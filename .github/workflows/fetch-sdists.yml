@@ -1,0 +1,57 @@
+name: Update sdists
+
+on:
+  schedule:
+  - cron: "25 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FORCE_COLOR: "1"
+  UV_SYSTEM_PYTHON: "1"  # make uv do global installs
+
+jobs:
+  fetch:
+    if: github.repository_owner == 'AA-Turner'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: true
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        version: latest
+        enable-cache: false
+
+    - name: Fetch top PyPI sdists
+      run: uv run fetch-sdists.py
+
+    - name: Set git configuration
+      run: |
+        git config core.safecrlf false
+        git config http.postBuffer 524288000
+        git config lfs.allowincompletepush true
+        git config user.name "Adam Turner"
+        git config user.email "9087854+aa-turner@users.noreply.github.com"
+
+    - name: Stage extracted source distributions
+      run: git add --all --force extracted/
+
+    - name: Commit extracted source distributions
+      run: git commit --quiet -m "Top PyPI sdists for $(date)" || true
+
+    - name: Push extracted source distributions
+      run: git push --force-with-lease
