@@ -3,6 +3,7 @@ New abstraction for Docker management with improved Ctrl+C handling.
 """
 
 import _thread
+import json
 import os
 import platform
 import subprocess
@@ -11,6 +12,7 @@ import threading
 import time
 import traceback
 import warnings
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -23,6 +25,7 @@ from docker.models.containers import Container
 from docker.models.images import Image
 from filelock import FileLock
 
+from fastled.print_filter import PrintFilter, PrintFilterFastled
 from fastled.spinner import Spinner
 
 CONFIG_DIR = Path(user_data_dir("fastled", "fastled"))
@@ -63,8 +66,54 @@ def get_lock(image_name: str) -> FileLock:
     return out
 
 
+@dataclass
+class Volume:
+    """
+    Represents a Docker volume mapping between host and container.
+
+    Attributes:
+        host_path: Path on the host system (e.g., "C:\\Users\\username\\project")
+        container_path: Path inside the container (e.g., "/app/data")
+        mode: Access mode, "rw" for read-write or "ro" for read-only
+    """
+
+    host_path: str
+    container_path: str
+    mode: str = "rw"
+
+    def to_dict(self) -> dict[str, dict[str, str]]:
+        """Convert the Volume object to the format expected by Docker API."""
+        return {self.host_path: {"bind": self.container_path, "mode": self.mode}}
+
+    @classmethod
+    def from_dict(cls, volume_dict: dict[str, dict[str, str]]) -> list["Volume"]:
+        """Create Volume objects from a Docker volume dictionary."""
+        volumes = []
+        for host_path, config in volume_dict.items():
+            volumes.append(
+                cls(
+                    host_path=host_path,
+                    container_path=config["bind"],
+                    mode=config.get("mode", "rw"),
+                )
+            )
+        return volumes
+
+
+# Override the default PrintFilter to use a custom one.
+def make_default_print_filter() -> PrintFilter:
+    """Create a default PrintFilter instance."""
+    return PrintFilterFastled()
+
+
 class RunningContainer:
-    def __init__(self, container, first_run=False):
+    def __init__(
+        self,
+        container: Container,
+        first_run: bool = False,
+        filter: PrintFilter | None = None,
+    ) -> None:
+        self.filter = filter or make_default_print_filter()
         self.container = container
         self.first_run = first_run
         self.running = True
@@ -81,7 +130,8 @@ class RunningContainer:
                 for log in self.container.logs(
                     follow=False, since=from_date, until=to_date, stream=True
                 ):
-                    print(log.decode("utf-8"), end="")
+                    # print(log.decode("utf-8"), end="")
+                    self.filter.print(log)
                 time.sleep(0.1)
                 from_date = to_date
                 to_date = _utc_now_no_tz()
@@ -104,9 +154,45 @@ class RunningContainer:
         self.detach()
 
 
+def _hack_to_fix_mac(volumes: list[Volume] | None) -> list[Volume] | None:
+    """Fixes the volume mounts on MacOS by removing the mode."""
+    if volumes is None:
+        return None
+    if sys.platform != "darwin":
+        # Only macos needs hacking.
+        return volumes
+
+    volumes = volumes.copy()
+    # Work around a Docker bug on MacOS where the expected network socket to the
+    # the host is not mounted correctly. This was actually fixed in recent versions
+    # of docker client but there is a large chunk of Docker clients out there with
+    # this bug in it.
+    #
+    # This hack is done by mounting the socket directly to the container.
+    # This socket talks to the docker daemon on the host.
+    #
+    # Found here.
+    # https://github.com/docker/docker-py/issues/3069#issuecomment-1316778735
+    # if it exists already then return the input
+    for volume in volumes:
+        if volume.host_path == "/var/run/docker.sock":
+            return volumes
+    # ok it doesn't exist, so add it
+    volumes.append(
+        Volume(
+            host_path="/var/run/docker.sock",
+            container_path="/var/run/docker.sock",
+            mode="rw",
+        )
+    )
+    return volumes
+
+
 class DockerManager:
     def __init__(self) -> None:
         from docker.errors import DockerException
+
+        self.is_suspended: bool = False
 
         try:
             self._client: DockerClient | None = None
@@ -201,24 +287,24 @@ class DockerManager:
             return False
 
     @staticmethod
-    def is_running() -> bool:
+    def is_running() -> tuple[bool, Exception | None]:
         """Check if Docker is running by pinging the Docker daemon."""
 
         if not DockerManager.is_docker_installed():
             print("Docker is not installed.")
-            return False
+            return False, Exception("Docker is not installed.")
         try:
             # self.client.ping()
             client = docker.from_env()
             client.ping()
             print("Docker is running.")
-            return True
+            return True, None
         except DockerException as e:
             print(f"Docker is not running: {str(e)}")
-            return False
+            return False, e
         except Exception as e:
             print(f"Error pinging Docker daemon: {str(e)}")
-            return False
+            return False, e
 
     def start(self) -> bool:
         """Attempt to start Docker Desktop (or the Docker daemon) automatically."""
@@ -314,8 +400,6 @@ class DockerManager:
 
                     # Quick check for latest version
                     with Spinner(f"Pulling newer version of {image_name}:{tag}..."):
-                        # This needs to be swapped out using the the command line interface AI!
-                        # _ = self.client.images.pull(image_name, tag=tag)
                         cmd_list = ["docker", "pull", f"{image_name}:{tag}"]
                         cmd_str = subprocess.list2cmdline(cmd_list)
                         print(f"Running command: {cmd_str}")
@@ -355,8 +439,8 @@ class DockerManager:
         self,
         container: Container,
         command: str | None,
-        volumes: dict | None,
-        ports: dict | None,
+        volumes_dict: dict[str, dict[str, str]] | None,
+        ports: dict[int, int] | None,
     ) -> bool:
         """Compare if existing container has matching configuration"""
         try:
@@ -386,7 +470,7 @@ class DockerManager:
                 return False
 
             # Check volumes if specified
-            if volumes:
+            if volumes_dict:
                 container_mounts = (
                     {
                         m["Source"]: {"bind": m["Destination"], "mode": m["Mode"]}
@@ -396,7 +480,7 @@ class DockerManager:
                     else {}
                 )
 
-                for host_dir, mount in volumes.items():
+                for host_dir, mount in volumes_dict.items():
                     if host_dir not in container_mounts:
                         print(f"Volume {host_dir} not found in container mounts.")
                         return False
@@ -446,7 +530,7 @@ class DockerManager:
         tag: str,
         container_name: str,
         command: str | None = None,
-        volumes: dict[str, dict[str, str]] | None = None,
+        volumes: list[Volume] | None = None,
         ports: dict[int, int] | None = None,
         remove_previous: bool = False,
     ) -> Container:
@@ -455,11 +539,23 @@ class DockerManager:
         If it exists with different config, remove and recreate it.
 
         Args:
-            volumes: Dict mapping host paths to dicts with 'bind' and 'mode' keys
-                    Example: {'/host/path': {'bind': '/container/path', 'mode': 'rw'}}
+            volumes: List of Volume objects for container volume mappings
             ports: Dict mapping host ports to container ports
                     Example: {8080: 80} maps host port 8080 to container port 80
         """
+        volumes = _hack_to_fix_mac(volumes)
+        # Convert volumes to the format expected by Docker API
+        volumes_dict = None
+        if volumes is not None:
+            volumes_dict = {}
+            for volume in volumes:
+                volumes_dict.update(volume.to_dict())
+
+        # Serialize the volumes to a json string
+        if volumes_dict:
+            volumes_str = json.dumps(volumes_dict)
+            print(f"Volumes: {volumes_str}")
+            print("Done")
         image_name = f"{image_name}:{tag}"
         try:
             container: Container = self.client.containers.get(container_name)
@@ -469,7 +565,9 @@ class DockerManager:
                 container.remove(force=True)
                 raise NotFound("Container removed due to remove_previous")
             # Check if configuration matches
-            elif not self._container_configs_match(container, command, volumes, ports):
+            elif not self._container_configs_match(
+                container, command, volumes_dict, ports
+            ):
                 print(
                     f"Container {container_name} exists but with different configuration. Removing and recreating..."
                 )
@@ -517,7 +615,7 @@ class DockerManager:
                 name=container_name,
                 detach=True,
                 tty=True,
-                volumes=volumes,
+                volumes=volumes_dict,
                 ports=ports,  # type: ignore
                 remove=True,
             )
@@ -529,9 +627,16 @@ class DockerManager:
         tag: str,
         container_name: str,
         command: str | None = None,
-        volumes: dict[str, dict[str, str]] | None = None,
+        volumes: list[Volume] | None = None,
         ports: dict[int, int] | None = None,
     ) -> None:
+        # Convert volumes to the format expected by Docker API
+        volumes = _hack_to_fix_mac(volumes)
+        volumes_dict = None
+        if volumes is not None:
+            volumes_dict = {}
+            for volume in volumes:
+                volumes_dict.update(volume.to_dict())
         # Remove existing container
         try:
             container: Container = self.client.containers.get(container_name)
@@ -548,9 +653,13 @@ class DockerManager:
                 "--name",
                 container_name,
             ]
-            if volumes:
-                for host_dir, mount in volumes.items():
-                    docker_command.extend(["-v", f"{host_dir}:{mount['bind']}"])
+            if volumes_dict:
+                for host_dir, mount in volumes_dict.items():
+                    docker_volume_arg = [
+                        "-v",
+                        f"{host_dir}:{mount['bind']}:{mount['mode']}",
+                    ]
+                    docker_command.extend(docker_volume_arg)
             if ports:
                 for host_port, container_port in ports.items():
                     docker_command.extend(["-p", f"{host_port}:{container_port}"])
@@ -591,6 +700,8 @@ class DockerManager:
         """
         Suspend (pause) the container.
         """
+        if self.is_suspended:
+            return
         if isinstance(container, str):
             container_name = container
             # container = self.get_container(container)

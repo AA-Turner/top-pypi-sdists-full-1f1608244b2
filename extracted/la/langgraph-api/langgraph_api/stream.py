@@ -119,7 +119,7 @@ async def astream_state(
     is_remote_pregel = isinstance(graph, BaseRemotePregel)
     if not is_remote_pregel:
         config["configurable"]["__pregel_node_finished"] = incr_nodes
-        # TODO add node tracking for JS graphs
+
     # attach run_id to config
     # for attempts beyond the first, use a fresh, unique run_id
     config = {**config, "run_id": run["run_id"]} if attempt == 1 else config

@@ -1,6 +1,7 @@
-use ast_grep_core::language::TSLanguage;
+use ast_grep_core::tree_sitter::{LanguageExt, StrDoc, TSLanguage};
 use ast_grep_core::Language;
 
+use ast_grep_core::matcher::{Pattern, PatternBuilder, PatternError};
 use ignore::types::{Types, TypesBuilder};
 use libloading::{Error as LibError, Library, Symbol};
 use serde::{Deserialize, Serialize};
@@ -202,30 +203,7 @@ impl DynamicLang {
     unsafe { &*addr_of!(DYNAMIC_LANG) }
   }
 }
-
 impl Language for DynamicLang {
-  /// tree sitter language to parse the source
-  fn get_ts_language(&self) -> TSLanguage {
-    self.inner().lang.clone()
-  }
-
-  fn from_path<P: AsRef<Path>>(path: P) -> Option<Self> {
-    let ext = path.as_ref().extension()?.to_str()?;
-    let mapping = unsafe { &*addr_of!(LANG_INDEX) };
-    let langs = Self::langs();
-    mapping.iter().find_map(|(p, idx)| {
-      if p == ext {
-        let index = *idx;
-        Some(Self {
-          index,
-          expando: langs[*idx as usize].expando_char,
-        })
-      } else {
-        None
-      }
-    })
-  }
-
   /// normalize pattern code before matching
   /// e.g. remove expression_statement, or prefer parsing {} to object over block
   fn pre_process_pattern<'q>(&self, query: &'q str) -> Cow<'q, str> {
@@ -254,6 +232,45 @@ impl Language for DynamicLang {
   fn expando_char(&self) -> char {
     self.expando
   }
+
+  fn kind_to_id(&self, kind: &str) -> u16 {
+    let inner = self.inner();
+    inner.lang.id_for_node_kind(kind, true)
+  }
+  fn field_to_id(&self, field: &str) -> Option<u16> {
+    let inner = self.inner();
+    inner.lang.field_id_for_name(field)
+  }
+
+  fn from_path<P: AsRef<Path>>(path: P) -> Option<Self> {
+    let ext = path.as_ref().extension()?.to_str()?;
+    let mapping = unsafe { &*addr_of!(LANG_INDEX) };
+    let langs = Self::langs();
+    mapping.iter().find_map(|(p, idx)| {
+      if p == ext {
+        let index = *idx;
+        Some(Self {
+          index,
+          expando: langs[*idx as usize].expando_char,
+        })
+      } else {
+        None
+      }
+    })
+  }
+  fn build_pattern(&self, builder: &PatternBuilder) -> Result<Pattern, PatternError> {
+    builder.build(|src| {
+      let doc = StrDoc::try_new(src, *self)?;
+      Ok(doc)
+    })
+  }
+}
+
+impl LanguageExt for DynamicLang {
+  /// tree sitter language to parse the source
+  fn get_ts_language(&self) -> TSLanguage {
+    self.inner().lang.clone()
+  }
 }
 
 #[cfg(test)]
@@ -272,6 +289,27 @@ mod test {
     }
   }
 
+  #[derive(Clone)]
+  struct TSLangWrapper(TSLanguage);
+
+  impl Language for TSLangWrapper {
+    fn kind_to_id(&self, kind: &str) -> u16 {
+      self.0.id_for_node_kind(kind, /* named */ true)
+    }
+    fn field_to_id(&self, field: &str) -> Option<u16> {
+      self.0.field_id_for_name(field)
+    }
+    fn build_pattern(&self, builder: &PatternBuilder) -> Result<Pattern, PatternError> {
+      builder.build(|src| StrDoc::try_new(src, self.clone()))
+    }
+  }
+
+  impl LanguageExt for TSLangWrapper {
+    fn get_ts_language(&self) -> TSLanguage {
+      self.0.clone()
+    }
+  }
+
   #[test]
   fn test_load_parser() {
     let path = get_tree_sitter_path();
@@ -280,9 +318,10 @@ mod test {
       return;
     }
     let (_lib, lang) = unsafe { load_ts_language(path.into(), "tree_sitter_json".into()).unwrap() };
+    let lang = TSLangWrapper(lang);
     let sg = lang.ast_grep("{\"a\": 123}");
     assert_eq!(
-      sg.root().to_sexp(),
+      sg.root().get_inner_node().to_sexp(),
       "(document (object (pair key: (string (string_content)) value: (number))))"
     );
   }

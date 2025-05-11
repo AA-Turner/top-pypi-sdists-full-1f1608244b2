@@ -3,7 +3,6 @@ import os
 import sys
 from pathlib import Path
 
-from fastled import __version__
 from fastled.project_init import project_init
 from fastled.select_sketch_directory import select_sketch_directory
 from fastled.settings import DEFAULT_URL, IMAGE_NAME
@@ -25,8 +24,37 @@ def _find_fastled_repo(start: Path) -> Path | None:
     return None
 
 
+_DEFAULT_HELP_TEXT = """
+FastLED WASM Compiler - Useful options:
+  <directory>           Directory containing the FastLED sketch to compile
+  --init [example]      Initialize one of the top tier WASM examples
+  --web [url]           Use web compiler
+  --server              Run the compiler server
+  --debug               Build with debug symbols for dev-tools debugging
+  --quick               Build in quick mode (default)
+  --release             Build in optimized release mode
+  --profile             Enable profiling the C++ build system
+  --update              Update the docker image for the wasm compiler
+  --purge               Remove all FastLED containers and images
+  --version             Show version information
+  --help                Show detailed help
+Examples:
+  fastled (will auto detect the sketch directory and prompt you)
+  fastled my_sketch
+  fastled my_sketch --web (compiles using the web compiler only)
+  fastled --init Blink (initializes a new sketch directory with the Blink example)
+  fastled --server (runs the compiler server in the current directory)
+"""
+
+
 def parse_args() -> Args:
     """Parse command-line arguments."""
+    from fastled import __version__
+
+    # Check if no arguments were provided
+    if len(sys.argv) == 1:
+        print(_DEFAULT_HELP_TEXT)
+
     parser = argparse.ArgumentParser(description=f"FastLED WASM Compiler {__version__}")
     parser.add_argument("--version", action="version", version=f"{__version__}")
     parser.add_argument(
@@ -65,7 +93,7 @@ def parse_args() -> Args:
     parser.add_argument(
         "--profile",
         action="store_true",
-        help="Enable profiling for web compilation",
+        help="Enable profiling of the C++ build system used for wasm compilation.",
     )
     parser.add_argument(
         "--force-compile",
@@ -78,6 +106,7 @@ def parse_args() -> Args:
         help="Disable automatic updates of the wasm compiler image when using docker.",
     )
     parser.add_argument(
+        "-u",
         "--update",
         "--upgrade",
         action="store_true",
@@ -88,7 +117,7 @@ def parse_args() -> Args:
         "--local",
         "-l",
         action="store_true",
-        help="Use localhost for web compilation from an instance of fastled --server, creating it if necessary",
+        help="(Default): Use localhost for web compilation from an instance of fastled --server, creating it if necessary",
     )
     parser.add_argument(
         "--build",

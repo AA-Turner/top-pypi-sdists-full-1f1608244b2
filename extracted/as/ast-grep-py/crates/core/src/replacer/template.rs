@@ -1,9 +1,9 @@
 use super::indent::{extract_with_deindent, get_indent_at_offset, indent_lines, DeindentedExtract};
-use super::{split_first_meta_var, MetaVarExtract, Replacer, Underlying};
+use super::{split_first_meta_var, MetaVarExtract, Replacer};
 use crate::language::Language;
-use crate::matcher::NodeMatch;
-use crate::meta_var::MetaVarEnv;
+use crate::meta_var::{MetaVarEnv, Underlying};
 use crate::source::{Content, Doc};
+use crate::NodeMatch;
 
 use thiserror::Error;
 
@@ -38,8 +38,8 @@ impl TemplateFix {
 }
 
 impl<D: Doc> Replacer<D> for TemplateFix {
-  fn generate_replacement(&self, nm: &NodeMatch<D>) -> Underlying<D::Source> {
-    let leading = nm.root.doc.get_source().get_range(0..nm.range().start);
+  fn generate_replacement(&self, nm: &NodeMatch<'_, D>) -> Underlying<D> {
+    let leading = nm.get_doc().get_source().get_range(0..nm.range().start);
     let indent = get_indent_at_offset::<D::Source>(leading);
     let bytes = replace_fixer(self, nm.get_env());
     let replaced = DeindentedExtract::MultiLine(&bytes, 0);
@@ -85,10 +85,7 @@ fn create_template(tmpl: &str, mv_char: char, transforms: &[String]) -> Template
   }
 }
 
-fn replace_fixer<D: Doc>(
-  fixer: &TemplateFix,
-  env: &MetaVarEnv<D>,
-) -> Vec<<D::Source as Content>::Underlying> {
+fn replace_fixer<D: Doc>(fixer: &TemplateFix, env: &MetaVarEnv<'_, D>) -> Underlying<D> {
   let template = match fixer {
     TemplateFix::Textual(n) => return D::Source::decode_str(n).to_vec(),
     TemplateFix::WithMetaVar(t) => t,
@@ -108,8 +105,8 @@ fn replace_fixer<D: Doc>(
   ret
 }
 
-fn maybe_get_var<'e, C, D>(
-  env: &'e MetaVarEnv<D>,
+fn maybe_get_var<'e, 't, C, D>(
+  env: &'e MetaVarEnv<'t, D>,
   var: &MetaVarExtract,
   indent: &usize,
 ) -> Option<Cow<'e, [C::Underlying]>>
@@ -127,7 +124,7 @@ where
     }
     MetaVarExtract::Single(name) => {
       let replaced = env.get_match(name)?;
-      let source = replaced.root.doc.get_source();
+      let source = replaced.get_doc().get_source();
       let range = replaced.range();
       (source, range)
     }
@@ -139,9 +136,9 @@ where
       // NOTE: start_byte is not always index range of source's slice.
       // e.g. start_byte is still byte_offset in utf_16 (napi). start_byte
       // so we need to call source's get_range method
-      let start = nodes[0].inner.start_byte() as usize;
-      let end = nodes[nodes.len() - 1].inner.end_byte() as usize;
-      let source = nodes[0].root.doc.get_source();
+      let start = nodes[0].range().start;
+      let end = nodes[nodes.len() - 1].range().end;
+      let source = nodes[0].get_doc().get_source();
       (source, start..end)
     }
   };
@@ -151,7 +148,7 @@ where
 }
 
 // replace meta_var in template string, e.g. "Hello $NAME" -> "Hello World"
-pub fn gen_replacement<D: Doc>(template: &str, nm: &NodeMatch<D>) -> Underlying<D::Source> {
+pub fn gen_replacement<D: Doc>(template: &str, nm: &NodeMatch<'_, D>) -> Underlying<D> {
   let fixer = create_template(template, nm.lang().meta_var_char(), &[]);
   fixer.generate_replacement(nm)
 }
@@ -160,8 +157,10 @@ pub fn gen_replacement<D: Doc>(template: &str, nm: &NodeMatch<D>) -> Underlying<
 mod test {
 
   use super::*;
-  use crate::language::{Language, Tsx};
+  use crate::language::Tsx;
+  use crate::matcher::NodeMatch;
   use crate::meta_var::{MetaVarEnv, MetaVariable};
+  use crate::tree_sitter::LanguageExt;
   use crate::Pattern;
   use std::collections::HashMap;
 
@@ -180,7 +179,7 @@ if (true) {
   $B
 )";
     let mut src = Tsx.ast_grep(src);
-    let pattern = Pattern::str(pattern, Tsx);
+    let pattern = Pattern::new(pattern, Tsx);
     let success = src.replace(pattern, template).expect("should replace");
     assert!(success);
     let expect = r"if (true) {
@@ -195,10 +194,7 @@ if (true) {
 
   fn test_str_replace(replacer: &str, vars: &[(&str, &str)], expected: &str) {
     let mut env = MetaVarEnv::new();
-    let roots: Vec<_> = vars
-      .iter()
-      .map(|(v, p)| (v, Tsx.ast_grep(p).inner))
-      .collect();
+    let roots: Vec<_> = vars.iter().map(|(v, p)| (v, Tsx.ast_grep(p))).collect();
     for (var, root) in &roots {
       env.insert(var, root.root());
     }
@@ -257,10 +253,7 @@ if (true) {
 
   fn test_ellipsis_replace(replacer: &str, vars: &[(&str, &str)], expected: &str) {
     let mut env = MetaVarEnv::new();
-    let roots: Vec<_> = vars
-      .iter()
-      .map(|(v, p)| (v, Tsx.ast_grep(p).inner))
-      .collect();
+    let roots: Vec<_> = vars.iter().map(|(v, p)| (v, Tsx.ast_grep(p))).collect();
     for (var, root) in &roots {
       env.insert_multi(var, root.root().children().collect());
     }
@@ -306,10 +299,7 @@ if (true) {
 
   fn test_template_replace(template: &str, vars: &[(&str, &str)], expected: &str) {
     let mut env = MetaVarEnv::new();
-    let roots: Vec<_> = vars
-      .iter()
-      .map(|(v, p)| (v, Tsx.ast_grep(p).inner))
-      .collect();
+    let roots: Vec<_> = vars.iter().map(|(v, p)| (v, Tsx.ast_grep(p))).collect();
     for (var, root) in &roots {
       env.insert(var, root.root());
     }

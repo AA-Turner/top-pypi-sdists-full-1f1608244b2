@@ -30,7 +30,7 @@ pub fn from_str<'de, T: Deserialize<'de>>(s: &'de str) -> Result<T, YamlError> {
 
 pub fn from_yaml_string<'a, L: Language + Deserialize<'a>>(
   yamls: &'a str,
-  registration: &GlobalRules<L>,
+  registration: &GlobalRules,
 ) -> Result<Vec<RuleConfig<L>>, RuleConfigError> {
   let mut ret = vec![];
   for yaml in Deserializer::from_str(yamls) {
@@ -41,9 +41,10 @@ pub fn from_yaml_string<'a, L: Language + Deserialize<'a>>(
 }
 #[cfg(test)]
 mod test {
-
   use super::*;
-  use ast_grep_core::language::TSLanguage;
+  use ast_grep_core::matcher::{Pattern, PatternBuilder, PatternError};
+  use ast_grep_core::tree_sitter::{LanguageExt, StrDoc, TSLanguage};
+  use ast_grep_core::Language;
   use std::path::Path;
 
   #[derive(Clone, Deserialize, PartialEq, Eq)]
@@ -51,9 +52,20 @@ mod test {
     Tsx,
   }
   impl Language for TypeScript {
+    fn kind_to_id(&self, kind: &str) -> u16 {
+      TSLanguage::from(tree_sitter_typescript::LANGUAGE_TSX).id_for_node_kind(kind, true)
+    }
+    fn field_to_id(&self, field: &str) -> Option<u16> {
+      TSLanguage::from(tree_sitter_typescript::LANGUAGE_TSX).field_id_for_name(field)
+    }
     fn from_path<P: AsRef<Path>>(_path: P) -> Option<Self> {
       Some(TypeScript::Tsx)
     }
+    fn build_pattern(&self, builder: &PatternBuilder) -> Result<Pattern, PatternError> {
+      builder.build(|src| StrDoc::try_new(src, self.clone()))
+    }
+  }
+  impl LanguageExt for TypeScript {
     fn get_ts_language(&self) -> TSLanguage {
       tree_sitter_typescript::LANGUAGE_TSX.into()
     }

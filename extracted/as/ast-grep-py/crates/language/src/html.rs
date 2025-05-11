@@ -1,5 +1,6 @@
 use super::pre_process_pattern;
-use ast_grep_core::language::TSRange;
+use ast_grep_core::matcher::{Pattern, PatternBuilder, PatternError};
+use ast_grep_core::tree_sitter::{LanguageExt, StrDoc, TSLanguage, TSRange};
 use ast_grep_core::Language;
 use ast_grep_core::{matcher::KindMatcher, Doc, Node};
 use std::collections::HashMap;
@@ -9,19 +10,33 @@ use std::collections::HashMap;
 #[derive(Clone, Copy, Debug)]
 pub struct Html;
 impl Language for Html {
-  fn get_ts_language(&self) -> ast_grep_core::language::TSLanguage {
-    crate::parsers::language_html()
-  }
   fn expando_char(&self) -> char {
     'z'
   }
   fn pre_process_pattern<'q>(&self, query: &'q str) -> std::borrow::Cow<'q, str> {
     pre_process_pattern(self.expando_char(), query)
   }
+  fn kind_to_id(&self, kind: &str) -> u16 {
+    crate::parsers::language_html().id_for_node_kind(kind, true)
+  }
+  fn field_to_id(&self, field: &str) -> Option<u16> {
+    crate::parsers::language_html().field_id_for_name(field)
+  }
+  fn build_pattern(&self, builder: &PatternBuilder) -> Result<Pattern, PatternError> {
+    builder.build(|src| StrDoc::try_new(src, *self))
+  }
+}
+impl LanguageExt for Html {
+  fn get_ts_language(&self) -> TSLanguage {
+    crate::parsers::language_html()
+  }
   fn injectable_languages(&self) -> Option<&'static [&'static str]> {
     Some(&["css", "js", "ts", "tsx", "scss", "less", "stylus", "coffee"])
   }
-  fn extract_injections<D: Doc>(&self, root: Node<D>) -> HashMap<String, Vec<TSRange>> {
+  fn extract_injections<L: LanguageExt>(
+    &self,
+    root: Node<StrDoc<L>>,
+  ) -> HashMap<String, Vec<TSRange>> {
     let lang = root.lang();
     let mut map = HashMap::new();
     let matcher = KindMatcher::new("script_element", lang.clone());
@@ -68,16 +83,17 @@ fn find_lang<D: Doc>(node: &Node<D>) -> Option<String> {
 fn node_to_range<D: Doc>(node: &Node<D>) -> TSRange {
   let r = node.range();
   let start = node.start_pos();
-  let sp = start.ts_point();
+  let sp = start.byte_point();
+  let sp = tree_sitter::Point::new(sp.0, sp.1);
   let end = node.end_pos();
-  let ep = end.ts_point();
+  let ep = end.byte_point();
+  let ep = tree_sitter::Point::new(ep.0, ep.1);
   TSRange::new(r.start as u32, r.end as u32, &sp, &ep)
 }
 
 #[cfg(test)]
 mod test {
   use super::*;
-  use ast_grep_core::source::TSParseError;
 
   fn test_match(query: &str, source: &str) {
     use crate::test::test_match_lang;
@@ -99,20 +115,19 @@ mod test {
     test_non_match("<div>$$$</div>", "<div class='foo'>123</div>");
   }
 
-  fn test_replace(src: &str, pattern: &str, replacer: &str) -> Result<String, TSParseError> {
+  fn test_replace(src: &str, pattern: &str, replacer: &str) -> String {
     use crate::test::test_replace_lang;
     test_replace_lang(src, pattern, replacer, Html)
   }
 
   #[test]
-  fn test_html_replace() -> Result<(), TSParseError> {
+  fn test_html_replace() {
     let ret = test_replace(
       r#"<div class='foo'>bar</div>"#,
       r#"<$TAG class='foo'>$$$B</$TAG>"#,
       r#"<$TAG class='$$$B'>foo</$TAG>"#,
-    )?;
+    );
     assert_eq!(ret, r#"<div class='bar'>foo</div>"#);
-    Ok(())
   }
 
   fn extract(src: &str) -> HashMap<String, Vec<TSRange>> {

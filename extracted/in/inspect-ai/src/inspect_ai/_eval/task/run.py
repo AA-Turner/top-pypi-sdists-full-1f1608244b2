@@ -27,6 +27,7 @@ from inspect_ai._util.constants import (
 )
 from inspect_ai._util.datetime import iso_now
 from inspect_ai._util.error import exception_message
+from inspect_ai._util.exception import TerminateSampleError
 from inspect_ai._util.hooks import send_telemetry
 from inspect_ai._util.json import to_json_str_safe
 from inspect_ai._util.registry import (
@@ -35,6 +36,7 @@ from inspect_ai._util.registry import (
     registry_unqualified_name,
 )
 from inspect_ai._util.working import (
+    end_sample_working_limit,
     init_sample_working_limit,
     sample_waiting_time,
 )
@@ -639,10 +641,11 @@ async def task_run_sample(
                 ) = contextlib.nullcontext()
                 try:
                     # update active sample wth sandboxes now that we are initialised
-                    active.sandboxes = await sandbox_connections()
-
-                    # end init
-                    await init_span.__aexit__(None, None, None)
+                    # (ensure that we still exit init context in presence of sandbox error)
+                    try:
+                        active.sandboxes = await sandbox_connections()
+                    finally:
+                        await init_span.__aexit__(None, None, None)
 
                     # initialise timeout context manager
                     timeout_cm = (
@@ -673,6 +676,9 @@ async def task_run_sample(
 
                         # set progress for plan then run it
                         state = await plan(state, generate)
+
+                    # disable sample working limit after execution
+                    end_sample_working_limit()
 
                 except TimeoutError:
                     if time_limit is not None:
@@ -715,7 +721,7 @@ async def task_run_sample(
                         # handle the cancel exception
                         raise
 
-                except LimitExceededError:
+                except (LimitExceededError, TerminateSampleError):
                     # capture most recent state for scoring
                     state = sample_state() or state
 
@@ -925,7 +931,7 @@ async def log_sample(
         input=sample.input,
         choices=sample.choices,
         target=sample.target,
-        metadata=sample.metadata or {},
+        metadata=state.metadata or {},
         sandbox=sample.sandbox,
         files=list(sample.files.keys()) if sample.files else None,
         setup=sample.setup,

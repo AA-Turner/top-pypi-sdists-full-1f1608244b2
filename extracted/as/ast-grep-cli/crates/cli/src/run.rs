@@ -3,7 +3,7 @@ use std::path::Path;
 use anyhow::{Context, Result};
 use ast_grep_config::Fixer;
 use ast_grep_core::{MatchStrictness, Matcher, Pattern};
-use ast_grep_language::Language;
+use ast_grep_language::{Language, LanguageExt};
 use clap::{builder::PossibleValue, Parser, ValueEnum};
 use ignore::WalkParallel;
 
@@ -113,7 +113,7 @@ pub struct RunArg {
 }
 
 impl RunArg {
-  fn build_pattern(&self, lang: SgLang) -> Result<Pattern<SgLang>> {
+  fn build_pattern(&self, lang: SgLang) -> Result<Pattern> {
     let pattern = if let Some(sel) = &self.selector {
       Pattern::contextual(&self.pattern, sel, lang)
     } else {
@@ -128,7 +128,7 @@ impl RunArg {
   }
 
   // do not unwrap pattern here, we should allow non-pattern to be debugged as tree
-  fn debug_pattern_if_needed(&self, pattern_ret: &Result<Pattern<SgLang>>, lang: SgLang) {
+  fn debug_pattern_if_needed(&self, pattern_ret: &Result<Pattern>, lang: SgLang) {
     let Some(debug_query) = &self.debug_query else {
       return;
     };
@@ -244,8 +244,8 @@ impl PathWorker for RunWithInferredLang {
 
 struct RunWithSpecificLang {
   arg: RunArg,
-  pattern: Pattern<SgLang>,
-  rewrite: Option<Fixer<SgLang>>,
+  pattern: Pattern,
+  rewrite: Option<Fixer>,
   stats: RunTrace,
 }
 
@@ -332,7 +332,8 @@ impl StdInWorker for RunWithSpecificLang {
   ) -> Result<Vec<P::Processed>> {
     let lang = self.arg.lang.expect("must present");
     let grep = lang.ast_grep(src);
-    let mut matches = grep.root().find_all(&self.pattern).peekable();
+    let root = grep.root();
+    let mut matches = root.find_all(&self.pattern).peekable();
     if matches.peek().is_none() {
       return Ok(vec![]);
     }
@@ -349,8 +350,8 @@ impl StdInWorker for RunWithSpecificLang {
 }
 fn match_one_file<T, P: PrintProcessor<T>>(
   processor: &P,
-  match_unit: &MatchUnit<impl Matcher<SgLang>>,
-  rewrite: &Option<Fixer<SgLang>>,
+  match_unit: &MatchUnit<impl Matcher>,
+  rewrite: &Option<Fixer>,
 ) -> Result<Option<T>> {
   let MatchUnit {
     path,
@@ -358,7 +359,8 @@ fn match_one_file<T, P: PrintProcessor<T>>(
     matcher,
   } = match_unit;
 
-  let mut matches = grep.root().find_all(matcher).peekable();
+  let root = grep.root();
+  let mut matches = root.find_all(matcher).peekable();
   if matches.peek().is_none() {
     return Ok(None);
   }

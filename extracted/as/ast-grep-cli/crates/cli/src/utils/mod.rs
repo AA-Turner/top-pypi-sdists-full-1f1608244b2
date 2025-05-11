@@ -28,8 +28,8 @@ use smallvec::{smallvec, SmallVec};
 
 use ast_grep_config::RuleCollection;
 use ast_grep_core::Pattern;
-use ast_grep_core::{Matcher, StrDoc};
-use ast_grep_language::Language;
+use ast_grep_core::{tree_sitter::StrDoc, Matcher};
+use ast_grep_language::{Language, LanguageExt};
 
 use std::fs::read_to_string;
 use std::io::stdout;
@@ -130,10 +130,10 @@ pub fn filter_file_rule(
   collect_file_stats(path, lang, configs, trace)?;
   let mut ret = smallvec![grep.clone()];
   if let Some(injected) = lang.injectable_sg_langs() {
-    let docs = grep.inner.get_injections(|s| SgLang::from_str(s).ok());
+    let sub_roots = grep.get_injections(|s| SgLang::from_str(s).ok());
     let inj = injected.filter_map(|l| {
-      let doc = docs.iter().find(|d| *d.lang() == l)?;
-      let grep = AstGrep { inner: doc.clone() };
+      let root = sub_roots.iter().find(|d| *d.lang() == l)?;
+      let grep = root.clone();
       collect_file_stats(path, l, configs, trace).ok()?;
       Some(grep)
     });
@@ -147,12 +147,12 @@ pub fn filter_file_rule(
 pub fn filter_file_pattern<'a>(
   path: &Path,
   lang: SgLang,
-  root_matcher: Option<&'a Pattern<SgLang>>,
-  sub_matchers: &'a [(SgLang, Pattern<SgLang>)],
-) -> Result<SmallVec<[MatchUnit<&'a Pattern<SgLang>>; 1]>> {
+  root_matcher: Option<&'a Pattern>,
+  sub_matchers: &'a [(SgLang, Pattern)],
+) -> Result<SmallVec<[MatchUnit<&'a Pattern>; 1]>> {
   let file_content = read_file(path)?;
   let grep = lang.ast_grep(&file_content);
-  let do_match = |ast_grep: AstGrep, matcher: &'a Pattern<SgLang>| {
+  let do_match = |ast_grep: AstGrep, matcher: &'a Pattern| {
     let fixed = matcher.fixed_string();
     if !fixed.is_empty() && !file_content.contains(&*fixed) {
       return None;
@@ -167,10 +167,10 @@ pub fn filter_file_pattern<'a>(
   if let Some(matcher) = root_matcher {
     ret.extend(do_match(grep.clone(), matcher));
   }
-  let injections = grep.inner.get_injections(|s| SgLang::from_str(s).ok());
+  let injections = grep.get_injections(|s| SgLang::from_str(s).ok());
   let sub_units = injections.into_iter().filter_map(|inner| {
     let (_, matcher) = sub_matchers.iter().find(|i| *inner.lang() == i.0)?;
-    let injected = AstGrep { inner };
+    let injected = inner;
     do_match(injected, matcher)
   });
   ret.extend(sub_units);
@@ -189,7 +189,7 @@ fn file_too_large(file_content: &str) -> bool {
 /// A single atomic unit where matches happen.
 /// It contains the file path, sg instance and matcher.
 /// An analogy to compilation unit in C programming language.
-pub struct MatchUnit<M: Matcher<SgLang>> {
+pub struct MatchUnit<M: Matcher> {
   pub path: PathBuf,
   pub grep: AstGrep,
   pub matcher: M,
@@ -204,7 +204,7 @@ mod test {
   fn test_html_embedding() {
     let root =
       SgLang::Builtin(SupportLang::Html).ast_grep("<script lang=typescript>alert(123)</script>");
-    let docs = root.inner.get_injections(|s| SgLang::from_str(s).ok());
+    let docs = root.get_injections(|s| SgLang::from_str(s).ok());
     assert_eq!(docs.len(), 1);
     let script = docs[0].root().child(0).expect("should exist");
     assert_eq!(script.kind(), "expression_statement");
@@ -213,7 +213,7 @@ mod test {
   #[test]
   fn test_html_embedding_lang_not_found() {
     let root = SgLang::Builtin(SupportLang::Html).ast_grep("<script lang=xxx>alert(123)</script>");
-    let docs = root.inner.get_injections(|s| SgLang::from_str(s).ok());
+    let docs = root.get_injections(|s| SgLang::from_str(s).ok());
     assert_eq!(docs.len(), 0);
   }
 }

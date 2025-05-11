@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: django-axes
-Version: 7.1.0
+Version: 8.0.0
 Summary: Keep track of failed login attempts in Django-powered sites.
 Home-page: https://github.com/jazzband/django-axes
 Author: Josh VanderLinden, Philip Neustrom, Michael Blume, Alex Clark, Camilo Nova, Aleksi Hakli
@@ -17,7 +17,6 @@ Classifier: Environment :: Web Environment
 Classifier: Environment :: Plugins
 Classifier: Framework :: Django
 Classifier: Framework :: Django :: 4.2
-Classifier: Framework :: Django :: 5.0
 Classifier: Framework :: Django :: 5.1
 Classifier: Framework :: Django :: 5.2
 Classifier: Intended Audience :: Developers
@@ -144,6 +143,12 @@ See `CONTRIBUTING <CONTRIBUTING.rst>`__.
 
 Changes
 =======
+
+8.0.0 (2025-05-10)
+------------------
+
+- Move all database related logic to the default ``axes.handlers.database.AxesDatabaseHandler``.
+  [nefrob]
 
 7.1.0 (2025-04-23)
 ------------------

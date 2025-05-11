@@ -1,7 +1,9 @@
 use crate::lang::SgLang;
 use ansi_term::Style;
-use ast_grep_core::{language::TSLanguage, matcher::PatternNode, meta_var::MetaVariable, Pattern};
-use ast_grep_language::Language;
+use ast_grep_core::{
+  matcher::PatternNode, meta_var::MetaVariable, tree_sitter::TSLanguage, Pattern,
+};
+use ast_grep_language::LanguageExt;
 use clap::ValueEnum;
 use tree_sitter as ts;
 
@@ -17,7 +19,7 @@ pub enum DebugFormat {
   Sexp,
 }
 impl DebugFormat {
-  pub fn debug_pattern(&self, pattern: &Pattern<SgLang>, lang: SgLang, colored: bool) {
+  pub fn debug_pattern(&self, pattern: &Pattern, lang: SgLang, colored: bool) {
     match self {
       DebugFormat::Pattern => {
         let lang = lang.get_ts_language();
@@ -42,14 +44,14 @@ impl DebugFormat {
         debug_assert!(false, "debug_tree cannot be called with Pattern")
       }
       DebugFormat::Sexp => {
-        eprintln!("Debug Sexp:\n{}", root.root().to_sexp());
+        eprintln!("Debug Sexp:\n{}", root.root().get_inner_node().to_sexp());
       }
       DebugFormat::Ast => {
-        let dumped = dump_node(root.root().get_ts_node());
+        let dumped = dump_node(root.root().get_inner_node());
         eprintln!("Debug AST:\n{}", dumped.ast(colored));
       }
       DebugFormat::Cst => {
-        let dumped = dump_node(root.root().get_ts_node());
+        let dumped = dump_node(root.root().get_inner_node());
         eprintln!("Debug CST:\n{}", dumped.cst(colored));
       }
     }
@@ -80,7 +82,6 @@ fn dump_pattern(
       kind_id,
       is_named,
     } => {
-      let lang = lang.get_ts_language();
       if *is_named {
         let kind = lang.node_kind_for_id(*kind_id).unwrap();
         let kind = style.kind_style.paint(format!("{kind}"));
@@ -250,7 +251,7 @@ program (0,0)-(0,11)
   fn test_dump_node() {
     let lang = SgLang::Builtin(TypeScript.into());
     let root = lang.ast_grep("var a = 123");
-    let dumped = dump_node(root.root().get_ts_node());
+    let dumped = dump_node(root.root().get_inner_node());
     assert_eq!(DUMPED.trim(), dumped.ast(false).trim());
   }
 
@@ -267,7 +268,7 @@ translation_unit (0,0)-(0,9)
   fn test_missing_node() {
     let lang = SgLang::Builtin(C.into());
     let root = lang.ast_grep("int a = 1");
-    let dumped = dump_node(root.root().get_ts_node());
+    let dumped = dump_node(root.root().get_inner_node());
     assert_eq!(MISSING.trim(), dumped.cst(false).trim());
   }
 }

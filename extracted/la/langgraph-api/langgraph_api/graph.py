@@ -15,11 +15,13 @@ from typing import TYPE_CHECKING, Any, NamedTuple
 from uuid import UUID, uuid5
 
 import structlog
-from langchain_core.runnables.config import run_in_executor
+from langchain_core.runnables.config import run_in_executor, var_child_runnable_config
 from langgraph.checkpoint.base import BaseCheckpointSaver
+from langgraph.constants import CONFIG_KEY_CHECKPOINTER, CONFIG_KEY_STORE
 from langgraph.graph import Graph
 from langgraph.pregel import Pregel
 from langgraph.store.base import BaseStore
+from langgraph.utils.config import ensure_config
 from starlette.exceptions import HTTPException
 
 from langgraph_api import asyncio as lg_asyncio
@@ -109,26 +111,38 @@ async def get_graph(
     """Return the runnable."""
     assert_graph_exists(graph_id)
     value = GRAPHS[graph_id]
+    token = None
     if graph_id in FACTORY_ACCEPTS_CONFIG:
+        config = ensure_config(config)
+        if store is not None and not config["configurable"].get(CONFIG_KEY_STORE):
+            config["configurable"][CONFIG_KEY_STORE] = store
+        if checkpointer is not None and not config["configurable"].get(
+            CONFIG_KEY_CHECKPOINTER
+        ):
+            config["configurable"][CONFIG_KEY_CHECKPOINTER] = checkpointer
+        token = var_child_runnable_config.set(config)
         value = value(config) if FACTORY_ACCEPTS_CONFIG[graph_id] else value()
-
-    async with _generate_graph(value) as graph_obj:
-        if isinstance(graph_obj, Graph):
-            graph_obj = graph_obj.compile()
-        if not isinstance(graph_obj, Pregel | BaseRemotePregel):
-            raise HTTPException(
-                status_code=424,
-                detail=f"Graph '{graph_id}' is not valid. Review graph registration.",
-            )
-        update = {
-            "checkpointer": checkpointer,
-            "store": store,
-        }
-        if graph_obj.name == "LangGraph":
-            update["name"] = graph_id
-        if isinstance(graph_obj, BaseRemotePregel):
-            update["config"] = config
-        yield graph_obj.copy(update=update)
+    try:
+        async with _generate_graph(value) as graph_obj:
+            if isinstance(graph_obj, Graph):
+                graph_obj = graph_obj.compile()
+            if not isinstance(graph_obj, Pregel | BaseRemotePregel):
+                raise HTTPException(
+                    status_code=424,
+                    detail=f"Graph '{graph_id}' is not valid. Review graph registration.",
+                )
+            update = {
+                "checkpointer": checkpointer,
+                "store": store,
+            }
+            if graph_obj.name == "LangGraph":
+                update["name"] = graph_id
+            if isinstance(graph_obj, BaseRemotePregel):
+                update["config"] = config
+            yield graph_obj.copy(update=update)
+    finally:
+        if token is not None:
+            var_child_runnable_config.reset(token)
 
 
 def graph_exists(graph_id: str) -> bool:

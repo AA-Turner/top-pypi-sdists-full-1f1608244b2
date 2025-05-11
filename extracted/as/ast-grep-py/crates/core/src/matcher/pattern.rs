@@ -2,22 +2,68 @@ use crate::language::Language;
 use crate::match_tree::{match_end_non_recursive, match_node_non_recursive, MatchStrictness};
 use crate::matcher::{kind_utils, KindMatcher, KindMatcherError, Matcher};
 use crate::meta_var::{MetaVarEnv, MetaVariable};
-use crate::source::TSParseError;
-use crate::{Doc, Node, Root, StrDoc};
+use crate::source::SgNode;
+use crate::{Doc, Node, Root};
 
 use bit_set::BitSet;
 use thiserror::Error;
 
 use std::borrow::Cow;
 use std::collections::HashSet;
-use std::marker::PhantomData;
 
 #[derive(Clone)]
-pub struct Pattern<L: Language> {
+pub struct Pattern {
   pub node: PatternNode,
   root_kind: Option<u16>,
-  lang: PhantomData<L>,
   pub strictness: MatchStrictness,
+}
+
+pub struct PatternBuilder<'a> {
+  selector: Option<&'a str>,
+  src: Cow<'a, str>,
+}
+
+impl PatternBuilder<'_> {
+  pub fn build<D, F>(&self, parse: F) -> Result<Pattern, PatternError>
+  where
+    F: FnOnce(&str) -> Result<D, String>,
+    D: Doc,
+  {
+    let doc = parse(&self.src).map_err(PatternError::Parse)?;
+    let root = Root::doc(doc);
+    if let Some(selector) = self.selector {
+      self.contextual(&root, selector)
+    } else {
+      self.single(&root)
+    }
+  }
+  fn single<D: Doc>(&self, root: &Root<D>) -> Result<Pattern, PatternError> {
+    let goal = root.root();
+    if goal.children().len() == 0 {
+      return Err(PatternError::NoContent(self.src.to_string()));
+    }
+    if !is_single_node(&goal.inner) {
+      return Err(PatternError::MultipleNode(self.src.to_string()));
+    }
+    let node = Pattern::single_matcher(root);
+    Ok(Pattern::from(node))
+  }
+
+  fn contextual<D: Doc>(&self, root: &Root<D>, selector: &str) -> Result<Pattern, PatternError> {
+    let goal = root.root();
+    let kind_matcher = KindMatcher::try_new(selector, root.lang().clone())?;
+    let Some(node) = goal.find(&kind_matcher) else {
+      return Err(PatternError::NoSelectorInContext {
+        context: self.src.to_string(),
+        selector: selector.into(),
+      });
+    };
+    Ok(Pattern {
+      root_kind: Some(node.kind_id()),
+      node: convert_node_to_pattern(node.get_node().clone()),
+      strictness: MatchStrictness::Smart,
+    })
+  }
 }
 
 #[derive(Clone)]
@@ -72,18 +118,17 @@ impl<'r, D: Doc> From<Node<'r, D>> for PatternNode {
   }
 }
 
-impl<'r, D: Doc> From<Node<'r, D>> for Pattern<D::Lang> {
+impl<'r, D: Doc> From<Node<'r, D>> for Pattern {
   fn from(node: Node<'r, D>) -> Self {
     Self {
       node: convert_node_to_pattern(node),
       root_kind: None,
-      lang: PhantomData,
       strictness: MatchStrictness::Smart,
     }
   }
 }
 
-fn convert_node_to_pattern<D: Doc>(node: Node<D>) -> PatternNode {
+fn convert_node_to_pattern<D: Doc>(node: Node<'_, D>) -> PatternNode {
   if let Some(meta_var) = extract_var_from_node(&node) {
     PatternNode::MetaVar { meta_var }
   } else if node.is_leaf() {
@@ -94,7 +139,7 @@ fn convert_node_to_pattern<D: Doc>(node: Node<D>) -> PatternNode {
     }
   } else {
     let children = node.children().filter_map(|n| {
-      if n.get_ts_node().is_missing() {
+      if n.is_missing() {
         None
       } else {
         Some(PatternNode::from(n))
@@ -107,15 +152,15 @@ fn convert_node_to_pattern<D: Doc>(node: Node<D>) -> PatternNode {
   }
 }
 
-fn extract_var_from_node<D: Doc>(goal: &Node<D>) -> Option<MetaVariable> {
+fn extract_var_from_node<D: Doc>(goal: &Node<'_, D>) -> Option<MetaVariable> {
   let key = goal.text();
   goal.lang().extract_meta_var(&key)
 }
 
 #[derive(Debug, Error)]
 pub enum PatternError {
-  #[error("Tree-Sitter fails to parse the pattern.")]
-  TSParse(#[from] TSParseError),
+  #[error("Fails to parse the pattern query: `{0}`")]
+  Parse(String),
   #[error("No AST root is detected. Please check the pattern source `{0}`.")]
   NoContent(String),
   #[error("Multiple AST nodes are detected. Please check the pattern source `{0}`.")]
@@ -127,8 +172,8 @@ pub enum PatternError {
 }
 
 #[inline]
-fn is_single_node(n: &tree_sitter::Node) -> bool {
-  match n.child_count() {
+fn is_single_node<'r, N: SgNode<'r>>(n: &N) -> bool {
+  match n.children().len() {
     1 => true,
     2 => {
       let c = n.child(1).expect("second child must exist");
@@ -139,11 +184,7 @@ fn is_single_node(n: &tree_sitter::Node) -> bool {
     _ => false,
   }
 }
-impl<L: Language> Pattern<L> {
-  pub fn str(src: &str, lang: L) -> Self {
-    Self::new(src, lang)
-  }
-
+impl Pattern {
   pub fn has_error(&self) -> bool {
     let kind = match &self.node {
       PatternNode::Terminal { kind_id, .. } => *kind_id,
@@ -197,22 +238,17 @@ fn collect_vars<'p>(p: &'p PatternNode, vars: &mut HashSet<&'p str>) {
   }
 }
 
-impl<L: Language> Pattern<L> {
-  pub fn try_new(src: &str, lang: L) -> Result<Self, PatternError> {
+impl Pattern {
+  pub fn try_new<L: Language>(src: &str, lang: L) -> Result<Self, PatternError> {
     let processed = lang.pre_process_pattern(src);
-    let root = Root::<StrDoc<L>>::try_new(&processed, lang)?;
-    let goal = root.root();
-    if goal.inner.child_count() == 0 {
-      return Err(PatternError::NoContent(src.into()));
-    }
-    if !is_single_node(&goal.inner) {
-      return Err(PatternError::MultipleNode(src.into()));
-    }
-    let node = Self::single_matcher(&root);
-    Ok(Self::from(node))
+    let builder = PatternBuilder {
+      selector: None,
+      src: processed,
+    };
+    lang.build_pattern(&builder)
   }
 
-  pub fn new(src: &str, lang: L) -> Self {
+  pub fn new<L: Language>(src: &str, lang: L) -> Self {
     Self::try_new(src, lang).unwrap()
   }
 
@@ -221,27 +257,17 @@ impl<L: Language> Pattern<L> {
     self
   }
 
-  pub fn contextual(context: &str, selector: &str, lang: L) -> Result<Self, PatternError> {
+  pub fn contextual<L: Language>(
+    context: &str,
+    selector: &str,
+    lang: L,
+  ) -> Result<Self, PatternError> {
     let processed = lang.pre_process_pattern(context);
-    let root = Root::<StrDoc<L>>::try_new(&processed, lang.clone())?;
-    let goal = root.root();
-    let kind_matcher = KindMatcher::try_new(selector, lang)?;
-    let Some(node) = goal.find(&kind_matcher) else {
-      return Err(PatternError::NoSelectorInContext {
-        context: context.into(),
-        selector: selector.into(),
-      });
+    let builder = PatternBuilder {
+      selector: Some(selector),
+      src: processed,
     };
-    Ok(Self {
-      root_kind: Some(node.kind_id()),
-      node: convert_node_to_pattern(node.get_node().clone()),
-      lang: PhantomData,
-      strictness: MatchStrictness::Smart,
-    })
-  }
-  pub fn doc(doc: StrDoc<L>) -> Self {
-    let root = Root::doc(doc);
-    Self::from(root.root())
+    lang.build_pattern(&builder)
   }
   fn single_matcher<D: Doc>(root: &Root<D>) -> Node<D> {
     // debug_assert!(matches!(self.style, PatternStyle::Single));
@@ -254,8 +280,8 @@ impl<L: Language> Pattern<L> {
   }
 }
 
-impl<L: Language> Matcher<L> for Pattern<L> {
-  fn match_node_with_env<'tree, D: Doc<Lang = L>>(
+impl Matcher for Pattern {
+  fn match_node_with_env<'tree, D: Doc>(
     &self,
     node: Node<'tree, D>,
     env: &mut Cow<MetaVarEnv<'tree, D>>,
@@ -293,7 +319,7 @@ impl<L: Language> Matcher<L> for Pattern<L> {
     Some(kinds)
   }
 
-  fn get_match_len<D: Doc<Lang = L>>(&self, node: Node<D>) -> Option<usize> {
+  fn get_match_len<D: Doc>(&self, node: Node<'_, D>) -> Option<usize> {
     let start = node.range().start;
     let end = match_end_non_recursive(self, node)?;
     Some(end - start)
@@ -309,7 +335,7 @@ impl std::fmt::Debug for PatternNode {
   }
 }
 
-impl<L: Language> std::fmt::Debug for Pattern<L> {
+impl std::fmt::Debug for Pattern {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     write!(f, "{:?}", self.node)
   }
@@ -320,32 +346,34 @@ mod test {
   use super::*;
   use crate::language::Tsx;
   use crate::matcher::MatcherExt;
+  use crate::meta_var::MetaVarEnv;
+  use crate::tree_sitter::StrDoc;
   use std::collections::HashMap;
 
   fn pattern_node(s: &str) -> Root<StrDoc<Tsx>> {
-    Root::new(s, Tsx)
+    Root::str(s, Tsx)
   }
 
   fn test_match(s1: &str, s2: &str) {
-    let pattern = Pattern::str(s1, Tsx);
+    let pattern = Pattern::new(s1, Tsx);
     let cand = pattern_node(s2);
     let cand = cand.root();
     assert!(
       pattern.find_node(cand.clone()).is_some(),
       "goal: {:?}, candidate: {}",
       pattern,
-      cand.to_sexp(),
+      cand.get_inner_node().to_sexp(),
     );
   }
   fn test_non_match(s1: &str, s2: &str) {
-    let pattern = Pattern::str(s1, Tsx);
+    let pattern = Pattern::new(s1, Tsx);
     let cand = pattern_node(s2);
     let cand = cand.root();
     assert!(
       pattern.find_node(cand.clone()).is_none(),
       "goal: {:?}, candidate: {}",
       pattern,
-      cand.to_sexp(),
+      cand.get_inner_node().to_sexp(),
     );
   }
 
@@ -363,7 +391,7 @@ mod test {
   }
 
   fn match_env(goal_str: &str, cand: &str) -> HashMap<String, String> {
-    let pattern = Pattern::str(goal_str, Tsx);
+    let pattern = Pattern::new(goal_str, Tsx);
     let cand = pattern_node(cand);
     let cand = cand.root();
     let nm = pattern.find_node(cand).unwrap();
@@ -379,7 +407,7 @@ mod test {
   #[test]
   fn test_pattern_should_not_pollute_env() {
     // gh issue #1164
-    let pattern = Pattern::str("const $A = 114", Tsx);
+    let pattern = Pattern::new("const $A = 114", Tsx);
     let cand = pattern_node("const a = 514");
     let cand = cand.root().child(0).unwrap();
     let map = MetaVarEnv::new();
@@ -441,15 +469,12 @@ mod test {
   }
 
   fn get_kind(kind_str: &str) -> usize {
-    Tsx
-      .get_ts_language()
-      .id_for_node_kind(kind_str, true)
-      .into()
+    Tsx.kind_to_id(kind_str).into()
   }
 
   #[test]
   fn test_pattern_potential_kinds() {
-    let pattern = Pattern::str("const a = 1", Tsx);
+    let pattern = Pattern::new("const a = 1", Tsx);
     let kind = get_kind("lexical_declaration");
     let kinds = pattern.potential_kinds().expect("should have kinds");
     assert_eq!(kinds.len(), 1);
@@ -458,7 +483,7 @@ mod test {
 
   #[test]
   fn test_pattern_with_non_root_meta_var() {
-    let pattern = Pattern::str("const $A = $B", Tsx);
+    let pattern = Pattern::new("const $A = $B", Tsx);
     let kind = get_kind("lexical_declaration");
     let kinds = pattern.potential_kinds().expect("should have kinds");
     assert_eq!(kinds.len(), 1);
@@ -467,7 +492,7 @@ mod test {
 
   #[test]
   fn test_bare_wildcard() {
-    let pattern = Pattern::str("$A", Tsx);
+    let pattern = Pattern::new("$A", Tsx);
     // wildcard should match anything, so kinds should be None
     assert!(pattern.potential_kinds().is_none());
   }
@@ -494,7 +519,7 @@ mod test {
   #[test]
   #[ignore]
   fn test_multi_node_pattern() {
-    let pattern = Pattern::str("a;b;c;", Tsx);
+    let pattern = Pattern::new("a;b;c;", Tsx);
     let kinds = pattern.potential_kinds().expect("should have kinds");
     assert_eq!(kinds.len(), 1);
     test_match("a;b;c", "a;b;c;");
@@ -512,22 +537,14 @@ mod test {
   #[test]
   #[ignore]
   fn test_pattern_size() {
-    assert_eq!(std::mem::size_of::<Pattern<Tsx>>(), 40);
-  }
-
-  #[test]
-  fn test_doc_pattern() {
-    let doc = StrDoc::new("let a = 123", Tsx);
-    let pattern = Pattern::doc(doc);
-    let kinds = pattern.potential_kinds().expect("should have kinds");
-    assert_eq!(kinds.len(), 1);
+    assert_eq!(std::mem::size_of::<Pattern>(), 40);
   }
 
   #[test]
   fn test_error_kind() {
     let ret = Pattern::contextual("a", "property_identifier", Tsx);
     assert!(ret.is_err());
-    let ret = Pattern::str("123+", Tsx);
+    let ret = Pattern::new("123+", Tsx);
     assert!(ret.has_error());
   }
 
@@ -557,7 +574,7 @@ mod test {
 
   #[test]
   fn test_debug_pattern() {
-    let pattern = Pattern::str("var $A = 1", Tsx);
+    let pattern = Pattern::new("var $A = 1", Tsx);
     assert_eq!(
       format!("{pattern:?}"),
       "[var, [Capture(\"A\", true), =, 1]]"
@@ -565,7 +582,7 @@ mod test {
   }
 
   fn defined_vars(s: &str) -> Vec<String> {
-    let pattern = Pattern::str(s, Tsx);
+    let pattern = Pattern::new(s, Tsx);
     let mut vars: Vec<_> = pattern
       .defined_vars()
       .into_iter()

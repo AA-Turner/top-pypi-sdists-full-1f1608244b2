@@ -89,6 +89,50 @@ def copy_files(src_dir: Path, js_src: Path) -> None:
             shutil.copy2(item, js_src / item.name)
 
 
+def _banner(msg: str) -> str:
+    """
+    Create a banner for the given message.
+    Example:
+    msg = "Hello, World!"
+    print -> "#################"
+             "# Hello, World! #"
+             "#################"
+    """
+    lines = msg.split("\n")
+    # Find the width of the widest line
+    max_width = max(len(line) for line in lines)
+    width = max_width + 4  # Add 4 for "# " and " #"
+
+    # Create the top border
+    banner = "\n" + "#" * width + "\n"
+
+    # Add each line with proper padding
+    for line in lines:
+        padding = max_width - len(line)
+        banner += f"# {line}{' ' * padding} #\n"
+
+    # Add the bottom border
+    banner += "#" * width + "\n"
+    return banner
+
+
+def _chunked_print(text: str, lines_per_print: int = 10) -> None:
+    """Prints the text in chunks of the specified size."""
+    lines = text.splitlines()
+    buffer: list[str] = []
+
+    def flush() -> None:
+        if buffer:
+            print("\n".join(buffer))
+            buffer.clear()
+
+    for line in lines:
+        buffer.append(line)
+        if len(buffer) >= lines_per_print:
+            flush()
+    flush()
+
+
 def compile(
     compiler_root: Path, build_mode: BuildMode, auto_clean: bool, no_platformio: bool
 ) -> int:
@@ -96,7 +140,7 @@ def compile(
     max_attempts = 1
     env = os.environ.copy()
     env["BUILD_MODE"] = build_mode.name
-    print(f"Build mode: {build_mode.name}")
+    print(_banner(f"WASM is building in mode: {build_mode.name}"))
     cmd_list: list[str] = []
     if no_platformio:
         # execute build_archive.syh
@@ -113,6 +157,11 @@ def compile(
             cmd_list.append("-v")
 
     def _open_process(cmd_list: list[str] = cmd_list) -> subprocess.Popen:
+        print(
+            _banner(
+                "Build started with command:\n  " + subprocess.list2cmdline(cmd_list)
+            )
+        )
         out = subprocess.Popen(
             cmd_list,
             cwd=compiler_root,
@@ -131,14 +180,13 @@ def compile(
             assert process.stdout is not None
             line: str
             for line in process.stdout:
-                processed_line = line.replace("fastled/src", "src")
-                timestamped_line = _timestamp_output(processed_line)
+                timestamped_line = _timestamp_output(line)
                 output_lines.append(timestamped_line)
             process.wait()
             relative_output = _make_timestamps_relative("\n".join(output_lines))
-            print(relative_output)
+            _chunked_print(relative_output)
             if process.returncode == 0:
-                print(f"Compilation successful on attempt {attempt}")
+                print(_banner(f"Compilation successful on attempt {attempt}"))
                 return 0
             else:
                 raise subprocess.CalledProcessError(process.returncode, ["pio", "run"])
@@ -199,7 +247,7 @@ def transform_to_cpp(src_dir: Path) -> None:
 def insert_headers(
     src_dir: Path, exclusion_folders: List[Path], file_extensions: List[str]
 ) -> None:
-    print("Inserting headers in source files...")
+    print(_banner("Inserting headers in source files..."))
     for file in src_dir.rglob("*"):
         if (
             file.suffix in file_extensions
@@ -213,7 +261,7 @@ def process_ino_files(src_dir: Path) -> None:
     transform_to_cpp(src_dir)
     exclusion_folders: List[Path] = []
     insert_headers(src_dir, exclusion_folders, _FILE_EXTENSIONS)
-    print("Transform to cpp and insert header operations completed.")
+    print(_banner("Transform to cpp and insert header operations completed."))
 
 
 def _make_timestamps_relative(stdout: str) -> str:
@@ -381,7 +429,7 @@ def process_compile(
     if rtn != 0:
         print("Compilation failed.")
         raise RuntimeError("Compilation failed.")
-    print("Compilation successful.")
+    print(_banner("Compilation successful."))
 
 
 def cleanup(args: Args, js_src: Path) -> None:
@@ -422,9 +470,15 @@ def run(args: Args) -> int:
     print(f"Using mapped directory: {args.mapped_dir}")
 
     if args.profile:
-        print("Enabling profiling for compilation.")
+        print(_banner("Enabling profiling for compilation."))
         # Profile linking
         os.environ["EMPROFILE"] = "2"
+    else:
+        print(
+            _banner(
+                "Build process profiling is disabled\nuse --profile to get metrics on how long the build process took."
+            )
+        )
 
     try:
 
@@ -477,6 +531,8 @@ def run(args: Args) -> int:
                 return 1
 
             def _get_build_dir_platformio() -> Path:
+                # First assert there is only one build artifact directory.
+                # The name is dynamic: it's your sketch folder name.
                 build_dirs = [d for d in PIO_BUILD_DIR.iterdir() if d.is_dir()]
                 if len(build_dirs) != 1:
                     raise RuntimeError(
@@ -493,16 +549,17 @@ def run(args: Args) -> int:
             else:
                 build_dir = _get_build_dir_platformio()
 
-            print("Copying output files...")
+            print(_banner("Copying output files..."))
             out_dir: Path = src_dir / _FASTLED_OUTPUT_DIR_NAME
             out_dir.mkdir(parents=True, exist_ok=True)
 
-            for file in ["fastled.js", "fastled.wasm"]:
-                _src = build_dir / file
-                _dst = out_dir / file
-                print(f"Copying {_src} to {_dst}")
-                shutil.copy2(_src, _dst)
+            # Copy all fastled.* build artifacts
+            for file_path in build_dir.glob("fastled.*"):
+                _dst = out_dir / file_path.name
+                print(f"Copying {file_path} to {_dst}")
+                shutil.copy2(file_path, _dst)
 
+            # Copy static files.
             print(f"Copying {_INDEX_HTML_SRC} to output directory")
             shutil.copy2(_INDEX_HTML_SRC, out_dir / "index.html")
             print(f"Copying {_INDEX_CSS_SRC} to output directory")
@@ -510,23 +567,30 @@ def run(args: Args) -> int:
 
             # copy all js files in _FASTLED_COMPILER_DIR to output directory
             Path(out_dir / "modules").mkdir(parents=True, exist_ok=True)
-            for _file in _FASTLED_MODULES_DIR.iterdir():
-                if _file.suffix == ".js":
-                    print(f"Copying {_file} to output directory")
-                    shutil.copy2(_file, out_dir / "modules" / _file.name)
 
-            fastled_js_mem = build_dir / "fastled.js.mem"
-            fastled_wasm_map = build_dir / "fastled.wasm.map"
-            fastled_js_symbols = build_dir / "fastled.js.symbols"
-            if fastled_js_mem.exists():
-                print(f"Copying {fastled_js_mem} to output directory")
-                shutil.copy2(fastled_js_mem, out_dir / fastled_js_mem.name)
-            if fastled_wasm_map.exists():
-                print(f"Copying {fastled_wasm_map} to output directory")
-                shutil.copy2(fastled_wasm_map, out_dir / fastled_wasm_map.name)
-            if fastled_js_symbols.exists():
-                print(f"Copying {fastled_js_symbols} to output directory")
-                shutil.copy2(fastled_js_symbols, out_dir / fastled_js_symbols.name)
+            # Recursively copy all non-hidden files and directories
+            print(f"Copying files from {_FASTLED_MODULES_DIR} to {out_dir / 'modules'}")
+            shutil.copytree(
+                src=_FASTLED_MODULES_DIR,
+                dst=out_dir / "modules",
+                dirs_exist_ok=True,
+                ignore=shutil.ignore_patterns(".*"),
+            )  # Ignore hidden files
+
+            # Now long needed since now we do glob copy.
+            # fastled_js_mem = build_dir / "fastled.js.mem"
+            # fastled_wasm_map = build_dir / "fastled.wasm.map"
+            # fastled_js_symbols = build_dir / "fastled.js.symbols"
+            # if fastled_js_mem.exists():
+            #     print(f"Copying {fastled_js_mem} to output directory")
+            #     shutil.copy2(fastled_js_mem, out_dir / fastled_js_mem.name)
+            # if fastled_wasm_map.exists():
+            #     print(f"Copying {fastled_wasm_map} to output directory")
+            #     shutil.copy2(fastled_wasm_map, out_dir / fastled_wasm_map.name)
+            # if fastled_js_symbols.exists():
+            #     print(f"Copying {fastled_js_symbols} to output directory")
+            # shutil.copy2(fastled_js_symbols, out_dir / fastled_js_symbols.name)
+
             print("Copying index.js to output directory")
             shutil.copy2(_INDEX_JS_SRC, out_dir / "index.js")
             optional_input_data_dir = src_dir / "data"
@@ -546,7 +610,7 @@ def run(args: Args) -> int:
                     if _file.is_file():  # Only copy files, not directories
                         filename: str = _file.name
                         if filename.endswith(".embedded.json"):
-                            print("Embedding data file")
+                            print(_banner("Embedding data file"))
                             filename_no_embedded = filename.replace(
                                 ".embedded.json", ""
                             )
@@ -577,13 +641,13 @@ def run(args: Args) -> int:
                             )
 
             # Write manifest file even if empty
-            print("Writing manifest files.json")
+            print(_banner("Writing manifest files.json"))
             manifest_json_str = json.dumps(manifest, indent=2, sort_keys=True)
             with open(out_dir / "files.json", "w") as f:
                 f.write(manifest_json_str)
         cleanup(args, SKETCH_SRC)
 
-        print("Compilation process completed successfully")
+        print(_banner("Compilation process completed successfully"))
         return 0
 
     except Exception as e:

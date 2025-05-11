@@ -10,12 +10,13 @@ from jc import appdirs
 from jc import utils
 
 
-__version__ = '1.25.4'
+__version__ = '1.25.5'
 
 parsers: List[str] = [
     'acpi',
     'airport',
     'airport-s',
+    'amixer',
     'apt-cache-show',
     'apt-get-sqq',
     'arp',

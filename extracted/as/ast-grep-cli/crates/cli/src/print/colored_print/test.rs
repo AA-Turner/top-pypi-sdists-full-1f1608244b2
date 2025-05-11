@@ -2,7 +2,7 @@
 
 use super::*;
 use ast_grep_config::{from_yaml_string, Fixer, GlobalRules};
-use ast_grep_language::{Language, SupportLang};
+use ast_grep_language::{LanguageExt, SupportLang};
 use codespan_reporting::term::termcolor::Buffer;
 
 use std::fmt::Write;
@@ -44,10 +44,11 @@ const MATCHES_CASES: &[Case] = &[
 ];
 #[test]
 fn test_print_matches() {
+  let lang = SgLang::from(SupportLang::Tsx);
   for &(source, pattern, note) in MATCHES_CASES {
     // heading is required for CI
     let mut printer = make_test_printer().heading(Heading::Always);
-    let grep = SgLang::from(SupportLang::Tsx).ast_grep(source);
+    let grep = lang.ast_grep(source);
     let matches = grep.root().find_all(pattern).collect();
     let processor = printer.get_processor();
     let buffer = processor
@@ -69,9 +70,10 @@ fn test_print_matches() {
 
 #[test]
 fn test_print_matches_without_heading() {
+  let lang = SgLang::from(SupportLang::Tsx);
   for &(source, pattern, note) in MATCHES_CASES {
     let mut printer = make_test_printer().heading(Heading::Never);
-    let grep = SgLang::from(SupportLang::Tsx).ast_grep(source);
+    let grep = lang.ast_grep(source);
     let matches = grep.root().find_all(pattern).collect();
     let processor = printer.get_processor();
     let buffer = processor
@@ -93,11 +95,12 @@ fn test_print_matches_without_heading() {
 #[test]
 fn test_print_rules() {
   let globals = GlobalRules::default();
+  let lang = SgLang::from(SupportLang::TypeScript);
   for &(source, pattern, note) in MATCHES_CASES {
     let mut printer = make_test_printer()
       .heading(Heading::Never)
       .style(ReportStyle::Short);
-    let grep = SgLang::from(SupportLang::TypeScript).ast_grep(source);
+    let grep = lang.ast_grep(source);
     let source = source.to_string();
     let file = SimpleFile::new(Cow::Borrowed("test.tsx"), &source);
     let rule = from_yaml_string(
@@ -169,7 +172,8 @@ fn test_print_diffs() {
     let lang = SgLang::from(SupportLang::Tsx);
     let fixer = Fixer::from_str(rewrite, &lang).expect("should work");
     let grep = lang.ast_grep(source);
-    let matches = grep.root().find_all(pattern);
+    let root = grep.root();
+    let matches = root.find_all(pattern);
     let diffs = matches
       .map(|n| Diff::generate(n, &pattern, &fixer))
       .collect();
@@ -261,7 +265,8 @@ fix: '{rewrite}'"
   .unwrap();
   let matcher = rule.get_matcher(&globals).expect("should parse");
   let fixer = matcher.fixer.as_ref().expect("should have fixer");
-  let matches = grep.root().find_all(&matcher);
+  let root = grep.root();
+  let matches = root.find_all(&matcher);
   let diffs = matches.map(|n| (Diff::generate(n, &pattern, fixer), &rule));
   let buffer = printer
     .get_processor()

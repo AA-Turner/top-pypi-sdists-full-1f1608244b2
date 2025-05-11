@@ -1,5 +1,4 @@
 #![cfg(test)]
-use ast_grep_core::source::TSParseError;
 
 use super::*;
 use ast_grep_core::Pattern;
@@ -17,18 +16,17 @@ fn test_ruby_pattern() {
 // https://github.com/ast-grep/ast-grep/issues/713
 #[test]
 fn test_ruby_tree_sitter_panic() {
-  let pattern = Pattern::str("Foo::barbaz", Ruby);
+  let pattern = Pattern::new("Foo::barbaz", Ruby);
   assert_eq!(pattern.fixed_string(), "barbaz");
 }
 
-fn test_replace(src: &str, pattern: &str, replacer: &str) -> Result<String, TSParseError> {
+fn test_replace(src: &str, pattern: &str, replacer: &str) -> String {
   use crate::test::test_replace_lang;
   test_replace_lang(src, pattern, replacer, Ruby)
 }
 
 #[test]
-fn test_ruby_replace() -> Result<(), TSParseError> {
-  let ret = test_replace("Foo::bar()", "Foo::$METHOD()", "$METHOD()")?;
+fn test_ruby_replace() {
+  let ret = test_replace("Foo::bar()", "Foo::$METHOD()", "$METHOD()");
   assert_eq!(ret, "bar()");
-  Ok(())
 }

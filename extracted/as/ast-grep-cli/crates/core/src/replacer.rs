@@ -1,13 +1,12 @@
-use crate::matcher::{Matcher, NodeMatch};
-use crate::meta_var::{is_valid_meta_var_char, MetaVariableID};
-use crate::source::Edit as E;
-use crate::{Doc, Node, Root};
+use crate::matcher::Matcher;
+use crate::meta_var::{is_valid_meta_var_char, MetaVariableID, Underlying};
+use crate::{Doc, Node, NodeMatch, Root};
 use std::ops::Range;
 
 pub(crate) use indent::formatted_slice;
 
+use crate::source::Edit as E;
 type Edit<D> = E<<D as Doc>::Source>;
-type Underlying<S> = Vec<<S as Content>::Underlying>;
 
 mod indent;
 mod structural;
@@ -18,8 +17,8 @@ pub use template::{TemplateFix, TemplateFixError};
 
 /// Replace meta variable in the replacer string
 pub trait Replacer<D: Doc> {
-  fn generate_replacement(&self, nm: &NodeMatch<D>) -> Underlying<D::Source>;
-  fn get_replaced_range(&self, nm: &NodeMatch<D>, matcher: impl Matcher<D::Lang>) -> Range<usize> {
+  fn generate_replacement(&self, nm: &NodeMatch<'_, D>) -> Underlying<D>;
+  fn get_replaced_range(&self, nm: &NodeMatch<'_, D>, matcher: impl Matcher) -> Range<usize> {
     let range = nm.range();
     if let Some(len) = matcher.get_match_len(nm.get_node().clone()) {
       range.start..range.start + len
@@ -30,13 +29,13 @@ pub trait Replacer<D: Doc> {
 }
 
 impl<D: Doc> Replacer<D> for str {
-  fn generate_replacement(&self, nm: &NodeMatch<D>) -> Underlying<D::Source> {
+  fn generate_replacement(&self, nm: &NodeMatch<'_, D>) -> Underlying<D> {
     template::gen_replacement(self, nm)
   }
 }
 
 impl<D: Doc> Replacer<D> for Root<D> {
-  fn generate_replacement(&self, nm: &NodeMatch<D>) -> Underlying<D::Source> {
+  fn generate_replacement(&self, nm: &NodeMatch<'_, D>) -> Underlying<D> {
     structural::gen_replacement(self, nm)
   }
 }
@@ -46,13 +45,13 @@ where
   D: Doc,
   T: Replacer<D> + ?Sized,
 {
-  fn generate_replacement(&self, nm: &NodeMatch<D>) -> Underlying<D::Source> {
+  fn generate_replacement(&self, nm: &NodeMatch<D>) -> Underlying<D> {
     (**self).generate_replacement(nm)
   }
 }
 
 impl<D: Doc> Replacer<D> for Node<'_, D> {
-  fn generate_replacement(&self, _nm: &NodeMatch<D>) -> Underlying<D::Source> {
+  fn generate_replacement(&self, _nm: &NodeMatch<'_, D>) -> Underlying<D> {
     let range = self.range();
     self.root.doc.get_source().get_range(range).to_vec()
   }

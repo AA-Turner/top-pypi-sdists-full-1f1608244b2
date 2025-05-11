@@ -7,17 +7,14 @@ from typing import Generator
 
 from .compile_server import CompileServer
 from .live_client import LiveClient
+from .settings import DOCKER_FILE, IMAGE_NAME
 from .site.build import build
 from .types import BuildMode, CompileResult, CompileServerError
 
 # IMPORTANT! There's a bug in github which will REJECT any version update
 # that has any other change in the repo. Please bump the version as the
 # ONLY change in a commit, or else the pypi update and the release will fail.
-__version__ = "1.2.66"
-
-DOCKER_FILE = (
-    "https://raw.githubusercontent.com/zackees/fastled-wasm/refs/heads/main/Dockerfile"
-)
+__version__ = "1.2.78"
 
 
 class Api:
@@ -137,7 +134,9 @@ class Docker:
     def is_running() -> bool:
         from fastled.docker_manager import DockerManager
 
-        return DockerManager.is_running()
+        ok: bool
+        ok, _ = DockerManager.is_running()
+        return ok
 
     @staticmethod
     def is_container_running(container_name: str | None = None) -> bool:
@@ -152,7 +151,6 @@ class Docker:
     @staticmethod
     def purge() -> None:
         from fastled.docker_manager import DockerManager
-        from fastled.settings import IMAGE_NAME
 
         docker_mgr = DockerManager()
         docker_mgr.purge(image_name=IMAGE_NAME)
@@ -215,4 +213,5 @@ __all__ = [
     "CompileResult",
     "CompileServerError",
     "BuildMode",
+    "DOCKER_FILE",
 ]

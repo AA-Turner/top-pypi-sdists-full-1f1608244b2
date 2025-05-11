@@ -27,20 +27,22 @@ fn field_name_to_id<L: Language>(
   let Some(field) = field else {
     return Ok(None);
   };
-  let ts_lang = env.lang.get_ts_language();
-  match ts_lang.field_id_for_name(&field) {
+  match env.lang.field_to_id(&field) {
     Some(id) => Ok(Some(id)),
     None => Err(RuleSerializeError::InvalidField(field)),
   }
 }
 
-pub struct Inside<L: Language> {
-  outer: Rule<L>,
+pub struct Inside {
+  outer: Rule,
   field: Option<u16>,
-  stop_by: StopBy<L>,
+  stop_by: StopBy,
 }
-impl<L: Language> Inside<L> {
-  pub fn try_new(relation: Relation, env: &DeserializeEnv<L>) -> Result<Self, RuleSerializeError> {
+impl Inside {
+  pub fn try_new<L: Language>(
+    relation: Relation,
+    env: &DeserializeEnv<L>,
+  ) -> Result<Self, RuleSerializeError> {
     Ok(Self {
       stop_by: StopBy::try_from(relation.stop_by, env)?,
       field: field_name_to_id(relation.field, env)?,
@@ -63,8 +65,8 @@ impl<L: Language> Inside<L> {
   }
 }
 
-impl<L: Language> Matcher<L> for Inside<L> {
-  fn match_node_with_env<'tree, D: Doc<Lang = L>>(
+impl Matcher for Inside {
+  fn match_node_with_env<'tree, D: Doc>(
     &self,
     node: Node<'tree, D>,
     env: &mut Cow<MetaVarEnv<'tree, D>>,
@@ -91,13 +93,16 @@ impl<L: Language> Matcher<L> for Inside<L> {
   }
 }
 
-pub struct Has<L: Language> {
-  inner: Rule<L>,
-  stop_by: StopBy<L>,
+pub struct Has {
+  inner: Rule,
+  stop_by: StopBy,
   field: Option<u16>,
 }
-impl<L: Language> Has<L> {
-  pub fn try_new(relation: Relation, env: &DeserializeEnv<L>) -> Result<Self, RuleSerializeError> {
+impl Has {
+  pub fn try_new<L: Language>(
+    relation: Relation,
+    env: &DeserializeEnv<L>,
+  ) -> Result<Self, RuleSerializeError> {
     Ok(Self {
       stop_by: StopBy::try_from(relation.stop_by, env)?,
       inner: env.deserialize_rule(relation.rule)?,
@@ -120,8 +125,8 @@ impl<L: Language> Has<L> {
   }
 }
 
-impl<L: Language> Matcher<L> for Has<L> {
-  fn match_node_with_env<'tree, D: Doc<Lang = L>>(
+impl Matcher for Has {
+  fn match_node_with_env<'tree, D: Doc>(
     &self,
     node: Node<'tree, D>,
     env: &mut Cow<MetaVarEnv<'tree, D>>,
@@ -170,12 +175,15 @@ impl<L: Language> Matcher<L> for Has<L> {
   }
 }
 
-pub struct Precedes<L: Language> {
-  later: Rule<L>,
-  stop_by: StopBy<L>,
+pub struct Precedes {
+  later: Rule,
+  stop_by: StopBy,
 }
-impl<L: Language> Precedes<L> {
-  pub fn try_new(relation: Relation, env: &DeserializeEnv<L>) -> Result<Self, RuleSerializeError> {
+impl Precedes {
+  pub fn try_new<L: Language>(
+    relation: Relation,
+    env: &DeserializeEnv<L>,
+  ) -> Result<Self, RuleSerializeError> {
     if relation.field.is_some() {
       return Err(RuleSerializeError::FieldNotSupported);
     }
@@ -199,8 +207,8 @@ impl<L: Language> Precedes<L> {
     self.stop_by.verify_util()
   }
 }
-impl<L: Language> Matcher<L> for Precedes<L> {
-  fn match_node_with_env<'tree, D: Doc<Lang = L>>(
+impl Matcher for Precedes {
+  fn match_node_with_env<'tree, D: Doc>(
     &self,
     node: Node<'tree, D>,
     env: &mut Cow<MetaVarEnv<'tree, D>>,
@@ -212,12 +220,15 @@ impl<L: Language> Matcher<L> for Precedes<L> {
   }
 }
 
-pub struct Follows<L: Language> {
-  former: Rule<L>,
-  stop_by: StopBy<L>,
+pub struct Follows {
+  former: Rule,
+  stop_by: StopBy,
 }
-impl<L: Language> Follows<L> {
-  pub fn try_new(relation: Relation, env: &DeserializeEnv<L>) -> Result<Self, RuleSerializeError> {
+impl Follows {
+  pub fn try_new<L: Language>(
+    relation: Relation,
+    env: &DeserializeEnv<L>,
+  ) -> Result<Self, RuleSerializeError> {
     if relation.field.is_some() {
       return Err(RuleSerializeError::FieldNotSupported);
     }
@@ -240,8 +251,8 @@ impl<L: Language> Follows<L> {
     self.stop_by.verify_util()
   }
 }
-impl<L: Language> Matcher<L> for Follows<L> {
-  fn match_node_with_env<'tree, D: Doc<Lang = L>>(
+impl Matcher for Follows {
+  fn match_node_with_env<'tree, D: Doc>(
     &self,
     node: Node<'tree, D>,
     env: &mut Cow<MetaVarEnv<'tree, D>>,
@@ -260,25 +271,26 @@ mod test {
   use ast_grep_core::matcher::KindMatcher;
   use ast_grep_core::ops as o;
   use ast_grep_core::Pattern;
+  use ast_grep_core::{tree_sitter::LanguageExt, Language};
 
-  fn find_rule<M: Matcher<TS>>(src: &str, matcher: M) -> Option<String> {
+  fn find_rule<M: Matcher>(src: &str, matcher: M) -> Option<String> {
     let grep = TS::Tsx.ast_grep(src);
     grep.root().find(matcher).map(|s| s.text().to_string())
   }
 
-  fn test_found<M: Matcher<TS>>(found_list: &[&str], matcher: M) {
+  fn test_found<M: Matcher>(found_list: &[&str], matcher: M) {
     for found in found_list {
       assert!(find_rule(found, &matcher).is_some());
     }
   }
 
-  fn test_not_found<M: Matcher<TS>>(not_found_list: &[&str], matcher: M) {
+  fn test_not_found<M: Matcher>(not_found_list: &[&str], matcher: M) {
     for found in not_found_list {
       assert!(find_rule(found, &matcher).is_none());
     }
   }
 
-  fn make_rule(target: &str, relation: Rule<TS>) -> impl Matcher<TS> {
+  fn make_rule(target: &str, relation: Rule) -> impl Matcher {
     o::All::new(vec![Rule::Pattern(Pattern::new(target, TS::Tsx)), relation])
   }
 
@@ -621,7 +633,7 @@ mod test {
     let inside = Inside {
       stop_by: StopBy::End,
       outer: Rule::Kind(KindMatcher::new("for_statement", TS::Tsx)),
-      field: TS::Tsx.get_ts_language().field_id_for_name("condition"),
+      field: TS::Tsx.field_to_id("condition"),
     };
     let rule = make_rule("a = 1", Rule::Inside(Box::new(inside)));
     test_found(&["for (;a = 1;) {}"], &rule);
@@ -633,7 +645,7 @@ mod test {
     let has = Has {
       stop_by: StopBy::End,
       inner: Rule::Pattern(Pattern::new("a = 1", TS::Tsx)),
-      field: TS::Tsx.get_ts_language().field_id_for_name("condition"),
+      field: TS::Tsx.field_to_id("condition"),
     };
     let rule = o::All::new(vec![
       Rule::Kind(KindMatcher::new("for_statement", TS::Tsx)),
@@ -674,13 +686,13 @@ mod test {
     let inside = Inside {
       stop_by: StopBy::Rule(Rule::Pattern(Pattern::new("var $C", TS::Tsx))),
       outer: Rule::Pattern(Pattern::new("var a = $A", TS::Tsx)),
-      field: TS::Tsx.get_ts_language().field_id_for_name("condition"),
+      field: TS::Tsx.field_to_id("condition"),
     };
     assert_eq!(inside.defined_vars(), ["A", "C"].into_iter().collect());
     let has = Has {
       stop_by: StopBy::Rule(Rule::Kind(KindMatcher::new("for_statement", TS::Tsx))),
       inner: Rule::Pattern(Pattern::new("var a = $A", TS::Tsx)),
-      field: TS::Tsx.get_ts_language().field_id_for_name("condition"),
+      field: TS::Tsx.field_to_id("condition"),
     };
     assert_eq!(has.defined_vars(), ["A"].into_iter().collect());
   }

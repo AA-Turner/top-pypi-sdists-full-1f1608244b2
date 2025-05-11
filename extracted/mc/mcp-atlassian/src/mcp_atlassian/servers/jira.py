@@ -11,8 +11,7 @@ from requests.exceptions import HTTPError
 from mcp_atlassian.exceptions import MCPAtlassianAuthenticationError
 from mcp_atlassian.jira.constants import DEFAULT_READ_JIRA_FIELDS
 from mcp_atlassian.models.jira.common import JiraUser
-
-from .context import MainAppContext
+from mcp_atlassian.utils import convert_empty_defaults_to_none
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +23,7 @@ jira_mcp = FastMCP(
 
 @jira_mcp.tool(tags={"jira", "read"})
 async def get_user_profile(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     user_identifier: Annotated[
         str,
         Field(
@@ -87,15 +86,16 @@ async def get_user_profile(
     return json.dumps(response_data, indent=2, ensure_ascii=False)
 
 
+@convert_empty_defaults_to_none
 @jira_mcp.tool(tags={"jira", "read"})
 async def get_issue(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     issue_key: Annotated[str, Field(description="Jira issue key (e.g., 'PROJ-123')")],
     fields: Annotated[
-        str | None,
+        str,
         Field(
             description=(
-                "Comma-separated list of fields to return (e.g., 'summary,status,customfield_10010'). "
+                "(Optional) Comma-separated list of fields to return (e.g., 'summary,status,customfield_10010'). "
                 "You may also provide a single field as a string (e.g., 'duedate'). "
                 "Use '*all' for all fields (including custom fields), or omit for essential fields only."
             ),
@@ -103,15 +103,15 @@ async def get_issue(
         ),
     ] = ",".join(DEFAULT_READ_JIRA_FIELDS),
     expand: Annotated[
-        str | None,
+        str,
         Field(
             description=(
-                "Optional fields to expand. Examples: 'renderedFields' (for rendered content), "
+                "(Optional) Fields to expand. Examples: 'renderedFields' (for rendered content), "
                 "'transitions' (for available status transitions), 'changelog' (for history)"
             ),
-            default=None,
+            default="",
         ),
-    ] = None,
+    ] = "",
     comment_limit: Annotated[
         int,
         Field(
@@ -122,12 +122,12 @@ async def get_issue(
         ),
     ] = 10,
     properties: Annotated[
-        str | None,
+        str,
         Field(
-            description="A comma-separated list of issue properties to return",
-            default=None,
+            description="(Optional) A comma-separated list of issue properties to return",
+            default="",
         ),
-    ] = None,
+    ] = "",
     update_history: Annotated[
         bool,
         Field(
@@ -174,9 +174,10 @@ async def get_issue(
     return json.dumps(result, indent=2, ensure_ascii=False)
 
 
+@convert_empty_defaults_to_none
 @jira_mcp.tool(tags={"jira", "read"})
 async def search(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     jql: Annotated[
         str,
         Field(
@@ -193,10 +194,10 @@ async def search(
         ),
     ],
     fields: Annotated[
-        str | None,
+        str,
         Field(
             description=(
-                "Comma-separated fields to return in the results. "
+                "(Optional) Comma-separated fields to return in the results. "
                 "Use '*all' for all fields, or specify individual fields like 'summary,status,assignee,priority'"
             ),
             default=",".join(DEFAULT_READ_JIRA_FIELDS),
@@ -211,23 +212,24 @@ async def search(
         Field(description="Starting index for pagination (0-based)", default=0, ge=0),
     ] = 0,
     projects_filter: Annotated[
-        str | None,
+        str,
         Field(
             description=(
-                "Comma-separated list of project keys to filter results by. "
+                "(Optional) Comma-separated list of project keys to filter results by. "
                 "Overrides the environment variable JIRA_PROJECTS_FILTER if provided."
             ),
+            default="",
         ),
-    ] = None,
+    ] = "",
     expand: Annotated[
-        str | None,
+        str,
         Field(
             description=(
-                "Optional fields to expand. Examples: 'renderedFields', 'transitions', 'changelog'"
+                "(Optional) fields to expand. Examples: 'renderedFields', 'transitions', 'changelog'"
             ),
-            default=None,
+            default="",
         ),
-    ] = None,
+    ] = "",
 ) -> str:
     """Search Jira issues using JQL (Jira Query Language).
 
@@ -266,7 +268,7 @@ async def search(
 
 @jira_mcp.tool(tags={"jira", "read"})
 async def search_fields(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     keyword: Annotated[
         str,
         Field(
@@ -304,7 +306,7 @@ async def search_fields(
 
 @jira_mcp.tool(tags={"jira", "read"})
 async def get_project_issues(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     project_key: Annotated[str, Field(description="The project key")],
     limit: Annotated[
         int,
@@ -340,7 +342,7 @@ async def get_project_issues(
 
 @jira_mcp.tool(tags={"jira", "read"})
 async def get_transitions(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     issue_key: Annotated[str, Field(description="Jira issue key (e.g., 'PROJ-123')")],
 ) -> str:
     """Get available status transitions for a Jira issue.
@@ -364,7 +366,7 @@ async def get_transitions(
 
 @jira_mcp.tool(tags={"jira", "read"})
 async def get_worklog(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     issue_key: Annotated[str, Field(description="Jira issue key (e.g., 'PROJ-123')")],
 ) -> str:
     """Get worklog entries for a Jira issue.
@@ -388,7 +390,7 @@ async def get_worklog(
 
 @jira_mcp.tool(tags={"jira", "read"})
 async def download_attachments(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     issue_key: Annotated[str, Field(description="Jira issue key (e.g., 'PROJ-123')")],
     target_dir: Annotated[
         str, Field(description="Directory where attachments should be saved")
@@ -413,19 +415,22 @@ async def download_attachments(
     return json.dumps(result, indent=2, ensure_ascii=False)
 
 
+@convert_empty_defaults_to_none
 @jira_mcp.tool(tags={"jira", "read"})
 async def get_agile_boards(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     board_name: Annotated[
-        str | None, Field(description="The name of board, support fuzzy search")
-    ] = None,
+        str, Field(description="(Optional) The name of board, support fuzzy search")
+    ] = "",
     project_key: Annotated[
-        str | None, Field(description="Jira project key (e.g., 'PROJ-123')")
-    ] = None,
+        str, Field(description="(Optional) Jira project key (e.g., 'PROJ-123')")
+    ] = "",
     board_type: Annotated[
-        str | None,
-        Field(description="The type of jira board (e.g., 'scrum', 'kanban')"),
-    ] = None,
+        str,
+        Field(
+            description="(Optional) The type of jira board (e.g., 'scrum', 'kanban')"
+        ),
+    ] = "",
     start_at: Annotated[
         int,
         Field(description="Starting index for pagination (0-based)", default=0, ge=0),
@@ -464,9 +469,10 @@ async def get_agile_boards(
     return json.dumps(result, indent=2, ensure_ascii=False)
 
 
+@convert_empty_defaults_to_none
 @jira_mcp.tool(tags={"jira", "read"})
 async def get_board_issues(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     board_id: Annotated[str, Field(description="The id of the board (e.g., '1001')")],
     jql: Annotated[
         str,
@@ -484,7 +490,7 @@ async def get_board_issues(
         ),
     ],
     fields: Annotated[
-        str | None,
+        str,
         Field(
             description=(
                 "Comma-separated fields to return in the results. "
@@ -503,7 +509,7 @@ async def get_board_issues(
         Field(description="Maximum number of results (1-50)", default=10, ge=1, le=50),
     ] = 10,
     expand: Annotated[
-        str | None,
+        str,
         Field(
             description="Optional fields to expand in the response (e.g., 'changelog').",
             default="version",
@@ -545,14 +551,15 @@ async def get_board_issues(
     return json.dumps(result, indent=2, ensure_ascii=False)
 
 
+@convert_empty_defaults_to_none
 @jira_mcp.tool(tags={"jira", "read"})
 async def get_sprints_from_board(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     board_id: Annotated[str, Field(description="The id of board (e.g., '1000')")],
     state: Annotated[
-        str | None,
+        str,
         Field(description="Sprint state (e.g., 'active', 'future', 'closed')"),
-    ] = None,
+    ] = "",
     start_at: Annotated[
         int,
         Field(description="Starting index for pagination (0-based)", default=0, ge=0),
@@ -586,12 +593,13 @@ async def get_sprints_from_board(
     return json.dumps(result, indent=2, ensure_ascii=False)
 
 
+@convert_empty_defaults_to_none
 @jira_mcp.tool(tags={"jira", "read"})
 async def get_sprint_issues(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     sprint_id: Annotated[str, Field(description="The id of sprint (e.g., '10001')")],
     fields: Annotated[
-        str | None,
+        str,
         Field(
             description=(
                 "Comma-separated fields to return in the results. "
@@ -639,7 +647,7 @@ async def get_sprint_issues(
 
 
 @jira_mcp.tool(tags={"jira", "read"})
-async def get_link_types(ctx: Context[Any, MainAppContext]) -> str:
+async def get_link_types(ctx: Context) -> str:
     """Get all available issue link types.
 
     Args:
@@ -658,9 +666,10 @@ async def get_link_types(ctx: Context[Any, MainAppContext]) -> str:
     return json.dumps(formatted_link_types, indent=2, ensure_ascii=False)
 
 
+@convert_empty_defaults_to_none
 @jira_mcp.tool(tags={"jira", "write"})
 async def create_issue(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     project_key: Annotated[
         str,
         Field(
@@ -683,36 +692,36 @@ async def create_issue(
         ),
     ],
     assignee: Annotated[
-        str | None,
+        str,
         Field(
-            description="Assignee's user identifier (string): Email, display name, or account ID (e.g., 'user@example.com', 'John Doe', 'accountid:...')",
-            default=None,
+            description="(Optional) Assignee's user identifier (string): Email, display name, or account ID (e.g., 'user@example.com', 'John Doe', 'accountid:...')",
+            default="",
         ),
-    ] = None,
+    ] = "",
     description: Annotated[
         str, Field(description="Issue description", default="")
     ] = "",
     components: Annotated[
-        str | None,
+        str,
         Field(
-            description="Comma-separated list of component names to assign (e.g., 'Frontend,API')",
-            default=None,
+            description="(Optional) Comma-separated list of component names to assign (e.g., 'Frontend,API')",
+            default="",
         ),
-    ] = None,
+    ] = "",
     additional_fields: Annotated[
-        dict[str, Any] | None,
+        dict[str, Any],
         Field(
             description=(
-                "Optional dictionary of additional fields to set. Examples:\n"
+                "(Optional) Dictionary of additional fields to set. Examples:\n"
                 "- Set priority: {'priority': {'name': 'High'}}\n"
                 "- Add labels: {'labels': ['frontend', 'urgent']}\n"
                 "- Link to parent (for any issue type): {'parent': 'PROJ-123'}\n"
                 "- Set Fix Version/s: {'fixVersions': [{'id': '10020'}]}\n"
                 "- Custom fields: {'customfield_10010': 'value'}"
             ),
-            default=None,
+            default_factory=dict,
         ),
-    ] = None,
+    ] = {},  # noqa: B006
 ) -> str:
     """Create a new Jira issue with optional Epic link or parent for subtasks.
 
@@ -771,7 +780,7 @@ async def create_issue(
 
 @jira_mcp.tool(tags={"jira", "write"})
 async def batch_create_issues(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     issues: Annotated[
         str,
         Field(
@@ -844,9 +853,10 @@ async def batch_create_issues(
     return json.dumps(result, indent=2, ensure_ascii=False)
 
 
+@convert_empty_defaults_to_none
 @jira_mcp.tool(tags={"jira", "read"})
 async def batch_get_changelogs(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     issue_ids_or_keys: Annotated[
         list[str],
         Field(
@@ -854,12 +864,12 @@ async def batch_get_changelogs(
         ),
     ],
     fields: Annotated[
-        list[str] | None,
+        list[str],
         Field(
-            description="Filter the changelogs by fields, e.g. ['status', 'assignee']. Default to [] for all fields.",
-            default=None,
+            description="(Optional) Filter the changelogs by fields, e.g. ['status', 'assignee']. Default to [] for all fields.",
+            default_factory=list,
         ),
-    ] = None,
+    ] = [],  # noqa: B006
     limit: Annotated[
         int,
         Field(
@@ -920,9 +930,10 @@ async def batch_get_changelogs(
     return json.dumps(results, indent=2, ensure_ascii=False)
 
 
+@convert_empty_defaults_to_none
 @jira_mcp.tool(tags={"jira", "write"})
 async def update_issue(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     issue_key: Annotated[str, Field(description="Jira issue key (e.g., 'PROJ-123')")],
     fields: Annotated[
         dict[str, Any],
@@ -934,22 +945,22 @@ async def update_issue(
         ),
     ],
     additional_fields: Annotated[
-        dict[str, Any] | None,
+        dict[str, Any],
         Field(
-            description="Optional dictionary of additional fields to update. Use this for custom fields or more complex updates.",
-            default=None,
+            description="(Optional) Dictionary of additional fields to update. Use this for custom fields or more complex updates.",
+            default_factory=dict,
         ),
-    ] = None,
+    ] = {},  # noqa: B006
     attachments: Annotated[
-        str | None,
+        str,
         Field(
             description=(
-                "Optional JSON string array or comma-separated list of file paths to attach to the issue. "
+                "(Optional) JSON string array or comma-separated list of file paths to attach to the issue. "
                 "Example: '/path/to/file1.txt,/path/to/file2.txt' or ['/path/to/file1.txt','/path/to/file2.txt']"
             ),
-            default=None,
+            default="",
         ),
-    ] = None,
+    ] = "",
 ) -> str:
     """Update an existing Jira issue including changing status, adding Epic links, updating fields, etc.
 
@@ -1029,7 +1040,7 @@ async def update_issue(
 
 @jira_mcp.tool(tags={"jira", "write"})
 async def delete_issue(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     issue_key: Annotated[str, Field(description="Jira issue key (e.g. PROJ-123)")],
 ) -> str:
     """Delete an existing Jira issue.
@@ -1060,7 +1071,7 @@ async def delete_issue(
 
 @jira_mcp.tool(tags={"jira", "write"})
 async def add_comment(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     issue_key: Annotated[str, Field(description="Jira issue key (e.g., 'PROJ-123')")],
     comment: Annotated[str, Field(description="Comment text in Markdown format")],
 ) -> str:
@@ -1090,9 +1101,10 @@ async def add_comment(
     return json.dumps(result, indent=2, ensure_ascii=False)
 
 
+@convert_empty_defaults_to_none
 @jira_mcp.tool(tags={"jira", "write"})
 async def add_worklog(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     issue_key: Annotated[str, Field(description="Jira issue key (e.g., 'PROJ-123')")],
     time_spent: Annotated[
         str,
@@ -1104,25 +1116,25 @@ async def add_worklog(
         ),
     ],
     comment: Annotated[
-        str | None,
-        Field(description="Optional comment for the worklog in Markdown format"),
-    ] = None,
+        str,
+        Field(description="(Optional) Comment for the worklog in Markdown format"),
+    ] = "",
     started: Annotated[
-        str | None,
+        str,
         Field(
             description=(
-                "Optional start time in ISO format. If not provided, the current time will be used. "
+                "(Optional) Start time in ISO format. If not provided, the current time will be used. "
                 "Example: '2023-08-01T12:00:00.000+0000'"
             )
         ),
-    ] = None,
+    ] = "",
     # Add original_estimate and remaining_estimate as per original tool
     original_estimate: Annotated[
-        str | None, Field(description="Optional new value for the original estimate")
-    ] = None,
+        str, Field(description="(Optional) New value for the original estimate")
+    ] = "",
     remaining_estimate: Annotated[
-        str | None, Field(description="Optional new value for the remaining estimate")
-    ] = None,
+        str, Field(description="(Optional) New value for the remaining estimate")
+    ] = "",
 ) -> str:
     """Add a worklog entry to a Jira issue.
 
@@ -1165,7 +1177,7 @@ async def add_worklog(
 
 @jira_mcp.tool(tags={"jira", "write"})
 async def link_to_epic(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     issue_key: Annotated[
         str, Field(description="The key of the issue to link (e.g., 'PROJ-123')")
     ],
@@ -1202,9 +1214,10 @@ async def link_to_epic(
     return json.dumps(result, indent=2, ensure_ascii=False)
 
 
+@convert_empty_defaults_to_none
 @jira_mcp.tool(tags={"jira", "write"})
 async def create_issue_link(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     link_type: Annotated[
         str,
         Field(
@@ -1218,15 +1231,15 @@ async def create_issue_link(
         str, Field(description="The key of the outward issue (e.g., 'PROJ-456')")
     ],
     comment: Annotated[
-        str | None, Field(description="Optional comment to add to the link")
-    ] = None,
+        str, Field(description="(Optional) Comment to add to the link")
+    ] = "",
     comment_visibility: Annotated[
-        dict[str, str] | None,
+        dict[str, str],
         Field(
-            description="Optional visibility settings for the comment (e.g., {'type': 'group', 'value': 'jira-users'})",
-            default=None,
+            description="(Optional) Visibility settings for the comment (e.g., {'type': 'group', 'value': 'jira-users'})",
+            default_factory=dict,
         ),
-    ] = None,
+    ] = {},  # noqa: B006
 ) -> str:
     """Create a link between two Jira issues.
 
@@ -1278,7 +1291,7 @@ async def create_issue_link(
 
 @jira_mcp.tool(tags={"jira", "write"})
 async def remove_issue_link(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     link_id: Annotated[str, Field(description="The ID of the link to remove")],
 ) -> str:
     """Remove a link between two Jira issues.
@@ -1308,9 +1321,10 @@ async def remove_issue_link(
     return json.dumps(result, indent=2, ensure_ascii=False)
 
 
+@convert_empty_defaults_to_none
 @jira_mcp.tool(tags={"jira", "write"})
 async def transition_issue(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     issue_key: Annotated[str, Field(description="Jira issue key (e.g., 'PROJ-123')")],
     transition_id: Annotated[
         str,
@@ -1322,25 +1336,25 @@ async def transition_issue(
         ),
     ],
     fields: Annotated[
-        dict[str, Any] | None,
+        dict[str, Any],
         Field(
             description=(
-                "Optional dictionary of fields to update during the transition. "
+                "(Optional) Dictionary of fields to update during the transition. "
                 "Some transitions require specific fields to be set (e.g., resolution). "
                 "Example: {'resolution': {'name': 'Fixed'}}"
             ),
-            default=None,
+            default_factory=dict,
         ),
-    ] = None,
+    ] = {},  # noqa: B006
     comment: Annotated[
-        str | None,
+        str,
         Field(
             description=(
-                "Comment to add during the transition (optional). "
+                "(Optional) Comment to add during the transition. "
                 "This will be visible in the issue history."
             ),
         ),
-    ] = None,
+    ] = "",
 ) -> str:
     """Transition a Jira issue to a new status.
 
@@ -1387,9 +1401,10 @@ async def transition_issue(
     return json.dumps(result, indent=2, ensure_ascii=False)
 
 
+@convert_empty_defaults_to_none
 @jira_mcp.tool(tags={"jira", "write"})
 async def create_sprint(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     board_id: Annotated[str, Field(description="The id of board (e.g., '1000')")],
     sprint_name: Annotated[
         str, Field(description="Name of the sprint (e.g., 'Sprint 1')")
@@ -1400,7 +1415,7 @@ async def create_sprint(
     end_date: Annotated[
         str, Field(description="End time for sprint (ISO 8601 format)")
     ],
-    goal: Annotated[str | None, Field(description="Goal of the sprint")] = None,
+    goal: Annotated[str, Field(description="(Optional) Goal of the sprint")] = "",
 ) -> str:
     """Create Jira sprint for a board.
 
@@ -1436,26 +1451,25 @@ async def create_sprint(
     return json.dumps(sprint.to_simplified_dict(), indent=2, ensure_ascii=False)
 
 
+@convert_empty_defaults_to_none
 @jira_mcp.tool(tags={"jira", "write"})
 async def update_sprint(
-    ctx: Context[Any, MainAppContext],
+    ctx: Context,
     sprint_id: Annotated[str, Field(description="The id of sprint (e.g., '10001')")],
     sprint_name: Annotated[
-        str | None, Field(description="Optional: New name for the sprint")
-    ] = None,
+        str, Field(description="(Optional) New name for the sprint")
+    ] = "",
     state: Annotated[
-        str | None,
-        Field(description="Optional: New state for the sprint (future|active|closed)"),
-    ] = None,
+        str,
+        Field(description="(Optional) New state for the sprint (future|active|closed)"),
+    ] = "",
     start_date: Annotated[
-        str | None, Field(description="Optional: New start date for the sprint")
-    ] = None,
+        str, Field(description="(Optional) New start date for the sprint")
+    ] = "",
     end_date: Annotated[
-        str | None, Field(description="Optional: New end date for the sprint")
-    ] = None,
-    goal: Annotated[
-        str | None, Field(description="Optional: New goal for the sprint")
-    ] = None,
+        str, Field(description="(Optional) New end date for the sprint")
+    ] = "",
+    goal: Annotated[str, Field(description="(Optional) New goal for the sprint")] = "",
 ) -> str:
     """Update jira sprint.
 

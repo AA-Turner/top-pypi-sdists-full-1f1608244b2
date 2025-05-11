@@ -344,8 +344,8 @@ fn open_in_editor(path: &Path, start_line: usize) -> Result<()> {
 mod test {
   use super::*;
   use ast_grep_config::{from_yaml_string, Fixer, GlobalRules};
-  use ast_grep_core::traversal::Visitor;
-  use ast_grep_core::{AstGrep, Matcher, StrDoc};
+  use ast_grep_core::tree_sitter::{StrDoc, Visitor};
+  use ast_grep_core::{AstGrep, Matcher};
   use ast_grep_language::SupportLang;
 
   fn make_rule(rule: &str) -> RuleConfig<SgLang> {
@@ -366,11 +366,7 @@ language: TypeScript
     .unwrap()
   }
 
-  fn make_diffs(
-    grep: &AstGrep<StrDoc<SgLang>>,
-    matcher: impl Matcher<SgLang>,
-    fixer: &Fixer<SgLang>,
-  ) -> Diffs<()> {
+  fn make_diffs(grep: &AstGrep<StrDoc<SgLang>>, matcher: impl Matcher, fixer: &Fixer) -> Diffs<()> {
     let root = grep.root();
     let old_source = root.root().get_text().to_string();
     let contents = Visitor::new(&matcher)
@@ -418,7 +414,8 @@ fix: ($B, lifecycle.update(['$A']))",
     let diffs = make_diffs(
       &root,
       "Some($A)",
-      &Fixer::from_str("$A", &SupportLang::TypeScript.into()).expect("fixer must compile"),
+      &Fixer::from_str::<SgLang>("$A", &SupportLang::TypeScript.into())
+        .expect("fixer must compile"),
     );
     let ret = apply_rewrite(diffs);
     assert_eq!("Some(1)", ret);
@@ -431,7 +428,8 @@ fix: ($B, lifecycle.update(['$A']))",
     let diffs = make_diffs(
       &root,
       "Some($A)",
-      &Fixer::from_str("$A", &SupportLang::TypeScript.into()).expect("fixer must compile"),
+      &Fixer::from_str::<SgLang>("$A", &SupportLang::TypeScript.into())
+        .expect("fixer must compile"),
     );
     let ret = apply_rewrite(diffs);
     assert_eq!("\n\n\n1", ret);

@@ -170,14 +170,14 @@ impl FunctionalPosition {
   }
 }
 
-pub struct NthChild<L: Language> {
+pub struct NthChild {
   position: FunctionalPosition,
-  of_rule: Option<Box<Rule<L>>>,
+  of_rule: Option<Box<Rule>>,
   reverse: bool,
 }
 
-impl<L: Language> NthChild<L> {
-  pub fn try_new(
+impl NthChild {
+  pub fn try_new<L: Language>(
     rule: SerializableNthChild,
     env: &DeserializeEnv<L>,
   ) -> Result<Self, NthChildError> {
@@ -203,7 +203,7 @@ impl<L: Language> NthChild<L> {
     }
   }
 
-  fn find_index<'t, D: Doc<Lang = L>>(
+  fn find_index<'t, D: Doc>(
     &self,
     node: &Node<'t, D>,
     env: &mut Cow<MetaVarEnv<'t, D>>,
@@ -245,8 +245,8 @@ impl<L: Language> NthChild<L> {
   }
 }
 
-impl<L: Language> Matcher<L> for NthChild<L> {
-  fn match_node_with_env<'tree, D: Doc<Lang = L>>(
+impl Matcher for NthChild {
+  fn match_node_with_env<'tree, D: Doc>(
     &self,
     node: Node<'tree, D>,
     env: &mut Cow<MetaVarEnv<'tree, D>>,
@@ -266,6 +266,8 @@ mod test {
   use crate::from_str;
   use crate::test::TypeScript as TS;
   use ast_grep_core::matcher::RegexMatcher;
+  use ast_grep_core::meta_var::MetaVarEnv;
+  use ast_grep_core::tree_sitter::LanguageExt;
 
   #[test]
   fn test_positional() {
@@ -291,7 +293,7 @@ mod test {
     assert!(position.is_matched(4));
   }
 
-  fn find_index(rule: Option<Rule<TS>>, reverse: bool) -> Option<usize> {
+  fn find_index(rule: Option<Rule>, reverse: bool) -> Option<usize> {
     let rule = NthChild {
       position: FunctionalPosition {
         step_size: 2,
@@ -303,7 +305,7 @@ mod test {
     let mut env = Cow::Owned(MetaVarEnv::new());
     let grep = TS::Tsx.ast_grep("[1,2,3,4]");
     let node = grep.root().find("2").unwrap();
-    rule.find_index(&node, &mut env)
+    rule.find_index(&*node, &mut env)
   }
 
   #[test]
@@ -386,7 +388,7 @@ mod test {
     parse_error("na", "character");
   }
 
-  fn deser(src: &str) -> Rule<TS> {
+  fn deser(src: &str) -> Rule {
     let rule: SerializableRule = from_str(src).expect("cannot parse rule");
     let env = DeserializeEnv::new(TS::Tsx);
     env.deserialize_rule(rule).expect("should deserialize")

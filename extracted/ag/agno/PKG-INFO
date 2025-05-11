@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: agno
-Version: 1.4.5
+Version: 1.4.6
 Summary: Agno: a lightweight library for building Reasoning Agents
 Author-email: Ashpreet Bedi <ashpreet@agno.com>
 License: Copyright (c) Agno, Inc.
@@ -422,6 +422,16 @@ Requires-Dist: types-aiofiles; extra == "dev"
 Requires-Dist: fastapi; extra == "dev"
 Requires-Dist: uvicorn; extra == "dev"
 Requires-Dist: arxiv; extra == "dev"
+Provides-Extra: opentelemetry
+Requires-Dist: opentelemetry-sdk; extra == "opentelemetry"
+Requires-Dist: opentelemetry-exporter-otlp; extra == "opentelemetry"
+Provides-Extra: weave
+Requires-Dist: weave; extra == "weave"
+Provides-Extra: openlit
+Requires-Dist: openlit; extra == "openlit"
+Requires-Dist: agno[opentelemetry]; extra == "openlit"
+Provides-Extra: langfuse
+Requires-Dist: langfuse; extra == "langfuse"
 Provides-Extra: azure
 Requires-Dist: azure-ai-inference; extra == "azure"
 Requires-Dist: aiohttp; extra == "azure"
@@ -447,6 +457,8 @@ Provides-Extra: litellm
 Requires-Dist: litellm; extra == "litellm"
 Provides-Extra: meta
 Requires-Dist: llama-api-client; extra == "meta"
+Provides-Extra: cerebras
+Requires-Dist: cerebras-cloud-sdk; extra == "cerebras"
 Provides-Extra: apify
 Requires-Dist: apify-client; extra == "apify"
 Provides-Extra: cartesia
@@ -559,6 +571,7 @@ Requires-Dist: agno[openai]; extra == "models"
 Requires-Dist: agno[ibm]; extra == "models"
 Requires-Dist: agno[litellm]; extra == "models"
 Requires-Dist: agno[meta]; extra == "models"
+Requires-Dist: agno[cerebras]; extra == "models"
 Provides-Extra: tools
 Requires-Dist: agno[apify]; extra == "tools"
 Requires-Dist: agno[exa]; extra == "tools"

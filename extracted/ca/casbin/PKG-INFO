@@ -1,8 +1,8 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: casbin
-Version: 1.41.0
+Version: 1.43.0
 Summary: An authorization library that supports access control models like ACL, RBAC, ABAC in Python
-Author-email: TechLee <techlee@qq.com>
+Author-email: Casbin <admin@casbin.org>
 License: Apache 2.0
 Project-URL: Home-page, https://github.com/casbin/pycasbin
 Keywords: casbin,acl,rbac,abac,auth,authz,authorization,access control,permission
@@ -19,6 +19,7 @@ Requires-Python: >=3.3
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: simpleeval>=0.9.11
+Dynamic: license-file
 
 PyCasbin
 ====

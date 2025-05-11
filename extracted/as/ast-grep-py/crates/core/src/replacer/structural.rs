@@ -1,28 +1,28 @@
 use super::{Edit, Underlying};
 use crate::language::Language;
-use crate::matcher::NodeMatch;
 use crate::meta_var::MetaVarEnv;
-use crate::source::Content;
-use crate::{Doc, Node, Root};
+use crate::source::{Content, SgNode};
+use crate::{Doc, Node, NodeMatch, Root};
 
-pub fn gen_replacement<D: Doc>(root: &Root<D>, nm: &NodeMatch<D>) -> Underlying<D::Source> {
+pub fn gen_replacement<D: Doc>(root: &Root<D>, nm: &NodeMatch<D>) -> Underlying<D> {
   let edits = collect_edits(root, nm.get_env(), nm.lang());
   merge_edits_to_vec(edits, root)
 }
 
 fn collect_edits<D: Doc>(root: &Root<D>, env: &MetaVarEnv<D>, lang: &D::Lang) -> Vec<Edit<D>> {
   let mut node = root.root();
-  let root_id = node.inner.id();
+  let root_id = node.node_id();
   let mut edits = vec![];
 
   // this is a post-order DFS that stops traversal when the node matches
   'outer: loop {
     if let Some(text) = get_meta_var_replacement(&node, env, lang.clone()) {
-      let position = node.inner.start_byte();
-      let length = node.inner.end_byte() - position;
+      let range = node.range();
+      let position = range.start;
+      let length = range.len();
       edits.push(Edit::<D> {
-        position: position as usize,
-        deleted_length: length as usize,
+        position,
+        deleted_length: length,
         inserted_text: text,
       });
     } else if let Some(first_child) = node.child(0) {
@@ -41,7 +41,7 @@ fn collect_edits<D: Doc>(root: &Root<D>, env: &MetaVarEnv<D>, lang: &D::Lang) ->
     // traverse up to parent until getting to root
     loop {
       // come back to the root node, terminating dfs
-      if node.inner.id() == root_id {
+      if node.node_id() == root_id {
         break 'outer;
       }
       if let Some(sibling) = node.next() {
@@ -60,7 +60,7 @@ fn collect_edits<D: Doc>(root: &Root<D>, env: &MetaVarEnv<D>, lang: &D::Lang) ->
   edits
 }
 
-fn merge_edits_to_vec<D: Doc>(edits: Vec<Edit<D>>, root: &Root<D>) -> Underlying<D::Source> {
+fn merge_edits_to_vec<D: Doc>(edits: Vec<Edit<D>>, root: &Root<D>) -> Underlying<D> {
   let mut ret = vec![];
   let mut start = 0;
   for edit in edits {
@@ -83,7 +83,7 @@ fn get_meta_var_replacement<D: Doc>(
   node: &Node<D>,
   env: &MetaVarEnv<D>,
   lang: D::Lang,
-) -> Option<Underlying<D::Source>> {
+) -> Option<Underlying<D>> {
   if !node.is_named_leaf() {
     return None;
   }
@@ -94,24 +94,20 @@ fn get_meta_var_replacement<D: Doc>(
 
 #[cfg(test)]
 mod test {
-  use super::*;
-  use crate::language::{Language, Tsx};
+  use crate::language::Tsx;
   use crate::meta_var::MetaVarEnv;
-  use crate::{replacer::Replacer, Root};
+  use crate::{replacer::Replacer, tree_sitter::LanguageExt, NodeMatch, Root};
   use std::collections::HashMap;
 
   fn test_pattern_replace(replacer: &str, vars: &[(&str, &str)], expected: &str) {
     let mut env = MetaVarEnv::new();
-    let roots: Vec<_> = vars
-      .iter()
-      .map(|(v, p)| (v, Tsx.ast_grep(p).inner))
-      .collect();
+    let roots: Vec<_> = vars.iter().map(|(v, p)| (v, Tsx.ast_grep(p))).collect();
     for (var, root) in &roots {
       env.insert(var, root.root());
     }
     let dummy = Tsx.ast_grep("dummy");
     let node_match = NodeMatch::new(dummy.root(), env.clone());
-    let replacer = Root::new(replacer, Tsx);
+    let replacer = Root::str(replacer, Tsx);
     let replaced = replacer.generate_replacement(&node_match);
     let replaced = String::from_utf8_lossy(&replaced);
     assert_eq!(
@@ -165,16 +161,13 @@ mod test {
 
   fn test_ellipsis_replace(replacer: &str, vars: &[(&str, &str)], expected: &str) {
     let mut env = MetaVarEnv::new();
-    let roots: Vec<_> = vars
-      .iter()
-      .map(|(v, p)| (v, Tsx.ast_grep(p).inner))
-      .collect();
+    let roots: Vec<_> = vars.iter().map(|(v, p)| (v, Tsx.ast_grep(p))).collect();
     for (var, root) in &roots {
       env.insert_multi(var, root.root().children().collect());
     }
     let dummy = Tsx.ast_grep("dummy");
     let node_match = NodeMatch::new(dummy.root(), env.clone());
-    let replacer = Root::new(replacer, Tsx);
+    let replacer = Root::str(replacer, Tsx);
     let replaced = replacer.generate_replacement(&node_match);
     let replaced = String::from_utf8_lossy(&replaced);
     assert_eq!(

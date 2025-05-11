@@ -15617,7 +15617,7 @@ async def ch_games(USER_GAMES, game, condition, balls=-1):
 #         return USER_GAMES
 
 
-async def get_user_vars(PROJECT_USERNAME, BASE_P, ENT_TID, chat_id, lc, username, full_name, is_premium=False, usr_hash='',
+async def get_user_vars(PROJECT_USERNAME, BASE_P, ENT_TID, chat_id, lc, username, full_name, is_premium=False, usr_sig='',
                         page=''):
     USER_TID = chat_id
     USER_VARS = json.loads(USER_VARS_)
@@ -15667,7 +15667,7 @@ async def get_user_vars(PROJECT_USERNAME, BASE_P, ENT_TID, chat_id, lc, username
                 USER_VARS['USER_LZ'] = lz
             # endregion
             print(f"{USER_VARS=}, {lc=}")
-        USER_VARS['USER_HASH'] = usr_hash
+        USER_VARS['USER_SIG'] = usr_sig
         USER_VARS['USER_ISPREMIUM'] = is_premium
 
         sql = f""" 

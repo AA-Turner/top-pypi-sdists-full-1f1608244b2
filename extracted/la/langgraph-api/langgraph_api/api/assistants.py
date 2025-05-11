@@ -3,6 +3,13 @@ from uuid import uuid4
 
 import structlog
 from langchain_core.runnables.utils import create_model
+from langgraph.constants import (
+    CONFIG_KEY_CHECKPOINT_ID,
+    CONFIG_KEY_CHECKPOINT_NS,
+    CONFIG_KEY_CHECKPOINTER,
+    CONFIG_KEY_STORE,
+    CONFIG_KEY_THREAD_ID,
+)
 from langgraph.pregel import Pregel
 from pydantic import TypeAdapter
 from starlette.exceptions import HTTPException
@@ -21,11 +28,22 @@ from langgraph_api.validation import (
     AssistantVersionChange,
     AssistantVersionsSearchRequest,
 )
+from langgraph_runtime.checkpoint import Checkpointer
 from langgraph_runtime.database import connect
 from langgraph_runtime.ops import Assistants
 from langgraph_runtime.retry import retry_db
+from langgraph_runtime.store import Store
 
 logger = structlog.stdlib.get_logger(__name__)
+
+
+EXCLUDED_CONFIG_SCHEMA = (
+    CONFIG_KEY_CHECKPOINTER,
+    CONFIG_KEY_STORE,
+    CONFIG_KEY_CHECKPOINT_ID,
+    CONFIG_KEY_CHECKPOINT_NS,
+    CONFIG_KEY_THREAD_ID,
+)
 
 
 def _get_configurable_jsonschema(graph: Pregel) -> dict:
@@ -52,6 +70,9 @@ def _get_configurable_jsonschema(graph: Pregel) -> dict:
     if model_fields is not None and "configurable" in model_fields:
         configurable = TypeAdapter(model_fields["configurable"].annotation)
         json_schema = configurable.json_schema()
+        if json_schema:
+            for key in EXCLUDED_CONFIG_SCHEMA:
+                json_schema["properties"].pop(key, None)
         # The type name of the configurable type is not preserved.
         # We'll add it back to the schema if we can.
         if hasattr(graph, "config_type") and graph.config_type is not None:
@@ -174,36 +195,41 @@ async def get_assistant_graph(
     validate_uuid(assistant_id, "Invalid assistant ID: must be a UUID")
     async with connect() as conn:
         assistant_ = await Assistants.get(conn, assistant_id)
-    assistant = await fetchone(assistant_)
-    config = await ajson_loads(assistant["config"])
-    async with get_graph(assistant["graph_id"], config) as graph:
-        xray: bool | int = False
-        xray_query = request.query_params.get("xray")
-        if xray_query:
-            if xray_query in ("true", "True"):
-                xray = True
-            elif xray_query in ("false", "False"):
-                xray = False
-            else:
-                try:
-                    xray = int(xray_query)
-                except ValueError:
-                    raise HTTPException(422, detail="Invalid xray value") from None
+        assistant = await fetchone(assistant_)
+        config = await ajson_loads(assistant["config"])
+        async with get_graph(
+            assistant["graph_id"],
+            config,
+            checkpointer=Checkpointer(conn),
+            store=Store(),
+        ) as graph:
+            xray: bool | int = False
+            xray_query = request.query_params.get("xray")
+            if xray_query:
+                if xray_query in ("true", "True"):
+                    xray = True
+                elif xray_query in ("false", "False"):
+                    xray = False
+                else:
+                    try:
+                        xray = int(xray_query)
+                    except ValueError:
+                        raise HTTPException(422, detail="Invalid xray value") from None
 
-                if xray <= 0:
-                    raise HTTPException(422, detail="Invalid xray value") from None
+                    if xray <= 0:
+                        raise HTTPException(422, detail="Invalid xray value") from None
 
-        if isinstance(graph, BaseRemotePregel):
-            drawable_graph = await graph.fetch_graph(xray=xray)
-            return ApiResponse(drawable_graph.to_json())
+            if isinstance(graph, BaseRemotePregel):
+                drawable_graph = await graph.fetch_graph(xray=xray)
+                return ApiResponse(drawable_graph.to_json())
 
-        try:
-            drawable_graph = await graph.aget_graph(xray=xray)
-            return ApiResponse(drawable_graph.to_json())
-        except NotImplementedError:
-            raise HTTPException(
-                422, detail="The graph does not support visualization"
-            ) from None
+            try:
+                drawable_graph = await graph.aget_graph(xray=xray)
+                return ApiResponse(drawable_graph.to_json())
+            except NotImplementedError:
+                raise HTTPException(
+                    422, detail="The graph does not support visualization"
+                ) from None
 
 
 @retry_db
@@ -215,35 +241,40 @@ async def get_assistant_subgraphs(
     validate_uuid(assistant_id, "Invalid assistant ID: must be a UUID")
     async with connect() as conn:
         assistant_ = await Assistants.get(conn, assistant_id)
-    assistant = await fetchone(assistant_)
-    config = await ajson_loads(assistant["config"])
-    async with get_graph(assistant["graph_id"], config) as graph:
-        namespace = request.path_params.get("namespace")
+        assistant = await fetchone(assistant_)
+        config = await ajson_loads(assistant["config"])
+        async with get_graph(
+            assistant["graph_id"],
+            config,
+            checkpointer=Checkpointer(conn),
+            store=Store(),
+        ) as graph:
+            namespace = request.path_params.get("namespace")
 
-        if isinstance(graph, BaseRemotePregel):
-            return ApiResponse(
-                await graph.fetch_subgraphs(
-                    namespace=namespace,
-                    recurse=request.query_params.get("recurse", "False")
-                    in ("true", "True"),
-                )
-            )
-
-        try:
-            return ApiResponse(
-                {
-                    ns: _graph_schemas(subgraph)
-                    async for ns, subgraph in graph.aget_subgraphs(
+            if isinstance(graph, BaseRemotePregel):
+                return ApiResponse(
+                    await graph.fetch_subgraphs(
                         namespace=namespace,
                         recurse=request.query_params.get("recurse", "False")
                         in ("true", "True"),
                     )
-                }
-            )
-        except NotImplementedError:
-            raise HTTPException(
-                422, detail="The graph does not support visualization"
-            ) from None
+                )
+
+            try:
+                return ApiResponse(
+                    {
+                        ns: _graph_schemas(subgraph)
+                        async for ns, subgraph in graph.aget_subgraphs(
+                            namespace=namespace,
+                            recurse=request.query_params.get("recurse", "False")
+                            in ("true", "True"),
+                        )
+                    }
+                )
+            except NotImplementedError:
+                raise HTTPException(
+                    422, detail="The graph does not support visualization"
+                ) from None
 
 
 @retry_db
@@ -255,53 +286,59 @@ async def get_assistant_schemas(
     validate_uuid(assistant_id, "Invalid assistant ID: must be a UUID")
     async with connect() as conn:
         assistant_ = await Assistants.get(conn, assistant_id)
-    assistant = await fetchone(assistant_)
-    config = await ajson_loads(assistant["config"])
-    async with get_graph(assistant["graph_id"], config) as graph:
-        if isinstance(graph, BaseRemotePregel):
-            schemas = await graph.fetch_state_schema()
+        # TODO Implementa  cache so we can de-dent and release this connection.
+        assistant = await fetchone(assistant_)
+        config = await ajson_loads(assistant["config"])
+        async with get_graph(
+            assistant["graph_id"],
+            config,
+            checkpointer=Checkpointer(conn),
+            store=Store(),
+        ) as graph:
+            if isinstance(graph, BaseRemotePregel):
+                schemas = await graph.fetch_state_schema()
+                return ApiResponse(
+                    {
+                        "graph_id": assistant["graph_id"],
+                        "input_schema": schemas.get("input"),
+                        "output_schema": schemas.get("output"),
+                        "state_schema": schemas.get("state"),
+                        "config_schema": schemas.get("config"),
+                    }
+                )
+
+            try:
+                input_schema = graph.get_input_jsonschema()
+            except Exception as e:
+                logger.warning(
+                    f"Failed to get input schema for graph {graph.name} with error: `{str(e)}`"
+                )
+                input_schema = None
+            try:
+                output_schema = graph.get_output_jsonschema()
+            except Exception as e:
+                logger.warning(
+                    f"Failed to get output schema for graph {graph.name} with error: `{str(e)}`"
+                )
+                output_schema = None
+
+            state_schema = _state_jsonschema(graph)
+            try:
+                config_schema = _get_configurable_jsonschema(graph)
+            except Exception as e:
+                config_schema = None
+                logger.warning(
+                    f"Failed to get config schema for graph {graph.name} with error: `{str(e)}`"
+                )
             return ApiResponse(
                 {
                     "graph_id": assistant["graph_id"],
-                    "input_schema": schemas.get("input"),
-                    "output_schema": schemas.get("output"),
-                    "state_schema": schemas.get("state"),
-                    "config_schema": schemas.get("config"),
+                    "input_schema": input_schema,
+                    "output_schema": output_schema,
+                    "state_schema": state_schema,
+                    "config_schema": config_schema,
                 }
             )
-
-        try:
-            input_schema = graph.get_input_jsonschema()
-        except Exception as e:
-            logger.warning(
-                f"Failed to get input schema for graph {graph.name} with error: `{str(e)}`"
-            )
-            input_schema = None
-        try:
-            output_schema = graph.get_output_jsonschema()
-        except Exception as e:
-            logger.warning(
-                f"Failed to get output schema for graph {graph.name} with error: `{str(e)}`"
-            )
-            output_schema = None
-
-        state_schema = _state_jsonschema(graph)
-        try:
-            config_schema = _get_configurable_jsonschema(graph)
-        except Exception as e:
-            config_schema = None
-            logger.warning(
-                f"Failed to get config schema for graph {graph.name} with error: `{str(e)}`"
-            )
-        return ApiResponse(
-            {
-                "graph_id": assistant["graph_id"],
-                "input_schema": input_schema,
-                "output_schema": output_schema,
-                "state_schema": state_schema,
-                "config_schema": config_schema,
-            }
-        )
 
 
 @retry_db
