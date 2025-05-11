@@ -41,7 +41,6 @@ async def lifespan(
 
     await start_http_client()
     await start_pool()
-    await collect_graphs_from_env(True)
     await start_ui_bundler()
     try:
         async with SimpleTaskGroup(
@@ -54,6 +53,8 @@ async def lifespan(
                 tg.create_task(queue_with_signal())
             store = Store()
             var_child_runnable_config.set({CONF: {CONFIG_KEY_STORE: store}})
+            # Keep after the setter above so users can access the store from within the factory function
+            await collect_graphs_from_env(True)
             yield
     finally:
         await stop_ui_bundler()

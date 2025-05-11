@@ -37,7 +37,7 @@ type OrderResult<T> = Result<T, String>;
 #[derive(Clone)]
 pub struct DeserializeEnv<L: Language> {
   /// registration for global utility rules and local utility rules.
-  pub(crate) registration: RuleRegistration<L>,
+  pub(crate) registration: RuleRegistration,
   /// current rules' language
   pub(crate) lang: L,
 }
@@ -172,7 +172,7 @@ impl<L: Language> DeserializeEnv<L> {
   /// register global utils rule discovered in the config.
   pub fn parse_global_utils(
     utils: Vec<SerializableGlobalRule<L>>,
-  ) -> Result<GlobalRules<L>, RuleCoreError> {
+  ) -> Result<GlobalRules, RuleCoreError> {
     let registration = GlobalRules::default();
     let utils = into_map(utils);
     let order = TopologicalSort::get_order(&utils)
@@ -189,10 +189,7 @@ impl<L: Language> DeserializeEnv<L> {
     Ok(registration)
   }
 
-  pub fn deserialize_rule(
-    &self,
-    serialized: SerializableRule,
-  ) -> Result<Rule<L>, RuleSerializeError> {
+  pub fn deserialize_rule(&self, serialized: SerializableRule) -> Result<Rule, RuleSerializeError> {
     rule::deserialize_rule(serialized, self)
   }
 
@@ -203,7 +200,7 @@ impl<L: Language> DeserializeEnv<L> {
     TopologicalSort::get_order(trans)
   }
 
-  pub fn with_globals(self, globals: &GlobalRules<L>) -> Self {
+  pub fn with_globals(self, globals: &GlobalRules) -> Self {
     Self {
       registration: RuleRegistration::from_globals(globals),
       lang: self.lang,
@@ -216,10 +213,12 @@ mod test {
   use super::*;
   use crate::test::TypeScript;
   use crate::{from_str, Rule};
-  use anyhow::Result;
+  use ast_grep_core::tree_sitter::LanguageExt;
   use ast_grep_core::Matcher;
 
-  fn get_dependent_utils() -> Result<(Rule<TypeScript>, DeserializeEnv<TypeScript>)> {
+  type Result<T> = std::result::Result<T, RuleSerializeError>;
+
+  fn get_dependent_utils() -> Result<(Rule, DeserializeEnv<TypeScript>)> {
     let utils = from_str(
       "
 accessor-name:
@@ -228,7 +227,8 @@ accessor-name:
 member-name:
   kind: identifier
 ",
-    )?;
+    )
+    .expect("failed to parse utils");
     let env = DeserializeEnv::new(TypeScript::Tsx).with_utils(&utils)?;
     assert_eq!(utils.keys().count(), 2);
     let rule = from_str("matches: accessor-name").unwrap();
@@ -264,7 +264,8 @@ member-name:
 local-rule:
   matches: global-rule
 ",
-    )?;
+    )
+    .expect("failed to parse utils");
     // should not panic
     DeserializeEnv::new(TypeScript::Tsx).with_utils(&utils)?;
     Ok(())
@@ -277,7 +278,8 @@ local-rule:
 local-rule:
   matches: local-rule
 ",
-    )?;
+    )
+    .expect("failed to parse utils");
     let ret = DeserializeEnv::new(TypeScript::Tsx).with_utils(&utils);
     assert!(ret.is_err());
     Ok(())
@@ -296,7 +298,8 @@ local-rule-c:
   any:
     - matches: local-rule-a
 ",
-    )?;
+    )
+    .expect("failed to parse utils");
     let ret = DeserializeEnv::new(TypeScript::Tsx).with_utils(&utils);
     assert!(ret.is_err());
     Ok(())
@@ -310,7 +313,8 @@ local-rule-a:
   not: {matches: local-rule-b}
 local-rule-b:
   matches: local-rule-a",
-    )?;
+    )
+    .expect("failed to parse utils");
     let ret = DeserializeEnv::new(TypeScript::Tsx).with_utils(&utils);
     assert!(matches!(
       ret,

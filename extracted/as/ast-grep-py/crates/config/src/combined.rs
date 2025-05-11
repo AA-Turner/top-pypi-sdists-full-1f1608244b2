@@ -52,7 +52,7 @@ impl<'t, D: Doc> ScanResultInner<'t, D> {
 
 struct Suppressions(HashMap<usize, Suppression>);
 impl Suppressions {
-  fn collect<D: Doc>(&mut self, node: &Node<D>) {
+  fn collect<D: Doc>(&mut self, node: &Node<'_, D>) {
     if !node.kind().contains("comment") || !node.text().contains(IGNORE_TEXT) {
       return;
     }
@@ -76,7 +76,7 @@ impl Suppressions {
     self.0.values().map(|s| s.node_id).collect()
   }
 
-  fn check_suppression<D: Doc>(&mut self, node: &Node<D>) -> MaySuppressed {
+  fn check_suppression<D: Doc>(&mut self, node: &Node<'_, D>) -> MaySuppressed {
     let line = node.start_pos().line();
     if let Some(sup) = self.0.get_mut(&line) {
       MaySuppressed::Yes(sup)
@@ -266,6 +266,7 @@ mod test {
   use crate::from_str;
   use crate::test::TypeScript;
   use crate::SerializableRuleConfig;
+  use ast_grep_core::tree_sitter::LanguageExt;
 
   fn create_rule() -> RuleConfig<TypeScript> {
     let rule: SerializableRuleConfig<TypeScript> = from_str(

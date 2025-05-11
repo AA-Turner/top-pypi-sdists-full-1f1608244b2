@@ -5,7 +5,7 @@ mod json_print;
 
 use crate::lang::SgLang;
 use ast_grep_config::{Fixer, RuleConfig};
-use ast_grep_core::{Matcher, NodeMatch as SgNodeMatch, StrDoc};
+use ast_grep_core::{tree_sitter::StrDoc, Matcher, NodeMatch as SgNodeMatch};
 
 use anyhow::Result;
 use clap::ValueEnum;
@@ -71,11 +71,7 @@ pub struct Diff<'n> {
 }
 
 impl<'n> Diff<'n> {
-  pub fn generate(
-    node_match: NodeMatch<'n>,
-    matcher: &impl Matcher<SgLang>,
-    rewrite: &Fixer<SgLang>,
-  ) -> Self {
+  pub fn generate(node_match: NodeMatch<'n>, matcher: &impl Matcher, rewrite: &Fixer) -> Self {
     let edit = node_match.make_edit(matcher, rewrite);
     let replacement = String::from_utf8(edit.inserted_text).unwrap();
     Self {

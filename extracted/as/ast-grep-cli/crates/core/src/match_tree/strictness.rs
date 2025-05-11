@@ -1,6 +1,7 @@
 use crate::matcher::{kind_utils, PatternNode};
 use crate::meta_var::MetaVariable;
-use crate::{Doc, Node};
+use crate::node::Node;
+use crate::Doc;
 use std::iter::Peekable;
 use std::str::FromStr;
 
@@ -30,12 +31,12 @@ fn skip_comment_or_unnamed(n: &Node<impl Doc>) -> bool {
 }
 
 impl MatchStrictness {
-  pub(crate) fn match_terminal<D: Doc>(
+  pub(crate) fn match_terminal(
     &self,
     is_named: bool,
     text: &str,
     goal_kind: u16,
-    candidate: &Node<D>,
+    candidate: &Node<impl Doc>,
   ) -> MatchOneNode {
     use MatchStrictness as M;
     let cand_kind = candidate.kind_id();

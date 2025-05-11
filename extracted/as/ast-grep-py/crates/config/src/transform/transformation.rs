@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 
 use string_case::{Separator, StringCase};
 
-fn get_text_from_env<D: Doc>(var: &MetaVariable, ctx: &mut Ctx<D>) -> Option<String> {
+fn get_text_from_env<D: Doc>(var: &MetaVariable, ctx: &mut Ctx<'_, '_, D>) -> Option<String> {
   // TODO: check if topological sort has resolved transform dependency
   let bytes = ctx.env.get_var_bytes(var)?;
   Some(<D::Source as Content>::encode_bytes(bytes).into_owned())
@@ -32,7 +32,7 @@ pub struct Substring<T> {
 }
 
 impl Substring<MetaVariable> {
-  fn compute<D: Doc>(&self, ctx: &mut Ctx<D>) -> Option<String> {
+  fn compute<D: Doc>(&self, ctx: &mut Ctx<'_, '_, D>) -> Option<String> {
     let text = get_text_from_env(&self.source, ctx)?;
     let chars: Vec<_> = text.chars().collect();
     let len = chars.len() as i32;
@@ -73,7 +73,7 @@ pub struct Replace<T> {
   by: String,
 }
 impl Replace<MetaVariable> {
-  fn compute<D: Doc>(&self, ctx: &mut Ctx<D>) -> Option<String> {
+  fn compute<D: Doc>(&self, ctx: &mut Ctx<'_, '_, D>) -> Option<String> {
     let text = get_text_from_env(&self.source, ctx)?;
     let re = Regex::new(&self.replace).unwrap();
     Some(re.replace_all(&text, &self.by).into_owned())
@@ -92,7 +92,7 @@ pub struct Convert<T> {
   separated_by: Option<Vec<Separator>>,
 }
 impl Convert<MetaVariable> {
-  fn compute<D: Doc>(&self, ctx: &mut Ctx<D>) -> Option<String> {
+  fn compute<D: Doc>(&self, ctx: &mut Ctx<'_, '_, D>) -> Option<String> {
     let text = get_text_from_env(&self.source, ctx)?;
     Some(self.to_case.apply(&text, self.separated_by.as_deref()))
   }
@@ -166,7 +166,7 @@ impl Transformation<String> {
   }
 }
 impl Transformation<MetaVariable> {
-  pub(super) fn insert<D: Doc>(&self, key: &str, ctx: &mut Ctx<D>) {
+  pub(super) fn insert<D: Doc>(&self, key: &str, ctx: &mut Ctx<'_, '_, D>) {
     let src = self.source();
     // TODO: add this debug assertion back
     // debug_assert!(ctx.env.get_transformed(key).is_none());
@@ -180,7 +180,7 @@ impl Transformation<MetaVariable> {
     };
     ctx.env.insert_transformation(src, key, bytes);
   }
-  fn compute<D: Doc>(&self, ctx: &mut Ctx<D>) -> Option<String> {
+  fn compute<D: Doc>(&self, ctx: &mut Ctx<'_, '_, D>) -> Option<String> {
     use Transformation as T;
     match self {
       T::Replace(r) => r.compute(ctx),
@@ -207,6 +207,7 @@ mod test {
   use super::*;
   use crate::test::TypeScript;
   use crate::DeserializeEnv;
+  use ast_grep_core::tree_sitter::LanguageExt;
   use serde_yaml::with::singleton_map_recursive;
   use std::collections::HashMap;
 

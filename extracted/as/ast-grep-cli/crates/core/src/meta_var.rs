@@ -1,7 +1,7 @@
 use crate::match_tree::does_node_match_exactly;
 use crate::matcher::Matcher;
 use crate::source::Content;
-use crate::{Doc, Language, Node, StrDoc};
+use crate::{Doc, Node};
 use std::borrow::Cow;
 use std::collections::HashMap;
 
@@ -9,7 +9,8 @@ use crate::replacer::formatted_slice;
 
 pub type MetaVariableID = String;
 
-type Underlying<D> = Vec<<<D as Doc>::Source as Content>::Underlying>;
+pub type Underlying<D> = Vec<<<D as Doc>::Source as Content>::Underlying>;
+
 /// a dictionary that stores metavariable instantiation
 /// const a = 123 matched with const a = $A will produce env: $A => 123
 #[derive(Clone)]
@@ -19,7 +20,7 @@ pub struct MetaVarEnv<'tree, D: Doc> {
   transformed_var: HashMap<MetaVariableID, Underlying<D>>,
 }
 
-impl<'tree, D: Doc> MetaVarEnv<'tree, D> {
+impl<'t, D: Doc> MetaVarEnv<'t, D> {
   pub fn new() -> Self {
     Self {
       single_matched: HashMap::new(),
@@ -28,7 +29,7 @@ impl<'tree, D: Doc> MetaVarEnv<'tree, D> {
     }
   }
 
-  pub fn insert(&mut self, id: &str, ret: Node<'tree, D>) -> Option<&mut Self> {
+  pub fn insert(&mut self, id: &str, ret: Node<'t, D>) -> Option<&mut Self> {
     if self.match_variable(id, &ret) {
       self.single_matched.insert(id.to_string(), ret);
       Some(self)
@@ -37,7 +38,7 @@ impl<'tree, D: Doc> MetaVarEnv<'tree, D> {
     }
   }
 
-  pub fn insert_multi(&mut self, id: &str, ret: Vec<Node<'tree, D>>) -> Option<&mut Self> {
+  pub fn insert_multi(&mut self, id: &str, ret: Vec<Node<'t, D>>) -> Option<&mut Self> {
     if self.match_multi_var(id, &ret) {
       self.multi_matched.insert(id.to_string(), ret);
       Some(self)
@@ -46,39 +47,15 @@ impl<'tree, D: Doc> MetaVarEnv<'tree, D> {
     }
   }
 
-  pub fn insert_transformation(&mut self, var: &MetaVariable, name: &str, slice: Underlying<D>) {
-    let node = match var {
-      MetaVariable::Capture(v, _) => self.single_matched.get(v),
-      MetaVariable::MultiCapture(vs) => self.multi_matched.get(vs).and_then(|vs| vs.first()),
-      _ => None,
-    };
-    let deindented = if let Some(v) = node {
-      formatted_slice(&slice, v.root.doc.get_source(), v.range().start).to_vec()
-    } else {
-      slice
-    };
-    self.transformed_var.insert(name.to_string(), deindented);
-  }
-
-  pub fn get_match(&self, var: &str) -> Option<&'_ Node<'tree, D>> {
+  pub fn get_match(&self, var: &str) -> Option<&'_ Node<'t, D>> {
     self.single_matched.get(var)
   }
 
-  pub fn get_multiple_matches(&self, var: &str) -> Vec<Node<'tree, D>> {
+  pub fn get_multiple_matches(&self, var: &str) -> Vec<Node<'t, D>> {
     self.multi_matched.get(var).cloned().unwrap_or_default()
   }
 
-  pub fn get_transformed(&self, var: &str) -> Option<&Underlying<D>> {
-    self.transformed_var.get(var)
-  }
-  pub fn get_var_bytes<'s>(
-    &'s self,
-    var: &MetaVariable,
-  ) -> Option<&'s [<D::Source as Content>::Underlying]> {
-    get_var_bytes_impl(self, var)
-  }
-
-  pub fn add_label(&mut self, label: &str, node: Node<'tree, D>) {
+  pub fn add_label(&mut self, label: &str, node: Node<'t, D>) {
     self
       .multi_matched
       .entry(label.into())
@@ -86,11 +63,11 @@ impl<'tree, D: Doc> MetaVarEnv<'tree, D> {
       .push(node);
   }
 
-  pub fn get_labels(&self, label: &str) -> Option<&Vec<Node<'tree, D>>> {
+  pub fn get_labels(&self, label: &str) -> Option<&Vec<Node<'t, D>>> {
     self.multi_matched.get(label)
   }
 
-  pub fn get_matched_variables(&self) -> impl Iterator<Item = MetaVariable> + '_ {
+  pub fn get_matched_variables(&self) -> impl Iterator<Item = MetaVariable> + use<'_, 't, D> {
     let single = self
       .single_matched
       .keys()
@@ -109,31 +86,13 @@ impl<'tree, D: Doc> MetaVarEnv<'tree, D> {
     single.chain(multi).chain(transformed)
   }
 
-  pub fn match_constraints<M: Matcher<D::Lang>>(
-    &mut self,
-    var_matchers: &HashMap<MetaVariableID, M>,
-  ) -> bool {
-    let mut env = Cow::Borrowed(self);
-    for (var_id, candidate) in &self.single_matched {
-      if let Some(m) = var_matchers.get(var_id) {
-        if m.match_node_with_env(candidate.clone(), &mut env).is_none() {
-          return false;
-        }
-      }
-    }
-    if let Cow::Owned(env) = env {
-      *self = env;
-    }
-    true
-  }
-
-  fn match_variable(&self, id: &str, candidate: &Node<D>) -> bool {
+  fn match_variable(&self, id: &str, candidate: &Node<'t, D>) -> bool {
     if let Some(m) = self.single_matched.get(id) {
       return does_node_match_exactly(m, candidate);
     }
     true
   }
-  fn match_multi_var(&self, id: &str, cands: &[Node<D>]) -> bool {
+  fn match_multi_var(&self, id: &str, cands: &[Node<'t, D>]) -> bool {
     let Some(nodes) = self.multi_matched.get(id) else {
       return true;
     };
@@ -158,6 +117,50 @@ impl<'tree, D: Doc> MetaVarEnv<'tree, D> {
     }
   }
 
+  pub fn match_constraints<M: Matcher>(
+    &mut self,
+    var_matchers: &HashMap<MetaVariableID, M>,
+  ) -> bool {
+    let mut env = Cow::Borrowed(self);
+    for (var_id, candidate) in &self.single_matched {
+      if let Some(m) = var_matchers.get(var_id) {
+        if m.match_node_with_env(candidate.clone(), &mut env).is_none() {
+          return false;
+        }
+      }
+    }
+    if let Cow::Owned(env) = env {
+      *self = env;
+    }
+    true
+  }
+
+  pub fn insert_transformation(&mut self, var: &MetaVariable, name: &str, slice: Underlying<D>) {
+    let node = match var {
+      MetaVariable::Capture(v, _) => self.single_matched.get(v),
+      MetaVariable::MultiCapture(vs) => self.multi_matched.get(vs).and_then(|vs| vs.first()),
+      _ => None,
+    };
+    let deindented = if let Some(v) = node {
+      formatted_slice(&slice, v.get_doc().get_source(), v.range().start).to_vec()
+    } else {
+      slice
+    };
+    self.transformed_var.insert(name.to_string(), deindented);
+  }
+
+  pub fn get_transformed(&self, var: &str) -> Option<&Underlying<D>> {
+    self.transformed_var.get(var)
+  }
+  pub fn get_var_bytes<'s>(
+    &'s self,
+    var: &MetaVariable,
+  ) -> Option<&'s [<D::Source as Content>::Underlying]> {
+    get_var_bytes_impl(self, var)
+  }
+}
+
+impl<D: Doc> MetaVarEnv<'_, D> {
   /// internal for readopt NodeMatch in pinned.rs
   /// readopt node and env when sending them to other threads
   pub(crate) fn visit_nodes<F>(&mut self, mut f: F)
@@ -175,18 +178,18 @@ impl<'tree, D: Doc> MetaVarEnv<'tree, D> {
   }
 }
 
-fn get_var_bytes_impl<'t, C, D>(
-  env: &'t MetaVarEnv<'t, D>,
+fn get_var_bytes_impl<'e, 't, C, D>(
+  env: &'e MetaVarEnv<'t, D>,
   var: &MetaVariable,
-) -> Option<&'t [C::Underlying]>
+) -> Option<&'e [C::Underlying]>
 where
-  D: Doc<Source = C>,
+  D: Doc<Source = C> + 't,
   C: Content + 't,
 {
   match var {
     MetaVariable::Capture(n, _) => {
       if let Some(node) = env.get_match(n) {
-        let bytes = node.root.doc.get_source().get_range(node.range());
+        let bytes = node.get_doc().get_source().get_range(node.range());
         Some(bytes)
       } else if let Some(bytes) = env.get_transformed(n) {
         Some(bytes)
@@ -202,9 +205,9 @@ where
         // NOTE: start_byte is not always index range of source's slice.
         // e.g. start_byte is still byte_offset in utf_16 (napi). start_byte
         // so we need to call source's get_range method
-        let start = nodes[0].inner.start_byte() as usize;
-        let end = nodes[nodes.len() - 1].inner.end_byte() as usize;
-        Some(nodes[0].root.doc.get_source().get_range(start..end))
+        let start = nodes[0].range().start;
+        let end = nodes[nodes.len() - 1].range().end;
+        Some(nodes[0].get_doc().get_source().get_range(start..end))
       }
     }
     _ => None,
@@ -277,17 +280,14 @@ pub(crate) fn is_valid_meta_var_char(c: char) -> bool {
   is_valid_first_char(c) || c.is_ascii_digit()
 }
 
-impl<'tree, L: Language> From<MetaVarEnv<'tree, StrDoc<L>>> for HashMap<String, String> {
-  fn from(env: MetaVarEnv<'tree, StrDoc<L>>) -> Self {
+impl<'tree, D: Doc> From<MetaVarEnv<'tree, D>> for HashMap<String, String> {
+  fn from(env: MetaVarEnv<'tree, D>) -> Self {
     let mut ret = HashMap::new();
     for (id, node) in env.single_matched {
       ret.insert(id, node.text().into());
     }
     for (id, bytes) in env.transformed_var {
-      ret.insert(
-        id,
-        String::from_utf8(bytes).expect("invalid transform variable"),
-      );
+      ret.insert(id, <D::Source as Content>::encode_bytes(&bytes).to_string());
     }
     for (id, nodes) in env.multi_matched {
       let s: Vec<_> = nodes.iter().map(|n| n.text()).collect();
@@ -301,7 +301,8 @@ impl<'tree, L: Language> From<MetaVarEnv<'tree, StrDoc<L>>> for HashMap<String, 
 #[cfg(test)]
 mod test {
   use super::*;
-  use crate::language::{Language, Tsx};
+  use crate::language::Tsx;
+  use crate::tree_sitter::LanguageExt;
   use crate::Pattern;
 
   fn extract_var(s: &str) -> Option<MetaVariable> {

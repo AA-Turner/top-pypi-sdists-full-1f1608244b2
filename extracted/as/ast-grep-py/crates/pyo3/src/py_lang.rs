@@ -1,5 +1,6 @@
 use anyhow::Context;
-use ast_grep_core::language::TSLanguage;
+use ast_grep_core::matcher::{Pattern, PatternBuilder, PatternError};
+use ast_grep_core::tree_sitter::{LanguageExt, StrDoc, TSLanguage};
 use ast_grep_dynamic::{CustomLang, DynamicLang};
 use ast_grep_language::{Language, SupportLang};
 use serde::{Deserialize, Serialize};
@@ -88,13 +89,6 @@ impl FromStr for PyLang {
 
 use PyLang::*;
 impl Language for PyLang {
-  fn get_ts_language(&self) -> TSLanguage {
-    match self {
-      Builtin(b) => b.get_ts_language(),
-      Custom(c) => c.get_ts_language(),
-    }
-  }
-
   fn pre_process_pattern<'q>(&self, query: &'q str) -> Cow<'q, str> {
     match self {
       Builtin(b) => b.pre_process_pattern(query),
@@ -115,6 +109,30 @@ impl Language for PyLang {
     match self {
       Builtin(b) => b.expando_char(),
       Custom(c) => c.expando_char(),
+    }
+  }
+
+  fn kind_to_id(&self, kind: &str) -> u16 {
+    match self {
+      Builtin(b) => b.kind_to_id(kind),
+      Custom(c) => c.kind_to_id(kind),
+    }
+  }
+  fn field_to_id(&self, field: &str) -> Option<u16> {
+    match self {
+      Builtin(b) => b.field_to_id(field),
+      Custom(c) => c.field_to_id(field),
+    }
+  }
+  fn build_pattern(&self, builder: &PatternBuilder) -> Result<Pattern, PatternError> {
+    builder.build(|src| StrDoc::try_new(src, *self))
+  }
+}
+impl LanguageExt for PyLang {
+  fn get_ts_language(&self) -> TSLanguage {
+    match self {
+      Builtin(b) => b.get_ts_language(),
+      Custom(c) => c.get_ts_language(),
     }
   }
 }

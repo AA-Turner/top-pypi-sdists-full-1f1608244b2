@@ -1,8 +1,8 @@
 [project]
 name = "casbin"
-version = "1.41.0"
+version = "1.43.0"
 authors = [
-    {name = "TechLee", email = "techlee@qq.com"},
+    {name = "Casbin", email = "admin@casbin.org"},
 ]
 description = "An authorization library that supports access control models like ACL, RBAC, ABAC in Python"
 readme = "README.md"

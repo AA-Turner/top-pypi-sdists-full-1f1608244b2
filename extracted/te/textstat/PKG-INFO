@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: textstat
-Version: 0.7.5
+Version: 0.7.6
 Summary: Calculate statistical features from text
 Home-page: https://github.com/textstat/textstat
 Author: Shivam Bansal, Chaitanya Aggarwal
@@ -25,6 +25,17 @@ License-File: LICENSE
 Requires-Dist: pyphen
 Requires-Dist: cmudict
 Requires-Dist: setuptools
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 # Textstat
 
@@ -370,7 +381,7 @@ Attempts to quantify how understandable a text is.
 textstat.gutierrez_polini(text)
 ```
 
-Returns the Guttiérrez de Polini understandability index.
+Returns the Gutiérrez de Polini understandability index.
 
 Specifically designed for the texts in spanish, not an adaptation.
 Conceived for grade-school level texts.

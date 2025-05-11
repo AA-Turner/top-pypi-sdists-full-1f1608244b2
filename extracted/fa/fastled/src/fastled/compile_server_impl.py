@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import time
+import traceback
 import warnings
 from datetime import datetime, timezone
 from pathlib import Path
@@ -12,8 +13,8 @@ from fastled.docker_manager import (
     Container,
     DockerManager,
     RunningContainer,
+    Volume,
 )
-from fastled.interactive_srcs import INTERACTIVE_SOURCES
 from fastled.settings import DEFAULT_CONTAINER_NAME, IMAGE_NAME, SERVER_PORT
 from fastled.sketch import looks_like_fastled_repo
 from fastled.types import BuildMode, CompileResult, CompileServerError
@@ -33,6 +34,32 @@ def _try_get_fastled_src(path: Path) -> Path | None:
         fastled_src_dir = path / "src"
         return fastled_src_dir
     return None
+
+
+def _port_is_free(port: int) -> bool:
+    """Check if a port is free."""
+    import socket
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        try:
+            _ = sock.bind(("localhost", port)) and sock.bind(("0.0.0.0", port))
+            return True
+        except OSError:
+            return False
+
+
+def _find_free_port() -> int:
+    """Find a free port on the system."""
+
+    start_port = 49152
+    tries = 10
+
+    for port in range(start_port, start_port + tries):
+        if _port_is_free(port):
+            return port
+    raise RuntimeError(
+        f"No free port found in the range {start_port}-{start_port + tries - 1}"
+    )
 
 
 class CompileServerImpl:
@@ -111,14 +138,24 @@ class CompileServerImpl:
         project_init(example=example, outputdir=outputdir)
 
     @property
-    def running(self) -> bool:
+    def running(self) -> tuple[bool, Exception | None]:
         if not self._port:
-            return False
+            return False, Exception("Docker hasn't been initialzed with a port yet")
         if not DockerManager.is_docker_installed():
-            return False
-        if not DockerManager.is_running():
-            return False
-        return self.docker.is_container_running(self.container_name)
+            return False, Exception("Docker is not installed")
+        docker_running, err = self.docker.is_running()
+        if not docker_running:
+            IS_MAC = sys.platform == "darwin"
+            if IS_MAC:
+                if "FileNotFoundError" in str(err):
+                    traceback.print_exc()
+                    print("\n\nNone fatal debug print for MacOS\n")
+            return False, err
+        ok: bool = self.docker.is_container_running(self.container_name)
+        if ok:
+            return True, None
+        else:
+            return False, Exception("Docker is not running")
 
     def using_fastled_src_dir_volume(self) -> bool:
         out = self.fastled_src_dir is not None
@@ -190,6 +227,7 @@ class CompileServerImpl:
             image_name=IMAGE_NAME, tag="latest", upgrade=upgrade
         )
         DISK_CACHE.put("last-update", now_str)
+        CLIENT_PORT = 80  # TODO: Don't use port 80.
 
         print("Docker image now validated")
         port = SERVER_PORT
@@ -197,42 +235,72 @@ class CompileServerImpl:
             server_command = ["/bin/bash"]
         else:
             server_command = ["python", "/js/run.py", "server"] + SERVER_OPTIONS
-        ports = {80: port}
-        volumes = None
+        if self.interactive:
+            print("Disabling port forwarding in interactive mode")
+            ports = {}
+        else:
+            ports = {CLIENT_PORT: port}
+        volumes = []
         if self.fastled_src_dir:
             print(
                 f"Mounting FastLED source directory {self.fastled_src_dir} into container /host/fastled/src"
             )
-            volumes = {
-                str(self.fastled_src_dir): {"bind": "/host/fastled/src", "mode": "ro"}
-            }
+            volumes.append(
+                Volume(
+                    host_path=str(self.fastled_src_dir),
+                    container_path="/host/fastled/src",
+                    mode="ro",
+                )
+            )
         if self.interactive:
             # add the mapped directory to the container
             print(f"Mounting {self.mapped_dir} into container /mapped")
-            # volumes = {str(self.mapped_dir): {"bind": "/mapped", "mode": "rw"}}
-            # add it
             assert self.mapped_dir is not None
             dir_name = self.mapped_dir.name
             if not volumes:
-                volumes = {}
-            volumes[str(self.mapped_dir)] = {
-                "bind": f"/mapped/{dir_name}",
-                "mode": "rw",
-            }
+                volumes = []
+            volumes.append(
+                Volume(
+                    host_path=str(self.mapped_dir),
+                    container_path=f"/mapped/{dir_name}",
+                    mode="rw",
+                )
+            )
             if self.fastled_src_dir is not None:
                 # to allow for interactive compilation
-                interactive_sources = list(INTERACTIVE_SOURCES)
-                for src in interactive_sources:
-                    src_path = Path(src).absolute()
+                # interactive_sources = list(INTERACTIVE_SOURCES)
+                interactive_sources: list[tuple[Path, str]] = []
+                init_runtime_py = (
+                    Path(self.fastled_src_dir)
+                    / ".."
+                    / ".."
+                    / "fastled-wasm"
+                    / "compiler"
+                    / "init_runtime.py"
+                )
+                if init_runtime_py.exists():
+                    # fastled-wasm is in a sister directory, mapping this in to the container.
+                    mapping = (
+                        init_runtime_py,
+                        "/js/init_runtime.py",
+                    )
+                    interactive_sources.append(mapping)
+
+                src_host: Path
+                dst_container: str
+                for src_host, dst_container in interactive_sources:
+                    src_path = Path(src_host).absolute()
                     if src_path.exists():
-                        print(f"Mounting {src} into container")
-                        src_str = str(src_path)
-                        volumes[src_str] = {
-                            "bind": f"/js/fastled/{src}",
-                            "mode": "rw",
-                        }
+                        print(f"Mounting {src_host} into container")
+                        volumes.append(
+                            Volume(
+                                host_path=str(src_path),
+                                container_path=dst_container,
+                                mode="rw",
+                            )
+                        )
                     else:
-                        print(f"Could not find {src}")
+                        print(f"Could not find {src_path}")
 
         cmd_str = subprocess.list2cmdline(server_command)
         if not self.interactive:
@@ -250,6 +318,13 @@ class CompileServerImpl:
             print("Compile server starting")
             return port
         else:
+            client_port_mapped = CLIENT_PORT in ports
+            port_is_free = _port_is_free(CLIENT_PORT)
+            if client_port_mapped and port_is_free:
+                warnings.warn(
+                    f"Can't expose port {CLIENT_PORT}, disabling port forwarding in interactive mode"
+                )
+                ports = {}
             self.docker.run_container_interactive(
                 image_name=IMAGE_NAME,
                 tag="latest",
@@ -266,6 +341,8 @@ class CompileServerImpl:
         return self.docker.is_container_running(self.container_name)
 
     def stop(self) -> None:
+        if self.docker.is_suspended:
+            return
         if self.running_container:
             self.running_container.detach()
             self.running_container = None

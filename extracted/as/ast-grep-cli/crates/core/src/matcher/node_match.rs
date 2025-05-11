@@ -1,17 +1,19 @@
 use super::Matcher;
 use crate::meta_var::MetaVarEnv;
 use crate::replacer::Replacer;
-use crate::source::Edit;
+use crate::source::Edit as E;
 use crate::{Doc, Node};
 
 use std::borrow::Borrow;
 use std::ops::Deref;
 
+type Edit<D> = E<<D as Doc>::Source>;
+
 /// Represents the matched node with populated MetaVarEnv.
 /// It derefs to the Node so you can use it as a Node.
 /// To access the underlying MetaVarEnv, call `get_env` method.
 #[derive(Clone)]
-pub struct NodeMatch<'tree, D: Doc>(Node<'tree, D>, MetaVarEnv<'tree, D>);
+pub struct NodeMatch<'t, D: Doc>(Node<'t, D>, MetaVarEnv<'t, D>);
 
 impl<'tree, D: Doc> NodeMatch<'tree, D> {
   pub fn new(node: Node<'tree, D>, env: MetaVarEnv<'tree, D>) -> Self {
@@ -37,12 +39,12 @@ impl<'tree, D: Doc> NodeMatch<'tree, D> {
 }
 
 impl<D: Doc> NodeMatch<'_, D> {
-  pub fn replace_by<R: Replacer<D>>(&self, replacer: R) -> Edit<D::Source> {
+  pub fn replace_by<R: Replacer<D>>(&self, replacer: R) -> Edit<D> {
     let range = self.range();
     let position = range.start;
     let deleted_length = range.len();
     let inserted_text = replacer.generate_replacement(self);
-    Edit {
+    Edit::<D> {
       position,
       deleted_length,
       inserted_text,
@@ -50,14 +52,14 @@ impl<D: Doc> NodeMatch<'_, D> {
   }
 
   #[doc(hidden)]
-  pub fn make_edit<M, R>(&self, matcher: &M, replacer: &R) -> Edit<D::Source>
+  pub fn make_edit<M, R>(&self, matcher: &M, replacer: &R) -> Edit<D>
   where
-    M: Matcher<D::Lang>,
+    M: Matcher,
     R: Replacer<D>,
   {
     let range = replacer.get_replaced_range(self, matcher);
     let inserted_text = replacer.generate_replacement(self);
-    Edit {
+    Edit::<D> {
       position: range.start,
       deleted_length: range.len(),
       inserted_text,
@@ -97,9 +99,9 @@ impl<'tree, D: Doc> Borrow<Node<'tree, D>> for NodeMatch<'tree, D> {
 mod test {
   use super::*;
   use crate::language::Tsx;
-  use crate::{Language, StrDoc};
+  use crate::tree_sitter::{LanguageExt, StrDoc};
 
-  fn use_node<L: Language>(n: &Node<StrDoc<L>>) -> String {
+  fn use_node<L: LanguageExt>(n: &Node<StrDoc<L>>) -> String {
     n.text().to_string()
   }
 

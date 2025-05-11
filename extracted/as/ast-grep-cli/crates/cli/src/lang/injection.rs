@@ -1,7 +1,10 @@
 use super::SgLang;
 use crate::utils::ErrorContext as EC;
 use ast_grep_config::{DeserializeEnv, RuleCore, SerializableRuleCore};
-use ast_grep_core::{language::TSRange, Doc, Language, Node, StrDoc};
+use ast_grep_core::{
+  tree_sitter::{LanguageExt, StrDoc, TSRange},
+  Doc, Node,
+};
 
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
@@ -34,7 +37,7 @@ pub struct SerializableInjection {
 
 struct Injection {
   host: SgLang,
-  rules: Vec<(RuleCore<SgLang>, Option<String>)>,
+  rules: Vec<(RuleCore, Option<String>)>,
   injectable: HashSet<String>,
 }
 
@@ -123,24 +126,26 @@ pub fn injectable_languages(lang: SgLang) -> Option<&'static [&'static str]> {
   Some(&injection.1)
 }
 
-pub fn extract_injections<D: Doc>(root: Node<D>) -> HashMap<String, Vec<TSRange>> {
-  // NB Only works in the CLI crate because we only has Node<SgLang>
-  let root: Node<StrDoc<SgLang>> = unsafe { std::mem::transmute(root) };
-  let mut ret = match root.lang() {
+pub fn extract_injections<L: LanguageExt>(
+  lang: &SgLang,
+  root: Node<StrDoc<L>>,
+) -> HashMap<String, Vec<TSRange>> {
+  let mut ret = match lang {
     SgLang::Custom(c) => c.extract_injections(root.clone()),
     SgLang::Builtin(b) => b.extract_injections(root.clone()),
   };
   let injections = unsafe { &*addr_of!(LANG_INJECTIONS) };
-  extract_custom_inject(injections, root, &mut ret);
+  extract_custom_inject(lang, injections, root, &mut ret);
   ret
 }
 
-fn extract_custom_inject(
+fn extract_custom_inject<L: LanguageExt>(
+  lang: &SgLang,
   injections: &[Injection],
-  root: Node<StrDoc<SgLang>>,
+  root: Node<StrDoc<L>>,
   ret: &mut HashMap<String, Vec<TSRange>>,
 ) {
-  let Some(rules) = injections.iter().find(|n| n.host == *root.lang()) else {
+  let Some(rules) = injections.iter().find(|n| n.host == *lang) else {
     return;
   };
   for (rule, default_lang) in &rules.rules {
@@ -165,9 +170,11 @@ fn extract_custom_inject(
 fn node_to_range<D: Doc>(node: &Node<D>) -> TSRange {
   let r = node.range();
   let start = node.start_pos();
-  let sp = start.ts_point();
+  let sp = start.byte_point();
+  let sp = tree_sitter::Point::new(sp.0, sp.1);
   let end = node.end_pos();
-  let ep = end.ts_point();
+  let ep = end.byte_point();
+  let ep = tree_sitter::Point::new(ep.0, ep.1);
   TSRange::new(r.start as u32, r.end as u32, &sp, &ep)
 }
 
@@ -222,18 +229,17 @@ injected: [js, ts, tsx]";
     assert_eq!(map.len(), 1);
     let injections: Vec<_> = map.into_values().collect();
     let mut ret = HashMap::new();
-    let sg =
-      SgLang::from(SupportLang::JavaScript).ast_grep("const a = styled`.btn { margin: 0; }`");
+    let lang = SgLang::from(SupportLang::JavaScript);
+    let sg = lang.ast_grep("const a = styled`.btn { margin: 0; }`");
     let root = sg.root();
-    extract_custom_inject(&injections, root, &mut ret);
+    extract_custom_inject(&lang, &injections, root, &mut ret);
     assert_eq!(ret.len(), 1);
     assert_eq!(ret["css"].len(), 1);
     assert!(!ret.contains_key("js"));
     ret.clear();
-    let sg =
-      SgLang::from(SupportLang::JavaScript).ast_grep("const a = styled.css`.btn { margin: 0; }`");
+    let sg = lang.ast_grep("const a = styled.css`.btn { margin: 0; }`");
     let root = sg.root();
-    extract_custom_inject(&injections, root, &mut ret);
+    extract_custom_inject(&lang, &injections, root, &mut ret);
     assert_eq!(ret.len(), 1);
     assert_eq!(ret["css"].len(), 1);
     assert!(!ret.contains_key("js"));

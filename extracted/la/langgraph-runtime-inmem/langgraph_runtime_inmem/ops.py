@@ -26,6 +26,7 @@ from starlette.exceptions import HTTPException
 from langgraph_runtime_inmem.checkpoint import Checkpointer
 from langgraph_runtime_inmem.database import InMemConnectionProto, connect
 from langgraph_runtime_inmem.inmem_stream import Message, get_stream_manager
+from langgraph_runtime_inmem.store import Store
 
 if typing.TYPE_CHECKING:
     from langgraph_api.asyncio import ValueEvent
@@ -1078,7 +1079,7 @@ class Threads(Authenticated):
                 # format latest checkpoint for response
                 checkpointer.latest_iter = checkpoint
                 async with get_graph(
-                    graph_id, thread_config, checkpointer=checkpointer
+                    graph_id, thread_config, checkpointer=checkpointer, store=Store()
                 ) as graph:
                     result = await graph.aget_state(config, subgraphs=subgraphs)
                     if (
@@ -1153,7 +1154,7 @@ class Threads(Authenticated):
 
                 checkpointer.latest_iter = checkpoint
                 async with get_graph(
-                    graph_id, thread_config, checkpointer=checkpointer
+                    graph_id, thread_config, checkpointer=checkpointer, store=Store()
                 ) as graph:
                     update_config = config.copy()
                     update_config["configurable"] = {
@@ -1227,7 +1228,10 @@ class Threads(Authenticated):
                 config["configurable"].setdefault("checkpoint_ns", "")
 
                 async with get_graph(
-                    graph_id, thread_config, checkpointer=Checkpointer(conn)
+                    graph_id,
+                    thread_config,
+                    checkpointer=Checkpointer(conn),
+                    store=Store(),
                 ) as graph:
                     next_config = await graph.abulk_update_state(
                         config,
@@ -1302,6 +1306,7 @@ class Threads(Authenticated):
                     checkpointer=await asyncio.to_thread(
                         Checkpointer, conn, unpack_hook=_msgpack_ext_hook_to_json
                     ),
+                    store=Store(),
                 ) as graph:
                     # Convert before parameter if it's a string
                     before_param = (
@@ -1894,7 +1899,11 @@ class Runs(Authenticated):
                 if queues or action != "rollback":
                     if run["status"] == "pending":
                         thread = next(
-                            (t for t in conn.store["threads"] if t["thread_id"] == run["thread_id"]),
+                            (
+                                t
+                                for t in conn.store["threads"]
+                                if t["thread_id"] == run["thread_id"]
+                            ),
                             None,
                         )
                         if thread:

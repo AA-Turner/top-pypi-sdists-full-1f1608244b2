@@ -43,6 +43,8 @@ def run_server(args: Args) -> int:
 
 
 def main() -> int:
+    from fastled import __version__
+
     args = parse_args()
     interactive: bool = args.interactive
     has_server = args.server
@@ -51,6 +53,9 @@ def main() -> int:
     just_compile: bool = args.just_compile
     # directory: Path | None = Path(args.directory).absolute() if args.directory else None
     directory: Path | None = Path(args.directory) if args.directory else None
+
+    # now it is safe to print out the version
+    print(f"FastLED version: {__version__}")
 
     if update:
         # Force auto_update to ensure update check happens
@@ -63,19 +68,37 @@ def main() -> int:
         print("Building is disabled")
         build = False
 
-    if build:
-        raise NotImplementedError("Building is not yet supported.")
+    if interactive:
+        # raise NotImplementedError("Building is not yet supported.")
         file_watcher_set(False)
-        project_root = Path(".").absolute()
-        print(f"Building Docker image at {project_root}")
-        from fastled import Api, Docker
+        # project_root = Path(".").absolute()
+        # print(f"Building Docker image at {project_root}")
+        from fastled import Api
 
-        server = Docker.spawn_server_from_fastled_repo(
-            project_root=project_root,
+        # server = Docker.spawn_server_from_fastled_repo(
+        #     project_root=project_root,
+        #     interactive=interactive,
+        #     sketch_folder=directory,
+        # )
+        # assert isinstance(server, CompileServer)
+        server: CompileServer = CompileServer(
             interactive=interactive,
-            sketch_folder=directory,
+            auto_updates=False,
+            mapped_dir=directory,
+            auto_start=False,
+            remove_previous=False,
         )
-        assert isinstance(server, CompileServer)
+
+        server.start(wait_for_startup=False)
+
+        try:
+            while server.process_running():
+                # wait for ctrl-c
+                time.sleep(0.1)
+        except KeyboardInterrupt:
+            print("\nExiting from server...")
+            server.stop()
+            return 0
 
         try:
             if interactive:

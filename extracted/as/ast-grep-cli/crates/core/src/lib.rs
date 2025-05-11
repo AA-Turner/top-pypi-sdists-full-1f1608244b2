@@ -12,7 +12,8 @@ pub mod meta_var;
 pub mod ops;
 pub mod replacer;
 pub mod source;
-pub mod traversal;
+#[cfg(feature = "tree-sitter")]
+pub mod tree_sitter;
 
 #[doc(hidden)]
 pub mod pinned;
@@ -24,87 +25,20 @@ pub use language::Language;
 pub use match_tree::MatchStrictness;
 pub use matcher::{Matcher, NodeMatch, Pattern, PatternError};
 pub use node::{Node, Position};
-pub use source::{Doc, StrDoc};
-
-#[doc(hidden)]
-pub use node::DisplayContext;
-
-use replacer::Replacer;
+pub use source::Doc;
 
 use node::Root;
-use source::{Edit, TSParseError};
 
-#[derive(Clone)]
-pub struct AstGrep<D: Doc> {
-  #[doc(hidden)]
-  pub inner: Root<D>,
-}
-impl<D: Doc> AstGrep<D> {
-  pub fn root(&self) -> Node<D> {
-    self.inner.root()
-  }
-
-  pub fn edit(&mut self, edit: Edit<D::Source>) -> Result<&mut Self, TSParseError> {
-    self.inner.do_edit(edit)?;
-    Ok(self)
-  }
-
-  pub fn replace<M: Matcher<D::Lang>, R: Replacer<D>>(
-    &mut self,
-    pattern: M,
-    replacer: R,
-  ) -> Result<bool, TSParseError> {
-    if let Some(edit) = self.root().replace(pattern, replacer) {
-      self.edit(edit)?;
-      Ok(true)
-    } else {
-      Ok(false)
-    }
-  }
-
-  pub fn lang(&self) -> &D::Lang {
-    self.inner.lang()
-  }
-
-  /// Use this method to avoid expensive string encoding overhead
-  /// TODO: add more documents on what is happening
-  pub fn doc(d: D) -> Self {
-    Self {
-      inner: Root::doc(d),
-    }
-  }
-}
-
-impl<L: Language> AstGrep<StrDoc<L>> {
-  pub fn new<S: AsRef<str>>(src: S, lang: L) -> Self {
-    Self {
-      inner: Root::new(src.as_ref(), lang),
-    }
-  }
-
-  /*
-  pub fn customized<C: Content>(content: C, lang: L) -> Result<Self, TSParseError> {
-    Ok(Self {
-      inner: Root::customized(content, lang)?,
-    })
-  }
-  */
-  pub fn source(&self) -> &str {
-    self.inner.doc.get_source().as_str()
-  }
-
-  pub fn generate(self) -> String {
-    self.inner.doc.src
-  }
-}
+pub type AstGrep<D> = Root<D>;
 
 #[cfg(test)]
 mod test {
   use super::*;
+  use crate::tree_sitter::LanguageExt;
   use language::Tsx;
   use ops::Op;
 
-  pub type Result = std::result::Result<(), TSParseError>;
+  pub type Result = std::result::Result<(), String>;
 
   #[test]
   fn test_replace() -> Result {

@@ -27,11 +27,12 @@ mod scala;
 mod swift;
 mod yaml;
 
+use ast_grep_core::matcher::{Pattern, PatternBuilder, PatternError};
 pub use html::Html;
 
-use ast_grep_core::language::{TSLanguage, TSRange};
 use ast_grep_core::meta_var::MetaVariable;
-use ast_grep_core::{Doc, Node};
+use ast_grep_core::tree_sitter::{StrDoc, TSLanguage, TSRange};
+use ast_grep_core::Node;
 use ignore::types::{Types, TypesBuilder};
 use serde::de::Visitor;
 use serde::{de, Deserialize, Deserializer, Serialize};
@@ -43,7 +44,8 @@ use std::iter::repeat;
 use std::path::Path;
 use std::str::FromStr;
 
-pub use ast_grep_core::Language;
+pub use ast_grep_core::language::Language;
+pub use ast_grep_core::tree_sitter::LanguageExt;
 
 /// this macro implements bare-bone methods for a language
 macro_rules! impl_lang {
@@ -51,6 +53,19 @@ macro_rules! impl_lang {
     #[derive(Clone, Copy, Debug)]
     pub struct $lang;
     impl Language for $lang {
+      fn kind_to_id(&self, kind: &str) -> u16 {
+        self
+          .get_ts_language()
+          .id_for_node_kind(kind, /*named*/ true)
+      }
+      fn field_to_id(&self, field: &str) -> Option<u16> {
+        self.get_ts_language().field_id_for_name(field)
+      }
+      fn build_pattern(&self, builder: &PatternBuilder) -> Result<Pattern, PatternError> {
+        builder.build(|src| StrDoc::try_new(src, self.clone()))
+      }
+    }
+    impl LanguageExt for $lang {
       fn get_ts_language(&self) -> TSLanguage {
         parsers::$func().into()
       }
@@ -85,9 +100,14 @@ macro_rules! impl_lang_expando {
   ($lang: ident, $func: ident, $char: expr) => {
     #[derive(Clone, Copy, Debug)]
     pub struct $lang;
-    impl ast_grep_core::language::Language for $lang {
-      fn get_ts_language(&self) -> ast_grep_core::language::TSLanguage {
-        $crate::parsers::$func().into()
+    impl Language for $lang {
+      fn kind_to_id(&self, kind: &str) -> u16 {
+        self
+          .get_ts_language()
+          .id_for_node_kind(kind, /*named*/ true)
+      }
+      fn field_to_id(&self, field: &str) -> Option<u16> {
+        self.get_ts_language().field_id_for_name(field)
       }
       fn expando_char(&self) -> char {
         $char
@@ -95,16 +115,28 @@ macro_rules! impl_lang_expando {
       fn pre_process_pattern<'q>(&self, query: &'q str) -> std::borrow::Cow<'q, str> {
         pre_process_pattern(self.expando_char(), query)
       }
+      fn build_pattern(&self, builder: &PatternBuilder) -> Result<Pattern, PatternError> {
+        builder.build(|src| StrDoc::try_new(src, self.clone()))
+      }
+    }
+    impl LanguageExt for $lang {
+      fn get_ts_language(&self) -> TSLanguage {
+        $crate::parsers::$func().into()
+      }
     }
   };
+}
+
+pub trait Alias: Display {
+  const ALIAS: &'static [&'static str];
 }
 
 /// Implements the `ALIAS` associated constant for the given lang, which is
 /// then used to define the `alias` const fn and a `Deserialize` impl.
 macro_rules! impl_alias {
   ($lang:ident => $as:expr) => {
-    impl $lang {
-      pub const ALIAS: &'static [&'static str] = $as;
+    impl Alias for $lang {
+      const ALIAS: &'static [&'static str] = $as;
     }
 
     impl fmt::Display for $lang {
@@ -390,27 +422,32 @@ macro_rules! impl_lang_method {
     }
   };
 }
-
 impl Language for SupportLang {
-  fn from_path<P: AsRef<Path>>(path: P) -> Option<Self> {
-    from_extension(path.as_ref())
-  }
-
-  impl_lang_method!(get_ts_language, () => TSLanguage);
+  impl_lang_method!(kind_to_id, (kind: &str) => u16);
+  impl_lang_method!(field_to_id, (field: &str) => Option<u16>);
   impl_lang_method!(meta_var_char, () => char);
   impl_lang_method!(expando_char, () => char);
   impl_lang_method!(extract_meta_var, (source: &str) => Option<MetaVariable>);
-  impl_lang_method!(injectable_languages, () => Option<&'static [&'static str]>);
+  impl_lang_method!(build_pattern, (builder: &PatternBuilder) => Result<Pattern, PatternError>);
+  fn pre_process_pattern<'q>(&self, query: &'q str) -> Cow<'q, str> {
+    execute_lang_method! { self, pre_process_pattern, query }
+  }
+  fn from_path<P: AsRef<Path>>(path: P) -> Option<Self> {
+    from_extension(path.as_ref())
+  }
+}
 
-  fn extract_injections<D: Doc>(&self, root: Node<D>) -> HashMap<String, Vec<TSRange>> {
+impl LanguageExt for SupportLang {
+  impl_lang_method!(get_ts_language, () => TSLanguage);
+  impl_lang_method!(injectable_languages, () => Option<&'static [&'static str]>);
+  fn extract_injections<L: LanguageExt>(
+    &self,
+    root: Node<StrDoc<L>>,
+  ) -> HashMap<String, Vec<TSRange>> {
     match self {
       SupportLang::Html => Html.extract_injections(root),
       _ => HashMap::new(),
     }
-  }
-
-  fn pre_process_pattern<'q>(&self, query: &'q str) -> Cow<'q, str> {
-    execute_lang_method! { self, pre_process_pattern, query }
   }
 }
 
@@ -487,25 +524,25 @@ pub fn config_file_type() -> Types {
 #[cfg(test)]
 mod test {
   use super::*;
-  use ast_grep_core::{matcher::MatcherExt, source::TSParseError, Pattern};
+  use ast_grep_core::{matcher::MatcherExt, Pattern};
 
-  pub fn test_match_lang(query: &str, source: &str, lang: impl Language) {
+  pub fn test_match_lang(query: &str, source: &str, lang: impl LanguageExt) {
     let cand = lang.ast_grep(source);
-    let pattern = Pattern::str(query, lang);
+    let pattern = Pattern::new(query, lang);
     assert!(
       pattern.find_node(cand.root()).is_some(),
       "goal: {pattern:?}, candidate: {}",
-      cand.root().to_sexp(),
+      cand.root().get_inner_node().to_sexp(),
     );
   }
 
-  pub fn test_non_match_lang(query: &str, source: &str, lang: impl Language) {
+  pub fn test_non_match_lang(query: &str, source: &str, lang: impl LanguageExt) {
     let cand = lang.ast_grep(source);
-    let pattern = Pattern::str(query, lang);
+    let pattern = Pattern::new(query, lang);
     assert!(
       pattern.find_node(cand.root()).is_none(),
       "goal: {pattern:?}, candidate: {}",
-      cand.root().to_sexp(),
+      cand.root().get_inner_node().to_sexp(),
     );
   }
 
@@ -513,14 +550,13 @@ mod test {
     src: &str,
     pattern: &str,
     replacer: &str,
-    lang: impl Language,
-  ) -> Result<String, TSParseError> {
+    lang: impl LanguageExt,
+  ) -> String {
     let mut source = lang.ast_grep(src);
-    // TODO: we should have still have pattern as replacer
-    let replacer = lang.pre_process_pattern(replacer);
-    let replacer = lang.ast_grep(replacer).inner;
-    assert!(source.replace(pattern, replacer)?);
-    Ok(source.generate())
+    assert!(source
+      .replace(pattern, replacer)
+      .expect("should parse successfully"));
+    source.generate()
   }
 
   #[test]

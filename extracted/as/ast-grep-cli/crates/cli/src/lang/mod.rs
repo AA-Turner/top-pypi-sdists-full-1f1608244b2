@@ -4,12 +4,13 @@ mod lang_globs;
 use crate::utils::ErrorContext as EC;
 
 use anyhow::{Context, Result};
+use ast_grep_core::matcher::{Pattern, PatternBuilder, PatternError};
 use ast_grep_core::{
-  language::{TSLanguage, TSRange},
-  Doc, Node,
+  tree_sitter::{StrDoc, TSLanguage, TSRange},
+  Node,
 };
 use ast_grep_dynamic::DynamicLang;
-use ast_grep_language::{Language, SupportLang};
+use ast_grep_language::{Language, LanguageExt, SupportLang};
 use ignore::types::Types;
 use serde::{Deserialize, Serialize};
 
@@ -152,22 +153,6 @@ impl From<DynamicLang> for SgLang {
 
 use SgLang::*;
 impl Language for SgLang {
-  fn get_ts_language(&self) -> TSLanguage {
-    match self {
-      Builtin(b) => b.get_ts_language(),
-      Custom(c) => c.get_ts_language(),
-    }
-  }
-
-  fn from_path<P: AsRef<Path>>(path: P) -> Option<Self> {
-    // respect user overriding like languageGlobs and custom lang
-    // TODO: test this preference
-    let path = path.as_ref();
-    lang_globs::from_path(path)
-      .or_else(|| DynamicLang::from_path(path).map(Custom))
-      .or_else(|| SupportLang::from_path(path).map(Builtin))
-  }
-
   fn pre_process_pattern<'q>(&self, query: &'q str) -> Cow<'q, str> {
     match self {
       Builtin(b) => b.pre_process_pattern(query),
@@ -191,12 +176,48 @@ impl Language for SgLang {
     }
   }
 
+  fn kind_to_id(&self, kind: &str) -> u16 {
+    match self {
+      Builtin(b) => b.kind_to_id(kind),
+      Custom(c) => c.kind_to_id(kind),
+    }
+  }
+  fn field_to_id(&self, field: &str) -> Option<u16> {
+    match self {
+      Builtin(b) => b.field_to_id(field),
+      Custom(c) => c.field_to_id(field),
+    }
+  }
+  fn from_path<P: AsRef<Path>>(path: P) -> Option<Self> {
+    // respect user overriding like languageGlobs and custom lang
+    // TODO: test this preference
+    let path = path.as_ref();
+    lang_globs::from_path(path)
+      .or_else(|| DynamicLang::from_path(path).map(Custom))
+      .or_else(|| SupportLang::from_path(path).map(Builtin))
+  }
+  fn build_pattern(&self, builder: &PatternBuilder) -> std::result::Result<Pattern, PatternError> {
+    builder.build(|src| StrDoc::try_new(src, *self))
+  }
+}
+
+impl LanguageExt for SgLang {
+  fn get_ts_language(&self) -> TSLanguage {
+    match self {
+      Builtin(b) => b.get_ts_language(),
+      Custom(c) => c.get_ts_language(),
+    }
+  }
+
   fn injectable_languages(&self) -> Option<&'static [&'static str]> {
     injection::injectable_languages(*self)
   }
 
-  fn extract_injections<D: Doc>(&self, root: Node<D>) -> HashMap<String, Vec<TSRange>> {
-    injection::extract_injections(root)
+  fn extract_injections<L: LanguageExt>(
+    &self,
+    root: Node<StrDoc<L>>,
+  ) -> HashMap<String, Vec<TSRange>> {
+    injection::extract_injections(self, root)
   }
 }
 
