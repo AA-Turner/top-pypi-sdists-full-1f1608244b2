@@ -2,7 +2,7 @@ import asyncio
 import copy
 import logging
 import uuid
-from typing import Dict, List, Optional, Set, Union
+from typing import Optional, Union
 
 from pyee.asyncio import AsyncIOEventEmitter
 
@@ -16,7 +16,7 @@ from .exceptions import (
     OperationError,
 )
 from .mediastreams import MediaStreamTrack
-from .rtcconfiguration import RTCConfiguration
+from .rtcconfiguration import RTCBundlePolicy, RTCConfiguration
 from .rtcdatachannel import RTCDataChannel, RTCDataChannelParameters
 from .rtcdtlstransport import RTCCertificate, RTCDtlsParameters, RTCDtlsTransport
 from .rtcicetransport import (
@@ -50,8 +50,8 @@ logger = logging.getLogger(__name__)
 
 
 def filter_preferred_codecs(
-    codecs: List[RTCRtpCodecParameters], preferred: List[RTCRtpCodecCapability]
-) -> List[RTCRtpCodecParameters]:
+    codecs: list[RTCRtpCodecParameters], preferred: list[RTCRtpCodecCapability]
+) -> list[RTCRtpCodecParameters]:
     if not preferred:
         return codecs
 
@@ -80,11 +80,11 @@ def filter_preferred_codecs(
 
 
 def find_common_codecs(
-    local_codecs: List[RTCRtpCodecParameters],
-    remote_codecs: List[RTCRtpCodecParameters],
-) -> List[RTCRtpCodecParameters]:
+    local_codecs: list[RTCRtpCodecParameters],
+    remote_codecs: list[RTCRtpCodecParameters],
+) -> list[RTCRtpCodecParameters]:
     common = []
-    common_base: Dict[int, RTCRtpCodecParameters] = {}
+    common_base: dict[int, RTCRtpCodecParameters] = {}
     for c in remote_codecs:
         # for RTX, check we accepted the base codec
         if is_rtx(c):
@@ -111,9 +111,9 @@ def find_common_codecs(
 
 
 def find_common_header_extensions(
-    local_extensions: List[RTCRtpHeaderExtensionParameters],
-    remote_extensions: List[RTCRtpHeaderExtensionParameters],
-) -> List[RTCRtpHeaderExtensionParameters]:
+    local_extensions: list[RTCRtpHeaderExtensionParameters],
+    remote_extensions: list[RTCRtpHeaderExtensionParameters],
+) -> list[RTCRtpHeaderExtensionParameters]:
     common = []
     for rx in remote_extensions:
         for lx in local_extensions:
@@ -180,7 +180,7 @@ async def add_remote_candidates(
         await iceTransport.addRemoteCandidate(None)
 
 
-def allocate_mid(mids: Set[str]) -> str:
+def allocate_mid(mids: set[str]) -> str:
     """
     Allocate a MID which has not been used yet.
     """
@@ -295,22 +295,22 @@ class RTCPeerConnection(AsyncIOEventEmitter):
         self.__certificates = [RTCCertificate.generateCertificate()]
         self.__cname = f"{uuid.uuid4()}"
         self.__configuration = configuration or RTCConfiguration()
-        self.__dtlsTransports: Set[RTCDtlsTransport] = set()
-        self.__iceTransports: Set[RTCIceTransport] = set()
-        self.__remoteDtls: Dict[
+        self.__dtlsTransports: set[RTCDtlsTransport] = set()
+        self.__iceTransports: set[RTCIceTransport] = set()
+        self.__remoteDtls: dict[
             Union[RTCRtpTransceiver, RTCSctpTransport], RTCDtlsParameters
         ] = {}
-        self.__remoteIce: Dict[
+        self.__remoteIce: dict[
             Union[RTCRtpTransceiver, RTCSctpTransport], RTCIceParameters
         ] = {}
-        self.__seenMids: Set[str] = set()
+        self.__seenMids: set[str] = set()
         self.__sctp: Optional[RTCSctpTransport] = None
         self.__sctp_mline_index: Optional[int] = None
         self._sctpLegacySdp = True
         self.__sctpRemotePort: Optional[int] = None
         self.__sctpRemoteCaps = None
         self.__stream_id = str(uuid.uuid4())
-        self.__transceivers: List[RTCRtpTransceiver] = []
+        self.__transceivers: list[RTCRtpTransceiver] = []
 
         self.__closeTask: Optional[asyncio.Task] = None
         self.__connectionState = "new"
@@ -406,14 +406,20 @@ class RTCPeerConnection(AsyncIOEventEmitter):
             raise ValueError("Candidate must have either sdpMid or sdpMLineIndex")
 
         for transceiver in self.__transceivers:
-            if candidate.sdpMid == transceiver.mid and not transceiver._bundled:
+            if (
+                candidate.sdpMid == transceiver.mid
+                or candidate.sdpMLineIndex == transceiver._get_mline_index()
+            ) and not transceiver._bundled:
                 iceTransport = transceiver._transport.transport
                 await iceTransport.addRemoteCandidate(candidate)
                 return
 
         if (
             self.__sctp
-            and candidate.sdpMid == self.__sctp.mid
+            and (
+                candidate.sdpMid == self.__sctp.mid
+                or candidate.sdpMLineIndex == self.__sctp_mline_index
+            )
             and not self.__sctp._bundled
         ):
             iceTransport = self.__sctp.transport.transport
@@ -634,11 +640,11 @@ class RTCPeerConnection(AsyncIOEventEmitter):
 
         def get_media(
             description: sdp.SessionDescription,
-        ) -> List[sdp.MediaDescription]:
+        ) -> list[sdp.MediaDescription]:
             return description.media if description else []
 
         def get_media_section(
-            media: List[sdp.MediaDescription], i: int
+            media: list[sdp.MediaDescription], i: int
         ) -> Optional[sdp.MediaDescription]:
             return media[i] if i < len(media) else None
 
@@ -700,14 +706,14 @@ class RTCPeerConnection(AsyncIOEventEmitter):
 
         return wrap_session_description(description)
 
-    def getReceivers(self) -> List[RTCRtpReceiver]:
+    def getReceivers(self) -> list[RTCRtpReceiver]:
         """
         Returns the list of :class:`RTCRtpReceiver` objects that are currently
         attached to the connection.
         """
         return list(map(lambda x: x.receiver, self.__transceivers))
 
-    def getSenders(self) -> List[RTCRtpSender]:
+    def getSenders(self) -> list[RTCRtpSender]:
         """
         Returns the list of :class:`RTCRtpSender` objects that are currently
         attached to the connection.
@@ -728,7 +734,7 @@ class RTCPeerConnection(AsyncIOEventEmitter):
             merged.update(report)
         return merged
 
-    def getTransceivers(self) -> List[RTCRtpTransceiver]:
+    def getTransceivers(self) -> list[RTCRtpTransceiver]:
         """
         Returns the list of :class:`RTCRtpTransceiver` objects that are currently
         attached to the connection.
@@ -832,7 +838,7 @@ class RTCPeerConnection(AsyncIOEventEmitter):
         self.__validate_description(description, is_local=False)
 
         # apply description
-        iceCandidates: Dict[RTCIceTransport, sdp.MediaDescription] = {}
+        iceCandidates: dict[RTCIceTransport, sdp.MediaDescription] = {}
         trackEvents = []
         for i, media in enumerate(description.media):
             dtlsTransport: Optional[RTCDtlsTransport] = None
@@ -843,6 +849,7 @@ class RTCPeerConnection(AsyncIOEventEmitter):
                 for t in self.__transceivers:
                     if t.kind == media.kind and t.mid in [None, media.rtp.muxId]:
                         transceiver = t
+                        break
                 if transceiver is None:
                     transceiver = self.__createTransceiver(
                         direction="recvonly", kind=media.kind
@@ -1054,7 +1061,23 @@ class RTCPeerConnection(AsyncIOEventEmitter):
 
     def __createDtlsTransport(self) -> RTCDtlsTransport:
         # create ICE transport
-        iceGatherer = RTCIceGatherer(iceServers=self.__configuration.iceServers)
+        if len(self.__transceivers) > 0 or self.__sctp:
+            if len(self.__transceivers) > 0:
+                parameters = self.__transceivers[
+                    0
+                ].transport.transport.iceGatherer.getLocalParameters()
+            else:
+                parameters = (
+                    self.__sctp.transport.transport.iceGatherer.getLocalParameters()
+                )
+            iceGatherer = RTCIceGatherer(
+                iceServers=self.__configuration.iceServers,
+                local_username=parameters.usernameFragment,
+                local_password=parameters.password,
+            )
+        else:
+            iceGatherer = RTCIceGatherer(iceServers=self.__configuration.iceServers)
+
         iceGatherer.on("statechange", self.__updateIceGatheringState)
         iceTransport = RTCIceTransport(iceGatherer)
         iceTransport.on("statechange", self.__updateIceConnectionState)
@@ -1074,8 +1097,17 @@ class RTCPeerConnection(AsyncIOEventEmitter):
         return dtlsTransport
 
     def __createSctpTransport(self) -> None:
-        self.__sctp = RTCSctpTransport(self.__createDtlsTransport())
-        self.__sctp._bundled = False
+        dtlsTransport = None
+        bundled = (
+            self.__configuration.bundlePolicy == RTCBundlePolicy.MAX_BUNDLE
+            and len(self.__transceivers) > 0
+        )
+        if bundled:
+            dtlsTransport = self.__transceivers[0].transport
+        else:
+            dtlsTransport = self.__createDtlsTransport()
+        self.__sctp = RTCSctpTransport(dtlsTransport)
+        self.__sctp._bundled = bundled
         self.__sctp.mid = None
 
         @self.__sctp.on("datachannel")
@@ -1085,7 +1117,26 @@ class RTCPeerConnection(AsyncIOEventEmitter):
     def __createTransceiver(
         self, direction: str, kind: str, sender_track=None
     ) -> RTCRtpTransceiver:
-        dtlsTransport = self.__createDtlsTransport()
+        dtlsTransport = None
+        bundled = False
+        if self.__configuration.bundlePolicy == RTCBundlePolicy.MAX_BUNDLE:
+            if len(self.__transceivers) > 0:
+                dtlsTransport = self.__transceivers[0].transport
+                bundled = True
+            elif self.__sctp:
+                dtlsTransport = self.__sctp.transport
+                bundled = True
+        elif self.__configuration.bundlePolicy == RTCBundlePolicy.BALANCED:
+            transceiver = next(
+                filter(lambda t: t.kind == kind, self.__transceivers), None
+            )
+            if transceiver:
+                dtlsTransport = transceiver.transport
+                bundled = True
+
+        if not dtlsTransport:
+            dtlsTransport = self.__createDtlsTransport()
+
         transceiver = RTCRtpTransceiver(
             direction=direction,
             kind=kind,
@@ -1094,7 +1145,7 @@ class RTCPeerConnection(AsyncIOEventEmitter):
         )
         transceiver.receiver._set_rtcp_ssrc(transceiver.sender._ssrc)
         transceiver.sender._stream_id = self.__stream_id
-        transceiver._bundled = False
+        transceiver._bundled = bundled
         transceiver._transport = dtlsTransport
         self.__transceivers.append(transceiver)
         return transceiver
@@ -1137,7 +1188,7 @@ class RTCPeerConnection(AsyncIOEventEmitter):
             rtcp=media.rtp.rtcp,
         )
         if len(media.ssrc):
-            encodings: Dict[int, RTCRtpDecodingParameters] = {}
+            encodings: dict[int, RTCRtpDecodingParameters] = {}
             for codec in transceiver._codecs:
                 if is_rtx(codec):
                     apt = codec.parameters.get("apt")

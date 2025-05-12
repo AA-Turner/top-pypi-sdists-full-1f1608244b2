@@ -7,9 +7,9 @@ name = "check-wheel-contents"
 dynamic = ["version"]
 description = "Check your wheels have the right contents"
 readme = "README.rst"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = "MIT"
-license-files = { paths = ["LICENSE"] }
+license-files = ["LICENSE"]
 authors = [
     { name = "John Thorvald Wodder II", email = "check-wheel-contents@varonathe.org" }
 ]
@@ -23,15 +23,12 @@ keywords = [
 classifiers = [
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
-    "License :: OSI Approved :: MIT License",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Build Tools",
@@ -41,7 +38,7 @@ classifiers = [
 
 dependencies = [
     "attrs            >= 18.1",
-    "click            >= 7.0",
+    "click            ~= 8.2",
     "packaging",
     "backports.cached-property; python_version < '3.8'",
     "pydantic         ~= 2.0",

@@ -1,12 +1,12 @@
 Metadata-Version: 2.4
 Name: dycw-utilities
-Version: 0.113.3
+Version: 0.113.4
 Author-email: Derek Wan <d.wan@icloud.com>
 License-File: LICENSE
 Requires-Python: >=3.12
 Requires-Dist: typing-extensions<4.14,>=4.13.1
 Provides-Extra: test
-Requires-Dist: hypothesis<6.132,>=6.131.14; extra == 'test'
+Requires-Dist: hypothesis<6.132,>=6.131.15; extra == 'test'
 Requires-Dist: pytest-asyncio<0.27,>=0.26.0; extra == 'test'
 Requires-Dist: pytest-cov<6.2,>=6.1.1; extra == 'test'
 Requires-Dist: pytest-instafail<0.6,>=0.5.0; extra == 'test'
@@ -14,7 +14,7 @@ Requires-Dist: pytest-lazy-fixtures<1.2,>=1.1.2; extra == 'test'
 Requires-Dist: pytest-only<2.2,>=2.1.2; extra == 'test'
 Requires-Dist: pytest-randomly<3.17,>=3.16.0; extra == 'test'
 Requires-Dist: pytest-regressions<2.8,>=2.7.0; extra == 'test'
-Requires-Dist: pytest-rerunfailures<16,>=15.0; extra == 'test'
+Requires-Dist: pytest-rerunfailures<16,>=15.1; extra == 'test'
 Requires-Dist: pytest-rng<1.1,>=1.0.0; extra == 'test'
 Requires-Dist: pytest-timeout<2.5,>=2.4.0; extra == 'test'
 Requires-Dist: pytest-xdist<3.7,>=3.6.1; extra == 'test'
@@ -37,7 +37,7 @@ Requires-Dist: atools<0.15,>=0.14.2; extra == 'zzz-test-atools'
 Provides-Extra: zzz-test-cachetools
 Requires-Dist: cachetools<5.6,>=5.5.2; extra == 'zzz-test-cachetools'
 Provides-Extra: zzz-test-click
-Requires-Dist: click<8.2,>=8.1.8; extra == 'zzz-test-click'
+Requires-Dist: click<8.3,>=8.2.0; extra == 'zzz-test-click'
 Requires-Dist: sqlalchemy<2.1,>=2.0.40; extra == 'zzz-test-click'
 Requires-Dist: whenever<0.8,>=0.7.3; extra == 'zzz-test-click'
 Provides-Extra: zzz-test-contextlib
@@ -80,7 +80,7 @@ Provides-Extra: zzz-test-hypothesis
 Requires-Dist: aiosqlite<0.22,>=0.21.0; extra == 'zzz-test-hypothesis'
 Requires-Dist: asyncpg<0.31,>=0.30.0; extra == 'zzz-test-hypothesis'
 Requires-Dist: greenlet<3.3,>=3.2.0; extra == 'zzz-test-hypothesis'
-Requires-Dist: hypothesis<6.132,>=6.131.14; extra == 'zzz-test-hypothesis'
+Requires-Dist: hypothesis<6.132,>=6.131.15; extra == 'zzz-test-hypothesis'
 Requires-Dist: luigi<3.7,>=3.6.0; extra == 'zzz-test-hypothesis'
 Requires-Dist: numpy<2.3,>=2.2.5; extra == 'zzz-test-hypothesis'
 Requires-Dist: pathvalidate<3.3,>=3.2.3; extra == 'zzz-test-hypothesis'
@@ -101,7 +101,7 @@ Requires-Dist: polars-lts-cpu<1.30,>=1.29.0; extra == 'zzz-test-jupyter'
 Provides-Extra: zzz-test-logging
 Requires-Dist: atomicwrites<1.5,>=1.4.1; extra == 'zzz-test-logging'
 Requires-Dist: coloredlogs<15.1,>=15.0.1; extra == 'zzz-test-logging'
-Requires-Dist: concurrent-log-handler<0.10,>=0.9.25; extra == 'zzz-test-logging'
+Requires-Dist: concurrent-log-handler<0.10,>=0.9.26; extra == 'zzz-test-logging'
 Requires-Dist: rich<14.1,>=14.0.0; extra == 'zzz-test-logging'
 Requires-Dist: tomlkit<0.14,>=0.13.2; extra == 'zzz-test-logging'
 Requires-Dist: tzlocal<5.4,>=5.3.1; extra == 'zzz-test-logging'
@@ -172,7 +172,7 @@ Requires-Dist: whenever<0.8,>=0.7.3; extra == 'zzz-test-redis'
 Provides-Extra: zzz-test-rich
 Requires-Dist: rich<14.1,>=14.0.0; extra == 'zzz-test-rich'
 Provides-Extra: zzz-test-scipy
-Requires-Dist: scipy<1.16,>=1.15.2; extra == 'zzz-test-scipy'
+Requires-Dist: scipy<1.16,>=1.15.3; extra == 'zzz-test-scipy'
 Provides-Extra: zzz-test-sentinel
 Provides-Extra: zzz-test-shelve
 Provides-Extra: zzz-test-slack-sdk

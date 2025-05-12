@@ -1612,7 +1612,7 @@ typedef char *(*__pyx_t_9psycopg_c_2pq_conn_bytes_f)(PGconn const *);
  */
 typedef int (*__pyx_t_9psycopg_c_2pq_conn_int_f)(PGconn const *);
 
-/* "psycopg_c/pq/pgconn.pyx":730
+/* "psycopg_c/pq/pgconn.pyx":732
  * 
  * 
  * cdef (Py_ssize_t, libpq.Oid *, char * const*, int *, int *) _query_params_args(             # <<<<<<<<<<<<<<
@@ -19011,7 +19011,7 @@ static char *__pyx_f_9psycopg_c_2pq__call_bytes(struct __pyx_obj_9psycopg_c_2pq_
  *     if not _ensure_pgconn(pgconn):
  *         return NULL             # <<<<<<<<<<<<<<
  *     cdef char *rv = func(pgconn._pgconn_ptr)
- *     assert rv is not NULL
+ *     if rv is not NULL:
  */
     __pyx_r = NULL;
     goto __pyx_L0;
@@ -19029,8 +19029,8 @@ static char *__pyx_f_9psycopg_c_2pq__call_bytes(struct __pyx_obj_9psycopg_c_2pq_
  *     if not _ensure_pgconn(pgconn):
  *         return NULL
  *     cdef char *rv = func(pgconn._pgconn_ptr)             # <<<<<<<<<<<<<<
- *     assert rv is not NULL
- *     return rv
+ *     if rv is not NULL:
+ *         return rv
  */
   __pyx_t_3 = __pyx_v_func(__pyx_v_pgconn->_pgconn_ptr); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 702, __pyx_L1_error)
   __pyx_v_rv = __pyx_t_3;
@@ -19038,31 +19038,43 @@ static char *__pyx_f_9psycopg_c_2pq__call_bytes(struct __pyx_obj_9psycopg_c_2pq_
   /* "psycopg_c/pq/pgconn.pyx":703
  *         return NULL
  *     cdef char *rv = func(pgconn._pgconn_ptr)
- *     assert rv is not NULL             # <<<<<<<<<<<<<<
- *     return rv
- * 
+ *     if rv is not NULL:             # <<<<<<<<<<<<<<
+ *         return rv
+ *     else:
  */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(__pyx_assertions_enabled())) {
-    __pyx_t_2 = (__pyx_v_rv != NULL);
-    if (unlikely(!__pyx_t_2)) {
-      __Pyx_Raise(__pyx_builtin_AssertionError, 0, 0, 0);
-      __PYX_ERR(0, 703, __pyx_L1_error)
-    }
-  }
-  #else
-  if ((1)); else __PYX_ERR(0, 703, __pyx_L1_error)
-  #endif
+  __pyx_t_2 = (__pyx_v_rv != NULL);
+  if (__pyx_t_2) {
 
-  /* "psycopg_c/pq/pgconn.pyx":704
+    /* "psycopg_c/pq/pgconn.pyx":704
  *     cdef char *rv = func(pgconn._pgconn_ptr)
- *     assert rv is not NULL
- *     return rv             # <<<<<<<<<<<<<<
+ *     if rv is not NULL:
+ *         return rv             # <<<<<<<<<<<<<<
+ *     else:
+ *         return b""
+ */
+    __pyx_r = __pyx_v_rv;
+    goto __pyx_L0;
+
+    /* "psycopg_c/pq/pgconn.pyx":703
+ *         return NULL
+ *     cdef char *rv = func(pgconn._pgconn_ptr)
+ *     if rv is not NULL:             # <<<<<<<<<<<<<<
+ *         return rv
+ *     else:
+ */
+  }
+
+  /* "psycopg_c/pq/pgconn.pyx":706
+ *         return rv
+ *     else:
+ *         return b""             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_r = __pyx_v_rv;
-  goto __pyx_L0;
+  /*else*/ {
+    __pyx_r = ((char *)"");
+    goto __pyx_L0;
+  }
 
   /* "psycopg_c/pq/pgconn.pyx":696
  * 
@@ -19080,7 +19092,7 @@ static char *__pyx_f_9psycopg_c_2pq__call_bytes(struct __pyx_obj_9psycopg_c_2pq_
   return __pyx_r;
 }
 
-/* "psycopg_c/pq/pgconn.pyx":707
+/* "psycopg_c/pq/pgconn.pyx":709
  * 
  * 
  * cdef int _call_int(PGconn pgconn, conn_int_f func) except -2:             # <<<<<<<<<<<<<<
@@ -19096,18 +19108,18 @@ static int __pyx_f_9psycopg_c_2pq__call_int(struct __pyx_obj_9psycopg_c_2pq_PGco
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "psycopg_c/pq/pgconn.pyx":711
+  /* "psycopg_c/pq/pgconn.pyx":713
  *     Call one of the pgconn libpq functions returning an int.
  *     """
  *     if not _ensure_pgconn(pgconn):             # <<<<<<<<<<<<<<
  *         return -2
  *     return func(pgconn._pgconn_ptr)
  */
-  __pyx_t_1 = __pyx_f_9psycopg_c_2pq__ensure_pgconn(__pyx_v_pgconn); if (unlikely(__pyx_t_1 == ((int)0))) __PYX_ERR(0, 711, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_9psycopg_c_2pq__ensure_pgconn(__pyx_v_pgconn); if (unlikely(__pyx_t_1 == ((int)0))) __PYX_ERR(0, 713, __pyx_L1_error)
   __pyx_t_2 = (!(__pyx_t_1 != 0));
   if (__pyx_t_2) {
 
-    /* "psycopg_c/pq/pgconn.pyx":712
+    /* "psycopg_c/pq/pgconn.pyx":714
  *     """
  *     if not _ensure_pgconn(pgconn):
  *         return -2             # <<<<<<<<<<<<<<
@@ -19117,7 +19129,7 @@ static int __pyx_f_9psycopg_c_2pq__call_int(struct __pyx_obj_9psycopg_c_2pq_PGco
     __pyx_r = -2;
     goto __pyx_L0;
 
-    /* "psycopg_c/pq/pgconn.pyx":711
+    /* "psycopg_c/pq/pgconn.pyx":713
  *     Call one of the pgconn libpq functions returning an int.
  *     """
  *     if not _ensure_pgconn(pgconn):             # <<<<<<<<<<<<<<
@@ -19126,18 +19138,18 @@ static int __pyx_f_9psycopg_c_2pq__call_int(struct __pyx_obj_9psycopg_c_2pq_PGco
  */
   }
 
-  /* "psycopg_c/pq/pgconn.pyx":713
+  /* "psycopg_c/pq/pgconn.pyx":715
  *     if not _ensure_pgconn(pgconn):
  *         return -2
  *     return func(pgconn._pgconn_ptr)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_1 = __pyx_v_func(__pyx_v_pgconn->_pgconn_ptr); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 713, __pyx_L1_error)
+  __pyx_t_1 = __pyx_v_func(__pyx_v_pgconn->_pgconn_ptr); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 715, __pyx_L1_error)
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "psycopg_c/pq/pgconn.pyx":707
+  /* "psycopg_c/pq/pgconn.pyx":709
  * 
  * 
  * cdef int _call_int(PGconn pgconn, conn_int_f func) except -2:             # <<<<<<<<<<<<<<
@@ -19153,7 +19165,7 @@ static int __pyx_f_9psycopg_c_2pq__call_int(struct __pyx_obj_9psycopg_c_2pq_PGco
   return __pyx_r;
 }
 
-/* "psycopg_c/pq/pgconn.pyx":716
+/* "psycopg_c/pq/pgconn.pyx":718
  * 
  * 
  * cdef void notice_receiver(void *arg, const libpq.PGresult *res_ptr) noexcept with gil:             # <<<<<<<<<<<<<<
@@ -19195,20 +19207,20 @@ static void __pyx_f_9psycopg_c_2pq_notice_receiver(void *__pyx_v_arg, PGresult c
   #endif
   __Pyx_RefNannySetupContext("notice_receiver", 0);
 
-  /* "psycopg_c/pq/pgconn.pyx":717
+  /* "psycopg_c/pq/pgconn.pyx":719
  * 
  * cdef void notice_receiver(void *arg, const libpq.PGresult *res_ptr) noexcept with gil:
  *     cdef PGconn pgconn = <object>arg             # <<<<<<<<<<<<<<
  *     if pgconn.notice_handler is None:
  *         return
  */
-  if (!(likely(((((PyObject *)__pyx_v_arg)) == Py_None) || likely(__Pyx_TypeTest(((PyObject *)__pyx_v_arg), __pyx_ptype_9psycopg_c_2pq_PGconn))))) __PYX_ERR(0, 717, __pyx_L1_error)
+  if (!(likely(((((PyObject *)__pyx_v_arg)) == Py_None) || likely(__Pyx_TypeTest(((PyObject *)__pyx_v_arg), __pyx_ptype_9psycopg_c_2pq_PGconn))))) __PYX_ERR(0, 719, __pyx_L1_error)
   __pyx_t_1 = ((PyObject *)__pyx_v_arg);
   __Pyx_INCREF(__pyx_t_1);
   __pyx_v_pgconn = ((struct __pyx_obj_9psycopg_c_2pq_PGconn *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "psycopg_c/pq/pgconn.pyx":718
+  /* "psycopg_c/pq/pgconn.pyx":720
  * cdef void notice_receiver(void *arg, const libpq.PGresult *res_ptr) noexcept with gil:
  *     cdef PGconn pgconn = <object>arg
  *     if pgconn.notice_handler is None:             # <<<<<<<<<<<<<<
@@ -19218,7 +19230,7 @@ static void __pyx_f_9psycopg_c_2pq_notice_receiver(void *__pyx_v_arg, PGresult c
   __pyx_t_2 = (__pyx_v_pgconn->notice_handler == Py_None);
   if (__pyx_t_2) {
 
-    /* "psycopg_c/pq/pgconn.pyx":719
+    /* "psycopg_c/pq/pgconn.pyx":721
  *     cdef PGconn pgconn = <object>arg
  *     if pgconn.notice_handler is None:
  *         return             # <<<<<<<<<<<<<<
@@ -19227,7 +19239,7 @@ static void __pyx_f_9psycopg_c_2pq_notice_receiver(void *__pyx_v_arg, PGresult c
  */
     goto __pyx_L0;
 
-    /* "psycopg_c/pq/pgconn.pyx":718
+    /* "psycopg_c/pq/pgconn.pyx":720
  * cdef void notice_receiver(void *arg, const libpq.PGresult *res_ptr) noexcept with gil:
  *     cdef PGconn pgconn = <object>arg
  *     if pgconn.notice_handler is None:             # <<<<<<<<<<<<<<
@@ -19236,19 +19248,19 @@ static void __pyx_f_9psycopg_c_2pq_notice_receiver(void *__pyx_v_arg, PGresult c
  */
   }
 
-  /* "psycopg_c/pq/pgconn.pyx":721
+  /* "psycopg_c/pq/pgconn.pyx":723
  *         return
  * 
  *     cdef PGresult res = PGresult._from_ptr(<libpq.PGresult *>res_ptr)             # <<<<<<<<<<<<<<
  *     try:
  *         pgconn.notice_handler(res)
  */
-  __pyx_t_1 = ((PyObject *)__pyx_f_9psycopg_c_2pq_8PGresult__from_ptr(((PGresult *)__pyx_v_res_ptr))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 721, __pyx_L1_error)
+  __pyx_t_1 = ((PyObject *)__pyx_f_9psycopg_c_2pq_8PGresult__from_ptr(((PGresult *)__pyx_v_res_ptr))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 723, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_res = ((struct __pyx_obj_9psycopg_c_2pq_PGresult *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "psycopg_c/pq/pgconn.pyx":722
+  /* "psycopg_c/pq/pgconn.pyx":724
  * 
  *     cdef PGresult res = PGresult._from_ptr(<libpq.PGresult *>res_ptr)
  *     try:             # <<<<<<<<<<<<<<
@@ -19265,7 +19277,7 @@ static void __pyx_f_9psycopg_c_2pq_notice_receiver(void *__pyx_v_arg, PGresult c
       __Pyx_XGOTREF(__pyx_t_5);
       /*try:*/ {
 
-        /* "psycopg_c/pq/pgconn.pyx":723
+        /* "psycopg_c/pq/pgconn.pyx":725
  *     cdef PGresult res = PGresult._from_ptr(<libpq.PGresult *>res_ptr)
  *     try:
  *         pgconn.notice_handler(res)             # <<<<<<<<<<<<<<
@@ -19291,13 +19303,13 @@ static void __pyx_f_9psycopg_c_2pq_notice_receiver(void *__pyx_v_arg, PGresult c
           PyObject *__pyx_callargs[2] = {__pyx_t_7, ((PyObject *)__pyx_v_res)};
           __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_6, __pyx_callargs+1-__pyx_t_8, 1+__pyx_t_8);
           __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 723, __pyx_L7_error)
+          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 725, __pyx_L7_error)
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         }
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "psycopg_c/pq/pgconn.pyx":722
+        /* "psycopg_c/pq/pgconn.pyx":724
  * 
  *     cdef PGresult res = PGresult._from_ptr(<libpq.PGresult *>res_ptr)
  *     try:             # <<<<<<<<<<<<<<
@@ -19314,7 +19326,7 @@ static void __pyx_f_9psycopg_c_2pq_notice_receiver(void *__pyx_v_arg, PGresult c
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-      /* "psycopg_c/pq/pgconn.pyx":724
+      /* "psycopg_c/pq/pgconn.pyx":726
  *     try:
  *         pgconn.notice_handler(res)
  *     except Exception as e:             # <<<<<<<<<<<<<<
@@ -19324,7 +19336,7 @@ static void __pyx_f_9psycopg_c_2pq_notice_receiver(void *__pyx_v_arg, PGresult c
       __pyx_t_9 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
       if (__pyx_t_9) {
         __Pyx_AddTraceback("psycopg_c.pq.notice_receiver", __pyx_clineno, __pyx_lineno, __pyx_filename);
-        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_6, &__pyx_t_7) < 0) __PYX_ERR(0, 724, __pyx_L9_except_error)
+        if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_6, &__pyx_t_7) < 0) __PYX_ERR(0, 726, __pyx_L9_except_error)
         __Pyx_XGOTREF(__pyx_t_1);
         __Pyx_XGOTREF(__pyx_t_6);
         __Pyx_XGOTREF(__pyx_t_7);
@@ -19332,16 +19344,16 @@ static void __pyx_f_9psycopg_c_2pq_notice_receiver(void *__pyx_v_arg, PGresult c
         __pyx_v_e = __pyx_t_6;
         /*try:*/ {
 
-          /* "psycopg_c/pq/pgconn.pyx":725
+          /* "psycopg_c/pq/pgconn.pyx":727
  *         pgconn.notice_handler(res)
  *     except Exception as e:
  *         logger.exception("error in notice receiver: %s", e)             # <<<<<<<<<<<<<<
  *     finally:
  *         res._pgresult_ptr = NULL  # avoid destroying the pgresult_ptr
  */
-          __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_logger); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 725, __pyx_L18_error)
+          __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_logger); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 727, __pyx_L18_error)
           __Pyx_GOTREF(__pyx_t_11);
-          __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_exception); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 725, __pyx_L18_error)
+          __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_exception); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 727, __pyx_L18_error)
           __Pyx_GOTREF(__pyx_t_12);
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
           __pyx_t_11 = NULL;
@@ -19362,14 +19374,14 @@ static void __pyx_f_9psycopg_c_2pq_notice_receiver(void *__pyx_v_arg, PGresult c
             PyObject *__pyx_callargs[3] = {__pyx_t_11, __pyx_kp_u_error_in_notice_receiver_s, __pyx_v_e};
             __pyx_t_10 = __Pyx_PyObject_FastCall(__pyx_t_12, __pyx_callargs+1-__pyx_t_8, 2+__pyx_t_8);
             __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
-            if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 725, __pyx_L18_error)
+            if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 727, __pyx_L18_error)
             __Pyx_GOTREF(__pyx_t_10);
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
           }
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         }
 
-        /* "psycopg_c/pq/pgconn.pyx":724
+        /* "psycopg_c/pq/pgconn.pyx":726
  *     try:
  *         pgconn.notice_handler(res)
  *     except Exception as e:             # <<<<<<<<<<<<<<
@@ -19424,7 +19436,7 @@ static void __pyx_f_9psycopg_c_2pq_notice_receiver(void *__pyx_v_arg, PGresult c
       }
       goto __pyx_L9_except_error;
 
-      /* "psycopg_c/pq/pgconn.pyx":722
+      /* "psycopg_c/pq/pgconn.pyx":724
  * 
  *     cdef PGresult res = PGresult._from_ptr(<libpq.PGresult *>res_ptr)
  *     try:             # <<<<<<<<<<<<<<
@@ -19446,7 +19458,7 @@ static void __pyx_f_9psycopg_c_2pq_notice_receiver(void *__pyx_v_arg, PGresult c
     }
   }
 
-  /* "psycopg_c/pq/pgconn.pyx":727
+  /* "psycopg_c/pq/pgconn.pyx":729
  *         logger.exception("error in notice receiver: %s", e)
  *     finally:
  *         res._pgresult_ptr = NULL  # avoid destroying the pgresult_ptr             # <<<<<<<<<<<<<<
@@ -19498,7 +19510,7 @@ static void __pyx_f_9psycopg_c_2pq_notice_receiver(void *__pyx_v_arg, PGresult c
     __pyx_L6:;
   }
 
-  /* "psycopg_c/pq/pgconn.pyx":716
+  /* "psycopg_c/pq/pgconn.pyx":718
  * 
  * 
  * cdef void notice_receiver(void *arg, const libpq.PGresult *res_ptr) noexcept with gil:             # <<<<<<<<<<<<<<
@@ -19526,7 +19538,7 @@ static void __pyx_f_9psycopg_c_2pq_notice_receiver(void *__pyx_v_arg, PGresult c
   #endif
 }
 
-/* "psycopg_c/pq/pgconn.pyx":730
+/* "psycopg_c/pq/pgconn.pyx":732
  * 
  * 
  * cdef (Py_ssize_t, libpq.Oid *, char * const*, int *, int *) _query_params_args(             # <<<<<<<<<<<<<<
@@ -19564,7 +19576,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("_query_params_args", 1);
 
-  /* "psycopg_c/pq/pgconn.pyx":740
+  /* "psycopg_c/pq/pgconn.pyx":742
  *     # is most often no-op
  *     cdef tuple tparam_types
  *     if param_types is not None and not isinstance(param_types, tuple):             # <<<<<<<<<<<<<<
@@ -19583,19 +19595,19 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "psycopg_c/pq/pgconn.pyx":741
+    /* "psycopg_c/pq/pgconn.pyx":743
  *     cdef tuple tparam_types
  *     if param_types is not None and not isinstance(param_types, tuple):
  *         tparam_types = tuple(param_types)             # <<<<<<<<<<<<<<
  *     else:
  *         tparam_types = param_types
  */
-    __pyx_t_4 = __Pyx_PySequence_Tuple(__pyx_v_param_types); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 741, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PySequence_Tuple(__pyx_v_param_types); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 743, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_v_tparam_types = ((PyObject*)__pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "psycopg_c/pq/pgconn.pyx":740
+    /* "psycopg_c/pq/pgconn.pyx":742
  *     # is most often no-op
  *     cdef tuple tparam_types
  *     if param_types is not None and not isinstance(param_types, tuple):             # <<<<<<<<<<<<<<
@@ -19605,7 +19617,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
     goto __pyx_L3;
   }
 
-  /* "psycopg_c/pq/pgconn.pyx":743
+  /* "psycopg_c/pq/pgconn.pyx":745
  *         tparam_types = tuple(param_types)
  *     else:
  *         tparam_types = param_types             # <<<<<<<<<<<<<<
@@ -19613,7 +19625,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  *     cdef Py_ssize_t nparams = len(param_values) if param_values else 0
  */
   /*else*/ {
-    if (!(likely(PyTuple_CheckExact(__pyx_v_param_types))||((__pyx_v_param_types) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_v_param_types))) __PYX_ERR(0, 743, __pyx_L1_error)
+    if (!(likely(PyTuple_CheckExact(__pyx_v_param_types))||((__pyx_v_param_types) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_v_param_types))) __PYX_ERR(0, 745, __pyx_L1_error)
     __pyx_t_4 = __pyx_v_param_types;
     __Pyx_INCREF(__pyx_t_4);
     __pyx_v_tparam_types = ((PyObject*)__pyx_t_4);
@@ -19621,7 +19633,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
   }
   __pyx_L3:;
 
-  /* "psycopg_c/pq/pgconn.pyx":745
+  /* "psycopg_c/pq/pgconn.pyx":747
  *         tparam_types = param_types
  * 
  *     cdef Py_ssize_t nparams = len(param_values) if param_values else 0             # <<<<<<<<<<<<<<
@@ -19632,16 +19644,16 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
   if (__pyx_t_1) {
     if (unlikely(__pyx_v_param_values == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-      __PYX_ERR(0, 745, __pyx_L1_error)
+      __PYX_ERR(0, 747, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyList_GET_SIZE(__pyx_v_param_values); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 745, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyList_GET_SIZE(__pyx_v_param_values); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 747, __pyx_L1_error)
     __pyx_t_5 = __pyx_t_6;
   } else {
     __pyx_t_5 = 0;
   }
   __pyx_v_nparams = __pyx_t_5;
 
-  /* "psycopg_c/pq/pgconn.pyx":746
+  /* "psycopg_c/pq/pgconn.pyx":748
  * 
  *     cdef Py_ssize_t nparams = len(param_values) if param_values else 0
  *     if tparam_types is not None and len(tparam_types) != nparams:             # <<<<<<<<<<<<<<
@@ -19656,22 +19668,22 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
   }
   if (unlikely(__pyx_v_tparam_types == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 746, __pyx_L1_error)
+    __PYX_ERR(0, 748, __pyx_L1_error)
   }
-  __pyx_t_5 = __Pyx_PyTuple_GET_SIZE(__pyx_v_tparam_types); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 746, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyTuple_GET_SIZE(__pyx_v_tparam_types); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 748, __pyx_L1_error)
   __pyx_t_3 = (__pyx_t_5 != __pyx_v_nparams);
   __pyx_t_1 = __pyx_t_3;
   __pyx_L7_bool_binop_done:;
   if (unlikely(__pyx_t_1)) {
 
-    /* "psycopg_c/pq/pgconn.pyx":748
+    /* "psycopg_c/pq/pgconn.pyx":750
  *     if tparam_types is not None and len(tparam_types) != nparams:
  *         raise ValueError(
  *             "got %d param_values but %d param_types"             # <<<<<<<<<<<<<<
  *             % (nparams, len(tparam_types))
  *         )
  */
-    __pyx_t_4 = PyTuple_New(5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 748, __pyx_L1_error)
+    __pyx_t_4 = PyTuple_New(5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 750, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_5 = 0;
     __pyx_t_7 = 127;
@@ -19680,14 +19692,14 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
     __Pyx_GIVEREF(__pyx_kp_u_got);
     PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_kp_u_got);
 
-    /* "psycopg_c/pq/pgconn.pyx":749
+    /* "psycopg_c/pq/pgconn.pyx":751
  *         raise ValueError(
  *             "got %d param_values but %d param_types"
  *             % (nparams, len(tparam_types))             # <<<<<<<<<<<<<<
  *         )
  *     if param_formats is not None and len(param_formats) != nparams:
  */
-    __pyx_t_8 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_v_nparams, 0, ' ', 'd'); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 749, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_v_nparams, 0, ' ', 'd'); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 751, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __pyx_t_5 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_8);
     __Pyx_GIVEREF(__pyx_t_8);
@@ -19699,10 +19711,10 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
     PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_kp_u_param_values_but);
     if (unlikely(__pyx_v_tparam_types == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-      __PYX_ERR(0, 749, __pyx_L1_error)
+      __PYX_ERR(0, 751, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyTuple_GET_SIZE(__pyx_v_tparam_types); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 749, __pyx_L1_error)
-    __pyx_t_8 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_6, 0, ' ', 'd'); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 749, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyTuple_GET_SIZE(__pyx_v_tparam_types); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 751, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_6, 0, ' ', 'd'); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 751, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __pyx_t_5 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_8);
     __Pyx_GIVEREF(__pyx_t_8);
@@ -19713,32 +19725,32 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
     __Pyx_GIVEREF(__pyx_kp_u_param_types_2);
     PyTuple_SET_ITEM(__pyx_t_4, 4, __pyx_kp_u_param_types_2);
 
-    /* "psycopg_c/pq/pgconn.pyx":748
+    /* "psycopg_c/pq/pgconn.pyx":750
  *     if tparam_types is not None and len(tparam_types) != nparams:
  *         raise ValueError(
  *             "got %d param_values but %d param_types"             # <<<<<<<<<<<<<<
  *             % (nparams, len(tparam_types))
  *         )
  */
-    __pyx_t_8 = __Pyx_PyUnicode_Join(__pyx_t_4, 5, __pyx_t_5, __pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 748, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyUnicode_Join(__pyx_t_4, 5, __pyx_t_5, __pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 750, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "psycopg_c/pq/pgconn.pyx":747
+    /* "psycopg_c/pq/pgconn.pyx":749
  *     cdef Py_ssize_t nparams = len(param_values) if param_values else 0
  *     if tparam_types is not None and len(tparam_types) != nparams:
  *         raise ValueError(             # <<<<<<<<<<<<<<
  *             "got %d param_values but %d param_types"
  *             % (nparams, len(tparam_types))
  */
-    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 747, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 749, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __Pyx_Raise(__pyx_t_4, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __PYX_ERR(0, 747, __pyx_L1_error)
+    __PYX_ERR(0, 749, __pyx_L1_error)
 
-    /* "psycopg_c/pq/pgconn.pyx":746
+    /* "psycopg_c/pq/pgconn.pyx":748
  * 
  *     cdef Py_ssize_t nparams = len(param_values) if param_values else 0
  *     if tparam_types is not None and len(tparam_types) != nparams:             # <<<<<<<<<<<<<<
@@ -19747,7 +19759,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
   }
 
-  /* "psycopg_c/pq/pgconn.pyx":751
+  /* "psycopg_c/pq/pgconn.pyx":753
  *             % (nparams, len(tparam_types))
  *         )
  *     if param_formats is not None and len(param_formats) != nparams:             # <<<<<<<<<<<<<<
@@ -19762,22 +19774,22 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
   }
   if (unlikely(__pyx_v_param_formats == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 751, __pyx_L1_error)
+    __PYX_ERR(0, 753, __pyx_L1_error)
   }
-  __pyx_t_5 = __Pyx_PyList_GET_SIZE(__pyx_v_param_formats); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 751, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyList_GET_SIZE(__pyx_v_param_formats); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 753, __pyx_L1_error)
   __pyx_t_3 = (__pyx_t_5 != __pyx_v_nparams);
   __pyx_t_1 = __pyx_t_3;
   __pyx_L10_bool_binop_done:;
   if (unlikely(__pyx_t_1)) {
 
-    /* "psycopg_c/pq/pgconn.pyx":753
+    /* "psycopg_c/pq/pgconn.pyx":755
  *     if param_formats is not None and len(param_formats) != nparams:
  *         raise ValueError(
  *             "got %d param_values but %d param_formats"             # <<<<<<<<<<<<<<
  *             % (nparams, len(param_formats))
  *         )
  */
-    __pyx_t_4 = PyTuple_New(5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 753, __pyx_L1_error)
+    __pyx_t_4 = PyTuple_New(5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 755, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_5 = 0;
     __pyx_t_7 = 127;
@@ -19786,14 +19798,14 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
     __Pyx_GIVEREF(__pyx_kp_u_got);
     PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_kp_u_got);
 
-    /* "psycopg_c/pq/pgconn.pyx":754
+    /* "psycopg_c/pq/pgconn.pyx":756
  *         raise ValueError(
  *             "got %d param_values but %d param_formats"
  *             % (nparams, len(param_formats))             # <<<<<<<<<<<<<<
  *         )
  * 
  */
-    __pyx_t_8 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_v_nparams, 0, ' ', 'd'); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 754, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_v_nparams, 0, ' ', 'd'); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 756, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __pyx_t_5 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_8);
     __Pyx_GIVEREF(__pyx_t_8);
@@ -19805,10 +19817,10 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
     PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_kp_u_param_values_but);
     if (unlikely(__pyx_v_param_formats == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-      __PYX_ERR(0, 754, __pyx_L1_error)
+      __PYX_ERR(0, 756, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyList_GET_SIZE(__pyx_v_param_formats); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 754, __pyx_L1_error)
-    __pyx_t_8 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_6, 0, ' ', 'd'); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 754, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyList_GET_SIZE(__pyx_v_param_formats); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 756, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_6, 0, ' ', 'd'); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 756, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __pyx_t_5 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_8);
     __Pyx_GIVEREF(__pyx_t_8);
@@ -19819,32 +19831,32 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
     __Pyx_GIVEREF(__pyx_kp_u_param_formats_2);
     PyTuple_SET_ITEM(__pyx_t_4, 4, __pyx_kp_u_param_formats_2);
 
-    /* "psycopg_c/pq/pgconn.pyx":753
+    /* "psycopg_c/pq/pgconn.pyx":755
  *     if param_formats is not None and len(param_formats) != nparams:
  *         raise ValueError(
  *             "got %d param_values but %d param_formats"             # <<<<<<<<<<<<<<
  *             % (nparams, len(param_formats))
  *         )
  */
-    __pyx_t_8 = __Pyx_PyUnicode_Join(__pyx_t_4, 5, __pyx_t_5, __pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 753, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyUnicode_Join(__pyx_t_4, 5, __pyx_t_5, __pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 755, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "psycopg_c/pq/pgconn.pyx":752
+    /* "psycopg_c/pq/pgconn.pyx":754
  *         )
  *     if param_formats is not None and len(param_formats) != nparams:
  *         raise ValueError(             # <<<<<<<<<<<<<<
  *             "got %d param_values but %d param_formats"
  *             % (nparams, len(param_formats))
  */
-    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 752, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_8); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 754, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __Pyx_Raise(__pyx_t_4, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __PYX_ERR(0, 752, __pyx_L1_error)
+    __PYX_ERR(0, 754, __pyx_L1_error)
 
-    /* "psycopg_c/pq/pgconn.pyx":751
+    /* "psycopg_c/pq/pgconn.pyx":753
  *             % (nparams, len(tparam_types))
  *         )
  *     if param_formats is not None and len(param_formats) != nparams:             # <<<<<<<<<<<<<<
@@ -19853,7 +19865,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
   }
 
-  /* "psycopg_c/pq/pgconn.pyx":757
+  /* "psycopg_c/pq/pgconn.pyx":759
  *         )
  * 
  *     cdef char **aparams = NULL             # <<<<<<<<<<<<<<
@@ -19862,7 +19874,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
   __pyx_v_aparams = NULL;
 
-  /* "psycopg_c/pq/pgconn.pyx":758
+  /* "psycopg_c/pq/pgconn.pyx":760
  * 
  *     cdef char **aparams = NULL
  *     cdef int *alenghts = NULL             # <<<<<<<<<<<<<<
@@ -19871,7 +19883,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
   __pyx_v_alenghts = NULL;
 
-  /* "psycopg_c/pq/pgconn.pyx":762
+  /* "psycopg_c/pq/pgconn.pyx":764
  *     cdef Py_ssize_t length
  * 
  *     if nparams:             # <<<<<<<<<<<<<<
@@ -19881,7 +19893,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
   __pyx_t_1 = (__pyx_v_nparams != 0);
   if (__pyx_t_1) {
 
-    /* "psycopg_c/pq/pgconn.pyx":763
+    /* "psycopg_c/pq/pgconn.pyx":765
  * 
  *     if nparams:
  *         aparams = <char **>PyMem_Malloc(nparams * sizeof(char *))             # <<<<<<<<<<<<<<
@@ -19890,7 +19902,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
     __pyx_v_aparams = ((char **)PyMem_Malloc((__pyx_v_nparams * (sizeof(char *)))));
 
-    /* "psycopg_c/pq/pgconn.pyx":764
+    /* "psycopg_c/pq/pgconn.pyx":766
  *     if nparams:
  *         aparams = <char **>PyMem_Malloc(nparams * sizeof(char *))
  *         alenghts = <int *>PyMem_Malloc(nparams * sizeof(int))             # <<<<<<<<<<<<<<
@@ -19899,7 +19911,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
     __pyx_v_alenghts = ((int *)PyMem_Malloc((__pyx_v_nparams * (sizeof(int)))));
 
-    /* "psycopg_c/pq/pgconn.pyx":765
+    /* "psycopg_c/pq/pgconn.pyx":767
  *         aparams = <char **>PyMem_Malloc(nparams * sizeof(char *))
  *         alenghts = <int *>PyMem_Malloc(nparams * sizeof(int))
  *         for i in range(nparams):             # <<<<<<<<<<<<<<
@@ -19911,7 +19923,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
     for (__pyx_t_9 = 0; __pyx_t_9 < __pyx_t_6; __pyx_t_9+=1) {
       __pyx_v_i = __pyx_t_9;
 
-      /* "psycopg_c/pq/pgconn.pyx":766
+      /* "psycopg_c/pq/pgconn.pyx":768
  *         alenghts = <int *>PyMem_Malloc(nparams * sizeof(int))
  *         for i in range(nparams):
  *             obj = param_values[i]             # <<<<<<<<<<<<<<
@@ -19920,14 +19932,14 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
       if (unlikely(__pyx_v_param_values == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 766, __pyx_L1_error)
+        __PYX_ERR(0, 768, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_param_values, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 766, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_param_values, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 768, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_XDECREF_SET(__pyx_v_obj, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "psycopg_c/pq/pgconn.pyx":767
+      /* "psycopg_c/pq/pgconn.pyx":769
  *         for i in range(nparams):
  *             obj = param_values[i]
  *             if obj is None:             # <<<<<<<<<<<<<<
@@ -19937,7 +19949,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
       __pyx_t_1 = (__pyx_v_obj == Py_None);
       if (__pyx_t_1) {
 
-        /* "psycopg_c/pq/pgconn.pyx":768
+        /* "psycopg_c/pq/pgconn.pyx":770
  *             obj = param_values[i]
  *             if obj is None:
  *                 aparams[i] = NULL             # <<<<<<<<<<<<<<
@@ -19946,7 +19958,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
         (__pyx_v_aparams[__pyx_v_i]) = NULL;
 
-        /* "psycopg_c/pq/pgconn.pyx":769
+        /* "psycopg_c/pq/pgconn.pyx":771
  *             if obj is None:
  *                 aparams[i] = NULL
  *                 alenghts[i] = 0             # <<<<<<<<<<<<<<
@@ -19955,7 +19967,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
         (__pyx_v_alenghts[__pyx_v_i]) = 0;
 
-        /* "psycopg_c/pq/pgconn.pyx":767
+        /* "psycopg_c/pq/pgconn.pyx":769
  *         for i in range(nparams):
  *             obj = param_values[i]
  *             if obj is None:             # <<<<<<<<<<<<<<
@@ -19965,7 +19977,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
         goto __pyx_L15;
       }
 
-      /* "psycopg_c/pq/pgconn.pyx":773
+      /* "psycopg_c/pq/pgconn.pyx":775
  *                 # TODO: it is a leak if this fails (but it should only fail
  *                 # on internal error, e.g. if obj is not a buffer)
  *                 _buffer_as_string_and_size(obj, &ptr, &length)             # <<<<<<<<<<<<<<
@@ -19973,9 +19985,9 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  *                 alenghts[i] = <int>length
  */
       /*else*/ {
-        __pyx_t_10 = __pyx_f_9psycopg_c_2pq__buffer_as_string_and_size(__pyx_v_obj, (&__pyx_v_ptr), (&__pyx_v_length)); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 773, __pyx_L1_error)
+        __pyx_t_10 = __pyx_f_9psycopg_c_2pq__buffer_as_string_and_size(__pyx_v_obj, (&__pyx_v_ptr), (&__pyx_v_length)); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 775, __pyx_L1_error)
 
-        /* "psycopg_c/pq/pgconn.pyx":774
+        /* "psycopg_c/pq/pgconn.pyx":776
  *                 # on internal error, e.g. if obj is not a buffer)
  *                 _buffer_as_string_and_size(obj, &ptr, &length)
  *                 aparams[i] = ptr             # <<<<<<<<<<<<<<
@@ -19984,7 +19996,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
         (__pyx_v_aparams[__pyx_v_i]) = __pyx_v_ptr;
 
-        /* "psycopg_c/pq/pgconn.pyx":775
+        /* "psycopg_c/pq/pgconn.pyx":777
  *                 _buffer_as_string_and_size(obj, &ptr, &length)
  *                 aparams[i] = ptr
  *                 alenghts[i] = <int>length             # <<<<<<<<<<<<<<
@@ -19996,7 +20008,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
       __pyx_L15:;
     }
 
-    /* "psycopg_c/pq/pgconn.pyx":762
+    /* "psycopg_c/pq/pgconn.pyx":764
  *     cdef Py_ssize_t length
  * 
  *     if nparams:             # <<<<<<<<<<<<<<
@@ -20005,7 +20017,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
   }
 
-  /* "psycopg_c/pq/pgconn.pyx":777
+  /* "psycopg_c/pq/pgconn.pyx":779
  *                 alenghts[i] = <int>length
  * 
  *     cdef libpq.Oid *atypes = NULL             # <<<<<<<<<<<<<<
@@ -20014,7 +20026,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
   __pyx_v_atypes = NULL;
 
-  /* "psycopg_c/pq/pgconn.pyx":778
+  /* "psycopg_c/pq/pgconn.pyx":780
  * 
  *     cdef libpq.Oid *atypes = NULL
  *     if tparam_types:             # <<<<<<<<<<<<<<
@@ -20024,7 +20036,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
   __pyx_t_1 = (__pyx_v_tparam_types != Py_None)&&(PyTuple_GET_SIZE(__pyx_v_tparam_types) != 0);
   if (__pyx_t_1) {
 
-    /* "psycopg_c/pq/pgconn.pyx":779
+    /* "psycopg_c/pq/pgconn.pyx":781
  *     cdef libpq.Oid *atypes = NULL
  *     if tparam_types:
  *         atypes = <libpq.Oid *>PyMem_Malloc(nparams * sizeof(libpq.Oid))             # <<<<<<<<<<<<<<
@@ -20033,7 +20045,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
     __pyx_v_atypes = ((Oid *)PyMem_Malloc((__pyx_v_nparams * (sizeof(Oid)))));
 
-    /* "psycopg_c/pq/pgconn.pyx":780
+    /* "psycopg_c/pq/pgconn.pyx":782
  *     if tparam_types:
  *         atypes = <libpq.Oid *>PyMem_Malloc(nparams * sizeof(libpq.Oid))
  *         for i in range(nparams):             # <<<<<<<<<<<<<<
@@ -20045,7 +20057,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
     for (__pyx_t_9 = 0; __pyx_t_9 < __pyx_t_6; __pyx_t_9+=1) {
       __pyx_v_i = __pyx_t_9;
 
-      /* "psycopg_c/pq/pgconn.pyx":781
+      /* "psycopg_c/pq/pgconn.pyx":783
  *         atypes = <libpq.Oid *>PyMem_Malloc(nparams * sizeof(libpq.Oid))
  *         for i in range(nparams):
  *             atypes[i] = tparam_types[i]             # <<<<<<<<<<<<<<
@@ -20054,16 +20066,16 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
       if (unlikely(__pyx_v_tparam_types == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 781, __pyx_L1_error)
+        __PYX_ERR(0, 783, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_GetItemInt_Tuple(__pyx_v_tparam_types, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 781, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt_Tuple(__pyx_v_tparam_types, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 783, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_11 = __Pyx_PyInt_As_Oid(__pyx_t_4); if (unlikely((__pyx_t_11 == ((Oid)-1)) && PyErr_Occurred())) __PYX_ERR(0, 781, __pyx_L1_error)
+      __pyx_t_11 = __Pyx_PyInt_As_Oid(__pyx_t_4); if (unlikely((__pyx_t_11 == ((Oid)-1)) && PyErr_Occurred())) __PYX_ERR(0, 783, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       (__pyx_v_atypes[__pyx_v_i]) = __pyx_t_11;
     }
 
-    /* "psycopg_c/pq/pgconn.pyx":778
+    /* "psycopg_c/pq/pgconn.pyx":780
  * 
  *     cdef libpq.Oid *atypes = NULL
  *     if tparam_types:             # <<<<<<<<<<<<<<
@@ -20072,7 +20084,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
   }
 
-  /* "psycopg_c/pq/pgconn.pyx":783
+  /* "psycopg_c/pq/pgconn.pyx":785
  *             atypes[i] = tparam_types[i]
  * 
  *     cdef int *aformats = NULL             # <<<<<<<<<<<<<<
@@ -20081,7 +20093,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
   __pyx_v_aformats = NULL;
 
-  /* "psycopg_c/pq/pgconn.pyx":784
+  /* "psycopg_c/pq/pgconn.pyx":786
  * 
  *     cdef int *aformats = NULL
  *     if param_formats is not None:             # <<<<<<<<<<<<<<
@@ -20091,7 +20103,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
   __pyx_t_1 = (__pyx_v_param_formats != ((PyObject*)Py_None));
   if (__pyx_t_1) {
 
-    /* "psycopg_c/pq/pgconn.pyx":785
+    /* "psycopg_c/pq/pgconn.pyx":787
  *     cdef int *aformats = NULL
  *     if param_formats is not None:
  *         aformats = <int *>PyMem_Malloc(nparams * sizeof(int *))             # <<<<<<<<<<<<<<
@@ -20100,7 +20112,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
     __pyx_v_aformats = ((int *)PyMem_Malloc((__pyx_v_nparams * (sizeof(int *)))));
 
-    /* "psycopg_c/pq/pgconn.pyx":786
+    /* "psycopg_c/pq/pgconn.pyx":788
  *     if param_formats is not None:
  *         aformats = <int *>PyMem_Malloc(nparams * sizeof(int *))
  *         for i in range(nparams):             # <<<<<<<<<<<<<<
@@ -20112,7 +20124,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
     for (__pyx_t_9 = 0; __pyx_t_9 < __pyx_t_6; __pyx_t_9+=1) {
       __pyx_v_i = __pyx_t_9;
 
-      /* "psycopg_c/pq/pgconn.pyx":787
+      /* "psycopg_c/pq/pgconn.pyx":789
  *         aformats = <int *>PyMem_Malloc(nparams * sizeof(int *))
  *         for i in range(nparams):
  *             aformats[i] = param_formats[i]             # <<<<<<<<<<<<<<
@@ -20121,16 +20133,16 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
       if (unlikely(__pyx_v_param_formats == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 787, __pyx_L1_error)
+        __PYX_ERR(0, 789, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_param_formats, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 787, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_param_formats, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 789, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 787, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 789, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       (__pyx_v_aformats[__pyx_v_i]) = __pyx_t_10;
     }
 
-    /* "psycopg_c/pq/pgconn.pyx":784
+    /* "psycopg_c/pq/pgconn.pyx":786
  * 
  *     cdef int *aformats = NULL
  *     if param_formats is not None:             # <<<<<<<<<<<<<<
@@ -20139,7 +20151,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
  */
   }
 
-  /* "psycopg_c/pq/pgconn.pyx":789
+  /* "psycopg_c/pq/pgconn.pyx":791
  *             aformats[i] = param_formats[i]
  * 
  *     return (nparams, atypes, aparams, alenghts, aformats)             # <<<<<<<<<<<<<<
@@ -20154,7 +20166,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
   __pyx_r = __pyx_t_12;
   goto __pyx_L0;
 
-  /* "psycopg_c/pq/pgconn.pyx":730
+  /* "psycopg_c/pq/pgconn.pyx":732
  * 
  * 
  * cdef (Py_ssize_t, libpq.Oid *, char * const*, int *, int *) _query_params_args(             # <<<<<<<<<<<<<<
@@ -20175,7 +20187,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
   return __pyx_r;
 }
 
-/* "psycopg_c/pq/pgconn.pyx":792
+/* "psycopg_c/pq/pgconn.pyx":794
  * 
  * 
  * cdef void _clear_query_params(             # <<<<<<<<<<<<<<
@@ -20185,7 +20197,7 @@ static __pyx_ctuple_9512b6__Py_ssize_t__and_Oid__ptr__and_char__ptrconst____etc 
 
 static void __pyx_f_9psycopg_c_2pq__clear_query_params(Oid *__pyx_v_ctypes, char *const *__pyx_v_cvalues, int *__pyx_v_clenghst, int *__pyx_v_cformats) {
 
-  /* "psycopg_c/pq/pgconn.pyx":795
+  /* "psycopg_c/pq/pgconn.pyx":797
  *     libpq.Oid *ctypes, char *const *cvalues, int *clenghst, int *cformats
  * ):
  *     PyMem_Free(ctypes)             # <<<<<<<<<<<<<<
@@ -20194,7 +20206,7 @@ static void __pyx_f_9psycopg_c_2pq__clear_query_params(Oid *__pyx_v_ctypes, char
  */
   PyMem_Free(__pyx_v_ctypes);
 
-  /* "psycopg_c/pq/pgconn.pyx":796
+  /* "psycopg_c/pq/pgconn.pyx":798
  * ):
  *     PyMem_Free(ctypes)
  *     PyMem_Free(<char **>cvalues)             # <<<<<<<<<<<<<<
@@ -20203,7 +20215,7 @@ static void __pyx_f_9psycopg_c_2pq__clear_query_params(Oid *__pyx_v_ctypes, char
  */
   PyMem_Free(((char **)__pyx_v_cvalues));
 
-  /* "psycopg_c/pq/pgconn.pyx":797
+  /* "psycopg_c/pq/pgconn.pyx":799
  *     PyMem_Free(ctypes)
  *     PyMem_Free(<char **>cvalues)
  *     PyMem_Free(clenghst)             # <<<<<<<<<<<<<<
@@ -20211,14 +20223,14 @@ static void __pyx_f_9psycopg_c_2pq__clear_query_params(Oid *__pyx_v_ctypes, char
  */
   PyMem_Free(__pyx_v_clenghst);
 
-  /* "psycopg_c/pq/pgconn.pyx":798
+  /* "psycopg_c/pq/pgconn.pyx":800
  *     PyMem_Free(<char **>cvalues)
  *     PyMem_Free(clenghst)
  *     PyMem_Free(cformats)             # <<<<<<<<<<<<<<
  */
   PyMem_Free(__pyx_v_cformats);
 
-  /* "psycopg_c/pq/pgconn.pyx":792
+  /* "psycopg_c/pq/pgconn.pyx":794
  * 
  * 
  * cdef void _clear_query_params(             # <<<<<<<<<<<<<<
@@ -32420,7 +32432,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_AssertionError = __Pyx_GetBuiltinName(__pyx_n_s_AssertionError); if (!__pyx_builtin_AssertionError) __PYX_ERR(0, 146, __pyx_L1_error)
   __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 314, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
-  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 747, __pyx_L1_error)
+  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 749, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;

@@ -9,12 +9,12 @@ from .compile_server import CompileServer
 from .live_client import LiveClient
 from .settings import DOCKER_FILE, IMAGE_NAME
 from .site.build import build
-from .types import BuildMode, CompileResult, CompileServerError
+from .types import BuildMode, CompileResult, CompileServerError, FileResponse
 
 # IMPORTANT! There's a bug in github which will REJECT any version update
 # that has any other change in the repo. Please bump the version as the
 # ONLY change in a commit, or else the pypi update and the release will fail.
-__version__ = "1.2.78"
+__version__ = "1.2.88"
 
 
 class Api:
@@ -65,6 +65,9 @@ class Api:
         keep_running=True,
         build_mode=BuildMode.QUICK,
         profile=False,
+        http_port: (
+            int | None
+        ) = None,  # None means auto select a free port. -1 means no server.
     ) -> LiveClient:
         return LiveClient(
             sketch_directory=sketch_directory,
@@ -75,6 +78,7 @@ class Api:
             keep_running=keep_running,
             build_mode=build_mode,
             profile=profile,
+            http_port=http_port,
         )
 
     @staticmethod
@@ -194,14 +198,19 @@ class Test:
     def spawn_http_server(
         directory: Path | str = Path("."),
         port: int | None = None,
+        compile_server_port: int | None = None,
         open_browser: bool = True,
     ) -> Process:
-        from fastled.open_browser import open_browser_process
+        from fastled.open_browser import spawn_http_server
 
+        compile_server_port = compile_server_port or -1
         if isinstance(directory, str):
             directory = Path(directory)
-        proc: Process = open_browser_process(
-            directory, port=port, open_browser=open_browser
+        proc: Process = spawn_http_server(
+            directory,
+            port=port,
+            compile_server_port=compile_server_port,
+            open_browser=open_browser,
         )
         return proc
 
@@ -213,5 +222,6 @@ __all__ = [
     "CompileResult",
     "CompileServerError",
     "BuildMode",
+    "FileResponse",
     "DOCKER_FILE",
 ]

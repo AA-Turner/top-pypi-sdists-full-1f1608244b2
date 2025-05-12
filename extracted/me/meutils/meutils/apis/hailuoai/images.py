@@ -211,10 +211,10 @@ async def get_request_policy(token):
 
 @retrying(predicate=lambda r: r.base_resp.status_code in {1000061, 1500009})  # 限流
 async def create_task(request: ImageRequest, token: Optional[str] = None):
-
     refresh_token = token or await get_next_token_for_polling(FEISHU_URL, from_redis=True, check_token=check_token)
     BASE_URL = get_base_url(refresh_token)
 
+    token = refresh_token
     # token = await get_access_token(refresh_token) ##########
 
     payload = {
@@ -290,35 +290,8 @@ async def create_task(request: ImageRequest, token: Optional[str] = None):
                                 detail=response.base_resp)
 
         return response
-    # {
-    #     "statusInfo": {
-    #         "code": 1000061,
-    #         "httpCode": 0,
-    #         "message": "上一个视频任务未完成，请稍后再试",
-    #         "serviceTime": 1729512914,
-    #         "requestID": "82bc8c60-4dc3-4ad0-b5b6-b1836e0c88ab",
-    #         "debugInfo": "",
-    #         "serverAlert": 0
-    #     }
-    # }
-
-    # {
-    #     "data": {
-    #         "id": "304746220940677121"
-    #     },
-    #     "statusInfo": {
-    #         "code": 0,
-    #         "httpCode": 0,
-    #         "message": "成功",
-    #         "serviceTime": 1729513305,
-    #         "requestID": "caaf2364-d2ed-45df-b79a-827810a5d58c",
-    #         "debugInfo": "",
-    #         "serverAlert": 0
-    #     }
-    # }
 
 
-# 307134660730421250
 async def get_task(task_id: str, token: str):
     BASE_URL = get_base_url(token)
 
@@ -437,7 +410,7 @@ if __name__ == '__main__':  # 304752356930580482
 
     token = None
     # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQ3MDMwNzIsInVzZXIiOnsiaWQiOiIzMDI4MzM4Njc3NzE5NDkwNTgiLCJuYW1lIjoibWUgYmV0dGVyIiwiYXZhdGFyIjoiIiwiZGV2aWNlSUQiOiIzMDI4MzM3NTk1MTI3NjQ0MTciLCJpc0Fub255bW91cyI6ZmFsc2V9fQ.Mjb64ZjkKyV9pj-_bXyLczU6kU729VLaKbYj9NmrK-4"
-    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDg3Mzg4MTQsInVzZXIiOnsiaWQiOiIyMjkwODQ3NTA2MDEzODgwMzciLCJuYW1lIjoi5bCP6J665bi9ODAzNyIsImF2YXRhciI6Imh0dHBzOi8vY2RuLmhhaWx1b2FpLmNvbS9wcm9kL3VzZXJfYXZhdGFyLzE3MDYyNjc3MTEyODI3NzA4NzItMTczMTk0NTcwNjY4OTY1ODk2b3ZlcnNpemUucG5nIiwiZGV2aWNlSUQiOiIyNDM3MTMyNTI1NDU5ODY1NjIiLCJpc0Fub255bW91cyI6ZmFsc2V9fQ.o0SoZMSTWkXNHxJjt3Ggby5MJWSfd-rnK_I95T_WMP8"
+    # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDg3Mzg4MTQsInVzZXIiOnsiaWQiOiIyMjkwODQ3NTA2MDEzODgwMzciLCJuYW1lIjoi5bCP6J665bi9ODAzNyIsImF2YXRhciI6Imh0dHBzOi8vY2RuLmhhaWx1b2FpLmNvbS9wcm9kL3VzZXJfYXZhdGFyLzE3MDYyNjc3MTEyODI3NzA4NzItMTczMTk0NTcwNjY4OTY1ODk2b3ZlcnNpemUucG5nIiwiZGV2aWNlSUQiOiIyNDM3MTMyNTI1NDU5ODY1NjIiLCJpc0Fub255bW91cyI6ZmFsc2V9fQ.o0SoZMSTWkXNHxJjt3Ggby5MJWSfd-rnK_I95T_WMP8"
     request = ImageRequest(
         model="hailuo-image-01",
 

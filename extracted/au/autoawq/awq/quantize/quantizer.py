@@ -1,3 +1,4 @@
+import transformers
 import torch
 import inspect
 import logging
@@ -152,6 +153,19 @@ class AwqQuantizer:
             # Transformers 4.45.0 moved rotary embedding to model definition as of this PR:
             # https://github.com/huggingface/transformers/pull/32617
             self.awq_model.move_embed(self.model, common_device)
+
+            # Transformers >= 4.48.0 requires positional embeddings should be computed before forward pass
+            if (
+                transformers.__version__ >= "4.48.0"
+                and self.module_kwargs.get("position_embeddings") is None
+            ):
+                self.module_kwargs["position_embeddings"] = self.model.model.rotary_emb(
+                    self.inps, self.module_kwargs["position_ids"]
+                )
+
+            if (transformers.__version__ >= "4.48.0"
+                and self.module_kwargs.get('attention_mask') is None):
+                self.module_kwargs['attention_mask'] = None
 
             for k, v in self.module_kwargs.items():
                 # position embeddings found in tuple
@@ -605,6 +619,8 @@ class AwqQuantizer:
             layer_kwargs["attention_mask"] = layer_kwargs["attention_mask"].to(
                 best_device
             )
+        elif "qwen" in self.awq_model.model_type:
+            layer_kwargs["attention_mask"] = None
 
         return modules, layer_kwargs, inps
 
@@ -630,6 +646,12 @@ class AwqQuantizer:
                 **named_linears,
                 "mlp": layer.mlp,
             }
+        
+        if self.awq_model.model_type == "qwen3_moe":
+            named_linears = {
+                **named_linears,
+                "mlp": layer.mlp,
+            }
 
         for name in named_linears:
             handles.append(
@@ -648,8 +670,17 @@ class AwqQuantizer:
         self.inps = self._module_forward(self.inps, layer, module_kwargs)
         for h in handles:
             h.remove()
+
         # now solve for scaling and clipping
-        input_feat = {k: torch.cat(v, dim=0) for k, v in input_feat.items()}
+        def cat_and_assert(k, v):
+            x = torch.cat(v, dim=0)
+            assert x.shape[0] != 0, (
+                f"{k} has a zero dimension. This can happen if no data was passed through (e.g. an expert in MoE not being activated). "
+                "Try increasing max_calib_samples (warning: this can significantly increase quantization time and memory usage.)"
+            )
+            return x
+
+        input_feat = {k: cat_and_assert(k, v) for k, v in input_feat.items()}
 
         return input_feat
 

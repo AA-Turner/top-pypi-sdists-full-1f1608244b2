@@ -18,12 +18,14 @@ class MieleEnum(IntEnum):
 
     @classmethod
     def _missing_(cls, value: object) -> Any | None:
-        if hasattr(cls, "unknown"):
-            warning = f"Missing {cls.__name__} code: {value} - defaulting to 'unknown'"
+        if hasattr(cls, "unknown_code") or hasattr(cls, "unknown"):
+            warning = (
+                f"Missing {cls.__name__} code: {value} - defaulting to 'unknown_code'"
+            )
             if warning not in completed_warnings:
                 completed_warnings.add(warning)
                 _LOGGER.warning(warning)
-            return cls.unknown
+            return cls.unknown_code
         return None
 
     def __new__(cls, value: int, *values: list[int]) -> Any:

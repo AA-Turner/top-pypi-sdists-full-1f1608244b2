@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: textstat
-Version: 0.7.6
+Version: 0.7.7
 Summary: Calculate statistical features from text
 Home-page: https://github.com/textstat/textstat
 Author: Shivam Bansal, Chaitanya Aggarwal
@@ -8,12 +8,11 @@ Author-email: shivam5992@gmail.com
 License: MIT
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.7
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Programming Language :: Python :: 3 :: Only
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: Education
@@ -40,8 +39,8 @@ Dynamic: summary
 # Textstat
 
 [![PyPI](https://img.shields.io/pypi/v/textstat.svg)](https://pypi.org/project/textstat/)
-[![Build Status](https://github.com/shivam5992/textstat/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/shivam5992/textstat/actions/workflows/test.yml)
-[![Downloads](https://img.shields.io/badge/dynamic/json.svg?url=https://pypistats.org/api/packages/textstat/recent?mirrors=false&label=downloads&query=$.data.last_month&suffix=/month)](https://pypistats.org/packages/textstat)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/textstat/textstat/test.yml?branch=main&label=main&logo=github&logoColor=white)](https://github.com/textstat/textstat/actions/workflows/test.yml)
+[![Downloads](https://img.shields.io/pypi/dm/textstat?logo=pypi&logoColor=white)](https://pypistats.org/packages/textstat)
 
 **Textstat is an easy to use library to calculate statistics from text. It helps determine readability, complexity, and grade level.**
 

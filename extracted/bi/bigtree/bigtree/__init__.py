@@ -1,4 +1,4 @@
-__version__ = "0.29.0"
+__version__ = "0.29.1"
 
 from bigtree.binarytree.construct import list_to_binarytree
 from bigtree.dag.construct import dataframe_to_dag, dict_to_dag, list_to_dag
@@ -25,6 +25,7 @@ from bigtree.tree.construct import (
     newick_to_tree,
     polars_to_tree,
     polars_to_tree_by_relation,
+    render_tree,
     str_to_tree,
 )
 from bigtree.tree.export import (

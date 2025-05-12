@@ -1,8 +1,7 @@
 Metadata-Version: 2.3
 Name: pyserde
-Version: 0.23.0
+Version: 0.24.0
 Summary: Yet another serialization library on top of dataclasses
-Home-page: https://github.com/yukinarit/pyserde
 License: MIT
 Author: yukinarit
 Author-email: yukinarit84@gmail.com
@@ -28,22 +27,23 @@ Provides-Extra: toml
 Provides-Extra: yaml
 Requires-Dist: beartype (>=0.18.4)
 Requires-Dist: casefy
-Requires-Dist: jaxtyping ; extra == "jaxtyping" or extra == "all"
+Requires-Dist: jaxtyping (<0.3.0) ; extra == "jaxtyping" or extra == "all"
 Requires-Dist: jinja2
 Requires-Dist: msgpack ; extra == "msgpack" or extra == "all"
-Requires-Dist: numpy (>1.21.0,<2.0.0) ; python_version ~= "3.9.0" and (extra == "numpy" or extra == "all")
-Requires-Dist: numpy (>1.22.0,<2.0.0) ; python_version ~= "3.10" and (extra == "numpy" or extra == "all")
-Requires-Dist: numpy (>1.22.0,<2.0.0) ; python_version ~= "3.11" and (extra == "numpy" or extra == "all")
-Requires-Dist: numpy (>1.22.0,<2.0.0) ; python_version ~= "3.12" and (extra == "numpy" or extra == "all")
-Requires-Dist: numpy (>1.22.0,<2.0.0) ; python_version ~= "3.13" and (extra == "numpy" or extra == "all")
+Requires-Dist: numpy (>1.21.0,<3.0.0) ; python_version ~= "3.9.0" and (extra == "numpy" or extra == "all")
+Requires-Dist: numpy (>1.22.0,<3.0.0) ; python_version ~= "3.10" and (extra == "numpy" or extra == "all")
+Requires-Dist: numpy (>1.22.0,<3.0.0) ; python_version ~= "3.11" and (extra == "numpy" or extra == "all")
+Requires-Dist: numpy (>1.22.0,<3.0.0) ; python_version ~= "3.12" and (extra == "numpy" or extra == "all")
+Requires-Dist: numpy (>1.22.0,<3.0.0) ; python_version ~= "3.13" and (extra == "numpy" or extra == "all")
 Requires-Dist: orjson ; extra == "orjson" or extra == "all"
 Requires-Dist: plum-dispatch (>=2.3)
 Requires-Dist: pyyaml ; extra == "yaml" or extra == "all"
 Requires-Dist: sqlalchemy (>2) ; extra == "sqlalchemy" or extra == "all"
 Requires-Dist: tomli ; extra == "toml" or extra == "all"
 Requires-Dist: tomli-w ; extra == "toml" or extra == "all"
-Requires-Dist: typing_extensions (>=4.1.0)
+Requires-Dist: typing_extensions (>=4.1.0,<4.13.0)
 Requires-Dist: typing_inspect (>=0.4.0)
+Project-URL: Homepage, https://github.com/yukinarit/pyserde
 Project-URL: Repository, https://github.com/yukinarit/pyserde
 Description-Content-Type: text/markdown
 

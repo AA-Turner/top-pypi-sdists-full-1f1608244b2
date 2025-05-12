@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "leafmap"
-version = "0.43.13"
+version = "0.44.0"
 dynamic = [
     "dependencies",
 ]
@@ -36,7 +36,7 @@ apps = ["streamlit-folium", "voila", "solara"]
 vector = ["geopandas", "osmnx", "pmtiles", "flask", "flask-cors", "lonboard", "mapclassify"]
 pmtiles = ["pmtiles", "flask", "flask-cors"]
 ai = ["geopandas", "osmnx", "localtileserver>=0.10.4", "rastervision", "pytorch-lightning", "torchgeo"]
-maplibre = ["anywidget", "geopandas", "h3", "ipyvuetify", "localtileserver", "mapclassify", "maplibre>=0.3.1", "pmtiles", "rioxarray", "xarray"]
+maplibre = ["anywidget", "geopandas", "fiona", "h3", "ipyvuetify", "localtileserver", "mapclassify", "maplibre>=0.3.1", "pmtiles", "rioxarray", "xarray"]
 gdal = ["gdal", "pyproj"]
 
 [tool]
@@ -52,7 +52,7 @@ dependencies = {file = ["requirements.txt"]}
 universal = true
 
 [tool.bumpversion]
-current_version = "0.43.13"
+current_version = "0.44.0"
 commit = true
 tag = true
 

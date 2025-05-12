@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: compel
-Version: 2.0.3
+Version: 2.1.0
 Summary: A prompting enhancement library for transformers-type text embedding systems.
 Author-email: Damian Stewart <null@damianstewart.com>
 Project-URL: Homepage, https://github.com/damian0815/compel
@@ -15,6 +15,7 @@ Requires-Dist: diffusers>=0.11
 Requires-Dist: pyparsing~=3.0
 Requires-Dist: torch
 Requires-Dist: transformers~=4.25
+Dynamic: license-file
 
 # Compel
 A text prompt weighting and blending library for transformers-type text embedding systems, by [@damian0815](https://github.com/damian0815).
@@ -102,6 +103,8 @@ If this doesn't help, you could try this advice offered by @kshieh1:
 See https://github.com/damian0815/compel/issues/24 for more details. Thanks @kshieh1 !
 
 ## Changelog
+
+### 2.1.0 - add `split_long_text_mode` arg to control word splitting for long prompts when `truncate_long_prompts` is False. See `SplitLongTextMode`. Defaults to `WORDS`. 
 
 #### 2.0.3 - include contributed fixes #64, #80 and fix license in pyproject.toml/pypi
 

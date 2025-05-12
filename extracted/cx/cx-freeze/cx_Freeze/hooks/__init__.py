@@ -11,7 +11,7 @@ from contextlib import suppress
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from cx_Freeze._compat import IS_CONDA, IS_MACOS, IS_WINDOWS
+from cx_Freeze._compat import IS_CONDA, IS_MACOS, IS_MINGW, IS_WINDOWS
 from cx_Freeze.hooks.qthooks import get_qt_plugins_paths  # noqa: F401
 
 if TYPE_CHECKING:
@@ -460,7 +460,7 @@ def load_pythoncom(finder: ModuleFinder, module: Module) -> None:
     pythoncom = __import__("pythoncom")
     filename = Path(pythoncom.__file__)
     finder.include_files(
-        filename, Path("lib", filename.name), copy_dependent_files=False
+        filename, f"lib/{filename.name}", copy_dependent_files=IS_MINGW
     )
 
 
@@ -474,7 +474,7 @@ def load_pywintypes(finder: ModuleFinder, module: Module) -> None:
     pywintypes = __import__("pywintypes")
     filename = Path(pywintypes.__file__)
     finder.include_files(
-        filename, Path("lib", filename.name), copy_dependent_files=False
+        filename, f"lib/{filename.name}", copy_dependent_files=IS_MINGW
     )
 
 
@@ -660,14 +660,23 @@ def load_yaml(finder: ModuleFinder, module: Module) -> None:
 
 
 def load_zlib(finder: ModuleFinder, module: Module) -> None:
-    """In conda-forge Windows, the zlib module requires the zlib.dll to be
-    present in the executable directory.
+    """In Windows, the zlib module requires the zlib.dll to be present in the
+    executable directory if using conda-forge. However, the required shared
+    library is zlib1.dll in official Python >= 3.12.
     """
-    if IS_CONDA and IS_WINDOWS:
+    if not IS_WINDOWS:
+        return
+    if IS_CONDA:
         source = Path(sys.base_prefix, "Library/bin/zlib.dll")
         if source.exists():
             target = source.name
             finder.lib_files[source] = target
+    else:
+        # ensure zlib1.dll is copied if lief is not used in Python 3.12+
+        for source in Path(sys.base_prefix, "DLLs").glob("zlib*.dll"):
+            target = f"lib/{source.name}"
+            finder.lib_files[source] = target
+            finder.include_files(source, target)
 
 
 def load_zope_component(finder: ModuleFinder, module: Module) -> None:
@@ -690,7 +699,7 @@ def missing_gdk(finder: ModuleFinder, caller: Module) -> None:
 
 
 def missing_ltihooks(finder: ModuleFinder, caller: Module) -> None:
-    """The ltihooks module is not necessairly present so ignore it when it
+    """The ltihooks module is not necessarily present so ignore it when it
     cannot be found.
     """
     caller.ignore_names.add("ltihooks")

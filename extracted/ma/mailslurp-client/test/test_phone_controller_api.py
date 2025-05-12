@@ -106,6 +106,20 @@ class TestPhoneControllerApi(unittest.TestCase):
         """
         pass
 
+    def test_get_phone_number_by_name(self):
+        """Test case for get_phone_number_by_name
+
+        Get a phone number by name  # noqa: E501
+        """
+        pass
+
+    def test_get_phone_number_by_phone_number(self):
+        """Test case for get_phone_number_by_phone_number
+
+        Get a phone number by phone number  # noqa: E501
+        """
+        pass
+
     def test_get_phone_numbers(self):
         """Test case for get_phone_numbers
 

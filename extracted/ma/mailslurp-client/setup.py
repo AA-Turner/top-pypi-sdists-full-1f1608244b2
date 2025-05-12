@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="mailslurp-client",
-    version="15.21.0",
+    version="15.21.1",
     description="Official MailSlurp Python SDK Email API",
     author="MailSlurp",
     author_email="contact@mailslurp.dev",

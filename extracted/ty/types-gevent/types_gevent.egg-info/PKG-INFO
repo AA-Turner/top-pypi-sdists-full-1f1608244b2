@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: types-gevent
-Version: 24.11.0.20250401
+Version: 25.4.0.20250512
 Summary: Typing stubs for gevent
 License-Expression: Apache-2.0
 Project-URL: Homepage, https://github.com/python/typeshed
@@ -28,7 +28,7 @@ It can be used by type-checking tools like
 [Pyre](https://pyre-check.org/),
 PyCharm, etc. to check code that uses `gevent`. This version of
 `types-gevent` aims to provide accurate annotations for
-`gevent==24.11.*`.
+`gevent==25.4.*`.
 
 This package is part of the [typeshed project](https://github.com/python/typeshed).
 All fixes for types and metadata should be contributed there.
@@ -39,7 +39,7 @@ directory.
 
 This package was tested with
 mypy 1.15.0,
-pyright 1.1.398,
+pyright 1.1.400,
 and pytype 2024.10.11.
 It was generated from typeshed commit
-[`bfd032156c59bbf851f62174014f24f4f89b96af`](https://github.com/python/typeshed/commit/bfd032156c59bbf851f62174014f24f4f89b96af).
+[`30b7b679f5949957e253f157366e221e982e5c0e`](https://github.com/python/typeshed/commit/30b7b679f5949957e253f157366e221e982e5c0e).

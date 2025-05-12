@@ -1,19 +1,17 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: check-wheel-contents
-Version: 0.6.1
+Version: 0.6.2
 Summary: Check your wheels have the right contents
 Project-URL: Source Code, https://github.com/jwodder/check-wheel-contents
 Project-URL: Bug Tracker, https://github.com/jwodder/check-wheel-contents/issues
 Author-email: John Thorvald Wodder II <check-wheel-contents@varonathe.org>
-License: MIT
+License-Expression: MIT
+License-File: LICENSE
 Keywords: linter,packaging,wheel
 Classifier: Environment :: Console
 Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3 :: Only
-Classifier: Programming Language :: Python :: 3.8
-Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
@@ -23,10 +21,10 @@ Classifier: Programming Language :: Python :: Implementation :: PyPy
 Classifier: Topic :: Software Development :: Build Tools
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Topic :: Software Development :: Quality Assurance
-Requires-Python: >=3.8
+Requires-Python: >=3.10
 Requires-Dist: attrs>=18.1
 Requires-Dist: backports-cached-property; python_version < '3.8'
-Requires-Dist: click>=7.0
+Requires-Dist: click~=8.2
 Requires-Dist: packaging
 Requires-Dist: pydantic~=2.0
 Requires-Dist: tomli<3.0,>=1.2; python_version < '3.11'
@@ -69,7 +67,7 @@ along with common causes and corresponding fixes.
 
 Installation
 ============
-``check-wheel-contents`` requires Python 3.8 or higher.  Just use `pip
+``check-wheel-contents`` requires Python 3.10 or higher.  Just use `pip
 <https://pip.pypa.io>`_ for Python 3 (You have pip, right?) to install
 ``check-wheel-contents`` and its dependencies::
 

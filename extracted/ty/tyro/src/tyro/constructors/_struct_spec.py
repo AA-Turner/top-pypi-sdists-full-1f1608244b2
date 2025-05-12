@@ -160,13 +160,15 @@ def apply_default_struct_rules(registry: ConstructorRegistry) -> None:
     from ._struct_spec_attrs import attrs_rule
     from ._struct_spec_dataclass import dataclass_rule
     from ._struct_spec_ml_collections import ml_collections_rule
+    from ._struct_spec_msgspec import msgspec_rule
     from ._struct_spec_pydantic import pydantic_rule
 
     # Register imported rules.
     registry.struct_rule(attrs_rule)
     registry.struct_rule(dataclass_rule)
-    registry.struct_rule(pydantic_rule)
     registry.struct_rule(ml_collections_rule)
+    registry.struct_rule(msgspec_rule)
+    registry.struct_rule(pydantic_rule)
 
     @registry.struct_rule
     def typeddict_rule(info: StructTypeInfo) -> StructConstructorSpec | None:
@@ -267,19 +269,19 @@ def apply_default_struct_rules(registry: ConstructorRegistry) -> None:
 
     @registry.struct_rule
     def namedtuple_rule(info: StructTypeInfo) -> StructConstructorSpec | None:
-        if not (
-            isinstance(info.type, type)
-            and issubclass(info.type, tuple)
-            and hasattr(info.type, "_fields")
-        ):
+        if not _resolver.is_namedtuple(info.type):
             return None
 
         field_list = []
         field_defaults = getattr(info.type, "_field_defaults", {})
+        field_names = getattr(info.type, "_fields", [])
 
-        for name, typ in _resolver.get_type_hints_resolve_type_params(
-            info.type, include_extras=True
-        ).items():
+        # Handle collections.namedtuple which doesn't have type annotations.
+        type_hints = {field: Any for field in field_names}
+        type_hints.update(
+            _resolver.get_type_hints_resolve_type_params(info.type, include_extras=True)
+        )
+        for name, typ in type_hints.items():
             default = field_defaults.get(name, MISSING_NONPROP)
 
             if info.default not in MISSING_AND_MISSING_NONPROP and hasattr(
@@ -292,7 +294,7 @@ def apply_default_struct_rules(registry: ConstructorRegistry) -> None:
             field_list.append(
                 StructFieldSpec(
                     name=name,
-                    type=typ,
+                    type=typ,  # type: ignore
                     default=default,
                     helptext=_docstrings.get_field_docstring(
                         info.type, name, info.markers
