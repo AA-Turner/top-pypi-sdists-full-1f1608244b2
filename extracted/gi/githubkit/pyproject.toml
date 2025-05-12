@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "GitHubKit"
-version = "0.12.12"
+version = "0.12.13"
 description = "GitHub SDK for Python"
 authors = ["yanyongyu <yyy@yyydl.top>"]
 license = "MIT"
@@ -22,11 +22,11 @@ PyJWT = { version = "^2.4.0", extras = ["crypto"], optional = true }
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.11.0"
-redis = "^5.2.0"
 Jinja2 = "^3.1.2"
 nonemoji = "^0.1.2"
 pre-commit = "^4.0.0"
 jsonpointer = "^3.0.0"
+redis = ">=5.2.0, <7.0.0"
 openapi-pydantic = "^0.5.0"
 tomli = { version = "^2.0.1", python = "<3.11" }
 
@@ -292,6 +292,13 @@ source = "https://raw.githubusercontent.com/github/rest-api-description/main/des
   "string",
   "null",
 ] }
+
+# https://github.com/yanyongyu/githubkit/issues/214
+# repo owner account may be deleted, can be null in pull request
+"/components/schemas/repository/properties/owner" = { anyOf = [
+  { type = "null" },
+  { "$ref" = "#/components/schemas/simple-user" },
+], "$ref" = "<unset>" }
 
 # https://github.com/github/rest-api-description/issues/2491
 "/components/schemas/auto-merge/properties/commit_title" = { type = [

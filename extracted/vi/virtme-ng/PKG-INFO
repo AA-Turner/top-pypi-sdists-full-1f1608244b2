@@ -1,6 +1,6 @@
 Metadata-Version: 2.2
 Name: virtme-ng
-Version: 1.35
+Version: 1.36
 Summary: Build and run a kernel inside a virtualized snapshot of your live system
 Home-page: https://github.com/arighi/virtme-ng
 Author: Andrea Righi

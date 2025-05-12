@@ -200,7 +200,10 @@ def get_dag_labels(dag_id: str) -> Dict[str, str]:
 
     labels = dag.params.get('labels', {})
 
-    if hasattr(labels, 'value'):
+    if hasattr(labels, 'items'):
+        # Airflow version 2.3+
+        labels = {k:v for k,v in labels.items() if not k.startswith('__')}
+    elif hasattr(labels, 'value'):
         # Airflow version 2.2.*
         labels = {k:v for k,v in labels.value.items() if not k.startswith('__')}
     else:
@@ -330,7 +333,7 @@ class RBACMetrics(FABBaseView):
     route_base = "/admin/metrics/"
     @FABexpose('/')
     def list(self):
-        return Response(generate_latest(), mimetype='text')
+        return Response(generate_latest(), mimetype='text/plain')
 
 
 # Metrics View for Flask app builder used in airflow with rbac enabled

@@ -4,7 +4,7 @@ import fractions
 import logging
 import threading
 import time
-from typing import Dict, Optional, Set, Union
+from typing import Optional, Union
 
 import av
 from av import AudioFrame, VideoFrame
@@ -54,9 +54,9 @@ class MediaBlackhole:
     """
 
     def __init__(self) -> None:
-        self.__tracks: Dict[MediaStreamTrack, asyncio.Future] = {}
+        self.__tracks: dict[MediaStreamTrack, asyncio.Future] = {}
 
-    def addTrack(self, track):
+    def addTrack(self, track: MediaStreamTrack) -> None:
         """
         Add a track whose media should be discarded.
 
@@ -309,7 +309,7 @@ class MediaPlayer:
         self.__thread_quit: Optional[threading.Event] = None
 
         # examine streams
-        self.__started: Set[PlayerStreamTrack] = set()
+        self.__started: set[PlayerStreamTrack] = set()
         self.__streams = []
         self.__decode = decode
         self.__audio: Optional[PlayerStreamTrack] = None
@@ -396,7 +396,7 @@ class MediaRecorderContext:
     def __init__(self, stream) -> None:
         self.started = False
         self.stream = stream
-        self.task = None
+        self.task: Optional[asyncio.Task[None]] = None
 
 
 class MediaRecorder:
@@ -418,9 +418,9 @@ class MediaRecorder:
     :param options: Additional options to pass to FFmpeg.
     """
 
-    def __init__(self, file, format=None, options=None):
+    def __init__(self, file, format=None, options=None) -> None:
         self.__container = av.open(file=file, format=format, mode="w", options=options)
-        self.__tracks = {}
+        self.__tracks: dict[MediaStreamTrack, MediaRecorderContext] = {}
 
     def addTrack(self, track: MediaStreamTrack) -> None:
         """
@@ -543,8 +543,8 @@ class MediaRelay:
     """
 
     def __init__(self) -> None:
-        self.__proxies: Dict[MediaStreamTrack, Set[RelayStreamTrack]] = {}
-        self.__tasks: Dict[MediaStreamTrack, asyncio.Future[None]] = {}
+        self.__proxies: dict[MediaStreamTrack, set[RelayStreamTrack]] = {}
+        self.__tasks: dict[MediaStreamTrack, asyncio.Future[None]] = {}
 
     def subscribe(
         self, track: MediaStreamTrack, buffered: bool = True

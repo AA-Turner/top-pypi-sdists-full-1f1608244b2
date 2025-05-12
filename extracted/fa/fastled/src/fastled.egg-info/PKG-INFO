@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: fastled
-Version: 1.2.78
+Version: 1.2.88
 Summary: FastLED Wasm Compiler
 Home-page: https://github.com/zackees/fastled-wasm
 Maintainer: Zachary Vorhies
@@ -13,15 +13,11 @@ License-File: LICENSE
 Requires-Dist: docker>=7.1.0
 Requires-Dist: httpx>=0.28.1
 Requires-Dist: watchdog>=6.0.0
-Requires-Dist: download>=0.3.5
 Requires-Dist: filelock>=3.16.1
 Requires-Dist: disklru>=2.0.1
 Requires-Dist: appdirs>=1.4.4
 Requires-Dist: rapidfuzz>=3.10.1
 Requires-Dist: progress>=1.6
-Requires-Dist: fastapi>=0.115.12
-Requires-Dist: uvicorn>=0.34.2
-Requires-Dist: pywebview>=5.4
 Requires-Dist: watchfiles>=1.0.5
 Requires-Dist: Flask>=3.0.0
 Requires-Dist: livereload

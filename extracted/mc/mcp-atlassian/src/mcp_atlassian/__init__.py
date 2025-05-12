@@ -6,9 +6,9 @@ import sys
 import click
 from dotenv import load_dotenv
 
-from .utils.logging import setup_logging
+from mcp_atlassian.utils.logging import setup_logging
 
-__version__ = "0.10.5"
+__version__ = "0.10.6"
 
 # Initialize logging with appropriate level
 logging_level = logging.WARNING
@@ -274,7 +274,7 @@ def main(
     if jira_projects_filter:
         os.environ["JIRA_PROJECTS_FILTER"] = jira_projects_filter
 
-    from .servers import main_mcp
+    from mcp_atlassian.servers import main_mcp
 
     # Run the server with specified transport
     if final_transport == "sse":

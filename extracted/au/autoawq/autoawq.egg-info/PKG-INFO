@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: autoawq
-Version: 0.2.8
+Version: 0.2.9
 Summary: AutoAWQ implements the AWQ algorithm for 4-bit quantization with a 2x speedup during inference.
 Home-page: https://github.com/casper-hansen/AutoAWQ
 Author: Casper Hansen
@@ -20,9 +20,9 @@ Classifier: Programming Language :: C++
 Requires-Python: >=3.8.0
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: torch>=2.5.1
+Requires-Dist: torch
 Requires-Dist: triton
-Requires-Dist: transformers<=4.47.1,>=4.45.0
+Requires-Dist: transformers>=4.45.0
 Requires-Dist: tokenizers>=0.12.1
 Requires-Dist: typing_extensions>=4.8.0
 Requires-Dist: accelerate
@@ -45,6 +45,36 @@ Requires-Dist: intel-extension-for-pytorch>=2.4.0; extra == "cpu"
 Provides-Extra: kernels
 Requires-Dist: autoawq-kernels; extra == "kernels"
 Requires-Dist: flash-attn>=2.2.0; extra == "kernels"
+Dynamic: author
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: platform
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# News: The vLLM project has fully adopted AutoAWQ
+
+It is no secret that maintaining a project such as AutoAWQ that has 2+ million downloads, 7000+ models on Huggingface, and 2.1k stars is hard for a solo developer who is doing this in their free time.
+
+Important Notice:
+- AutoAWQ is officially deprecated and will no longer be maintained.
+- The last tested configuration used Torch 2.6.0 and Transformers 4.51.3.
+- If future versions of Transformers break AutoAWQ compatibility, please report the issue to the Transformers project.
+
+Alternative:
+- AutoAWQ has been adopted by the vLLM Project: https://github.com/vllm-project/llm-compressor
+- MLX-LM now supports AWQ for Mac devices: http://github.com/ml-explore/mlx-lm
+
+For further inquiries, feel free to reach out:
+- X: https://x.com/casper_hansen_
+- LinkedIn: https://www.linkedin.com/in/casper-hansen-804005170/
 
 # AutoAWQ
 

@@ -9,11 +9,13 @@ import sys
 import sysconfig
 from pathlib import Path
 from shutil import copytree, ignore_patterns, which
-from subprocess import check_output
+from subprocess import CalledProcessError, check_output
 from textwrap import dedent
 from typing import TYPE_CHECKING
 
 import pytest
+from filelock import FileLock
+from packaging.requirements import Requirement
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -24,6 +26,7 @@ PYTHON_VERSION = sysconfig.get_python_version()
 ABI_THREAD = sysconfig.get_config_var("abi_thread") or ""
 BUILD_EXE_DIR = Path(f"build/exe.{PLATFORM}-{PYTHON_VERSION}{ABI_THREAD}")
 EXE_SUFFIX = sysconfig.get_config_var("EXE")
+IS_MINGW = PLATFORM.startswith("mingw")
 
 
 HERE = Path(__file__).resolve().parent
@@ -129,21 +132,48 @@ class TempPackage:
         cwd = os.fspath(self.path if cwd is None else cwd)
         return check_output(command, text=True, timeout=timeout, cwd=cwd)
 
-    def install(self, package, isolated=True) -> str:
+    def install(
+        self, package, *, binary=True, index=None, isolated=True
+    ) -> str:
+        if IS_MINGW:
+            MINGW_PACKAGE_PREFIX = os.environ["MINGW_PACKAGE_PREFIX"]
+            require = Requirement(package)
+            if require.marker is None or require.marker.evaluate():
+                package = require.name
+            cmd = (
+                "pacman -S --needed --noconfirm --quiet "
+                f"{MINGW_PACKAGE_PREFIX}-python-{package}"
+            )
+            with FileLock("/var/lib/pacman/db.lck"):
+                try:
+                    output = self.run(cmd, cwd=self.system_path)
+                except CalledProcessError:
+                    raise ModuleNotFoundError(package) from None
+            return None
+
         if which("uv") is None:
-            pytest.skip(reason=f"{package} must be installed")
+            request = self.request
+            pytest.skip(
+                f"{request.config.args[0]}::{request.node.name} - {package} "
+                "must be installed"
+            )
 
         cmd = f"uv pip install {package}"
+        if binary:
+            cmd = f"{cmd} --no-build"
+        if index is not None:
+            cmd = f"{cmd} --index {index}"
         if isolated:
-            self.prefix = isolated_prefix = self.path / ".tmp_prefix"
-            output = self.run(
-                f"{cmd} --prefix={isolated_prefix} --python={sys.executable}"
-            )
-            tmp_site = isolated_prefix / self.relative_site
+            self.prefix = self.path / ".tmp_prefix"
+            cmd = f"{cmd} --prefix={self.prefix} --python={sys.executable}"
+        try:
+            output = self.run(cmd, cwd=self.system_path)
+        except CalledProcessError:
+            raise ModuleNotFoundError(package) from None
+        if isolated:
+            tmp_site = self.prefix / self.relative_site
             self.monkeypatch.setenv("PYTHONPATH", os.path.normpath(tmp_site))
             self.monkeypatch.syspath_prepend(tmp_site)
-        else:
-            output = self.run(cmd, cwd=self.system_path)
         return output
 
 

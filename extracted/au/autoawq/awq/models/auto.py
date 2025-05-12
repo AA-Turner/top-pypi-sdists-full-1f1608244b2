@@ -26,6 +26,8 @@ AWQ_CAUSAL_LM_MODEL_MAP = {
     "baichuan": BaichuanAWQForCausalLM,
     "llava": LlavaAWQForCausalLM,
     "qwen2": Qwen2AWQForCausalLM,
+    "qwen3": Qwen3AWQForCausalLM,
+    "qwen3_moe": Qwen3MoeAWQForCausalLM,
     "gemma": GemmaAWQForCausalLM,
     "gemma2": Gemma2AWQForCausalLM,
     "stablelm": StableLmAWQForCausalLM,
@@ -40,6 +42,8 @@ AWQ_CAUSAL_LM_MODEL_MAP = {
     "internlm2": InternLM2AWQForCausalLM,
     "minicpm3": MiniCPM3AWQForCausalLM,
     "qwen2_vl": Qwen2VLAWQForCausalLM,
+    "qwen2_5_vl": Qwen2_5_VLAWQForCausalLM,
+    "qwen2_5_omni": Qwen2_5_OmniAWQForConditionalGeneration
 }
 
 
@@ -76,7 +80,6 @@ class AutoAWQForCausalLM:
         model_type = check_and_get_model_type(
             model_path, trust_remote_code, **model_init_kwargs
         )
-
         return AWQ_CAUSAL_LM_MODEL_MAP[model_type].from_pretrained(
             model_path,
             model_type,

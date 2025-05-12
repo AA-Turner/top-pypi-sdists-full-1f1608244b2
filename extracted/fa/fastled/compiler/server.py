@@ -28,10 +28,10 @@ from fastapi import (  # type: ignore
     UploadFile,
 )
 from fastapi.responses import FileResponse, RedirectResponse, Response  # type: ignore
+from paths import FASTLED_SRC  # The folder where the actual source code is located.
 from paths import (
     LIVE_GIT_FASTLED_DIR,
     OUTPUT_DIR,
-    RSYNC_DEST,
     SKETCH_CACHE_FILE,
     TEMP_DIR,
     UPLOAD_DIR,
@@ -76,6 +76,12 @@ _LIVE_GIT_UPDATES_INTERVAL = int(
 )  # Update every 24 hours
 _ALLOW_SHUTDOWN = os.environ.get("ALLOW_SHUTDOWN", "false").lower() in ["true", "1"]
 _NO_SKETCH_CACHE = os.environ.get("NO_SKETCH_CACHE", "false").lower() in ["true", "1"]
+
+# debug is a 20mb payload for the symbol information.
+_ONLY_QUICK_BUILDS = os.environ.get("ONLY_QUICK_BUILDS", "false").lower() in [
+    "true",
+    "1",
+]
 
 
 # TODO - cleanup
@@ -131,7 +137,7 @@ class UploadSizeMiddleware(BaseHTTPMiddleware):
 
 _CODE_SYNC = CodeSync(
     volume_mapped_src=VOLUME_MAPPED_SRC,
-    rsync_dest=RSYNC_DEST,
+    rsync_dest=FASTLED_SRC,
 )
 
 
@@ -226,12 +232,12 @@ def sync_live_git_to_target() -> None:
 
     _CODE_SYNC.sync_src_to_target(
         volume_mapped_src=LIVE_GIT_FASTLED_DIR / "src",
-        rsync_dest=RSYNC_DEST,
+        rsync_dest=FASTLED_SRC,
         callback=on_files_changed,
     )
     _CODE_SYNC.sync_src_to_target(
         volume_mapped_src=LIVE_GIT_FASTLED_DIR / "examples",
-        rsync_dest=RSYNC_DEST.parent / "examples",
+        rsync_dest=FASTLED_SRC.parent / "examples",
         callback=on_files_changed,
     )
     # Basically a setTimeout() in JS.
@@ -254,6 +260,12 @@ def compile_source(
     def _print(msg) -> None:
         diff = time.time() - epoch
         print(f" = SERVER {diff:.2f}s = {msg}")
+
+    if build_mode.lower() != "quick" and _ONLY_QUICK_BUILDS:
+        raise HTTPException(
+            status_code=400,
+            detail="Only quick builds are allowed in this version.",
+        )
 
     _print("Starting compile_source")
     global COMPILE_COUNT
@@ -427,8 +439,37 @@ def get_settings() -> dict:
         "UPLOAD_LIMIT": _UPLOAD_LIMIT,
         "VOLUME_MAPPED_SRC": str(VOLUME_MAPPED_SRC),
         "VOLUME_MAPPED_SRC_EXISTS": VOLUME_MAPPED_SRC.exists(),
+        "ONLY_QUICK_BUILDS": _ONLY_QUICK_BUILDS,
     }
     return settings
+
+
+# Return content and media type
+def fetch_file(full_path: Path) -> tuple[bytes, str] | HTTPException:
+    """Fetch the file from the server."""
+    print(f"Fetching file: {full_path}")
+    if not full_path.exists():
+        raise HTTPException(status_code=404, detail="File not found.")
+    if not full_path.is_file():
+        raise HTTPException(status_code=400, detail="Not a file.")
+    if not full_path.is_relative_to(FASTLED_SRC) and not full_path.is_relative_to(
+        "/emsdk"
+    ):
+        raise HTTPException(status_code=400, detail="Invalid file path.")
+
+    content = full_path.read_bytes()
+    # Determine media type based on file extension
+    media_type = "text/plain"
+    if full_path.suffix in [".h", ".cpp"]:
+        media_type = "text/plain"
+    elif full_path.suffix == ".html":
+        media_type = "text/html"
+    elif full_path.suffix == ".js":
+        media_type = "application/javascript"
+    elif full_path.suffix == ".css":
+        media_type = "text/css"
+
+    return content, media_type
 
 
 def startup() -> None:
@@ -595,6 +636,65 @@ def project_init_example(
         media_type="application/zip",
         filename="fastled_example.zip",
         background=background_tasks,
+    )
+
+
+@app.get("/sourcefiles/{filepath:path}")
+def source_file(filepath: str) -> Response:
+    """Get the source file from the server."""
+    print(f"Endpoint accessed: /sourcefiles/{filepath}")
+    if ".." in filepath:
+        raise HTTPException(status_code=400, detail="Invalid file path.")
+    full_path = Path(FASTLED_SRC / filepath)
+    result: tuple[bytes, str] | HTTPException = fetch_file(full_path=full_path)
+    if isinstance(result, HTTPException):
+        assert isinstance(result, HTTPException)
+        return Response(
+            content=result.detail,  # type: ignore
+            media_type="text/plain",
+            status_code=result.status_code,  # type: ignore
+        )
+    content, media_type = result
+    return Response(content=content, media_type=media_type)
+
+
+@app.get("/drawfsource/{file_path:path}")
+async def static_files(file_path: str) -> Response:
+    """Serve static files."""
+    print(f"Endpoint accessed: /drawfsource/{file_path}")
+
+    # Check if path matches the pattern js/fastled/src/...
+    if file_path.startswith("js/fastled/src/"):
+        # Extract the path after "js/fastled/src/"
+        relative_path = file_path[len("js/fastled/src/") :]
+        full_path = FASTLED_SRC / relative_path
+        result: tuple[bytes, str] | HTTPException = fetch_file(full_path=full_path)
+
+        # return Response(content=content, media_type=media_type)
+        if isinstance(result, HTTPException):
+            return Response(
+                content=result.detail,  # type: ignore
+                media_type="text/plain",
+                status_code=result.status_code,  # type: ignore
+            )
+        content, media_type = result
+        return Response(content=content, media_type=media_type)
+    elif file_path.startswith("js/drawfsource/emsdk/"):
+        relative_path = file_path[len("js/drawfsource/emsdk/") :]
+        full_path = Path("/") / "emsdk" / relative_path
+        result: tuple[bytes, str] | HTTPException = fetch_file(full_path=full_path)
+        if isinstance(result, HTTPException):
+            return Response(
+                content=result.detail,  # type: ignore
+                media_type="text/plain",
+                status_code=result.status_code,  # type: ignore
+            )
+        content, media_type = result
+        return Response(content=content, media_type=media_type)
+
+    # If file not found or path doesn't match expected format
+    return Response(
+        content=f"File not found: {file_path}", media_type="text/plain", status_code=404
     )
 
 

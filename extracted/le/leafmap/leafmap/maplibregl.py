@@ -802,14 +802,16 @@ class Map(MapWidget):
         if isinstance(data, str):
             if os.path.isfile(data) or data.startswith("http"):
                 data = gpd.read_file(data).__geo_interface__
-                bounds = get_bounds(data)
+                if fit_bounds:
+                    bounds = get_bounds(data)
                 source = GeoJSONSource(data=data, **source_args)
             else:
                 raise ValueError("The data must be a URL or a GeoJSON dictionary.")
         elif isinstance(data, dict):
             source = GeoJSONSource(data=data, **source_args)
 
-            bounds = get_bounds(data)
+            if fit_bounds:
+                bounds = get_bounds(data)
         else:
             raise ValueError("The data must be a URL or a GeoJSON dictionary.")
 
@@ -4185,6 +4187,99 @@ class Map(MapWidget):
 
             return widget
 
+    def add_labels(
+        self,
+        source: Union[str, Dict[str, Any]],
+        column: str,
+        name: Optional[str] = None,
+        text_size: int = 14,
+        text_anchor: str = "center",
+        text_color: str = "black",
+        min_zoom: Optional[float] = None,
+        max_zoom: Optional[float] = None,
+        layout: Optional[Dict[str, Any]] = None,
+        paint: Optional[Dict[str, Any]] = None,
+        before_id: Optional[str] = None,
+        opacity: float = 1.0,
+        visible: bool = True,
+        **kwargs: Any,
+    ) -> None:
+        """
+        Adds a label layer to the map.
+
+        This method adds a label layer to the map using the specified source and column for text values.
+
+        Args:
+            source (Union[str, Dict[str, Any]]): The data source for the labels. It can be a GeoJSON file path
+                or a dictionary containing GeoJSON data.
+            column (str): The column name in the source data to use for the label text.
+            name (Optional[str]): The name of the label layer. If None, a random name is generated. Defaults to None.
+            text_size (int): The size of the label text. Defaults to 14.
+            text_anchor (str): The anchor position of the text. Can be "center", "left", "right", etc. Defaults to "center".
+            text_color (str): The color of the label text. Defaults to "black".
+            min_zoom (Optional[float]): The minimum zoom level at which the labels are visible. Defaults to None.
+            max_zoom (Optional[float]): The maximum zoom level at which the labels are visible. Defaults to None.
+            layout (Optional[Dict[str, Any]]): Additional layout properties for the label layer. Defaults to None.
+                For more information, refer to https://maplibre.org/maplibre-style-spec/layers/#symbol.
+            paint (Optional[Dict[str, Any]]): Additional paint properties for the label layer. Defaults to None.
+            before_id (Optional[str]): The ID of an existing layer before which the new layer should be inserted. Defaults to None.
+            opacity (float): The opacity of the label layer. Defaults to 1.0.
+            visible (bool): Whether the label layer is visible by default. Defaults to True.
+            **kwargs (Any): Additional keyword arguments to customize the label layer.
+
+        Returns:
+            None
+        """
+
+        if name is None:
+            name = f"label_source_{common.random_string(3)}"
+
+        if isinstance(source, str):
+            gdf = common.read_vector(source)
+            geojson = gdf.__geo_interface__
+        elif isinstance(source, dict):
+            geojson = source
+        elif isinstance(source, gpd.GeoDataFrame):
+            geojson = source.__geo_interface__
+        else:
+            raise ValueError(
+                "Invalid source type. Use a GeoDataFrame, a file path to a GeoJSON file, or a dictionary."
+            )
+
+        source = {
+            "type": "geojson",
+            "data": geojson,
+        }
+
+        self.add_source(name, source)
+
+        if layout is None:
+            layout = {
+                "text-field": ["get", column],
+                "text-size": text_size,
+                "text-anchor": text_anchor,
+            }
+
+        if paint is None:
+            paint = {
+                "text-color": text_color,
+            }
+
+        layer = {
+            "id": f"{name}_labels",
+            "type": "symbol",
+            "source": name,
+            "layout": layout,
+            "paint": paint,
+            "min_zoom": min_zoom,
+            "max_zoom": max_zoom,
+            **kwargs,
+        }
+
+        self.add_layer(
+            layer, before_id=before_id, name=name, opacity=opacity, visible=visible
+        )
+
 
 class Container(v.Container):
 
@@ -5286,6 +5381,8 @@ def create_vector_data(
     height: int = 420,
     frame_border: int = 0,
     download: bool = True,
+    name: str = None,
+    paint: Dict[str, Any] = None,
     **kwargs: Any,
 ) -> widgets.VBox:
     """Generates a widget-based interface for creating and managing vector data on a map.
@@ -5322,7 +5419,13 @@ def create_vector_data(
         frame_border (int, optional): The width of the frame border for the Mapillary image widget.
             Defaults to 0.
         download (bool, optional): Whether to generate a download link for the exported file.
-        **kwargs (Any): Additional keyword arguments that may be passed to the function.
+            Defaults to True.
+        name (str, optional): The name of the drawn feature layer to be added to the map.
+            Defaults to None.
+        paint (Dict[str, Any], optional): A dictionary specifying the paint properties for the
+            drawn features. This can include properties like "circle-radius", "circle-color",
+            "circle-opacity", "circle-stroke-color", and "circle-stroke-width". Defaults to None.
+        **kwargs (Any): Additional keyword arguments that may be passed to the add_geojson method.
 
     Returns:
         widgets.VBox: A vertical box widget containing the map, sidebar, and control buttons.
@@ -5343,10 +5446,18 @@ def create_vector_data(
     if out_dir is None:
         out_dir = os.getcwd()
 
+    if paint is None:
+        paint = {
+            "circle-radius": 6,
+            "circle-color": "#FFFF00",
+            "circle-opacity": 1.0,
+            "circle-stroke-color": "#000000",
+            "circle-stroke-width": 1,
+        }
+
     def create_default_map():
         m = Map(style="liberty", height=map_height)
         m.add_basemap("Satellite")
-        m.add_basemap("OpenStreetMap.Mapnik", visible=True)
         m.add_overture_buildings(visible=True)
         m.add_overture_data(theme="transportation")
         m.add_layer_control()
@@ -5372,7 +5483,6 @@ def create_vector_data(
             if isinstance(values, list) or isinstance(values, tuple):
                 prop_widget = widgets.Dropdown(
                     options=values,
-                    # value=None,
                     description=key,
                 )
                 prop_widgets.children += (prop_widget,)
@@ -5408,6 +5518,29 @@ def create_vector_data(
                     for prop_widget in prop_widgets.children:
                         key = prop_widget.description
                         prop_widget.value = m.draw_features[feature_id][key]
+
+        for index, feature in enumerate(m.draw_feature_collection_all["features"]):
+            feature_id = feature["id"]
+            if feature_id in m.draw_features:
+                m.draw_feature_collection_all["features"][index]["properties"] = (
+                    m.draw_features[feature_id]
+                )
+
+        if isinstance(name, str):
+
+            if name not in m.layer_dict.keys():
+
+                m.add_geojson(
+                    m.draw_feature_collection_all,
+                    layer_type="circle",
+                    name=name,
+                    paint=paint,
+                    fit_bounds=False,
+                    **kwargs,
+                )
+
+            else:
+                m.set_data(name, m.draw_feature_collection_all)
 
     m.observe(draw_change, names="draw_features_selected")
 

@@ -41,6 +41,8 @@ class WQLinearMMFunction(Function):
 
         out_shape = x.shape[:-1] + (out_features,)
         x = x.to(torch.float16)
+        if x.shape[0] == 0:
+            return torch.zeros(out_shape, dtype=x.dtype, device=x.device)
 
         if awq_ext is not None:
             FP16_MATMUL_HEURISTIC_CONDITION = x.shape[0] * x.shape[1] >= 1024
@@ -60,13 +62,14 @@ class WQLinearMMFunction(Function):
 
             if FP16_MATMUL_HEURISTIC_CONDITION:
                 out = awq_dequantize_triton(qweight, scales, qzeros)
-                out = torch.matmul(x, out)
+                out = torch.matmul(x, out.to(x.dtype))
             else:
                 out = awq_gemm_triton(
                     x.reshape(-1, x.shape[-1]), qweight, scales, qzeros, split_k_iters=8,
                 )
 
         else:
+            global user_has_been_warned
             if not user_has_been_warned:
                 warnings.warn("Using naive (slow) implementation." + msg)
                 user_has_been_warned = True

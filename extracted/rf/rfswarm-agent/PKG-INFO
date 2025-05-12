@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: rfswarm-agent
-Version: 1.4.1
+Version: 1.5.0
 Summary: rfswarm Agent
 Home-page: https://github.com/damies13/rfswarm
 Author: damies13
@@ -22,12 +22,14 @@ Requires-Dist: configparser
 Requires-Dist: requests
 Requires-Dist: robotframework
 Requires-Dist: psutil
+Requires-Dist: pyyaml
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier
 Dynamic: description
 Dynamic: description-content-type
 Dynamic: home-page
+Dynamic: license-file
 Dynamic: project-url
 Dynamic: requires-dist
 Dynamic: requires-python

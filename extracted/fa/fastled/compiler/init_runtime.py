@@ -4,47 +4,73 @@ import warnings
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+COMPILER_ROOT = Path("/js")
+COMPILER_DIR = COMPILER_ROOT / "compiler"
+
 SRC_MAPPED_HOST_COMPLER_DIR = Path("/host/fastled/src/platforms/wasm/compiler")
-SRC_STANDARD_HOST_COMPILER_DIR = Path(
-    "/js/compiler/fastled/src/platforms/wasm/compiler"
-)
-
-COMPILER_TARGET = Path("/js")
-
 if SRC_MAPPED_HOST_COMPLER_DIR.exists():
-    SRC_COMPILER_DIR = SRC_MAPPED_HOST_COMPLER_DIR
+    print(f"Using mapped host compiler directory: {SRC_MAPPED_HOST_COMPLER_DIR}")
+    FASTLED_COMPILER_DIR = SRC_MAPPED_HOST_COMPLER_DIR
 else:
-    SRC_COMPILER_DIR = SRC_STANDARD_HOST_COMPILER_DIR
+    print(f"Using standard host compiler directory: {SRC_MAPPED_HOST_COMPLER_DIR}")
+    FASTLED_COMPILER_DIR = COMPILER_ROOT / "fastled/src/platforms/wasm/compiler"
+
 
 HERE = Path(__file__).parent
 
 
-def copy_task(src: str | Path) -> None:
+def symlink_task(src: str | Path, dst: Path) -> None:
     src = Path(src)
-    if "entrypoint.sh" in str(src):
-        return
-    link_dst = COMPILER_TARGET / src.name
-
     # Handle shell scripts
     if src.suffix == ".sh":
         os.system(f"dos2unix {src} && chmod +x {src}")
 
     # if link exists, remove it
-    if link_dst.exists():
-        print(f"Removing existing link {link_dst}")
+    if dst.exists():
+        print(f"Removing existing link {dst}")
         try:
-            os.remove(link_dst)
+            os.remove(dst)
         except Exception as e:
-            warnings.warn(f"Failed to remove {link_dst}: {e}")
+            warnings.warn(f"Failed to remove {dst}: {e}")
 
-    if not link_dst.exists():
-        print(f"Linking {src} to {link_dst}")
+    if not dst.exists():
+        print(f"Linking {src} to {dst}")
         try:
-            os.symlink(str(src), str(link_dst))
+            os.symlink(str(src), str(dst))
         except FileExistsError:
-            print(f"Target {link_dst} already exists")
+            print(f"Target {dst} already exists")
     else:
-        print(f"Target {link_dst} already exists")
+        print(f"Target {dst} already exists")
+
+
+def _collect_docker_compile_files(globs: list[str]) -> list[tuple[Path, Path]]:
+    """
+    Collects files matching the given glob patterns from the Docker compile directory.
+    """
+    files = []
+    for pattern in globs:
+        for file_path in glob.glob(str(COMPILER_DIR / pattern)):
+            src = Path(file_path)
+            if "entrypoint.sh" in str(src):
+                continue
+            dst = COMPILER_ROOT / src.name
+            files.append((src, dst))
+    return files
+
+
+def _collect_fastled_compile_files(globs: list[str]) -> list[tuple[Path, Path]]:
+    """
+    Collects files matching the given glob patterns from the FastLED compile directory.
+    """
+    files = []
+    for pattern in globs:
+        for file_path in glob.glob(str(FASTLED_COMPILER_DIR / pattern)):
+            src = Path(file_path)
+            if "entrypoint.sh" in str(src):
+                continue
+            dst = COMPILER_ROOT / src.name
+            files.append((src, dst))
+    return files
 
 
 def make_links() -> None:
@@ -61,13 +87,25 @@ def make_links() -> None:
     ]
 
     # Get all matching files in compiler directory
-    files = []
+    tasks = _collect_docker_compile_files(globs=patterns)
+    tasks += _collect_fastled_compile_files(globs=patterns)
+
     for pattern in patterns:
-        files.extend(glob.glob(str(SRC_COMPILER_DIR / pattern)))
+        for file_path in glob.glob(str(FASTLED_COMPILER_DIR / pattern)):
+            src = Path(file_path)
+            if "entrypoint.sh" in str(src):
+                continue
+            dst = COMPILER_ROOT / src.name
+            tasks.append((src, dst))
 
     # Process files in parallel using ThreadPoolExecutor
     with ThreadPoolExecutor(max_workers=16) as executor:
-        executor.map(copy_task, files)
+
+        def functor(args):
+            src, dst = args
+            symlink_task(src, dst)
+
+        executor.map(functor, tasks)
 
 
 def init_runtime() -> None:
