@@ -271,6 +271,9 @@ class WalletApi(object):
 
         :param bool async_req: execute request asynchronously
         :param str currency: Filter by currency. Return all currency records if not specified
+        :param str withdraw_id: The withdrawal record id starts with w, such as: w1879219868. When withdraw_id is not empty, the value querys this withdrawal record and no longer querys according to time
+        :param str asset_class: The currency type of withdrawal record is empty by default. It supports users to query the withdrawal records in the main and innovation areas on demand. Value range: SPOT, PILOT  SPOT: Main Zone  PILOT: Innovation Zone
+        :param str withdraw_order_id: User-defined order number when withdrawing. Default is empty. When not empty, the specified user-defined order number record will be queried
         :param int _from: Time range beginning, default to 7 days before current time
         :param int to: Time range ending, default to current time
         :param int limit: Maximum number of records to be returned in a single list
@@ -300,6 +303,9 @@ class WalletApi(object):
 
         :param bool async_req: execute request asynchronously
         :param str currency: Filter by currency. Return all currency records if not specified
+        :param str withdraw_id: The withdrawal record id starts with w, such as: w1879219868. When withdraw_id is not empty, the value querys this withdrawal record and no longer querys according to time
+        :param str asset_class: The currency type of withdrawal record is empty by default. It supports users to query the withdrawal records in the main and innovation areas on demand. Value range: SPOT, PILOT  SPOT: Main Zone  PILOT: Innovation Zone
+        :param str withdraw_order_id: User-defined order number when withdrawing. Default is empty. When not empty, the specified user-defined order number record will be queried
         :param int _from: Time range beginning, default to 7 days before current time
         :param int to: Time range ending, default to current time
         :param int limit: Maximum number of records to be returned in a single list
@@ -322,6 +328,9 @@ class WalletApi(object):
 
         all_params = [
             'currency',
+            'withdraw_id',
+            'asset_class',
+            'withdraw_order_id',
             '_from',
             'to',
             'limit',
@@ -358,6 +367,12 @@ class WalletApi(object):
         query_params = []
         if 'currency' in local_var_params and local_var_params['currency'] is not None:  # noqa: E501
             query_params.append(('currency', local_var_params['currency']))  # noqa: E501
+        if 'withdraw_id' in local_var_params and local_var_params['withdraw_id'] is not None:  # noqa: E501
+            query_params.append(('withdraw_id', local_var_params['withdraw_id']))  # noqa: E501
+        if 'asset_class' in local_var_params and local_var_params['asset_class'] is not None:  # noqa: E501
+            query_params.append(('asset_class', local_var_params['asset_class']))  # noqa: E501
+        if 'withdraw_order_id' in local_var_params and local_var_params['withdraw_order_id'] is not None:  # noqa: E501
+            query_params.append(('withdraw_order_id', local_var_params['withdraw_order_id']))  # noqa: E501
         if '_from' in local_var_params and local_var_params['_from'] is not None:  # noqa: E501
             query_params.append(('from', local_var_params['_from']))  # noqa: E501
         if 'to' in local_var_params and local_var_params['to'] is not None:  # noqa: E501
@@ -418,7 +433,7 @@ class WalletApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :rtype: list[gate_api.LedgerRecord]
+        :rtype: list[gate_api.DepositRecord]
         :return: If the method is called asynchronously,
                  returns the request thread.
         """
@@ -449,7 +464,7 @@ class WalletApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :rtype: tuple(list[gate_api.LedgerRecord], status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(list[gate_api.DepositRecord], status_code(int), headers(HTTPHeaderDict))
         :return: If the method is called asynchronously,
                  returns the request thread.
         """
@@ -524,7 +539,7 @@ class WalletApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[LedgerRecord]',  # noqa: E501
+            response_type='list[DepositRecord]',  # noqa: E501
             auth_settings=auth_settings,
             async_req=local_var_params.get('async_req'),
             _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501

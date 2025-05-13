@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from connector.generated.models.custom_attribute_customized_type import CustomAttributeCustomizedType
 from connector.generated.models.custom_attribute_type import CustomAttributeType
 from typing import Optional, Set
@@ -31,7 +31,8 @@ class CustomAttributeSchema(BaseModel):
     customized_type: CustomAttributeCustomizedType = Field(description="The type of entity this custom attribute is for.")
     name: StrictStr = Field(description="The name of the custom attribute.")
     attribute_type: CustomAttributeType = Field(description="The data type of the custom attribute.")
-    __properties: ClassVar[List[str]] = ["customized_type", "name", "attribute_type"]
+    description: Optional[StrictStr] = Field(default=None, description="Human readable description of what this custom attribute represents, as sometimes it's not clear from the name alone.")
+    __properties: ClassVar[List[str]] = ["customized_type", "name", "attribute_type", "description"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -86,7 +87,8 @@ class CustomAttributeSchema(BaseModel):
         _obj = cls.model_validate({
             "customized_type": obj.get("customized_type"),
             "name": obj.get("name"),
-            "attribute_type": obj.get("attribute_type")
+            "attribute_type": obj.get("attribute_type"),
+            "description": obj.get("description")
         })
         return _obj
 

@@ -17,7 +17,8 @@ The process is intentionally split into multiple packages:
   belong to neither the reactor, nor the engines, nor the client wrappers.
 """
 import logging
-from typing import Mapping, MutableMapping, NoReturn
+from collections.abc import Mapping, MutableMapping
+from typing import NoReturn
 
 from kopf._cogs.aiokits import aiotime
 from kopf._cogs.configs import configuration
@@ -73,6 +74,9 @@ async def authenticate(
         _activity_title: str = "Authentication",
 ) -> None:
     """ Retrieve the credentials once, successfully or not, and exit. """
+    # We do not need the locks protection here. There is only one activity for vault population.
+    # Even with 2+ activities, if the vault is empty, all consumers will be blocked by waiting.
+    # The API clients wake up only on the final population with the internal lock protection.
 
     # Sleep most of the time waiting for a signal to re-auth.
     await vault.wait_for_emptiness()

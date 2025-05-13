@@ -40,9 +40,16 @@ from autocoder.linters.shadow_linter import ShadowLinter
 from autocoder.compilers.shadow_compiler import ShadowCompiler
 from autocoder.common.action_yml_file_manager import ActionYmlFileManager
 from autocoder.common.auto_coder_lang import get_message
+from autocoder.common.save_formatted_log import save_formatted_log
 # Import the new display function
 from autocoder.common.v2.agent.agentic_tool_display import get_tool_display_message
 from autocoder.common.v2.agent.agentic_edit_types import FileChangeEntry
+from autocoder.utils.llms import get_single_llm
+
+from autocoder.common.file_checkpoint.models import FileChange as CheckpointFileChange
+from autocoder.common.file_checkpoint.manager import FileChangeManager as CheckpointFileChangeManager
+from autocoder.linters.normal_linter import NormalLinter
+from autocoder.compilers.normal_compiler import NormalCompiler
 from autocoder.common.v2.agent.agentic_edit_tools import (  # Import specific resolvers
     BaseToolResolver,
     ExecuteCommandToolResolver, ReadFileToolResolver, WriteToFileToolResolver,
@@ -51,7 +58,7 @@ from autocoder.common.v2.agent.agentic_edit_tools import (  # Import specific re
     AttemptCompletionToolResolver, PlanModeRespondToolResolver, UseMcpToolResolver,
     ListPackageInfoToolResolver
 )
-from autocoder.common.rulefiles.autocoderrules_utils import get_rules
+from autocoder.common.rulefiles.autocoderrules_utils import get_rules,auto_select_rules,get_required_and_index_rules
 from autocoder.common.v2.agent.agentic_edit_types import (AgenticEditRequest, ToolResult,
                                                           MemoryConfig, CommandConfig, BaseTool,
                                                           ExecuteCommandTool, ReadFileTool,
@@ -66,12 +73,14 @@ from autocoder.common.v2.agent.agentic_edit_types import (AgenticEditRequest, To
                                                           # Event Types
                                                           LLMOutputEvent, LLMThinkingEvent, ToolCallEvent,
                                                           ToolResultEvent, CompletionEvent, PlanModeRespondEvent, ErrorEvent, TokenUsageEvent,
+                                                          WindowLengthChangeEvent,
                                                           # Import specific tool types for display mapping
                                                           ReadFileTool, WriteToFileTool, ReplaceInFileTool, ExecuteCommandTool,
                                                           ListFilesTool, SearchFilesTool, ListCodeDefinitionNamesTool,
                                                           AskFollowupQuestionTool, UseMcpTool, AttemptCompletionTool
                                                           )
 
+from autocoder.rag.token_counter import count_tokens
 
 # Map Pydantic Tool Models to their Resolver Classes
 TOOL_RESOLVER_MAP: Dict[Type[BaseTool], Type[BaseToolResolver]] = {
@@ -86,7 +95,7 @@ TOOL_RESOLVER_MAP: Dict[Type[BaseTool], Type[BaseToolResolver]] = {
     AskFollowupQuestionTool: AskFollowupQuestionToolResolver,
     AttemptCompletionTool: AttemptCompletionToolResolver,  # Will stop the loop anyway
     PlanModeRespondTool: PlanModeRespondToolResolver,
-    UseMcpTool: UseMcpToolResolver,
+    UseMcpTool: UseMcpToolResolver
 }
 
 
@@ -102,9 +111,10 @@ class AgenticEdit:
         args: AutoCoderArgs,
         memory_config: MemoryConfig,
         command_config: Optional[CommandConfig] = None,
-        conversation_name: str = "current"
+        conversation_name:Optional[str] = "current"        
     ):
         self.llm = llm
+        self.context_prune_llm = get_single_llm(args.context_prune_model or args.model,product_mode=args.product_mode) 
         self.args = args
         self.printer = Printer()
         # Removed self.tools and self.result_manager
@@ -112,16 +122,29 @@ class AgenticEdit:
         # Removed self.max_iterations
         # Note: This might need updating based on the new flow
         self.conversation_history = conversation_history
+
+        self.current_conversations = []
         self.memory_config = memory_config
         self.command_config = command_config  # Note: command_config might be unused now
         self.project_type_analyzer = ProjectTypeAnalyzer(
             args=args, llm=self.llm)        
 
-        self.shadow_manager = ShadowManager(
-            args.source_dir, args.event_file, args.ignore_clean_shadows)
-        self.shadow_linter = ShadowLinter(self.shadow_manager, verbose=False)
-        self.shadow_compiler = ShadowCompiler(
-            self.shadow_manager, verbose=False)
+        # self.shadow_manager = ShadowManager(
+        #     args.source_dir, args.event_file, args.ignore_clean_shadows)
+        self.shadow_manager = None
+        # self.shadow_linter = ShadowLinter(self.shadow_manager, verbose=False)
+        self.shadow_compiler = None
+        # self.shadow_compiler = ShadowCompiler(self.shadow_manager, verbose=False)
+        self.shadow_linter = None
+
+        self.checkpoint_manager = CheckpointFileChangeManager(
+            project_dir=args.source_dir,
+            backup_dir=os.path.join(args.source_dir,".auto-coder","checkpoint"),
+            store_dir=os.path.join(args.source_dir,".auto-coder","checkpoint_store"),
+            max_history=50)
+        self.linter = NormalLinter(args.source_dir,verbose=False)
+        self.compiler = NormalCompiler(args.source_dir,verbose=False)        
+            
 
         self.mcp_server_info = ""
         try:
@@ -233,7 +256,7 @@ class AgenticEdit:
         # Tools
 
         ## execute_command
-        Description: Request to execute a CLI command on the system. Use this when you need to perform system operations or run specific commands to accomplish any step in the user's task. You must tailor your command to the user's system and provide a clear explanation of what the command does. For command chaining, use the appropriate chaining syntax for the user's shell. Prefer to execute complex CLI commands over creating executable scripts, as they are more flexible and easier to run. Commands will be executed in the current working directory: ${cwd.toPosix()}
+        Description: Request to execute a CLI command on the system. Use this when you need to perform system operations or run specific commands to accomplish any step in the user's task. You must tailor your command to the user's system and provide a clear explanation of what the command does. For command chaining, use the appropriate chaining syntax for the user's shell. Prefer to execute complex CLI commands over creating executable scripts, as they are more flexible and easier to run. Commands will be executed in the current working directory: {{current_project}}
         Parameters:
         - command: (required) The CLI command to execute. This should be valid for the current operating system. Ensure the command is properly formatted and does not contain any harmful instructions.
         - requires_approval: (required) A boolean indicating whether this command requires explicit user approval before execution in case the user has auto-approve mode enabled. Set to 'true' for potentially impactful operations like installing/uninstalling packages, deleting/overwriting files, system configuration changes, network operations, or any commands that could have unintended side effects. Set to 'false' for safe operations like reading files/directories, running development servers, building projects, and other non-destructive operations.
@@ -255,7 +278,7 @@ class AgenticEdit:
         ## read_file
         Description: Request to read the contents of a file at the specified path. Use this when you need to examine the contents of an existing file you do not know the contents of, for example to analyze code, review text files, or extract information from configuration files. Automatically extracts raw text from PDF and DOCX files. May not be suitable for other types of binary files, as it returns the raw content as a string.
         Parameters:
-        - path: (required) The path of the file to read (relative to the current working directory ${cwd.toPosix()})
+        - path: (required) The path of the file to read (relative to the current working directory {{ current_project }})
         Usage:
         <read_file>
         <path>File path here</path>
@@ -264,7 +287,7 @@ class AgenticEdit:
         ## write_to_file
         Description: Request to write content to a file at the specified path. If the file exists, it will be overwritten with the provided content. If the file doesn't exist, it will be created. This tool will automatically create any directories needed to write the file.
         Parameters:
-        - path: (required) The path of the file to write to (relative to the current working directory ${cwd.toPosix()})
+        - path: (required) The path of the file to write to (relative to the current working directory {{ current_project }})
         - content: (required) The content to write to the file. ALWAYS provide the COMPLETE intended content of the file, without any truncation or omissions. You MUST include ALL parts of the file, even if they haven't been modified.
         Usage:
         <write_to_file>
@@ -277,15 +300,15 @@ class AgenticEdit:
         ## replace_in_file
         Description: Request to replace sections of content in an existing file using SEARCH/REPLACE blocks that define exact changes to specific parts of the file. This tool should be used when you need to make targeted changes to specific parts of a file.
         Parameters:
-        - path: (required) The path of the file to modify (relative to the current working directory ${cwd.toPosix()})
+        - path: (required) The path of the file to modify (relative to the current working directory {{ current_project }})
         - diff: (required) One or more SEARCH/REPLACE blocks following this exact format:
-        \`\`\`
+        ```
         <<<<<<< SEARCH
         [exact content to find]
         =======
         [new content to replace with]
         >>>>>>> REPLACE
-        \`\`\`
+        ```
         Critical rules:
         1. SEARCH content must match the associated file section to find EXACTLY:
             * Match character-for-character including whitespace, indentation, line endings
@@ -313,7 +336,7 @@ class AgenticEdit:
         ## search_files
         Description: Request to perform a regex search across files in a specified directory, providing context-rich results. This tool searches for patterns or specific content across multiple files, displaying each match with encapsulating context.
         Parameters:
-        - path: (required) The path of the directory to search in (relative to the current working directory ${cwd.toPosix()}). This directory will be recursively searched.
+        - path: (required) The path of the directory to search in (relative to the current working directory {{ current_project }}). This directory will be recursively searched.
         - regex: (required) The regular expression pattern to search for. Uses Rust regex syntax.
         - file_pattern: (optional) Glob pattern to filter files (e.g., '*.ts' for TypeScript files). If not provided, it will search all files (*).
         Usage:
@@ -326,7 +349,7 @@ class AgenticEdit:
         ## list_files
         Description: Request to list files and directories within the specified directory. If recursive is true, it will list all files and directories recursively. If recursive is false or not provided, it will only list the top-level contents. Do not use this tool to confirm the existence of files you may have created, as the user will let you know if the files were created successfully or not.
         Parameters:
-        - path: (required) The path of the directory to list contents for (relative to the current working directory ${cwd.toPosix()})
+        - path: (required) The path of the directory to list contents for (relative to the current working directory {{ current_project }})
         - recursive: (optional) Whether to list files recursively. Use true for recursive listing, false or omit for top-level only.
         Usage:
         <list_files>
@@ -337,7 +360,7 @@ class AgenticEdit:
         ## list_code_definition_names
         Description: Request to list definition names (classes, functions, methods, etc.) used in source code files at the top level of the specified directory. This tool provides insights into the codebase structure and important constructs, encapsulating high-level concepts and relationships that are crucial for understanding the overall architecture.
         Parameters:
-        - path: (required) The path of the directory (relative to the current working directory ${cwd.toPosix()}) to list top level source code definitions for.
+        - path: (required) The path of the directory (relative to the current working directory {{ current_project }}) to list top level source code definitions for.
         Usage:
         <list_code_definition_names>
         <path>Directory path here</path>
@@ -594,30 +617,43 @@ class AgenticEdit:
         - If at any point a mermaid diagram would make your plan clearer to help the user quickly see the structure, you are encouraged to include a Mermaid code block in the response. (Note: if you use colors in your mermaid diagrams, be sure to use high contrast colors so the text is readable.)
         - Finally once it seems like you've reached a good plan, ask the user to switch you back to ACT MODE to implement the solution.
 
-        {% if enable_active_context_in_generate %}
         ====
 
-        PROJECT PACKAGE CONTEXT
+        PACKAGE CONTEXT INFORMATION
 
-        Each directory can contain a short **`active.md`** summary file located under the mirrored path inside
-        `{{ current_project }}/.auto-coder/active-context/`.
+        # Understanding Directory Context
 
-        * **Purpose** – captures only the files that have **recently changed** in that directory. It is *not* a full listing.
-        * **Example** – for `{{ current_project }}/src/abc/bbc`, the summary is
-          `{{ current_project }}/.auto-coder/active-context/src/abc/bbc/active.md`.
+        ## Purpose
 
-        **Reading a summary**
+        - Each directory in the project (especially source code directories) has implicit context information
+        - This includes recent changes, important files, and their purposes
+        - This contextual information helps you understand the role of the directory and the files in the directory
+
+        ## Accessing Directory Context
+
+        - Use the **list_package_info** tool to view this information for a specific directory
+        - Do NOT use other tools like list_files to view this specialized context information        
+
+        ## When to Use
+
+        - When you need to understand what has recently changed in a directory
+        - When you need insight into the purpose and organization of a directory
+        - Before diving into detailed file exploration with other tools
+
+        ## Example
 
         ```xml
-        <read_file>
-        <path>.auto-coder/active-context/src/abc/bbc/active.md</path>
-        </read_file>
+        <list_package_info>
+        <path>src/some/directory</path>
+        </list_package_info>
         ```
 
-        Use these summaries to quickly decide which files deserve a deeper look with tools like
-        `read_file`, `search_files`, or `list_code_definition_names`.
+        # Benefits
 
-        {% endif %}
+        - Quickly identifies recently modified files that may be relevant to your task
+        - Provides high-level understanding of directory contents and purpose
+        - Helps prioritize which files to examine in detail with tools like read_file, search_files, or list_code_definition_names
+
         ====
 
         CAPABILITIES
@@ -636,7 +672,7 @@ class AgenticEdit:
         - Your current working directory is: {{current_project}}
         - You cannot \`cd\` into a different directory to complete a task. You are stuck operating from '{{ current_project }}', so be sure to pass in the correct 'path' parameter when using tools that require a path.
         - Do not use the ~ character or $HOME to refer to the home directory.
-        - Before using the execute_command tool, you must first think about the SYSTEM INFORMATION context provided to understand the user's environment and tailor your commands to ensure they are compatible with their system. You must also consider if the command you need to run should be executed in a specific directory outside of the current working directory '${cwd.toPosix()}', and if so prepend with \`cd\`'ing into that directory && then executing the command (as one command since you are stuck operating from '${cwd.toPosix()}'). For example, if you needed to run \`npm install\` in a project outside of '${cwd.toPosix()}', you would need to prepend with a \`cd\` i.e. pseudocode for this would be \`cd (path to project) && (command, in this case npm install)\`.
+        - Before using the execute_command tool, you must first think about the SYSTEM INFORMATION context provided to understand the user's environment and tailor your commands to ensure they are compatible with their system. You must also consider if the command you need to run should be executed in a specific directory outside of the current working directory '{{ current_project }}', and if so prepend with \`cd\`'ing into that directory && then executing the command (as one command since you are stuck operating from '{{ current_project }}'). For example, if you needed to run \`npm install\` in a project outside of '{{ current_project }}', you would need to prepend with a \`cd\` i.e. pseudocode for this would be \`cd (path to project) && (command, in this case npm install)\`.
         - When using the search_files tool, craft your regex patterns carefully to balance specificity and flexibility. Based on the user's task you may use it to find code patterns, TODO comments, function definitions, or any text-based information across the project. The results include context, so analyze the surrounding code to better understand the matches. Leverage the search_files tool in combination with other tools for more comprehensive analysis. For example, use it to find specific code patterns, then use read_file to examine the full context of interesting matches before using replace_in_file to make informed changes.
         - When creating a new project (such as an app, website, or any software project), organize all new files within a dedicated project directory unless the user specifies otherwise. Use appropriate file paths when creating files, as the write_to_file tool will automatically create any necessary directories. Structure the project logically, adhering to best practices for the specific type of project being created. Unless otherwise specified, new projects should be easily run without additional setup, for example most projects can be built in HTML, CSS, and JavaScript - which you can open in a browser.
         - Be sure to consider the type of project (e.g. Python, JavaScript, web application) when determining the appropriate structure and files to include. Also consider what files may be most relevant to accomplishing the task, for example looking at a project's manifest file would help you understand the project's dependencies, which you could incorporate into any code you write.
@@ -659,17 +695,35 @@ class AgenticEdit:
         {% if extra_docs %}  
         ====
       
-        RULES PROVIDED BY USER
+        RULES OR  DOCUMENTS PROVIDED BY USER
 
         The following rules are provided by the user, and you must follow them strictly.
 
+        <user_rule_or_document_files>
         {% for key, value in extra_docs.items() %}
-        <user_rule>
+        <user_rule_or_document_file>
         ##File: {{ key }}
         {{ value }}
-        </user_rule>
-        {% endfor %}        
+        </user_rule_or_document_file>
+        {% endfor %}  
+        </user_rule_or_document_files>              
+        
+        Make sure you always start your task by using the read_file tool to get the relevant RULE files listed in index.md based on the user's specific requirements.        
         {% endif %}
+
+
+        {% if file_paths_str %}
+        ====
+        
+        FILES MENTIONED BY USER
+
+        The following are files or directories that the user mentioned. 
+        Make sure you always start your task by using the read_file tool to get the content of the files or list_files tool to list the files contained in the mentioned directories. If it is a directory, please use list_files to see what files it contains, and read the files as needed using read_file. If it is a file, please use read_file to read the file.
+        <files>
+        {{file_paths_str}}
+        </files>
+        {% endif %}
+        
 
         ====
 
@@ -691,18 +745,11 @@ class AgenticEdit:
         3. Remember, you have extensive capabilities with access to a wide range of tools that can be used in powerful and clever ways as necessary to accomplish each goal. Before calling a tool, do some analysis within <thinking></thinking> tags. First, analyze the file structure provided in environment_details to gain context and insights for proceeding effectively. Then, think about which of the provided tools is the most relevant tool to accomplish the user's task. Next, go through each of the required parameters of the relevant tool and determine if the user has directly provided or given enough information to infer a value. When deciding if the parameter can be inferred, carefully consider all the context to see if it supports a specific value. If all of the required parameters are present or can be reasonably inferred, close the thinking tag and proceed with the tool use. BUT, if one of the values for a required parameter is missing, DO NOT invoke the tool (not even with fillers for the missing params) and instead, ask the user to provide the missing parameters using the ask_followup_question tool. DO NOT ask for more information on optional parameters if it is not provided.
         4. Once you've completed the user's task, you must use the attempt_completion tool to present the result of the task to the user. You may also provide a CLI command to showcase the result of your task; this can be particularly useful for web development tasks, where you can run e.g. \`open index.html\` to show the website you've built.
         5. The user may provide feedback, which you can use to make improvements and try again. But DO NOT continue in pointless back and forth conversations, i.e. don't end your responses with questions or offers for further assistance.                    
-        
-        {% if file_paths_str %}
-        ====
-        The following are files that the user is currently focusing on. 
-        Make sure you always start your analysis by using the read_file tool to get the content of the files.
-        <files>
-        {{file_paths_str}}
-        </files>
-        {% endif %}
-        """
-        import os
-        extra_docs = get_rules()
+                
+        """        
+        ## auto_select_rules(context=request.user_input, llm=self.llm,args=self.args)        rules =       
+        # extra_docs = get_rules()  
+        extra_docs = get_required_and_index_rules()   
         
         env_info = detect_env()
         shell_type = "bash"
@@ -771,7 +818,7 @@ class AgenticEdit:
         # Join with newline for readability, matching prompt examples
         return "\n".join(xml_parts)
 
-    def analyze(self, request: AgenticEditRequest) -> Generator[Union[LLMOutputEvent, LLMThinkingEvent, ToolCallEvent, ToolResultEvent, CompletionEvent, ErrorEvent], None, None]:
+    def analyze(self, request: AgenticEditRequest) -> Generator[Union[LLMOutputEvent, LLMThinkingEvent, ToolCallEvent, ToolResultEvent, CompletionEvent, ErrorEvent, WindowLengthChangeEvent], None, None]:
         """
         Analyzes the user request, interacts with the LLM, parses responses,
         executes tools, and yields structured events for visualization until completion or error.
@@ -781,6 +828,7 @@ class AgenticEdit:
         logger.info(f"Generated system prompt with length: {len(system_prompt)}")
         
         # print(system_prompt)
+
         conversations = [
             {"role": "system", "content": system_prompt},
         ] 
@@ -789,11 +837,17 @@ class AgenticEdit:
             "role": "user", "content": request.user_input
         })        
         
-        logger.info(
-            f"Initial conversation history size: {len(conversations)}")
         
-        logger.info(f"Conversation history: {json.dumps(conversations, indent=2,ensure_ascii=False)}")
-
+        self.current_conversations = conversations
+        
+        # 计算初始对话窗口长度并触发事件
+        conversation_str = json.dumps(conversations, ensure_ascii=False)
+        current_tokens = count_tokens(conversation_str)
+        yield WindowLengthChangeEvent(tokens_used=current_tokens)
+        
+        logger.info(
+            f"Initial conversation history size: {len(conversations)}, tokens: {current_tokens}")
+                
         iteration_count = 0
         tool_executed = False
         while True:
@@ -813,6 +867,8 @@ class AgenticEdit:
 
             assistant_buffer = ""
             logger.info("Initializing stream chat with LLM")
+
+            # ## 实际请求大模型
             llm_response_gen = stream_chat_with_continue(
                 llm=self.llm,
                 conversations=conversations,
@@ -820,16 +876,27 @@ class AgenticEdit:
                 args=self.args
             )
 
-            meta_holder = byzerllm.MetaHolder()
+            # llm_response_gen = self.llm.stream_chat_oai(
+            #     conversations=conversations,
+            #     delta_mode=True            
+            # )
+            
             logger.info("Starting to parse LLM response stream")
             parsed_events = self.stream_and_parse_llm_response(
-                llm_response_gen, meta_holder)
+                llm_response_gen)
 
             event_count = 0
+            mark_event_should_finish = False
             for event in parsed_events:
-                event_count += 1
-                logger.info(f"Processing event #{event_count}: {type(event).__name__}")
                 global_cancel.check_and_raise(token=self.args.event_file)
+                event_count += 1
+                
+                if mark_event_should_finish:
+                    if isinstance(event, TokenUsageEvent):
+                        logger.info("Yielding token usage event")
+                        yield event
+                    continue
+                                
                 if isinstance(event, (LLMOutputEvent, LLMThinkingEvent)):
                     assistant_buffer += event.text
                     logger.debug(f"Accumulated {len(assistant_buffer)} chars in assistant buffer")
@@ -844,11 +911,18 @@ class AgenticEdit:
 
                     # Append assistant's thoughts and the tool call to history
                     logger.info(f"Adding assistant message with tool call to conversation history")
+                    
+                    # 记录当前对话的token数量
                     conversations.append({
                         "role": "assistant",
                         "content": assistant_buffer + tool_xml
                     })                    
                     assistant_buffer = ""  # Reset buffer after tool call
+                    
+                    # 计算当前对话的总 token 数量并触发事件
+                    current_conversation_str = json.dumps(conversations, ensure_ascii=False)
+                    total_tokens = count_tokens(current_conversation_str)
+                    yield WindowLengthChangeEvent(tokens_used=total_tokens)
 
                     yield event  # Yield the ToolCallEvent for display
                     logger.info("Yielded ToolCallEvent")
@@ -861,7 +935,9 @@ class AgenticEdit:
                         yield CompletionEvent(completion=tool_obj, completion_xml=tool_xml)
                         logger.info(
                             "AgenticEdit analyze loop finished due to AttemptCompletion.")
-                        return
+                        save_formatted_log(self.args.source_dir, json.dumps(conversations, ensure_ascii=False), "agentic_conversation")        
+                        mark_event_should_finish = True
+                        continue
 
                     if isinstance(tool_obj, PlanModeRespondTool):
                         logger.info(
@@ -870,7 +946,9 @@ class AgenticEdit:
                         yield PlanModeRespondEvent(completion=tool_obj, completion_xml=tool_xml)
                         logger.info(
                             "AgenticEdit analyze loop finished due to PlanModeRespond.")
-                        return
+                        save_formatted_log(self.args.source_dir, json.dumps(conversations, ensure_ascii=False), "agentic_conversation")        
+                        mark_event_should_finish = True
+                        continue
 
                     # Resolve the tool
                     resolver_cls = TOOL_RESOLVER_MAP.get(type(tool_obj))
@@ -926,14 +1004,26 @@ class AgenticEdit:
 
                     # Append the tool result (as user message) to history
                     logger.info("Adding tool result to conversation history")
+                    
+                    # 添加工具结果到对话历史
                     conversations.append({
                         "role": "user",  # Simulating the user providing the tool result
                         "content": error_xml
                     })
+                    
+                    # 计算当前对话的总 token 数量并触发事件
+                    current_conversation_str = json.dumps(conversations, ensure_ascii=False)
+                    total_tokens = count_tokens(current_conversation_str)
+                    yield WindowLengthChangeEvent(tokens_used=total_tokens)
+                    
                     logger.info(
                         f"Added tool result to conversations for tool {type(tool_obj).__name__}")
                     logger.info(f"Breaking LLM cycle after executing tool: {tool_name}")
-                    break  # After tool execution and result, break to start a new LLM cycle
+                    
+                    # 一次交互只能有一次工具，剩下的其实就没有用了，但是如果不让流式处理完，我们就无法获取服务端
+                    # 返回的token消耗和计费，所以通过此标记来完成进入空转，直到流式走完，获取到最后的token消耗和计费
+                    mark_event_should_finish=True
+                    # break  # After tool execution and result, break to start a new LLM cycle
 
                 elif isinstance(event, ErrorEvent):
                     logger.error(f"Error event occurred: {event.message}")
@@ -941,9 +1031,10 @@ class AgenticEdit:
                     # Optionally stop the process on parsing errors
                     # logger.error("Stopping analyze loop due to parsing error.")
                     # return
-
-            logger.info("Yielding token usage event")
-            yield TokenUsageEvent(usage=meta_holder.meta)
+                elif isinstance(event, TokenUsageEvent):
+                    logger.info("Yielding token usage event")
+                    yield event    
+                
             
             if not tool_executed:
                 # No tool executed in this LLM response cycle
@@ -951,6 +1042,7 @@ class AgenticEdit:
                 # Append any remaining assistant buffer to history if it wasn't followed by a tool
                 if assistant_buffer:
                     logger.info(f"Appending assistant buffer to history: {len(assistant_buffer)} chars")
+                    
                     last_message = conversations[-1]
                     if last_message["role"] != "assistant":
                         logger.info("Adding new assistant message")
@@ -959,21 +1051,33 @@ class AgenticEdit:
                     elif last_message["role"] == "assistant":
                         logger.info("Appending to existing assistant message")
                         last_message["content"] += assistant_buffer
+                        
+                    # 计算当前对话的总 token 数量并触发事件
+                    current_conversation_str = json.dumps(conversations, ensure_ascii=False)
+                    total_tokens = count_tokens(current_conversation_str)
+                    yield WindowLengthChangeEvent(tokens_used=total_tokens)
                 
                 # 添加系统提示，要求LLM必须使用工具或明确结束，而不是直接退出
                 logger.info("Adding system reminder to use tools or attempt completion")
+                
                 conversations.append({
                     "role": "user",
                     "content": "NOTE: You must use an appropriate tool (such as read_file, write_to_file, execute_command, etc.) or explicitly complete the task (using attempt_completion). Do not provide text responses without taking concrete actions. Please select a suitable tool to continue based on the user's task."
                 })
+                
+                # 计算当前对话的总 token 数量并触发事件
+                current_conversation_str = json.dumps(conversations, ensure_ascii=False)
+                total_tokens = count_tokens(current_conversation_str)
+                yield WindowLengthChangeEvent(tokens_used=total_tokens)
                 # 继续循环，让 LLM 再思考，而不是 break
                 logger.info("Continuing the LLM interaction loop without breaking")
                 continue
             
         logger.info(f"AgenticEdit analyze loop finished after {iteration_count} iterations.")
+        save_formatted_log(self.args.source_dir, json.dumps(conversations, ensure_ascii=False), "agentic_conversation")    
 
     def stream_and_parse_llm_response(
-        self, generator: Generator[Tuple[str, Any], None, None], meta_holder: byzerllm.MetaHolder
+        self, generator: Generator[Tuple[str, Any], None, None]
     ) -> Generator[Union[LLMOutputEvent, LLMThinkingEvent, ToolCallEvent, ErrorEvent], None, None]:
         """
         Streamingly parses the LLM response generator, distinguishing between
@@ -1051,12 +1155,15 @@ class AgenticEdit:
                     f"Failed to parse tool XML for <{tool_tag}>: {e}\nXML:\n{tool_xml}")
                 return None
 
-        for content_chunk, metadata in generator:
-            global_cancel.check_and_raise(token=self.args.event_file)
-            meta_holder.meta = metadata            
+        last_metadata = None        
+        for content_chunk, metadata in generator:            
+            global_cancel.check_and_raise(token=self.args.event_file)                      
             if not content_chunk:
+                last_metadata = metadata                
                 continue
-            buffer += content_chunk
+            
+            last_metadata = metadata
+            buffer += content_chunk            
 
             while True:
                 # Check for transitions: thinking -> text, tool -> text, text -> thinking, text -> tool
@@ -1166,9 +1273,7 @@ class AgenticEdit:
 
                 # If no event was processed in this iteration, break inner loop
                 if not found_event:
-                    break
-        
-        yield TokenUsageEvent(usage=meta_holder.meta)        
+                    break                
 
         # After generator exhausted, yield any remaining content
         if in_thinking_block:
@@ -1186,192 +1291,211 @@ class AgenticEdit:
             # Yield remaining plain text
             yield LLMOutputEvent(text=buffer)
 
-    def run_with_events(self, request: AgenticEditRequest):
-        """
-        Runs the agentic edit process, converting internal events to the
-        standard event system format and writing them using the event manager.
-        """
-        event_manager = get_event_manager(self.args.event_file)
-        self.apply_pre_changes()
-
-        try:
-            event_stream = self.analyze(request)
-            for agent_event in event_stream:
-                content = None
-                metadata = EventMetadata(
-                    action_file=self.args.file,
-                    is_streaming=False,
-                    stream_out_type="/agent/edit")
-
-                if isinstance(agent_event, LLMThinkingEvent):
-                    content = EventContentCreator.create_stream_thinking(
-                        content=agent_event.text)
-                    metadata.is_streaming = True
-                    metadata.path = "/agent/edit/thinking"
-                    event_manager.write_stream(
-                        content=content.to_dict(), metadata=metadata.to_dict())
-                elif isinstance(agent_event, LLMOutputEvent):
-                    content = EventContentCreator.create_stream_content(
-                        content=agent_event.text)
-                    metadata.is_streaming = True
-                    metadata.path = "/agent/edit/output"
-                    event_manager.write_stream(content=content.to_dict(),
-                                               metadata=metadata.to_dict())
-                elif isinstance(agent_event, ToolCallEvent):
-                    tool_name = type(agent_event.tool).__name__
-                    metadata.path = "/agent/edit/tool/call"
-                    content = EventContentCreator.create_result(
-                        content={
-                            "tool_name": tool_name,
-                            **agent_event.tool.model_dump()
-                        },
-                        metadata={}
-                    )
-                    event_manager.write_result(
-                        content=content.to_dict(), metadata=metadata.to_dict())
-                elif isinstance(agent_event, ToolResultEvent):
-                    metadata.path = "/agent/edit/tool/result"
-                    content = EventContentCreator.create_result(
-                        content={
-                            "tool_name": agent_event.tool_name,
-                            **agent_event.result.model_dump()
-                        },
-                        metadata={}
-                    )
-                    event_manager.write_result(
-                        content=content.to_dict(), metadata=metadata.to_dict())
-                elif isinstance(agent_event, PlanModeRespondEvent):
-                    metadata.path = "/agent/edit/plan_mode_respond"
-                    content = EventContentCreator.create_markdown_result(
-                        content=agent_event.completion.response,
-                        metadata={}
-                    )
-                    event_manager.write_result(
-                        content=content.to_dict(), metadata=metadata.to_dict())
-
-                elif isinstance(agent_event, TokenUsageEvent):
-                    last_meta: SingleOutputMeta = agent_event.usage
-                    # Get model info for pricing
-                    from autocoder.utils import llms as llm_utils
-                    model_name = ",".join(llm_utils.get_llm_names(self.llm))
-                    model_info = llm_utils.get_model_info(
-                        model_name, self.args.product_mode) or {}
-                    input_price = model_info.get(
-                        "input_price", 0.0) if model_info else 0.0
-                    output_price = model_info.get(
-                        "output_price", 0.0) if model_info else 0.0
-
-                    # Calculate costs
-                    input_cost = (last_meta.input_tokens_count *
-                                  input_price) / 1000000  # Convert to millions
-                    # Convert to millions
-                    output_cost = (
-                        last_meta.generated_tokens_count * output_price) / 1000000
-
-                    # 添加日志记录
-                    logger.info(f"Token Usage Details: Model={model_name}, Input Tokens={last_meta.input_tokens_count}, Output Tokens={last_meta.generated_tokens_count}, Input Cost=${input_cost:.6f}, Output Cost=${output_cost:.6f}")
-
-                    get_event_manager(self.args.event_file).write_result(
-                        EventContentCreator.create_result(content=EventContentCreator.ResultTokenStatContent(
-                            model_name=model_name,
-                            elapsed_time=0.0,
-                            first_token_time=last_meta.first_token_time,
-                            input_tokens=last_meta.input_tokens_count,
-                            output_tokens=last_meta.generated_tokens_count,
-                            input_cost=input_cost,
-                            output_cost=output_cost
-                        ).to_dict()), metadata=metadata.to_dict())
-
-                elif isinstance(agent_event, CompletionEvent):
-                    # 在这里完成实际合并
-                    try:
-                        self.apply_changes()
-                    except Exception as e:
-                        logger.exception(
-                            f"Error merging shadow changes to project: {e}")
-
-                    metadata.path = "/agent/edit/completion"
-                    content = EventContentCreator.create_completion(
-                        success_code="AGENT_COMPLETE",
-                        success_message="Agent attempted task completion.",
-                        result={
-                            "response": agent_event.completion.result
-                        }
-                    )
-                    event_manager.write_completion(
-                        content=content.to_dict(), metadata=metadata.to_dict())
-                elif isinstance(agent_event, ErrorEvent):
-                    metadata.path = "/agent/edit/error"
-                    content = EventContentCreator.create_error(
-                        error_code="AGENT_ERROR",
-                        error_message=agent_event.message,
-                        details={"agent_event_type": "ErrorEvent"}
-                    )
-                    event_manager.write_error(
-                        content=content.to_dict(), metadata=metadata.to_dict())
-                else:
-                    metadata.path = "/agent/edit/error"
-                    logger.warning(
-                        f"Unhandled agent event type: {type(agent_event)}")
-                    content = EventContentCreator.create_error(
-                        error_code="AGENT_ERROR",
-                        error_message=f"Unhandled agent event type: {type(agent_event)}",
-                        details={"agent_event_type": type(
-                            agent_event).__name__}
-                    )
-                    event_manager.write_error(
-                        content=content.to_dict(), metadata=metadata.to_dict())
-
-        except Exception as e:
-            logger.exception(
-                "An unexpected error occurred during agent execution:")
-            metadata = EventMetadata(
-                action_file=self.args.file,
-                is_streaming=False,
-                stream_out_type="/agent/edit/error")
-            error_content = EventContentCreator.create_error(
-                error_code="AGENT_FATAL_ERROR",
-                error_message=f"An unexpected error occurred: {str(e)}",
-                details={"exception_type": type(e).__name__}
-            )
-            event_manager.write_error(
-                content=error_content.to_dict(), metadata=metadata.to_dict())
-            # Re-raise the exception if needed, or handle appropriately
-            raise e
+        # 这个要放在最后，防止其他关联的多个事件的信息中断        
+        yield TokenUsageEvent(usage=last_metadata)            
+    
 
     def apply_pre_changes(self):
         # get the file name
         file_name = os.path.basename(self.args.file)
         if not self.args.skip_commit:
             try:
+                commit_result = git_utils.commit_changes(
+                    self.args.source_dir, f"auto_coder_pre_{file_name}")
                 get_event_manager(self.args.event_file).write_result(
                     EventContentCreator.create_result(
-                        content=self.printer.get_message_from_key("/agent/edit/apply_pre_changes")), metadata=EventMetadata(
+                        content={
+                            "have_commit":commit_result.success,
+                            "commit_hash":commit_result.commit_hash,
+                            "diff_file_num":len(commit_result.changed_files),
+                            "event_file":self.args.event_file
+                        }), metadata=EventMetadata(
                         action_file=self.args.file,
                         is_streaming=False,
                         path="/agent/edit/apply_pre_changes",
                         stream_out_type="/agent/edit").to_dict())
-                git_utils.commit_changes(
-                    self.args.source_dir, f"auto_coder_pre_{file_name}")
+                
             except Exception as e:
                 self.printer.print_in_terminal("git_init_required",
                                                source_dir=self.args.source_dir, error=str(e))
                 return
 
+    def get_available_checkpoints(self) -> List[Dict[str, Any]]:
+        """
+        获取可用的检查点列表
+        
+        Returns:
+            List[Dict[str, Any]]: 检查点信息列表
+        """
+        if not self.checkpoint_manager:
+            return []
+        
+        return self.checkpoint_manager.get_available_checkpoints()
+    
+    def rollback_to_checkpoint(self, checkpoint_id: str) -> bool:
+        """
+        回滚到指定的检查点，恢复文件状态和对话状态
+        
+        Args:
+            checkpoint_id: 检查点ID
+            
+        Returns:
+            bool: 是否成功回滚
+        """
+        if not self.checkpoint_manager:
+            logger.error("无法回滚：检查点管理器未初始化")
+            return False
+        
+        try:
+            # 回滚文件变更
+            undo_result, checkpoint = self.checkpoint_manager.undo_change_group_with_conversation(checkpoint_id)
+            if not undo_result.success:
+                logger.error(f"回滚文件变更失败: {undo_result.errors}")
+                return False
+            
+            # 恢复对话状态
+            if checkpoint:
+                self.current_conversations = checkpoint.conversations
+                logger.info(f"已恢复对话状态，包含 {len(checkpoint.conversations)} 条消息")
+                return True
+            else:
+                logger.warning(f"未找到关联的对话检查点: {checkpoint_id}，只回滚了文件变更")
+                return undo_result.success
+        except Exception as e:
+            logger.exception(f"回滚到检查点 {checkpoint_id} 失败: {str(e)}")
+            return False
+    
+    def handle_rollback_command(self, command: str) -> str:
+        """
+        处理回滚相关的命令
+        
+        Args:
+            command: 命令字符串，如 "rollback list", "rollback to <id>", "rollback info <id>"
+            
+        Returns:
+            str: 命令执行结果
+        """
+        if command == "rollback list":
+            # 列出可用的检查点
+            checkpoints = self.get_available_checkpoints()
+            if not checkpoints:
+                return "没有可用的检查点。"
+            
+            result = "可用的检查点列表：\n"
+            for i, cp in enumerate(checkpoints):
+                time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(cp["timestamp"]))
+                result += f"{i+1}. ID: {cp['id'][:8]}... | 时间: {time_str} | 变更文件数: {cp['changes_count']}"
+                result += f" | {'包含对话状态' if cp['has_conversation'] else '不包含对话状态'}\n"
+            
+            return result
+        
+        elif command.startswith("rollback info "):
+            # 显示检查点详情
+            cp_id = command[len("rollback info "):].strip()
+            
+            # 查找检查点
+            checkpoints = self.get_available_checkpoints()
+            target_cp = None
+            
+            # 支持通过序号或ID查询
+            if cp_id.isdigit() and 1 <= int(cp_id) <= len(checkpoints):
+                target_cp = checkpoints[int(cp_id) - 1]
+            else:
+                for cp in checkpoints:
+                    if cp["id"].startswith(cp_id):
+                        target_cp = cp
+                        break
+            
+            if not target_cp:
+                return f"未找到ID为 {cp_id} 的检查点。"
+            
+            # 获取检查点详细信息
+            time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(target_cp["timestamp"]))
+            
+            # 获取变更文件列表
+            changes = self.checkpoint_manager.get_changes_by_group(target_cp["id"])
+            changed_files = [change.file_path for change in changes]
+            
+            # 获取对话状态信息
+            conversation_info = "无对话状态信息"
+            if target_cp["has_conversation"] and hasattr(self.checkpoint_manager, 'conversation_store'):
+                checkpoint = self.checkpoint_manager.conversation_store.get_checkpoint(target_cp["id"])
+                if checkpoint and checkpoint.conversations:
+                    conversation_info = f"包含 {len(checkpoint.conversations)} 条对话消息"
+            
+            result = f"检查点详情：\n"
+            result += f"ID: {target_cp['id']}\n"
+            result += f"创建时间: {time_str}\n"
+            result += f"变更文件数: {target_cp['changes_count']}\n"
+            result += f"对话状态: {conversation_info}\n\n"
+            
+            if changed_files:
+                result += "变更文件列表：\n"
+                for i, file_path in enumerate(changed_files):
+                    result += f"{i+1}. {file_path}\n"
+            
+            return result
+        
+        elif command.startswith("rollback to "):
+            # 回滚到指定检查点
+            cp_id = command[len("rollback to "):].strip()
+            
+            # 查找检查点
+            checkpoints = self.get_available_checkpoints()
+            target_cp = None
+            
+            # 支持通过序号或ID回滚
+            if cp_id.isdigit() and 1 <= int(cp_id) <= len(checkpoints):
+                target_cp = checkpoints[int(cp_id) - 1]
+            else:
+                for cp in checkpoints:
+                    if cp["id"].startswith(cp_id):
+                        target_cp = cp
+                        break
+            
+            if not target_cp:
+                return f"未找到ID为 {cp_id} 的检查点。"
+            
+            # 执行回滚
+            success = self.rollback_to_checkpoint(target_cp["id"])
+            
+            if success:
+                # 获取变更文件列表
+                changes = self.checkpoint_manager.get_changes_by_group(target_cp["id"])
+                changed_files = [change.file_path for change in changes]
+                
+                result = f"成功回滚到检查点 {target_cp['id'][:8]}...\n"
+                result += f"恢复了 {len(changed_files)} 个文件的状态"
+                
+                if target_cp["has_conversation"]:
+                    result += f"\n同时恢复了对话状态"
+                
+                return result
+            else:
+                return f"回滚到检查点 {target_cp['id'][:8]}... 失败。"
+        
+        return "未知命令。可用命令：rollback list, rollback info <id>, rollback to <id>"
+    
     def apply_changes(self):
         """
         Apply all tracked file changes to the original project directory.
         """
-        for (file_path, change) in self.get_all_file_changes().items():
-            # Ensure the directory exists before writing the file
-            dir_path = os.path.dirname(file_path)
-            if dir_path: # Ensure dir_path is not empty (for files in root)
-                 os.makedirs(dir_path, exist_ok=True)
+        diff_file_num = 0
+        if self.shadow_manager:
+            for (file_path, change) in self.get_all_file_changes().items():
+                # Ensure the directory exists before writing the file
+                dir_path = os.path.dirname(file_path)
+                if dir_path: # Ensure dir_path is not empty (for files in root)
+                    os.makedirs(dir_path, exist_ok=True)
 
-            with open(file_path, 'w', encoding='utf-8') as f:
-                f.write(change.content)
-
-        if len(self.get_all_file_changes()) > 0:
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    f.write(change.content)
+            diff_file_num = len(self.get_all_file_changes())  
+        else:          
+            changes = self.checkpoint_manager.get_changes_by_group(self.args.event_file)
+            diff_file_num = len(changes)
+            
+        if diff_file_num > 0:
             if not self.args.skip_commit:
                 try:
                     file_name = os.path.basename(self.args.file)
@@ -1379,13 +1503,20 @@ class AgenticEdit:
                         self.args.source_dir,
                         f"{self.args.query}\nauto_coder_{file_name}",
                     )
-
+                    
                     get_event_manager(self.args.event_file).write_result(
                         EventContentCreator.create_result(
-                            content=self.printer.get_message_from_key("/agent/edit/apply_changes")), metadata=EventMetadata(
+                            content={
+                                "have_commit":commit_result.success,
+                                "commit_hash":commit_result.commit_hash,
+                                "diff_file_num":diff_file_num,
+                                "event_file":self.args.event_file                                
+                            }), metadata=EventMetadata(
                             action_file=self.args.file,
                             is_streaming=False,
+                            path="/agent/edit/apply_changes",
                             stream_out_type="/agent/edit").to_dict())
+                    
                     action_yml_file_manager = ActionYmlFileManager(
                         self.args.source_dir)
                     action_file_name = os.path.basename(self.args.file)
@@ -1431,6 +1562,15 @@ class AgenticEdit:
         console.print(Panel(
             f"[bold]{get_message('/agent/edit/user_query')}:[/bold]\n{request.user_input}", title=get_message("/agent/edit/objective"), border_style="blue"))
 
+        # 用于累计TokenUsageEvent数据
+        accumulated_token_usage = {
+            "model_name": "",
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "input_cost": 0.0,
+            "output_cost": 0.0
+        }
+
         try:
             self.apply_pre_changes()
             event_stream = self.analyze(request)
@@ -1457,19 +1597,19 @@ class AgenticEdit:
                     # 添加日志记录
                     logger.info(f"Token Usage: Model={model_name}, Input Tokens={last_meta.input_tokens_count}, Output Tokens={last_meta.generated_tokens_count}, Input Cost=${input_cost:.6f}, Output Cost=${output_cost:.6f}")
 
-                    self.printer.print_in_terminal(
-                            "code_generation_complete",
-                            duration=0.0,
-                            input_tokens=last_meta.input_tokens_count,
-                            output_tokens=last_meta.generated_tokens_count,
-                            input_cost=input_cost,
-                            output_cost=output_cost,
-                            speed=0.0,
-                            model_names=model_name,
-                            sampling_count=1
-                        )
+                    # 累计token使用情况
+                    accumulated_token_usage["model_name"] = model_name
+                    accumulated_token_usage["input_tokens"] += last_meta.input_tokens_count
+                    accumulated_token_usage["output_tokens"] += last_meta.generated_tokens_count
+                    accumulated_token_usage["input_cost"] += input_cost
+                    accumulated_token_usage["output_cost"] += output_cost
                     
-                if isinstance(event, LLMThinkingEvent):
+                elif isinstance(event, WindowLengthChangeEvent):
+                    # 显示当前会话的token数量
+                    logger.info(f"当前会话总 tokens: {event.tokens_used}")
+                    console.print(f"[dim]当前会话总 tokens: {event.tokens_used}[/dim]")
+                    
+                elif isinstance(event, LLMThinkingEvent):
                     # Render thinking within a less prominent style, maybe grey?
                     console.print(f"[grey50]{event.text}[/grey50]", end="")
                 elif isinstance(event, LLMOutputEvent):
@@ -1590,7 +1730,35 @@ class AgenticEdit:
 
                 time.sleep(0.1)  # Small delay for better visual flow
 
+            # 在处理完所有事件后打印累计的token使用情况
+            if accumulated_token_usage["input_tokens"] > 0:
+                self.printer.print_in_terminal(
+                    "code_generation_complete",
+                    duration=0.0,
+                    input_tokens=accumulated_token_usage["input_tokens"],
+                    output_tokens=accumulated_token_usage["output_tokens"],
+                    input_cost=accumulated_token_usage["input_cost"],
+                    output_cost=accumulated_token_usage["output_cost"],
+                    speed=0.0,
+                    model_names=accumulated_token_usage["model_name"],
+                    sampling_count=1
+                )
+                
         except Exception as e:
+            # 在处理异常时也打印累计的token使用情况
+            if accumulated_token_usage["input_tokens"] > 0:
+                self.printer.print_in_terminal(
+                    "code_generation_complete",
+                    duration=0.0,
+                    input_tokens=accumulated_token_usage["input_tokens"],
+                    output_tokens=accumulated_token_usage["output_tokens"],
+                    input_cost=accumulated_token_usage["input_cost"],
+                    output_cost=accumulated_token_usage["output_cost"],
+                    speed=0.0,
+                    model_names=accumulated_token_usage["model_name"],
+                    sampling_count=1
+                )
+                
             logger.exception(
                 "An unexpected error occurred during agent execution:")
             console.print(Panel(
@@ -1598,3 +1766,177 @@ class AgenticEdit:
             raise e
         finally:
             console.rule("[bold cyan]Agentic Edit Finished[/]")
+
+    def run_with_events(self, request: AgenticEditRequest):
+        """
+        Runs the agentic edit process, converting internal events to the
+        standard event system format and writing them using the event manager.
+        """
+        event_manager = get_event_manager(self.args.event_file)
+        self.apply_pre_changes()              
+
+        try:
+            event_stream = self.analyze(request)
+            for agent_event in event_stream:
+                content = None
+                metadata = EventMetadata(
+                    action_file=self.args.file,
+                    is_streaming=False,
+                    stream_out_type="/agent/edit")
+
+                if isinstance(agent_event, LLMThinkingEvent):
+                    content = EventContentCreator.create_stream_thinking(
+                        content=agent_event.text)
+                    metadata.is_streaming = True
+                    metadata.path = "/agent/edit/thinking"
+                    event_manager.write_stream(
+                        content=content.to_dict(), metadata=metadata.to_dict())
+                elif isinstance(agent_event, LLMOutputEvent):
+                    content = EventContentCreator.create_stream_content(
+                        content=agent_event.text)
+                    metadata.is_streaming = True
+                    metadata.path = "/agent/edit/output"
+                    event_manager.write_stream(content=content.to_dict(),
+                                            metadata=metadata.to_dict())
+                elif isinstance(agent_event, ToolCallEvent):
+                    tool_name = type(agent_event.tool).__name__
+                    metadata.path = "/agent/edit/tool/call"
+                    content = EventContentCreator.create_result(
+                        content={
+                            "tool_name": tool_name,
+                            **agent_event.tool.model_dump()
+                        },
+                        metadata={}
+                    )
+                    event_manager.write_result(
+                        content=content.to_dict(), metadata=metadata.to_dict())
+                elif isinstance(agent_event, ToolResultEvent):
+                    metadata.path = "/agent/edit/tool/result"
+                    content = EventContentCreator.create_result(
+                        content={
+                            "tool_name": agent_event.tool_name,
+                            **agent_event.result.model_dump()
+                        },
+                        metadata={}
+                    )
+                    event_manager.write_result(
+                        content=content.to_dict(), metadata=metadata.to_dict())
+                elif isinstance(agent_event, PlanModeRespondEvent):
+                    metadata.path = "/agent/edit/plan_mode_respond"
+                    content = EventContentCreator.create_markdown_result(
+                        content=agent_event.completion.response,
+                        metadata={}
+                    )
+                    event_manager.write_result(
+                        content=content.to_dict(), metadata=metadata.to_dict())
+
+                elif isinstance(agent_event, TokenUsageEvent):
+                    last_meta: SingleOutputMeta = agent_event.usage
+                    # Get model info for pricing
+                    from autocoder.utils import llms as llm_utils
+                    model_name = ",".join(llm_utils.get_llm_names(self.llm))
+                    model_info = llm_utils.get_model_info(
+                        model_name, self.args.product_mode) or {}
+                    input_price = model_info.get(
+                        "input_price", 0.0) if model_info else 0.0
+                    output_price = model_info.get(
+                        "output_price", 0.0) if model_info else 0.0
+
+                    # Calculate costs
+                    input_cost = (last_meta.input_tokens_count *
+                                input_price) / 1000000  # Convert to millions
+                    # Convert to millions
+                    output_cost = (
+                        last_meta.generated_tokens_count * output_price) / 1000000
+
+                    # 添加日志记录
+                    logger.info(f"Token Usage Details: Model={model_name}, Input Tokens={last_meta.input_tokens_count}, Output Tokens={last_meta.generated_tokens_count}, Input Cost=${input_cost:.6f}, Output Cost=${output_cost:.6f}")
+                    
+                    # 直接将每次的 TokenUsageEvent 写入到事件中
+                    metadata.path = "/agent/edit/token_usage"
+                    content = EventContentCreator.create_result(content=EventContentCreator.ResultTokenStatContent(
+                        model_name=model_name,
+                        elapsed_time=0.0,
+                        first_token_time=last_meta.first_token_time,
+                        input_tokens=last_meta.input_tokens_count,
+                        output_tokens=last_meta.generated_tokens_count,
+                        input_cost=input_cost,
+                        output_cost=output_cost
+                    ).to_dict())
+                    event_manager.write_result(content=content.to_dict(), metadata=metadata.to_dict())
+                                       
+
+                elif isinstance(agent_event, CompletionEvent):
+                    # 在这里完成实际合并
+                    try:
+                        self.apply_changes()
+                    except Exception as e:
+                        logger.exception(
+                            f"Error merging shadow changes to project: {e}")                                        
+
+                    metadata.path = "/agent/edit/completion"
+                    content = EventContentCreator.create_completion(
+                        success_code="AGENT_COMPLETE",
+                        success_message="Agent attempted task completion.",
+                        result={
+                            "response": agent_event.completion.result
+                        }
+                    )
+                    event_manager.write_completion(
+                        content=content.to_dict(), metadata=metadata.to_dict())
+                elif isinstance(agent_event, WindowLengthChangeEvent):
+                    # 处理窗口长度变化事件
+                    metadata.path = "/agent/edit/window_length_change"
+                    content = EventContentCreator.create_result(
+                        content={
+                            "tokens_used": agent_event.tokens_used
+                        },
+                        metadata={}
+                    )
+                    event_manager.write_result(
+                        content=content.to_dict(), metadata=metadata.to_dict())
+                    
+                    # 记录日志
+                    logger.info(f"当前会话总 tokens: {agent_event.tokens_used}")
+                    
+                elif isinstance(agent_event, ErrorEvent):                                        
+                    metadata.path = "/agent/edit/error"
+                    content = EventContentCreator.create_error(
+                        error_code="AGENT_ERROR",
+                        error_message=agent_event.message,
+                        details={"agent_event_type": "ErrorEvent"}
+                    )
+                    event_manager.write_error(
+                        content=content.to_dict(), metadata=metadata.to_dict())
+                else:
+                    metadata.path = "/agent/edit/error"
+                    logger.warning(
+                        f"Unhandled agent event type: {type(agent_event)}")
+                    content = EventContentCreator.create_error(
+                        error_code="AGENT_ERROR",
+                        error_message=f"Unhandled agent event type: {type(agent_event)}",
+                        details={"agent_event_type": type(
+                            agent_event).__name__}
+                    )
+                    event_manager.write_error(
+                        content=content.to_dict(), metadata=metadata.to_dict())
+
+        except Exception as e:
+            logger.exception(
+                "An unexpected error occurred during agent execution:")
+            metadata = EventMetadata(
+                action_file=self.args.file,
+                is_streaming=False,
+                stream_out_type="/agent/edit/error")
+                
+            # 发送累计的TokenUsageEvent数据（在错误情况下也需要发送）            
+                
+            error_content = EventContentCreator.create_error(
+                error_code="AGENT_FATAL_ERROR",
+                error_message=f"An unexpected error occurred: {str(e)}",
+                details={"exception_type": type(e).__name__}
+            )
+            event_manager.write_error(
+                content=error_content.to_dict(), metadata=metadata.to_dict())
+            # Re-raise the exception if needed, or handle appropriately
+            raise e

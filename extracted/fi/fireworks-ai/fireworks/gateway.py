@@ -2,16 +2,14 @@
 #
 # All Rights Reserved.
 
-from datetime import timedelta
-import functools
 import os
-from typing import List, Optional, TypeVar
+from typing import List, Optional, TypeVar, Union
 
 from grpclib.client import Channel
 import httpx
 from betterproto.lib.std.google.protobuf import FieldMask
-from fireworks._util import async_lru_cache
 from fireworks.control_plane.generated.protos.gateway import (
+    AcceleratorType,
     AutoscalingPolicy,
     CreateDeploymentRequest,
     Deployment,
@@ -24,6 +22,8 @@ from fireworks.control_plane.generated.protos.gateway import (
     ScaleDeploymentRequest,
     UpdateDeploymentRequest,
 )
+from asyncstdlib.functools import cache
+from openai import NOT_GIVEN, NotGiven
 
 
 def _get_api_key_from_env() -> Optional[str]:
@@ -71,8 +71,14 @@ class Gateway:
         self._api_key = api_key
         self._host = self._server_addr.split(":")[0]
         self._port = int(self._server_addr.split(":")[1])
-        channel = Channel(host=self._host, port=self._port, ssl=True)
-        self._stub = GatewayStub(channel, metadata=[("x-api-key", api_key)])
+        self._channel = Channel(host=self._host, port=self._port, ssl=True)
+        self._stub = GatewayStub(self._channel, metadata=[("x-api-key", api_key)])
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        self._channel.close()
 
     async def list_models(
         self,
@@ -126,10 +132,18 @@ class Gateway:
         )
         return deployments.deployments
 
-    async def create_deployment(self, model: str, autoscaling_policy: Optional[AutoscalingPolicy] = None):
+    async def create_deployment(
+        self,
+        model: str,
+        autoscaling_policy: Optional[AutoscalingPolicy] = None,
+        accelerator_type: Union[AcceleratorType, NotGiven] = NOT_GIVEN,
+    ):
         deployment = Deployment(base_model=model)
         if autoscaling_policy is not None:
             deployment.autoscaling_policy = autoscaling_policy
+        if not isinstance(accelerator_type, NotGiven):
+            deployment.accelerator_type = accelerator_type
+
         account_id = await self.account_id()
         request = CreateDeploymentRequest(parent=f"accounts/{account_id}", deployment=deployment)
         deployment = await self._stub.create_deployment(request)
@@ -138,12 +152,20 @@ class Gateway:
     async def scale_deployment(self, name: str, replicas: int):
         await self._stub.scale_deployment(ScaleDeploymentRequest(name=name, replica_count=replicas))
 
-    async def update_deployment(self, name: str, autoscaling_policy: Optional[AutoscalingPolicy] = None):
+    async def update_deployment(
+        self,
+        name: str,
+        autoscaling_policy: Optional[AutoscalingPolicy] = None,
+        accelerator_type: Optional[AcceleratorType] = None,
+    ):
         deployment = Deployment(name=name)
         update_mask = FieldMask(paths=[])
         if autoscaling_policy is not None:
             deployment.autoscaling_policy = autoscaling_policy
             update_mask.paths.append("autoscaling_policy")
+        if accelerator_type is not None:
+            deployment.accelerator_type = accelerator_type
+            update_mask.paths.append("accelerator_type")
         if len(update_mask.paths) == 0:
             return
         await self._stub.update_deployment(UpdateDeploymentRequest(deployment=deployment, update_mask=update_mask))
@@ -151,7 +173,7 @@ class Gateway:
     async def get_deployment(self, name: str) -> Deployment:
         return await self._stub.get_deployment(GetDeploymentRequest(name=name))
 
-    @async_lru_cache()
+    @cache
     async def account_id(self) -> str:
         # make curl -v -H "Authorization: Bearer XXX" https://api.fireworks.ai/verifyApiKey
         # and read x-fireworks-account-id from headers of the response

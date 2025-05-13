@@ -16,6 +16,7 @@ from typing_extensions import assert_never
 from .. import utils
 from ..config import Config
 from .api import APIClient
+from .api import GPUSize
 from .api import AuthLevel
 from .api import QuotaInfos
 from .api import ScheduleResponse
@@ -45,10 +46,10 @@ def api_client():
     return APIClient(httpx_client)
 
 
-def startup_report():
+def startup_report(cgroup_path: str, gpu_size: GPUSize):
     retries, max_retries = 0, 2
     client = api_client()
-    while (status := client.startup_report()) is httpx.codes.NOT_FOUND: # pragma: no cover
+    while (status := client.startup_report(cgroup_path, gpu_size)) is httpx.codes.NOT_FOUND: # pragma: no cover
         time.sleep(1)
         if (retries := retries + 1) > max_retries:
             raise RuntimeError("Error while initializing ZeroGPU: NotFound")
@@ -145,7 +146,8 @@ def schedule(
                 gpu = "Pro GPU" if auth == 'pro' else ("free GPU" if auth == 'regular' else "GPU")
                 message = (
                     f"You have exceeded your {gpu} quota "
-                    f"({requested}s requested vs. {res.left}s left)."
+                    f"({requested}s requested vs. {res.left}s left). "
+                    f"Try again in {res.wait}"
                 )
             raise error("ZeroGPU quota exceeded", message)
 

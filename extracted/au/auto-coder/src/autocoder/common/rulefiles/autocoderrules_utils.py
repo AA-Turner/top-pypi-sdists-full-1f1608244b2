@@ -10,6 +10,7 @@ import byzerllm # Added import
 from pydantic import BaseModel, Field
 from typing import List, Dict, Optional, Any # Added Any
 from autocoder.common import AutoCoderArgs
+import concurrent.futures  # 添加线程池导入
 
 # 尝试导入 FileMonitor
 try:
@@ -25,7 +26,7 @@ class RuleFile(BaseModel):
     """规则文件的Pydantic模型"""
     description: str = Field(default="", description="规则的描述")
     globs: List[str] = Field(default_factory=list, description="文件匹配模式列表")
-    always_apply: bool = Field(default=False, alias="alwaysApply", description="是否总是应用规则")
+    always_apply: bool = Field(default=False, description="是否总是应用规则")
     content: str = Field(default="", description="规则文件的正文内容")
     file_path: str = Field(default="", description="规则文件的路径")
 
@@ -206,15 +207,14 @@ class AutocoderRulesManager:
                 except Exception as e:
                     logger.warning(f"解析规则文件YAML头部时出错: {e}")
             
-            # 创建并返回Pydantic模型
+            # 创建并返回Pydantic模型            
             rule = RuleFile(
                 description=metadata.get('description', ''),
                 globs=metadata.get('globs', []),
                 always_apply=metadata.get('alwaysApply', False),
                 content=markdown_content.strip(),
                 file_path=file_path
-            )
-            
+            )                                    
             return rule
             
         except Exception as e:
@@ -232,6 +232,25 @@ class AutocoderRulesManager:
             parsed_rule = self.parse_rule_file(file_path)
             parsed_rules.append(parsed_rule)
         return parsed_rules
+
+    @classmethod
+    def reset_instance(cls):
+        """
+        重置单例实例。
+        如果当前实例正在运行，则先取消注册监控的目录，然后重置实例。
+        """
+        with cls._lock:
+            if cls._instance is not None:
+                # 取消注册监控的目录
+                if cls._instance._file_monitor:
+                    for dir_path in cls._instance._monitored_dirs:
+                        try:
+                            cls._instance._file_monitor.unregister(dir_path)
+                            logger.info(f"已取消注册目录监控: {dir_path}")
+                        except Exception as e:
+                            logger.warning(f"取消注册目录 {dir_path} 时出错: {e}")
+                cls._instance = None
+                logger.info("AutocoderRulesManager单例已被重置")
 
 
 # 对外提供单例
@@ -258,6 +277,11 @@ def parse_rule_file(file_path: str, project_root: Optional[str] = None) -> RuleF
         _rules_manager = AutocoderRulesManager(project_root=project_root)
     return _rules_manager.parse_rule_file(file_path)
 
+def reset_rules_manager():
+    """重置AutocoderRulesManager单例实例"""
+    AutocoderRulesManager.reset_instance()
+    global _rules_manager
+    _rules_manager = None
 
 # 添加用于返回类型的Pydantic模型
 class RuleRelevance(BaseModel):
@@ -313,10 +337,49 @@ class RuleSelector:
             "rule": rule,
             "context": context
         }
-
-    def select_rules(self, context: str, rules: List[RuleFile]) -> List[RuleFile]:
+        
+    def _evaluate_rule(self, rule: RuleFile, context: str) -> tuple[RuleFile, bool, Optional[str]]:
         """
-        选择适用于当前上下文的规则。
+        评估单个规则是否适用于当前上下文。
+        
+        Args:
+            rule: 要评估的规则
+            context: 上下文信息
+            
+        Returns:
+            tuple: (规则, 是否选中, 理由)
+        """
+        # 如果规则设置为总是应用，直接返回选中
+        if rule.always_apply:
+            return (rule, True, "规则设置为总是应用")
+            
+        # 如果没有LLM，无法评估non-always规则
+        if self.llm is None:
+            return (rule, False, "未提供LLM，无法评估non-always规则")
+            
+        try:
+            prompt = self._build_selection_prompt.prompt(rule=rule, context=context)
+            logger.debug(f"为规则 '{os.path.basename(rule.file_path)}' 生成的判断 Prompt (片段): {prompt[:200]}...")
+            
+            result = None
+            try:
+                # 使用with_return_type方法获取结构化结果
+                result = self._build_selection_prompt.with_llm(self.llm).with_return_type(RuleRelevance).run(rule=rule, context=context)
+                if result and result.is_relevant:
+                    return (rule, True, result.reason)
+                else:
+                    return (rule, False, result.reason if result else "未提供理由")
+            except Exception as e:
+                logger.warning(f"LLM 未能为规则 '{os.path.basename(rule.file_path)}' 提供有效响应: {e}")
+                return (rule, False, f"LLM评估出错: {str(e)}")
+                
+        except Exception as e:
+            logger.error(f"评估规则 '{os.path.basename(rule.file_path)}' 时出错: {e}", exc_info=True)
+            return (rule, False, f"评估过程出错: {str(e)}")
+
+    def select_rules(self, context: str) -> List[RuleFile]:
+        """
+        选择适用于当前上下文的规则。使用线程池并发评估规则。
 
         Args:
             context: 可选的字典，包含用于规则选择的上下文信息 (例如，用户指令、目标文件等)。
@@ -324,56 +387,47 @@ class RuleSelector:
         Returns:
             List[RuleFile]: 选定的规则列表。
         """
+        rules = get_parsed_rules()
         selected_rules: List[RuleFile] = []
         logger.info(f"开始选择规则，总规则数: {len(rules)}")
-
+        
+        # 预先分类处理always_apply规则
+        always_apply_rules = []
+        need_llm_rules = []
+        
         for rule in rules:
             if rule.always_apply:
-                selected_rules.append(rule)
-                logger.debug(f"规则 '{os.path.basename(rule.file_path)}' (AlwaysApply=True) 已自动选择。")
-                continue
-
-            if self.llm is None:
-                 logger.debug(f"规则 '{os.path.basename(rule.file_path)}' (AlwaysApply=False) 已跳过，因为未提供 LLM。")
-                 continue
-
-            # 对于 alwaysApply=False 的规则，使用 LLM 判断
-            try:
-                prompt = self._build_selection_prompt.prompt(rule=rule, context=context)
-                logger.debug(f"为规则 '{os.path.basename(rule.file_path)}' 生成的判断 Prompt (片段): {prompt[:200]}...")
-
-                # **** 实际LLM调用 ****
-                # 确保 self.llm 实例已正确初始化并可用
-                if self.llm: # Check if llm is not None                    
-                    result = None
-                    try:
-                        # 使用with_return_type方法获取结构化结果
-                        result = self._build_selection_prompt.with_llm(self.llm).with_return_type(RuleRelevance).run(rule=rule, context=context)
-                        if result and result.is_relevant:
-                            selected_rules.append(rule)
-                            logger.info(f"规则 '{os.path.basename(rule.file_path)}' (AlwaysApply=False) 已被 LLM 选择，原因: {result.reason}")
-                        else:
-                            logger.debug(f"规则 '{os.path.basename(rule.file_path)}' (AlwaysApply=False) 未被 LLM 选择，原因: {result.reason if result else '未提供'}")
-                    except Exception as e:                    
-                        logger.warning(f"LLM 未能为规则 '{os.path.basename(rule.file_path)}' 提供有效响应。")
-                        # 根据需要决定是否跳过或默认不选
-                        continue # 跳过此规则
-                else: # Handle case where self.llm is None after the initial check
-                    logger.warning(f"LLM instance became None unexpectedly for rule '{os.path.basename(rule.file_path)}'.")
-                    continue
-
-                # **** 模拟LLM调用 (用于测试/开发) ****
-                # 注释掉模拟部分，使用上面的实际调用
-                # simulated_response = "yes" if "always" in rule.description.lower() or "index" in rule.description.lower() else "no"
-                # logger.warning(f"模拟LLM判断规则 '{os.path.basename(rule.file_path)}': {simulated_response}")
-                # response_text = simulated_response
-                # **** 结束模拟 ****
-
-            except Exception as e:
-                logger.error(f"使用 LLM 判断规则 '{os.path.basename(rule.file_path)}' 时出错: {e}", exc_info=True)
-                # 根据策略决定是否包含出错的规则，这里选择跳过
-                continue
-
+                always_apply_rules.append(rule)
+            elif self.llm is not None:
+                need_llm_rules.append(rule)
+        
+        # 添加always_apply规则
+        for rule in always_apply_rules:
+            selected_rules.append(rule)
+            logger.debug(f"规则 '{os.path.basename(rule.file_path)}' (AlwaysApply=True) 已自动选择。")
+            
+        # 如果没有需要LLM评估的规则，直接返回结果
+        if not need_llm_rules:
+            logger.info(f"规则选择完成，选中规则数: {len(selected_rules)}")
+            return selected_rules
+            
+        # 使用线程池并发评估规则
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            # 提交所有评估任务
+            future_to_rule = {
+                executor.submit(self._evaluate_rule, rule, context): rule 
+                for rule in need_llm_rules
+            }
+            
+            # 收集评估结果
+            for future in concurrent.futures.as_completed(future_to_rule):
+                rule, is_selected, reason = future.result()
+                if is_selected:
+                    selected_rules.append(rule)
+                    logger.info(f"规则 '{os.path.basename(rule.file_path)}' (AlwaysApply=False) 已被 LLM 选择，原因: {reason}")
+                else:
+                    logger.debug(f"规则 '{os.path.basename(rule.file_path)}' (AlwaysApply=False) 未被 LLM 选择，原因: {reason}")
+                    
         logger.info(f"规则选择完成，选中规则数: {len(selected_rules)}")
         return selected_rules
 
@@ -393,9 +447,38 @@ class RuleSelector:
         # 保持 file_path 作为 key
         return {rule.file_path: rule.content for rule in selected_rules}
 
-def auto_select_rules(context: str, rules: List[RuleFile], llm: Optional[byzerllm.ByzerLLM] = None,args:Optional[AutoCoderArgs] = None) -> List[RuleFile]:
+def auto_select_rules(context: str, llm: Optional[byzerllm.ByzerLLM] = None,args:Optional[AutoCoderArgs] = None) -> List[Dict[str, str]]:
     """
     根据LLM的判断和规则元数据选择适用的规则。
     """
-    selector = RuleSelector(llm=llm, args=args)
-    return selector.select_rules(context=context, rules=rules)
+    selector = RuleSelector(llm=llm, args=args)    
+    return selector.get_selected_rules_content(context=context)
+
+def get_required_and_index_rules() -> Dict[str, str]:
+    """
+    获取所有必须应用的规则文件(always_apply=True)和Index.md文件。
+    
+    Args:
+        project_root: 可选的项目根目录路径，用于初始化规则管理器。
+        
+    Returns:
+        Dict[str, str]: 包含必须应用的规则和Index.md文件的{file_path: content}字典。
+    """
+    # 获取所有解析后的规则文件
+    parsed_rules = get_parsed_rules()
+    result: Dict[str, str] = {}
+    logger.info(f"获取所有解析后的规则文件完成，总数: {len(parsed_rules)}")
+    
+    for rule in parsed_rules:
+        # 检查是否是always_apply=True的规则
+        if rule.always_apply:
+            result[rule.file_path] = rule.content
+            logger.info(f"添加必须应用的规则: {os.path.basename(rule.file_path)}")
+        
+        # 检查是否是Index.md文件
+        if os.path.basename(rule.file_path).lower() == "index.md":
+            result[rule.file_path] = rule.content
+            logger.info(f"添加Index.md文件: {rule.file_path}")
+    
+    logger.info(f"获取必须应用的规则和Index.md文件完成，总数: {len(result)}")
+    return result

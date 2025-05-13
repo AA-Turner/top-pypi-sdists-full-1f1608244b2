@@ -655,7 +655,7 @@ class ConfigureLogsForPlaybackConfigurationResponseTypeDef(TypedDict):
 
 class LogConfigurationTypeDef(TypedDict):
     PercentEnabled: int
-    EnabledLoggingStrategies: NotRequired[List[LoggingStrategyType]]
+    EnabledLoggingStrategies: List[LoggingStrategyType]
     AdsInteractionLog: NotRequired[AdsInteractionLogOutputTypeDef]
     ManifestServiceInteractionLog: NotRequired[ManifestServiceInteractionLogOutputTypeDef]
 

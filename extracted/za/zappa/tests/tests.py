@@ -97,34 +97,7 @@ class TestZappa(unittest.TestCase):
             "zappa.core.Zappa.get_installed_packages",
             return_value=mock_installed_packages,
         ):
-            z = Zappa(runtime="python3.8")
-            path = z.create_lambda_zip(handler_file=os.path.realpath(__file__))
-            self.assertTrue(os.path.isfile(path))
-            os.remove(path)
-
-    def test_get_manylinux_python38(self):
-        z = Zappa(runtime="python3.8")
-        self.assertIsNotNone(z.get_cached_manylinux_wheel("psycopg2-binary", "2.8.4"))
-        self.assertIsNone(z.get_cached_manylinux_wheel("derp_no_such_thing", "0.0"))
-
-        # mock with a known manylinux wheel package so that code for downloading them gets invoked
-        mock_installed_packages = {"psycopg2-binary": "2.8.4"}
-        with mock.patch(
-            "zappa.core.Zappa.get_installed_packages",
-            return_value=mock_installed_packages,
-        ):
-            z = Zappa(runtime="python3.8")
-            path = z.create_lambda_zip(handler_file=os.path.realpath(__file__))
-            self.assertTrue(os.path.isfile(path))
-            os.remove(path)
-
-        # same, but with an ABI3 package
-        mock_installed_packages = {"cryptography": "2.8"}
-        with mock.patch(
-            "zappa.core.Zappa.get_installed_packages",
-            return_value=mock_installed_packages,
-        ):
-            z = Zappa(runtime="python3.8")
+            z = Zappa(runtime="python3.13")
             path = z.create_lambda_zip(handler_file=os.path.realpath(__file__))
             self.assertTrue(os.path.isfile(path))
             os.remove(path)
@@ -233,6 +206,33 @@ class TestZappa(unittest.TestCase):
             return_value=mock_installed_packages,
         ):
             z = Zappa(runtime="python3.12")
+            path = z.create_lambda_zip(handler_file=os.path.realpath(__file__))
+            self.assertTrue(os.path.isfile(path))
+            os.remove(path)
+
+    def test_get_manylinux_python313(self):
+        z = Zappa(runtime="python3.13")
+        self.assertIsNotNone(z.get_cached_manylinux_wheel("psycopg-binary", "3.2.5"))
+        self.assertIsNone(z.get_cached_manylinux_wheel("derp_no_such_thing", "0.0"))
+
+        # mock with a known manylinux wheel package so that code for downloading them gets invoked
+        mock_installed_packages = {"psycopg-binary": "3.2.5"}
+        with mock.patch(
+            "zappa.core.Zappa.get_installed_packages",
+            return_value=mock_installed_packages,
+        ):
+            z = Zappa(runtime="python3.13")
+            path = z.create_lambda_zip(handler_file=os.path.realpath(__file__))
+            self.assertTrue(os.path.isfile(path))
+            os.remove(path)
+
+        # same, but with an ABI3 package
+        mock_installed_packages = {"cryptography": "44.0.2"}
+        with mock.patch(
+            "zappa.core.Zappa.get_installed_packages",
+            return_value=mock_installed_packages,
+        ):
+            z = Zappa(runtime="python3.13")
             path = z.create_lambda_zip(handler_file=os.path.realpath(__file__))
             self.assertTrue(os.path.isfile(path))
             os.remove(path)
@@ -673,6 +673,22 @@ class TestZappa(unittest.TestCase):
             mock_client.get_function_configuration.return_value = {"PackageType": "Zip"}
             z.update_lambda_configuration("test", "test", "test")
             self.assertEqual(mock_client.update_function_configuration.call_args[1]["Layers"], [])
+
+    def test_snap_start_configuration(self):
+        """
+        Test that SnapStart configuration is correctly set in Lambda configuration.
+        """
+        # Test with SnapStart explicitly enabled
+        zappa_cli = ZappaCLI()
+        zappa_cli.api_stage = "snap_start_enabled"
+        zappa_cli.load_settings("tests/test_settings.yaml")
+        self.assertEqual("PublishedVersions", zappa_cli.snap_start)
+
+        # Test with SnapStart explicitly disabled
+        zappa_cli = ZappaCLI()
+        zappa_cli.api_stage = "snap_start_disabled"
+        zappa_cli.load_settings("tests/test_settings.yaml")
+        self.assertEqual("None", zappa_cli.snap_start)
 
     def test_update_empty_aws_env_hash(self):
         z = Zappa()
@@ -2580,7 +2596,7 @@ class TestZappa(unittest.TestCase):
             reload(zappa)
 
     @mock.patch("os.getenv", return_value="True")
-    @mock.patch("sys.version_info", new_callable=partial(get_sys_versioninfo, 8))
+    @mock.patch("sys.version_info", new_callable=partial(get_sys_versioninfo, 9))
     def test_no_runtimeerror_when_in_docker(self, *_):
         from importlib import reload
 
@@ -2633,6 +2649,28 @@ class TestZappa(unittest.TestCase):
         request = create_wsgi_request(event)
         expected = "query=Jane%26John&otherquery=B&test=hello%2Bm.te%26how%26are%26you"
         self.assertEqual(request["QUERY_STRING"], expected)
+
+    @mock.patch("subprocess.Popen")
+    def test_create_handler_venv_win32_none_stderror_result(self, popen_mock):
+        class PopenMock:
+            returncode = 999
+
+            @classmethod
+            def communicate(cls):
+                return "valid_stdout", None  # On win32, stderr can be None
+
+        popen_mock.return_value = PopenMock
+
+        boto_mock = mock.MagicMock()
+        zappa_core = Zappa(
+            boto_session=boto_mock,
+            profile_name="test",
+            aws_region="test",
+            load_credentials=True,
+        )
+
+        with self.assertRaises(EnvironmentError):
+            zappa_core.create_handler_venv()
 
 
 if __name__ == "__main__":

@@ -348,8 +348,9 @@ def _pack(offload_dir: str):
                 originals_dedup[original_id] = original
                 originals |= {original}
             fakes[originals_dedup[original_id]] += [fake]
+    total_size = _total_unpacked_size()
     progress = tqdm(
-        total=_total_unpacked_size(),
+        total=total_size,
         unit='B',
         unit_scale=True,
         desc="ZeroGPU tensors packing",
@@ -362,11 +363,13 @@ def _pack(offload_dir: str):
     for fake_list in fakes.values():
         for fake in fake_list:
             cuda_aliases[fake] = None
+    return total_size
 
 def pack():
-    _pack(Config.zerogpu_offload_dir)
+    total_size = _pack(Config.zerogpu_offload_dir)
     gc.collect()
     malloc_trim()
+    return total_size
 
 def init(nvidia_uuid: str):
     os.environ['CUDA_VISIBLE_DEVICES'] = nvidia_uuid

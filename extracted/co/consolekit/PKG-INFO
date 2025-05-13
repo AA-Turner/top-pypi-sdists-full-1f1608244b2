@@ -1,10 +1,10 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: consolekit
-Version: 1.7.2
+Version: 1.8.0
 Summary: Additional utilities for click.
 Keywords: click,terminal
 Author-email: Dominic Davis-Foster <dominic@davis-foster.co.uk>
-Requires-Python: >=3.6.1
+Requires-Python: >=3.7
 Description-Content-Type: text/x-rst
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Environment :: Console
@@ -13,17 +13,18 @@ Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3 :: Only
-Classifier: Programming Language :: Python :: 3.6
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Programming Language :: Python :: Implementation :: CPython
 Classifier: Programming Language :: Python :: Implementation :: PyPy
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Typing :: Typed
+License-File: LICENSE
 Requires-Dist: click>=7.1.2
 Requires-Dist: colorama>=0.4.3; python_version < "3.10" and platform_system == "Windows"
 Requires-Dist: deprecation-alias>=0.1.1
@@ -148,7 +149,7 @@ consolekit
 .. |language| image:: https://img.shields.io/github/languages/top/domdfcoding/consolekit
 	:alt: GitHub top language
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/domdfcoding/consolekit/v1.7.2
+.. |commits-since| image:: https://img.shields.io/github/commits-since/domdfcoding/consolekit/v1.8.0
 	:target: https://github.com/domdfcoding/consolekit/pulse
 	:alt: GitHub commits since tagged version
 
@@ -156,7 +157,7 @@ consolekit
 	:target: https://github.com/domdfcoding/consolekit/commit/master
 	:alt: GitHub last commit
 
-.. |maintained| image:: https://img.shields.io/maintenance/yes/2024
+.. |maintained| image:: https://img.shields.io/maintenance/yes/2025
 	:alt: Maintenance
 
 .. |pypi-downloads| image:: https://img.shields.io/pypi/dm/consolekit

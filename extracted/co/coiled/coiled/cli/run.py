@@ -213,7 +213,7 @@ def run_via_ssh(
         try:
             mb_size = file_to_upload["f"].stat().st_size / 1_000_000
             if mb_size > 1:
-                console.print(f"  {file_to_upload['f']} is {mb_size:.2f}MiB, this may be slow to upload")
+                console.print(f"  {file_to_upload['f']} is {mb_size:.2f} MB, this may be slow to upload")
         except Exception:
             pass
         upload_file(connection, **file_to_upload)

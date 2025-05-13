@@ -135,12 +135,12 @@ def get_user_permission_level(user, site):
             .objects
             .get_with_change_permissions(user, site)
             .select_related('page')
-            .order_by('page__node__path')
+            .order_by('page__path')
         )[0]
     except IndexError:
         # user isn't assigned to any node
         raise NoPermissionsException
-    return permission.page.node.depth
+    return permission.page.depth
 
 
 def cached_func(func):
@@ -156,6 +156,20 @@ def cached_func(func):
     # Allows us to access the un-cached function
     cached_func.without_cache = func
     return cached_func
+
+
+def clear_func_cache(user, func):
+    func_cache_name = '_djangocms_cached_func_%s' % func.__name__
+    if hasattr(user, func_cache_name):
+        delattr(user, func_cache_name)
+
+
+def clear_permission_lru_caches(user):
+    """
+    Clear all python lru caches used by the permission system
+    """
+    clear_func_cache(user, get_global_actions_for_user)
+    clear_func_cache(user, get_page_actions_for_user)
 
 
 @cached_func
@@ -180,12 +194,12 @@ def get_page_actions_for_user(user, site):
         PagePermission
         .objects
         .with_user(user)
-        .select_related('page__node')
-        .filter(page__node__site=site)
+        .select_related('page')
+        .filter(page__site=site)
     )
 
     for perm in page_permissions.iterator():
-        permission_tuple = perm.grant_on, perm.page.node.path
+        permission_tuple = perm.grant_on, perm.page.path
         for action in perm.get_configured_actions():
             actions[action].append(permission_tuple)
     return actions
@@ -202,12 +216,12 @@ def has_global_permission(user, site, action, use_cache=True):
 def has_page_permission(user, page, action, use_cache=True):
     import warnings
 
-    from cms.utils.compat.warnings import RemovedInDjangoCMS43Warning
+    from cms.utils.compat.warnings import RemovedInDjangoCMS51Warning
     from cms.utils.page_permissions import has_generic_permission
 
-    warnings.warn("has_page_permission is deprecated and will be removed in django CMS 4.3. "
+    warnings.warn("has_page_permission is deprecated. "
                   "Use cms.utils.page_permissions.has_generic_permission instead.",
-                  RemovedInDjangoCMS43Warning, stacklevel=2)
+                  RemovedInDjangoCMS51Warning, stacklevel=2)
 
     action_map = {
         "change": "change_page",
@@ -220,7 +234,7 @@ def has_page_permission(user, page, action, use_cache=True):
     if action in action_map:
         action = action_map[action]
 
-    return has_generic_permission(page, user, action, site=None, check_global=False, use_cache=use_cache)
+    return has_generic_permission(page, user, action, site=page.site, check_global=False, use_cache=use_cache)
 
 
 def get_subordinate_users(user, site):
@@ -273,12 +287,12 @@ def get_subordinate_users(user, site):
     from cms.models import PermissionTuple
     allow_list = Q()
     for perm_tuple in get_change_permissions_perm_tuples(user, site, check_global=False):
-        allow_list |= PermissionTuple(perm_tuple).allow_list("pagepermission__page__node")
+        allow_list |= PermissionTuple(perm_tuple).allow_list("pagepermission__page")
 
     # normal query
     qs = get_user_model().objects.distinct().filter(
         Q(is_staff=True) & (
-            allow_list & Q(pagepermission__page__node__depth__gte=user_level)
+            allow_list & Q(pagepermission__page__depth__gte=user_level)
         ) | (
             Q(pageuser__created_by=user) & Q(pagepermission__page=None)
         )
@@ -318,11 +332,11 @@ def get_subordinate_groups(user, site):
     from cms.models import PermissionTuple
     allow_list = Q()
     for perm_tuple in get_change_permissions_perm_tuples(user, site, check_global=False):
-        allow_list |= PermissionTuple(perm_tuple).allow_list("pagepermission__page__node")
+        allow_list |= PermissionTuple(perm_tuple).allow_list("pagepermission__page")
 
     return Group.objects.distinct().filter(
         (
-            allow_list & Q(pagepermission__page__node__depth__gte=user_level)
+            allow_list & Q(pagepermission__page__depth__gte=user_level)
         ) | (
             Q(pageusergroup__created_by=user) & Q(pagepermission__page__isnull=True)
         )
@@ -334,10 +348,10 @@ def get_view_restrictions(pages):
     Load all view restrictions for the pages
     """
 
-    from cms.utils.compat.warnings import RemovedInDjangoCMS43Warning
+    from cms.utils.compat.warnings import RemovedInDjangoCMS51Warning
 
-    warnings.warn("get_view_restrictions will be removed in django CMS 4.3",
-                  RemovedInDjangoCMS43Warning, stacklevel=2)
+    warnings.warn("get_view_restrictions will be removed",
+                  RemovedInDjangoCMS51Warning, stacklevel=2)
 
     restricted_pages = defaultdict(list)
 
@@ -348,13 +362,10 @@ def get_view_restrictions(pages):
     if not pages:
         return restricted_pages
 
-    nodes = [page.node for page in pages]
     pages_by_id = {}
-
     for page in pages:
-        if page.node.is_root():
-            page.node._set_hierarchy(nodes)
-        page.node.__dict__['item'] = page
+        if page.is_root():
+            page._set_hierarchy(pages)
         pages_by_id[page.pk] = page
 
     page_permissions = PagePermission.objects.filter(
@@ -378,9 +389,14 @@ def has_plugin_permission(user, plugin_type, permission_type):
     permission_type should be 'add', 'change' or 'delete'.
     """
     from cms.plugin_pool import plugin_pool
-    plugin_class = plugin_pool.get_plugin(plugin_type)
-    codename = get_model_permission_codename(
-        plugin_class.model,
-        action=permission_type,
-    )
-    return user.has_perm(codename)
+    try:
+        plugin_class = plugin_pool.get_plugin(plugin_type)
+        codename = get_model_permission_codename(
+            plugin_class.model,
+            action=permission_type,
+        )
+        return user.has_perm(codename)
+    except KeyError:
+        # Grant all permissions for uninstalled plugins, so they do not block
+        # emptying placeholders.
+        return True

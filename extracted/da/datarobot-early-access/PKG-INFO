@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: datarobot_early_access
-Version: 3.8.0.2025.4.28
+Version: 3.8.0.2025.5.12
 Summary: This client library is designed to support the DataRobot API.
 Home-page: https://datarobot.com
 Author: datarobot
@@ -13,7 +13,6 @@ Project-URL: Changelog, https://datarobot-public-api-client.readthedocs-hosted.c
 Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers
 Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
-Classifier: License :: Other/Proprietary License
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3 :: Only

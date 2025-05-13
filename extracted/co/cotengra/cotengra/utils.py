@@ -58,9 +58,6 @@ except ImportError:
         yield from dict.fromkeys(it)
 
 
-__all__ = ("groupby", "interleave", "unique")
-
-
 def deprecated(fn, old_name, new_name):
     def new_fn(*args, **kwargs):
         import warnings
@@ -830,6 +827,11 @@ def get_symbol_map(inputs):
     return symbol_map
 
 
+Contraction = collections.namedtuple(
+    "Contraction", ("inputs", "output", "shapes", "size_dict")
+)
+
+
 def rand_equation(
     n, reg, n_out=0, n_hyper_in=0, n_hyper_out=0, d_min=2, d_max=3, seed=None
 ):
@@ -907,7 +909,7 @@ def rand_equation(
 
     rng.shuffle(output)
 
-    return inputs, output, shapes, size_dict
+    return Contraction(inputs, output, shapes, size_dict)
 
 
 def tree_equation(
@@ -944,7 +946,7 @@ def tree_equation(
     output = rng.sample(list(size_dict), n_outer)
     shapes = [tuple(size_dict[ix] for ix in term) for term in inputs]
 
-    return inputs, output, shapes, size_dict
+    return Contraction(inputs, output, shapes, size_dict)
 
 
 def networkx_graph_to_equation(
@@ -988,7 +990,7 @@ def networkx_graph_to_equation(
     output = []
     shapes = [tuple(size_dict[ix] for ix in term) for term in inputs]
 
-    return inputs, output, shapes, size_dict
+    return Contraction(inputs, output, shapes, size_dict)
 
 
 def randreg_equation(
@@ -1076,7 +1078,7 @@ def perverse_equation(
     n_outer = min(n_outer, num_indices)
     output = rng.sample(indices, n_outer)
 
-    return inputs, output, shapes, size_dict
+    return Contraction(inputs, output, shapes, size_dict)
 
 
 def rand_tree(
@@ -1093,7 +1095,7 @@ def rand_tree(
     """Get a random contraction tree (note, not a tree like equation)."""
     from .interface import array_contract_tree
 
-    inputs, output, _, size_dict = rand_equation(
+    con = rand_equation(
         n,
         reg,
         n_out=n_out,
@@ -1104,7 +1106,9 @@ def rand_tree(
         seed=seed,
     )
 
-    tree = array_contract_tree(inputs, output, size_dict, optimize=optimize)
+    tree = array_contract_tree(
+        con.inputs, con.output, con.size_dict, optimize=optimize
+    )
     return tree
 
 
@@ -1171,7 +1175,7 @@ def lattice_equation(dims, cyclic=False, d_min=2, d_max=None, seed=None):
 
     shapes = tuple(tuple(size_dict[ix] for ix in term) for term in inputs)
 
-    return inputs, output, shapes, size_dict
+    return Contraction(inputs, output, shapes, size_dict)
 
 
 def find_output_str(lhs):
@@ -1427,7 +1431,20 @@ def find_output_from_inputs(inputs):
     return tuple(once)
 
 
-def canonicalize_inputs(inputs, output=None, shapes=None, size_dict=None):
+def is_edge_path(optimize):
+    """Check if the optimize path is a list of indices or a single string."""
+    return isinstance(optimize, (list, tuple)) and isinstance(
+        optimize[0], (int, str)
+    )
+
+
+def canonicalize_inputs(
+    inputs,
+    output=None,
+    shapes=None,
+    size_dict=None,
+    optimize=None,
+):
     """Return a canonicalized version of the inputs and output, with the
     indices labelled from 'a', 'b', 'c', ... according to the order they appear
     in the equation.
@@ -1461,9 +1478,17 @@ def canonicalize_inputs(inputs, output=None, shapes=None, size_dict=None):
         The canonicalized index size dictionary, ``None`` if ``size_dict`` or
         ``shapes`` was not provided.
     """
-    ind_map = collections.defaultdict(
-        map(get_symbol, itertools.count()).__next__
-    )
+
+    if isinstance(optimize, str) and optimize in ("edgesort", "ncon"):
+        # we'll need the new indices to have the same sorted order as
+        # the supplied indices, not sorted by first appearance
+        sorted_inds = sorted({ix for term in inputs for ix in term})
+        ind_map = {ix: get_symbol(i) for i, ix in enumerate(sorted_inds)}
+    else:
+        # we can just populate as the indices appear
+        ind_map = collections.defaultdict(
+            map(get_symbol, itertools.count()).__next__
+        )
 
     new_inputs = tuple(tuple(ind_map[ind] for ind in term) for term in inputs)
 
@@ -1483,7 +1508,16 @@ def canonicalize_inputs(inputs, output=None, shapes=None, size_dict=None):
     else:
         new_size_dict = None
 
-    return new_inputs, new_output, new_size_dict
+    if optimize is not None:
+        if is_edge_path(optimize):
+            # edge path, need to update index names
+            new_optimize = tuple(ind_map[ind] for ind in optimize)
+        else:
+            new_optimize = optimize
+    else:
+        new_optimize = None
+
+    return new_inputs, new_output, new_size_dict, new_optimize
 
 
 def convert_from_interleaved(args):

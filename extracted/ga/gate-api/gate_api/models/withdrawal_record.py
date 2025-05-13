@@ -41,7 +41,8 @@ class WithdrawalRecord(object):
         'amount': 'str',
         'fee': 'str',
         'currency': 'str',
-        'address': 'str',
+        'fail_reason': 'str',
+        'timestamp2': 'str',
         'memo': 'str',
         'status': 'str',
         'chain': 'str'
@@ -56,14 +57,15 @@ class WithdrawalRecord(object):
         'amount': 'amount',
         'fee': 'fee',
         'currency': 'currency',
-        'address': 'address',
+        'fail_reason': 'fail_reason',
+        'timestamp2': 'timestamp2',
         'memo': 'memo',
         'status': 'status',
         'chain': 'chain'
     }
 
-    def __init__(self, id=None, txid=None, block_number=None, withdraw_order_id=None, timestamp=None, amount=None, fee=None, currency=None, address=None, memo=None, status=None, chain=None, local_vars_configuration=None):  # noqa: E501
-        # type: (str, str, str, str, str, str, str, str, str, str, str, str, Configuration) -> None
+    def __init__(self, id=None, txid=None, block_number=None, withdraw_order_id=None, timestamp=None, amount=None, fee=None, currency=None, fail_reason=None, timestamp2=None, memo=None, status=None, chain=None, local_vars_configuration=None):  # noqa: E501
+        # type: (str, str, str, str, str, str, str, str, str, str, str, str, str, Configuration) -> None
         """WithdrawalRecord - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -77,7 +79,8 @@ class WithdrawalRecord(object):
         self._amount = None
         self._fee = None
         self._currency = None
-        self._address = None
+        self._fail_reason = None
+        self._timestamp2 = None
         self._memo = None
         self._status = None
         self._chain = None
@@ -97,8 +100,10 @@ class WithdrawalRecord(object):
         if fee is not None:
             self.fee = fee
         self.currency = currency
-        if address is not None:
-            self.address = address
+        if fail_reason is not None:
+            self.fail_reason = fail_reason
+        if timestamp2 is not None:
+            self.timestamp2 = timestamp2
         if memo is not None:
             self.memo = memo
         if status is not None:
@@ -294,27 +299,50 @@ class WithdrawalRecord(object):
         self._currency = currency
 
     @property
-    def address(self):
-        """Gets the address of this WithdrawalRecord.  # noqa: E501
+    def fail_reason(self):
+        """Gets the fail_reason of this WithdrawalRecord.  # noqa: E501
 
-        Withdrawal address. Required for withdrawals  # noqa: E501
+        The reason for withdrawal failure is that there is a value when status = CANCEL, and the rest of the state is empty  # noqa: E501
 
-        :return: The address of this WithdrawalRecord.  # noqa: E501
+        :return: The fail_reason of this WithdrawalRecord.  # noqa: E501
         :rtype: str
         """
-        return self._address
+        return self._fail_reason
 
-    @address.setter
-    def address(self, address):
-        """Sets the address of this WithdrawalRecord.
+    @fail_reason.setter
+    def fail_reason(self, fail_reason):
+        """Sets the fail_reason of this WithdrawalRecord.
 
-        Withdrawal address. Required for withdrawals  # noqa: E501
+        The reason for withdrawal failure is that there is a value when status = CANCEL, and the rest of the state is empty  # noqa: E501
 
-        :param address: The address of this WithdrawalRecord.  # noqa: E501
+        :param fail_reason: The fail_reason of this WithdrawalRecord.  # noqa: E501
         :type: str
         """
 
-        self._address = address
+        self._fail_reason = fail_reason
+
+    @property
+    def timestamp2(self):
+        """Gets the timestamp2 of this WithdrawalRecord.  # noqa: E501
+
+        The withdrawal end time, i.e.: withdrawal cancel time or withdrawal success time When status = CANCEL, the corresponding cancel time When status = DONE and block_number > 0, it is the time to withdrawal success  # noqa: E501
+
+        :return: The timestamp2 of this WithdrawalRecord.  # noqa: E501
+        :rtype: str
+        """
+        return self._timestamp2
+
+    @timestamp2.setter
+    def timestamp2(self, timestamp2):
+        """Sets the timestamp2 of this WithdrawalRecord.
+
+        The withdrawal end time, i.e.: withdrawal cancel time or withdrawal success time When status = CANCEL, the corresponding cancel time When status = DONE and block_number > 0, it is the time to withdrawal success  # noqa: E501
+
+        :param timestamp2: The timestamp2 of this WithdrawalRecord.  # noqa: E501
+        :type: str
+        """
+
+        self._timestamp2 = timestamp2
 
     @property
     def memo(self):
@@ -343,7 +371,7 @@ class WithdrawalRecord(object):
     def status(self):
         """Gets the status of this WithdrawalRecord.  # noqa: E501
 
-        Transaction status  - DONE: Completed (block_number > 0 is considered to be truly completed) - CANCEL: Canceled - REQUEST: Requesting - MANUAL: Pending manual review - BCODE: Recharge code operation - EXTPEND: Sent awaiting confirmation - FAIL: Failure on the chain awaiting confirmation - INVALID: Invalid order - VERIFY: Verifying - PROCES: Processing - PEND: Processing - DMOVE: pending manual review  # noqa: E501
+        Transaction status  - DONE: Completed (block_number > 0 is considered to be truly completed) - CANCEL: Canceled - REQUEST: Requesting - MANUAL: Pending manual review - BCODE: Recharge code operation - EXTPEND: Sent awaiting confirmation - FAIL: Failure on the chain awaiting confirmation - INVALID: Invalid order - VERIFY: Verifying - PROCES: Processing - PEND: Processing - DMOVE: pending manual review - REVIEW: Under review  # noqa: E501
 
         :return: The status of this WithdrawalRecord.  # noqa: E501
         :rtype: str
@@ -354,7 +382,7 @@ class WithdrawalRecord(object):
     def status(self, status):
         """Sets the status of this WithdrawalRecord.
 
-        Transaction status  - DONE: Completed (block_number > 0 is considered to be truly completed) - CANCEL: Canceled - REQUEST: Requesting - MANUAL: Pending manual review - BCODE: Recharge code operation - EXTPEND: Sent awaiting confirmation - FAIL: Failure on the chain awaiting confirmation - INVALID: Invalid order - VERIFY: Verifying - PROCES: Processing - PEND: Processing - DMOVE: pending manual review  # noqa: E501
+        Transaction status  - DONE: Completed (block_number > 0 is considered to be truly completed) - CANCEL: Canceled - REQUEST: Requesting - MANUAL: Pending manual review - BCODE: Recharge code operation - EXTPEND: Sent awaiting confirmation - FAIL: Failure on the chain awaiting confirmation - INVALID: Invalid order - VERIFY: Verifying - PROCES: Processing - PEND: Processing - DMOVE: pending manual review - REVIEW: Under review  # noqa: E501
 
         :param status: The status of this WithdrawalRecord.  # noqa: E501
         :type: str

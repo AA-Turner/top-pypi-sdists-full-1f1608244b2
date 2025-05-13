@@ -15,13 +15,12 @@ from GANDLF.metrics import (
     overall_stats,
     structural_similarity_index,
     mean_squared_error,
+    root_mean_squared_error,
     peak_signal_noise_ratio,
     mean_squared_log_error,
     mean_absolute_error,
-    ncc_mean,
-    ncc_std,
-    ncc_max,
-    ncc_min,
+    ncc_metrics,
+    generate_instance_segmentation,
 )
 from GANDLF.losses.segmentation import dice
 from GANDLF.metrics.segmentation import (
@@ -261,6 +260,26 @@ def generate_metrics_dict(
                     "volumeSimilarity_" + str(class_index)
                 ] = label_overlap_filter.GetVolumeSimilarity()
 
+    elif problem_type == "segmentation_brats":
+        for _, row in tqdm(input_df.iterrows(), total=input_df.shape[0]):
+            current_subject_id = row["SubjectID"]
+            overall_stats_dict[current_subject_id] = {}
+            label_image = torchio.LabelMap(row["Target"])
+            pred_image = torchio.LabelMap(row["Prediction"])
+            label_tensor = label_image.data
+            pred_tensor = pred_image.data
+            spacing = label_image.spacing
+            if label_tensor.data.shape[-1] == 1:
+                spacing = spacing[0:2]
+            # add dimension for batch
+            parameters["subject_spacing"] = torch.Tensor(spacing).unsqueeze(0)
+            label_array = label_tensor.unsqueeze(0).numpy()
+            pred_array = pred_tensor.unsqueeze(0).numpy()
+
+            overall_stats_dict[current_subject_id] = generate_instance_segmentation(
+                prediction=pred_array, target=label_array
+            )
+
     elif problem_type == "synthesis":
 
         def __fix_2d_tensor(input_tensor):
@@ -302,21 +321,22 @@ def generate_metrics_dict(
             reference_tensor = (
                 input_tensor if reference_tensor is None else reference_tensor
             )
-            v_min, v_max = np.percentile(
-                reference_tensor, [p_min, p_max]
-            )  # get p_min percentile and p_max percentile
-
+            # get p_min percentile and p_max percentile
+            v_min, v_max = np.percentile(reference_tensor, [p_min, p_max])
             # set lower bound to be 0 if strictlyPositive is enabled
             v_min = max(v_min, 0.0) if strictlyPositive else v_min
-            output_tensor = np.clip(
-                input_tensor, v_min, v_max
-            )  # clip values to percentiles from reference_tensor
-            output_tensor = (output_tensor - v_min) / (
-                v_max - v_min
-            )  # normalizes values to [0;1]
+            # clip values to percentiles from reference_tensor
+            output_tensor = np.clip(input_tensor, v_min, v_max)
+            # normalizes values to [0;1]
+            output_tensor = (output_tensor - v_min) / (v_max - v_min)
             return output_tensor
 
-        input_df = __update_header_location_case_insensitive(input_df, "Mask", False)
+        # these are additional columns that could be present for synthesis tasks
+        for column_to_make_case_insensitive in ["Mask", "VoidImage"]:
+            input_df = __update_header_location_case_insensitive(
+                input_df, column_to_make_case_insensitive, False
+            )
+
         for _, row in tqdm(input_df.iterrows(), total=input_df.shape[0]):
             current_subject_id = row["SubjectID"]
             overall_stats_dict[current_subject_id] = {}
@@ -332,6 +352,15 @@ def generate_metrics_dict(
                 )
             ).byte()
 
+            void_image_present = True if "VoidImage" in row else False
+            void_image = (
+                __fix_2d_tensor(torchio.ScalarImage(row["VoidImage"]).data)
+                if "VoidImage" in row
+                else torch.from_numpy(
+                    np.ones(target_image.numpy().shape, dtype=np.uint8)
+                )
+            )
+
             # Get Infill region (we really are only interested in the infill region)
             output_infill = (pred_image * mask).float()
             gt_image_infill = (target_image * mask).float()
@@ -339,9 +368,10 @@ def generate_metrics_dict(
             # Normalize to [0;1] based on GT (otherwise MSE will depend on the image intensity range)
             normalize = parameters.get("normalize", True)
             if normalize:
+                # use all the tissue that is not masked for normalization
                 reference_tensor = (
-                    target_image * ~mask
-                )  # use all the tissue that is not masked for normalization
+                    target_image * ~mask if not void_image_present else void_image
+                )
                 gt_image_infill = __percentile_clip(
                     gt_image_infill,
                     reference_tensor=reference_tensor,
@@ -364,18 +394,10 @@ def generate_metrics_dict(
             # ncc metrics
             compute_ncc = parameters.get("compute_ncc", True)
             if compute_ncc:
-                overall_stats_dict[current_subject_id]["ncc_mean"] = ncc_mean(
-                    output_infill, gt_image_infill
-                )
-                overall_stats_dict[current_subject_id]["ncc_std"] = ncc_std(
-                    output_infill, gt_image_infill
-                )
-                overall_stats_dict[current_subject_id]["ncc_max"] = ncc_max(
-                    output_infill, gt_image_infill
-                )
-                overall_stats_dict[current_subject_id]["ncc_min"] = ncc_min(
-                    output_infill, gt_image_infill
-                )
+                calculated_ncc_metrics = ncc_metrics(output_infill, gt_image_infill)
+                for key, value in calculated_ncc_metrics.items():
+                    # we don't need the ".item()" here, since the values are already scalars
+                    overall_stats_dict[current_subject_id][key] = value
 
             # only voxels that are to be inferred (-> flat array)
             # these are required for mse, psnr, etc.
@@ -383,6 +405,10 @@ def generate_metrics_dict(
             output_infill = output_infill[mask]
 
             overall_stats_dict[current_subject_id]["mse"] = mean_squared_error(
+                output_infill, gt_image_infill
+            ).item()
+
+            overall_stats_dict[current_subject_id]["rmse"] = root_mean_squared_error(
                 output_infill, gt_image_infill
             ).item()
 

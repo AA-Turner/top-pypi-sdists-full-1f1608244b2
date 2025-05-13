@@ -27,10 +27,10 @@ as the reasons of failures. However, the errors are exposed to other packages.
 """
 import collections.abc
 import json
-from typing import Collection, Optional
+from collections.abc import Collection
+from typing import Literal, Optional, TypedDict
 
 import aiohttp
-from typing_extensions import Literal, TypedDict
 
 
 class RawStatusCause(TypedDict):
@@ -110,6 +110,19 @@ class APINotFoundError(APIClientError):
 
 
 class APIConflictError(APIClientError):
+    pass
+
+
+class APISessionClosed(Exception):
+    """
+    A helper to escalate from inside the requests to cause re-authentication.
+
+    This happens when credentials expire while multiple concurrent requests
+    are ongoing (including their retries, mostly their back-off timeouts):
+    one random request will raise HTTP 401 and cause the re-authentication,
+    while others will retry their requests with the old session (now closed!)
+    and get a generic RuntimeError from aiohttp, thus failing their whole task.
+    """
     pass
 
 

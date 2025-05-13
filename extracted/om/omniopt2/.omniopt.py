@@ -4360,6 +4360,10 @@ def set_parameter_constraints(experiment_constraints: Optional[list], experiment
 
                 with open(file_path, "a", encoding="utf-8") as f:
                     f.write(constraints_string + "\n")
+        else:
+            print_debug(f"set_parameter_constraints: not set, content: {experiment_constraints}")
+    else:
+        print_debug("set_parameter_constraints: no constraints set")
 
     return experiment_args
 
@@ -6623,7 +6627,13 @@ def create_node(model_name: str, threshold: int, next_model_name: Optional[str])
 
     selected_model = select_model(model_name)
     model_spec = [
-        GeneratorSpec(selected_model, model_gen_kwargs={"random_seed": args.seed})
+        GeneratorSpec(
+            selected_model,
+            model_gen_kwargs={
+                "random_seed": args.seed,
+                "fallback_to_sample_polytope": True
+            }
+        )
     ]
 
     res = GenerationNode(
@@ -7683,6 +7693,8 @@ def main() -> None:
             cli_params_experiment_parameters,
             experiment_parameters,
         ])
+
+        print_debug(f"experiment_parameters: {experiment_parameters}")
 
     set_orchestrator()
 

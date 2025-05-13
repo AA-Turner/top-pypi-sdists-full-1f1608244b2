@@ -17,6 +17,8 @@ from pickle import PicklingError
 from typing import Callable
 from typing import TypeVar
 
+from .config import Config
+
 
 GRADIO_VERSION_ERROR_MESSAGE = "Make sure Gradio version is at least 3.46"
 
@@ -26,7 +28,7 @@ T = TypeVar('T')
 
 @cache
 def self_cgroup_device_path() -> str:
-    cgroup_content = Path('/proc/self/cgroup').read_text()
+    cgroup_content = Path(Config.zerogpu_proc_self_cgroup_path).read_text()
     for line in cgroup_content.strip().split('\n'):
         contents = line.split(':devices:')
         if len(contents) != 2:
@@ -67,10 +69,6 @@ def drop_params(fn: Callable[[], T]) -> Callable[..., T]:
     def drop(*args):
         return fn()
     return drop
-
-
-def boolean(value: str | None) -> bool:
-    return value is not None and value.lower() in ("1", "t", "true")
 
 
 def gradio_request_var():

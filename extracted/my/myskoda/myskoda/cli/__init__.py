@@ -34,9 +34,11 @@ from myskoda.cli.operations import (
     set_windows_heating,
     start_air_conditioning,
     start_auxiliary_heating,
+    start_ventilation,
     start_window_heating,
     stop_air_conditioning,
     stop_auxiliary_heating,
+    stop_ventilation,
     stop_window_heating,
     unlock,
     wakeup,
@@ -47,6 +49,7 @@ from myskoda.cli.requests import (
     auxiliary_heating,
     charging,
     charging_profiles,
+    connection_status,
     departure_timers,
     driving_range,
     garage,
@@ -155,6 +158,7 @@ cli.add_command(maintenance)
 cli.add_command(driving_range)
 cli.add_command(user)
 cli.add_command(trip_statistics)
+cli.add_command(connection_status)
 cli.add_command(garage)
 cli.add_command(auth)
 cli.add_command(start_air_conditioning)
@@ -162,6 +166,8 @@ cli.add_command(stop_air_conditioning)
 cli.add_command(start_auxiliary_heating)
 cli.add_command(stop_auxiliary_heating)
 cli.add_command(set_target_temperature)
+cli.add_command(start_ventilation)
+cli.add_command(stop_ventilation)
 cli.add_command(start_window_heating)
 cli.add_command(stop_window_heating)
 cli.add_command(set_charge_limit)

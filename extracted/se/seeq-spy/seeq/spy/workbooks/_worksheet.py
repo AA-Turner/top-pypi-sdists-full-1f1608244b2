@@ -24,6 +24,7 @@ from seeq.spy.workbooks._content import DateRange, AssetSelection
 from seeq.spy.workbooks._context import WorkbookPushContext
 from seeq.spy.workbooks._item import Item, ItemList
 from seeq.spy.workbooks._item_map import ItemMap
+from seeq.spy.workbooks._table_toolbar import ConditionTableToolbar
 from seeq.spy.workbooks._trend_toolbar import TrendToolbar
 from seeq.spy.workbooks._workstep import Workstep, AnalysisWorkstep
 
@@ -332,13 +333,21 @@ class AnalysisWorksheet(Worksheet):
     def __init__(self, workbook, definition=None, *, provenance=None, add_defaults=True):
         super().__init__(workbook, definition, provenance=provenance, add_defaults=add_defaults)
         self._trend_toolbar = TrendToolbar(self)
+        self._condition_table_toolbar = ConditionTableToolbar(self)
 
     @property
     def trend_toolbar(self):
         """
-        Trend toolbar for configuring the worksheet's trend toolbar settings.
+        Configuration object that exposes settings for Trend View
         """
         return self._trend_toolbar
+
+    @property
+    def condition_table_toolbar(self):
+        """
+        Configuration object that exposes settings for Condition Tables in Table & Charts View
+        """
+        return self._condition_table_toolbar
 
     @property
     def html(self):
@@ -630,7 +639,6 @@ class AnalysisWorksheet(Worksheet):
         Trend        Show the time-series trend view (default)
         Scatter Plot Show the scatter plot view
         Treemap      Show the treemap view
-        Scorecard    Show the table view
         Table        Show the table view
         ============ =========================================
         """

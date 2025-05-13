@@ -22,12 +22,17 @@ from typing import Union
 
 from .literals import (
     ConfigurationJobStatusType,
+    DataIntegrationEventDatasetLoadStatusType,
+    DataIntegrationEventDatasetOperationTypeType,
     DataIntegrationEventTypeType,
+    DataIntegrationFlowExecutionStatusType,
+    DataIntegrationFlowFieldPriorityDedupeSortOrderType,
     DataIntegrationFlowFileTypeType,
     DataIntegrationFlowLoadTypeType,
     DataIntegrationFlowSourceTypeType,
     DataIntegrationFlowTargetTypeType,
     DataIntegrationFlowTransformationTypeType,
+    DataLakeDatasetPartitionTransformTypeType,
     DataLakeDatasetSchemaFieldTypeType,
     InstanceStateType,
 )
@@ -39,9 +44,9 @@ if sys.version_info >= (3, 9):
 else:
     from typing import Dict, List, Mapping, Sequence
 if sys.version_info >= (3, 12):
-    from typing import NotRequired, TypedDict
+    from typing import Literal, NotRequired, TypedDict
 else:
-    from typing_extensions import NotRequired, TypedDict
+    from typing_extensions import Literal, NotRequired, TypedDict
 
 __all__ = (
     "BillOfMaterialsImportJobTypeDef",
@@ -51,45 +56,96 @@ __all__ = (
     "CreateDataIntegrationFlowResponseTypeDef",
     "CreateDataLakeDatasetRequestTypeDef",
     "CreateDataLakeDatasetResponseTypeDef",
+    "CreateDataLakeNamespaceRequestTypeDef",
+    "CreateDataLakeNamespaceResponseTypeDef",
     "CreateInstanceRequestTypeDef",
     "CreateInstanceResponseTypeDef",
+    "DataIntegrationEventDatasetLoadExecutionDetailsTypeDef",
+    "DataIntegrationEventDatasetTargetConfigurationTypeDef",
+    "DataIntegrationEventDatasetTargetDetailsTypeDef",
+    "DataIntegrationEventTypeDef",
+    "DataIntegrationFlowDatasetOptionsOutputTypeDef",
     "DataIntegrationFlowDatasetOptionsTypeDef",
+    "DataIntegrationFlowDatasetOptionsUnionTypeDef",
+    "DataIntegrationFlowDatasetSourceConfigurationOutputTypeDef",
     "DataIntegrationFlowDatasetSourceConfigurationTypeDef",
+    "DataIntegrationFlowDatasetSourceConfigurationUnionTypeDef",
+    "DataIntegrationFlowDatasetSourceTypeDef",
+    "DataIntegrationFlowDatasetTargetConfigurationOutputTypeDef",
     "DataIntegrationFlowDatasetTargetConfigurationTypeDef",
+    "DataIntegrationFlowDedupeStrategyOutputTypeDef",
+    "DataIntegrationFlowDedupeStrategyTypeDef",
+    "DataIntegrationFlowDedupeStrategyUnionTypeDef",
+    "DataIntegrationFlowExecutionOutputMetadataTypeDef",
+    "DataIntegrationFlowExecutionSourceInfoTypeDef",
+    "DataIntegrationFlowExecutionTypeDef",
+    "DataIntegrationFlowFieldPriorityDedupeFieldTypeDef",
+    "DataIntegrationFlowFieldPriorityDedupeStrategyConfigurationOutputTypeDef",
+    "DataIntegrationFlowFieldPriorityDedupeStrategyConfigurationTypeDef",
+    "DataIntegrationFlowFieldPriorityDedupeStrategyConfigurationUnionTypeDef",
     "DataIntegrationFlowS3OptionsTypeDef",
     "DataIntegrationFlowS3SourceConfigurationTypeDef",
+    "DataIntegrationFlowS3SourceTypeDef",
     "DataIntegrationFlowS3TargetConfigurationTypeDef",
     "DataIntegrationFlowSQLTransformationConfigurationTypeDef",
+    "DataIntegrationFlowSourceOutputTypeDef",
     "DataIntegrationFlowSourceTypeDef",
+    "DataIntegrationFlowSourceUnionTypeDef",
+    "DataIntegrationFlowTargetOutputTypeDef",
     "DataIntegrationFlowTargetTypeDef",
+    "DataIntegrationFlowTargetUnionTypeDef",
     "DataIntegrationFlowTransformationTypeDef",
     "DataIntegrationFlowTypeDef",
+    "DataLakeDatasetPartitionFieldTransformTypeDef",
+    "DataLakeDatasetPartitionFieldTypeDef",
+    "DataLakeDatasetPartitionSpecOutputTypeDef",
+    "DataLakeDatasetPartitionSpecTypeDef",
+    "DataLakeDatasetPartitionSpecUnionTypeDef",
+    "DataLakeDatasetPrimaryKeyFieldTypeDef",
     "DataLakeDatasetSchemaFieldTypeDef",
     "DataLakeDatasetSchemaOutputTypeDef",
     "DataLakeDatasetSchemaTypeDef",
     "DataLakeDatasetSchemaUnionTypeDef",
     "DataLakeDatasetTypeDef",
+    "DataLakeNamespaceTypeDef",
     "DeleteDataIntegrationFlowRequestTypeDef",
     "DeleteDataIntegrationFlowResponseTypeDef",
     "DeleteDataLakeDatasetRequestTypeDef",
     "DeleteDataLakeDatasetResponseTypeDef",
+    "DeleteDataLakeNamespaceRequestTypeDef",
+    "DeleteDataLakeNamespaceResponseTypeDef",
     "DeleteInstanceRequestTypeDef",
     "DeleteInstanceResponseTypeDef",
     "GetBillOfMaterialsImportJobRequestTypeDef",
     "GetBillOfMaterialsImportJobResponseTypeDef",
+    "GetDataIntegrationEventRequestTypeDef",
+    "GetDataIntegrationEventResponseTypeDef",
+    "GetDataIntegrationFlowExecutionRequestTypeDef",
+    "GetDataIntegrationFlowExecutionResponseTypeDef",
     "GetDataIntegrationFlowRequestTypeDef",
     "GetDataIntegrationFlowResponseTypeDef",
     "GetDataLakeDatasetRequestTypeDef",
     "GetDataLakeDatasetResponseTypeDef",
+    "GetDataLakeNamespaceRequestTypeDef",
+    "GetDataLakeNamespaceResponseTypeDef",
     "GetInstanceRequestTypeDef",
     "GetInstanceResponseTypeDef",
     "InstanceTypeDef",
+    "ListDataIntegrationEventsRequestPaginateTypeDef",
+    "ListDataIntegrationEventsRequestTypeDef",
+    "ListDataIntegrationEventsResponseTypeDef",
+    "ListDataIntegrationFlowExecutionsRequestPaginateTypeDef",
+    "ListDataIntegrationFlowExecutionsRequestTypeDef",
+    "ListDataIntegrationFlowExecutionsResponseTypeDef",
     "ListDataIntegrationFlowsRequestPaginateTypeDef",
     "ListDataIntegrationFlowsRequestTypeDef",
     "ListDataIntegrationFlowsResponseTypeDef",
     "ListDataLakeDatasetsRequestPaginateTypeDef",
     "ListDataLakeDatasetsRequestTypeDef",
     "ListDataLakeDatasetsResponseTypeDef",
+    "ListDataLakeNamespacesRequestPaginateTypeDef",
+    "ListDataLakeNamespacesRequestTypeDef",
+    "ListDataLakeNamespacesResponseTypeDef",
     "ListInstancesRequestPaginateTypeDef",
     "ListInstancesRequestTypeDef",
     "ListInstancesResponseTypeDef",
@@ -106,6 +162,8 @@ __all__ = (
     "UpdateDataIntegrationFlowResponseTypeDef",
     "UpdateDataLakeDatasetRequestTypeDef",
     "UpdateDataLakeDatasetResponseTypeDef",
+    "UpdateDataLakeNamespaceRequestTypeDef",
+    "UpdateDataLakeNamespaceResponseTypeDef",
     "UpdateInstanceRequestTypeDef",
     "UpdateInstanceResponseTypeDef",
 )
@@ -129,6 +187,20 @@ class ResponseMetadataTypeDef(TypedDict):
     RetryAttempts: int
     HostId: NotRequired[str]
 
+class CreateDataLakeNamespaceRequestTypeDef(TypedDict):
+    instanceId: str
+    name: str
+    description: NotRequired[str]
+    tags: NotRequired[Mapping[str, str]]
+
+class DataLakeNamespaceTypeDef(TypedDict):
+    instanceId: str
+    name: str
+    arn: str
+    createdTime: datetime
+    lastModifiedTime: datetime
+    description: NotRequired[str]
+
 class CreateInstanceRequestTypeDef(TypedDict):
     instanceName: NotRequired[str]
     instanceDescription: NotRequired[str]
@@ -150,15 +222,43 @@ class InstanceTypeDef(TypedDict):
     kmsKeyArn: NotRequired[str]
     versionNumber: NotRequired[float]
 
-class DataIntegrationFlowDatasetOptionsTypeDef(TypedDict):
-    loadType: NotRequired[DataIntegrationFlowLoadTypeType]
-    dedupeRecords: NotRequired[bool]
+class DataIntegrationEventDatasetLoadExecutionDetailsTypeDef(TypedDict):
+    status: DataIntegrationEventDatasetLoadStatusType
+    message: NotRequired[str]
+
+class DataIntegrationEventDatasetTargetConfigurationTypeDef(TypedDict):
+    datasetIdentifier: str
+    operationType: DataIntegrationEventDatasetOperationTypeType
+
+class DataIntegrationFlowDatasetSourceTypeDef(TypedDict):
+    datasetIdentifier: str
+
+class DataIntegrationFlowExecutionOutputMetadataTypeDef(TypedDict):
+    diagnosticReportsRootS3URI: NotRequired[str]
+
+class DataIntegrationFlowS3SourceTypeDef(TypedDict):
+    bucketName: str
+    key: str
+
+class DataIntegrationFlowFieldPriorityDedupeFieldTypeDef(TypedDict):
+    name: str
+    sortOrder: DataIntegrationFlowFieldPriorityDedupeSortOrderType
 
 class DataIntegrationFlowS3OptionsTypeDef(TypedDict):
     fileType: NotRequired[DataIntegrationFlowFileTypeType]
 
 class DataIntegrationFlowSQLTransformationConfigurationTypeDef(TypedDict):
     query: str
+
+DataLakeDatasetPartitionFieldTransformTypeDef = TypedDict(
+    "DataLakeDatasetPartitionFieldTransformTypeDef",
+    {
+        "type": DataLakeDatasetPartitionTransformTypeType,
+    },
+)
+
+class DataLakeDatasetPrimaryKeyFieldTypeDef(TypedDict):
+    name: str
 
 DataLakeDatasetSchemaFieldTypeDef = TypedDict(
     "DataLakeDatasetSchemaFieldTypeDef",
@@ -178,12 +278,25 @@ class DeleteDataLakeDatasetRequestTypeDef(TypedDict):
     namespace: str
     name: str
 
+class DeleteDataLakeNamespaceRequestTypeDef(TypedDict):
+    instanceId: str
+    name: str
+
 class DeleteInstanceRequestTypeDef(TypedDict):
     instanceId: str
 
 class GetBillOfMaterialsImportJobRequestTypeDef(TypedDict):
     instanceId: str
     jobId: str
+
+class GetDataIntegrationEventRequestTypeDef(TypedDict):
+    instanceId: str
+    eventId: str
+
+class GetDataIntegrationFlowExecutionRequestTypeDef(TypedDict):
+    instanceId: str
+    flowName: str
+    executionId: str
 
 class GetDataIntegrationFlowRequestTypeDef(TypedDict):
     instanceId: str
@@ -194,6 +307,10 @@ class GetDataLakeDatasetRequestTypeDef(TypedDict):
     namespace: str
     name: str
 
+class GetDataLakeNamespaceRequestTypeDef(TypedDict):
+    instanceId: str
+    name: str
+
 class GetInstanceRequestTypeDef(TypedDict):
     instanceId: str
 
@@ -201,6 +318,18 @@ class PaginatorConfigTypeDef(TypedDict):
     MaxItems: NotRequired[int]
     PageSize: NotRequired[int]
     StartingToken: NotRequired[str]
+
+class ListDataIntegrationEventsRequestTypeDef(TypedDict):
+    instanceId: str
+    eventType: NotRequired[DataIntegrationEventTypeType]
+    nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
+
+class ListDataIntegrationFlowExecutionsRequestTypeDef(TypedDict):
+    instanceId: str
+    flowName: str
+    nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
 
 class ListDataIntegrationFlowsRequestTypeDef(TypedDict):
     instanceId: str
@@ -210,6 +339,11 @@ class ListDataIntegrationFlowsRequestTypeDef(TypedDict):
 class ListDataLakeDatasetsRequestTypeDef(TypedDict):
     instanceId: str
     namespace: str
+    nextToken: NotRequired[str]
+    maxResults: NotRequired[int]
+
+class ListDataLakeNamespacesRequestTypeDef(TypedDict):
+    instanceId: str
     nextToken: NotRequired[str]
     maxResults: NotRequired[int]
 
@@ -238,6 +372,11 @@ class UpdateDataLakeDatasetRequestTypeDef(TypedDict):
     name: str
     description: NotRequired[str]
 
+class UpdateDataLakeNamespaceRequestTypeDef(TypedDict):
+    instanceId: str
+    name: str
+    description: NotRequired[str]
+
 class UpdateInstanceRequestTypeDef(TypedDict):
     instanceId: str
     instanceName: NotRequired[str]
@@ -263,6 +402,11 @@ class DeleteDataLakeDatasetResponseTypeDef(TypedDict):
     name: str
     ResponseMetadata: ResponseMetadataTypeDef
 
+class DeleteDataLakeNamespaceResponseTypeDef(TypedDict):
+    instanceId: str
+    name: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
 class GetBillOfMaterialsImportJobResponseTypeDef(TypedDict):
     job: BillOfMaterialsImportJobTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
@@ -273,6 +417,23 @@ class ListTagsForResourceResponseTypeDef(TypedDict):
 
 class SendDataIntegrationEventResponseTypeDef(TypedDict):
     eventId: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class CreateDataLakeNamespaceResponseTypeDef(TypedDict):
+    namespace: DataLakeNamespaceTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class GetDataLakeNamespaceResponseTypeDef(TypedDict):
+    namespace: DataLakeNamespaceTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class ListDataLakeNamespacesResponseTypeDef(TypedDict):
+    namespaces: List[DataLakeNamespaceTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+class UpdateDataLakeNamespaceResponseTypeDef(TypedDict):
+    namespace: DataLakeNamespaceTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 class CreateInstanceResponseTypeDef(TypedDict):
@@ -296,13 +457,21 @@ class UpdateInstanceResponseTypeDef(TypedDict):
     instance: InstanceTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
-class DataIntegrationFlowDatasetSourceConfigurationTypeDef(TypedDict):
+class DataIntegrationEventDatasetTargetDetailsTypeDef(TypedDict):
     datasetIdentifier: str
-    options: NotRequired[DataIntegrationFlowDatasetOptionsTypeDef]
+    operationType: DataIntegrationEventDatasetOperationTypeType
+    datasetLoadExecution: DataIntegrationEventDatasetLoadExecutionDetailsTypeDef
 
-class DataIntegrationFlowDatasetTargetConfigurationTypeDef(TypedDict):
-    datasetIdentifier: str
-    options: NotRequired[DataIntegrationFlowDatasetOptionsTypeDef]
+class DataIntegrationFlowExecutionSourceInfoTypeDef(TypedDict):
+    sourceType: DataIntegrationFlowSourceTypeType
+    s3Source: NotRequired[DataIntegrationFlowS3SourceTypeDef]
+    datasetSource: NotRequired[DataIntegrationFlowDatasetSourceTypeDef]
+
+class DataIntegrationFlowFieldPriorityDedupeStrategyConfigurationOutputTypeDef(TypedDict):
+    fields: List[DataIntegrationFlowFieldPriorityDedupeFieldTypeDef]
+
+class DataIntegrationFlowFieldPriorityDedupeStrategyConfigurationTypeDef(TypedDict):
+    fields: Sequence[DataIntegrationFlowFieldPriorityDedupeFieldTypeDef]
 
 class DataIntegrationFlowS3SourceConfigurationTypeDef(TypedDict):
     bucketName: str
@@ -318,13 +487,29 @@ class DataIntegrationFlowTransformationTypeDef(TypedDict):
     transformationType: DataIntegrationFlowTransformationTypeType
     sqlTransformation: NotRequired[DataIntegrationFlowSQLTransformationConfigurationTypeDef]
 
+class DataLakeDatasetPartitionFieldTypeDef(TypedDict):
+    name: str
+    transform: DataLakeDatasetPartitionFieldTransformTypeDef
+
 class DataLakeDatasetSchemaOutputTypeDef(TypedDict):
     name: str
     fields: List[DataLakeDatasetSchemaFieldTypeDef]
+    primaryKeys: NotRequired[List[DataLakeDatasetPrimaryKeyFieldTypeDef]]
 
 class DataLakeDatasetSchemaTypeDef(TypedDict):
     name: str
     fields: Sequence[DataLakeDatasetSchemaFieldTypeDef]
+    primaryKeys: NotRequired[Sequence[DataLakeDatasetPrimaryKeyFieldTypeDef]]
+
+class ListDataIntegrationEventsRequestPaginateTypeDef(TypedDict):
+    instanceId: str
+    eventType: NotRequired[DataIntegrationEventTypeType]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+class ListDataIntegrationFlowExecutionsRequestPaginateTypeDef(TypedDict):
+    instanceId: str
+    flowName: str
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class ListDataIntegrationFlowsRequestPaginateTypeDef(TypedDict):
     instanceId: str
@@ -333,6 +518,10 @@ class ListDataIntegrationFlowsRequestPaginateTypeDef(TypedDict):
 class ListDataLakeDatasetsRequestPaginateTypeDef(TypedDict):
     instanceId: str
     namespace: str
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+class ListDataLakeNamespacesRequestPaginateTypeDef(TypedDict):
+    instanceId: str
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class ListInstancesRequestPaginateTypeDef(TypedDict):
@@ -347,17 +536,83 @@ class SendDataIntegrationEventRequestTypeDef(TypedDict):
     eventGroupId: str
     eventTimestamp: NotRequired[TimestampTypeDef]
     clientToken: NotRequired[str]
+    datasetTarget: NotRequired[DataIntegrationEventDatasetTargetConfigurationTypeDef]
 
-class DataIntegrationFlowSourceTypeDef(TypedDict):
-    sourceType: DataIntegrationFlowSourceTypeType
-    sourceName: str
-    s3Source: NotRequired[DataIntegrationFlowS3SourceConfigurationTypeDef]
-    datasetSource: NotRequired[DataIntegrationFlowDatasetSourceConfigurationTypeDef]
+class DataIntegrationEventTypeDef(TypedDict):
+    instanceId: str
+    eventId: str
+    eventType: DataIntegrationEventTypeType
+    eventGroupId: str
+    eventTimestamp: datetime
+    datasetTargetDetails: NotRequired[DataIntegrationEventDatasetTargetDetailsTypeDef]
 
-class DataIntegrationFlowTargetTypeDef(TypedDict):
-    targetType: DataIntegrationFlowTargetTypeType
-    s3Target: NotRequired[DataIntegrationFlowS3TargetConfigurationTypeDef]
-    datasetTarget: NotRequired[DataIntegrationFlowDatasetTargetConfigurationTypeDef]
+class DataIntegrationFlowExecutionTypeDef(TypedDict):
+    instanceId: str
+    flowName: str
+    executionId: str
+    status: NotRequired[DataIntegrationFlowExecutionStatusType]
+    sourceInfo: NotRequired[DataIntegrationFlowExecutionSourceInfoTypeDef]
+    message: NotRequired[str]
+    startTime: NotRequired[datetime]
+    endTime: NotRequired[datetime]
+    outputMetadata: NotRequired[DataIntegrationFlowExecutionOutputMetadataTypeDef]
+
+DataIntegrationFlowDedupeStrategyOutputTypeDef = TypedDict(
+    "DataIntegrationFlowDedupeStrategyOutputTypeDef",
+    {
+        "type": Literal["FIELD_PRIORITY"],
+        "fieldPriority": NotRequired[
+            DataIntegrationFlowFieldPriorityDedupeStrategyConfigurationOutputTypeDef
+        ],
+    },
+)
+DataIntegrationFlowFieldPriorityDedupeStrategyConfigurationUnionTypeDef = Union[
+    DataIntegrationFlowFieldPriorityDedupeStrategyConfigurationTypeDef,
+    DataIntegrationFlowFieldPriorityDedupeStrategyConfigurationOutputTypeDef,
+]
+
+class DataLakeDatasetPartitionSpecOutputTypeDef(TypedDict):
+    fields: List[DataLakeDatasetPartitionFieldTypeDef]
+
+class DataLakeDatasetPartitionSpecTypeDef(TypedDict):
+    fields: Sequence[DataLakeDatasetPartitionFieldTypeDef]
+
+DataLakeDatasetSchemaUnionTypeDef = Union[
+    DataLakeDatasetSchemaTypeDef, DataLakeDatasetSchemaOutputTypeDef
+]
+
+class GetDataIntegrationEventResponseTypeDef(TypedDict):
+    event: DataIntegrationEventTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class ListDataIntegrationEventsResponseTypeDef(TypedDict):
+    events: List[DataIntegrationEventTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+class GetDataIntegrationFlowExecutionResponseTypeDef(TypedDict):
+    flowExecution: DataIntegrationFlowExecutionTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class ListDataIntegrationFlowExecutionsResponseTypeDef(TypedDict):
+    flowExecutions: List[DataIntegrationFlowExecutionTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
+class DataIntegrationFlowDatasetOptionsOutputTypeDef(TypedDict):
+    loadType: NotRequired[DataIntegrationFlowLoadTypeType]
+    dedupeRecords: NotRequired[bool]
+    dedupeStrategy: NotRequired[DataIntegrationFlowDedupeStrategyOutputTypeDef]
+
+DataIntegrationFlowDedupeStrategyTypeDef = TypedDict(
+    "DataIntegrationFlowDedupeStrategyTypeDef",
+    {
+        "type": Literal["FIELD_PRIORITY"],
+        "fieldPriority": NotRequired[
+            DataIntegrationFlowFieldPriorityDedupeStrategyConfigurationUnionTypeDef
+        ],
+    },
+)
 
 class DataLakeDatasetTypeDef(TypedDict):
     instanceId: str
@@ -368,34 +623,23 @@ class DataLakeDatasetTypeDef(TypedDict):
     createdTime: datetime
     lastModifiedTime: datetime
     description: NotRequired[str]
+    partitionSpec: NotRequired[DataLakeDatasetPartitionSpecOutputTypeDef]
 
-DataLakeDatasetSchemaUnionTypeDef = Union[
-    DataLakeDatasetSchemaTypeDef, DataLakeDatasetSchemaOutputTypeDef
+DataLakeDatasetPartitionSpecUnionTypeDef = Union[
+    DataLakeDatasetPartitionSpecTypeDef, DataLakeDatasetPartitionSpecOutputTypeDef
 ]
 
-class CreateDataIntegrationFlowRequestTypeDef(TypedDict):
-    instanceId: str
-    name: str
-    sources: Sequence[DataIntegrationFlowSourceTypeDef]
-    transformation: DataIntegrationFlowTransformationTypeDef
-    target: DataIntegrationFlowTargetTypeDef
-    tags: NotRequired[Mapping[str, str]]
+class DataIntegrationFlowDatasetSourceConfigurationOutputTypeDef(TypedDict):
+    datasetIdentifier: str
+    options: NotRequired[DataIntegrationFlowDatasetOptionsOutputTypeDef]
 
-class DataIntegrationFlowTypeDef(TypedDict):
-    instanceId: str
-    name: str
-    sources: List[DataIntegrationFlowSourceTypeDef]
-    transformation: DataIntegrationFlowTransformationTypeDef
-    target: DataIntegrationFlowTargetTypeDef
-    createdTime: datetime
-    lastModifiedTime: datetime
+class DataIntegrationFlowDatasetTargetConfigurationOutputTypeDef(TypedDict):
+    datasetIdentifier: str
+    options: NotRequired[DataIntegrationFlowDatasetOptionsOutputTypeDef]
 
-class UpdateDataIntegrationFlowRequestTypeDef(TypedDict):
-    instanceId: str
-    name: str
-    sources: NotRequired[Sequence[DataIntegrationFlowSourceTypeDef]]
-    transformation: NotRequired[DataIntegrationFlowTransformationTypeDef]
-    target: NotRequired[DataIntegrationFlowTargetTypeDef]
+DataIntegrationFlowDedupeStrategyUnionTypeDef = Union[
+    DataIntegrationFlowDedupeStrategyTypeDef, DataIntegrationFlowDedupeStrategyOutputTypeDef
+]
 
 class CreateDataLakeDatasetResponseTypeDef(TypedDict):
     dataset: DataLakeDatasetTypeDef
@@ -420,7 +664,41 @@ class CreateDataLakeDatasetRequestTypeDef(TypedDict):
     name: str
     schema: NotRequired[DataLakeDatasetSchemaUnionTypeDef]
     description: NotRequired[str]
+    partitionSpec: NotRequired[DataLakeDatasetPartitionSpecUnionTypeDef]
     tags: NotRequired[Mapping[str, str]]
+
+class DataIntegrationFlowSourceOutputTypeDef(TypedDict):
+    sourceType: DataIntegrationFlowSourceTypeType
+    sourceName: str
+    s3Source: NotRequired[DataIntegrationFlowS3SourceConfigurationTypeDef]
+    datasetSource: NotRequired[DataIntegrationFlowDatasetSourceConfigurationOutputTypeDef]
+
+class DataIntegrationFlowTargetOutputTypeDef(TypedDict):
+    targetType: DataIntegrationFlowTargetTypeType
+    s3Target: NotRequired[DataIntegrationFlowS3TargetConfigurationTypeDef]
+    datasetTarget: NotRequired[DataIntegrationFlowDatasetTargetConfigurationOutputTypeDef]
+
+class DataIntegrationFlowDatasetOptionsTypeDef(TypedDict):
+    loadType: NotRequired[DataIntegrationFlowLoadTypeType]
+    dedupeRecords: NotRequired[bool]
+    dedupeStrategy: NotRequired[DataIntegrationFlowDedupeStrategyUnionTypeDef]
+
+class DataIntegrationFlowTypeDef(TypedDict):
+    instanceId: str
+    name: str
+    sources: List[DataIntegrationFlowSourceOutputTypeDef]
+    transformation: DataIntegrationFlowTransformationTypeDef
+    target: DataIntegrationFlowTargetOutputTypeDef
+    createdTime: datetime
+    lastModifiedTime: datetime
+
+DataIntegrationFlowDatasetOptionsUnionTypeDef = Union[
+    DataIntegrationFlowDatasetOptionsTypeDef, DataIntegrationFlowDatasetOptionsOutputTypeDef
+]
+
+class DataIntegrationFlowDatasetTargetConfigurationTypeDef(TypedDict):
+    datasetIdentifier: str
+    options: NotRequired[DataIntegrationFlowDatasetOptionsTypeDef]
 
 class GetDataIntegrationFlowResponseTypeDef(TypedDict):
     flow: DataIntegrationFlowTypeDef
@@ -434,3 +712,45 @@ class ListDataIntegrationFlowsResponseTypeDef(TypedDict):
 class UpdateDataIntegrationFlowResponseTypeDef(TypedDict):
     flow: DataIntegrationFlowTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
+
+class DataIntegrationFlowDatasetSourceConfigurationTypeDef(TypedDict):
+    datasetIdentifier: str
+    options: NotRequired[DataIntegrationFlowDatasetOptionsUnionTypeDef]
+
+class DataIntegrationFlowTargetTypeDef(TypedDict):
+    targetType: DataIntegrationFlowTargetTypeType
+    s3Target: NotRequired[DataIntegrationFlowS3TargetConfigurationTypeDef]
+    datasetTarget: NotRequired[DataIntegrationFlowDatasetTargetConfigurationTypeDef]
+
+DataIntegrationFlowDatasetSourceConfigurationUnionTypeDef = Union[
+    DataIntegrationFlowDatasetSourceConfigurationTypeDef,
+    DataIntegrationFlowDatasetSourceConfigurationOutputTypeDef,
+]
+DataIntegrationFlowTargetUnionTypeDef = Union[
+    DataIntegrationFlowTargetTypeDef, DataIntegrationFlowTargetOutputTypeDef
+]
+
+class DataIntegrationFlowSourceTypeDef(TypedDict):
+    sourceType: DataIntegrationFlowSourceTypeType
+    sourceName: str
+    s3Source: NotRequired[DataIntegrationFlowS3SourceConfigurationTypeDef]
+    datasetSource: NotRequired[DataIntegrationFlowDatasetSourceConfigurationUnionTypeDef]
+
+DataIntegrationFlowSourceUnionTypeDef = Union[
+    DataIntegrationFlowSourceTypeDef, DataIntegrationFlowSourceOutputTypeDef
+]
+
+class CreateDataIntegrationFlowRequestTypeDef(TypedDict):
+    instanceId: str
+    name: str
+    sources: Sequence[DataIntegrationFlowSourceUnionTypeDef]
+    transformation: DataIntegrationFlowTransformationTypeDef
+    target: DataIntegrationFlowTargetUnionTypeDef
+    tags: NotRequired[Mapping[str, str]]
+
+class UpdateDataIntegrationFlowRequestTypeDef(TypedDict):
+    instanceId: str
+    name: str
+    sources: NotRequired[Sequence[DataIntegrationFlowSourceUnionTypeDef]]
+    transformation: NotRequired[DataIntegrationFlowTransformationTypeDef]
+    target: NotRequired[DataIntegrationFlowTargetUnionTypeDef]

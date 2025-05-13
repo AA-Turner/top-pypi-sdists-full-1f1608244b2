@@ -3793,9 +3793,30 @@ async def nf_busca_nf_saida_mais_recente() -> RpaRetornoProcessoDTO:
         await worker_sleep(2)
         pyautogui.click()
         await worker_sleep(2)
+
         for _ in range(10):
             pyautogui.press('pagedown')
+
+
+        last_line_nfs_emsys = 'x'
+        while True:
+            with pyautogui.hold('ctrl'):
+                pyautogui.press('c')
             await worker_sleep(1)
+            with pyautogui.hold('ctrl'):
+                pyautogui.press('c')
+
+            win32clipboard.OpenClipboard()
+            line_nf_emsys = win32clipboard.GetClipboardData().strip()
+            win32clipboard.CloseClipboard()
+            console.print(f"Linha atual copiada do Emsys: {line_nf_emsys}\nUltima Linha copiada: {last_line_nfs_emsys}")
+
+            if bool(line_nf_emsys):
+                if last_line_nfs_emsys == line_nf_emsys:
+                    break
+                else:
+                    last_line_nfs_emsys = line_nf_emsys
+                    pyautogui.press('pagedown')
 
         pyautogui.press('enter')
         await worker_sleep(7)
@@ -3811,25 +3832,13 @@ async def nf_busca_nf_saida_mais_recente() -> RpaRetornoProcessoDTO:
 
             send_keys('%n')
 
-        try:
-            ASSETS_PATH = "assets"
-            grid_visualizacao = pyautogui.locateOnScreen(
-                ASSETS_PATH + "\\emsys\\alterar_grid_visualizacao.png", confidence=0.7
-            )
-            pyautogui.click(grid_visualizacao)
             await worker_sleep(5)
             return RpaRetornoProcessoDTO(
                 sucesso=True,
                 retorno=f"Processo Executado com Sucesso",
                 status=RpaHistoricoStatusEnum.Sucesso,
             )
-        except Exception as e:
-            return RpaRetornoProcessoDTO(
-                sucesso=False,
-                retorno=f"Não foi possivel clicar no Grid de alterar visualização para buscar a nota fiscal na tela de nota fiscal de saída, erro: {e}",
-                status=RpaHistoricoStatusEnum.Falha,
-                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
-            )
+        
     except Exception as e:
         return RpaRetornoProcessoDTO(
             sucesso=False,
@@ -4912,7 +4921,7 @@ async def status_trasmissao_nf():
 
 
 async def gerenciador_nf_header_retransmissao(
-    periodo: str, cod_cliente: str
+    periodo: str, cod_cliente: str, situacao: str
 ) -> RpaRetornoProcessoDTO:
     try:
         console.print(f"\n'Conectando ao Gerenciador de NF", style="bold green")
@@ -4953,12 +4962,18 @@ async def gerenciador_nf_header_retransmissao(
 
         console.print("Verificando a situação...\n")
         situacao_text = situacao_select.window_text()
-        if "transmitida" in situacao_text.lower():
+        try:
+            situacao_select.select(situacao)
+        except Exception as e:
+            console.print("Select para o tipo de situação gerou excessão...\n")
+
+
+        if situacao in situacao_text.lower():
             console.print("Situação corretamente selecionada...\n")
         else:
             situacao_select.click()
             # set_combobox("||List", "Todas")
-            set_combobox("||List", "Não Transmitida")
+            set_combobox("||List", situacao)
 
         console.print("Inserindo o codigo do cliente...\n")
         field_cod_cliente.click()

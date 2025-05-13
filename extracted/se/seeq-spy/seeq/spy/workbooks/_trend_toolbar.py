@@ -6,46 +6,9 @@ from typing import List, Dict
 import pandas as pd
 
 from seeq.spy import _common
+from seeq.spy._common import docstring_parameter
 from seeq.spy._errors import *
-
-
-def docstring_parameter(*sub):
-    def dec(obj):
-        obj.__doc__ = obj.__doc__.format(*sub)
-        return obj
-
-    return dec
-
-
-class ContextSwitchable:
-    def __init__(self, parent):
-        self._parent = parent
-        self._context = self._determine_context()
-
-    def _determine_context(self):
-        parent_class_names = {cls.__name__ for cls in self._parent.__class__.__mro__}
-        if "AnalysisWorksheet" in parent_class_names:
-            return "worksheet"
-        elif "AnalysisWorkstep" in parent_class_names:
-            return "workstep"
-        else:
-            raise ValueError(f"Unsupported parent class: {self._parent.__class__.__name__}")
-
-    @property
-    def _getter_workstep(self):
-        if self._context == "worksheet":
-            return self._parent.current_workstep()
-        elif self._context == "workstep":
-            return self._parent
-        return None
-
-    @property
-    def _setter_workstep(self):
-        if self._context == "worksheet":
-            return self._parent.branch_current_workstep()
-        elif self._context == "workstep":
-            return self._parent
-        return None
+from seeq.spy.workbooks._context_switchable import ContextSwitchable
 
 
 # Refer client/packages/webserver/app/src/trend/toolbar/TrendToolbar.organism.tsx
@@ -79,7 +42,6 @@ class TrendToolbar(ContextSwitchable):
         Trend        Show the time-series trend view (default)
         Scatter Plot Show the scatter plot view
         Treemap      Show the treemap view
-        Scorecard    Show the table view
         Table        Show the table view
         ============ =========================================
         """

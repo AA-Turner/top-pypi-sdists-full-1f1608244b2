@@ -9,6 +9,7 @@
 # @Description  :
 """
 guidance 控制精细度 => sample_strength 0-1 数值越大生成的效果质量越好，耗时会更久
+ paths: ["/mweb/v1/generate", "/mweb/v1/super_resolution", "/mweb/v1/painting", "/commerce/v1/subscription/make_unauto_order", "/commerce/v1/benefits/credit_receive", "/commerce/v1/purchase/make_order", "/mweb/v1/get_explore", "/mweb/v1/feed_short_video", "/mweb/v1/feed", "/mweb/v1/get_homepage", "/mweb/v1/get_weekly_challenge_work_list", "/mweb/v1/mget_item_info", "/mweb/v1/get_item_info", "/mweb/v1/get_history_by_ids", "/mweb/search/v1/search"],
 
 """
 import json
@@ -206,7 +207,7 @@ def key_builder(*args, **kwargs):
 
 
 @retrying()
-# @rcache(ttl=30 * 24 * 3600, serializer="pickle", key_builder=lambda *args, **kwargs: f"{args[1].seed} {args[1].prompt}")
+@rcache(ttl=1 * 1 * 3600, serializer="pickle", key_builder=lambda *args, **kwargs: f"{args[1].seed} {args[1].prompt}")
 async def create_task(request: ImageRequest, token: Optional[str] = None):  # todo: 图片
     token = token or await get_next_token_for_polling(FEISHU_URL, check_token)
 
@@ -281,7 +282,6 @@ async def create_task(request: ImageRequest, token: Optional[str] = None):  # to
 @retrying(max_retries=3, min=3)
 async def get_task(task_id, token):
     url = "/mweb/v1/get_history_by_ids"
-
     headers = get_headers(url, token)
 
     payload = {
@@ -296,14 +296,23 @@ async def get_task(task_id, token):
 
         logger.debug(response.text)
 
+        task_info = {}
         if response.text:
             data = response.json()
+            logger.debug(bjson(data))
+            task_info = (data.get("data") or {}).get(task_id, {})
         else:
-            data = {}
+            logger.debug("走 /mweb/v1/get_history")
 
-        logger.debug(bjson(data))
+            data = await get_task_plus(task_id, token)
+
+            records_list = (data.get("data") or {}).get("records_list", [])
+
+            for record in records_list:
+                if record.get("history_record_id") == task_id:
+                    task_info = record
+
         # {'ret': '1015', 'errmsg': 'login error', 'systime': '1734524280', 'logid': '20241218201800AC3267447B287E9E6C46', 'data': None}
-        task_info = (data.get("data") or {}).get(task_id, {})
         item_list = task_info.get("item_list", [])  # "status": 30,
 
         status_code = task_info.get("status")
@@ -337,6 +346,254 @@ async def get_task(task_id, token):
             response.message = fail_msg
 
         return response
+
+
+@retrying(max_retries=3, min=3)
+async def get_task_plus(task_id, token):
+    url = "/mweb/v1/get_history"
+    headers = get_headers(url, token)
+
+    params = {
+        "aid": 513695,
+        "da_version": "3.2.2",
+        "aigc_features": "app_lip_sync",
+    }
+
+    payload = {
+        "count": 20,
+        "history_type_list": [
+            1,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "direction": 1,
+        "mode": "workbench",
+        "image_info": {
+            "width": 2048,
+            "height": 2048,
+            "format": "webp",
+            "image_scene_list": [
+                {
+                    "scene": "smart_crop",
+                    "width": 240,
+                    "height": 240,
+                    "uniq_key": "smart_crop-w:240-h:240",
+                    "format": "webp"
+                },
+                {
+                    "scene": "smart_crop",
+                    "width": 320,
+                    "height": 320,
+                    "uniq_key": "smart_crop-w:320-h:320",
+                    "format": "webp"
+                },
+                {
+                    "scene": "smart_crop",
+                    "width": 480,
+                    "height": 480,
+                    "uniq_key": "smart_crop-w:480-h:480",
+                    "format": "webp"
+                },
+                {
+                    "scene": "smart_crop",
+                    "width": 480,
+                    "height": 320,
+                    "uniq_key": "smart_crop-w:480-h:320",
+                    "format": "webp"
+                },
+                {
+                    "scene": "smart_crop",
+                    "width": 240,
+                    "height": 160,
+                    "uniq_key": "smart_crop-w:240-h:160",
+                    "format": "webp"
+                },
+                {
+                    "scene": "smart_crop",
+                    "width": 160,
+                    "height": 213,
+                    "uniq_key": "smart_crop-w:160-h:213",
+                    "format": "webp"
+                },
+                {
+                    "scene": "smart_crop",
+                    "width": 320,
+                    "height": 427,
+                    "uniq_key": "smart_crop-w:320-h:427",
+                    "format": "webp"
+                },
+                {
+                    "scene": "loss",
+                    "width": 1080,
+                    "height": 1080,
+                    "uniq_key": "1080",
+                    "format": "webp"
+                },
+                {
+                    "scene": "loss",
+                    "width": 900,
+                    "height": 900,
+                    "uniq_key": "900",
+                    "format": "webp"
+                },
+                {
+                    "scene": "loss",
+                    "width": 720,
+                    "height": 720,
+                    "uniq_key": "720",
+                    "format": "webp"
+                },
+                {
+                    "scene": "loss",
+                    "width": 480,
+                    "height": 480,
+                    "uniq_key": "480",
+                    "format": "webp"
+                },
+                {
+                    "scene": "loss",
+                    "width": 360,
+                    "height": 360,
+                    "uniq_key": "360",
+                    "format": "webp"
+                },
+                {
+                    "scene": "normal",
+                    "width": 2400,
+                    "height": 2400,
+                    "uniq_key": "2400",
+                    "format": "webp"
+                }
+            ]
+        },
+        "origin_image_info": {
+            "width": 96,
+            "format": "webp",
+            "image_scene_list": [
+                {
+                    "scene": "smart_crop",
+                    "width": 240,
+                    "height": 240,
+                    "uniq_key": "smart_crop-w:240-h:240",
+                    "format": "webp"
+                },
+                {
+                    "scene": "smart_crop",
+                    "width": 320,
+                    "height": 320,
+                    "uniq_key": "smart_crop-w:320-h:320",
+                    "format": "webp"
+                },
+                {
+                    "scene": "smart_crop",
+                    "width": 480,
+                    "height": 480,
+                    "uniq_key": "smart_crop-w:480-h:480",
+                    "format": "webp"
+                },
+                {
+                    "scene": "smart_crop",
+                    "width": 480,
+                    "height": 320,
+                    "uniq_key": "smart_crop-w:480-h:320",
+                    "format": "webp"
+                },
+                {
+                    "scene": "smart_crop",
+                    "width": 240,
+                    "height": 160,
+                    "uniq_key": "smart_crop-w:240-h:160",
+                    "format": "webp"
+                },
+                {
+                    "scene": "smart_crop",
+                    "width": 160,
+                    "height": 213,
+                    "uniq_key": "smart_crop-w:160-h:213",
+                    "format": "webp"
+                },
+                {
+                    "scene": "smart_crop",
+                    "width": 320,
+                    "height": 427,
+                    "uniq_key": "smart_crop-w:320-h:427",
+                    "format": "webp"
+                },
+                {
+                    "scene": "loss",
+                    "width": 1080,
+                    "height": 1080,
+                    "uniq_key": "1080",
+                    "format": "webp"
+                },
+                {
+                    "scene": "loss",
+                    "width": 900,
+                    "height": 900,
+                    "uniq_key": "900",
+                    "format": "webp"
+                },
+                {
+                    "scene": "loss",
+                    "width": 720,
+                    "height": 720,
+                    "uniq_key": "720",
+                    "format": "webp"
+                },
+                {
+                    "scene": "loss",
+                    "width": 480,
+                    "height": 480,
+                    "uniq_key": "480",
+                    "format": "webp"
+                },
+                {
+                    "scene": "loss",
+                    "width": 360,
+                    "height": 360,
+                    "uniq_key": "360",
+                    "format": "webp"
+                },
+                {
+                    "scene": "normal",
+                    "width": 2400,
+                    "height": 2400,
+                    "uniq_key": "2400",
+                    "format": "webp"
+                }
+            ]
+        },
+        "history_option": {
+            "story_id": "",
+            "multi_size_image_config": [
+                {
+                    "height": 100,
+                    "width": 100,
+                    "format": "webp"
+                },
+                {
+                    "height": 360,
+                    "width": 360,
+                    "format": "webp"
+                },
+                {
+                    "height": 720,
+                    "width": 720,
+                    "format": "webp"
+                }
+            ]
+        },
+        "is_pack_origin": True
+    }
+
+    async with httpx.AsyncClient(base_url=BASE_URL, headers=headers, timeout=60) as client:
+        response = await client.post(url, json=payload, params=params)
+        response.raise_for_status()
+
+        return response.json()
 
 
 # @cache: todo: cache 积分异常消耗
@@ -404,7 +661,7 @@ if __name__ == '__main__':
 
     # arun(generate(ImageRequest(prompt="fuck you")))
     prompt = "A plump Chinese beauty wearing a wedding  dress revealing her skirt and underwear is swinging on the swing,Happy smile,cleavage,Exposed thighs,Spread your legs open,Extend your leg,panties,upskirt,Barefoot,sole"
-    prompt = "a dog cat in the same room !!!    !!"
+    prompt = "a dog cat in the same room"
     # prompt = "https://oss.ffire.cc/files/kling_watermark.png 让这个女人带上墨镜，衣服换个颜色...  "
     request = ImageRequest(prompt=prompt, size="1328x1328")
     # request = ImageRequest(prompt=prompt, size="1024x1024")
@@ -412,9 +669,12 @@ if __name__ == '__main__':
     # request = ImageRequest(prompt=prompt, size="2048*2048")
 
     # task = arun(create_task(request, "7d9969ffd8ad2edda7da8fff11cb9434"))
-    task = arun(create_task(request, "d2d142fc877e696484cc2fc521127b36"))
+    # task = arun(create_task(request, "d2d142fc877e696484cc2fc521127b36"))
+    #
+    # arun(get_task(task.task_id, task.system_fingerprint))
 
-    arun(get_task(task.task_id, task.system_fingerprint))
+    arun(get_task('16279716197378', 'd2d142fc877e696484cc2fc521127b36'))
+    arun(get_task_plus('16279716197378', 'd2d142fc877e696484cc2fc521127b36'))
 
     # TaskResponse(task_id='16127190069506', code=0, message=None, status='SUBMITTED', data=None,
     #              system_fingerprint='8089661372fe8db9795cc507c3049625', model=None,

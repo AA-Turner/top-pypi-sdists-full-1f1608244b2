@@ -26,8 +26,11 @@ from botocore.errorfactory import BaseClientExceptions
 from botocore.exceptions import ClientError as BotocoreClientError
 
 from .paginator import (
+    ListDataIntegrationEventsPaginator,
+    ListDataIntegrationFlowExecutionsPaginator,
     ListDataIntegrationFlowsPaginator,
     ListDataLakeDatasetsPaginator,
+    ListDataLakeNamespacesPaginator,
     ListInstancesPaginator,
 )
 from .type_defs import (
@@ -37,26 +40,42 @@ from .type_defs import (
     CreateDataIntegrationFlowResponseTypeDef,
     CreateDataLakeDatasetRequestTypeDef,
     CreateDataLakeDatasetResponseTypeDef,
+    CreateDataLakeNamespaceRequestTypeDef,
+    CreateDataLakeNamespaceResponseTypeDef,
     CreateInstanceRequestTypeDef,
     CreateInstanceResponseTypeDef,
     DeleteDataIntegrationFlowRequestTypeDef,
     DeleteDataIntegrationFlowResponseTypeDef,
     DeleteDataLakeDatasetRequestTypeDef,
     DeleteDataLakeDatasetResponseTypeDef,
+    DeleteDataLakeNamespaceRequestTypeDef,
+    DeleteDataLakeNamespaceResponseTypeDef,
     DeleteInstanceRequestTypeDef,
     DeleteInstanceResponseTypeDef,
     GetBillOfMaterialsImportJobRequestTypeDef,
     GetBillOfMaterialsImportJobResponseTypeDef,
+    GetDataIntegrationEventRequestTypeDef,
+    GetDataIntegrationEventResponseTypeDef,
+    GetDataIntegrationFlowExecutionRequestTypeDef,
+    GetDataIntegrationFlowExecutionResponseTypeDef,
     GetDataIntegrationFlowRequestTypeDef,
     GetDataIntegrationFlowResponseTypeDef,
     GetDataLakeDatasetRequestTypeDef,
     GetDataLakeDatasetResponseTypeDef,
+    GetDataLakeNamespaceRequestTypeDef,
+    GetDataLakeNamespaceResponseTypeDef,
     GetInstanceRequestTypeDef,
     GetInstanceResponseTypeDef,
+    ListDataIntegrationEventsRequestTypeDef,
+    ListDataIntegrationEventsResponseTypeDef,
+    ListDataIntegrationFlowExecutionsRequestTypeDef,
+    ListDataIntegrationFlowExecutionsResponseTypeDef,
     ListDataIntegrationFlowsRequestTypeDef,
     ListDataIntegrationFlowsResponseTypeDef,
     ListDataLakeDatasetsRequestTypeDef,
     ListDataLakeDatasetsResponseTypeDef,
+    ListDataLakeNamespacesRequestTypeDef,
+    ListDataLakeNamespacesResponseTypeDef,
     ListInstancesRequestTypeDef,
     ListInstancesResponseTypeDef,
     ListTagsForResourceRequestTypeDef,
@@ -69,6 +88,8 @@ from .type_defs import (
     UpdateDataIntegrationFlowResponseTypeDef,
     UpdateDataLakeDatasetRequestTypeDef,
     UpdateDataLakeDatasetResponseTypeDef,
+    UpdateDataLakeNamespaceRequestTypeDef,
+    UpdateDataLakeNamespaceResponseTypeDef,
     UpdateInstanceRequestTypeDef,
     UpdateInstanceResponseTypeDef,
 )
@@ -166,6 +187,17 @@ class SupplyChainClient(BaseClient):
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#create_data_lake_dataset)
         """
 
+    def create_data_lake_namespace(
+        self, **kwargs: Unpack[CreateDataLakeNamespaceRequestTypeDef]
+    ) -> CreateDataLakeNamespaceResponseTypeDef:
+        """
+        Enables you to programmatically create an Amazon Web Services Supply Chain data
+        lake namespace.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/create_data_lake_namespace.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#create_data_lake_namespace)
+        """
+
     def create_instance(
         self, **kwargs: Unpack[CreateInstanceRequestTypeDef]
     ) -> CreateInstanceResponseTypeDef:
@@ -201,6 +233,17 @@ class SupplyChainClient(BaseClient):
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#delete_data_lake_dataset)
         """
 
+    def delete_data_lake_namespace(
+        self, **kwargs: Unpack[DeleteDataLakeNamespaceRequestTypeDef]
+    ) -> DeleteDataLakeNamespaceResponseTypeDef:
+        """
+        Enables you to programmatically delete an Amazon Web Services Supply Chain data
+        lake namespace and its underling datasets.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/delete_data_lake_namespace.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#delete_data_lake_namespace)
+        """
+
     def delete_instance(
         self, **kwargs: Unpack[DeleteInstanceRequestTypeDef]
     ) -> DeleteInstanceResponseTypeDef:
@@ -223,6 +266,17 @@ class SupplyChainClient(BaseClient):
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#get_bill_of_materials_import_job)
         """
 
+    def get_data_integration_event(
+        self, **kwargs: Unpack[GetDataIntegrationEventRequestTypeDef]
+    ) -> GetDataIntegrationEventResponseTypeDef:
+        """
+        Enables you to programmatically view an Amazon Web Services Supply Chain Data
+        Integration Event.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/get_data_integration_event.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#get_data_integration_event)
+        """
+
     def get_data_integration_flow(
         self, **kwargs: Unpack[GetDataIntegrationFlowRequestTypeDef]
     ) -> GetDataIntegrationFlowResponseTypeDef:
@@ -232,6 +286,16 @@ class SupplyChainClient(BaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/get_data_integration_flow.html)
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#get_data_integration_flow)
+        """
+
+    def get_data_integration_flow_execution(
+        self, **kwargs: Unpack[GetDataIntegrationFlowExecutionRequestTypeDef]
+    ) -> GetDataIntegrationFlowExecutionResponseTypeDef:
+        """
+        Get the flow execution.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/get_data_integration_flow_execution.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#get_data_integration_flow_execution)
         """
 
     def get_data_lake_dataset(
@@ -245,6 +309,17 @@ class SupplyChainClient(BaseClient):
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#get_data_lake_dataset)
         """
 
+    def get_data_lake_namespace(
+        self, **kwargs: Unpack[GetDataLakeNamespaceRequestTypeDef]
+    ) -> GetDataLakeNamespaceResponseTypeDef:
+        """
+        Enables you to programmatically view an Amazon Web Services Supply Chain data
+        lake namespace.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/get_data_lake_namespace.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#get_data_lake_namespace)
+        """
+
     def get_instance(
         self, **kwargs: Unpack[GetInstanceRequestTypeDef]
     ) -> GetInstanceResponseTypeDef:
@@ -254,6 +329,27 @@ class SupplyChainClient(BaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/get_instance.html)
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#get_instance)
+        """
+
+    def list_data_integration_events(
+        self, **kwargs: Unpack[ListDataIntegrationEventsRequestTypeDef]
+    ) -> ListDataIntegrationEventsResponseTypeDef:
+        """
+        Enables you to programmatically list all data integration events for the
+        provided Amazon Web Services Supply Chain instance.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/list_data_integration_events.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#list_data_integration_events)
+        """
+
+    def list_data_integration_flow_executions(
+        self, **kwargs: Unpack[ListDataIntegrationFlowExecutionsRequestTypeDef]
+    ) -> ListDataIntegrationFlowExecutionsResponseTypeDef:
+        """
+        List flow executions.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/list_data_integration_flow_executions.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#list_data_integration_flow_executions)
         """
 
     def list_data_integration_flows(
@@ -276,6 +372,17 @@ class SupplyChainClient(BaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/list_data_lake_datasets.html)
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#list_data_lake_datasets)
+        """
+
+    def list_data_lake_namespaces(
+        self, **kwargs: Unpack[ListDataLakeNamespacesRequestTypeDef]
+    ) -> ListDataLakeNamespacesResponseTypeDef:
+        """
+        Enables you to programmatically view the list of Amazon Web Services Supply
+        Chain data lake namespaces.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/list_data_lake_namespaces.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#list_data_lake_namespaces)
         """
 
     def list_instances(
@@ -302,8 +409,8 @@ class SupplyChainClient(BaseClient):
         self, **kwargs: Unpack[SendDataIntegrationEventRequestTypeDef]
     ) -> SendDataIntegrationEventResponseTypeDef:
         """
-        Send the transactional data payload for the event with real-time data for
-        analysis or monitoring.
+        Send the data payload for the event with real-time data for analysis or
+        monitoring.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/send_data_integration_event.html)
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#send_data_integration_event)
@@ -351,6 +458,17 @@ class SupplyChainClient(BaseClient):
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#update_data_lake_dataset)
         """
 
+    def update_data_lake_namespace(
+        self, **kwargs: Unpack[UpdateDataLakeNamespaceRequestTypeDef]
+    ) -> UpdateDataLakeNamespaceResponseTypeDef:
+        """
+        Enables you to programmatically update an Amazon Web Services Supply Chain data
+        lake namespace.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/update_data_lake_namespace.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#update_data_lake_namespace)
+        """
+
     def update_instance(
         self, **kwargs: Unpack[UpdateInstanceRequestTypeDef]
     ) -> UpdateInstanceResponseTypeDef:
@@ -361,6 +479,28 @@ class SupplyChainClient(BaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/update_instance.html)
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#update_instance)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_data_integration_events"]
+    ) -> ListDataIntegrationEventsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/get_paginator.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_data_integration_flow_executions"]
+    ) -> ListDataIntegrationFlowExecutionsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/get_paginator.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#get_paginator)
         """
 
     @overload  # type: ignore[override]
@@ -378,6 +518,17 @@ class SupplyChainClient(BaseClient):
     def get_paginator(  # type: ignore[override]
         self, operation_name: Literal["list_data_lake_datasets"]
     ) -> ListDataLakeDatasetsPaginator:
+        """
+        Create a paginator for an operation.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/supplychain/client/get_paginator.html)
+        [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_supplychain/client/#get_paginator)
+        """
+
+    @overload  # type: ignore[override]
+    def get_paginator(  # type: ignore[override]
+        self, operation_name: Literal["list_data_lake_namespaces"]
+    ) -> ListDataLakeNamespacesPaginator:
         """
         Create a paginator for an operation.
 

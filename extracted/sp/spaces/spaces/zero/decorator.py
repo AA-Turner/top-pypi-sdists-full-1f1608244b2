@@ -104,7 +104,6 @@ def _GPU(
 
     setattr(decorated, 'zerogpu', None)
 
-    client.startup_report()
     decorated_cache.update({
         task:      decorated,
         decorated: decorated,

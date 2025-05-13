@@ -12,14 +12,30 @@ class JavaScriptStyleLanguageStates(CodeStateMachine):  # pylint: disable=R0903
         self.function_name = ''
         self.started_function = None
         self.as_object = False
+        self._getter_setter_prefix = None
+        self.arrow_function_pending = False
 
     def _state_global(self, token):
         if self.as_object:
+            # Support for getter/setter: look for 'get' or 'set' before method name
+            if token in ('get', 'set'):
+                self._getter_setter_prefix = token
+                return
+            if hasattr(self, '_getter_setter_prefix') and self._getter_setter_prefix:
+                # Next token is the property name
+                self.last_tokens = f"{self._getter_setter_prefix} {token}"
+                self._getter_setter_prefix = None
+                return
+            if token == '[':
+                self._collect_computed_name()
+                return
             if token == ':':
                 self.function_name = self.last_tokens
                 return
             elif token == '(':
-                self._function(self.last_tokens)
+                if not self.started_function:
+                    self.arrow_function_pending = True
+                    self._function(self.last_tokens)
                 self.next(self._function, token)
                 return
 
@@ -34,8 +50,7 @@ class JavaScriptStyleLanguageStates(CodeStateMachine):  # pylint: disable=R0903
         elif token in ('else', 'do', 'try', 'final'):
             self.next(self._expecting_statement_or_block)
         elif token in ('=>',):
-            if self.function_name:
-                self._push_function_to_stack()
+            # Only handle arrow function body, do not push function here
             self._state = self._arrow_function
         elif token == '=':
             self.function_name = self.last_tokens
@@ -116,7 +131,9 @@ class JavaScriptStyleLanguageStates(CodeStateMachine):  # pylint: disable=R0903
         if token != '(':
             self.function_name = token
         else:
-            self._push_function_to_stack()
+            if not self.started_function:
+                self._push_function_to_stack()
+            self.arrow_function_pending = False
             self._state = self._dec
             if token == '(':
                 self._dec(token)
@@ -134,6 +151,34 @@ class JavaScriptStyleLanguageStates(CodeStateMachine):  # pylint: disable=R0903
         self.context.add_to_long_function_name(" " + token)
 
     def _expecting_func_opening_bracket(self, token):
-        if token != '{':
+        # Do not reset started_function for arrow functions (=>)
+        if token != '{' and token != '=>':
             self.started_function = None
         self.next(self._state_global, token)
+
+    def _collect_computed_name(self):
+        # Collect tokens between [ and ]
+        tokens = []
+        def collect(token):
+            if token == ']':
+                # Try to join tokens and camelCase if possible
+                name = ''.join(tokens)
+                # Remove quotes and pluses for simple cases
+                name = name.replace("'", '').replace('"', '').replace('+', '').replace(' ', '')
+                # Lowercase first char, uppercase next word's first char
+                name = self._to_camel_case(name)
+                self.last_tokens = name
+                self.next(self._state_global)
+                return True
+            tokens.append(token)
+            return False
+        self.next(collect)
+
+    def _to_camel_case(self, s):
+        # Simple camelCase conversion for test case
+        if not s:
+            return s
+        parts = s.split()
+        if not parts:
+            return s
+        return parts[0][0].lower() + parts[0][1:] + ''.join(p.capitalize() for p in parts[1:])

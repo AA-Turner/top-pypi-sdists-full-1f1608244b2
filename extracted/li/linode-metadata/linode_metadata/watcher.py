@@ -26,7 +26,6 @@ DEFAULT_POLL_INTERVAL = timedelta(minutes=1)
 
 
 class BaseMetadataWatcher(ABC):
-
     _logger: Logger
 
     def __init__(
@@ -86,7 +85,7 @@ class BaseMetadataWatcher(ABC):
 
     @staticmethod
     def normalize_poll_interval(
-        poll_interval: Union[timedelta, float, int]
+        poll_interval: Union[timedelta, float, int],
     ) -> timedelta:
         """
         Normalize poll_interval to be an instance of datetime.timedelta.

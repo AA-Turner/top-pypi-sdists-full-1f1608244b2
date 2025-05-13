@@ -7,7 +7,7 @@ from typing import Generic, TypeVar, cast
 
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.prompts import PromptTemplate
-from patchright.async_api import ElementHandle, Page
+from playwright.async_api import ElementHandle, Page
 
 # from lmnr.sdk.laminar import Laminar
 from pydantic import BaseModel
@@ -190,8 +190,8 @@ class Controller(Generic[Context]):
 		@self.registry.action('Switch tab', param_model=SwitchTabAction)
 		async def switch_tab(params: SwitchTabAction, browser: BrowserContext):
 			await browser.switch_to_tab(params.page_id)
-			# Wait for tab to be ready
-			page = await browser.get_current_page()
+			# Wait for tab to be ready and ensure references are synchronized
+			page = await browser.get_agent_current_page()
 			await page.wait_for_load_state()
 			msg = f'🔄  Switched to tab {params.page_id}'
 			logger.info(msg)
@@ -200,6 +200,8 @@ class Controller(Generic[Context]):
 		@self.registry.action('Open url in new tab', param_model=OpenTabAction)
 		async def open_tab(params: OpenTabAction, browser: BrowserContext):
 			await browser.create_new_tab(params.url)
+			# Ensure tab references are properly synchronized
+			await browser.get_agent_current_page()  # this has side-effects (even though it looks like a getter)
 			msg = f'🔗  Opened new tab with {params.url}'
 			logger.info(msg)
 			return ActionResult(extracted_content=msg, include_in_memory=True)
@@ -328,13 +330,20 @@ class Controller(Generic[Context]):
 
 				for locator in locators:
 					try:
-						# First check if element exists and is visible
-						if await locator.count() > 0 and await locator.first.is_visible():
-							await locator.first.scroll_into_view_if_needed()
+						if await locator.count() == 0:
+							continue
+
+						element = await locator.first
+						is_visible = await element.is_visible()
+						bbox = await element.bounding_box()
+
+						if is_visible and bbox is not None and bbox['width'] > 0 and bbox['height'] > 0:
+							await element.scroll_into_view_if_needed()
 							await asyncio.sleep(0.5)  # Wait for scroll to complete
 							msg = f'🔍  Scrolled to text: {text}'
 							logger.info(msg)
 							return ActionResult(extracted_content=msg, include_in_memory=True)
+
 					except Exception as e:
 						logger.debug(f'Locator attempt failed: {str(e)}')
 						continue

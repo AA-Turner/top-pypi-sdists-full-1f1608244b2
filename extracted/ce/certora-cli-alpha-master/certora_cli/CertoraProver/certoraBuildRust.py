@@ -16,7 +16,7 @@
 import glob
 import shutil
 from pathlib import Path
-from typing import Set, List
+from typing import Set
 
 from CertoraProver.certoraBuild import build_source_tree
 from CertoraProver.certoraContextClass import CertoraContext
@@ -25,48 +25,11 @@ import CertoraProver.certoraContextAttributes as Attrs
 from Shared import certoraUtils as Util
 
 
-def build_rust_app(context: CertoraContext) -> None:
-    build_command: List[str] = []
-    feature_flag = None
-    if context.build_script:
-        build_command = [context.build_script]
-        feature_flag = '--cargo_features'
+def set_rust_build_directory(context: CertoraContext) -> None:
+    if not context.files:
+        build_rust_app(context)
 
-    elif not context.files:
-        build_command = ["cargo", "certora-sbf"]
-        feature_flag = '--features'
-        if context.cargo_tools_version:
-            build_command.append("--tools-version")
-            build_command.append(context.cargo_tools_version)
-
-    if build_command:
-        if context.cargo_features is not None:
-            build_command.extend([feature_flag] + context.cargo_features)
-
-        build_command.append('--json')
-
-        if context.test == str(Util.TestValue.SOLANA_BUILD_CMD):
-            raise Util.TestResultsReady(build_command)
-
-        run_rust_build(context, build_command)
-        if not context.rust_executables:
-            raise Util.CertoraUserInputError("failed to get target executable")
-
-        copy_files_to_build_dir(context)
-
-    else:
-        if not context.files:
-            raise Util.CertoraUserInputError("'files' or 'build_script' must be set for Rust projects")
-        if len(context.files) > 1:
-            raise Util.CertoraUserInputError("Rust projects must specify exactly one executable in 'files'.")
-
-        try:
-            Util.get_certora_sources_dir().mkdir(parents=True, exist_ok=True)
-            shutil.copy(Util.get_last_conf_file(), Util.get_certora_sources_dir() / Util.LAST_CONF_FILE)
-        except Exception as e:
-            raise Util.CertoraUserInputError(f"Collecting build files failed with the exception: {e}")
-
-        context.rust_executables = context.files[0]
+    copy_files_to_build_dir(context)
 
     sources: Set[Path] = set()
     collect_files_from_rust_sources(context, sources)
@@ -77,6 +40,44 @@ def build_rust_app(context: CertoraContext) -> None:
 
     except Exception as e:
         raise Util.CertoraUserInputError(f"Collecting build files failed with the exception: {e}")
+
+def build_rust_app(context: CertoraContext) -> None:
+    assert not context.files, "build_rust_app: expecting files to be empty"
+    if context.build_script:
+        build_command = [context.build_script, '--json', '-l']
+        feature_flag = '--cargo_features'
+    else:  # cargo
+        build_command = ["cargo", "certora-sbf", '--json']
+        feature_flag = '--features'
+        if context.cargo_tools_version:
+            build_command.extend(["--tools-version", context.cargo_tools_version])
+
+    if context.cargo_features is not None:
+        build_command.append(feature_flag)
+        build_command.extend(context.cargo_features)
+
+    if context.test == str(Util.TestValue.SOLANA_BUILD_CMD):
+        raise Util.TestResultsReady(build_command)
+
+    run_rust_build(context, build_command)
+
+def add_solana_files_from_prover_args(context: CertoraContext) -> None:
+    if context.prover_args:
+        inlining_file = False
+        summaries_file = False
+        for prover_arg in context.prover_args:
+            for arg in prover_arg.split(' '):
+                if inlining_file:
+                    context.solana_inlining = context.solana_inlining or [Path(arg)]
+                    inlining_file = False
+                if summaries_file:
+                    context.solana_summaries = context.solana_summaries or [Path(arg)]
+                    summaries_file = False
+
+                if arg == '-solanaInlining':
+                    inlining_file = True
+                elif arg == '-solanaSummaries':
+                    summaries_file = True
 
 
 def add_solana_files_to_sources(context: CertoraContext, sources: Set[Path]) -> None:
@@ -97,7 +98,7 @@ def add_solana_files_to_sources(context: CertoraContext, sources: Set[Path]) -> 
         for file_path in file_paths:
             if not file_path.exists():
                 raise Util.CertoraUserInputError(f"in {attr_name} file {file_path} does not exist")
-            sources.add(file_path.absolute())
+            sources.add(file_path.absolute().resolve())
 
 
 def collect_files_from_rust_sources(context: CertoraContext, sources: Set[Path]) -> None:
@@ -119,16 +120,18 @@ def collect_files_from_rust_sources(context: CertoraContext, sources: Set[Path])
                     sources.add(file_path)
 
         sources.add(project_directory.absolute())
-        if Path(context.build_script).exists():
+        if context.build_script:
             sources.add(Path(context.build_script).resolve())
     if getattr(context, 'conf_file', None) and Path(context.conf_file).exists():
         sources.add(Path(context.conf_file).absolute())
+
+    add_solana_files_from_prover_args(context)
     add_solana_files_to_sources(context, sources)
 
 
 def copy_files_to_build_dir(context: CertoraContext) -> None:
-    rust_executable = Path(context.rust_project_directory) / context.rust_executables
-    shutil.copyfile(rust_executable, Util.get_build_dir() / rust_executable.name)
+    assert context.files, "copy_files_to_build_dir: expecting files to be non-empty"
+    shutil.copyfile(context.files[0], Util.get_build_dir() / Path(context.files[0]).name)
 
     if rust_logs := getattr(context, 'rust_logs_stdout', None):
         shutil.copy(Path(rust_logs), Util.get_build_dir() / Path(rust_logs).name)

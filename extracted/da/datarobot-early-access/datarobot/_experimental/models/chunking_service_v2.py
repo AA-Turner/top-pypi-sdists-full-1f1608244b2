@@ -74,6 +74,8 @@ class DatasetInfo(APIObject):
          The list of column names in the dataset.
     dialect : str
          The sql dialect associated with the dataset (e.g., Snowflake, BigQuery, Spark).
+    version : int
+         The version of the dataset definition information.
     data_store_id : str
          The ID of the data store.
     data_source_id : str
@@ -87,6 +89,7 @@ class DatasetInfo(APIObject):
             t.Key("estimated_size_per_row"): t.Int,
             t.Key("columns"): t.List(t.String),
             t.Key("dialect"): t.Enum(*enum_to_list(ChunkServiceDialect)),
+            t.Key("version"): t.Int,
             t.Key("data_store_id", optional=True): t.Or(t.String, t.Null),
             t.Key("data_source_id", optional=True): t.Or(t.String, t.Null),
         }
@@ -99,6 +102,7 @@ class DatasetInfo(APIObject):
         estimated_size_per_row: int,
         columns: List[str],
         dialect: ChunkServiceDialect,
+        version: int,
         data_store_id: Optional[str] = None,
         data_source_id: Optional[str] = None,
     ):
@@ -107,6 +111,7 @@ class DatasetInfo(APIObject):
         self.estimated_size_per_row = estimated_size_per_row
         self.columns = columns
         self.dialect = dialect
+        self.version = version
         self.data_store_id = data_store_id
         self.data_source_id = data_source_id
 
@@ -132,6 +137,65 @@ class DynamicDatasetProps(APIObject):
         credentials_id: str,
     ):
         self.credentials_id = credentials_id
+
+
+class DatasetDefinitionInfoHistory(APIObject):
+    """
+    Dataset definition info history for the dataset definition.
+
+    Attributes
+    ----------
+    id : str
+        The ID of the dataset definition information history.
+    dataset_info : DatasetInfo
+        The versioned information about the dataset.
+    """
+
+    _path = "datasetDefinitions/{}/versions/"
+
+    _converter = t.Dict(
+        {
+            t.Key("id"): t.String,
+            t.Key("dataset_info"): DatasetInfo._converter,
+        }
+    ).allow_extra("*")
+
+    def __init__(
+        self,
+        id: str,
+        dataset_info: DatasetInfo,
+    ):
+        self.id = id
+        self.dataset_info = dataset_info
+
+    @classmethod
+    def from_data(
+        cls, data: Union[Dict[str, Any], List[Dict[str, Any]]]
+    ) -> DatasetDefinitionInfoHistory:
+        """Properly convert composition classes."""
+        converted_data = cls._converter.check(from_api(data))
+        converted_data["dataset_info"] = DatasetInfo(**converted_data["dataset_info"])
+
+        return cls(**converted_data)
+
+    @classmethod
+    def list(cls, dataset_definition_id: str) -> List[DatasetDefinitionInfoHistory]:
+        """
+        List all dataset definition info history
+
+        Parameters
+        ----------
+        dataset_definition_id: str
+            The ID of the dataset definition.
+
+        Returns
+        -------
+        A list of DatasetDefinitionInfoHistory
+        """
+
+        path = cls._path.format(dataset_definition_id)
+        data = unpaginate(path, None, cls._client)
+        return [cls.from_server_data(item) for item in data]
 
 
 class DatasetDefinition(APIObject):
@@ -261,7 +325,7 @@ class DatasetDefinition(APIObject):
         return cls.from_server_data(data)
 
     @classmethod
-    def get(cls, dataset_definition_id: str) -> DatasetDefinition:
+    def get(cls, dataset_definition_id: str, version: Optional[int] = None) -> DatasetDefinition:
         """
         Retrieve a specific dataset definition metadata.
 
@@ -269,6 +333,8 @@ class DatasetDefinition(APIObject):
         ----------
         dataset_definition_id: str
             The ID of the dataset definition.
+        version: Optional[int]
+            The version of the dataset definition information. If not provided, the latest version will be used.
 
         Returns
         -------
@@ -276,7 +342,10 @@ class DatasetDefinition(APIObject):
             The queried instance.
         """
         path = cls._path_with_id.format(dataset_definition_id)
-        response = cls._client.get(path)
+        query_params = {}
+        if version is not None:
+            query_params["version"] = version
+        response = cls._client.get(path, params=query_params)
         return cls.from_server_data(response.json())
 
     @classmethod
@@ -326,6 +395,22 @@ class DatasetDefinition(APIObject):
         elif resp.status_code == 202:
             # ignore new location since we return None
             wait_for_async_resolution(cls._client, resp.headers["Location"], max_wait)
+
+    @classmethod
+    def list_versions(cls, dataset_definition_id: str) -> List[DatasetDefinitionInfoHistory]:
+        """
+        List all info history of the dataset definition.
+
+        Parameters
+        ----------
+        dataset_definition_id: str
+            The ID of the dataset definition.
+
+        Returns
+        -------
+        A list of DatasetDefinitionInfoHistory
+        """
+        return DatasetDefinitionInfoHistory.list(dataset_definition_id)
 
 
 class RowsChunkDefinition(APIObject):
@@ -458,6 +543,8 @@ class ChunkDefinition(APIObject):
         The ID of the chunk entity.
     dataset_definition_id : str
         The ID of the dataset definition.
+    dataset_definition_info_version: int
+        The version of the dataset definition information.
     name : str
         The name of the chunk entity.
     is_readonly : bool
@@ -481,6 +568,7 @@ class ChunkDefinition(APIObject):
         {
             t.Key("id"): t.String,
             t.Key("dataset_definition_id"): t.String,
+            t.Key("dataset_definition_info_version"): t.Int,
             t.Key("name"): t.String,
             t.Key("is_readonly"): t.Bool,
             t.Key("partition_method"): t.Enum(*enum_to_list(ChunkingPartitionMethod)),
@@ -495,6 +583,7 @@ class ChunkDefinition(APIObject):
         self,
         id: str,
         dataset_definition_id: str,
+        dataset_definition_info_version: int,
         name: str,
         is_readonly: bool,
         partition_method: ChunkingPartitionMethod,
@@ -505,6 +594,7 @@ class ChunkDefinition(APIObject):
     ):
         self.id = id
         self.dataset_definition_id = dataset_definition_id
+        self.dataset_definition_info_version = dataset_definition_info_version
         self.name = name
         self.is_readonly = is_readonly
         self.partition_method = partition_method

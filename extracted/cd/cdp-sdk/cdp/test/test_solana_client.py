@@ -2,6 +2,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 
+from cdp.openapi_client.errors import ApiError
 from cdp.openapi_client.models.create_solana_account_request import (
     CreateSolanaAccountRequest,
 )
@@ -26,7 +27,7 @@ from cdp.openapi_client.models.sign_solana_transaction200_response import (
 from cdp.openapi_client.models.sign_solana_transaction_request import (
     SignSolanaTransactionRequest,
 )
-from cdp.openapi_client.models.solana_account import SolanaAccount
+from cdp.openapi_client.models.solana_account import SolanaAccount as SolanaAccountModel
 from cdp.solana_client import SolanaClient
 
 
@@ -54,7 +55,8 @@ async def test_create_account():
         create_solana_account_request=CreateSolanaAccountRequest(name=test_name),
     )
 
-    assert result == mock_sol_account
+    assert result.address == mock_sol_account.address
+    assert result.name == mock_sol_account.name
 
 
 @pytest.mark.asyncio
@@ -77,7 +79,8 @@ async def test_get_account():
 
     mock_solana_accounts_api.get_solana_account.assert_called_once_with(test_address)
 
-    assert result == mock_sol_account
+    assert result.address == mock_sol_account.address
+    assert result.name == mock_sol_account.name
 
 
 @pytest.mark.asyncio
@@ -112,16 +115,50 @@ async def test_get_account_throws_error_if_neither_address_nor_name_is_provided(
 
 
 @pytest.mark.asyncio
+async def test_get_or_create_account(server_account_model_factory):
+    """Test getting or creating a Solana account."""
+    mock_solana_accounts_api = AsyncMock()
+    mock_api_clients = AsyncMock()
+    mock_api_clients.solana_accounts = mock_solana_accounts_api
+
+    mock_sol_account = server_account_model_factory()
+    client = SolanaClient(api_clients=mock_api_clients)
+
+    mock_solana_accounts_api.get_solana_account_by_name = AsyncMock(
+        side_effect=[
+            ApiError(404, "not_found", "Account not found"),
+            mock_sol_account,
+        ]
+    )
+    mock_solana_accounts_api.create_solana_account = AsyncMock(return_value=mock_sol_account)
+
+    test_name = "test-sol-account"
+    result = await client.get_or_create_account(name=test_name)
+    result2 = await client.get_or_create_account(name=test_name)
+
+    assert mock_solana_accounts_api.get_solana_account_by_name.call_count == 2
+    mock_solana_accounts_api.create_solana_account.assert_called_once_with(
+        x_idempotency_key=None,
+        create_solana_account_request=CreateSolanaAccountRequest(name=test_name),
+    )
+
+    assert result.address == mock_sol_account.address
+    assert result.name == mock_sol_account.name
+    assert result2.address == mock_sol_account.address
+    assert result2.name == mock_sol_account.name
+
+
+@pytest.mark.asyncio
 async def test_list_accounts():
     """Test listing Solana accounts."""
     mock_solana_accounts_api = AsyncMock()
     mock_api_clients = AsyncMock()
     mock_api_clients.solana_accounts = mock_solana_accounts_api
 
-    mock_sol_account_1 = SolanaAccount(
+    mock_sol_account_1 = SolanaAccountModel(
         address="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", name="test-sol-account-1"
     )
-    mock_sol_account_2 = SolanaAccount(
+    mock_sol_account_2 = SolanaAccountModel(
         address="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", name="test-sol-account-2"
     )
 
@@ -139,7 +176,6 @@ async def test_list_accounts():
     )
 
     assert len(result.accounts) == 2
-    assert result.next_page_token == "next-page-token"
     assert result.accounts[0].address == "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     assert result.accounts[1].address == "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 

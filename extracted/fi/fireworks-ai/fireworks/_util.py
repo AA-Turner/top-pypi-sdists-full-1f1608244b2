@@ -1,41 +1,7 @@
 import asyncio
-from typing import Coroutine, Any, Callable, Dict, Optional, TypeVar, cast
-import functools
+from typing import Coroutine, Any, TypeVar
 
 T = TypeVar("T")
-
-
-def async_lru_cache():
-    """
-    Decorator that creates a simple cache for async functions with a single entry.
-    Unlike functools.lru_cache, this properly caches the result of an awaited coroutine,
-    not the coroutine object itself.
-    """
-
-    def decorator(func: Callable[..., Coroutine[Any, Any, T]]):
-        # Lock doesn't need to be nonlocal because it's only used within the wrapper function
-        # and is properly captured in the closure
-        lock = asyncio.Lock()
-
-        @functools.wraps(func)
-        async def wrapper(*args: Any, **kwargs: Any) -> T:
-            if hasattr(wrapper, "cache"):
-                return cast(T, wrapper.cache)  # type: ignore
-
-            async with lock:
-                if hasattr(wrapper, "cache"):
-                    return cast(T, wrapper.cache)  # type: ignore
-
-                # Call the original function and await its result
-                value = await func(*args, **kwargs)
-
-                # Store result in cache
-                wrapper.cache = value  # type: ignore
-                return value
-
-        return wrapper
-
-    return decorator
 
 
 def run_coroutine_in_appropriate_loop(coro: Coroutine[Any, Any, T]) -> T:

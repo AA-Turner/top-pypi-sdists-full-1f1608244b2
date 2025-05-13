@@ -1,7 +1,9 @@
 import asyncio
+import re
 import uuid
 from base64 import b64encode
 from collections import deque
+from collections.abc import Mapping
 from datetime import timedelta, timezone
 from decimal import Decimal
 from ipaddress import (
@@ -101,11 +103,36 @@ def default(obj):
 
 _option = orjson.OPT_SERIALIZE_NUMPY | orjson.OPT_NON_STR_KEYS
 
+_SURROGATE_RE = re.compile(r"[\ud800-\udfff]")
+
+
+def _strip_surr(s: str) -> str:
+    return s if _SURROGATE_RE.search(s) is None else _SURROGATE_RE.sub("", s)
+
+
+def _sanitise(o: Any) -> Any:
+    if isinstance(o, str):
+        return _strip_surr(o)
+    if isinstance(o, Mapping):
+        return {_sanitise(k): _sanitise(v) for k, v in o.items()}
+    if isinstance(o, list | tuple | set):
+        ctor = list if isinstance(o, list) else type(o)
+        return ctor(_sanitise(x) for x in o)
+    return o
+
 
 def json_dumpb(obj) -> bytes:
-    return orjson.dumps(obj, default=default, option=_option).replace(
-        rb"\u0000", b""
-    )  # null unicode char not allowed in json
+    try:
+        return orjson.dumps(obj, default=default, option=_option).replace(
+            rb"\u0000", b""
+        )  # null unicode char not allowed in json
+    except TypeError as e:
+        if "surrogates not allowed" not in str(e):
+            raise
+        surrogate_sanitized = _sanitise(obj)
+        return orjson.dumps(
+            surrogate_sanitized, default=default, option=_option
+        ).replace(rb"\u0000", b"")
 
 
 def json_loads(content: bytes | Fragment | dict) -> Any:

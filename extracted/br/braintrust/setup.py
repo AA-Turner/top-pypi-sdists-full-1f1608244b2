@@ -15,7 +15,7 @@ install_requires = [
     "GitPython",
     "requests",
     "chevron",
-    "braintrust_core==0.0.58",
+    "braintrust_core==0.0.59",
     "tqdm",
     "exceptiongroup>=1.2.0",
     "python-dotenv",

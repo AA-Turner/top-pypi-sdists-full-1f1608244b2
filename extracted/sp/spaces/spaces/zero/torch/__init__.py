@@ -12,7 +12,7 @@ except ImportError:
 
     _patch = lambda *args, **kwargs: None
     _unpatch = lambda *args, **kwargs: None
-    _pack = lambda *args, **kwargs: None
+    _pack = lambda *args, **kwargs: 0
     _init = lambda *args, **kwargs: None
     _size = lambda *args, **kwargs: 0
     _move = lambda *args, **kwargs: None

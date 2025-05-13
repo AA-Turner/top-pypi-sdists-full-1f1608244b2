@@ -592,6 +592,21 @@ def get_signal_statistic_function_map():
     }
 
 
+# refer TREND_SIGNAL_STATS in client/packages/webserver/app/src/trendData/trendData.constants.ts
+def get_trend_signal_statistic_function_map():
+    return {
+        "delta": "statistics.delta",
+        "maximum": "statistics.maximum",
+        "minimum": "statistics.minimum",
+        "value at end": "statistics.endValue",
+        "count": "statistics.count",
+        "range": "statistics.range",
+        "average": "statistics.average",
+        "percent good": "statistics.percentGood",
+        "standard deviation": "statistics.stdDev",
+    }
+
+
 def get_variable_number_statistic_function(statistic):
     match = re.match(r'^\w+\(([0-9]*.?[0-9]+|[0-9]+|[0-9]+.?[0-9]*)\)$', statistic)
     # matches numbers with decimal at beginning, end, or within
@@ -1030,3 +1045,11 @@ def removesuffix(s: str, suffix: str) -> str:
     if s.endswith(suffix):
         return s[: -len(suffix)]
     return s
+
+
+def docstring_parameter(*sub):
+    def dec(obj):
+        obj.__doc__ = obj.__doc__.format(*sub)
+        return obj
+
+    return dec

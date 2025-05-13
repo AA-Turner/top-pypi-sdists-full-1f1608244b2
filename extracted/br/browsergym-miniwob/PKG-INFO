@@ -1,6 +1,6 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: browsergym-miniwob
-Version: 0.13.3
+Version: 0.13.4
 Summary: MiniWoB++ benchmark for BrowserGym
 Project-URL: homepage, https://github.com/ServiceNow/BrowserGym
 Author: Rim Assouel, Maxime Gasse, Tom Marty
@@ -12,7 +12,7 @@ Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
 Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Requires-Python: >3.7
-Requires-Dist: browsergym-core==0.13.3
+Requires-Dist: browsergym-core==0.13.4
 Description-Content-Type: text/markdown
 
 # Miniwob benchmark for BrowserGym

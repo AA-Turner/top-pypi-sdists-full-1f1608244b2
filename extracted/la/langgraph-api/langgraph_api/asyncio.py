@@ -6,6 +6,7 @@ from functools import partial
 from typing import Any, Generic, TypeVar
 
 import structlog
+from langgraph.utils.future import chain_future
 
 T = TypeVar("T")
 
@@ -17,6 +18,12 @@ _MAIN_LOOP: asyncio.AbstractEventLoop | None = None
 def set_event_loop(loop: asyncio.AbstractEventLoop) -> None:
     global _MAIN_LOOP
     _MAIN_LOOP = loop
+
+
+def get_event_loop() -> asyncio.AbstractEventLoop:
+    if _MAIN_LOOP is None:
+        raise RuntimeError("No event loop set")
+    return _MAIN_LOOP
 
 
 async def sleep_if_not_done(delay: float, done: asyncio.Event) -> None:
@@ -116,6 +123,16 @@ def run_coroutine_threadsafe(
     future = asyncio.run_coroutine_threadsafe(coro, _MAIN_LOOP)
     future.add_done_callback(partial(_create_task_done_callback, ignore_exceptions))
     return future
+
+
+def call_soon_in_main_loop(coro: Coroutine[Any, Any, T]) -> asyncio.Future[T]:
+    """Run a coroutine in the main event loop."""
+    if _MAIN_LOOP is None:
+        raise RuntimeError("No event loop set")
+    main_loop_fut = asyncio.ensure_future(coro, loop=_MAIN_LOOP)
+    this_loop_fut = asyncio.get_running_loop().create_future()
+    _MAIN_LOOP.call_soon_threadsafe(chain_future, main_loop_fut, this_loop_fut)
+    return this_loop_fut
 
 
 class SimpleTaskGroup(AbstractAsyncContextManager["SimpleTaskGroup"]):

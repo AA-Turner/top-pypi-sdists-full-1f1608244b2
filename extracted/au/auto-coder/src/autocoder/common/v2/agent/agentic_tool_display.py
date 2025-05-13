@@ -93,8 +93,7 @@ TOOL_DISPLAY_MESSAGES: Dict[Type[BaseTool], Dict[str, str]] = {
             "[dim]工具：[/dim] [blue]{{ tool_name }}[/]\n"
             "[dim]参数：[/dim] {{ arguments_snippet }}{{ ellipsis }}"
         )
-    }    
-    # AttemptCompletionTool is handled separately in the display loop
+    }
 }
 
 def get_tool_display_message(tool: BaseTool) -> str:
@@ -172,7 +171,7 @@ def get_tool_display_message(tool: BaseTool) -> str:
             "tool_name": tool.tool_name,
             "arguments_snippet": snippet,
             "ellipsis": '...' if len(args_str) > 100 else ''
-        }
+        }    
     else:
         # Generic context for tools not specifically handled above
         context = tool.model_dump()

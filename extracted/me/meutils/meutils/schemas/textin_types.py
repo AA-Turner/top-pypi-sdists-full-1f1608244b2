@@ -47,6 +47,40 @@ class WatermarkRemove(BaseModel):
         }
 
 
+class PdfToMarkdown(BaseModel):
+    data: str  # path url base64 # from pydantic import HttpUrl
+    response_format: Literal["url", "b64_json"] = 'url'
+
+    class Config:
+        extra = "allow"
+
+        json_schema_extra = {
+            "examples": [
+                {
+                    "data": "https://s3.ffire.cc/files/pdf_to_markdown.jpg",
+                    "response_format": "url"
+
+                },
+            ]
+        }
+
+class CropEnhanceImage(BaseModel):
+    data: str  # path url base64 # from pydantic import HttpUrl
+    response_format: Literal["url", "b64_json"] = 'url'
+
+    class Config:
+        extra = "allow"
+
+        json_schema_extra = {
+            "examples": [
+                {
+                    "data": "https://s3.ffire.cc/files/pdf_to_markdown.jpg",
+                    "response_format": "url"
+
+                },
+            ]
+        }
+
 class WatermarkRemoveResponse(BaseModel):
     """{'code': 200,
      'duration': 375,

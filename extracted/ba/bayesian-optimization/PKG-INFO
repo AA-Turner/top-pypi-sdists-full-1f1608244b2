@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.3
 Name: bayesian-optimization
-Version: 2.0.3
+Version: 2.0.4
 Summary: Bayesian Optimization package
 License: MIT
 Author: Fernando Nogueira

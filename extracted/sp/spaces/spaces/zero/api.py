@@ -22,6 +22,7 @@ NvidiaUUID = str
 CGroupPath = str
 TaskId = int
 
+GPUSize = Literal['medium', 'large']
 AuthLevel = Literal['regular', 'pro']
 QueuingReason = Literal['node', 'concurrency']
 
@@ -81,8 +82,11 @@ class APIClient:
     def __init__(self, client: httpx.Client):
         self.client = client
 
-    def startup_report(self) -> httpx.codes:
-        res = self.client.post('/startup-report')
+    def startup_report(self, cgroup_path: str, gpu_size: GPUSize) -> httpx.codes:
+        res = self.client.post('/startup-report', params={
+            'cgroupPath': cgroup_path,
+            'gpuSize': gpu_size,
+        })
         return httpx.codes(res.status_code)
 
     def schedule(

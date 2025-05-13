@@ -29,6 +29,10 @@ class TaktileIdToken(BaseModel):
         permission = parse_permission(permission_str)
         resource_vals = {}
 
+        if permission["resource_name"] not in RESOURCES:
+            # by default we deny access to non-existing resources
+            raise InsufficientRightsException
+
         # First, get the resource arguments from the path
         resource_args = permission.get("resource_args", [])
         for i, key in enumerate(
@@ -57,7 +61,12 @@ class TaktileIdToken(BaseModel):
 
     @property
     def auth_roles(self) -> t.List[Role]:
-        return [self.build_role(role) for role in self.roles]
+        # only filter roles that are defined in the ROLES dict
+        return [
+            self.build_role(role)
+            for role in self.roles
+            if role.split("/")[0] in ROLES
+        ]
 
     @property
     def user_id(self) -> UUID4:
@@ -68,4 +77,11 @@ class TaktileIdToken(BaseModel):
             permission = [permission]
 
         for p in permission:
-            self._is_allowed(p, (self.build_role(role) for role in self.roles))
+            self._is_allowed(
+                p,
+                (
+                    self.build_role(role)
+                    for role in self.roles
+                    if role.split("/")[0] in ROLES
+                ),
+            )

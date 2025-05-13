@@ -34,7 +34,7 @@ from CertoraProver import certoraContextValidator as Cv
 from CertoraProver.certoraContextClass import CertoraContext
 from CertoraProver.certoraCollectRunMetadata import collect_run_metadata
 from CertoraProver.certoraCollectConfigurationLayout import collect_configuration_layout
-from CertoraProver.certoraBuildRust import build_rust_app
+from CertoraProver.certoraBuildRust import set_rust_build_directory
 from CertoraProver.certoraCloudIO import CloudVerification, validate_version_and_branch
 from certoraRun import CertoraRunResult, VIOLATIONS_EXIT_CODE, CertoraFoundViolations
 
@@ -132,7 +132,7 @@ def build_project(context: CertoraContext) -> Dict:
     run_logger.debug("Build Soroban target")
 
     build_start = time.perf_counter()
-    build_rust_app(context)
+    set_rust_build_directory(context)
     build_end = time.perf_counter()
 
     timings["buildTime"] = round(build_end - build_start, 4)

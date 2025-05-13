@@ -51,6 +51,18 @@ class CertoraVerifyGenerator:
             contract_to_check_asserts_for = self.context.assert_contracts
             self.certora_verify_struct = {"type": "assertion",
                                           "primaryContracts": contract_to_check_asserts_for}
+        elif self.context.equivalence_contracts is not None:
+            if self.context.method is None:
+                raise Util.CertoraUserInputError("Argument `method` is required for equivalence checks")
+            if len(self.context.method) != 1:
+                raise Util.CertoraUserInputError("Can only check equivalence on one method")
+            equivalence_query = context.equivalence_contracts
+            equiv_contracts = equivalence_query.split("=")
+            self.certora_verify_struct = {
+                "type": "equivalence",
+                "primary_contract": equiv_contracts[0],
+                "secondary_contract": equiv_contracts[1]
+            }
 
     def update_certora_verify_struct(self, in_certora_sources: bool) -> None:
         """

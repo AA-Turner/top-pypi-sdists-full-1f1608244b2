@@ -243,6 +243,13 @@ class DataFrameMeta(type):
 
 
 class DataFrame(metaclass=DataFrameMeta):
+    """Chalk's DataFrame class models tabular data similar to how `pandas` and `polars` do.
+    DataFrame can be used a Chalk feature type, when defining has-many joins between feature
+    classes. For more about the  Chalk DataFrame, see: https://docs.chalk.ai/docs/dataframe
+
+    NOTE: DataFrame functions are meant to be used in Python resolvers or in notebooks, but
+    NOT in Chalk Expressions."""
+
     filters: ClassVar[Tuple[Filter, ...]] = ()
     columns: Tuple[Feature, ...]  # set via a @property on the metaclass
     __columns__: ClassVar[Tuple[Feature, ...]] = ()
@@ -598,9 +605,11 @@ class DataFrame(metaclass=DataFrameMeta):
 
         # Resolve underscores to be within the dataframe's context
         item = tuple(
-            self._parse_underscore(exp=x)
-            if isinstance(x, Underscore)  # pyright: ignore[reportUnnecessaryIsInstance]
-            else x
+            (
+                self._parse_underscore(exp=x)
+                if isinstance(x, Underscore)  # pyright: ignore[reportUnnecessaryIsInstance]
+                else x
+            )
             for x in ensure_tuple(item)
         )
         assert all(not isinstance(x, Underscore) for x in item)
@@ -634,7 +643,8 @@ class DataFrame(metaclass=DataFrameMeta):
         group: Mapping[Union[Feature, Any], Union[Feature, Any]],
         agg: Mapping[Any, Any],
     ) -> DataFrame:
-        """Aggregate the `DataFrame` by the specified columns.
+        """Aggregate the `DataFrame` by the specified columns. This can be used
+        in Python resolvers or notebooks.
 
         Parameters
         ----------
@@ -723,7 +733,8 @@ class DataFrame(metaclass=DataFrameMeta):
         column: Any | None = None,
         descending: bool = False,
     ) -> list[int]:
-        """Compute a histogram with fixed width bins.
+        """Compute a histogram with fixed width bins. This can be used
+        in Python resolvers or notebooks.
 
         Parameters
         ----------
@@ -864,6 +875,8 @@ class DataFrame(metaclass=DataFrameMeta):
         In the above example, the sixth time bucket is empty, and
         will not be included in the resulting `DataFrame`.
 
+        This can be used in Python resolvers or notebooks.
+
         Parameters
         ----------
         index
@@ -991,6 +1004,7 @@ class DataFrame(metaclass=DataFrameMeta):
         """Vertically stack the `DataFrame` with another `DataFrame`
         containing the same columns. The `DataFrame` other will
         be appended to the bottom of this `DataFrame`.
+        This can be used in Python resolvers or notebooks.
 
         Parameters
         ----------
@@ -1019,6 +1033,7 @@ class DataFrame(metaclass=DataFrameMeta):
 
     def num_unique(self, column: Any = None) -> int:
         """Return the number of unique values in the specified column.
+        This can be used in Python resolvers or notebooks.
 
         Parameters
         ----------

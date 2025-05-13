@@ -2,7 +2,8 @@ import asyncio
 import dataclasses
 import functools
 import os
-from typing import Any, Callable, Collection, List, Optional
+from collections.abc import Collection
+from typing import Any, Callable, Optional
 
 import click
 
@@ -28,7 +29,10 @@ class CLIControls:
     loop: Optional[asyncio.AbstractEventLoop] = None
 
 
-class LogFormatParamType(click.Choice):
+# With Click>=8.2.0, that should be `click.Choice[LogFormat]`, but it is good for now, too.
+# TODO: when Python 3.9 is dropped, upgrade dependencies to click>=8.2.0, and remake the class here.
+#       see: https://github.com/nolar/kopf/pull/1174
+class LogFormatParamType(click.Choice):  # type: ignore
 
     def __init__(self) -> None:
         super().__init__(choices=[v.name.lower() for v in loggers.LogFormat])
@@ -85,8 +89,8 @@ def main(__controls: CLIControls) -> None:
 @click.make_pass_decorator(CLIControls, ensure=True)
 def run(
         __controls: CLIControls,
-        paths: List[str],
-        modules: List[str],
+        paths: list[str],
+        modules: list[str],
         peering_name: Optional[str],
         priority: Optional[int],
         standalone: Optional[bool],

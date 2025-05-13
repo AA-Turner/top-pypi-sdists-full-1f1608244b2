@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: ry
-Version: 0.0.41
+Version: 0.0.42
 Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: Apache Software License
@@ -68,11 +68,13 @@ directory for some quickstart examples.
 
 ---
 
-## What and why?
+## What?
 
-This is a collection of pyo3-wrappers for rust crates I wish existed in python.
+This is a collection of pyo3-wrappers for popular rust crates.
 
-It all started with me wanting a fast python `xxhash` and `fnv-64`
+This project started when I need a fast hashes for `fnv` and then `xxhash` in
+python. I have been adding things as needed/wanted (by me) for general tools and
+data-mancing.
 
 ## Who?
 
@@ -97,13 +99,19 @@ _(aka: questions that I have been asking myself)_
 
 ## Crate bindings
 
-ryo3-std
-
 - wrapped crates:
+  - `bytes`
+  - `dirs`
+  - `glob`
   - `heck`
+  - `http`
   - `jiter`
+  - `reqwest`
   - `shlex`
+  - `size`
   - `sqlformat`
+  - `tokio` (`fs` and `process`)
+  - `unindent`
   - `url`
   - `which`
   - compression:
@@ -117,6 +125,8 @@ ryo3-std
   - burnt-sushi:
     - `globset` (formerly [globsters](https://pypi.org/project/globsters/))
     - `jiff`
+    - `regex` (WIP ~ very incomplete)
+    - `same-file`
     - `walkdir`
 
 ### FUTURE?
@@ -124,13 +134,6 @@ ryo3-std
 - `subprocess.redo` (subprocesses that are lessy finicky and support tee-ing)
 - wrappers:
   - `ignore`
-  - `http`
-  - `regex`
-  - `reqwest` (async http client / waiting on pyo3 asyncio to stabilize and for
-    me to have more time)
-  - `tokio` (`fs` and `process`)
-  - `tracing` (could be nicer than python's awful logging lib -- currently a
-    part of ry/ryo3 for my dev purposes - currently has impl thingy in utiles)
   - `tracing` (eg logging)
   - `uuid`
 - organization
@@ -660,22 +663,25 @@ def is_gzipped(input: Buffer) -> bool: ...
 import typing as t
 
 from ry._types import Buffer
+from ry.ryo3._bytes import Bytes
 
 
-# =============================================================================
-# FNV
-# =============================================================================
 class FnvHasher:
     name: t.Literal["fnv1a"]
+    digest_size: t.Literal[8]
+    block_size: t.Literal[1]
 
-    def __init__(self, input: Buffer | None = None) -> None: ...
+    def __init__(
+        self, input: Buffer | None = None, key: int | None = None
+    ) -> None: ...
     def update(self, input: Buffer) -> None: ...
-    def digest(self) -> int: ...
+    def digest(self) -> Bytes: ...
+    def intdigest(self) -> int: ...
     def hexdigest(self) -> str: ...
     def copy(self) -> FnvHasher: ...
 
 
-def fnv1a(input: Buffer) -> FnvHasher: ...
+def fnv1a(input: Buffer, key: int | None = None) -> FnvHasher: ...
 
 ```
 <h2 id="ry.ryo3._fspath"><code>ry.ryo3._fspath</code></h2>
@@ -2657,9 +2663,14 @@ class Regex:
 ```python
 import typing as t
 
+from typing_extensions import TypeAlias
+
 import ry
-from ry.http import Headers, HttpStatus
+from ry._types import Buffer
+from ry.http import Headers, HttpStatus, HttpVersionLike
 from ry.ryo3 import URL, Duration
+
+HeadersLike: TypeAlias = Headers | dict[str, str]
 
 
 class HttpClient:
@@ -2667,6 +2678,7 @@ class HttpClient:
         self,
         *,
         headers: dict[str, str] | None = None,
+        cookies: bool = False,
         user_agent: str | None = None,  # default ~ 'ry-reqwest/<VERSION> ...'
         timeout: Duration | None = None,
         connect_timeout: Duration | None = None,
@@ -2676,42 +2688,47 @@ class HttpClient:
         deflate: bool = True,
     ) -> None: ...
     async def get(
-        self, url: str | URL, *, headers: dict[str, str] | None = None
+        self, url: str | URL, *, headers: HeadersLike | None = None
     ) -> Response: ...
     async def post(
         self,
         url: str | URL,
         *,
-        body: bytes | None = None,
-        headers: dict[str, str] | None = None,
+        body: Buffer | None = None,
+        headers: HeadersLike | None = None,
     ) -> Response: ...
     async def put(
         self,
         url: str | URL,
         *,
-        body: bytes | None = None,
-        headers: dict[str, str] | None = None,
+        body: Buffer | None = None,
+        headers: HeadersLike | None = None,
     ) -> Response: ...
     async def delete(
-        self, url: str | URL, *, headers: dict[str, str] | None = None
+        self, url: str | URL, *, headers: HeadersLike | None = None
     ) -> Response: ...
     async def patch(
         self,
         url: str | URL,
         *,
-        body: bytes | None = None,
+        body: Buffer | None = None,
         headers: dict[str, str] | None = None,
     ) -> Response: ...
     async def head(
-        self, url: str | URL, *, headers: dict[str, str] | None = None
+        self, url: str | URL, *, headers: HeadersLike | None = None
     ) -> Response: ...
     async def fetch(
         self,
         url: str | URL,
         *,
         method: str = "GET",
-        body: bytes | None = None,
-        headers: dict[str, str] | None = None,
+        body: Buffer | None = None,
+        headers: HeadersLike | None = None,
+        query: dict[str, t.Any] | t.Sequence[tuple[str, t.Any]] | None = None,
+        multipart: t.Any | None = None,  # TODO
+        form: t.Any | None = None,  # TODO
+        timeout: Duration | None = None,
+        version: HttpVersionLike | None = None,
     ) -> Response: ...
 
 
@@ -2731,14 +2748,34 @@ class ReqwestError(Exception):
 
 
 class Response:
-    status_code: int
-
     @property
     def headers(self) -> Headers: ...
     async def text(self) -> str: ...
     async def json(self) -> t.Any: ...
     async def bytes(self) -> ry.Bytes: ...
     def bytes_stream(self) -> ResponseStream: ...
+    @property
+    def url(self) -> URL: ...
+    @property
+    def version(
+        self,
+    ) -> t.Literal[
+        "HTTP/0.9", "HTTP/1.0", "HTTP/1.1", "HTTP/2.0", "HTTP/3.0"
+    ]: ...
+    @property
+    def http_version(
+        self,
+    ) -> t.Literal[
+        "HTTP/0.9", "HTTP/1.0", "HTTP/1.1", "HTTP/2.0", "HTTP/3.0"
+    ]: ...
+    @property
+    def status(self) -> int: ...
+    @property
+    def status_text(self) -> str: ...
+    @property
+    def status_code(self) -> HttpStatus: ...
+    @property
+    def redirected(self) -> bool: ...
 
 
 class ResponseStream:
@@ -2751,8 +2788,13 @@ async def fetch(
     *,
     client: HttpClient | None = None,
     method: str = "GET",
-    body: bytes | None = None,
-    headers: dict[str, str] | None = None,
+    body: Buffer | None = None,
+    headers: HeadersLike | None = None,
+    query: dict[str, t.Any] | t.Sequence[tuple[str, t.Any]] | None = None,
+    multipart: t.Any = None,  # TODO
+    form: t.Any = None,  # TODO
+    timeout: Duration | None = None,
+    version: HttpVersionLike | None = None,
 ) -> Response: ...
 
 ```
@@ -3193,6 +3235,19 @@ class DirEntry:
     def file_type(self) -> FileType: ...
 
 
+_T = t.TypeVar("_T")
+
+
+class RyIterable(t.Generic[_T]):
+    def __iter__(self) -> t.Self: ...
+    def __next__(self) -> _T: ...
+    def collect(self) -> list[_T]: ...
+    def take(self, n: int = 1) -> list[_T]: ...
+
+
+class ReadDir(RyIterable[DirEntry]): ...
+
+
 # ============================================================================
 # STD::FS ~ functions
 # =============================================================================
@@ -3200,14 +3255,14 @@ def read(path: FsPathLike) -> Bytes: ...
 def read_bytes(path: FsPathLike) -> bytes: ...
 def read_dir(
     path: FsPathLike,
-) -> t.Iterator[DirEntry]: ...
+) -> ReadDir: ...
 def read_text(path: FsPathLike) -> str: ...
 def read_stream(
     path: FsPathLike,
     chunk_size: int = 65536,
     *,
     offset: int = 0,
-) -> t.Iterator[Bytes]: ...
+) -> RyIterable[Bytes]: ...
 def write(path: FsPathLike, data: Buffer | str) -> int: ...
 def write_bytes(path: FsPathLike, data: bytes) -> int: ...
 def write_text(path: FsPathLike, data: str) -> int: ...
@@ -3550,7 +3605,7 @@ class URL:
     @property
     def query(self) -> str | None: ...
     @property
-    def query_pairs(self) -> list[tuple[str, str]]: ...
+    def query_pairs(self) -> tuple[tuple[str, str], ...]: ...
     @property
     def scheme(self) -> str: ...
     @property
@@ -3565,6 +3620,7 @@ class URL:
     def has_host(self) -> bool: ...
     def is_special(self) -> bool: ...
     def join(self, *parts: str) -> URL: ...
+    def make_relative(self, u: URL) -> URL: ...
     def to_filepath(self) -> str: ...
     def replace_fragment(self, fragment: str | None = None) -> URL: ...
     def replace_host(self, host: str | None = None) -> URL: ...
@@ -3636,7 +3692,7 @@ class WalkdirGen(t.Generic[_T_walkdir]):
     def __next__(self) -> _T_walkdir: ...
     def __iter__(self) -> t.Iterator[_T_walkdir]: ...
     def collect(self) -> list[_T_walkdir]: ...
-    def take(self, n: int) -> list[_T_walkdir]: ...
+    def take(self, n: int = 1) -> list[_T_walkdir]: ...
 
 
 @t.overload
@@ -3731,12 +3787,32 @@ def video_dir() -> str | None: ...
 
 ```python
 import typing as t
+from collections.abc import Mapping
+
+import typing_extensions
+
+# fmt: off
+HttpVersionLike: typing_extensions.TypeAlias = t.Literal[
+    "HTTP/0.9", "0.9", 0,
+    "HTTP/1.0", "1.0", 1, 10,
+    "HTTP/1.1", "1.1", 11,
+    "HTTP/2.0", "2.0", 2, 20,
+    "HTTP/3.0", "3.0", 3, 30,
+]
+# fmt: on
+
+_VT = t.TypeVar("_VT", bound=str | t.Sequence[str])
 
 
 class Headers:
     """python-ryo3-http `http::HeadersMap` wrapper"""
 
-    def __init__(self, headers: dict[str, str | t.Sequence[str]]) -> None: ...
+    def __init__(
+        self,
+        headers: Mapping[str, _VT] | Headers | None = None,
+        /,
+        **kwargs: _VT,
+    ) -> None: ...
 
     # =========================================================================
     # STRING
@@ -3752,21 +3828,30 @@ class Headers:
     def __delitem__(self, key: str) -> None: ...
     def __contains__(self, key: str) -> bool: ...
     def __or__(self, other: Headers | dict[str, str]) -> Headers: ...
+    def __ror__(self, other: Headers | dict[str, str]) -> Headers: ...
+    def __iter__(self) -> t.Iterator[str]: ...
+    def __bool__(self) -> bool: ...
+    def to_py(self) -> dict[str, str | t.Sequence[str]]: ...
     def asdict(self) -> dict[str, str | t.Sequence[str]]: ...
+    def stringify(self, *, fmt: bool = False) -> str: ...
 
     # =========================================================================
     # INSTANCE METHODS
     # =========================================================================
     def append(self, key: str, value: str) -> None: ...
+    def clear(self) -> None: ...
+    def contains_key(self, key: str) -> bool: ...
     def get(self, key: str) -> str | None: ...
     def get_all(self, key: str) -> list[str]: ...
+    def insert(self, key: str, value: str) -> None: ...
+    def is_empty(self) -> bool: ...
+    def keys(self) -> list[str]: ...
     def keys_len(self) -> int: ...
     def len(self) -> int: ...
-    def remove(self, key: str) -> None: ...
-    def clear(self) -> None: ...
     def pop(self, key: str) -> str: ...
-    def keys(self) -> list[str]: ...
+    def remove(self, key: str) -> None: ...
     def update(self, headers: Headers | dict[str, str]) -> None: ...
+    def values(self) -> list[str]: ...
 
 
 class HttpStatus:
@@ -3780,12 +3865,26 @@ class HttpStatus:
     def __le__(self, other: HttpStatus | int) -> bool: ...
     def __gt__(self, other: HttpStatus | int) -> bool: ...
     def __ge__(self, other: HttpStatus | int) -> bool: ...
+    def to_py(self) -> int: ...
+    @property
     def reason(self) -> str: ...
+    @property
+    def canonical_reason(self) -> str: ...
+    @property
     def is_informational(self) -> bool: ...
+    @property
     def is_success(self) -> bool: ...
+    @property
     def is_redirect(self) -> bool: ...
+    @property
+    def is_redirection(self) -> bool: ...
+    @property
     def is_client_error(self) -> bool: ...
+    @property
     def is_server_error(self) -> bool: ...
+    @property
+    def is_error(self) -> bool: ...
+    @property
     def is_ok(self) -> bool: ...
     @property
     def ok(self) -> bool: ...
@@ -4033,6 +4132,4 @@ def is_zstd(data: Buffer) -> bool: ...
 ## SEE ALSO
 
 - utiles (web-map tile utils): https://github.com/jessekrubin/utiles
-- jsonc2json (jsonc to json converter):
-  https://github.com/jessekrubin/jsonc2json
 

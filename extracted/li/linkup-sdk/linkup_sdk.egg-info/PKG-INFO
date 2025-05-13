@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: linkup-sdk
-Version: 0.2.4
+Version: 0.2.5
 Summary: A Python Client SDK for the Linkup API
 Home-page: https://github.com/LinkupPlatform/linkup-python-sdk
 Author: LINKUP TECHNOLOGIES
@@ -27,6 +27,7 @@ Dynamic: description-content-type
 Dynamic: home-page
 Dynamic: keywords
 Dynamic: license
+Dynamic: license-file
 Dynamic: project-url
 Dynamic: requires-dist
 Dynamic: requires-python

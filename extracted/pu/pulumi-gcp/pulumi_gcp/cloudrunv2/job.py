@@ -819,10 +819,8 @@ class _JobState:
         pulumi.set(self, "update_time", value)
 
 
+@pulumi.type_token("gcp:cloudrunv2/job:Job")
 class Job(pulumi.CustomResource):
-
-    pulumi_type = "gcp:cloudrunv2/job:Job"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -1125,6 +1123,31 @@ class Job(pulumi.CustomResource):
                     "containers": [{
                         "image": "us-docker.pkg.dev/cloudrun/container/job",
                     }],
+                },
+            })
+        ```
+        ### Cloudrunv2 Job Multicontainer
+
+        ```python
+        import pulumi
+        import pulumi_gcp as gcp
+
+        default = gcp.cloudrunv2.Job("default",
+            name="cloudrun-job",
+            location="us-central1",
+            deletion_protection=False,
+            template={
+                "template": {
+                    "containers": [
+                        {
+                            "name": "job-1",
+                            "image": "us-docker.pkg.dev/cloudrun/container/job",
+                        },
+                        {
+                            "name": "job-2",
+                            "image": "us-docker.pkg.dev/cloudrun/container/job",
+                        },
+                    ],
                 },
             })
         ```
@@ -1478,6 +1501,31 @@ class Job(pulumi.CustomResource):
                     "containers": [{
                         "image": "us-docker.pkg.dev/cloudrun/container/job",
                     }],
+                },
+            })
+        ```
+        ### Cloudrunv2 Job Multicontainer
+
+        ```python
+        import pulumi
+        import pulumi_gcp as gcp
+
+        default = gcp.cloudrunv2.Job("default",
+            name="cloudrun-job",
+            location="us-central1",
+            deletion_protection=False,
+            template={
+                "template": {
+                    "containers": [
+                        {
+                            "name": "job-1",
+                            "image": "us-docker.pkg.dev/cloudrun/container/job",
+                        },
+                        {
+                            "name": "job-2",
+                            "image": "us-docker.pkg.dev/cloudrun/container/job",
+                        },
+                    ],
                 },
             })
         ```

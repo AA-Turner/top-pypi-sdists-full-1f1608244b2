@@ -247,6 +247,7 @@ __all__ = (
     "GetTaskResponseTypeDef",
     "GetWorkerRequestTypeDef",
     "GetWorkerResponseTypeDef",
+    "HostConfigurationTypeDef",
     "HostPropertiesRequestTypeDef",
     "HostPropertiesResponseTypeDef",
     "IpAddressesOutputTypeDef",
@@ -625,6 +626,10 @@ class CreateFarmRequestTypeDef(TypedDict):
     description: NotRequired[str]
     kmsKeyArn: NotRequired[str]
     tags: NotRequired[Mapping[str, str]]
+
+class HostConfigurationTypeDef(TypedDict):
+    scriptBody: str
+    scriptTimeoutSeconds: NotRequired[int]
 
 JobParameterTypeDef = TypedDict(
     "JobParameterTypeDef",
@@ -1747,10 +1752,6 @@ class StartSessionsStatisticsAggregationResponseTypeDef(TypedDict):
     aggregationId: str
     ResponseMetadata: ResponseMetadataTypeDef
 
-class UpdateWorkerResponseTypeDef(TypedDict):
-    log: LogConfigurationTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
 class AttachmentsOutputTypeDef(TypedDict):
     manifests: List[ManifestPropertiesOutputTypeDef]
     fileSystem: NotRequired[JobAttachmentsFileSystemType]
@@ -1780,6 +1781,11 @@ class CopyJobTemplateRequestTypeDef(TypedDict):
     jobId: str
     queueId: str
     targetS3Location: S3LocationTypeDef
+
+class UpdateWorkerResponseTypeDef(TypedDict):
+    log: LogConfigurationTypeDef
+    hostConfiguration: HostConfigurationTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
 
 class JobSearchSummaryTypeDef(TypedDict):
     jobId: NotRequired[str]
@@ -2780,6 +2786,7 @@ class GetFleetResponseTypeDef(TypedDict):
     minWorkerCount: int
     maxWorkerCount: int
     configuration: FleetConfigurationOutputTypeDef
+    hostConfiguration: HostConfigurationTypeDef
     capabilities: FleetCapabilitiesTypeDef
     roleArn: str
     createdAt: datetime
@@ -2812,6 +2819,7 @@ class CreateFleetRequestTypeDef(TypedDict):
     description: NotRequired[str]
     minWorkerCount: NotRequired[int]
     tags: NotRequired[Mapping[str, str]]
+    hostConfiguration: NotRequired[HostConfigurationTypeDef]
 
 class UpdateFleetRequestTypeDef(TypedDict):
     farmId: str
@@ -2823,3 +2831,4 @@ class UpdateFleetRequestTypeDef(TypedDict):
     minWorkerCount: NotRequired[int]
     maxWorkerCount: NotRequired[int]
     configuration: NotRequired[FleetConfigurationUnionTypeDef]
+    hostConfiguration: NotRequired[HostConfigurationTypeDef]

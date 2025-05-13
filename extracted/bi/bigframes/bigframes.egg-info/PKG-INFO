@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: bigframes
-Version: 2.3.0
+Version: 2.4.0
 Summary: BigQuery DataFrames -- scalable analytics and machine learning with BigQuery
 Home-page: https://github.com/googleapis/python-bigquery-dataframes
 Author: Google LLC
@@ -27,8 +27,6 @@ Requires-Dist: fsspec>=2023.3.0
 Requires-Dist: gcsfs>=2023.3.0
 Requires-Dist: geopandas>=0.12.2
 Requires-Dist: google-auth<3.0,>=2.15.0
-Requires-Dist: google-cloud-bigtable>=2.24.0
-Requires-Dist: google-cloud-pubsub>=2.21.4
 Requires-Dist: google-cloud-bigquery[bqstorage,pandas]>=3.31.0
 Requires-Dist: google-cloud-bigquery-storage<3.0.0,>=2.30.0
 Requires-Dist: google-cloud-functions>=1.12.0
@@ -58,6 +56,8 @@ Requires-Dist: rich<14,>=12.4.4
 Provides-Extra: tests
 Requires-Dist: freezegun; extra == "tests"
 Requires-Dist: pytest-snapshot; extra == "tests"
+Requires-Dist: google-cloud-bigtable>=2.24.0; extra == "tests"
+Requires-Dist: google-cloud-pubsub>=2.21.4; extra == "tests"
 Provides-Extra: polars
 Requires-Dist: polars>=1.7.0; extra == "polars"
 Provides-Extra: scikit-learn
@@ -69,6 +69,8 @@ Requires-Dist: nox; extra == "dev"
 Requires-Dist: google-cloud-testutils; extra == "dev"
 Provides-Extra: all
 Requires-Dist: freezegun; extra == "all"
+Requires-Dist: google-cloud-bigtable>=2.24.0; extra == "all"
+Requires-Dist: google-cloud-pubsub>=2.21.4; extra == "all"
 Requires-Dist: google-cloud-testutils; extra == "all"
 Requires-Dist: nox; extra == "all"
 Requires-Dist: polars>=1.7.0; extra == "all"

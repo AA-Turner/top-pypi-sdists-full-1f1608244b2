@@ -63,6 +63,7 @@ class AudioInference(FireworksClient):
         vad_model: str = None,
         alignment_model: str = None,
         diarization_model: str = None,
+        skip_vad: bool = None,
         prompt: Optional[str] = None,
         response_format: Optional[str] = None,
         temperature: Optional[Union[float, List[float]]] = None,
@@ -85,6 +86,7 @@ class AudioInference(FireworksClient):
         - vad_model (str, optional): The VAD model name to call. If not present, defaults to `self.vad_model` on the AudioInference object.
         - alignment_model (str, optional): The alignment model name to call. If not present, defaults to `self.alignment_model` on the AudioInference object.
         - diarization_model (str, optional): The diarization model name to call. If not present, defaults to `self.diarization_model` on the AudioInference object.
+        - skip_vad (bool, optional): Whether to skip VAD. VAD can be skipped for audios shorter than 30 seconds only. If not present, defaults to "False".
         - prompt (str, optional): The input prompt with which to prime transcription. This can be used, for example, to continue a prior transcription given new audio data.
         - response_format (str): The format in which to return the response. Can be one of "json", "text", "srt", "verbose_json", or "vtt". If not present, defaults to "json".
         - temperature (Union[float, List[float]], optional): Sampling temperature to use when decoding text tokens during transcription. Alternatively, a list of temperatures to enable fallback decoding. If not present, defaults to "0.0".
@@ -109,6 +111,7 @@ class AudioInference(FireworksClient):
                 vad_model,
                 alignment_model,
                 diarization_model,
+                skip_vad,
                 prompt,
                 response_format,
                 temperature,
@@ -129,6 +132,7 @@ class AudioInference(FireworksClient):
         vad_model: str = None,
         alignment_model: str = None,
         diarization_model: str = None,
+        skip_vad: bool = None,
         prompt: Optional[str] = None,
         response_format: Optional[str] = None,
         temperature: Optional[Union[float, List[float]]] = None,
@@ -151,6 +155,7 @@ class AudioInference(FireworksClient):
         - vad_model (str, optional): The VAD model name to call. If not present, defaults to `self.vad_model` on the AudioInference object.
         - alignment_model (str, optional): The alignment model name to call. If not present, defaults to `self.alignment_model` on the AudioInference object.
         - diarization_model (str, optional): The diarization model name to call. If not present, defaults to `self.diarization_model` on the AudioInference object.
+        - skip_vad (bool, optional): Whether to skip VAD. VAD can be skipped for audios shorter than 30 seconds only. If not present, defaults to "False".
         - prompt (str, optional): The input prompt with which to prime transcription. This can be used, for example, to continue a prior transcription given new audio data.
         - response_format (str): The format in which to return the response. Can be one of "json", "text", "srt", "verbose_json", or "vtt". If not present, defaults to "json".
         - temperature (Union[float, List[float]], optional): Sampling temperature to use when decoding text tokens during transcription. Alternatively, a list of temperatures to enable fallback decoding. If not present, defaults to "0.0".
@@ -173,6 +178,7 @@ class AudioInference(FireworksClient):
             vad_model=vad_model or self.vad_model,
             alignment_model=alignment_model or self.alignment_model,
             diarization_model=diarization_model or self.diarization_model,
+            skip_vad=skip_vad,
             prompt=prompt,
             response_format=response_format,
             temperature=temperature,
@@ -216,6 +222,7 @@ class AudioInference(FireworksClient):
         model: str = None,
         vad_model: str = None,
         alignment_model: str = None,
+        skip_vad: bool = None,
         prompt: Optional[str] = None,
         response_format: Optional[str] = None,
         temperature: Optional[Union[float, List[float]]] = None,
@@ -233,6 +240,7 @@ class AudioInference(FireworksClient):
         - model (str, optional): The ASR model name to call. If not present, defaults to `self.model` on the AudioInference object.
         - vad_model (str, optional): The VAD model name to call. If not present, defaults to `self.vad_model` on the AudioInference object.
         - alignment_model (str, optional): The alignment model name to call. If not present, defaults to `self.alignment_model` on the AudioInference object.
+        - skip_vad (bool, optional): Whether to skip VAD. VAD can be skipped for audios shorter than 30 seconds only. If not present, defaults to "False".
         - prompt (str, optional): The input prompt with which to prime transcription. This can be used, for example, to continue a prior transcription given new audio data.
         - response_format (str): The format in which to return the response. Can be one of "json", "text", "srt", "verbose_json", or "vtt". If not present, defaults to "json".
         - temperature (Union[float, List[float]], optional): Sampling temperature to use when decoding text tokens during transcription. Alternatively, a list of temperatures to enable fallback decoding. If not present, defaults to "0.0".
@@ -252,6 +260,7 @@ class AudioInference(FireworksClient):
                 model,
                 vad_model,
                 alignment_model,
+                skip_vad,
                 prompt,
                 response_format,
                 temperature,
@@ -267,6 +276,7 @@ class AudioInference(FireworksClient):
         model: str = None,
         vad_model: str = None,
         alignment_model: str = None,
+        skip_vad: bool = None,
         prompt: Optional[str] = None,
         response_format: Optional[str] = None,
         temperature: Optional[Union[float, List[float]]] = None,
@@ -284,6 +294,7 @@ class AudioInference(FireworksClient):
         - model (str, optional): The ASR model name to call. If not present, defaults to `self.model` on the AudioInference object.
         - vad_model (str, optional): The VAD model name to call. If not present, defaults to `self.vad_model` on the AudioInference object.
         - alignment_model (str, optional): The alignment model name to call. If not present, defaults to `self.alignment_model` on the AudioInference object.
+        - skip_vad (bool, optional): Whether to skip VAD. VAD can be skipped for audios shorter than 30 seconds only. If not present, defaults to "False".
         - prompt (str, optional): The input prompt with which to prime transcription. This can be used, for example, to continue a prior transcription given new audio data.
         - response_format (str): The format in which to return the response. Can be one of "json", "text", "srt", "verbose_json", or "vtt". If not present, defaults to "json".
         - temperature (Union[float, List[float]], optional): Sampling temperature to use when decoding text tokens during transcription. Alternatively, a list of temperatures to enable fallback decoding. If not present, defaults to "0.0".
@@ -302,6 +313,7 @@ class AudioInference(FireworksClient):
             model=model or self.model,
             vad_model=vad_model or self.vad_model,
             alignment_model=alignment_model or self.alignment_model,
+            skip_vad=skip_vad,
             prompt=prompt,
             response_format=response_format,
             temperature=temperature,

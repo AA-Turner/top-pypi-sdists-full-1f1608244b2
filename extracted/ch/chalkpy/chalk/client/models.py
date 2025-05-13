@@ -3,7 +3,6 @@ from __future__ import annotations
 import dataclasses
 import json
 import os
-import re
 import traceback
 import uuid
 from datetime import datetime, timedelta
@@ -27,14 +26,14 @@ from chalk.utils.missing_dependency import missing_dependency_exception
 if TYPE_CHECKING:
     import pandas as pd
     import polars as pl
-    from pydantic import BaseModel, Extra, Field, fields, validator
+    from pydantic import BaseModel, Extra, Field, validator
 
     root_validator = lambda _: (lambda x: x)
 else:
     try:
-        from pydantic.v1 import BaseModel, Extra, Field, fields, root_validator, validator
+        from pydantic.v1 import BaseModel, Extra, Field, root_validator, validator
     except ImportError:
-        from pydantic import BaseModel, Extra, Field, fields, root_validator, validator
+        from pydantic import BaseModel, Extra, Field, root_validator, validator
 
 MAX_STR_LENGTH = 10_000
 
@@ -204,14 +203,6 @@ class ChalkException(BaseModel, frozen=True):
     internal_stacktrace: Optional[str] = None
     """The stacktrace produced by the code, full detail."""
 
-    @root_validator
-    def _validate_chalk_exception(cls, values: Dict[str, Any]):
-        values["message"] = values["message"][0:MAX_STR_LENGTH]
-        values["stacktrace"] = values["stacktrace"][0:MAX_STR_LENGTH]
-        if values.get("internal_stacktrace") is not None:
-            values["internal_stacktrace"] = values["internal_stacktrace"][0:MAX_STR_LENGTH]
-        return values
-
     @classmethod
     def from_exception(cls, exc: BaseException) -> "ChalkException":
         return ChalkException.create(
@@ -288,40 +279,6 @@ class ChalkError(BaseModel, frozen=True):
 
     def copy_for_pkey(self, pkey: Union[str, int]) -> "ChalkError":
         return self.copy(update={"display_primary_key": str(pkey)})
-
-    @root_validator
-    def _validate_chalk_error(cls, values: Dict[str, Any]):
-        values["category"] = _category_for_error_code(values["code"])
-
-        if not _CHALK_DEBUG_FULL_TRACE:
-            # Truncate the message to a specified maximum length.
-            values["message"] = values["message"][0:MAX_STR_LENGTH]
-
-        _HAS_CHALK_TRACE = "[has chalk trace]"
-        if _CHALK_DEBUG_FULL_TRACE and _HAS_CHALK_TRACE not in values["message"]:
-            # Include a stack trace if it's not already present and the super-verbose
-            # full trace flag is enabled.
-            import traceback
-
-            formatted_stack = traceback.format_stack()[:-1]  # Exclude this validation function.
-            start_stack_from = 0
-            for i in range(len(formatted_stack)):
-                if "run_endpoint_function" in formatted_stack[i]:
-                    # This function occurs in the stack trace before the actual entry into the engine-
-                    # everything before it is boilerplate.
-                    start_stack_from = i + 1
-            values["message"] = (
-                values["message"]
-                + f"\n{_HAS_CHALK_TRACE}\n"
-                + "[" * 200
-                + "\n"
-                + "\n".join(formatted_stack[start_stack_from:])
-                + "\n"
-                + "]" * 200
-                + "\n"
-            )
-
-        return values
 
     @classmethod
     def create(
@@ -703,6 +660,7 @@ class BulkOnlineQueryResponse:
     results: List[BulkOnlineQueryResult]
     global_errors: List[ChalkError] = dataclasses.field(default_factory=list)
     """Errors that don't correspond to a specific individual query."""
+
     trace_id: Optional[str] = None
     """Chalk Support can use this trace ID to investigate a query if an internal error occurs."""
 
@@ -724,42 +682,38 @@ class OfflineQueryInputUri(BaseModel):
     The uris aren't in any bucket.
     """
 
-    parquet_uri: str = Field(description="A list of global uris of the sharded parquet files")
-    start_row: Optional[int] = Field(default=None, description="The start row to read the parquet file from")
-    end_row: Optional[int] = Field(default=None, description="The end row to read the parquet file from")
+    parquet_uri: str
+    """A list of global uris of the sharded parquet files"""
 
-    is_iceberg: bool = Field(default=False, description="If this is `True`, this represents an Iceberg source")
+    start_row: Optional[int] = None
+    """The start row to read the parquet file from"""
 
-    iceberg_snapshot_id: Optional[int] = Field(
-        default=None,
-        description="The snapshot_id to use if parquet_uri points to an Iceberg metadata file",
-    )
-    iceberg_start_partition: Optional[int] = Field(
-        default=None,
-        description="The index of the first partition file to load",
-    )
-    iceberg_end_partition: Optional[int] = Field(
-        default=None,
-        description="One-after the index of the last partition file to load",
-    )
-    iceberg_filter: Optional[str] = Field(
-        default=None,
-        description="A SQL filter string applied to the Iceberg source table.",
-    )
+    end_row: Optional[int] = None
+    """The end row to read the parquet file from"""
 
-    aws_role_arn: Optional[str] = Field(
-        default=None,
-        description="An AWS role arn to assume while performing Iceberg read operations",
-    )
-    aws_region: Optional[str] = Field(
-        default=None,
-        description="The AWS region to query while performing Iceberg read operations",
-    )
+    is_iceberg: bool = False
+    """"If this is `True`, this represents an Iceberg source"""
 
-    column_name_to_feature_name: Optional[dict[str, Union[str, list[str]]]] = Field(
-        default=None,
-        description="An optional remapping from column name to (namespace-qualified) Chalk feature names",
-    )
+    iceberg_snapshot_id: Optional[int] = None
+    """The snapshot_id to use if parquet_uri points to an Iceberg metadata file"""
+
+    iceberg_start_partition: Optional[int] = None
+    """The index of the first partition file to load"""
+
+    iceberg_end_partition: Optional[int] = None
+    """One-after the index of the last partition file to load"""
+
+    iceberg_filter: Optional[str] = None
+    """A SQL filter string applied to the Iceberg source table."""
+
+    aws_role_arn: Optional[str] = None
+    """An AWS role arn to assume while performing Iceberg read operations"""
+
+    aws_region: Optional[str] = None
+    """The AWS region to query while performing Iceberg read operations"""
+
+    column_name_to_feature_name: Optional[dict[str, Union[str, list[str]]]] = None
+    """An optional remapping from column name to (namespace-qualified) Chalk feature names"""
 
 
 def OfflineQueryIcebergUri(
@@ -814,6 +768,10 @@ class UploadedParquetShardedOfflineQueryInput(BaseModel):
     version: OfflineQueryGivensVersion = Field(description="Version of how the inputs is represented in a table")
 
 
+def _matches_pattern(pattern: str):
+    return Field(pattern=pattern, regex=pattern)
+
+
 class ResourceRequests(BaseModel):
     """
     Override resource requests for processes with isolated resources, e.g., offline queries and cron jobs.
@@ -821,114 +779,85 @@ class ResourceRequests(BaseModel):
     before using these in a recurring pipeline.
     """
 
-    cpu: Optional[str] = None
+    cpu: Optional[str] = _matches_pattern(r"^(\d+(\.\d+)?m?)$")
     """
     CPU requests: Increasing this will make some Chalk operations that are parallel and CPU-bound faster.
     Default unit is physical CPU cores, i.e. "8" means 8 CPU cores, "0.5" means half of a CPU core.
     An alternative unit is "millicore", which is one-thousandth of a CPU core, i.e. 500m is half of a CPU core.
     """
-    memory: Optional[str] = None
+
+    memory: Optional[str] = _matches_pattern(MEMORY_REGEX)
     """
     Memory requests: you can use these to give your pod more memory, i.e. to prevent especially large jobs from OOMing.
     Default unit is bytes, i.e. 1000000000 is 1 gigabyte of memory.
     You can also specify a suffix such as K, M, or G for kilobytes, megabytes, and gigabytes, respectively.
     It's also possible to use the power of two equivalents, such as Ki, Mi, and Gi.
     """
-    ephemeral_volume_size: Optional[str] = None
-    """
-    Chalk can use this for spilling intermediate state of some large computations, i.e.
+
+    ephemeral_volume_size: Optional[str] = _matches_pattern(MEMORY_REGEX)
+    """Chalk can use this for spilling intermediate state of some large computations, i.e.
     joins, aggregations, and sorting.
     Default unit is bytes, i.e. 1000000000 is 1 gigabyte of memory.
     You can also specify a suffix such as K, M, or G for kilobytes, megabytes, and gigabytes, respectively.
     It's also possible to use the power of two equivalents, such as Ki, Mi, and Gi.
     """
-    ephemeral_storage: Optional[str] = None
-    """
-    Ephemeral storage for miscellaneous file system access.
+
+    ephemeral_storage: Optional[str] = _matches_pattern(MEMORY_REGEX)
+    """Ephemeral storage for miscellaneous file system access.
     Should probably not be below 1Gi to ensure there's enough space for the Docker image, etc.
     Should also not be too high or else the pod will not be scheduled.
     """
 
     resource_group: Optional[str] = None
-    """
-    Resource group to use for this job. If not specified, the default resource group will be used.
-    """
-
-    @validator(
-        "memory",
-        "ephemeral_volume_size",
-        "ephemeral_storage",
-    )  # pyright: ignore[reportUntypedFunctionDecorator]
-    def validate_memory_resource(cls, v: Optional[str], field: fields.ModelField) -> Optional[str]:
-        if v is not None and not re.match(MEMORY_REGEX, v):
-            raise ValueError(
-                (
-                    f"Got invalid value for {field.name}: {v}. {field.name} must match '{MEMORY_REGEX}': typically, "
-                    "this means it should either be an integer (denoting bytes), or a common memory specifier like '10G' or "
-                    "'10Gi' for 10 Gigabytes or Gibibytes."
-                )
-            )
-        return v
-
-    @validator("cpu")  # pyright: ignore[reportUntypedFunctionDecorator]
-    def validate_cpu_resource(cls, v: Optional[str], field: fields.ModelField) -> Optional[str]:
-        if v is not None and not re.match(CPU_REGEX, v):
-            raise ValueError(
-                (
-                    f"Got invalid value for {field.name}: {v}. {field.name} must match '{CPU_REGEX}': typically, this "
-                    "means it should either be an integer (denoting the number of cores), or an integer suffied by mi (indicating "
-                    "millicores, e.g. 1000mi)."
-                )
-            )
-        return v
+    """Resource group to use for this job. If not specified, the default resource group will be used."""
 
 
 class CreateOfflineQueryJobRequest(BaseModel):
-    output: List[str] = Field(description="A list of output feature root fqns to query")
-    output_expressions: List[str] = Field(
-        description="A list of underscore expressions to compute as query outputs, encoded as b64-serialized FeatureExpression protos",
-        default_factory=list,
-    )
-    required_output: List[str] = Field(default_factory=list, description="A list of required output feature root fqns")
-    required_output_expressions: List[str] = Field(
-        default_factory=list,
-        description="A list of required underscore expressions feature root fqns, , encoded as b64-serialized FeatureExpression protos",
-    )
-    destination_format: str = Field(description="The desired output format. Should be 'CSV' or 'PARQUET'")
-    job_id: Optional[uuid.UUID] = Field(
-        default=None,
-        description=(
-            "A unique job id. If not specified, one will be auto generated by the server. If specified by the client, "
-            "then jobs with the same ID will be rejected."
-        ),
-    )
+    output: List[str]
+    """A list of output feature root fqns to query"""
+
+    output_expressions: List[str] = Field(default_factory=list)
+    """A list of underscore expressions to compute as query outputs, encoded as
+    b64-serialized `FeatureExpression` protos"""
+
+    required_output: List[str] = Field(default_factory=list)
+    """A list of required output feature root fqns"""
+
+    required_output_expressions: List[str] = Field(default_factory=list)
+    """A list of required underscore expressions feature root fqns, , encoded as b64-serialized FeatureExpression protos"""
+
+    destination_format: str
+    """The desired output format. Should be 'CSV' or 'PARQUET'"""
+
+    job_id: Optional[uuid.UUID] = None
+    """A unique job id. If not specified, one will be auto generated by the server. If specified by the client,
+    then jobs with the same ID will be rejected."""
+
     input: Union[
         OfflineQueryInput,
         Tuple[OfflineQueryInput, ...],
         None,
         UploadedParquetShardedOfflineQueryInput,
         OfflineQueryInputUri,
-    ] = Field(default=None, description="Any givens")
-    max_samples: Optional[int] = Field(
-        default=None,
-        description="The maximum number of samples. If None, no limit",
-    )
-    max_cache_age_secs: Optional[int] = Field(
-        default=None,  # Defaults to ``OFFLINE_QUERY_MAX_CACHE_AGE_SECS`` in the chalkengine config
-        description=(
-            "The maximum staleness, in seconds, for how old the view on the offline store can be. That is, "
-            "data ingested within this interval will not be reflected in this offline query. "
-            "Set to ``0`` to ignore the cache. If not specified, it defaults to 30 minutes."
-        ),
-    )
-    observed_at_lower_bound: Optional[str] = Field(
-        default=None,
-        description="The lower bound for the observed at timestamp (inclusive). If not specified, defaults to the beginning of time",
-    )
-    observed_at_upper_bound: Optional[str] = Field(
-        default=None,
-        description="The upper bound for the observed at timestamp (inclusive). If not specified, defaults to the end of time.",
-    )
+    ] = None
+    """Any givens"""
+
+    max_samples: Optional[int] = None
+    """The maximum number of samples. If None, no limit"""
+
+    # Defaults to ``OFFLINE_QUERY_MAX_CACHE_AGE_SECS`` in the chalkengine config
+    max_cache_age_secs: Optional[int] = None
+    """The maximum staleness, in seconds, for how old the view on the offline store can be.
+    That is, data ingested within this interval will not be reflected in this offline query.
+    Set to ``0`` to ignore the cache. If not specified, it defaults to 30 minutes.
+    """
+
+    observed_at_lower_bound: Optional[str] = None
+    """The lower bound for the observed at timestamp (inclusive). If not specified, defaults to the beginning of time"""
+
+    observed_at_upper_bound: Optional[str] = None
+    """The upper bound for the observed at timestamp (inclusive). If not specified, defaults to the end of time."""
+
     dataset_name: Optional[str] = None
     branch: Optional[str] = None
     recompute_features: Union[bool, List[str]] = False
@@ -936,13 +865,12 @@ class CreateOfflineQueryJobRequest(BaseModel):
     store_plan_stages: bool = False
     explain: Union[bool, Literal["only"]] = False  # only is deprecated, leaving for backcompat
     tags: Optional[List[str]] = None
-    required_resolver_tags: Optional[List[str]] = Field(
-        default=None,
-        description="""
+    required_resolver_tags: Optional[List[str]] = None
+    """
     If specified, all resolvers invoked as part of this query must be tagged with all of these tags.
     Can be used to ensure that expensive resolvers are not executed.
-    """,
-    )
+    """
+
     correlation_id: Optional[str] = None
     query_context: Optional[ContextJsonDict] = None
     planner_options: Optional[Mapping[str, Any]] = None
@@ -1073,49 +1001,56 @@ class CreateBranchResponse(BaseModel):
 class ColumnMetadata(BaseModel):
     """This entire model is deprecated."""
 
-    feature_fqn: str = Field(description="The root FQN of the feature for a column")
+    feature_fqn: str
+    """The root FQN of the feature for a column"""
 
-    column_name: str = Field(description="The name of the column that corresponds to this feature")
+    column_name: str
+    """The name of the column that corresponds to this feature"""
 
-    dtype: str = Field(description="The data type for this feature")
+    dtype: str
+    """The data type for this feature"""
     # This field is currently a JSON-stringified version of the SerializeDType property
     # Using a string instead of a pydantic model the SerializedDType encoding does not affect
     # the api layer
 
 
 class GetOfflineQueryJobResponse(BaseModel):
-    is_finished: bool = Field(description="Whether the export job is finished (it runs asynchronously)")
-    version: int = Field(
-        default=1,  # Backwards compatibility
-        description=(
-            "Version number representing the format of the data. The client uses this version number "
-            "to properly decode and load the query results into DataFrames."
-        ),
-    )
-    urls: List[str] = Field(
-        description="A list of short-lived, authenticated URLs that the client can download to retrieve the exported data."
-    )
+    is_finished: bool
+    """Whether the export job is finished (it runs asynchronously)"""
+
+    version: int = 1  # Backwards compatibility
+    """Version number representing the format of the data. The client uses this version number
+    to properly decode and load the query results into DataFrames."""
+
+    urls: List[str]
+    """A list of short-lived, authenticated URLs that the client can download to retrieve the exported data."""
+
     errors: Optional[List[ChalkError]] = None
+
     # deprecated
-    columns: Optional[List[ColumnMetadata]] = Field(
-        description="Expected columns for the dataframe, including data type information",
-        default=None,
-    )
+    columns: Optional[List[ColumnMetadata]] = None
+    """Expected columns for the dataframe, including data type information"""
 
 
 class QueryStatus(IntEnum):
     PENDING_SUBMISSION = 1
     """Pending submission to the database."""
+
     SUBMITTED = 2
     """Submitted to the database, but not yet running."""
+
     RUNNING = 3
     """Running in the database."""
+
     ERROR = 4
     """Error with either submitting or running the job."""
+
     EXPIRED = 5
     """The job did not complete before an expiration deadline, so there are no results."""
+
     CANCELLED = 6
     """Manually cancelled before it errored or finished successfully."""
+
     SUCCESSFUL = 7  #
     """Successfully ran the job."""
 
@@ -1201,14 +1136,13 @@ class DatasetRecomputeResponse(DatasetRevisionResponse):
 
 
 class DatasetResponse(BaseModel):
-    is_finished: bool = Field(description="Whether the export job is finished (it runs asynchronously)")
-    version: int = Field(
-        default=1,  # Backwards compatibility
-        description=(
-            "Version number representing the format of the data. The client uses this version number "
-            "to properly decode and load the query results into DataFrames."
-        ),
-    )
+    is_finished: bool
+    """Whether the export job is finished (it runs asynchronously)"""
+
+    version: int = 1  # Backwards compatibility
+    """Version number representing the format of the data. The client uses this version number
+    to properly decode and load the query results into DataFrames."""
+
     environment_id: EnvironmentId
     dataset_id: Optional[uuid.UUID] = None
     dataset_name: Optional[str] = None
@@ -1324,7 +1258,7 @@ DEFAULT_SHARD_BATCH_KEY = ShardBatchKey(shard_id=0, batch_id=0)
 
 
 class DatasetRevisionSummaryResponse(DatasetRevisionInfoResponse):
-    type = DatasetRevisionResponseType.SUMMARY
+    type: DatasetRevisionResponseType = DatasetRevisionResponseType.SUMMARY
 
     def to_polars(self, shard_batch_key: Optional[ShardBatchKey] = None) -> pl.LazyFrame:
         if shard_batch_key is None:
@@ -1348,7 +1282,7 @@ class DatasetRevisionSummaryResponse(DatasetRevisionInfoResponse):
 
 
 class DatasetRevisionPreviewResponse(DatasetRevisionInfoResponse):
-    type = DatasetRevisionResponseType.PREVIEW
+    type: DatasetRevisionResponseType = DatasetRevisionResponseType.PREVIEW
 
     def to_polars(self, shard_batch_key: Optional[ShardBatchKey] = None) -> pl.LazyFrame:
         if self.urls is None or len(self.urls) == 0:
@@ -1494,20 +1428,15 @@ class GetIncrementalProgressResponse(BaseModel):
     environment_id: EnvironmentId
 
     resolver_fqn: str
-    """
-    The fully qualified name of the given resolver
-    """
+    """The fully qualified name of the given resolver."""
 
     query_name: Optional[str] = None
 
     max_ingested_timestamp: Optional[datetime]
-    """
-    The latest timestamp found in ingested data.
-    """
+    """The latest timestamp found in ingested data."""
 
     last_execution_timestamp: Optional[datetime]
-    """
-    The latest timestamp at which the resolver was run. If configured to do so, the
+    """The latest timestamp at which the resolver was run. If configured to do so, the
     resolver uses this timestamp instead of max_ingested_timestamp to filter input data.
     If None, this means that this value isn't currently used by this resolver.
     """
@@ -1524,14 +1453,12 @@ class SetIncrementalProgressRequest(BaseModel):
     """
 
     max_ingested_timestamp: Optional[datetime] = None
-    """
-    The latest timestamp found in ingested data.
+    """The latest timestamp found in ingested data.
     Timestamp must have a timezone specified.
     """
 
     last_execution_timestamp: Optional[datetime] = None
-    """
-    The latest time the resolver was run. If configured to do so, the
+    """The latest time the resolver was run. If configured to do so, the
     resolver uses this timestamp instead of max_ingested_timestamp to filter input data.
     Timestamp must have a timezone specified.
     """
@@ -1539,19 +1466,13 @@ class SetIncrementalProgressRequest(BaseModel):
 
 class BranchDeployRequest(BaseModel):
     branch_name: str
-    """
-    Name of the branch. If branch does not exist, it will be created.
-    """
+    """Name of the branch. If branch does not exist, it will be created."""
 
     create_only: bool = False
-    """
-    If true, tries to create a new branch returns an error if the branch already exists.
-    """
+    """If true, tries to create a new branch returns an error if the branch already exists."""
 
     source_deployment_id: Optional[str] = None
-    """
-    Use the given deployment's source on the branch. If None, the latest active deployment will be used.
-    """
+    """Use the given deployment's source on the branch. If None, the latest active deployment will be used."""
 
 
 class BranchDeployResponse(BaseModel):
@@ -1673,9 +1594,7 @@ class UploadFeaturesResponse(BaseModel):
     """Errors that occurred during feature upload, if any."""
 
     trace_id: Optional[str] = None
-    """
-    If an internal error occurs, this trace ID can be sent to Chalk Support to help debug the root cause.
-    """
+    """If an internal error occurs, this trace ID can be sent to Chalk Support to help debug the root cause."""
 
 
 class PlanQueryRequest(BaseModel):
@@ -1711,13 +1630,24 @@ class PlanQueryResponse(BaseModel):
 
 
 class IngestDatasetRequest(BaseModel):
-    revision_id: str = Field(description="The ID of the dataset revision to ingest")
-    branch: Optional[str] = Field(description="The branch to ingest the dataset into")
-    outputs: List[str] = Field(description="The output features to return from the dataset")
-    store_online: bool = Field(description="Whether to store the dataset into the online store")
-    store_offline: bool = Field(description="Whether to store the dataset into the offline store")
+    revision_id: str
+    """The ID of the dataset revision to ingest"""
+
+    branch: Optional[str]
+    """The branch to ingest the dataset into"""
+
+    outputs: List[str]
+    """The output features to return from the dataset"""
+
+    store_online: bool
+    """Whether to store the dataset into the online store"""
+
+    store_offline: bool
+    """Whether to store the dataset into the offline store"""
+
     enable_profiling: bool = False
     """Enable engine profiling for the ingestion"""
+
     planner_options: Optional[Mapping[str, Any]] = None
 
     online_timestamping_mode: Optional[str] = None
@@ -1725,15 +1655,17 @@ class IngestDatasetRequest(BaseModel):
 
 
 class AnnotatedSignedUploadURL(BaseModel):
-    signed_url: str = Field(description="Signed URLs which can be uploaded to using PUT requests")
-    filename: str = Field(description="Filenames which the signed URLs correspond to")
+    signed_url: str
+    """Signed URLs which can be uploaded to using PUT requests"""
+
+    filename: str
+    """Filenames which the signed URLs correspond to"""
 
 
 class OfflineQueryParquetUploadURLResponse(BaseModel):
     # there is one pair of url for each partition
-    urls: Tuple[AnnotatedSignedUploadURL, ...] = Field(
-        description="Signed URLs which can be uploaded to using PUT requests"
-    )
+    urls: Tuple[AnnotatedSignedUploadURL, ...]
+    """Signed URLs which can be uploaded to using PUT requests"""
 
 
 class FeatureStatistics(BaseModel):

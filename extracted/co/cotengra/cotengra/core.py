@@ -4,7 +4,6 @@ import collections
 import functools
 import itertools
 import math
-import operator
 import warnings
 from dataclasses import dataclass
 from typing import Optional
@@ -481,6 +480,8 @@ class ContractionTree:
         *,
         path=None,
         ssa_path=None,
+        edge_path=None,
+        optimize="auto-hq",
         autocomplete="auto",
         check=False,
         **kwargs,
@@ -500,12 +501,20 @@ class ContractionTree:
             The contraction path, a sequence of pairs of tensor ids to
             contract. The ids are linear indices into the list of temporary
             tensors, which are recycled as each contraction pops a pair and
-            appends the result. This or ``ssa_path`` must be supplied.
+            appends the result. One of ``path``, ``ssa_path`` or ``edge_path``
+            must be supplied.
         ssa_path : Sequence[Sequence[int]], optional
             The contraction path, a sequence of pairs of indices to contract.
             The indices are single use, as if the result of each contraction is
             appended to the end of the list of temporary tensors without
-            popping. This or ``path`` must be supplied.
+            popping. One of ``path``, ``ssa_path`` or ``edge_path`` must be
+            supplied.
+        edge_path : Sequence[str], optional
+            The contraction path, a sequence of indices to contract in order.
+            One of ``path``, ``ssa_path`` or ``edge_path`` must be supplied.
+        optimize : str, optional
+            If a contraction within the path contains 3 or more tensors, how to
+            optimize this subcontraction into a binary tree.
         autocomplete : "auto" or bool, optional
             Whether to automatically complete the path, i.e. contract all
             remaining nodes. If "auto" then a warning is issued if the path is
@@ -518,10 +527,17 @@ class ContractionTree:
         -------
         ContractionTree
         """
-        if int(path is None) + int(ssa_path is None) != 1:
+        if (path is None) + (ssa_path is None) + (edge_path is None) != 2:
             raise ValueError(
                 "Exactly one of ``path`` or ``ssa_path`` must be supplied."
             )
+
+        contract_opts = {"optimize": optimize, "check": check}
+
+        if edge_path is not None:
+            from .pathfinders.path_basic import edge_path_to_ssa
+
+            ssa_path = edge_path_to_ssa(edge_path, inputs)
 
         if ssa_path is not None:
             path = ssa_path
@@ -534,7 +550,7 @@ class ContractionTree:
             ssa = len(nodes)
             for p in path:
                 merge = [nodes.pop(i) for i in p]
-                nodes[ssa] = tree.contract_nodes(merge, check=check)
+                nodes[ssa] = tree.contract_nodes(merge, **contract_opts)
                 ssa += 1
             nodes = nodes.values()
         else:
@@ -542,7 +558,7 @@ class ContractionTree:
             nodes = list(tree.gen_leaves())
             for p in path:
                 merge = [nodes.pop(i) for i in sorted(p, reverse=True)]
-                nodes.append(tree.contract_nodes(merge, check=check))
+                nodes.append(tree.contract_nodes(merge, **contract_opts))
 
         if len(nodes) > 1 and autocomplete:
             if autocomplete == "auto":
@@ -550,9 +566,10 @@ class ContractionTree:
                 warnings.warn(
                     "Path was not complete - contracting all remaining. "
                     "You can silence this warning with `autocomplete=True`."
+                    "Or produce an incomplete tree with `autocomplete=False`."
                 )
 
-            tree.contract_nodes(nodes, check=check)
+            tree.contract_nodes(nodes, **contract_opts)
 
         return tree
 
@@ -657,37 +674,31 @@ class ContractionTree:
 
     @classmethod
     def from_edge_path(
-        cls, edge_path, inputs, output, size_dict, check=False, **kwargs
+        cls,
+        edge_path,
+        inputs,
+        output,
+        size_dict,
+        optimize="auto-hq",
+        autocomplete="auto",
+        check=False,
+        **kwargs,
     ):
         """Create a ``ContractionTree`` from an edge elimination ordering."""
-        tree = cls(inputs, output, size_dict, **kwargs)
-        nodes = list(tree.gen_leaves())
-
-        for e in edge_path:
-            # filter out the subgraph induced by edge `e` (generally a pair)
-            new_terms, merge = [], []
-            for node in nodes:
-                term = union_it(tree.node_to_terms(node))
-                if e in term:
-                    merge.append(node)
-                else:
-                    new_terms.append(node)
-
-            # contract the subgraph
-            if merge:
-                nodes = new_terms + [tree.contract_nodes(merge, check=check)]
-
-        # make sure we are generating a full contraction tree
-        nt = len(nodes)
-        if nt > 1:
-            # this seems to happen when the initial contraction contains a
-            # scalar? Or disconnected subgraphs?
-            warnings.warn(
-                f"Ended up with {nt} nodes - contracting all remaining."
-            )
-            tree.contract_nodes(nodes, check=check)
-
-        return tree
+        warnings.warn(
+            "ContractionTree.from_edge_path(edge_path, ...) is deprecated. Use"
+            " ContractionTree.from_path(edge_path=edge_path, ...) instead."
+        )
+        return cls.from_path(
+            inputs,
+            output,
+            size_dict,
+            edge_path=edge_path,
+            optimize=optimize,
+            autocomplete=autocomplete,
+            check=check,
+            **kwargs,
+        )
 
     def _add_node(self, node, check=False):
         if check:
@@ -1467,7 +1478,7 @@ class ContractionTree:
 
         Parameters
         ----------
-        order : None or callable, optional
+        order : None, "dfs", or callable, optional
             How to order the contractions within the tree. If a callable is
             given (which should take a node as its argument), try to contract
             nodes that minimize this function first.
@@ -2685,16 +2696,41 @@ class ContractionTree:
         )
 
     def get_path(self, order=None):
-        """Generate a standard path from the contraction tree."""
-        path = []
-        terms = list(self.gen_leaves())
+        """Generate a standard path (with linear recycled ids) from the
+        contraction tree.
 
-        for parent, l, r in self.traverse(order=order):
-            i, j = sorted((terms.index(l), terms.index(r)))
-            terms.pop(j)
-            terms.pop(i)
+        Parameters
+        ----------
+        order : None, "dfs", or callable, optional
+            How to order the contractions within the tree. If a callable is
+            given (which should take a node as its argument), try to contract
+            nodes that minimize this function first.
+
+        Returns
+        -------
+        path: tuple[tuple[int, int]]
+        """
+        from bisect import bisect_left
+
+        ssa = self.N
+        ssas = list(range(ssa))
+        node_to_ssa = dict(zip(self.gen_leaves(), ssas))
+        path = []
+
+        for parent, left, right in self.traverse(order=order):
+            # map nodes to ssas
+            lssa = node_to_ssa[left]
+            rssa = node_to_ssa[right]
+            # map ssas to linear indices, using bisection
+            i, j = sorted((bisect_left(ssas, lssa), bisect_left(ssas, rssa)))
+            # 'contract' nodes
+            ssas.pop(j)
+            ssas.pop(i)
             path.append((i, j))
-            terms.append(parent)
+            ssas.append(ssa)
+            # update mapping
+            node_to_ssa[parent] = ssa
+            ssa += 1
 
         return tuple(path)
 
@@ -2707,7 +2743,19 @@ class ContractionTree:
         return ["einsum_path", *self.get_path(order=order)]
 
     def get_ssa_path(self, order=None):
-        """Generate a ssa path from the contraction tree."""
+        """Generate a single static assignment path from the contraction tree.
+
+        Parameters
+        ----------
+        order : None, "dfs", or callable, optional
+            How to order the contractions within the tree. If a callable is
+            given (which should take a node as its argument), try to contract
+            nodes that minimize this function first.
+
+        Returns
+        -------
+        ssa_path: tuple[tuple[int, int]]
+        """
         ssa_path = []
         pos = dict(zip(self.gen_leaves(), range(self.N)))
 
@@ -3720,6 +3768,7 @@ class ContractionTreeCompressed(ContractionTree):
                 warnings.warn(
                     "Path was not complete - contracting all remaining. "
                     "You can silence this warning with `autocomplete=True`."
+                    "Or produce an incomplete tree with `autocomplete=False`."
                 )
 
             tree.autocomplete(optimize="greedy-compressed")

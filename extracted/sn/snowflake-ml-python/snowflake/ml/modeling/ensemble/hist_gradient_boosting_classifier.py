@@ -11,7 +11,7 @@ import cloudpickle as cp
 import numpy as np
 import pandas as pd
 from numpy import typing as npt
-
+from packaging import version
 
 import numpy
 import sklearn
@@ -59,6 +59,14 @@ _SUBPROJECT = "".join([s.capitalize() for s in "sklearn.ensemble".replace("sklea
 DATAFRAME_TYPE = Union[DataFrame, pd.DataFrame]
 
 INFER_SIGNATURE_MAX_ROWS = 100
+
+SKLEARN_LOWER, SKLEARN_UPPER = ('1.4', '1.6')
+# Modeling library estimators require a smaller sklearn version range.
+if not version.Version(SKLEARN_LOWER) <= version.Version(sklearn.__version__) < version.Version(SKLEARN_UPPER):
+    raise Exception(
+        f"To use the modeling library, install scikit-learn version >= {SKLEARN_LOWER} and < {SKLEARN_UPPER}"
+    )
+
 
 class HistGradientBoostingClassifier(BaseTransformer):
     r"""Histogram-based Gradient Boosting Classification Tree

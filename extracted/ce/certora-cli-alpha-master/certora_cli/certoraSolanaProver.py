@@ -35,7 +35,7 @@ from CertoraProver import certoraContextValidator as Cv
 
 import CertoraProver.certoraContext as Ctx
 import CertoraProver.certoraContextAttributes as Attrs
-from CertoraProver.certoraBuildRust import build_rust_app
+from CertoraProver.certoraBuildRust import set_rust_build_directory
 
 from certoraRun import CertoraRunResult, VIOLATIONS_EXIT_CODE, CertoraFoundViolations
 
@@ -104,7 +104,7 @@ def run_solana_prover(args: List[str]) -> Optional[CertoraRunResult]:
     run_logger.debug("Build Solana target")
     build_start = time.perf_counter()
 
-    build_rust_app(context)
+    set_rust_build_directory(context)
     build_end = time.perf_counter()
     timings["buildTime"] = round(build_end - build_start, 4)
     if context.test == str(Util.TestValue.AFTER_BUILD):

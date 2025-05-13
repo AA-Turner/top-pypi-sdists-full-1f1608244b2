@@ -30,7 +30,7 @@ def read(fname):
     return io.open(file_path, encoding="utf-8").read()
 
 
-version = "0.7.5"
+version = "0.7.6"
 
 
 setuptools.setup(
@@ -46,7 +46,7 @@ setuptools.setup(
     include_package_data=True,
     python_requires=">=3.8",
     install_requires=[
-        "datapi",
+        "ecmwf-datastores-client",
         "requests>=2.5.0",
         "tqdm",
     ],
@@ -56,7 +56,6 @@ setuptools.setup(
         "Intended Audience :: Developers",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",

@@ -9,7 +9,7 @@ import shlex
 import click
 import dask.config
 from dask.utils import format_time
-from rich import print
+from rich.console import Console
 from rich.panel import Panel
 
 import coiled
@@ -19,6 +19,8 @@ from coiled.cli.utils import CONTEXT_SETTINGS, fix_path_for_upload
 from coiled.credentials.aws import get_aws_local_session_token
 from coiled.utils import COILED_LOGGER_NAME, error_info_for_tracking, supress_logs
 
+console = Console(width=80)
+
 # Be fairly flexible in how we parse options in header, i.e., we allow:
 # "#COILED"
 # "# COILED"
@@ -27,6 +29,8 @@ from coiled.utils import COILED_LOGGER_NAME, error_info_for_tracking, supress_lo
 # key/val pair as "key val" or "key=val"
 # or just "key" if it's a flag
 HEADER_REGEX = re.compile(r"^\s*(# ?COILED)[\s:-]+([\w_-]+)([ =](.+))?")
+
+UPLOAD_FILE_TYPES = [".py", ".sh", ".yml", ".yaml", ".txt", ".csv", ".tsv", ".json"]
 
 
 def parse_array_string(array):
@@ -76,6 +80,19 @@ def handle_possible_implicit_file(implicit_file):
             # Gracefully handle not being able to read the file (e.g. binary files)
             return
 
+        # Avoid uploading large data files >32 kB
+        if not implicit_file.endswith(".py") and not implicit_file.endswith(".sh"):
+            try:
+                kb_size = os.stat(implicit_file).st_size / 1_000
+                if kb_size > 32:
+                    console.print(
+                        f"[orange1]WARNING:[/orange1] {implicit_file} is too large ({kb_size:.2f} kB) "
+                        "to automatically upload to cloud VMs (32 kB limit)",
+                    )
+                    return
+            except Exception:
+                return
+
         remote_rel_dir, remote_base = fix_path_for_upload(local_path=implicit_file)
 
         return {
@@ -90,7 +107,7 @@ def search_content_for_implicit_files(f: dict):
     content = f["content"]
     implicit_files = []
     for line in content.split("\n"):
-        if "python" in line or ".sh" in line:
+        if "python" in line or any(f_type in line for f_type in UPLOAD_FILE_TYPES):
             line_parts = shlex.split(line.strip())
             for part in line_parts:
                 implicit_file = handle_possible_implicit_file(part)
@@ -133,7 +150,7 @@ def get_kwargs_from_header(f: dict, click_params: list):
             else:
                 kwargs[key] = val
         elif line.startswith(("# COILED", "#COILED")):
-            print(f"Ignoring invalid option: {line}\nSupported formats: #COILED KEY=val` or `#COILED KEY val`.")
+            console.print(f"Ignoring invalid option: {line}\nSupported formats: #COILED KEY=val` or `#COILED KEY val`.")
     return kwargs
 
 
@@ -463,7 +480,7 @@ def _batch_run(default_kwargs, logger=None, from_cli=False, **kwargs) -> dict:
     # for example, user runs "coiled batch run foo.sh" and `foo.sh` itself runs `python foo.py`
     user_files_from_content = []
     for f in user_files:
-        if "python " in f["content"] or ".sh" in f["content"]:
+        if "python " in f["content"] or any(f_type in f["content"] for f_type in UPLOAD_FILE_TYPES):
             more_files = search_content_for_implicit_files(f)
             if more_files:
                 user_files_from_content.extend(more_files)
@@ -566,7 +583,11 @@ def _batch_run(default_kwargs, logger=None, from_cli=False, **kwargs) -> dict:
             "env_vars": job_env_vars,
             "secret_env_vars": job_secret_vars,
             "wait_for_ready_cluster": kwargs["wait_for_ready_cluster"],
-            "workdir": None,
+            # For non-prefect batch jobs, set workdir to the same place
+            # where user's local files are copied onto the cloud VM.
+            # Avoid possibly breaking prefect batch jobs
+            # https://github.com/coiled/platform/pull/8655#pullrequestreview-2826448869
+            "workdir": None if "flow-run-id" in tags else "/scratch/batch",
             "host_setup": host_setup_content,
         }
 
@@ -619,6 +640,6 @@ To track progress run:
   [green]{status_command}[/]
 {extra_message}"""
 
-            print(Panel(message, width=80, title="Coiled Batch"))
+            console.print(Panel(message, title="Coiled Batch"))
 
         return {"cluster_id": cluster.cluster_id, "cluster_name": cluster.name, "job_id": job_id}

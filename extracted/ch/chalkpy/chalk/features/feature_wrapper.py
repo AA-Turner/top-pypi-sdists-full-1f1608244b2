@@ -262,7 +262,14 @@ class FeatureWrapper:
                     f_copy_underlying.path = tuple(path_copy)
 
                 return FeatureWrapper(f_copy_underlying)
-            raise TypeError(f"Feature '{self}' does not support subscripting. Attempted to subscript with '{item}'")
+            item_features_maybe = []
+            if isinstance(item, Iterable):
+                for i in item:
+                    try:
+                        item_features_maybe.append(unwrap_feature(i).fqn)
+                    except:
+                        break
+            raise TypeError(f"Feature '{self}' of type {underlying.typ} does not support subscripting. Attempted to subscript with '{item_features_maybe or item}'")
 
         return FeatureWrapper(_MarkedUnderlyingFeature(f, ("__getitem__", item)))
 

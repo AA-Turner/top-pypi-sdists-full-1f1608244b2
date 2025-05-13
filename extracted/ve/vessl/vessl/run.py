@@ -3,7 +3,6 @@ import time
 from typing import List, Optional, TextIO
 
 import yaml
-from halo import Halo
 
 from openapi_client import (
     ExperimentYamlImportAPIInput,
@@ -143,8 +142,9 @@ def create_run(
     yaml_body: str,
     yaml_file_name: str,
     watch=False,
+    quiet=True, # Mitigation: sdk logic which contains rich contains or print will be moved to cli
     **kwargs,
-):
+) -> ResponseRunExecutionInfo:
     """Create run in the default organization/project. If you want to
     override the default organization/project, then pass `organization_name` or
     `project_name` as `**kwargs`.
@@ -153,6 +153,8 @@ def create_run(
         yaml_file (TextIO): Run ID.
         yaml_body (str): YAML body.
         yaml_file_name (str): YAML file name.
+        watch (bool): Whether to watch the run.
+        quiet (bool): Whether to print the log.
 
     Example:
         ```python
@@ -170,66 +172,52 @@ def create_run(
         body = yaml_body
     yaml_file_name = yaml_file_name.split("/")[-1]
 
-    wrap_str(" Launch VESSL Run 👟", "green")
+    wrap_str(" Launch VESSL Run 👟", "green", quiet=quiet)
     organization = _get_organization_name(**kwargs)
     project = _get_project_name(**kwargs)
-    wrap_str(f"   > Organization: {organization}", "cyan")
-    wrap_str(f"   > Project: {project}", "cyan")
+    wrap_str(f"   > Organization: {organization}", "cyan", quiet=quiet)
+    wrap_str(f"   > Project: {project}", "cyan", quiet=quiet)
 
-    spinner = Halo(text="Verifying YAML", text_color="cyan", spinner="dots", placement="right")
-    spinner.start()
-    interactive, out_str, yaml_obj = verify_yaml(body, spinner)
+    interactive, out_str, yaml_obj = verify_yaml(body)
 
     if yaml_obj == False:
-        spinner.stop_and_persist(
-            symbol="😢", text=wrap_str(" YAML verification failed!", "red", do_print=False)
-        )
+        wrap_str(" YAML verification failed!", "red", quiet=quiet)
         return
     else:
-        spinner.stop_and_persist(
-            symbol="✅", text=wrap_str(" YAML definition verified!", "green", do_print=False)
-        )
-    print(out_str)
-    wrap_str(f" Running: {yaml_file_name} ➡️", "green")
+        wrap_str(" YAML definition verified!", "green", quiet=quiet)
+    if not quiet:
+        print(out_str)
+    wrap_str(f" Running: {yaml_file_name} ➡️", "green", quiet=quiet)
     # yaml_obj["run"][0]["command"] = yaml_obj["run"][0]["command"].strip()
     clean_yaml_str = yaml.dump(yaml_obj, default_flow_style=False, sort_keys=False)
-    msg_box(clean_yaml_str)
-
-    spinner = Halo(
-        text="Submitting Run definition to cluster ..",
-        text_color="cyan",
-        spinner="dots",
-        placement="right",
-    )
-    spinner.start()
+    if not quiet:
+        msg_box(clean_yaml_str)
 
     response = vessl_api.run_spec_create_from_yamlapi(
         organization_name=_get_organization_name(**kwargs),
         project_name=_get_project_name(**kwargs),
         run_spec_create_from_yamlapi_input={"yaml_spec": clean_yaml_str},
     )
+    run_id = response.run_execution.id
+    run_execution_response = read_run(run_id=run_id)
 
-    spinner.stop_and_persist(
-        symbol="✅", text=wrap_str(" Your Run is submitted to the cluster.", "green", do_print=False)
-    )
-
-    link = f"{WEB_HOST}/{_get_organization_name(**kwargs)}/runs/{_get_project_name(**kwargs)}/{response.run_execution.id}"
+    link = f"{WEB_HOST}/{_get_organization_name(**kwargs)}/runs/{_get_project_name(**kwargs)}/{run_id}"
     wrap_str(
         f" Check your Run at: {link}",
         "cyan",
+        quiet=False,
     )
 
     if not watch:
-        wrap_str("   💡 Tip: Use `--watch` flag to stream logs directly to the console.", "green")
-        return
+        wrap_str("   💡 Tip: Use `--watch` flag to stream logs directly to the console.", "green", quiet=quiet)
+        return run_execution_response
 
-    wrap_str(f" --watch option enabled, waiting for the Run to be scheduled...", "green")
-    run_id = response.run_execution.id
+    wrap_str(f" --watch option enabled, waiting for the Run to be scheduled...", "green", quiet=quiet)
     started = check_run_exec_started(response)
     if not started:
         return
 
-    wrap_str(f" Showing Run logs from now:", "green")
+    wrap_str(f" Showing Run logs from now:", "green", quiet=quiet)
 
     # fetch pod outputs
     run_finished_dt = None
@@ -255,7 +243,8 @@ def create_run(
         if len(logs) > 0:
             after = logs[-1].timestamp + 0.000001
         time.sleep(3)
-
+    
+    return run_id
 
 def terminate_run(run_id: int, **kwargs):
     """Terminate run in the default organization/project. If you want to
@@ -307,7 +296,7 @@ def get_dt():
     return dt
 
 
-def wrap_str(string, color="default", end="", do_print=True):
+def wrap_str(string, color="default", end="", quiet=False):
     if color == "cyan":
         wrapped = f"{get_dt()}{colors.OKCYAN}{string}{end}{colors.ENDC}"
     elif color == "green":
@@ -318,7 +307,7 @@ def wrap_str(string, color="default", end="", do_print=True):
         wrapped = f"{get_dt()}{colors.WARNING}{string}{end}{colors.ENDC}"
     else:
         wrapped = f"{get_dt()}{string}{end}"
-    if do_print:
+    if not quiet:
         print(wrapped)
     else:
         return wrapped
@@ -351,7 +340,7 @@ def print_logs(logs: List[str]):
 
 
 # Check different stuffs in verify_yaml.
-def verify_yaml(yaml_str, spinner):
+def verify_yaml(yaml_str):
     # replace \t to double spaces
     yaml_str = yaml_str.replace("\t", "  ")
     yaml_obj = yaml.safe_load(yaml_str)
@@ -390,12 +379,12 @@ def verify_yaml(yaml_str, spinner):
             )
             return False, False, False
         else:
-            out_str += wrap_str(f"   ✓ Cluster verified", "cyan", "\n", do_print=False)
+            out_str += wrap_str(f"   ✓ Cluster verified", "cyan", "\n", quiet=True)
 
     if is_interactive:
-        out_str += wrap_str("   ✓ Mode: Interactive", "cyan", do_print=False)
+        out_str += wrap_str("   ✓ Mode: Interactive", "cyan", quiet=True)
     else:
-        out_str += wrap_str("   - 💡 Mode: Batch", "cyan", do_print=False)
+        out_str += wrap_str("   - 💡 Mode: Batch", "cyan", quiet=True)
 
     return is_interactive, out_str, yaml_obj
 
@@ -406,7 +395,7 @@ def run_from_yaml(
     yaml_body: str,
     yaml_file_name: str,
     **kwargs,
-) -> ResponseExperimentInfo:
+) -> ResponseRunExecutionInfo:
     if yaml_body == "":
         body = yaml_file.read()
     else:
@@ -419,18 +408,12 @@ def run_from_yaml(
     wrap_str(f"   > Organization: {organization}", "cyan")
     wrap_str(f"   > Project: {project}", "cyan")
 
-    spinner = Halo(text="Verifying YAML", text_color="cyan", spinner="dots", placement="right")
-    spinner.start()
-    interactive, out_str, yaml_obj = verify_yaml(body, spinner)
+    interactive, out_str, yaml_obj = verify_yaml(body)
     if yaml_obj == False:
-        spinner.stop_and_persist(
-            symbol="😢", text=wrap_str(" YAML verification failed!", "red", do_print=False)
-        )
+        wrap_str(" YAML verification failed!", "red", quiet=True)
         return
     else:
-        spinner.stop_and_persist(
-            symbol="✅", text=wrap_str(" YAML definition verified!", "green", do_print=False)
-        )
+        wrap_str(" YAML definition verified!", "green", quiet=True)
     print(out_str)
     wrap_str(f" Running: {yaml_file_name} ➡️", "green")
     yaml_obj["run"][0]["command"] = yaml_obj["run"][0]["command"].strip()
@@ -451,13 +434,7 @@ def apply_yaml(organization, body, project=None, is_workspace=True):
         workload = "workspace"
     else:
         workload = "experiment"
-    spinner = Halo(
-        text="Submitting Run definition to cluster ..",
-        text_color="cyan",
-        spinner="dots",
-        placement="right",
-    )
-    spinner.start()
+    wrap_str(f"Submitting Run definition to cluster ..", "cyan")
     if is_workspace:
         response = vessl_api.workspace_yaml_import_api(
             organization_name=organization,
@@ -473,9 +450,7 @@ def apply_yaml(organization, body, project=None, is_workspace=True):
                 data=body,
             ),
         )
-    spinner.stop_and_persist(
-        symbol="✅", text=wrap_str(" Your Run is submitted to the cluster.", "green", do_print=False)
-    )
+    wrap_str(" Your Run is submitted to the cluster.", "green", quiet=True)
     if is_workspace:
         link = f"{WEB_HOST}/{response.organization.name}/workspaces/{response.id}"
     else:
@@ -487,16 +462,9 @@ def apply_yaml(organization, body, project=None, is_workspace=True):
     return response
 
 
-def check_run_exec_started(response):
+def check_run_exec_started(response, quiet=True):
     run_id = response.run_execution.id
 
-    spinner = Halo(
-        text="Cluster Pending ..",
-        text_color="cyan",
-        spinner="dots",
-        placement="right",
-    )
-    spinner.start()
     not_started = True
     terminated = False
     while not_started and (not terminated):
@@ -507,22 +475,10 @@ def check_run_exec_started(response):
             terminated = True
 
     if terminated:
-        spinner.stop_and_persist(
-            symbol="🏝️", text=wrap_str(f" Run terminated!", "green", do_print=False)
-        )
+        wrap_str(f" Run terminated!", "green", quiet=quiet)
         return False
-    spinner.stop_and_persist(
-        symbol="✅",
-        text=wrap_str(f"> Your Run is assigned to the cluster.", "green", do_print=False),
-    )
+    wrap_str(f"> Your Run is assigned to the cluster.", "green", quiet=quiet)
 
-    spinner = Halo(
-        text="Cluster Initializing .. ",
-        text_color="cyan",
-        spinner="dots",
-        placement="right",
-    )
-    spinner.start()
     not_started = True
     while not_started and (not terminated):
         status = read_run(run_id=run_id).status
@@ -531,15 +487,12 @@ def check_run_exec_started(response):
         if status in ["failed", "stopped"]:
             terminated = True
     if terminated:
-        spinner.stop_and_persist(
-            symbol="🏝️", text=wrap_str(f" Run terminated!", "green", do_print=False)
-        )
+        wrap_str(f" Run terminated!", "green", quiet=True)
         return False
-    spinner.stop_and_persist(
-        symbol="✅", text=wrap_str(f"> Run has started!", "green", do_print=False)
-    )
-    print(LOGO)
-    wrap_str(f" VESSL Run has succesfully launched! 🚀", "green")
+    wrap_str(f"> Run has started!", "green", quiet=True)
+    if not quiet:
+        print(LOGO)
+        wrap_str(f" VESSL Run has succesfully launched! 🚀", "green", quiet=True)
     return True
 
 
@@ -552,13 +505,6 @@ def check_started(response, is_workspace=True):
         workload = "Experiment"
         experiment_id = response.id
 
-    spinner = Halo(
-        text="Cluster Pending ..",
-        text_color="cyan",
-        spinner="dots",
-        placement="right",
-    )
-    spinner.start()
     not_started = True
     terminated = False
     while not_started and (not terminated):
@@ -572,22 +518,10 @@ def check_started(response, is_workspace=True):
             terminated = True
 
     if terminated:
-        spinner.stop_and_persist(
-            symbol="🏝️", text=wrap_str(f" {workload} terminated!", "green", do_print=False)
-        )
+        wrap_str(f" {workload} terminated!", "green", quiet=True)
         return False
-    spinner.stop_and_persist(
-        symbol="✅",
-        text=wrap_str(f"> Your Run is assigned to the cluster.", "green", do_print=False),
-    )
+    wrap_str(f"> Your Run is assigned to the cluster.", "green", quiet=True)
 
-    spinner = Halo(
-        text="Cluster Initializing .. ",
-        text_color="cyan",
-        spinner="dots",
-        placement="right",
-    )
-    spinner.start()
     not_started = True
     while not_started and (not terminated):
         if is_workspace:
@@ -599,13 +533,10 @@ def check_started(response, is_workspace=True):
         if status in ["failed", "stopped"]:
             terminated = True
     if terminated:
-        spinner.stop_and_persist(
-            symbol="🏝️", text=wrap_str(f" {workload} terminated!", "green", do_print=False)
-        )
+        wrap_str(f" {workload} terminated!", "green", quiet=True)
         return False
-    spinner.stop_and_persist(
-        symbol="✅", text=wrap_str(f"> Run has started!", "green", do_print=False)
-    )
+    wrap_str(f"> Run has started!", "green", quiet=True)
+
     print(LOGO)
     wrap_str(f" VESSL Run has succesfully launched! 🚀", "green")
     return True

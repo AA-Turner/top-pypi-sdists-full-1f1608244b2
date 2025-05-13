@@ -22,6 +22,7 @@ CUDA_DEVICE_PROPERTIES = _SimpleNamespace(
     minor=CUDA_DEVICE_CAPABILITY[1],
     total_memory=CUDA_TOTAL_MEMORY,
     multi_processor_count=Config.zerogpu_cuda_multi_processor_count,
+    # TODO: L2_cache_size
 )
 
 if _torch.version.cuda.startswith("12."): # pyright: ignore [reportAttributeAccessIssue]

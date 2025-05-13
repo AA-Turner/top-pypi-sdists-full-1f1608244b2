@@ -168,6 +168,8 @@ class Attributes:
         table.add_column(Text("Default"), width=default_col_width)
 
         for name in dir(cls):
+            if name in cls.hide_attributes():
+                continue
             if name.isupper():
                 attr = getattr(cls, name, None)
                 assert isinstance(attr, AttributeDefinition), "print_attr_help: type(attr) == Attribute"
@@ -193,3 +195,11 @@ class Attributes:
             cls._all_conf_names = [attr.name.lower() for attr in cls.attribute_list()]
             #  'compiler_map' does not have a matching 'compiler' attribute
             cls._all_map_attrs = [attr for attr in cls._all_conf_names if attr.endswith(Util.MAP_SUFFIX)]
+
+    @classmethod
+    def hide_attributes(cls) -> List[str]:
+        """
+        This function is used to hide attributes from the help message.
+        :return: A list of attribute names to be hidden.
+        """
+        return []
