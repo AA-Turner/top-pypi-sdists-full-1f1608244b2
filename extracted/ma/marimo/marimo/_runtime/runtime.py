@@ -56,6 +56,7 @@ from marimo._messaging.ops import (
     CellOp,
     CompletedRun,
     DataColumnPreview,
+    DataSourceConnections,
     FunctionCallResult,
     HumanReadableStatus,
     InstallingPackageAlert,
@@ -124,7 +125,9 @@ from marimo._runtime.requests import (
     FunctionCallRequest,
     InstallMissingPackagesRequest,
     ListSecretKeysRequest,
+    PdbRequest,
     PreviewDatasetColumnRequest,
+    PreviewDataSourceConnectionRequest,
     PreviewSQLTableListRequest,
     PreviewSQLTableRequest,
     RefreshSecretsRequest,
@@ -162,7 +165,10 @@ from marimo._secrets.secrets import get_secret_keys
 from marimo._server.model import SessionMode
 from marimo._server.types import QueueType
 from marimo._sql.engines.types import SQLEngine
-from marimo._sql.get_engines import get_engines_from_variables
+from marimo._sql.get_engines import (
+    engine_to_data_source_connection,
+    get_engines_from_variables,
+)
 from marimo._tracer import kernel_tracer
 from marimo._types.ids import CellId_t, UIElementId, VariableName
 from marimo._types.lifespan import Lifespan
@@ -1537,6 +1543,18 @@ class Kernel:
 
         await _run_with_uninstantiated_requests(filtered_requests)
 
+    @kernel_tracer.start_as_current_span("pdb_request")
+    async def pdb_request(self, cell_id: CellId_t) -> None:
+        if (
+            self.debugger is None
+            or cell_id not in self.debugger._last_tracebacks
+            or cell_id not in self.graph.cells
+        ):
+            return
+
+        with self._install_execution_context(cell_id):
+            self.debugger.post_mortem_by_cell_id(cell_id)
+
     @kernel_tracer.start_as_current_span("rename_file")
     async def rename_file(self, filename: str) -> None:
         self.globals["__file__"] = filename
@@ -2013,6 +2031,9 @@ class Kernel:
                 await self.set_ui_element_value(request)
             CompletedRun().broadcast()
 
+        async def handle_pdb_request(request: PdbRequest) -> None:
+            await self.pdb_request(request.cell_id)
+
         async def handle_rename(request: RenameRequest) -> None:
             await self.rename_file(request.filename)
 
@@ -2041,18 +2062,19 @@ class Kernel:
             return None
 
         handler.register(CreationRequest, handle_instantiate)
+        handler.register(DeleteCellRequest, self.delete_cell)
         handler.register(ExecuteMultipleRequest, handle_execute_multiple)
         handler.register(ExecuteScratchpadRequest, handle_execute_scratchpad)
         handler.register(ExecuteStaleRequest, handle_execute_stale)
-        handler.register(RenameRequest, handle_rename)
-        handler.register(SetCellConfigRequest, self.set_cell_config)
-        handler.register(SetUserConfigRequest, handle_set_user_config)
-        handler.register(SetUIElementValueRequest, handle_set_ui_element_value)
         handler.register(FunctionCallRequest, handle_function_call)
-        handler.register(DeleteCellRequest, self.delete_cell)
         handler.register(
             InstallMissingPackagesRequest, handle_install_missing_packages
         )
+        handler.register(PdbRequest, handle_pdb_request)
+        handler.register(RenameRequest, handle_rename)
+        handler.register(SetCellConfigRequest, self.set_cell_config)
+        handler.register(SetUIElementValueRequest, handle_set_ui_element_value)
+        handler.register(SetUserConfigRequest, handle_set_user_config)
         handler.register(StopRequest, handle_stop)
         # Datasets
         handler.register(
@@ -2065,6 +2087,10 @@ class Kernel:
         handler.register(
             PreviewSQLTableListRequest,
             self.datasets_callbacks.preview_sql_table_list,
+        )
+        handler.register(
+            PreviewDataSourceConnectionRequest,
+            self.datasets_callbacks.preview_datasource_connection,
         )
         # Secrets
         handler.register(
@@ -2167,20 +2193,22 @@ class DatasetCallbacks:
         return
 
     def _get_sql_engine(
-        self, engine_name: str
+        self, variable_name: str
     ) -> tuple[Optional[SQLEngine], Optional[str]]:
-        """Find the SQL engine associated with the given name. Returns the engine and the error message if any."""
-        engine_name = cast(VariableName, engine_name)
+        """Find the SQL engine associated with the given variable name. Returns the engine and the error message if any."""
+        variable_name = cast(VariableName, variable_name)
 
         try:
             # Should we find the existing engine instead?
-            engine_val = self._kernel.globals.get(engine_name)
-            engines = get_engines_from_variables([(engine_name, engine_val)])
+            engine_val = self._kernel.globals.get(variable_name)
+            engines = get_engines_from_variables([(variable_name, engine_val)])
             if engines is None or len(engines) == 0:
                 return None, "Engine not found"
             return engines[0][1], None
         except Exception as e:
-            LOGGER.warning("Failed to get engine %s", engine_name, exc_info=e)
+            LOGGER.warning(
+                "Failed to get engine %s", variable_name, exc_info=e
+            )
             return None, str(e)
 
     @kernel_tracer.start_as_current_span("preview_sql_table")
@@ -2194,12 +2222,12 @@ class DatasetCallbacks:
                 - schema: Name of the schema
                 - table_name: Name of the table
         """
-        engine_name = cast(VariableName, request.engine)
+        variable_name = cast(VariableName, request.engine)
         database_name = request.database
         schema_name = request.schema
         table_name = request.table_name
 
-        engine, error = self._get_sql_engine(engine_name)
+        engine, error = self._get_sql_engine(variable_name)
         if error is not None or engine is None:
             SQLTablePreview(
                 request_id=request.request_id, table=None, error=error
@@ -2240,11 +2268,11 @@ class DatasetCallbacks:
                 - database: Name of the database
                 - schema: Name of the schema
         """
-        engine_name = cast(VariableName, request.engine)
+        variable_name = cast(VariableName, request.engine)
         database_name = request.database
         schema_name = request.schema
 
-        engine, error = self._get_sql_engine(engine_name)
+        engine, error = self._get_sql_engine(variable_name)
         if error is not None or engine is None:
             SQLTableListPreview(
                 request_id=request.request_id, tables=[], error=error
@@ -2269,6 +2297,28 @@ class DatasetCallbacks:
                 tables=[],
                 error="Failed to get table list: " + str(e),
             )
+
+    @kernel_tracer.start_as_current_span("preview_datasource_connection")
+    async def preview_datasource_connection(
+        self, request: PreviewDataSourceConnectionRequest
+    ) -> None:
+        """Broadcasts a datasource connection for a given engine"""
+        variable_name = cast(VariableName, request.engine)
+        engine, error = self._get_sql_engine(variable_name)
+        if error is not None or engine is None:
+            LOGGER.error("Failed to get engine %s", variable_name)
+            return
+
+        data_source_connection = engine_to_data_source_connection(
+            variable_name, engine
+        )
+
+        LOGGER.debug(
+            "Broadcasting datasource connection for %s engine", variable_name
+        )
+        DataSourceConnections(
+            connections=[data_source_connection],
+        ).broadcast()
 
 
 class SecretsCallbacks:
@@ -2666,9 +2716,22 @@ def launch_kernel(
     ui_element_request_mgr = SetUIElementRequestManager(set_ui_element_queue)
 
     async def control_loop(kernel: Kernel) -> None:
+        from queue import Empty
+
         while True:
             try:
-                request: ControlRequest | None = control_queue.get()
+                TIMEOUT_S = 0.1
+                # 100ms timeout to avoid blocking
+                # this does not mean ControlRequest will be blocked for 100ms
+                # but rather background tasks may not start until 100ms have passed
+                request: ControlRequest | None = control_queue.get(
+                    timeout=TIMEOUT_S
+                )
+            except Empty:
+                # Yield control back to the event loop to give
+                # other tasks a chance to run
+                await asyncio.sleep(0)
+                continue
             except Exception as e:
                 # triggered on Windows when quit with Ctrl+C
                 LOGGER.debug("kernel queue.get() failed %s", e)

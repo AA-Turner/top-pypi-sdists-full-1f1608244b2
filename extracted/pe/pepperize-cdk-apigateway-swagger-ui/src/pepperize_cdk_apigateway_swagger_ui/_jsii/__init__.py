@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@pepperize/cdk-apigateway-swagger-ui",
-    "0.0.1271",
+    "0.0.1274",
     __name__[0:-6],
-    "cdk-apigateway-swagger-ui@0.0.1271.jsii.tgz",
+    "cdk-apigateway-swagger-ui@0.0.1274.jsii.tgz",
 )
 
 __all__ = [

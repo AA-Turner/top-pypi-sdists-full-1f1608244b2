@@ -34,8 +34,8 @@ def register_preset(
 
     Parameters
     ----------
-    preset : str
-        The name of the preset.
+    preset : str or Sequence[str]
+        The name of the preset, or a sequence of alias names.
     optimizer : callable
         The optimizer function that returns a path.
     optimizer_tree : callable, optional
@@ -45,23 +45,29 @@ def register_preset(
     compressed : bool, optional
         If ``True``, the preset presents a compressed contraction optimizer.
     """
-    if optimizer is not None:
-        _PRESETS_PATH[preset] = optimizer
+    if isinstance(preset, (tuple, list)):
+        presets = preset
+    else:
+        presets = (preset,)
 
-        if register_opt_einsum == "auto":
-            register_opt_einsum = opt_einsum_installed
+    for preset in presets:
+        if optimizer is not None:
+            _PRESETS_PATH[preset] = optimizer
 
-        if register_opt_einsum:
-            try:
-                register_path_fn(preset, optimizer)
-            except KeyError:
-                pass
+            if register_opt_einsum == "auto":
+                register_opt_einsum = opt_einsum_installed
 
-    if optimizer_tree is not None:
-        _PRESETS_TREE[preset] = optimizer_tree
+            if register_opt_einsum:
+                try:
+                    register_path_fn(preset, optimizer)
+                except KeyError:
+                    pass
 
-    if compressed:
-        _COMPRESSED_PRESETS.add(preset)
+        if optimizer_tree is not None:
+            _PRESETS_TREE[preset] = optimizer_tree
+
+        if compressed:
+            _COMPRESSED_PRESETS.add(preset)
 
 
 @functools.lru_cache(None)
@@ -125,6 +131,7 @@ def normalize_input(
     output=None,
     size_dict=None,
     shapes=None,
+    optimize=None,
     canonicalize=True,
 ):
     """Parse a contraction definition, optionally canonicalizing the indices
@@ -133,11 +140,12 @@ def normalize_input(
 
     """
     if canonicalize:
-        inputs, output, size_dict = canonicalize_inputs(
+        inputs, output, size_dict, optimize = canonicalize_inputs(
             inputs,
             output,
             shapes=shapes,
             size_dict=size_dict,
+            optimize=optimize,
         )
     elif output is None:
         # didn't canonicalize or specify output
@@ -150,7 +158,7 @@ def normalize_input(
             # didn't canonicalize and only shapes given
             size_dict = shapes_inputs_to_size_dict(shapes, inputs)
 
-    return inputs, output, size_dict
+    return inputs, output, size_dict, optimize
 
 
 _find_path_handlers = {}
@@ -159,6 +167,12 @@ _find_path_handlers = {}
 def _find_path_explicit_path(inputs, output, size_dict, optimize):
     if isinstance(optimize, list):
         optimize = tuple(optimize)
+
+    if isinstance(optimize[0], (str, int)):
+        from .pathfinders.path_basic import edge_path_to_linear
+
+        optimize = edge_path_to_linear(optimize, inputs)
+
     return optimize
 
 
@@ -268,8 +282,8 @@ def array_contract_path(
         locations should be *popped* from the list and then the result of the
         contraction *appended*.
     """
-    inputs, output, size_dict = normalize_input(
-        inputs, output, size_dict, shapes, canonicalize=canonicalize
+    inputs, output, size_dict, optimize = normalize_input(
+        inputs, output, size_dict, shapes, optimize, canonicalize
     )
 
     if cache and can_hash_optimize(optimize.__class__):
@@ -287,7 +301,14 @@ def array_contract_path(
 
 
 def _find_tree_explicit(inputs, output, size_dict, optimize):
-    return ContractionTree.from_path(inputs, output, size_dict, path=optimize)
+    if isinstance(optimize[0], (str, int)):
+        return ContractionTree.from_path(
+            inputs, output, size_dict, edge_path=optimize
+        )
+    else:
+        return ContractionTree.from_path(
+            inputs, output, size_dict, path=optimize
+        )
 
 
 def _find_tree_optimizer_search(inputs, output, size_dict, optimize, **kwargs):
@@ -409,8 +430,8 @@ def array_contract_tree(
     --------
     array_contract, array_contract_expression, einsum_tree
     """
-    inputs, output, size_dict = normalize_input(
-        inputs, output, size_dict, shapes, canonicalize=canonicalize
+    inputs, output, size_dict, optimize = normalize_input(
+        inputs, output, size_dict, shapes, optimize, canonicalize
     )
 
     nterms = len(inputs)
@@ -725,8 +746,8 @@ def array_contract_expression(
     --------
     einsum_expression, array_contract, array_contract_tree
     """
-    inputs, output, size_dict = normalize_input(
-        inputs, output, size_dict, shapes, canonicalize=canonicalize
+    inputs, output, size_dict, optimize = normalize_input(
+        inputs, output, size_dict, shapes, optimize, canonicalize
     )
 
     if constants is not None:

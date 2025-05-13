@@ -2155,9 +2155,9 @@ MetricDatumTypeDef = TypedDict(
     "MetricDatumTypeDef",
     {
         "MetricName": NotRequired[AutoMLMetricEnumType],
+        "StandardMetricName": NotRequired[AutoMLMetricExtendedEnumType],
         "Value": NotRequired[float],
         "Set": NotRequired[MetricSetSourceType],
-        "StandardMetricName": NotRequired[AutoMLMetricExtendedEnumType],
     },
 )
 

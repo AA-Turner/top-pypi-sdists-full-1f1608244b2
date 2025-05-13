@@ -254,7 +254,7 @@ def test_to_pandas_array_struct_correct_result(session):
 def test_to_pandas_override_global_option(scalars_df_index):
     # Direct call to_pandas uses global default setting (allow_large_results=True),
     # table has 'bqdf' prefix.
-    with bigframes.option_context("bigquery.allow_large_results", True):
+    with bigframes.option_context("compute.allow_large_results", True):
 
         scalars_df_index.to_pandas()
         table_id = scalars_df_index._query_job.destination.table_id
@@ -324,7 +324,7 @@ def test_to_pandas_dry_run(session, scalars_pandas_df_multi_index):
 
 def test_to_arrow_override_global_option(scalars_df_index):
     # Direct call to_arrow uses global default setting (allow_large_results=True),
-    with bigframes.option_context("bigquery.allow_large_results", True):
+    with bigframes.option_context("compute.allow_large_results", True):
 
         scalars_df_index.to_arrow()
         table_id = scalars_df_index._query_job.destination.table_id
@@ -550,6 +550,74 @@ def test_to_gbq_w_duplicate_column_names(
         bf_result["int64_col_1"],
         check_names=False,
     )
+
+
+def test_to_gbq_w_protected_column_names(
+    scalars_df_index, scalars_pandas_df_index, dataset_id
+):
+    """
+    Column names can't use any of the following prefixes:
+
+    * _TABLE_
+    * _FILE_
+    * _PARTITION
+    * _ROW_TIMESTAMP
+    * __ROOT__
+    * _COLIDENTIFIER
+
+    See: https://cloud.google.com/bigquery/docs/schemas#column_names
+    """
+    destination_table = f"{dataset_id}.test_to_gbq_w_protected_column_names"
+
+    scalars_df_index = scalars_df_index.rename(
+        columns={
+            "bool_col": "_Table_Suffix",
+            "bytes_col": "_file_path",
+            "date_col": "_PARTITIONDATE",
+            "datetime_col": "_ROW_TIMESTAMP",
+            "int64_col": "__ROOT__",
+            "int64_too": "_COLIDENTIFIER",
+            "numeric_col": "COLIDENTIFIER",  # Create a collision at serialization time.
+        }
+    )[
+        [
+            "_Table_Suffix",
+            "_file_path",
+            "_PARTITIONDATE",
+            "_ROW_TIMESTAMP",
+            "__ROOT__",
+            "_COLIDENTIFIER",
+            "COLIDENTIFIER",
+        ]
+    ]
+    scalars_df_index.to_gbq(destination_table, if_exists="replace")
+
+    bf_result = bpd.read_gbq(destination_table, index_col="rowindex").to_pandas()
+
+    # Leading _ characters are removed to make these columns valid in BigQuery.
+    expected = scalars_pandas_df_index.rename(
+        columns={
+            "bool_col": "Table_Suffix",
+            "bytes_col": "file_path",
+            "date_col": "PARTITIONDATE",
+            "datetime_col": "ROW_TIMESTAMP",
+            "int64_col": "ROOT__",
+            "int64_too": "COLIDENTIFIER",
+            "numeric_col": "COLIDENTIFIER_1",
+        }
+    )[
+        [
+            "Table_Suffix",
+            "file_path",
+            "PARTITIONDATE",
+            "ROW_TIMESTAMP",
+            "ROOT__",
+            "COLIDENTIFIER",
+            "COLIDENTIFIER_1",
+        ]
+    ]
+
+    pd.testing.assert_frame_equal(bf_result, expected)
 
 
 def test_to_gbq_w_flexible_column_names(

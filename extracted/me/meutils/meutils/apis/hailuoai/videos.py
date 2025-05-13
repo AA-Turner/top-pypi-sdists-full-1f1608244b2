@@ -37,6 +37,9 @@ send_message = partial(
     url=VIDEOS
 )
 
+APP_ID = '3001'
+VERSION_CODE='22202'
+
 MODEL_MAPPING = {
     # video-01 video-01 video-01-live2d S2V-01
 
@@ -137,8 +140,8 @@ async def get_access_token(token: str):
 
     params = {
         'device_platform': 'web',
-        'app_id': '3001',
-        'version_code': '22201',
+        'app_id': APP_ID,
+        'version_code': VERSION_CODE,
         'uuid': '8c059369-00bf-4777-a426-d9c9b7984ee6',
         'device_id': '243713252545986562',
         'os_name': 'Mac',
@@ -269,8 +272,8 @@ async def create_task(request: VideoRequest, token: Optional[str] = None):
 
     params = {
         'device_platform': 'web',
-        'app_id': '3001',
-        'version_code': '22202',
+        'app_id': APP_ID,
+        'version_code': VERSION_CODE,
         'biz_id': 0,
         'uuid': '8c059369-00bf-4777-a426-d9c9b7984ee6',
         'device_id': '243713252545986562',
@@ -343,12 +346,15 @@ async def create_task(request: VideoRequest, token: Optional[str] = None):
 async def get_task(task_id: str, token: str):
     BASE_URL = get_base_url(token)
 
+    logger.debug(BASE_URL)
+
     task_id = task_id.rsplit('-', 1)[-1]
 
     params = {
         'device_platform': 'web',
-        'app_id': '3001',
-        'version_code': '22201',
+        'app_id': APP_ID,
+        'version_code': VERSION_CODE,
+        'biz_id': 0,
         'uuid': '8c059369-00bf-4777-a426-d9c9b7984ee6',
         'device_id': '243713252545986562',
         'os_name': 'Mac',
@@ -369,8 +375,6 @@ async def get_task(task_id: str, token: str):
         'token': token,
         'yy': get_yy(payload, params, url="/api/multimodal/video/processing"),
     }
-
-    logger.debug(headers['yy'])
 
     async with httpx.AsyncClient(base_url=BASE_URL, headers=headers, timeout=60) as client:
         response = await client.get("/api/multimodal/video/processing", params=params)
@@ -461,6 +465,8 @@ if __name__ == '__main__':  # 304752356930580482
 
     r = arun(create_task(request, token=token))
     # arun(get_task(task_id=r.task_id, token=r.system_fingerprint))
+
+    # arun(get_task(task_id="hailuoai-378260932722450439", token=token))
 
     # arun(get_access_token(token))
     #

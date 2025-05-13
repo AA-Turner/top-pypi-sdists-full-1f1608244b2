@@ -120,6 +120,16 @@ class HTTPRequest(Mapping[str, Any]):
 
 
 @dataclass
+class PdbRequest:
+    cell_id: CellId_t
+    # incoming request, e.g. from Starlette or FastAPI
+    request: Optional[HTTPRequest] = None
+
+    def __repr__(self) -> str:
+        return f"PdbRequest(cell={self.cell_id})"
+
+
+@dataclass
 class ExecutionRequest:
     cell_id: CellId_t
     code: str
@@ -332,6 +342,13 @@ class PreviewSQLTableListRequest:
 
 
 @dataclass
+class PreviewDataSourceConnectionRequest:
+    """Fetch a datasource connection"""
+
+    engine: str
+
+
+@dataclass
 class ListSecretKeysRequest:
     request_id: RequestId
 
@@ -342,21 +359,23 @@ class RefreshSecretsRequest:
 
 
 ControlRequest = Union[
+    CreationRequest,
+    DeleteCellRequest,
     ExecuteMultipleRequest,
     ExecuteScratchpadRequest,
     ExecuteStaleRequest,
-    CreationRequest,
-    DeleteCellRequest,
     FunctionCallRequest,
+    InstallMissingPackagesRequest,
+    ListSecretKeysRequest,
+    PdbRequest,
+    PreviewDatasetColumnRequest,
+    PreviewSQLTableListRequest,
+    PreviewDataSourceConnectionRequest,
+    PreviewSQLTableRequest,
+    RefreshSecretsRequest,
     RenameRequest,
     SetCellConfigRequest,
-    SetUserConfigRequest,
     SetUIElementValueRequest,
+    SetUserConfigRequest,
     StopRequest,
-    InstallMissingPackagesRequest,
-    PreviewDatasetColumnRequest,
-    PreviewSQLTableRequest,
-    PreviewSQLTableListRequest,
-    ListSecretKeysRequest,
-    RefreshSecretsRequest,
 ]

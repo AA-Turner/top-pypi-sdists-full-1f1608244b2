@@ -1,7 +1,7 @@
 r'''
 # `provider`
 
-Refer to the Terraform Registry for docs: [`local`](https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs).
+Refer to the Terraform Registry for docs: [`local`](https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class LocalProvider(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-local.provider.LocalProvider",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs local}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs local}.'''
 
     def __init__(
         self,
@@ -53,11 +53,11 @@ class LocalProvider(
         *,
         alias: typing.Optional[builtins.str] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs local} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs local} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs#alias LocalProvider#alias}
+        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs#alias LocalProvider#alias}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__7d22d61fb4ed68f610990262a1621168510888406f1536f801321deb6cdbe957)
@@ -80,7 +80,7 @@ class LocalProvider(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the LocalProvider to import.
-        :param import_from_id: The id of the existing LocalProvider that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing LocalProvider that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the LocalProvider to import is found.
         '''
         if __debug__:
@@ -134,7 +134,7 @@ class LocalProvider(
 class LocalProviderConfig:
     def __init__(self, *, alias: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs#alias LocalProvider#alias}
+        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs#alias LocalProvider#alias}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__64dbc73e09606aa66a4af8e9a0dea1ddd020dc0f7219838f63e50d705d476407)
@@ -147,7 +147,7 @@ class LocalProviderConfig:
     def alias(self) -> typing.Optional[builtins.str]:
         '''Alias name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs#alias LocalProvider#alias}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs#alias LocalProvider#alias}
         '''
         result = self._values.get("alias")
         return typing.cast(typing.Optional[builtins.str], result)

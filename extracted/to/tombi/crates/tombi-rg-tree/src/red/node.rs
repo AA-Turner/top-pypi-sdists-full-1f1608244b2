@@ -35,7 +35,7 @@ impl<L: Language> fmt::Debug for RedNode<L> {
                     WalkEvent::Leave(_) => level -= 1,
                 }
             }
-            assert_eq!(level, 0);
+            debug_assert_eq!(level, 0);
             Ok(())
         } else {
             write!(
@@ -43,7 +43,7 @@ impl<L: Language> fmt::Debug for RedNode<L> {
                 "{:?} @{:?} @{:?}",
                 self.kind(),
                 self.span(),
-                self.range()
+                tombi_text::Range::new_1_based(self.range())
             )
         }
     }

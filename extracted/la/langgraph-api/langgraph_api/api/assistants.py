@@ -3,13 +3,6 @@ from uuid import uuid4
 
 import structlog
 from langchain_core.runnables.utils import create_model
-from langgraph.constants import (
-    CONFIG_KEY_CHECKPOINT_ID,
-    CONFIG_KEY_CHECKPOINT_NS,
-    CONFIG_KEY_CHECKPOINTER,
-    CONFIG_KEY_STORE,
-    CONFIG_KEY_THREAD_ID,
-)
 from langgraph.pregel import Pregel
 from pydantic import TypeAdapter
 from starlette.exceptions import HTTPException
@@ -38,11 +31,11 @@ logger = structlog.stdlib.get_logger(__name__)
 
 
 EXCLUDED_CONFIG_SCHEMA = (
-    CONFIG_KEY_CHECKPOINTER,
-    CONFIG_KEY_STORE,
-    CONFIG_KEY_CHECKPOINT_ID,
-    CONFIG_KEY_CHECKPOINT_NS,
-    CONFIG_KEY_THREAD_ID,
+    "__pregel_checkpointer",
+    "__pregel_store",
+    "checkpoint_id",
+    "checkpoint_ns",
+    "thread_id",
 )
 
 

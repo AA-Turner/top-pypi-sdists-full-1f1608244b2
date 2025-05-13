@@ -254,6 +254,8 @@ class AutoCoderArgs(pydantic.BaseModel):
     emb_model: Optional[str] = ""
     code_model: Optional[str] = ""
     generate_rerank_model: Optional[str] = ""
+    context_prune_model: Optional[str] = ""
+    conversation_prune_model: Optional[str] = ""
     inference_model: Optional[str] = ""
     system_prompt: Optional[str] = ""
     planner_model: Optional[str] = ""
@@ -399,6 +401,7 @@ class AutoCoderArgs(pydantic.BaseModel):
 
     context_prune_strategy: Optional[str] = "extract"
     context_prune: Optional[bool] = True
+    context_prune_safe_zone_tokens: Optional[int] = 32*1024
     context_prune_sliding_window_size: Optional[int] = 1000
     context_prune_sliding_window_overlap: Optional[int] = 100
 
@@ -432,6 +435,8 @@ class AutoCoderArgs(pydantic.BaseModel):
     auto_fix_lint_max_attempts: Optional[int] = 5
     auto_fix_compile_max_attempts: Optional[int] = 5
     auto_fix_merge_max_attempts: Optional[int] = 5
+
+    enable_auto_select_rules: Optional[bool] = True
     
     ignore_clean_shadows: Optional[bool] = False
 

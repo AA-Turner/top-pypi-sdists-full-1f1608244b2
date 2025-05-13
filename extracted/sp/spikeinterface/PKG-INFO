@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: spikeinterface
-Version: 0.102.2
+Version: 0.102.3
 Summary: Python toolkit for analysis, visualization, and comparison of spike sorting output
 Author-email: Alessio Buccino <alessiop.buccino@gmail.com>, Samuel Garcia <sam.garcia.die@gmail.com>
 Project-URL: homepage, https://github.com/SpikeInterface/spikeinterface
@@ -22,14 +22,15 @@ Requires-Dist: numpy>=2.0.0; python_version >= "3.13"
 Requires-Dist: threadpoolctl>=3.0.0
 Requires-Dist: tqdm
 Requires-Dist: zarr<3,>=2.18
-Requires-Dist: neo>=0.14.0
+Requires-Dist: neo>=0.14.1
 Requires-Dist: probeinterface>=0.2.23
 Requires-Dist: packaging
+Requires-Dist: numcodecs<0.16.0
 Provides-Extra: extractors
 Requires-Dist: MEArec>=1.8; extra == "extractors"
 Requires-Dist: pynwb>=2.6.0; extra == "extractors"
 Requires-Dist: hdmf-zarr>=0.11.0; extra == "extractors"
-Requires-Dist: pyedflib<0.1.39,>=0.1.30; extra == "extractors"
+Requires-Dist: pyedflib>=0.1.30; extra == "extractors"
 Requires-Dist: sonpy; python_version < "3.10" and extra == "extractors"
 Requires-Dist: lxml; extra == "extractors"
 Requires-Dist: scipy; extra == "extractors"
@@ -84,7 +85,6 @@ Requires-Dist: pytest; extra == "test"
 Requires-Dist: pytest-dependency; extra == "test"
 Requires-Dist: pytest-cov; extra == "test"
 Requires-Dist: psutil; extra == "test"
-Requires-Dist: huggingface_hub; extra == "test"
 Requires-Dist: ibllib; extra == "test"
 Requires-Dist: s3fs; extra == "test"
 Requires-Dist: numba<0.61.0; python_version < "3.13" and extra == "test"

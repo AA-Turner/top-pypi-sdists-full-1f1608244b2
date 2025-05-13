@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: kopf
-Version: 1.37.5
+Version: 1.38.0
 Summary: Kubernetes Operator Pythonic Framework (Kopf)
 Home-page: https://github.com/nolar/kopf
 Author: Sergey Vasilyev
@@ -17,7 +17,6 @@ Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
@@ -27,10 +26,9 @@ Classifier: Programming Language :: Python :: 3 :: Only
 Classifier: Programming Language :: Python :: Implementation :: CPython
 Classifier: Programming Language :: Python :: Implementation :: PyPy
 Classifier: Topic :: Software Development :: Libraries
-Requires-Python: >=3.8
+Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: typing_extensions
 Requires-Dist: python-json-logger
 Requires-Dist: iso8601
 Requires-Dist: click
@@ -196,7 +194,7 @@ That easy! For more features, see the [documentation](https://kopf.readthedocs.i
 
 ## Usage
 
-Python 3.8+ is required:
+Python 3.9+ is required:
 [CPython](https://www.python.org/) and [PyPy](https://www.pypy.org/)
 are officially supported and tested; other Python implementations can work too.
 
@@ -204,7 +202,7 @@ We assume that when the operator is executed in the cluster, it must be packaged
 into a docker image with a CI/CD tool of your preference.
 
 ```dockerfile
-FROM python:3.12
+FROM python:3.13
 ADD . /src
 RUN pip install kopf
 CMD kopf run /src/handlers.py --verbose

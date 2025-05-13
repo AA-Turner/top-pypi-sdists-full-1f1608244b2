@@ -27,10 +27,22 @@ impl Range {
             end: if start <= end {
                 end
             } else {
-                tracing::error!("Invalid tombi_text::Range: start: {:?} > end: {:?}", start, end);
+                tracing::error!(
+                    "Invalid tombi_text::Range: start: {:?} > end: {:?}",
+                    start,
+                    end
+                );
                 start
             },
         }
+    }
+    /// New range with 1-based line and column
+    #[inline]
+    pub fn new_1_based(range: Self) -> Self {
+        Self::new(
+            Position::new(range.start().line() + 1, range.start().column() + 1),
+            Position::new(range.end().line() + 1, range.end().column() + 1),
+        )
     }
 
     #[inline]
@@ -159,7 +171,7 @@ mod test {
         let r1 = Range::from(range);
         let r2 = Range::from(other);
 
-        assert_eq!(r1.cmp(&r2), expected);
+        pretty_assertions::assert_eq!(r1.cmp(&r2), expected);
     }
 
     #[rstest]
@@ -173,6 +185,6 @@ mod test {
     ) {
         let mut range = Range::from(range);
         range += RelativePosition::of(text);
-        assert_eq!(range, expected.into());
+        pretty_assertions::assert_eq!(range, expected.into());
     }
 }

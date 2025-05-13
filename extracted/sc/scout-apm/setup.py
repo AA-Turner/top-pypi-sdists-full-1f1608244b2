@@ -33,7 +33,7 @@ else:
 
 setup(
     name="scout_apm",
-    version="3.3.0",
+    version="3.4.0",
     description="Scout Application Performance Monitoring Agent",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -60,7 +60,7 @@ setup(
     install_requires=[
         "asgiref",
         "psutil>=5",
-        "urllib3~=2.2.0",
+        "urllib3",
         "certifi",
         "wrapt>=1.10,<2.0",
     ],

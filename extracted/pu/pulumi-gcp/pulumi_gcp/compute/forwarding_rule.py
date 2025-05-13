@@ -144,6 +144,9 @@ class ForwardingRuleArgs:
                **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
                Please refer to the field `effective_labels` for all of the labels present on the resource.
         :param pulumi.Input[builtins.str] load_balancing_scheme: Specifies the forwarding rule type.
+               Note that an empty string value (`""`) is also supported for some use
+               cases, for example PSC (private service connection) regional forwarding
+               rules.
                For more information about forwarding rules, refer to
                [Forwarding rule concepts](https://cloud.google.com/load-balancing/docs/forwarding-rule-concepts).
                Default value is `EXTERNAL`.
@@ -526,6 +529,9 @@ class ForwardingRuleArgs:
     def load_balancing_scheme(self) -> Optional[pulumi.Input[builtins.str]]:
         """
         Specifies the forwarding rule type.
+        Note that an empty string value (`""`) is also supported for some use
+        cases, for example PSC (private service connection) regional forwarding
+        rules.
         For more information about forwarding rules, refer to
         [Forwarding rule concepts](https://cloud.google.com/load-balancing/docs/forwarding-rule-concepts).
         Default value is `EXTERNAL`.
@@ -936,6 +942,9 @@ class _ForwardingRuleState:
                **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
                Please refer to the field `effective_labels` for all of the labels present on the resource.
         :param pulumi.Input[builtins.str] load_balancing_scheme: Specifies the forwarding rule type.
+               Note that an empty string value (`""`) is also supported for some use
+               cases, for example PSC (private service connection) regional forwarding
+               rules.
                For more information about forwarding rules, refer to
                [Forwarding rule concepts](https://cloud.google.com/load-balancing/docs/forwarding-rule-concepts).
                Default value is `EXTERNAL`.
@@ -1406,6 +1415,9 @@ class _ForwardingRuleState:
     def load_balancing_scheme(self) -> Optional[pulumi.Input[builtins.str]]:
         """
         Specifies the forwarding rule type.
+        Note that an empty string value (`""`) is also supported for some use
+        cases, for example PSC (private service connection) regional forwarding
+        rules.
         For more information about forwarding rules, refer to
         [Forwarding rule concepts](https://cloud.google.com/load-balancing/docs/forwarding-rule-concepts).
         Default value is `EXTERNAL`.
@@ -1737,10 +1749,8 @@ class _ForwardingRuleState:
         pulumi.set(self, "target", value)
 
 
+@pulumi.type_token("gcp:compute/forwardingRule:ForwardingRule")
 class ForwardingRule(pulumi.CustomResource):
-
-    pulumi_type = "gcp:compute/forwardingRule:ForwardingRule"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -2562,6 +2572,9 @@ class ForwardingRule(pulumi.CustomResource):
                **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
                Please refer to the field `effective_labels` for all of the labels present on the resource.
         :param pulumi.Input[builtins.str] load_balancing_scheme: Specifies the forwarding rule type.
+               Note that an empty string value (`""`) is also supported for some use
+               cases, for example PSC (private service connection) regional forwarding
+               rules.
                For more information about forwarding rules, refer to
                [Forwarding rule concepts](https://cloud.google.com/load-balancing/docs/forwarding-rule-concepts).
                Default value is `EXTERNAL`.
@@ -3613,6 +3626,9 @@ class ForwardingRule(pulumi.CustomResource):
                **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
                Please refer to the field `effective_labels` for all of the labels present on the resource.
         :param pulumi.Input[builtins.str] load_balancing_scheme: Specifies the forwarding rule type.
+               Note that an empty string value (`""`) is also supported for some use
+               cases, for example PSC (private service connection) regional forwarding
+               rules.
                For more information about forwarding rules, refer to
                [Forwarding rule concepts](https://cloud.google.com/load-balancing/docs/forwarding-rule-concepts).
                Default value is `EXTERNAL`.
@@ -3988,6 +4004,9 @@ class ForwardingRule(pulumi.CustomResource):
     def load_balancing_scheme(self) -> pulumi.Output[Optional[builtins.str]]:
         """
         Specifies the forwarding rule type.
+        Note that an empty string value (`""`) is also supported for some use
+        cases, for example PSC (private service connection) regional forwarding
+        rules.
         For more information about forwarding rules, refer to
         [Forwarding rule concepts](https://cloud.google.com/load-balancing/docs/forwarding-rule-concepts).
         Default value is `EXTERNAL`.

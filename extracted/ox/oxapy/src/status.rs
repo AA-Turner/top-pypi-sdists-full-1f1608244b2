@@ -3,36 +3,29 @@ use std::collections::HashMap;
 use hyper::body::Bytes;
 use pyo3::prelude::*;
 
-use crate::{into_response::IntoResponse, response::Response};
-
-#[derive(Clone)]
-#[pyclass]
-pub struct Status(pub u16);
+use crate::response::Response;
 
 macro_rules! status_codes {
     ($(($num:expr, $kconst:ident);)+) => {
-        #[pymethods]
-        impl Status {
-        $(
-            #[classattr]
-            pub const $kconst: Status = Status($num);
-        )+
-
-            #[getter]
-            pub fn code(&self) -> u16 {
-                self.0
-            }
+        #[derive(Clone)]
+        #[pyclass]
+        #[allow(non_camel_case_types)]
+        #[allow(clippy::upper_case_acronyms)]
+        pub enum Status {
+            $(
+             $kconst = $num,
+            )+
         }
     }
 }
 
-impl IntoResponse for Status {
-    fn into_response(&self) -> PyResult<Response> {
-        Ok(Response {
+impl Into<Response> for Status {
+    fn into(self) -> Response {
+        Response {
             status: self.clone(),
             headers: HashMap::from([("Content-Type".to_string(), "text/plain".to_string())]),
             body: Bytes::new(),
-        })
+        }
     }
 }
 

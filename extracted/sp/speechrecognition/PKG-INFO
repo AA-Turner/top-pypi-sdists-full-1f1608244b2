@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: SpeechRecognition
-Version: 3.14.2
+Version: 3.14.3
 Summary: Library for performing speech recognition, with support for several engines and APIs, online and offline.
 Home-page: https://github.com/Uberi/speech_recognition#readme
 Author: Anthony Zhang (Uberi)

@@ -1200,10 +1200,15 @@ class CertoraBuildGenerator:
         return x[TYPE] == FUNCTION or x[TYPE] == CertoraBuildGenerator.CONSTRUCTOR_STRING
 
     @staticmethod
-    def collect_srcmap(data: Dict[str, Any]) -> Any:
+    def collect_srcmap(data: Dict[str, Any]) -> Tuple[str, str]:
         # no source map object in vyper
-        return (data["evm"]["deployedBytecode"].get("sourceMap", ""),
-                data["evm"]["bytecode"].get("sourceMap", ""))
+        deployed = data["evm"]["deployedBytecode"].get("sourceMap", "")
+        if isinstance(deployed, dict):
+            deployed = deployed.get("pc_pos_map_compressed", "")
+        regular = data["evm"]["bytecode"].get("sourceMap", "")
+        if isinstance(regular, dict):
+            regular = regular.get("pc_pos_map_compressed", "")
+        return deployed, regular
 
     @staticmethod
     def collect_varmap(contract: str, data: Dict[str, Any]) -> Any:
@@ -1742,6 +1747,10 @@ class CertoraBuildGenerator:
         sdc_name = f"{Path(build_arg_contract_file).name}_{file_index}"
         compilation_path = self.get_compilation_path(sdc_name)
         self.file_to_sdc_name[Util.abs_norm_path(build_arg_contract_file)] = sdc_name
+
+        compiler_collector = self.compiler_coll_factory \
+            .get_compiler_collector(Path(path_for_compiler_collector_file))
+
         # update remappings and collect_cmd:
         if not is_vyper:
             Util.safe_create_dir(compilation_path)
@@ -1789,8 +1798,10 @@ class CertoraBuildGenerator:
             compiler_logger.debug(f"collect_cmd: {collect_cmd}\n")
         else:
             compiler_ver_to_run = get_relevant_compiler(Path(build_arg_contract_file), self.context)
-
-            collect_cmd = f'{compiler_ver_to_run} -p "{self.context.solc_allow_path}" -o "{compilation_path}" ' \
+            path_string = ""
+            if compiler_collector.compiler_version[1] < 4:
+                path_string = f' -p "{self.context.solc_allow_path}"'
+            collect_cmd = f'{compiler_ver_to_run}{path_string} -o "{compilation_path}" ' \
                           f'--standard-json'
 
         # Make sure compilation artifacts are always deleted
@@ -1802,9 +1813,6 @@ class CertoraBuildGenerator:
             # we want to preserve the previous artifacts too for a comprehensive view
             # (we do not try to save a big chain history of changes, just a previous and current)
             self.backup_compiler_outputs(sdc_name, smart_contract_lang, "prev")
-
-        compiler_collector = self.compiler_coll_factory \
-            .get_compiler_collector(Path(path_for_compiler_collector_file))
 
         # Standard JSON
         remappings = [] if isinstance(compiler_collector, CompilerCollectorYul) else self.context.remappings
@@ -2710,8 +2718,8 @@ class CertoraBuildGenerator:
                 return None
             cloned_field = storage_field_info.copy()
             cloned_field["slot"] = str(link_slot)
-            # Try to uniquify the name
-            cloned_field["label"] = f"certoralink_{ext_instance.name}_{var_name}"
+            # Don't bother trying to uniquify the name
+            cloned_field["label"] = var_name
             return cloned_field
 
         def handle_one_extension(storage_ext: str) -> tuple[Any, str, List[Dict[str, Any]]] :
@@ -2762,23 +2770,34 @@ class CertoraBuildGenerator:
             if target_contract.storage_layout.get("types") is None:
                 target_contract.storage_layout["types"] = {}
             target_slots = {storage["slot"] for storage in target_contract.storage_layout["storage"]}
+            target_vars = {storage["label"] for storage in target_contract.storage_layout["storage"]}
             # Keep track of slots we've added, and error if we
             # find two extensions extending the same slot
             added_slots: Dict[str, str] = {}
+            added_vars: Dict[str, str] = {}
             for ext in extensions:
                 (new_fields, new_types) = to_add[ext]
 
                 for f in new_fields:
-                    # See if any of the new fields is a slot we've already added
+                    # See if any of the new fields is a slot or variable name we've already added
                     slot = f["slot"]
+                    var = f["label"]
                     if slot in added_slots:
                         seen = added_slots[slot]
-                        raise Util.CertoraUserInputError(f"Slot {slot} added to {target_contract.name} by {ext} already added by {seen}")
+                        raise Util.CertoraUserInputError(f"Slot {slot} added to {target_contract.name} by {ext} was already added by {seen}")
+
+                    if var in added_vars:
+                        seen = added_vars[var]
+                        raise Util.CertoraUserInputError(f"Var '{var}' added to {target_contract.name} by {ext} was already added by {seen}")
 
                     if slot in target_slots:
-                        raise Util.CertoraUserInputError(f"Slot {slot} added to {target_contract.name} by {ext} already mapped by {target_contract.name}")
+                        raise Util.CertoraUserInputError(f"Slot {slot} added to {target_contract.name} by {ext} is already mapped by {target_contract.name}")
+
+                    if var in target_vars:
+                        raise Util.CertoraUserInputError(f"Var '{var}' added to {target_contract.name} by {ext} is already declared by {target_contract.name}")
 
                     added_slots[slot] = ext
+                    added_vars[var] = ext
 
                 target_contract.storage_layout["storage"].extend(new_fields)
 
@@ -3669,8 +3688,7 @@ def build(context: CertoraContext, ignore_spec_syntax_check: bool = False) -> No
 
         # Start by syntax checking, if we're in the right mode
         if Cv.mode_has_spec_file(context) and not context.build_only and not ignore_spec_syntax_check:
-            attr = context.disable_local_typechecking
-            if attr:
+            if context.disable_local_typechecking:
                 build_logger.warning(
                     "Local checks of CVL specification files disabled. It is recommended to enable the checks.")
             else:
@@ -3682,6 +3700,11 @@ def build(context: CertoraContext, ignore_spec_syntax_check: bool = False) -> No
                                                                                    certora_build_generator,
                                                                                    certora_verify_generator,
                                                                                    certora_build_cache_manager)
+
+        # avoid running the same test over and over again for each split run, context.split_rules is true only for
+        # the first run and is set to [] for split runs
+        if context.split_rules:
+            Ctx.run_local_spec_check(True, context)
 
         # .certora_verify.json is always constructed even if build cache is enabled
         # Sources construction should only happen when rebuilding

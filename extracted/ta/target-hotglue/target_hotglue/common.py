@@ -7,4 +7,7 @@ class HGJSONEncoder(JSONEncoder):
         if isinstance(o, datetime):
             return o.isoformat()
 
-        return super().default(o)
+        try:
+            return super().default(o)
+        except Exception as e:
+            return str(o)

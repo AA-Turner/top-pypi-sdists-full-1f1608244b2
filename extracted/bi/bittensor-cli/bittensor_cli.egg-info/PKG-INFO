@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: bittensor-cli
-Version: 9.4.0
+Version: 9.4.1
 Summary: Bittensor CLI
 Author: bittensor.com
 Project-URL: homepage, https://github.com/opentensor/btcli
@@ -12,6 +12,7 @@ Requires-Dist: async-property==0.2.2
 Requires-Dist: async-substrate-interface>=1.1.0
 Requires-Dist: aiohttp~=3.10.2
 Requires-Dist: backoff~=2.2.1
+Requires-Dist: click<8.2.0
 Requires-Dist: GitPython>=3.0.0
 Requires-Dist: fuzzywuzzy~=0.18.0
 Requires-Dist: netaddr~=1.3.0
@@ -72,7 +73,7 @@ Installation steps are described below. For a full documentation on how to use `
 
 ## Install on macOS and Linux
 
-You can install `btcli` on your local machine directly from source, or from from PyPI. **Make sure you verify your installation after you install**:
+You can install `btcli` on your local machine directly from source, or from PyPI. **Make sure you verify your installation after you install**:
 
 
 ### Install from PyPI

@@ -1,7 +1,7 @@
 r'''
 # `data_local_sensitive_file`
 
-Refer to the Terraform Registry for docs: [`data_local_sensitive_file`](https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/data-sources/sensitive_file).
+Refer to the Terraform Registry for docs: [`data_local_sensitive_file`](https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/data-sources/sensitive_file).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataLocalSensitiveFile(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-local.dataLocalSensitiveFile.DataLocalSensitiveFile",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/data-sources/sensitive_file local_sensitive_file}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/data-sources/sensitive_file local_sensitive_file}.'''
 
     def __init__(
         self,
@@ -60,11 +60,11 @@ class DataLocalSensitiveFile(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/data-sources/sensitive_file local_sensitive_file} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/data-sources/sensitive_file local_sensitive_file} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param filename: Path to the file that will be read. The data source will return an error if the file does not exist. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/data-sources/sensitive_file#filename DataLocalSensitiveFile#filename}
+        :param filename: Path to the file that will be read. The data source will return an error if the file does not exist. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/data-sources/sensitive_file#filename DataLocalSensitiveFile#filename}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -103,7 +103,7 @@ class DataLocalSensitiveFile(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataLocalSensitiveFile to import.
-        :param import_from_id: The id of the existing DataLocalSensitiveFile that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/data-sources/sensitive_file#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataLocalSensitiveFile that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/data-sources/sensitive_file#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataLocalSensitiveFile to import is found.
         '''
         if __debug__:
@@ -225,7 +225,7 @@ class DataLocalSensitiveFileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param filename: Path to the file that will be read. The data source will return an error if the file does not exist. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/data-sources/sensitive_file#filename DataLocalSensitiveFile#filename}
+        :param filename: Path to the file that will be read. The data source will return an error if the file does not exist. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/data-sources/sensitive_file#filename DataLocalSensitiveFile#filename}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -327,7 +327,7 @@ class DataLocalSensitiveFileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         The data source will return an error if the file does not exist.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/data-sources/sensitive_file#filename DataLocalSensitiveFile#filename}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/data-sources/sensitive_file#filename DataLocalSensitiveFile#filename}
         '''
         result = self._values.get("filename")
         assert result is not None, "Required property 'filename' is missing"

@@ -128,7 +128,7 @@ def check_conf_content(context: CertoraContext) -> None:
             val = getattr(context, option)
             if val is None or val is False:
                 setattr(context, option, context.conf_file_attr[option])
-            elif option != Attrs.EvmProverAttributes.FILES.get_conf_key() and val != context.conf_file_attr[option]:
+            elif option != 'files' and val != context.conf_file_attr[option]:
                 cli_val = ' '.join(val) if isinstance(val, list) else str(val)
                 conf_val = ' '.join(context.conf_file_attr[option]) \
                     if isinstance(context.conf_file_attr[option], list) else str(context.conf_file_attr[option])

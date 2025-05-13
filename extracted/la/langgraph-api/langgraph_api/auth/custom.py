@@ -448,6 +448,9 @@ class DotDict:
     def __len__(self):
         return len(self._dict)
 
+    def __reduce__(self):
+        return (self.__class__, (self._dict,))
+
 
 class ProxyUser(BaseUser):
     """A proxy that wraps a user object to ensure it has all BaseUser properties.
@@ -516,6 +519,10 @@ class ProxyUser(BaseUser):
 
     def __str__(self) -> str:
         return f"{self._user}"
+
+    def __reduce__(self):
+        # Only store the wrapped user
+        return (self.__class__, (self._user,))
 
 
 class SimpleUser(ProxyUser):

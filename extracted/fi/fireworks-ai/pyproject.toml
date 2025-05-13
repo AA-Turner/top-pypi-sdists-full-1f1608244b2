@@ -40,7 +40,7 @@ tag_regex = "python@(?P<version>.*)"
 authors = [
     { name = "Fireworks AI", email = "info@fireworks.ai" },
 ]
-requires-python = "<4.0,>=3.7"
+requires-python = ">=3.7"
 dependencies = [
     "httpx",
     "httpx-ws",
@@ -49,6 +49,8 @@ dependencies = [
     "Pillow",
     "betterproto[compiler]==2.0.0b7",
     "openai",
+    "typing_extensions",
+    "asyncstdlib>=3.12.0",
 ]
 name = "fireworks-ai"
 dynamic = []
@@ -61,10 +63,22 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Development Status :: 3 - Alpha",
 ]
-version = "0.16.1"
+version = "0.16.3"
 
 [project.license]
 text = "MIT"
+
+[project.optional-dependencies]
+flumina = [
+    "fastapi",
+    "tabulate",
+    "prance",
+    "openapi-spec-validator",
+    "gitignore-parser",
+    "safetensors",
+    "tqdm",
+    "torch",
+]
 
 [project.urls]
 Homepage = "https://fireworks.ai"

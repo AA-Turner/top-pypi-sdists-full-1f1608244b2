@@ -74,6 +74,7 @@ from gate_api.models.delivery_candlestick import DeliveryCandlestick
 from gate_api.models.delivery_contract import DeliveryContract
 from gate_api.models.delivery_settlement import DeliverySettlement
 from gate_api.models.deposit_address import DepositAddress
+from gate_api.models.deposit_record import DepositRecord
 from gate_api.models.dual_get_orders import DualGetOrders
 from gate_api.models.dual_get_plans import DualGetPlans
 from gate_api.models.eth2_rate_list import Eth2RateList
@@ -108,6 +109,8 @@ from gate_api.models.futures_price_triggered_order import FuturesPriceTriggeredO
 from gate_api.models.futures_ticker import FuturesTicker
 from gate_api.models.futures_trade import FuturesTrade
 from gate_api.models.index_constituent import IndexConstituent
+from gate_api.models.inline_object import InlineObject
+from gate_api.models.inline_response200 import InlineResponse200
 from gate_api.models.insurance_record import InsuranceRecord
 from gate_api.models.ledger_record import LedgerRecord
 from gate_api.models.liquidate_order import LiquidateOrder
@@ -237,6 +240,7 @@ from gate_api.models.uni_loan_record import UniLoanRecord
 from gate_api.models.unified_account import UnifiedAccount
 from gate_api.models.unified_balance import UnifiedBalance
 from gate_api.models.unified_borrowable import UnifiedBorrowable
+from gate_api.models.unified_borrowable1 import UnifiedBorrowable1
 from gate_api.models.unified_currency import UnifiedCurrency
 from gate_api.models.unified_discount import UnifiedDiscount
 from gate_api.models.unified_discount_tiers import UnifiedDiscountTiers

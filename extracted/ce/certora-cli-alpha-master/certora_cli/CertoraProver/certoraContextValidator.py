@@ -43,6 +43,39 @@ class CertoraContextValidator:
     def __init__(self, context: CertoraContext):
         self.context = context
 
+    def handle_ranger_attrs(self) -> None:
+        # unset unsupported attributes
+        if Attrs.is_ranger_app():
+            for attr in Attrs.RangerAttributes.ranger_unsupported_attributes():
+                attr_name = attr.get_conf_key()
+                if getattr(self.context, attr_name):
+                    if attr.arg_type == AttrUtil.AttrArgType.BOOLEAN:
+                        setattr(self.context, attr_name, False)
+                    else:
+                        setattr(self.context, attr_name, None)
+                    validation_logger.info(f"Ranger does not support {attr_name}, ignoring this attribute")
+
+            # setting the default Ranger attributes
+
+            self.context.range = self.context.range or Util.DEFAULT_RANGER_RANGE
+            self.context.ranger_failure_limit = self.context.ranger_failure_limit or Util.DEFAULT_RANGER_FAILURE_LIMIT
+            if self.context.loop_iter and self.context.loop_iter != Util.DEFAULT_RANGER_LOOP_ITER:
+                validation_logger.info(f"While running Ranger, loop iter is {Util.DEFAULT_RANGER_LOOP_ITER} "
+                                       f"ignoring the set value of {self.context.loop_iter}")
+            self.context.loop_iter = self.context.loop_iter or Util.DEFAULT_RANGER_LOOP_ITER
+
+            for attr in Attrs.RangerAttributes.ranger_true_by_default_attributes():
+                attr_name = attr.get_conf_key()
+                setattr(self.context, attr_name, True)
+
+        else:
+            if self.context.range:
+                # self.context.range = None
+                validation_logger.info("the 'range' attribute is ignored when not running from the Ranger App")
+            if self.context.ranger_failure_limit:
+                # self.context.ranger_failure_limit = None
+                validation_logger.info("the 'ranger_failure_limit' is ignored when not running from the Ranger App")
+
     def validate(self) -> None:
 
         for attr_def in Attrs.get_attribute_class().attribute_list():
@@ -120,6 +153,14 @@ class CertoraContextValidator:
             setattr(self.context, conf_key, True)
         elif value not in [True, False]:
             raise Util.CertoraUserInputError(f"value of {conf_key} {value} is not a boolean (true/false)")
+
+    def check_rust_args_post_argparse(self) -> None:
+        context = self.context
+        if context.files:
+            if context.build_script:
+                raise Util.CertoraUserInputError("'files' and 'build_script' cannot be both set for Rust projects")
+            if len(context.files) > 1:
+                raise Util.CertoraUserInputError("Rust projects must specify exactly one executable in 'files'.")
 
     def check_args_post_argparse(self) -> None:
         """
@@ -549,15 +590,16 @@ def check_mode_of_operation(context: CertoraContext) -> None:
     context.is_verify = context.verify is not None and len(context.verify) > 0
     context.is_assert = context.assert_contracts is not None and len(context.assert_contracts) > 0
     context.is_bytecode = context.bytecode_jsons is not None and len(context.bytecode_jsons) > 0
+    context.is_equivalence = context.equivalence_contracts is not None
 
-    if (context.project_sanity or context.foundry) and (context.is_verify or context.is_assert or context.is_bytecode):
+    if (context.project_sanity or context.foundry) and (context.is_verify or context.is_assert or context.is_bytecode or context.is_equivalence):
         raise Util.CertoraUserInputError("The 'project_sanity' and 'foundry' options cannot coexist with the 'verify', 'assert_contract' or 'bytecode_jsons' options")
 
     if context.project_sanity and context.foundry:
         raise Util.CertoraUserInputError("The 'project_sanity' and 'foundry' options cannot coexist")
 
-    if context.is_verify and context.is_assert:
-        raise Util.CertoraUserInputError("only one option of 'assert_contracts' and 'verify' can be used")
+    if len(list(filter(None, [context.is_verify, context.is_assert, context.is_equivalence]))) > 1:
+        raise Util.CertoraUserInputError("only one option of 'assert_contracts', 'verify', 'equivalence' can be used")
 
     has_bytecode_spec = context.bytecode_spec is not None
     if has_bytecode_spec != context.is_bytecode:
@@ -624,7 +666,7 @@ def check_mode_of_operation(context: CertoraContext) -> None:
                     raise Util.CertoraUserInputError(
                         f"Option 'assert_contracts' cannot be used with a {special_file_type} file {input_file}")
 
-    if not any([context.is_assert, context.is_verify, context.is_bytecode,
+    if not any([context.is_assert, context.is_verify, context.is_bytecode, context.equivalence_contracts,
                 special_file_type]) and not context.build_only:
         raise Util.CertoraUserInputError("You must use 'verify' when running the Certora Prover")
 
@@ -872,7 +914,7 @@ def set_wait_for_results_default(context: CertoraContext) -> None:
 
 
 def mode_has_spec_file(context: CertoraContext) -> bool:
-    return not context.is_assert and not context.is_tac
+    return not context.is_assert and not context.is_tac and not context.is_equivalence
 
 
 def to_relative_paths(paths: Union[str, List[str]]) -> Union[str, List[str]]:

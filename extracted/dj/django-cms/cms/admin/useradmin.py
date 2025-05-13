@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 from django.contrib import admin
-from django.contrib.admin import site
+from django.contrib.admin import ModelAdmin, site
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.utils.translation import gettext
@@ -19,7 +19,7 @@ from cms.utils.permissions import (
 )
 
 user_model = get_user_model()
-admin_class = UserAdmin
+admin_class: type[ModelAdmin] = UserAdmin
 for model, admin_instance in site._registry.items():
     if model == user_model:
         admin_class = admin_instance.__class__
@@ -134,7 +134,7 @@ class PageUserGroupAdmin(GenericCmsPermissionAdmin, admin.ModelAdmin):
             for key in ('add', 'change', 'delete'):
                 perm_code = get_model_permission_codename(model, action=key)
                 if request.user.has_perm(perm_code):
-                    fields.append('can_%s_%s' % (key, name))
+                    fields.append(f'can_{key}_{name}')
             if fields:
                 fieldsets.insert(2 + i, (title, {'fields': (fields,)}))
         return fieldsets

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: langwatch
-Version: 0.1.43
+Version: 0.1.44
 Summary: Python SDK for LangWatch for monitoring your LLMs
 Project-URL: Documentation, https://langwatch.ai/docs
 Project-URL: Source Code, https://github.com/langwatch/langwatch
@@ -57,7 +57,7 @@ Requires-Dist: dspy-ai<3.0.0,>=2.5.2; extra == 'dspy'
 Provides-Extra: langchain
 Requires-Dist: langchain<1.0.0,>=0.3.0; extra == 'langchain'
 Provides-Extra: litellm
-Requires-Dist: litellm<2.0.0,>=1.40.15; extra == 'litellm'
+Requires-Dist: litellm<2.0.0,>=1.68.1; extra == 'litellm'
 Provides-Extra: openai
 Requires-Dist: openai<2.0.0,>=1.42.0; extra == 'openai'
 Provides-Extra: test

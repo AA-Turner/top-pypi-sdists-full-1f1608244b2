@@ -19,6 +19,12 @@ pub struct SchemaStore {
     options: crate::Options,
 }
 
+impl Default for SchemaStore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl SchemaStore {
     /// New with default options
     ///
@@ -475,5 +481,15 @@ impl SchemaStore {
                 }
             }
         })
+    }
+
+    pub async fn associate_schema(&self, schema_url: SchemaUrl, include: Vec<String>) {
+        let mut schemas = self.schemas.write().await;
+        schemas.push(crate::Schema {
+            url: schema_url,
+            include,
+            toml_version: None,
+            sub_root_keys: None,
+        });
     }
 }

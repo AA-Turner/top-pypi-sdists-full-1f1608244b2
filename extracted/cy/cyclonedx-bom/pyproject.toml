@@ -6,7 +6,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "cyclonedx-bom"
-version = "6.0.0"
+version = "6.1.1"
 description = "CycloneDX Software Bill of Materials (SBOM) generator for Python projects and environments"
 authors = [
   "Jan Kowalleck <jan.kowalleck@gmail.com>",
@@ -86,8 +86,8 @@ flake8-copyright-validator = "^0.0.1"
 flake8-isort = "6.1.2"
 flake8-quotes = "3.4.0"
 flake8-use-fstring = "1.4"
-pep8-naming = "0.14.1"
-flake8-logging = "1.6.0"
+pep8-naming = "0.15.1"
+flake8-logging = "1.7.0"
 isort = "6.0.1"
 autopep8 = "2.3.2"
 mypy = "1.15.0"
@@ -105,7 +105,7 @@ pip = ">=23.0"
 pipenv = ">=2023.11.5"
 poetry = "^1.7"
 pdm = "^2.11"
-uv = "0.6.14"  # keep pinned to exact version, until a v1.0.0 is released
+uv = "0.7.3"  # keep pinned to exact version, until a v1.0.0 is released
 
 
 

@@ -45,6 +45,7 @@ from typing import Any, Callable, Dict, Optional, Type, TypeVar, cast
 
 # 3rd party
 import click
+from domdf_python_tools.compat import importlib_metadata
 
 # this package
 from consolekit import _readline, commands, input, terminal_colours, tracebacks, utils  # noqa: F401
@@ -56,7 +57,7 @@ from consolekit.options import _Option
 __author__: str = "Dominic Davis-Foster"
 __copyright__: str = "2020 Dominic Davis-Foster"
 __license__: str = "MIT License"
-__version__: str = "1.7.2"
+__version__: str = "1.8.0"
 __email__: str = "dominic@davis-foster.co.uk"
 
 __all__ = (
@@ -145,4 +146,5 @@ click.Parameter.__module__ = "click"
 click.Context.__module__ = "click"
 click.HelpFormatter.__module__ = "click"
 click.Group.__module__ = "click"
-click.OptionParser.__module__ = "click"
+if tuple(map(int, (importlib_metadata.version("click").split('.')))) < (8, 2):
+	click.OptionParser.__module__ = "click"

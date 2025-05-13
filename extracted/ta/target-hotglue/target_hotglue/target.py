@@ -18,6 +18,12 @@ from singer_sdk.helpers._util import read_json_file
 
 from target_hotglue.target_base import Target
 from target_hotglue.sinks import ModelSink
+import pandas as pd
+import os
+
+job_id = os.environ.get('JOB_ID')
+flow_id = os.environ.get('FLOW')
+SNAPSHOT_DIR = os.environ.get('SNAPSHOT_DIR') or f"/home/hotglue/{job_id}/snapshots"
 
 class TargetHotglue(Target):
     """Sample target for Hotglue."""
@@ -116,24 +122,77 @@ class TargetHotglue(Target):
             ),
             None,
         )
+    
+    def get_record_id(self, sink_name, record, relation_fields=None):
+        external_id = record.get(self.EXTERNAL_ID_KEY)
+        if external_id:
+            sink_snapshot = None
+            snapshot_path_csv = f"{SNAPSHOT_DIR}/{sink_name}_{flow_id}.snapshot.csv"
+            snapshot_path_parquet = f"{SNAPSHOT_DIR}/{sink_name}_{flow_id}.snapshot.parquet"
+            if os.path.exists(snapshot_path_csv):
+                sink_snapshot = pd.read_csv(snapshot_path_csv)
+            elif os.path.exists(snapshot_path_parquet):
+                sink_snapshot = pd.read_parquet(snapshot_path_parquet)
+            
+            if sink_snapshot is not None:
+                sink_snapshot["InputId"] = sink_snapshot["InputId"].astype(str)
+                external_id = sink_snapshot[sink_snapshot["InputId"] == str(external_id)]
+                if len(external_id):
+                    record["id"] = external_id["RemoteId"].iloc[0]
+
+        if isinstance(relation_fields, list):
+            for relation in relation_fields:
+
+                if not isinstance(relation, dict):
+                    continue
+
+                field = relation.get("field")
+                object_name = relation.get("objectName")
+
+                if (
+                    not field or
+                    not object_name or
+                    not record.get(field)
+                ):
+                    continue
+
+                relation_snapshot = None
+
+                relation_path_csv = f"{SNAPSHOT_DIR}/{object_name}_{flow_id}.snapshot.csv"
+                relation_path_parquet = f"{SNAPSHOT_DIR}/{object_name}_{flow_id}.snapshot.parquet"
+
+                if os.path.exists(relation_path_csv):
+                    relation_snapshot = pd.read_csv(relation_path_csv)
+                elif os.path.exists(relation_path_parquet):
+                    relation_snapshot = pd.read_parquet(relation_path_parquet)
+
+                if relation_snapshot is None:
+                    continue
+
+                row = relation_snapshot[relation_snapshot["InputId"] == record.get(field)]
+
+                if len(row) > 0:
+                    record[field] = row.iloc[0]["RemoteId"]
+
+        return record
 
     def _process_state_message(self, message_dict: dict) -> None:
         """Process a state message. drain sinks if needed."""
-        self._assert_line_requires(message_dict, requires={"value"})
-        state = message_dict["value"]
-
         # Determine where to store state based on streaming_job
         if self.streaming_job:
+            self._assert_line_requires(message_dict, requires={"value"})
+            state = message_dict["value"]
             current_state = self._latest_state["tap"]
             if current_state == state:
                 return
             self._latest_state["tap"] = state
         else:
-            current_state = self._latest_state
-            if current_state == state:
-                return
-            self._latest_state = state
-
+            if not self._latest_state:
+                self._assert_line_requires(message_dict, requires={"value"})
+                state = message_dict["value"]
+                if self._latest_state == state:
+                    return
+                self._latest_state = state
         if self._max_record_age_in_minutes > self._MAX_RECORD_AGE_IN_MINUTES:
             self.logger.info(
                 "One or more records have exceeded the max age of "
@@ -175,6 +234,12 @@ class TargetHotglue(Target):
             sink._validate_and_parse(transformed_record)
 
             sink.tally_record_read()
+
+            transformed_record = self.get_record_id(sink.name, transformed_record, sink.relation_fields if hasattr(sink, 'relation_fields') else None)
+
+            if not self.name in sink.allows_externalid:
+                external_id = transformed_record.pop(self.EXTERNAL_ID_KEY, None)
+
             transformed_record = sink.preprocess_record(transformed_record, context)
 
             if transformed_record and external_id:

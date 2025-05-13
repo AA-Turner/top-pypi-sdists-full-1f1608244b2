@@ -58,9 +58,11 @@ class AuthClient:
             minutes=settings.CACHE_FALLBACK_TIME_MINUTES
         ),
         salt: t.Optional[str] = None,
+        cert: t.Optional[t.Tuple[str, str]] = None,
     ) -> None:
         self.public_key_url = urljoin(url, ".well-known/jwks.json")
         self.access_token_url = urljoin(url, "api/v1/login/access-token")
+        self.cert = cert
         self._cache = cache
         self._cache_speedup_time = cache_speedup_time
         self._cache_fallback_time = cache_fallback_time
@@ -101,6 +103,7 @@ class AuthClient:
             response = requests.get(
                 self.public_key_url,
                 timeout=settings.AUTH_SERVER_TIMEOUT_SECONDS,
+                cert=self.cert,
             )
             response.raise_for_status()
         except requests.exceptions.RequestException:
@@ -263,6 +266,7 @@ class AuthClient:
                 headers=session_state.to_auth_headers(),
                 timeout=settings.AUTH_SERVER_TIMEOUT_SECONDS,
                 params={"expires_seconds": expires_seconds},
+                cert=self.cert,
             )
             res.raise_for_status()
             id_token = res.json()["id_token"]

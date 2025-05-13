@@ -25,24 +25,32 @@ def _get_class_constructor_signature(user_cls: type) -> inspect.Signature: ...
 
 class _ServiceOptions:
     secrets: typing.Collection[modal.secret._Secret]
+    validated_volumes: typing.Sequence[tuple[str, modal.volume._Volume]]
     resources: typing.Optional[modal_proto.api_pb2.Resources]
     retry_policy: typing.Optional[modal_proto.api_pb2.FunctionRetryPolicy]
-    concurrency_limit: typing.Optional[int]
+    max_containers: typing.Optional[int]
+    buffer_containers: typing.Optional[int]
+    scaledown_window: typing.Optional[int]
     timeout_secs: typing.Optional[int]
-    task_idle_timeout_secs: typing.Optional[int]
-    validated_volumes: typing.Sequence[tuple[str, modal.volume._Volume]]
+    max_concurrent_inputs: typing.Optional[int]
     target_concurrent_inputs: typing.Optional[int]
+    batch_max_size: typing.Optional[int]
+    batch_wait_ms: typing.Optional[int]
 
     def __init__(
         self,
-        secrets: typing.Collection[modal.secret._Secret],
-        resources: typing.Optional[modal_proto.api_pb2.Resources],
-        retry_policy: typing.Optional[modal_proto.api_pb2.FunctionRetryPolicy],
-        concurrency_limit: typing.Optional[int],
-        timeout_secs: typing.Optional[int],
-        task_idle_timeout_secs: typing.Optional[int],
-        validated_volumes: typing.Sequence[tuple[str, modal.volume._Volume]],
-        target_concurrent_inputs: typing.Optional[int],
+        secrets: typing.Collection[modal.secret._Secret] = (),
+        validated_volumes: typing.Sequence[tuple[str, modal.volume._Volume]] = (),
+        resources: typing.Optional[modal_proto.api_pb2.Resources] = None,
+        retry_policy: typing.Optional[modal_proto.api_pb2.FunctionRetryPolicy] = None,
+        max_containers: typing.Optional[int] = None,
+        buffer_containers: typing.Optional[int] = None,
+        scaledown_window: typing.Optional[int] = None,
+        timeout_secs: typing.Optional[int] = None,
+        max_concurrent_inputs: typing.Optional[int] = None,
+        target_concurrent_inputs: typing.Optional[int] = None,
+        batch_max_size: typing.Optional[int] = None,
+        batch_wait_ms: typing.Optional[int] = None,
     ) -> None: ...
     def __repr__(self): ...
     def __eq__(self, other): ...
@@ -141,7 +149,7 @@ class Obj:
 
 class _Cls(modal._object._Object):
     _class_service_function: typing.Optional[modal._functions._Function]
-    _options: typing.Optional[_ServiceOptions]
+    _options: _ServiceOptions
     _app: typing.Optional[modal.app._App]
     _name: typing.Optional[str]
     _method_metadata: typing.Optional[dict[str, modal_proto.api_pb2.FunctionHandleMetadata]]
@@ -182,12 +190,15 @@ class _Cls(modal._object._Object):
         volumes: dict[typing.Union[str, os.PathLike], modal.volume._Volume] = {},
         retries: typing.Union[int, modal.retries.Retries, None] = None,
         max_containers: typing.Optional[int] = None,
+        buffer_containers: typing.Optional[int] = None,
         scaledown_window: typing.Optional[int] = None,
         timeout: typing.Optional[int] = None,
-        allow_concurrent_inputs: typing.Optional[int] = None,
         concurrency_limit: typing.Optional[int] = None,
         container_idle_timeout: typing.Optional[int] = None,
+        allow_concurrent_inputs: typing.Optional[int] = None,
     ) -> _Cls: ...
+    def with_concurrency(self: _Cls, *, max_inputs: int, target_inputs: typing.Optional[int] = None) -> _Cls: ...
+    def with_batching(self: _Cls, *, max_batch_size: int, wait_ms: int) -> _Cls: ...
     @staticmethod
     async def lookup(
         app_name: str,
@@ -203,7 +214,7 @@ class _Cls(modal._object._Object):
 
 class Cls(modal.object.Object):
     _class_service_function: typing.Optional[modal.functions.Function]
-    _options: typing.Optional[_ServiceOptions]
+    _options: _ServiceOptions
     _app: typing.Optional[modal.app.App]
     _name: typing.Optional[str]
     _method_metadata: typing.Optional[dict[str, modal_proto.api_pb2.FunctionHandleMetadata]]
@@ -245,12 +256,15 @@ class Cls(modal.object.Object):
         volumes: dict[typing.Union[str, os.PathLike], modal.volume.Volume] = {},
         retries: typing.Union[int, modal.retries.Retries, None] = None,
         max_containers: typing.Optional[int] = None,
+        buffer_containers: typing.Optional[int] = None,
         scaledown_window: typing.Optional[int] = None,
         timeout: typing.Optional[int] = None,
-        allow_concurrent_inputs: typing.Optional[int] = None,
         concurrency_limit: typing.Optional[int] = None,
         container_idle_timeout: typing.Optional[int] = None,
+        allow_concurrent_inputs: typing.Optional[int] = None,
     ) -> Cls: ...
+    def with_concurrency(self: Cls, *, max_inputs: int, target_inputs: typing.Optional[int] = None) -> Cls: ...
+    def with_batching(self: Cls, *, max_batch_size: int, wait_ms: int) -> Cls: ...
 
     class __lookup_spec(typing_extensions.Protocol):
         def __call__(

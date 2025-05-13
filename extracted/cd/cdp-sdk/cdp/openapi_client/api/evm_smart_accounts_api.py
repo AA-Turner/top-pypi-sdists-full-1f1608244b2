@@ -102,6 +102,8 @@ class EVMSmartAccountsApi:
             '201': "EvmSmartAccount",
             '400': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -171,6 +173,8 @@ class EVMSmartAccountsApi:
             '201': "EvmSmartAccount",
             '400': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -240,6 +244,8 @@ class EVMSmartAccountsApi:
             '201': "EvmSmartAccount",
             '400': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -304,7 +310,7 @@ class EVMSmartAccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearerAuth'
+            'apiKeyAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -383,6 +389,8 @@ class EVMSmartAccountsApi:
             '400': "Error",
             '404': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -453,6 +461,8 @@ class EVMSmartAccountsApi:
             '400': "Error",
             '404': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -523,6 +533,8 @@ class EVMSmartAccountsApi:
             '400': "Error",
             '404': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -574,7 +586,7 @@ class EVMSmartAccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearerAuth'
+            'apiKeyAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -657,6 +669,8 @@ class EVMSmartAccountsApi:
             '400': "Error",
             '404': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -731,6 +745,8 @@ class EVMSmartAccountsApi:
             '400': "Error",
             '404': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -805,6 +821,8 @@ class EVMSmartAccountsApi:
             '400': "Error",
             '404': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -859,7 +877,7 @@ class EVMSmartAccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearerAuth'
+            'apiKeyAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -941,6 +959,8 @@ class EVMSmartAccountsApi:
             '200': "ListEvmSmartAccounts200Response",
             '400': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1014,6 +1034,8 @@ class EVMSmartAccountsApi:
             '200': "ListEvmSmartAccounts200Response",
             '400': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1087,6 +1109,8 @@ class EVMSmartAccountsApi:
             '200': "ListEvmSmartAccounts200Response",
             '400': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1145,7 +1169,7 @@ class EVMSmartAccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearerAuth'
+            'apiKeyAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -1228,6 +1252,8 @@ class EVMSmartAccountsApi:
             '400': "Error",
             '404': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1302,6 +1328,8 @@ class EVMSmartAccountsApi:
             '400': "Error",
             '404': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1376,6 +1404,8 @@ class EVMSmartAccountsApi:
             '400': "Error",
             '404': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1443,7 +1473,7 @@ class EVMSmartAccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearerAuth'
+            'apiKeyAuth'
         ]
 
         return self.api_client.param_serialize(
@@ -1485,7 +1515,7 @@ class EVMSmartAccountsApi:
     ) -> EvmUserOperation:
         """Send a user operation
 
-        Sends a user operation with a signature. The signature that is sent should be 65 bytes, consisting of the `r`, `s`, and `v` values of the ECDSA signature. Note that the `v` value should conform to the `personal_sign` standard, which means it should be 27 or 28.
+        Sends a user operation with a signature. The payload to sign must be the `userOpHash` field of the user operation. This hash should be signed directly (not using `personal_sign` or EIP-191 message hashing). The signature must be 65 bytes in length, consisting of: - 32 bytes for the `r` value - 32 bytes for the `s` value - 1 byte for the `v` value (must be 27 or 28) If using the CDP Paymaster, the user operation must be signed and sent within 2 minutes of being prepared.
 
         :param address: The address of the Smart Account to send the user operation from. (required)
         :type address: str
@@ -1530,6 +1560,8 @@ class EVMSmartAccountsApi:
             '400': "Error",
             '404': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1563,7 +1595,7 @@ class EVMSmartAccountsApi:
     ) -> ApiResponse[EvmUserOperation]:
         """Send a user operation
 
-        Sends a user operation with a signature. The signature that is sent should be 65 bytes, consisting of the `r`, `s`, and `v` values of the ECDSA signature. Note that the `v` value should conform to the `personal_sign` standard, which means it should be 27 or 28.
+        Sends a user operation with a signature. The payload to sign must be the `userOpHash` field of the user operation. This hash should be signed directly (not using `personal_sign` or EIP-191 message hashing). The signature must be 65 bytes in length, consisting of: - 32 bytes for the `r` value - 32 bytes for the `s` value - 1 byte for the `v` value (must be 27 or 28) If using the CDP Paymaster, the user operation must be signed and sent within 2 minutes of being prepared.
 
         :param address: The address of the Smart Account to send the user operation from. (required)
         :type address: str
@@ -1608,6 +1640,8 @@ class EVMSmartAccountsApi:
             '400': "Error",
             '404': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1641,7 +1675,7 @@ class EVMSmartAccountsApi:
     ) -> RESTResponseType:
         """Send a user operation
 
-        Sends a user operation with a signature. The signature that is sent should be 65 bytes, consisting of the `r`, `s`, and `v` values of the ECDSA signature. Note that the `v` value should conform to the `personal_sign` standard, which means it should be 27 or 28.
+        Sends a user operation with a signature. The payload to sign must be the `userOpHash` field of the user operation. This hash should be signed directly (not using `personal_sign` or EIP-191 message hashing). The signature must be 65 bytes in length, consisting of: - 32 bytes for the `r` value - 32 bytes for the `s` value - 1 byte for the `v` value (must be 27 or 28) If using the CDP Paymaster, the user operation must be signed and sent within 2 minutes of being prepared.
 
         :param address: The address of the Smart Account to send the user operation from. (required)
         :type address: str
@@ -1686,6 +1720,8 @@ class EVMSmartAccountsApi:
             '400': "Error",
             '404': "Error",
             '500': "Error",
+            '502': "Error",
+            '503': "Error",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1756,7 +1792,7 @@ class EVMSmartAccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearerAuth'
+            'apiKeyAuth'
         ]
 
         return self.api_client.param_serialize(

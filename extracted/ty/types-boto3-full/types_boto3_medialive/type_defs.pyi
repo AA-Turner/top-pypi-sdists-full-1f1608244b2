@@ -50,6 +50,7 @@ from .literals import (
     Av1GopSizeUnitsType,
     Av1LevelType,
     Av1LookAheadRateControlType,
+    Av1RateControlModeType,
     Av1SceneChangeDetectType,
     AvailBlankingStateType,
     BandwidthReductionFilterStrengthType,
@@ -3650,6 +3651,7 @@ class OutputDestinationOutputTypeDef(TypedDict):
     MultiplexSettings: NotRequired[MultiplexProgramChannelDestinationSettingsTypeDef]
     Settings: NotRequired[List[OutputDestinationSettingsTypeDef]]
     SrtSettings: NotRequired[List[SrtOutputDestinationSettingsTypeDef]]
+    LogicalInterfaceNames: NotRequired[List[str]]
 
 class OutputDestinationTypeDef(TypedDict):
     Id: NotRequired[str]
@@ -3657,6 +3659,7 @@ class OutputDestinationTypeDef(TypedDict):
     MultiplexSettings: NotRequired[MultiplexProgramChannelDestinationSettingsTypeDef]
     Settings: NotRequired[Sequence[OutputDestinationSettingsTypeDef]]
     SrtSettings: NotRequired[Sequence[SrtOutputDestinationSettingsTypeDef]]
+    LogicalInterfaceNames: NotRequired[Sequence[str]]
 
 class PauseStateScheduleActionSettingsOutputTypeDef(TypedDict):
     Pipelines: NotRequired[List[PipelinePauseStateSettingsTypeDef]]
@@ -3798,6 +3801,8 @@ class Av1SettingsOutputTypeDef(TypedDict):
     QvbrQualityLevel: NotRequired[int]
     SceneChangeDetect: NotRequired[Av1SceneChangeDetectType]
     TimecodeBurninSettings: NotRequired[TimecodeBurninSettingsTypeDef]
+    Bitrate: NotRequired[int]
+    RateControlMode: NotRequired[Av1RateControlModeType]
 
 class Av1SettingsTypeDef(TypedDict):
     FramerateDenominator: int
@@ -3817,6 +3822,8 @@ class Av1SettingsTypeDef(TypedDict):
     QvbrQualityLevel: NotRequired[int]
     SceneChangeDetect: NotRequired[Av1SceneChangeDetectType]
     TimecodeBurninSettings: NotRequired[TimecodeBurninSettingsTypeDef]
+    Bitrate: NotRequired[int]
+    RateControlMode: NotRequired[Av1RateControlModeType]
 
 class AvailConfigurationTypeDef(TypedDict):
     AvailSettings: NotRequired[AvailSettingsTypeDef]

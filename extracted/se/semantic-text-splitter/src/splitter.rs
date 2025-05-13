@@ -15,12 +15,9 @@ mod markdown;
 mod text;
 
 #[cfg(feature = "code")]
-#[allow(clippy::module_name_repetitions)]
 pub use code::{CodeSplitter, CodeSplitterError};
 #[cfg(feature = "markdown")]
-#[allow(clippy::module_name_repetitions)]
 pub use markdown::MarkdownSplitter;
-#[allow(clippy::module_name_repetitions)]
 pub use text::TextSplitter;
 
 /// Shared interface for splitters that can generate chunks of text based on the
@@ -368,7 +365,7 @@ where
                         successful_chunk_size = Some(chunk_size);
                     }
                 }
-            };
+            }
 
             // Adjust search area
             if fits.is_lt() {
@@ -454,7 +451,7 @@ where
     /// Find the ideal next sections, breaking it up until we find the largest chunk.
     /// Increasing length of chunk until we find biggest size to minimize validation time
     /// on huge chunks
-    #[allow(clippy::too_many_lines)]
+    #[expect(clippy::too_many_lines)]
     fn update_next_sections(&mut self) -> usize {
         // First thing, clear out the list, but reuse the allocated memory
         self.next_sections.clear();
@@ -509,7 +506,7 @@ where
         };
 
         let mut sections = sections
-            .take_while(move |(offset, _)| max_offset.map_or(true, |max| *offset <= max))
+            .take_while(move |(offset, _)| max_offset.is_none_or(|max| *offset <= max))
             .filter(|(_, str)| !str.is_empty());
 
         // Start filling up the next sections. Since calculating the size of the chunk gets more expensive
@@ -561,7 +558,6 @@ where
                     Ordering::Less => {
                         // We know we can go higher
                         low = new_num.saturating_sub(1);
-                        continue;
                     }
                     Ordering::Equal => {
                         // Don't update low because it could be a range
@@ -572,12 +568,11 @@ where
                             }
                         }
                         prev_equals = Some(chunk_size);
-                        continue;
                     }
                     Ordering::Greater => {
                         break;
                     }
-                };
+                }
             }
         }
 
@@ -602,7 +597,7 @@ where
             match self.next_chunk()? {
                 // Make sure we didn't get an empty chunk. Should only happen in
                 // cases where we trim.
-                (_, "") => continue,
+                (_, "") => {}
                 c => {
                     let item_end = c.0 + c.1.len();
                     // Skip because we've emitted a chunk whose content we've already emitted

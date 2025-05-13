@@ -41,6 +41,8 @@ class LedgerRecord(object):
         'currency': 'str',
         'address': 'str',
         'memo': 'str',
+        'withdraw_id': 'str',
+        'asset_class': 'str',
         'status': 'str',
         'chain': 'str'
     }
@@ -54,12 +56,14 @@ class LedgerRecord(object):
         'currency': 'currency',
         'address': 'address',
         'memo': 'memo',
+        'withdraw_id': 'withdraw_id',
+        'asset_class': 'asset_class',
         'status': 'status',
         'chain': 'chain'
     }
 
-    def __init__(self, id=None, txid=None, withdraw_order_id=None, timestamp=None, amount=None, currency=None, address=None, memo=None, status=None, chain=None, local_vars_configuration=None):  # noqa: E501
-        # type: (str, str, str, str, str, str, str, str, str, str, Configuration) -> None
+    def __init__(self, id=None, txid=None, withdraw_order_id=None, timestamp=None, amount=None, currency=None, address=None, memo=None, withdraw_id=None, asset_class=None, status=None, chain=None, local_vars_configuration=None):  # noqa: E501
+        # type: (str, str, str, str, str, str, str, str, str, str, str, str, Configuration) -> None
         """LedgerRecord - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -73,6 +77,8 @@ class LedgerRecord(object):
         self._currency = None
         self._address = None
         self._memo = None
+        self._withdraw_id = None
+        self._asset_class = None
         self._status = None
         self._chain = None
         self.discriminator = None
@@ -91,6 +97,10 @@ class LedgerRecord(object):
             self.address = address
         if memo is not None:
             self.memo = memo
+        if withdraw_id is not None:
+            self.withdraw_id = withdraw_id
+        if asset_class is not None:
+            self.asset_class = asset_class
         if status is not None:
             self.status = status
         self.chain = chain
@@ -145,7 +155,7 @@ class LedgerRecord(object):
     def withdraw_order_id(self):
         """Gets the withdraw_order_id of this LedgerRecord.  # noqa: E501
 
-        Client order id, up to 32 length and can only include 0-9, A-Z, a-z, underscore(_), hyphen(-) or dot(.)   # noqa: E501
+        User-defined order number when withdrawing. Default is empty. When not empty, the specified user-defined order number record will be queried  # noqa: E501
 
         :return: The withdraw_order_id of this LedgerRecord.  # noqa: E501
         :rtype: str
@@ -156,7 +166,7 @@ class LedgerRecord(object):
     def withdraw_order_id(self, withdraw_order_id):
         """Sets the withdraw_order_id of this LedgerRecord.
 
-        Client order id, up to 32 length and can only include 0-9, A-Z, a-z, underscore(_), hyphen(-) or dot(.)   # noqa: E501
+        User-defined order number when withdrawing. Default is empty. When not empty, the specified user-defined order number record will be queried  # noqa: E501
 
         :param withdraw_order_id: The withdraw_order_id of this LedgerRecord.  # noqa: E501
         :type: str
@@ -284,10 +294,56 @@ class LedgerRecord(object):
         self._memo = memo
 
     @property
+    def withdraw_id(self):
+        """Gets the withdraw_id of this LedgerRecord.  # noqa: E501
+
+        The withdrawal record id starts with w, such as: w1879219868. When withdraw_id is not empty, the value querys this withdrawal record and no longer querys according to time  # noqa: E501
+
+        :return: The withdraw_id of this LedgerRecord.  # noqa: E501
+        :rtype: str
+        """
+        return self._withdraw_id
+
+    @withdraw_id.setter
+    def withdraw_id(self, withdraw_id):
+        """Sets the withdraw_id of this LedgerRecord.
+
+        The withdrawal record id starts with w, such as: w1879219868. When withdraw_id is not empty, the value querys this withdrawal record and no longer querys according to time  # noqa: E501
+
+        :param withdraw_id: The withdraw_id of this LedgerRecord.  # noqa: E501
+        :type: str
+        """
+
+        self._withdraw_id = withdraw_id
+
+    @property
+    def asset_class(self):
+        """Gets the asset_class of this LedgerRecord.  # noqa: E501
+
+        The currency type of withdrawal record is empty by default. It supports users to query the withdrawal records in the main and innovation areas on demand. Value range: SPOT, PILOT  SPOT: Main Zone  PILOT: Innovation Zone  # noqa: E501
+
+        :return: The asset_class of this LedgerRecord.  # noqa: E501
+        :rtype: str
+        """
+        return self._asset_class
+
+    @asset_class.setter
+    def asset_class(self, asset_class):
+        """Sets the asset_class of this LedgerRecord.
+
+        The currency type of withdrawal record is empty by default. It supports users to query the withdrawal records in the main and innovation areas on demand. Value range: SPOT, PILOT  SPOT: Main Zone  PILOT: Innovation Zone  # noqa: E501
+
+        :param asset_class: The asset_class of this LedgerRecord.  # noqa: E501
+        :type: str
+        """
+
+        self._asset_class = asset_class
+
+    @property
     def status(self):
         """Gets the status of this LedgerRecord.  # noqa: E501
 
-        Record status.  - DONE: done - CANCEL: cancelled - REQUEST: requesting - MANUAL: pending manual approval - BCODE: GateCode operation - EXTPEND: pending confirm after sending - FAIL: pending confirm when fail - INVALID: invalid order - VERIFY: verifying - PROCES: processing - PEND: pending - DMOVE: required manual approval  # noqa: E501
+        Record status.  - DONE: done - CANCEL: cancelled - REQUEST: requesting - MANUAL: pending manual approval - BCODE: GateCode operation - EXTPEND: pending confirm after sending - FAIL: pending confirm when fail - INVALID: invalid order - VERIFY: verifying - PROCES: processing - PEND: pending - DMOVE: required manual approval - REVIEW: Under review  # noqa: E501
 
         :return: The status of this LedgerRecord.  # noqa: E501
         :rtype: str
@@ -298,7 +354,7 @@ class LedgerRecord(object):
     def status(self, status):
         """Sets the status of this LedgerRecord.
 
-        Record status.  - DONE: done - CANCEL: cancelled - REQUEST: requesting - MANUAL: pending manual approval - BCODE: GateCode operation - EXTPEND: pending confirm after sending - FAIL: pending confirm when fail - INVALID: invalid order - VERIFY: verifying - PROCES: processing - PEND: pending - DMOVE: required manual approval  # noqa: E501
+        Record status.  - DONE: done - CANCEL: cancelled - REQUEST: requesting - MANUAL: pending manual approval - BCODE: GateCode operation - EXTPEND: pending confirm after sending - FAIL: pending confirm when fail - INVALID: invalid order - VERIFY: verifying - PROCES: processing - PEND: pending - DMOVE: required manual approval - REVIEW: Under review  # noqa: E501
 
         :param status: The status of this LedgerRecord.  # noqa: E501
         :type: str

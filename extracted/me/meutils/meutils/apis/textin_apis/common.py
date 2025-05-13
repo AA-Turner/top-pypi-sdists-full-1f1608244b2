@@ -13,7 +13,7 @@ from meutils.pipe import *
 from meutils.io.files_utils import to_bytes, to_url
 from meutils.caches import rcache
 
-from meutils.schemas.textin_types import WatermarkRemove, BASE_URL
+from meutils.schemas.textin_types import BASE_URL, WatermarkRemove, PdfToMarkdown, CropEnhanceImage
 
 from httpx import AsyncClient
 
@@ -55,6 +55,52 @@ class Textin(object):
 
             return data
 
+    async def pdf_to_markdown(self, request: PdfToMarkdown, params: Optional[dict] = None):  # crop_enhance_image
+        s = time.perf_counter()
+
+        request.data = await to_bytes(request.data)
+
+        params = params or {}
+        async with AsyncClient(base_url=self.base_url, headers=self.headers, timeout=100, params=params) as cilent:
+            response = await cilent.post("pdf_to_markdown", content=request.data)
+            response.raise_for_status()
+
+            data = response.json()
+            data['timings'] = {'inference': time.perf_counter() - s}
+
+            logger.debug(bjson(data))
+
+            return data
+
+    async def crop_enhance_image(self, request: CropEnhanceImage, params: Optional[dict] = None):  # crop_enhance_image
+        s = time.perf_counter()
+
+        request.data = await to_bytes(request.data)
+
+        params = params or {}
+        async with AsyncClient(base_url=self.base_url, headers=self.headers, timeout=100, params=params) as cilent:
+            response = await cilent.post("crop_enhance_image", content=request.data)
+            response.raise_for_status()
+
+            data = response.json()
+            data['timings'] = {'inference': time.perf_counter() - s}
+
+            # {'code': 200,
+            #  'duration': 161,
+            #  'message': 'success',
+            #  'result': {'image_list': [{'angle': 0,
+            #                             'cropped_height': 848,
+            #                             'cropped_width': 628,
+            #                             'image':
+
+            if request.response_format == "url" and data.get("code") == 200:
+                for image in data["result"]["image_list"]:
+                    image["image"] = await to_url(image["image"], filename=f'{shortuuid.random()}.png')
+
+            logger.debug(bjson(data))
+
+            return data
+
 
 if __name__ == '__main__':
     # image = "doc_watermark.jpg"
@@ -66,4 +112,18 @@ if __name__ == '__main__':
         image=image,
         response_format="url"
     )
-    arun(Textin().image_watermark_remove(request))
+    # arun(Textin().image_watermark_remove(request))
+
+    request = PdfToMarkdown(
+        data="https://s3.ffire.cc/files/pdf_to_markdown.jpg",
+        response_format="url"
+    )
+
+    # arun(Textin().pdf_to_markdown(request))
+
+    request = CropEnhanceImage(
+        data="https://s3.ffire.cc/files/pdf_to_markdown.jpg",
+        response_format="url"
+    )
+
+    arun(Textin().crop_enhance_image(request))

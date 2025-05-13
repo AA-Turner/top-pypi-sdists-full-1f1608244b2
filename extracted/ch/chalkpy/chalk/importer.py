@@ -1151,8 +1151,8 @@ def import_all_python_files_from_dir(
         else:
             venv_path = None if venv is None else Path(venv)
             ignore_config = get_default_combined_ignore_config(resolved_root) if check_ignores else None
-            repo_files = list(
-                _get_py_files_fast(resolved_root=resolved_root, venv_path=venv_path, ignore_config=ignore_config)
+            repo_files = sorted(
+                list(_get_py_files_fast(resolved_root=resolved_root, venv_path=venv_path, ignore_config=ignore_config))
             )
 
         CHALK_IMPORTER.add_repo_files(repo_files)

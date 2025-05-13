@@ -18,6 +18,8 @@ FEISHU_URL_ABROAD = "https://xchatllm.feishu.cn/sheets/GYCHsvI4qhnDPNtI4VPcdw2kn
 
 FEISHU_URL_OSS = "https://xchatllm.feishu.cn/sheets/MekfsfVuohfUf1tsWV0cCvTmn3c?sheet=Kcg6QC"
 
+
+
 #     """生成中是1 成功是2 失败是5 内容审核7 排队中11"""
 # "status": 12,
 # "message": "Optimizing prompt in progress...",

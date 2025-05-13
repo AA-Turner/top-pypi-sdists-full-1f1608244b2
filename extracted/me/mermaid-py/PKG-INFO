@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: mermaid-py
-Version: 0.7.1
+Version: 0.8.0
 Summary: Python Interface for the Popular mermaid-js Library, Simplified for Diagram Creation.
 License: MIT
 Author: ouhammmourachid
@@ -52,7 +52,7 @@ pip install mermaid-py
 import mermaid as md
 from mermaid.graph import Graph
 
-sequence = Graph('Sequence-diagram',"""
+render = md.Mermaid("""
 stateDiagram-v2
     [*] --> Still
     Still --> [*]
@@ -62,7 +62,6 @@ stateDiagram-v2
     Moving --> Crash
     Crash --> [*]
 """)
-render = md.Mermaid(sequence)
 render # !! note this only works in the notebook that rendered the html.
 ```
 

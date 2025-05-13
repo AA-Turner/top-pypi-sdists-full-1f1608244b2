@@ -1,8 +1,5 @@
 //! Python Bindings for text-splitter crate
 
-// pyo3 uses these
-#![allow(elided_lifetimes_in_paths, unsafe_op_in_unsafe_fn)]
-
 use std::str::FromStr;
 
 use pyo3::{
@@ -502,7 +499,7 @@ impl PyTextSplitter {
         If `trim` was specified in the text splitter, then each chunk will already be
         trimmed as well.
     */
-    fn chunk_all(&self, texts: Vec<String>) -> Vec<Vec<String>> {
+    fn chunk_all(&self, texts: Vec<PyBackedStr>) -> Vec<Vec<String>> {
         texts
             .into_par_iter()
             .map(|text| self.splitter.chunks(&text).map(ToOwned::to_owned).collect())
@@ -524,7 +521,7 @@ impl PyTextSplitter {
         If `trim` was specified in the text splitter, then each chunk will already be
         trimmed as well.
     */
-    fn chunk_all_indices(&self, texts: Vec<String>) -> Vec<Vec<(usize, String)>> {
+    fn chunk_all_indices(&self, texts: Vec<PyBackedStr>) -> Vec<Vec<(usize, String)>> {
         texts
             .into_par_iter()
             .map(|text| {
@@ -934,7 +931,7 @@ impl PyMarkdownSplitter {
         If `trim` was specified in the text splitter, then each chunk will already be
         trimmed as well.
     */
-    fn chunk_all(&self, texts: Vec<String>) -> Vec<Vec<String>> {
+    fn chunk_all(&self, texts: Vec<PyBackedStr>) -> Vec<Vec<String>> {
         texts
             .into_par_iter()
             .map(|text| self.splitter.chunks(&text).map(ToOwned::to_owned).collect())
@@ -956,7 +953,7 @@ impl PyMarkdownSplitter {
         If `trim` was specified in the text splitter, then each chunk will already be
         trimmed as well.
     */
-    fn chunk_all_indices(&self, texts: Vec<String>) -> Vec<Vec<(usize, String)>> {
+    fn chunk_all_indices(&self, texts: Vec<PyBackedStr>) -> Vec<Vec<(usize, String)>> {
         texts
             .into_par_iter()
             .map(|text| {
@@ -1423,7 +1420,7 @@ impl PyCodeSplitter {
         If `trim` was specified in the text splitter, then each chunk will already be
         trimmed as well.
     */
-    fn chunk_all(&self, texts: Vec<String>) -> Vec<Vec<String>> {
+    fn chunk_all(&self, texts: Vec<PyBackedStr>) -> Vec<Vec<String>> {
         texts
             .into_par_iter()
             .map(|text| self.splitter.chunks(&text).map(ToOwned::to_owned).collect())
@@ -1445,7 +1442,7 @@ impl PyCodeSplitter {
         If `trim` was specified in the text splitter, then each chunk will already be
         trimmed as well.
     */
-    fn chunk_all_indices(&self, texts: Vec<String>) -> Vec<Vec<(usize, String)>> {
+    fn chunk_all_indices(&self, texts: Vec<PyBackedStr>) -> Vec<Vec<(usize, String)>> {
         texts
             .into_par_iter()
             .map(|text| {

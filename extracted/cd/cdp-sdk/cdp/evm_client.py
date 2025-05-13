@@ -1,36 +1,39 @@
+from typing import Any
+
 from eth_account.signers.base import BaseAccount
 from eth_account.typed_transactions import DynamicFeeTransaction
 
+from cdp.actions.evm.list_token_balances import list_token_balances
+from cdp.actions.evm.request_faucet import request_faucet
+from cdp.actions.evm.send_transaction import send_transaction
 from cdp.actions.evm.send_user_operation import send_user_operation
 from cdp.actions.evm.wait_for_user_operation import wait_for_user_operation
+from cdp.analytics import wrap_class_with_error_tracking
 from cdp.api_clients import ApiClients
 from cdp.evm_call_types import ContractCall, EncodedCall
 from cdp.evm_server_account import EvmServerAccount, ListEvmAccountsResponse
 from cdp.evm_smart_account import EvmSmartAccount, ListEvmSmartAccountsResponse
 from cdp.evm_token_balances import (
-    EvmToken,
-    EvmTokenAmount,
-    EvmTokenBalance,
     ListTokenBalancesResult,
 )
 from cdp.evm_transaction_types import TransactionRequestEIP1559
+from cdp.openapi_client.errors import ApiError
 from cdp.openapi_client.models.create_evm_account_request import CreateEvmAccountRequest
 from cdp.openapi_client.models.create_evm_smart_account_request import (
     CreateEvmSmartAccountRequest,
 )
+from cdp.openapi_client.models.eip712_domain import EIP712Domain
+from cdp.openapi_client.models.eip712_message import EIP712Message
 from cdp.openapi_client.models.evm_call import EvmCall
 from cdp.openapi_client.models.evm_user_operation import EvmUserOperation as EvmUserOperationModel
 from cdp.openapi_client.models.prepare_user_operation_request import (
     PrepareUserOperationRequest,
 )
-from cdp.openapi_client.models.request_evm_faucet_request import RequestEvmFaucetRequest
-from cdp.openapi_client.models.send_evm_transaction_request import SendEvmTransactionRequest
 from cdp.openapi_client.models.sign_evm_hash_request import SignEvmHashRequest
 from cdp.openapi_client.models.sign_evm_message_request import SignEvmMessageRequest
 from cdp.openapi_client.models.sign_evm_transaction_request import (
     SignEvmTransactionRequest,
 )
-from cdp.utils import serialize_unsigned_transaction
 
 
 class EvmClient:
@@ -38,6 +41,8 @@ class EvmClient:
 
     def __init__(self, api_clients: ApiClients):
         self.api_clients = api_clients
+        wrap_class_with_error_tracking(EvmServerAccount)
+        wrap_class_with_error_tracking(EvmSmartAccount)
 
     async def create_account(
         self, name: str | None = None, idempotency_key: str | None = None
@@ -56,7 +61,7 @@ class EvmClient:
             x_idempotency_key=idempotency_key,
             create_evm_account_request=CreateEvmAccountRequest(name=name),
         )
-        return EvmServerAccount(evm_account, self.api_clients.evm_accounts)
+        return EvmServerAccount(evm_account, self.api_clients.evm_accounts, self.api_clients)
 
     async def create_smart_account(self, owner: BaseAccount) -> EvmSmartAccount:
         """Create an EVM smart account.
@@ -71,7 +76,9 @@ class EvmClient:
         evm_smart_account = await self.api_clients.evm_smart_accounts.create_evm_smart_account(
             CreateEvmSmartAccountRequest(owners=[owner.address]),
         )
-        return EvmSmartAccount(evm_smart_account.address, owner, evm_smart_account.name)
+        return EvmSmartAccount(
+            evm_smart_account.address, owner, evm_smart_account.name, self.api_clients
+        )
 
     async def get_account(
         self, address: str | None = None, name: str | None = None
@@ -92,7 +99,32 @@ class EvmClient:
             evm_account = await self.api_clients.evm_accounts.get_evm_account_by_name(name)
         else:
             raise ValueError("Either address or name must be provided")
-        return EvmServerAccount(evm_account, self.api_clients.evm_accounts)
+        return EvmServerAccount(evm_account, self.api_clients.evm_accounts, self.api_clients)
+
+    async def get_or_create_account(self, name: str | None = None) -> EvmServerAccount:
+        """Get an EVM account, or create one if it doesn't exist.
+
+        Args:
+            name (str, optional): The name of the account to get or create.
+
+        Returns:
+            EvmServerAccount: The EVM server account.
+
+        """
+        try:
+            account = await self.get_account(name=name)
+            return account
+        except ApiError as e:
+            if e.http_code == 404:
+                try:
+                    account = await self.create_account(name=name)
+                    return account
+                except ApiError as e:
+                    if e.http_code == 409:
+                        account = await self.get_account(name=name)
+                        return account
+                    raise e
+            raise e
 
     async def get_smart_account(
         self, address: str, owner: BaseAccount | None = None
@@ -108,7 +140,9 @@ class EvmClient:
 
         """
         evm_smart_account = await self.api_clients.evm_smart_accounts.get_evm_smart_account(address)
-        return EvmSmartAccount(evm_smart_account.address, owner, evm_smart_account.name)
+        return EvmSmartAccount(
+            evm_smart_account.address, owner, evm_smart_account.name, self.api_clients
+        )
 
     async def get_user_operation(self, address: str, user_op_hash: str) -> EvmUserOperationModel:
         """Get a user operation by address and hash.
@@ -142,7 +176,7 @@ class EvmClient:
             page_size=page_size, page_token=page_token
         )
         evm_server_accounts = [
-            EvmServerAccount(account, self.api_clients.evm_accounts)
+            EvmServerAccount(account, self.api_clients.evm_accounts, self.api_clients)
             for account in response.accounts
         ]
         return ListEvmAccountsResponse(
@@ -169,26 +203,12 @@ class EvmClient:
             [ListTokenBalancesResult]: The token balances for the address on the network.
 
         """
-        response = await self.api_clients.evm_token_balances.list_evm_token_balances(
-            address=address, network=network, page_size=page_size, page_token=page_token
-        )
-        return ListTokenBalancesResult(
-            balances=[
-                EvmTokenBalance(
-                    token=EvmToken(
-                        contract_address=balance.token.contract_address,
-                        network=balance.token.network,
-                        symbol=balance.token.symbol,
-                        name=balance.token.name,
-                    ),
-                    amount=EvmTokenAmount(
-                        amount=int(balance.amount.amount),
-                        decimals=balance.amount.decimals,
-                    ),
-                )
-                for balance in response.balances
-            ],
-            next_page_token=response.next_page_token,
+        return await list_token_balances(
+            self.api_clients.evm_token_balances,
+            address,
+            network,
+            page_size,
+            page_token,
         )
 
     async def list_smart_accounts(
@@ -270,12 +290,7 @@ class EvmClient:
             str: The transaction hash of the faucet request.
 
         """
-        response = await self.api_clients.faucets.request_evm_faucet(
-            request_evm_faucet_request=RequestEvmFaucetRequest(
-                address=address, network=network, token=token
-            )
-        )
-        return response.transaction_hash
+        return await request_faucet(self.api_clients.faucets, address, network, token)
 
     async def sign_hash(self, address: str, hash: str, idempotency_key: str | None = None) -> str:
         """Sign an EVM hash.
@@ -313,6 +328,42 @@ class EvmClient:
         response = await self.api_clients.evm_accounts.sign_evm_message(
             address=address,
             sign_evm_message_request=SignEvmMessageRequest(message=message),
+            x_idempotency_key=idempotency_key,
+        )
+        return response.signature
+
+    async def sign_typed_data(
+        self,
+        address: str,
+        domain: EIP712Domain,
+        types: dict[str, Any],
+        primary_type: str,
+        message: dict[str, Any],
+        idempotency_key: str | None = None,
+    ) -> str:
+        """Sign an EVM typed data.
+
+        Args:
+            address (str): The address of the account.
+            domain (EIP712Domain): The domain of the message.
+            types (Dict[str, Any]): The types of the message.
+            primary_type (str): The primary type of the message.
+            message (Dict[str, Any]): The message to sign.
+            idempotency_key (str, optional): The idempotency key. Defaults to None.
+
+        Returns:
+            str: The signature.
+
+        """
+        eip712_message = EIP712Message(
+            domain=domain,
+            types=types,
+            primary_type=primary_type,
+            message=message,
+        )
+        response = await self.api_clients.evm_accounts.sign_evm_typed_data(
+            address=address,
+            eip712_message=eip712_message,
             x_idempotency_key=idempotency_key,
         )
         return response.signature
@@ -378,44 +429,13 @@ class EvmClient:
             str: The transaction hash.
 
         """
-        if isinstance(transaction, str):
-            return (
-                await self.api_clients.evm_accounts.send_evm_transaction(
-                    address=address,
-                    send_evm_transaction_request=SendEvmTransactionRequest(
-                        transaction=transaction, network=network
-                    ),
-                    x_idempotency_key=idempotency_key,
-                )
-            ).transaction_hash
-        elif isinstance(transaction, TransactionRequestEIP1559):
-            typed_tx = DynamicFeeTransaction.from_dict(transaction.as_dict())
-            serialized_tx = serialize_unsigned_transaction(typed_tx)
-
-            send_evm_transaction_request = SendEvmTransactionRequest(
-                transaction=serialized_tx, network=network
-            )
-
-            return (
-                await self.api_clients.evm_accounts.send_evm_transaction(
-                    address=address,
-                    send_evm_transaction_request=send_evm_transaction_request,
-                    x_idempotency_key=idempotency_key,
-                )
-            ).transaction_hash
-        else:
-            serialized_tx = serialize_unsigned_transaction(transaction)
-            send_evm_transaction_request = SendEvmTransactionRequest(
-                transaction=serialized_tx, network=network
-            )
-
-            return (
-                await self.api_clients.evm_accounts.send_evm_transaction(
-                    address=address,
-                    send_evm_transaction_request=send_evm_transaction_request,
-                    x_idempotency_key=idempotency_key,
-                )
-            ).transaction_hash
+        return await send_transaction(
+            self.api_clients.evm_accounts,
+            address,
+            transaction,
+            network,
+            idempotency_key,
+        )
 
     async def send_user_operation(
         self,
@@ -438,7 +458,8 @@ class EvmClient:
         """
         return await send_user_operation(
             self.api_clients,
-            smart_account,
+            smart_account.address,
+            smart_account.owners[0],
             calls,
             network,
             paymaster_url,
@@ -470,3 +491,13 @@ class EvmClient:
             timeout_seconds,
             interval_seconds,
         )
+
+    async def update_account(self, address: str, name: str | None = None) -> EvmServerAccount:
+        """Update an EVM account.
+
+        Args:
+            address (str): The address of the account.
+            name (str, optional): The name of the account.
+
+        """
+        raise NotImplementedError("Updating an EVM account is not yet implemented")

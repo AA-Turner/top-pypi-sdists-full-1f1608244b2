@@ -51,6 +51,7 @@ __all__ = (
     "Av1GopSizeUnitsType",
     "Av1LevelType",
     "Av1LookAheadRateControlType",
+    "Av1RateControlModeType",
     "Av1SceneChangeDetectType",
     "AvailBlankingStateType",
     "BandwidthReductionFilterStrengthType",
@@ -460,6 +461,7 @@ Av1LevelType = Literal[
     "AV1_LEVEL_AUTO",
 ]
 Av1LookAheadRateControlType = Literal["HIGH", "LOW", "MEDIUM"]
+Av1RateControlModeType = Literal["CBR", "QVBR"]
 Av1SceneChangeDetectType = Literal["DISABLED", "ENABLED"]
 AvailBlankingStateType = Literal["DISABLED", "ENABLED"]
 BandwidthReductionFilterStrengthType = Literal[

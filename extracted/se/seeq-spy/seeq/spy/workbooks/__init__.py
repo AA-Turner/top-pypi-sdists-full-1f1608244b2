@@ -14,6 +14,7 @@ from seeq.spy.workbooks._pull import pull
 from seeq.spy.workbooks._push import push
 from seeq.spy.workbooks._save import save
 from seeq.spy.workbooks._search import search
+from seeq.spy.workbooks._table_toolbar import ConditionTableToolbar, ConditionTableColumns, ConditionTableColumn
 from seeq.spy.workbooks._template import ItemTemplate, WorkbookTemplate, AnalysisTemplate, AnalysisWorksheetTemplate, \
     TopicTemplate, TopicDocumentTemplate, AnalysisWorkstepTemplate
 from seeq.spy.workbooks._trend_toolbar import Capsules, Color, Conditions, Cursors, Labels, Signals, TrendItems, \
@@ -40,6 +41,9 @@ __all__ = ['search',
            'Labels',
            'TrendItems',
            'TrendToolbar',
+           'ConditionTableToolbar',
+           'ConditionTableColumns',
+           'ConditionTableColumn',
            'Labels',
            'Topic',
            'DateRange',

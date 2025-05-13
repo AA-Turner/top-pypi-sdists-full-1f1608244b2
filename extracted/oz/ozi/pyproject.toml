@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 [build-system]
 build-backend = "ozi_build.buildapi"
-requires      = ["OZI.build[core,uv]~=2.0.7"]
+requires      = ["OZI.build[core,uv]>=2.0.7,<2.3.0"]
 
 [project.scripts]
 ozi = "ozi.__main__:main"
@@ -13,7 +13,7 @@ ozi-fix = "ozi.fix.__main__:main"
 
 [project]
 name = "OZI"
-version = "1.41.5"
+version = "1.41.9"
 description = 'Package Python projects with Meson.'
 readme = 'README.rst'
 authors = [{name='Eden Ross Duff MSc', email='help@oziproject.dev'}]

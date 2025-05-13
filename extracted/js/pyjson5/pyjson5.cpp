@@ -1605,7 +1605,7 @@ enum  {
   __pyx_e_7pyjson5_NO_EXTRA_DATA = 0x00110000
 };
 
-/* "src/_imports.pyx":207
+/* "src/_imports.pyx":204
  * 
  * 
  * ctypedef struct AsciiObject:             # <<<<<<<<<<<<<<
@@ -2500,6 +2500,13 @@ static CYTHON_INLINE PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject *k
 
 /* ExtTypeTest.proto */
 static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type);
+
+/* SetPackagePathFromImportLib.proto */
+#if PY_MAJOR_VERSION >= 3 && !CYTHON_PEP489_MULTI_PHASE_INIT
+static int __Pyx_SetPackagePathFromImportLib(PyObject *module_name);
+#else
+#define __Pyx_SetPackagePathFromImportLib(a) 0
+#endif
 
 /* IncludeStructmemberH.proto */
 #include <structmember.h>
@@ -3871,6 +3878,7 @@ typedef struct {
   PyObject *__pyx_n_s_position;
   PyObject *__pyx_n_s_pprint;
   PyObject *__pyx_n_s_pyjson5;
+  PyObject *__pyx_n_u_pyjson5;
   PyObject *__pyx_n_s_quotationmark;
   PyObject *__pyx_n_u_quotationmark;
   PyObject *__pyx_kp_u_quotationmark_must_be_one_ASCII;
@@ -4214,6 +4222,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_position);
   Py_CLEAR(clear_module_state->__pyx_n_s_pprint);
   Py_CLEAR(clear_module_state->__pyx_n_s_pyjson5);
+  Py_CLEAR(clear_module_state->__pyx_n_u_pyjson5);
   Py_CLEAR(clear_module_state->__pyx_n_s_quotationmark);
   Py_CLEAR(clear_module_state->__pyx_n_u_quotationmark);
   Py_CLEAR(clear_module_state->__pyx_kp_u_quotationmark_must_be_one_ASCII);
@@ -4535,6 +4544,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_position);
   Py_VISIT(traverse_module_state->__pyx_n_s_pprint);
   Py_VISIT(traverse_module_state->__pyx_n_s_pyjson5);
+  Py_VISIT(traverse_module_state->__pyx_n_u_pyjson5);
   Py_VISIT(traverse_module_state->__pyx_n_s_quotationmark);
   Py_VISIT(traverse_module_state->__pyx_n_u_quotationmark);
   Py_VISIT(traverse_module_state->__pyx_kp_u_quotationmark_must_be_one_ASCII);
@@ -4954,6 +4964,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_position __pyx_mstate_global->__pyx_n_s_position
 #define __pyx_n_s_pprint __pyx_mstate_global->__pyx_n_s_pprint
 #define __pyx_n_s_pyjson5 __pyx_mstate_global->__pyx_n_s_pyjson5
+#define __pyx_n_u_pyjson5 __pyx_mstate_global->__pyx_n_u_pyjson5
 #define __pyx_n_s_quotationmark __pyx_mstate_global->__pyx_n_s_quotationmark
 #define __pyx_n_u_quotationmark __pyx_mstate_global->__pyx_n_u_quotationmark
 #define __pyx_kp_u_quotationmark_must_be_one_ASCII __pyx_mstate_global->__pyx_kp_u_quotationmark_must_be_one_ASCII
@@ -64198,6 +64209,7 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_position, __pyx_k_position, sizeof(__pyx_k_position), 0, 0, 1, 1},
     {&__pyx_n_s_pprint, __pyx_k_pprint, sizeof(__pyx_k_pprint), 0, 0, 1, 1},
     {&__pyx_n_s_pyjson5, __pyx_k_pyjson5, sizeof(__pyx_k_pyjson5), 0, 0, 1, 1},
+    {&__pyx_n_u_pyjson5, __pyx_k_pyjson5, sizeof(__pyx_k_pyjson5), 0, 1, 0, 1},
     {&__pyx_n_s_quotationmark, __pyx_k_quotationmark, sizeof(__pyx_k_quotationmark), 0, 0, 1, 1},
     {&__pyx_n_u_quotationmark, __pyx_k_quotationmark, sizeof(__pyx_k_quotationmark), 0, 1, 0, 1},
     {&__pyx_kp_u_quotationmark_must_be_one_ASCII, __pyx_k_quotationmark_must_be_one_ASCII, sizeof(__pyx_k_quotationmark_must_be_one_ASCII), 0, 1, 0, 0},
@@ -65143,9 +65155,15 @@ namespace {
 
 #if PY_MAJOR_VERSION < 3
 __Pyx_PyMODINIT_FUNC initpyjson5(void) CYTHON_SMALL_CODE; /*proto*/
+#if !defined(CYTHON_NO_PYINIT_EXPORT) && (defined(_WIN32) || defined(WIN32) || defined(MS_WINDOWS))
+__Pyx_PyMODINIT_FUNC init__init__(void) { initpyjson5(); }
+#endif
 __Pyx_PyMODINIT_FUNC initpyjson5(void)
 #else
 __Pyx_PyMODINIT_FUNC PyInit_pyjson5(void) CYTHON_SMALL_CODE; /*proto*/
+#if !defined(CYTHON_NO_PYINIT_EXPORT) && (defined(_WIN32) || defined(WIN32) || defined(MS_WINDOWS))
+__Pyx_PyMODINIT_FUNC PyInit___init__(void) { return PyInit_pyjson5(); }
+#endif
 __Pyx_PyMODINIT_FUNC PyInit_pyjson5(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
@@ -65329,6 +65347,9 @@ if (!__Pyx_RefNanny) {
   if (__pyx_module_is_main_pyjson5) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(17, 1, __pyx_L1_error)
   }
+  if (!CYTHON_PEP489_MULTI_PHASE_INIT) {
+    if (unlikely((__Pyx_SetPackagePathFromImportLib(__pyx_n_u_pyjson5) < 0))) __PYX_ERR(17, 1, __pyx_L1_error)
+  }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(17, 1, __pyx_L1_error)
@@ -65354,24 +65375,24 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(17, 1, __pyx_L1_error)
   #endif
 
-  /* "src/_imports.pyx":220
+  /* "src/_imports.pyx":217
  * cdef object saferepr
  * 
  * from collections.abc import Mapping             # <<<<<<<<<<<<<<
  * from datetime import datetime, date, time
  * from decimal import Decimal
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 220, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 217, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_n_s_Mapping);
   __Pyx_GIVEREF(__pyx_n_s_Mapping);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_Mapping)) __PYX_ERR(21, 220, __pyx_L1_error);
-  __pyx_t_3 = __Pyx_Import(__pyx_n_s_collections_abc, __pyx_t_2, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 220, __pyx_L1_error)
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_Mapping)) __PYX_ERR(21, 217, __pyx_L1_error);
+  __pyx_t_3 = __Pyx_Import(__pyx_n_s_collections_abc, __pyx_t_2, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 217, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_Mapping); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 220, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_Mapping); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 217, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_7cpython_4type_type))))) __PYX_ERR(21, 220, __pyx_L1_error)
+  if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_7cpython_4type_type))))) __PYX_ERR(21, 217, __pyx_L1_error)
   __Pyx_INCREF(__pyx_t_2);
   __Pyx_XGOTREF((PyObject *)__pyx_v_7pyjson5_Mapping);
   __Pyx_DECREF_SET(__pyx_v_7pyjson5_Mapping, ((PyTypeObject *)__pyx_t_2));
@@ -65379,46 +65400,46 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/_imports.pyx":221
+  /* "src/_imports.pyx":218
  * 
  * from collections.abc import Mapping
  * from datetime import datetime, date, time             # <<<<<<<<<<<<<<
  * from decimal import Decimal
  * from io import IOBase
  */
-  __pyx_t_3 = PyList_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 221, __pyx_L1_error)
+  __pyx_t_3 = PyList_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(__pyx_n_s_datetime);
   __Pyx_GIVEREF(__pyx_n_s_datetime);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_3, 0, __pyx_n_s_datetime)) __PYX_ERR(21, 221, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_3, 0, __pyx_n_s_datetime)) __PYX_ERR(21, 218, __pyx_L1_error);
   __Pyx_INCREF(__pyx_n_s_date);
   __Pyx_GIVEREF(__pyx_n_s_date);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_3, 1, __pyx_n_s_date)) __PYX_ERR(21, 221, __pyx_L1_error);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_3, 1, __pyx_n_s_date)) __PYX_ERR(21, 218, __pyx_L1_error);
   __Pyx_INCREF(__pyx_n_s_time);
   __Pyx_GIVEREF(__pyx_n_s_time);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_3, 2, __pyx_n_s_time)) __PYX_ERR(21, 221, __pyx_L1_error);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_datetime, __pyx_t_3, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 221, __pyx_L1_error)
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_3, 2, __pyx_n_s_time)) __PYX_ERR(21, 218, __pyx_L1_error);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_datetime, __pyx_t_3, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_datetime); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 221, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_datetime); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_7cpython_4type_type))))) __PYX_ERR(21, 221, __pyx_L1_error)
+  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_7cpython_4type_type))))) __PYX_ERR(21, 218, __pyx_L1_error)
   __Pyx_INCREF(__pyx_t_3);
   __Pyx_XGOTREF((PyObject *)__pyx_v_7pyjson5_datetime);
   __Pyx_DECREF_SET(__pyx_v_7pyjson5_datetime, ((PyTypeObject *)__pyx_t_3));
   __Pyx_GIVEREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_date); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 221, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_date); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_7cpython_4type_type))))) __PYX_ERR(21, 221, __pyx_L1_error)
+  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_7cpython_4type_type))))) __PYX_ERR(21, 218, __pyx_L1_error)
   __Pyx_INCREF(__pyx_t_3);
   __Pyx_XGOTREF((PyObject *)__pyx_v_7pyjson5_date);
   __Pyx_DECREF_SET(__pyx_v_7pyjson5_date, ((PyTypeObject *)__pyx_t_3));
   __Pyx_GIVEREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 221, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_time); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_7cpython_4type_type))))) __PYX_ERR(21, 221, __pyx_L1_error)
+  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_7cpython_4type_type))))) __PYX_ERR(21, 218, __pyx_L1_error)
   __Pyx_INCREF(__pyx_t_3);
   __Pyx_XGOTREF((PyObject *)__pyx_v_7pyjson5_time);
   __Pyx_DECREF_SET(__pyx_v_7pyjson5_time, ((PyTypeObject *)__pyx_t_3));
@@ -65426,24 +65447,24 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/_imports.pyx":222
+  /* "src/_imports.pyx":219
  * from collections.abc import Mapping
  * from datetime import datetime, date, time
  * from decimal import Decimal             # <<<<<<<<<<<<<<
  * from io import IOBase
  * from pprint import saferepr
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 222, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 219, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_n_s_Decimal);
   __Pyx_GIVEREF(__pyx_n_s_Decimal);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_Decimal)) __PYX_ERR(21, 222, __pyx_L1_error);
-  __pyx_t_3 = __Pyx_Import(__pyx_n_s_decimal, __pyx_t_2, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 222, __pyx_L1_error)
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_Decimal)) __PYX_ERR(21, 219, __pyx_L1_error);
+  __pyx_t_3 = __Pyx_Import(__pyx_n_s_decimal, __pyx_t_2, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 219, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_Decimal); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 222, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_Decimal); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 219, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_7cpython_4type_type))))) __PYX_ERR(21, 222, __pyx_L1_error)
+  if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_7cpython_4type_type))))) __PYX_ERR(21, 219, __pyx_L1_error)
   __Pyx_INCREF(__pyx_t_2);
   __Pyx_XGOTREF((PyObject *)__pyx_v_7pyjson5_Decimal);
   __Pyx_DECREF_SET(__pyx_v_7pyjson5_Decimal, ((PyTypeObject *)__pyx_t_2));
@@ -65451,23 +65472,23 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "src/_imports.pyx":223
+  /* "src/_imports.pyx":220
  * from datetime import datetime, date, time
  * from decimal import Decimal
  * from io import IOBase             # <<<<<<<<<<<<<<
  * from pprint import saferepr
  */
-  __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 223, __pyx_L1_error)
+  __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 220, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(__pyx_n_s_IOBase);
   __Pyx_GIVEREF(__pyx_n_s_IOBase);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_3, 0, __pyx_n_s_IOBase)) __PYX_ERR(21, 223, __pyx_L1_error);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_io, __pyx_t_3, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 223, __pyx_L1_error)
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_3, 0, __pyx_n_s_IOBase)) __PYX_ERR(21, 220, __pyx_L1_error);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_io, __pyx_t_3, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 220, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_IOBase); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 223, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_IOBase); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 220, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_7cpython_4type_type))))) __PYX_ERR(21, 223, __pyx_L1_error)
+  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_7cpython_4type_type))))) __PYX_ERR(21, 220, __pyx_L1_error)
   __Pyx_INCREF(__pyx_t_3);
   __Pyx_XGOTREF((PyObject *)__pyx_v_7pyjson5_IOBase);
   __Pyx_DECREF_SET(__pyx_v_7pyjson5_IOBase, ((PyTypeObject *)__pyx_t_3));
@@ -65475,20 +65496,20 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "src/_imports.pyx":224
+  /* "src/_imports.pyx":221
  * from decimal import Decimal
  * from io import IOBase
  * from pprint import saferepr             # <<<<<<<<<<<<<<
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 224, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 221, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_n_s_saferepr);
   __Pyx_GIVEREF(__pyx_n_s_saferepr);
-  if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_saferepr)) __PYX_ERR(21, 224, __pyx_L1_error);
-  __pyx_t_3 = __Pyx_Import(__pyx_n_s_pprint, __pyx_t_2, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 224, __pyx_L1_error)
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_saferepr)) __PYX_ERR(21, 221, __pyx_L1_error);
+  __pyx_t_3 = __Pyx_Import(__pyx_n_s_pprint, __pyx_t_2, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(21, 221, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_saferepr); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 224, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_3, __pyx_n_s_saferepr); if (unlikely(!__pyx_t_2)) __PYX_ERR(21, 221, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_t_2);
   __Pyx_XGOTREF(__pyx_v_7pyjson5_saferepr);
@@ -68289,6 +68310,57 @@ static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type) {
     __Pyx_DECREF_TypeName(type_name);
     return 0;
 }
+
+/* SetPackagePathFromImportLib */
+#if PY_MAJOR_VERSION >= 3 && !CYTHON_PEP489_MULTI_PHASE_INIT
+static int __Pyx_SetPackagePathFromImportLib(PyObject *module_name) {
+    PyObject *importlib, *osmod, *ossep, *parts, *package_path;
+    PyObject *file_path = NULL;
+    int result;
+    PyObject *spec;
+    importlib = PyImport_ImportModule("importlib.util");
+    if (unlikely(!importlib))
+        goto bad;
+    spec = PyObject_CallMethod(importlib, "find_spec", "(O)", module_name);
+    Py_DECREF(importlib);
+    if (unlikely(!spec))
+        goto bad;
+    file_path = PyObject_GetAttrString(spec, "origin");
+    Py_DECREF(spec);
+    if (unlikely(!file_path))
+        goto bad;
+    if (unlikely(PyObject_SetAttrString(__pyx_m, "__file__", file_path) < 0))
+        goto bad;
+    osmod = PyImport_ImportModule("os");
+    if (unlikely(!osmod))
+        goto bad;
+    ossep = PyObject_GetAttrString(osmod, "sep");
+    Py_DECREF(osmod);
+    if (unlikely(!ossep))
+        goto bad;
+    parts = PyObject_CallMethod(file_path, "rsplit", "(Oi)", ossep, 1);
+    Py_DECREF(file_path); file_path = NULL;
+    Py_DECREF(ossep);
+    if (unlikely(!parts))
+        goto bad;
+    package_path = Py_BuildValue("[O]", PyList_GET_ITEM(parts, 0));
+    Py_DECREF(parts);
+    if (unlikely(!package_path))
+        goto bad;
+    goto set_path;
+bad:
+    PyErr_WriteUnraisable(module_name);
+    Py_XDECREF(file_path);
+    PyErr_Clear();
+    package_path = PyList_New(0);
+    if (unlikely(!package_path))
+        return -1;
+set_path:
+    result = PyObject_SetAttrString(__pyx_m, "__path__", package_path);
+    Py_DECREF(package_path);
+    return result;
+}
+#endif
 
 /* FixUpExtensionType */
 #if CYTHON_USE_TYPE_SPECS

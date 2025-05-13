@@ -23,6 +23,7 @@ from seeq.spy.workbooks._data import StoredSignal, StoredCondition, StoredOrCalc
 from seeq.spy.workbooks._data import ThresholdMetric
 from seeq.spy.workbooks._item import Item, Reference, replace_items
 from seeq.spy.workbooks._item_map import ItemMap
+from seeq.spy.workbooks._table_toolbar import ConditionTableToolbar
 from seeq.spy.workbooks._trend_toolbar import TrendToolbar
 
 
@@ -267,6 +268,7 @@ class AnalysisWorkstep(Workstep):
         if self.view is None:
             self._set_view_key()
         self._trend_toolbar = TrendToolbar(self)
+        self._condition_table_toolbar = ConditionTableToolbar(self)
 
     @property
     def trend_toolbar(self):
@@ -274,6 +276,13 @@ class AnalysisWorkstep(Workstep):
         Trend toolbar for configuring the worksheet's trend toolbar settings.
         """
         return self._trend_toolbar
+
+    @property
+    def condition_table_toolbar(self):
+        """
+        Condition table toolbar for configuring the worksheet's condition table settings.
+        """
+        return self._condition_table_toolbar
 
     @property
     def display_items(self):

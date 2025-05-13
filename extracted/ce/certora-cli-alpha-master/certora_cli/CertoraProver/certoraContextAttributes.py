@@ -824,6 +824,13 @@ class EvmAttributes(AttrUtil.Attributes):
         disables_build_cache=False
     )
 
+    EQUIVALENCE_CONTRACTS = AttrUtil.AttributeDefinition(
+        attr_validation_func=Vf.validate_equivalence_contracts,
+        arg_type=AttrUtil.AttrArgType.STRING,
+        affects_build_cache_key=False,
+        disables_build_cache=False
+    )
+
     BYTECODE_JSONS = AttrUtil.AttributeDefinition(
         attr_validation_func=Vf.validate_json_file,
         arg_type=AttrUtil.AttrArgType.LIST,
@@ -964,6 +971,20 @@ class EvmAttributes(AttrUtil.Attributes):
         disables_build_cache=False
     )
 
+    EXCLUDE_METHOD = AttrUtil.AttributeDefinition(
+        attr_validation_func=Vf.validate_method_flag,
+        jar_flag='-excludeMethod',
+        arg_type=AttrUtil.AttrArgType.LIST,
+        help_msg="Filter out methods to be verified by their signature",
+        default_desc="Verifies all public or external methods. In invariants pure and view functions are ignored",
+        argparse_args={
+            'nargs': AttrUtil.ONE_OR_MORE_OCCURRENCES,
+            'action': AttrUtil.APPEND
+        },
+        affects_build_cache_key=False,
+        disables_build_cache=False
+    )
+
     OPTIMISTIC_CONTRACT_RECURSION = AttrUtil.AttributeDefinition(
         arg_type=AttrUtil.AttrArgType.BOOLEAN,
         help_msg="Assume the recursion limit is never reached in cases of "
@@ -1083,25 +1104,34 @@ class EvmAttributes(AttrUtil.Attributes):
         default_desc="",
     )
 
-    BMC = AttrUtil.AttributeDefinition(
+    RANGE = AttrUtil.AttributeDefinition(
         attr_validation_func=Vf.validate_non_negative_integer,
         argparse_args={
             'action': AttrUtil.UniqueStore
         },
+        help_msg="The maximal length of function call sequences Ranger checks",
+        default_desc=f"The default value ('{Util.DEFAULT_RANGER_RANGE}') is used",
         jar_flag="-boundedModelChecking",
         affects_build_cache_key=False,
         disables_build_cache=False,
     )
 
-    BMC_FAILURE_LIMIT = AttrUtil.AttributeDefinition(
+    RANGER_FAILURE_LIMIT = AttrUtil.AttributeDefinition(
         attr_validation_func=Vf.validate_non_negative_integer,
         argparse_args={
             'action': AttrUtil.UniqueStore
         },
+        help_msg="Once this number of violations are found, no new Ranger call sequence checks will be started. Checks already in progress will continue.",
+        default_desc=f"Once {Util.DEFAULT_RANGER_FAILURE_LIMIT} violations are found, no new Ranger call sequence checks will be started.",
         jar_flag="-boundedModelCheckingFailureLimit",
         affects_build_cache_key=False,
         disables_build_cache=False,
     )
+
+    @classmethod
+    def hide_attributes(cls) -> List[str]:
+        # do not show these attributes in the help message
+        return [cls.RANGER_FAILURE_LIMIT.name, cls.RANGE.name]
 
 
 class InternalUseAttributes(AttrUtil.Attributes):
@@ -1652,6 +1682,22 @@ class EvmProverAttributes(CommonAttributes, DeprecatedAttributes, EvmAttributes,
     )
 
 
+class RangerAttributes(EvmProverAttributes):
+    @classmethod
+    def ranger_unsupported_attributes(cls) -> List[AttrUtil.AttributeDefinition]:
+        return [cls.PROJECT_SANITY, cls.RULE_SANITY, cls.COVERAGE_INFO, cls.FOUNDRY, cls.INDEPENDENT_SATISFY,
+                cls.MULTI_ASSERT_CHECK, cls.MULTI_EXAMPLE]
+
+    @classmethod
+    def ranger_true_by_default_attributes(cls) -> List[AttrUtil.AttributeDefinition]:
+        return [cls.OPTIMISTIC_LOOP, cls.OPTIMISTIC_FALLBACK, cls.AUTO_DISPATCHER, cls.OPTIMISTIC_HASHING]
+
+    @classmethod
+    def hide_attributes(cls) -> List[str]:
+        # do not show these attributes in the help message
+        combined_list = cls.ranger_unsupported_attributes() + cls.ranger_true_by_default_attributes()
+        return [attr.name for attr in combined_list] + [cls.LOOP_ITER.name, cls.RANGER_FAILURE_LIMIT.name]
+
 class SorobanProverAttributes(CommonAttributes, InternalUseAttributes, BackendAttributes, RustAttributes):
     FILES = AttrUtil.AttributeDefinition(
         attr_validation_func=Vf.validate_soroban_extension,
@@ -1802,6 +1848,12 @@ def is_soroban_app() -> bool:
 def is_rust_app() -> bool:
     return is_soroban_app() or is_solana_app()
 
-
+# Ranger will also return true for this function
 def is_evm_app() -> bool:
-    return get_attribute_class() == EvmProverAttributes
+    return issubclass(get_attribute_class(), EvmProverAttributes)
+
+def is_ranger_app() -> bool:
+    return get_attribute_class() == RangerAttributes
+
+def is_sophy_app() -> bool:
+    return False  # wait for the tool to be added

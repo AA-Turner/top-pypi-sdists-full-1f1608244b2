@@ -1,14 +1,15 @@
-use itertools::Itertools;
+use crate::goto_definition_for_crate_cargo_toml;
 use tombi_config::TomlVersion;
-use tower_lsp::lsp_types::{Location, TextDocumentIdentifier};
-
-use crate::get_workspace_cargo_toml_location;
+use tombi_extension::DefinitionLocations;
+use tombi_schema_store::match_accessors;
+use tower_lsp::lsp_types::TextDocumentIdentifier;
 
 pub async fn goto_declaration(
     text_document: &TextDocumentIdentifier,
-    keys: &[tombi_document_tree::Key],
+    document_tree: &tombi_document_tree::DocumentTree,
+    accessors: &[tombi_schema_store::Accessor],
     toml_version: TomlVersion,
-) -> Result<Option<Location>, tower_lsp::jsonrpc::Error> {
+) -> Result<Option<tombi_extension::DefinitionLocations>, tower_lsp::jsonrpc::Error> {
     // Check if current file is Cargo.toml
     if !text_document.uri.path().ends_with("Cargo.toml") {
         return Ok(None);
@@ -17,12 +18,21 @@ pub async fn goto_declaration(
         return Ok(None);
     };
 
-    let keys = keys.iter().map(|key| key.value()).collect_vec();
-    let keys = keys.as_slice();
-
-    if keys.last() != Some(&"workspace") {
-        get_workspace_cargo_toml_location(keys, &cargo_toml_path, toml_version, false)
+    let locations = if match_accessors!(accessors[..1], ["workspace"]) {
+        vec![]
     } else {
-        Ok(None)
+        goto_definition_for_crate_cargo_toml(
+            document_tree,
+            accessors,
+            &cargo_toml_path,
+            toml_version,
+            false,
+        )?
+    };
+
+    if locations.is_empty() {
+        return Ok(None);
     }
+
+    Ok(Some(DefinitionLocations(locations)))
 }

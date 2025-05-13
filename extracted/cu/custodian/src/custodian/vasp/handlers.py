@@ -137,6 +137,8 @@ class VaspErrorHandler(ErrorHandler):
         "set_core_wf": ["internal error in SET_CORE_WF"],
         "read_error": ["Error reading item", "Error code was IERR= 5"],
         "auto_nbands": ["The number of bands has been changed"],
+        "ibzkpt": ["not all point group operations"],
+        "fexcf": ["supplied exchange-correlation table"],
     }
 
     def __init__(
@@ -208,6 +210,26 @@ class VaspErrorHandler(ErrorHandler):
 
         if "tet" in self.errors:
             actions.append({"dict": "INCAR", "action": {"_set": {"ISMEAR": 0, "SIGMA": 0.05}}})
+
+        if "ibzkpt" in self.errors:
+            # Discussion here:
+            # https://www.vasp.at/forum/viewtopic.php?p=24485
+            if self.error_count["ibzkpt"] == 0 and vi["INCAR"].get("ISYM", 2) != 0:
+                actions.append({"dict": "INCAR", "action": {"_set": {"ISYM": 0}}})
+            elif self.error_count["ibzkpt"] == 1 and vi["INCAR"].get("SYMPREC", 1e-5) > 1e-6:
+                actions.append({"dict": "INCAR", "action": {"_set": {"SYMPREC": 1e-6}}})
+            self.error_count["ibzkpt"] += 1
+
+        if "fexcf" in self.errors:
+            # Minimal fixes suggested here, only practical one is CONTCAR --> POSCAR
+            # https://www.vasp.at/forum/viewtopic.php?p=14827
+            if self.error_count["fexcf"] == 0:
+                # First see if last ionic configuration is more stable on rerun
+                actions.append({"file": "CONTCAR", "action": {"_file_copy": {"dest": "POSCAR"}}})
+            elif self.error_count["fexcf"] == 1 and vi["INCAR"].get("IBRION", -1) == 1:
+                # Try more stable geometry optimization method
+                actions.append({"dict": "INCAR", "action": {"_set": {"IBRION": 2}}})
+            self.error_count["fexcf"] += 1
 
         if "dentet" in self.errors:
             # For dentet: follow advice in this thread
@@ -1391,7 +1413,7 @@ class LargeSigmaHandler(ErrorHandler):
                 terminate_on_match=False,
             )
             outcar.read_pattern(
-                {"electronic_steps": r"Iteration *(\D\d*\ \d*)"},
+                {"electronic_step_indices": r"Iteration\s*\d+\s*\(\s*(\d+)\s*\)"},
                 postprocess=int,
                 reverse=False,
                 terminate_on_match=False,
@@ -1402,15 +1424,15 @@ class LargeSigmaHandler(ErrorHandler):
             entropies_per_atom = [0.0 for _ in range(completed_ionic_steps)]
             n_atoms = len(Structure.from_file(os.path.join(directory, "POSCAR")))
 
-            # `Iteration (#ionic step # electronic step)` always written before entropy
-            e_step_idx = [step[0] for step in outcar.data.get("electronic_steps", [])]
-            smearing_entropy = outcar.data.get("smearing_entropy", [0.0 for _ in e_step_idx])
-            for ie_step_idx, ie_step in enumerate(e_step_idx):
-                # Because this handler monitors OUTCAR dynamically, it sometimes tries
-                # to retrieve data in OUTCAR before that data is written. To avoid this,
-                # we have two checks for list length here
-                if ie_step <= completed_ionic_steps and ie_step_idx < len(smearing_entropy):
-                    entropies_per_atom[ie_step - 1] = smearing_entropy[ie_step_idx]
+            electronic_step_indices = [step[0] for step in outcar.data.get("electronic_step_indices", [])]
+            smearing_entropy = outcar.data.get("smearing_entropy", [0.0 for _ in electronic_step_indices])
+
+            ionic_step_idx = 0
+            for electronic_step_idx, entropy in zip(electronic_step_indices, smearing_entropy, strict=False):
+                if electronic_step_idx == 1:
+                    ionic_step_idx += 1
+                if ionic_step_idx <= completed_ionic_steps:
+                    entropies_per_atom[ionic_step_idx - 1] = entropy
 
             if len(entropies_per_atom) > 0:
                 n_atoms = len(Structure.from_file(os.path.join(directory, "POSCAR")))
@@ -1569,6 +1591,9 @@ class NonConvergingErrorHandler(ErrorHandler):
     Check if a run is hitting the maximum number of electronic steps at the
     last nionic_steps ionic steps (default=10). If so, change ALGO using a
     multi-step ladder scheme or kill the job.
+
+    In some cases (ALGO=All or ALGO=Normal and ISMEAR < 0), this handler also changes AMIX
+    and BMIX but unsure if this helps much. Some anecdotal evidence suggests it doesn't.
     """
 
     is_monitor = True

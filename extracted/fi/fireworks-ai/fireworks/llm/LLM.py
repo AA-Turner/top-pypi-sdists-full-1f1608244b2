@@ -1,8 +1,10 @@
+from collections import defaultdict, deque
 from datetime import timedelta
-import functools
+import time
 from fireworks.client.api_client import FireworksClient
 from fireworks.client.chat import Chat as FireworksChat
 from fireworks.client.chat_completion import ChatCompletionV2 as FireworksChatCompletion
+from asyncstdlib.functools import cache
 from typing import (
     AsyncGenerator,
     Generator,
@@ -12,8 +14,10 @@ from typing import (
     Union,
     overload,
 )
+from fireworks.client.error import BadGatewayError, ServiceUnavailableError
 from fireworks.gateway import Gateway
 from fireworks.control_plane.generated.protos.gateway import (
+    AcceleratorType as AcceleratorTypeEnum,
     AutoscalingPolicy,
     DeployedModelState,
     Deployment,
@@ -23,10 +27,13 @@ from fireworks.control_plane.generated.protos.gateway import (
 import asyncio
 import logging
 import os
+import atexit
 from openai.types.chat.chat_completion import ChatCompletion as OpenAIChatCompletion
 from openai.types.chat.chat_completion_chunk import ChatCompletionChunk
 from openai.types.chat.chat_completion_message_param import ChatCompletionMessageParam
-from fireworks._util import run_coroutine_in_appropriate_loop, async_lru_cache
+from openai.types.chat.completion_create_params import ResponseFormat
+from openai import NOT_GIVEN, NotGiven
+from fireworks._util import run_coroutine_in_appropriate_loop
 
 # Configure logger with a consistent format for better debugging
 logger = logging.getLogger(__name__)
@@ -40,6 +47,9 @@ if os.environ.get("FIREWORKS_SDK_DEBUG"):
     logger.setLevel(logging.DEBUG)
 
 
+ReasoningEffort = Literal["low", "medium", "high"]
+
+
 class ChatCompletion:
     def __init__(self, llm: "LLM"):
         self._client = FireworksChatCompletion(llm._client)
@@ -50,6 +60,8 @@ class ChatCompletion:
         self,
         messages: Iterable[ChatCompletionMessageParam],
         stream: Literal[False] = False,
+        response_format: Optional[ResponseFormat] = None,
+        reasoning_effort: Optional[ReasoningEffort] = None,
         extra_headers=None,
         **kwargs,
     ) -> OpenAIChatCompletion:
@@ -60,6 +72,8 @@ class ChatCompletion:
         self,
         messages: Iterable[ChatCompletionMessageParam],
         stream: Literal[True] = True,
+        response_format: Optional[ResponseFormat] = None,
+        reasoning_effort: Optional[ReasoningEffort] = None,
         extra_headers=None,
         **kwargs,
     ) -> Generator[ChatCompletionChunk, None, None]:
@@ -69,25 +83,49 @@ class ChatCompletion:
         self,
         messages: Iterable[ChatCompletionMessageParam],
         stream: bool = False,
+        response_format: Optional[ResponseFormat] = None,
+        reasoning_effort: Optional[ReasoningEffort] = None,
         extra_headers=None,
         **kwargs,
     ) -> Union[OpenAIChatCompletion, Generator[ChatCompletionChunk, None, None]]:
-        # Use the helper method to handle the coroutine execution
+        """
+        WARNING: Due to the need to run a coroutine in an event loop, only use
+        this method in a sync context. In general, we recommend using the async
+        version of this method, acreate.
+        """
         run_coroutine_in_appropriate_loop(self._llm._ensure_deployment_ready())
         model_id = run_coroutine_in_appropriate_loop(self._llm.model_id())
-        return self._client.create(
-            model=model_id,
-            prompt_or_messages=messages,
-            stream=stream,
-            extra_headers=extra_headers,
-            **kwargs,
-        )
+        retries = 0
+        while retries < self._llm.max_retries:
+            try:
+                if self._llm.enable_metrics:
+                    start_time = time.time()
+                result = self._client.create(
+                    model=model_id,
+                    prompt_or_messages=messages,
+                    stream=stream,
+                    extra_headers=extra_headers,
+                    response_format=response_format,
+                    reasoning_effort=reasoning_effort,
+                    **kwargs,
+                )
+                if self._llm.enable_metrics:
+                    end_time = time.time()
+                    self._llm._metrics.add_metric("time_to_last_token", end_time - start_time)
+                return result
+            except BadGatewayError:
+                retries += 1
+            except ServiceUnavailableError:
+                retries += 1
+        raise Exception(f"Failed to create chat completion after {self._llm.max_retries} retries")
 
     @overload
     async def acreate(
         self,
         messages: Iterable[ChatCompletionMessageParam],
         stream: Literal[False] = False,
+        response_format: Optional[ResponseFormat] = None,
+        reasoning_effort: Optional[ReasoningEffort] = None,
         extra_headers=None,
         **kwargs,
     ) -> OpenAIChatCompletion: ...
@@ -97,6 +135,8 @@ class ChatCompletion:
         self,
         messages: Iterable[ChatCompletionMessageParam],
         stream: Literal[True] = True,
+        response_format: Optional[ResponseFormat] = None,
+        reasoning_effort: Optional[ReasoningEffort] = None,
         extra_headers=None,
         **kwargs,
     ) -> AsyncGenerator[ChatCompletionChunk, None]:
@@ -106,22 +146,42 @@ class ChatCompletion:
         self,
         messages: Iterable[ChatCompletionMessageParam],
         stream: bool = False,
+        response_format: Optional[ResponseFormat] = None,
+        reasoning_effort: Optional[ReasoningEffort] = None,
         extra_headers=None,
         **kwargs,
     ) -> Union[OpenAIChatCompletion, AsyncGenerator[ChatCompletionChunk, None]]:
         await self._llm._ensure_deployment_ready()
         model_id = await self._llm.model_id()
-        resp_or_generator = self._client.acreate(  # type: ignore
-            model=model_id,
-            prompt_or_messages=messages,
-            stream=stream,
-            extra_headers=extra_headers,
-            **kwargs,
-        )
-        if stream:
-            return resp_or_generator  # type: ignore
-        else:
-            return await resp_or_generator  # type: ignore
+        retries = 0
+        while retries < self._llm.max_retries:
+            try:
+                resp_or_generator = self._client.acreate(  # type: ignore
+                    model=model_id,
+                    prompt_or_messages=messages,
+                    stream=stream,
+                    extra_headers=extra_headers,
+                    response_format=response_format,
+                    reasoning_effort=reasoning_effort,
+                    **kwargs,
+                )
+                if stream:
+                    return resp_or_generator  # type: ignore
+                else:
+                    if self._llm.enable_metrics:
+                        start_time = time.time()
+                    resp = await resp_or_generator  # type: ignore
+                    if self._llm.enable_metrics:
+                        end_time = time.time()
+                        self._llm._metrics.add_metric("time_to_last_token", end_time - start_time)
+                    return resp
+            except BadGatewayError as e:
+                logger.debug(f"BadGatewayError: {e}. model_id: {model_id}")
+                retries += 1
+            except ServiceUnavailableError as e:
+                logger.debug(f"ServiceUnavailableError: {e}. model_id: {model_id}")
+                retries += 1
+        raise Exception(f"Failed to create chat completion after {self._llm.max_retries} retries")
 
 
 class Chat:
@@ -129,34 +189,234 @@ class Chat:
         self.completions = ChatCompletion(llm)
 
 
-class LLM:
+# Make param a literal type so developer does not need to import AcceleratorType enum
+AcceleratorTypeLiteral = Literal[
+    "NVIDIA_A100_80GB",
+    "NVIDIA_H100_80GB",
+    "AMD_MI300X_192GB",
+    "NVIDIA_A10G_24GB",
+    "NVIDIA_A100_40GB",
+    "NVIDIA_L4_24GB",
+    "NVIDIA_H200_141GB",
+    "NVIDIA_B200_180GB",
+]
 
+
+DEFAULT_MAX_RETRIES = 3
+
+
+class Metrics:
+    """
+    A class for tracking and analyzing performance metrics for LLM operations.
+
+    This class maintains a rolling window of metrics such as response times,
+    token generation speeds, and other performance indicators. It provides
+    statistical methods to analyze these metrics (mean, median, min, max).
+
+    Each metric is stored as a list of values with a maximum size to prevent
+    unbounded memory growth. When the maximum size is reached, the oldest
+    values are removed in a FIFO manner.
+    """
+
+    def __init__(self, max_metrics: int = 1000):
+        """
+        Initialize the metrics tracker.
+
+        Args:
+            max_metrics: Maximum number of values to store for each metric.
+                         Defaults to 1000. When exceeded, oldest values are removed.
+        """
+        self._metrics = defaultdict(deque)
+        self._max_metrics = max_metrics
+
+    def add_metric(self, metric_name: str, metric_value: float):
+        """
+        Add a new metric value to the specified metric.
+
+        Args:
+            metric_name: Name of the metric to track
+            metric_value: Value to add to the metric
+        """
+        self._metrics[metric_name].append(metric_value)
+        if len(self._metrics[metric_name]) > self._max_metrics:
+            self._metrics[metric_name].popleft()
+
+    def get_metric(self, metric_name: str):
+        """
+        Get all recorded values for a specific metric.
+
+        Args:
+            metric_name: Name of the metric to retrieve
+
+        Returns:
+            List of metric values or None if the metric doesn't exist
+        """
+        if metric_name not in self._metrics:
+            return None
+        return self._metrics[metric_name]
+
+    def get_metric_mean(self, metric_name: str) -> Optional[float]:
+        """
+        Calculate the arithmetic mean of a metric's values.
+
+        Args:
+            metric_name: Name of the metric
+
+        Returns:
+            Mean value or None if the metric doesn't exist
+        """
+        if metric_name not in self._metrics:
+            return None
+        return sum(self._metrics[metric_name]) / len(self._metrics[metric_name])
+
+    def get_metric_median(self, metric_name: str):
+        """
+        Calculate the median value of a metric.
+
+        Args:
+            metric_name: Name of the metric
+
+        Returns:
+            Median value or None if the metric doesn't exist
+        """
+        if metric_name not in self._metrics:
+            return None
+        return sorted(self._metrics[metric_name])[len(self._metrics[metric_name]) // 2]
+
+    def get_metric_min(self, metric_name: str):
+        """
+        Get the minimum value recorded for a metric.
+
+        Args:
+            metric_name: Name of the metric
+
+        Returns:
+            Minimum value or None if the metric doesn't exist
+        """
+        if metric_name not in self._metrics:
+            return None
+        return min(self._metrics[metric_name])
+
+    def get_metric_max(self, metric_name: str):
+        """
+        Get the maximum value recorded for a metric.
+
+        Args:
+            metric_name: Name of the metric
+
+        Returns:
+            Maximum value or None if the metric doesn't exist
+        """
+        if metric_name not in self._metrics:
+            return None
+        return max(self._metrics[metric_name])
+
+
+class LLM:
     def __init__(
         self,
         model: str,
         api_key: Optional[str] = None,
-        base_url: Optional[str] = "https://api.fireworks.ai/inference/v1",
+        base_url: str = "https://api.fireworks.ai/inference/v1",
+        deployment_type: Literal["serverless", "on-demand"] = "serverless",
+        accelerator_type: Union[AcceleratorTypeLiteral, NotGiven] = NOT_GIVEN,
+        scale_up_window: timedelta = timedelta(seconds=1),
+        scale_down_window: timedelta = timedelta(minutes=1),
+        scale_to_zero_window: timedelta = timedelta(minutes=5),
+        enable_metrics: bool = False,
+        max_retries: int = DEFAULT_MAX_RETRIES,
     ):
+        """
+        Initialize the LLM.
+
+        Args:
+            model: The model to use.
+            api_key: The API key to use.
+            base_url: The base URL to use.
+            deployment_type: The deployment type to use.
+            accelerator_type: The accelerator type to use.
+            scale_up_window: The scale up window to use.
+            scale_down_window: The scale down window to use.
+            scale_to_zero_window: The scale to zero window to use.
+            enable_metrics: Whether to enable metrics. Only records time to last token for non-streaming requests.
+                TODO: add support for streaming requests.
+                TODO: add support for more metrics (TTFT, Tokens/second)
+            max_retries: The maximum number of retries to use.
+        """
         self._client = FireworksClient(api_key=api_key, base_url=base_url)
         if not model.startswith("accounts/fireworks/models/"):
             self._model = f"accounts/fireworks/models/{model}"
         else:
             self._model = model
         self.chat = Chat(self, self._model)
-        self._api_key = api_key
+        self.deployment_type = deployment_type
+        self.max_retries = max_retries
+        self.enable_metrics = enable_metrics
         self._gateway = Gateway(api_key=api_key)
+        self._metrics = Metrics()
+        atexit.register(self._gateway._channel.close)
+
+        if isinstance(accelerator_type, str):
+            self._accelerator_type = AcceleratorTypeEnum.from_string(accelerator_type)
+            self._validate_model_for_gpu(self._model, self._accelerator_type)
+        else:
+            self._accelerator_type = accelerator_type
 
         # aggressive defaults for experimentation to save on cost
         self._autoscaling_policy: AutoscalingPolicy = AutoscalingPolicy(
-            scale_up_window=timedelta(seconds=1),
-            scale_down_window=timedelta(minutes=1),
-            scale_to_zero_window=timedelta(minutes=5),
+            scale_up_window=scale_up_window,
+            scale_down_window=scale_down_window,
+            scale_to_zero_window=scale_to_zero_window,
         )
+
+    @staticmethod
+    def _validate_model_for_gpu(model: str, accelerator_type: AcceleratorTypeEnum):
+        """
+        Models are not always supported on all GPU types. This function checks if the model is supported on a GPU.
+        """
+        if "qwen3-1p7b" in model:
+            supported_accelerators = [
+                AcceleratorTypeEnum.NVIDIA_H100_80GB,
+                AcceleratorTypeEnum.NVIDIA_H200_141GB,
+            ]
+            if accelerator_type not in supported_accelerators:
+                raise ValueError(
+                    f"Qwen3-1p7b is not supported on {accelerator_type}. "
+                    f"Please pass one of the following accelerators: {list(map(str, supported_accelerators))} "
+                    f"to the LLM constructor using the accelerator_type parameter.\n\n"
+                    f"Example:\n"
+                    f"    from fireworks import LLM\n"
+                    f"    llm = LLM(\n"
+                    f'        model="qwen3-1p7b",\n'
+                    f'        accelerator_type="NVIDIA_H100_80GB"\n'
+                    f"    )"
+                )
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self._gateway.__aexit__(exc_type, exc_val, exc_tb)
 
     async def is_serverless(self):
         return await self._is_available_on_serverless()
 
-    @async_lru_cache()
+    async def apply(self):
+        """
+        Like Terraform apply, this will ensure the deployment is ready and return the deployment.
+        """
+        await self._ensure_deployment_ready()
+        return self
+
+    def get_time_to_last_token_mean(self) -> Optional[float]:
+        """
+        Returns the mean time to last token for non-streaming requests. If no metrics are available, returns None.
+        """
+        if not self.enable_metrics:
+            raise ValueError("Metrics are not enabled for this LLM")
+        return self._metrics.get_metric_mean("time_to_last_token")
+
+    @cache
     async def _is_available_on_serverless(self):
         logger.debug(f"Checking if {self._model} is available on serverless")
         models = await self._gateway.list_models(parent="accounts/fireworks", include_deployed_model_refs=True)
@@ -202,46 +462,81 @@ class LLM:
 
     async def _query_existing_deployment(self):
         """
-        Queries all deployments for the model and returns the first one (for now).
-        TODO: should only return the deployment with the same configurations that affect quality and performance.
+        Queries all deployments for the same model and accelerator type (if given) and returns the first one.
         """
         deployments = await self._gateway.list_deployments(filter=f'base_model="{self._model}"')
-        if len(deployments) == 0:
-            return None
-        # TODO: filter by configurations that affect quality (like quantization) and performance (like speculative decoding, replicas, ngram speculation, etc.)
-        return deployments[0]
+        if self._accelerator_type is not NOT_GIVEN:
+            # filter for deployment with the same accelerator type
+            deployment = next((d for d in deployments if d.accelerator_type == self._accelerator_type), None)
+        else:
+            deployment = next(iter(deployments), None)
+        return deployment
 
     async def _ensure_deployment_ready(self) -> None:
         """
         If a deployment is inferred for this LLM, ensure it's deployed and
         ready. A deployment is required if the model is not available on
-        serverless or this LLM has custom configurations.
+        serverless or this LLM has deployment_type="on-demand".
         """
-        if await self._is_available_on_serverless():
-            return
 
-        logger.debug(f"Model {self._model} is not available on serverless, checking for existing deployment")
+        if await self._is_available_on_serverless():
+            if self.deployment_type == "serverless":
+                logger.debug(f"Model {self._model} is available on serverless, using serverless deployment")
+                return
+            else:
+                logger.debug(
+                    f"Model {self._model} is available on serverless, but deployment_type is on-demand, continuing to ensure deployment is ready"
+                )
+        else:
+            logger.debug(f"Model {self._model} is not available on serverless, checking for existing deployment")
+
         deployment = await self._query_existing_deployment()
 
         if deployment is None:
             logger.debug(f"No existing deployment found, creating deployment for {self._model}")
-            deployment = await self._gateway.create_deployment(self._model, self._autoscaling_policy)
+            deployment = await self._gateway.create_deployment(
+                self._model, self._autoscaling_policy, self._accelerator_type
+            )
+            logger.debug(f"Deployment {deployment.name} created, waiting for it to be ready")
 
             # poll deployment status until it's ready
+            start_time = asyncio.get_event_loop().time()
+            last_log_time = 0
             while deployment.state != DeploymentState.READY:
+                current_time = asyncio.get_event_loop().time()
                 # wait for 1 second
                 await asyncio.sleep(1)
                 deployment = await self._gateway.get_deployment(deployment.name)
+                if current_time - last_log_time >= 10:
+                    elapsed_so_far = current_time - start_time
+                    logger.debug(
+                        f"Waiting for deployment {deployment.name} to be ready, current state: {deployment.state}, elapsed time: {elapsed_so_far:.2f}s"
+                    )
+                    last_log_time = current_time
 
-            logger.debug(f"Deployment {deployment.name} is ready, using deployment")
+            total_time = asyncio.get_event_loop().time() - start_time
+            logger.debug(
+                f"Deployment {deployment.name} is ready, using deployment (ready in {total_time:.2f} seconds)"
+            )
         else:
             logger.debug(f"Deployment {deployment.name} already exists, checking if it needs to be scaled up")
+
+            updates = {}
+
             # if autoscaling policy is not equal, update it
             if not self._is_autoscaling_policy_equal(deployment):
-                logger.debug(f"Updating autoscaling policy for {deployment.name}")
-                start_time = asyncio.get_event_loop().time()
+                logger.debug(
+                    f"Updating autoscaling policy for {deployment.name} to "
+                    f"{self._autoscaling_policy.scale_up_window.total_seconds()}s up, "
+                    f"{self._autoscaling_policy.scale_down_window.total_seconds()}s down, "
+                    f"{self._autoscaling_policy.scale_to_zero_window.total_seconds()}s to zero"
+                )
+                updates["autoscaling_policy"] = self._autoscaling_policy
 
-                await self._gateway.update_deployment(deployment.name, self._autoscaling_policy)
+            if len(updates) > 0:
+                logger.debug(f"Updating deployment {deployment.name} with {updates}")
+                start_time = asyncio.get_event_loop().time()
+                await self._gateway.update_deployment(deployment.name, **updates)
 
                 # poll until deployment is ready
                 while deployment.state != DeploymentState.READY:
@@ -249,7 +544,7 @@ class LLM:
                     deployment = await self._gateway.get_deployment(deployment.name)
 
                 elapsed_time = asyncio.get_event_loop().time() - start_time
-                logger.debug(f"Deployment policy update completed in {elapsed_time:.2f} seconds")
+                logger.debug(f"Deployment update completed in {elapsed_time:.2f} seconds")
 
             if deployment.replica_count == 0:
                 logger.debug(f"Deployment {deployment.name} is not ready, scaling to 1 replica")
@@ -299,8 +594,14 @@ class LLM:
             and deployment.autoscaling_policy.scale_to_zero_window == self._autoscaling_policy.scale_to_zero_window
         )
 
-    @async_lru_cache()
+    @cache
     async def deployment(self) -> Optional[Deployment]:
+        """
+        Queries for any deployment that should exist for this LLM under this
+        Fireworks account. If no deployment is found, but should exist, it will
+        be created and returned. If no deployment is found and should not exist,
+        None is returned.
+        """
         await self._ensure_deployment_ready()
         deployment = await self._query_existing_deployment()
         return deployment
@@ -321,10 +622,10 @@ class LLM:
             return self.model
         return f"{self.model}#{deployment.name}"
 
+    def __str__(self):
+        return self.__repr__()
+
     def __repr__(self):
-        deployment = self.deployment.cache  # type: ignore
-        if deployment is not None:
-            return f"LLM(model={self.model}, deployment={deployment})"
         return f"LLM(model={self.model})"
 
 

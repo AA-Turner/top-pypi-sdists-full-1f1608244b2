@@ -18,6 +18,7 @@ class TranscriptionRequest(BaseModel):
     vad_model: Optional[str] = None
     alignment_model: Optional[str] = None
     diarization_model: Optional[str] = None
+    skip_vad: Optional[bool] = None
 
     prompt: Optional[str] = None
     response_format: Optional[str] = None
@@ -91,6 +92,7 @@ class TranslationRequest(BaseModel):
     model: Optional[str] = None
     vad_model: Optional[str] = None
     alignment_model: Optional[str] = None
+    skip_vad: Optional[bool] = None
 
     prompt: Optional[str] = None
     response_format: Optional[str] = None

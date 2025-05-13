@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: browser-use
-Version: 0.1.45
+Version: 0.1.46
 Summary: Make websites accessible for AI agents
 Project-URL: Repository, https://github.com/browser-use/browser-use
 Author: Gregor Zunic
@@ -10,7 +10,6 @@ Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
 Requires-Python: <4.0,>=3.11
 Requires-Dist: anyio>=4.9.0
-Requires-Dist: botocore>=1.37.23
 Requires-Dist: click>=8.1.8
 Requires-Dist: faiss-cpu>=1.9.0
 Requires-Dist: google-api-core>=2.24.0
@@ -25,7 +24,7 @@ Requires-Dist: langchain-openai==0.3.11
 Requires-Dist: langchain>=0.3.21
 Requires-Dist: markdownify==1.1.0
 Requires-Dist: mem0ai==0.1.93
-Requires-Dist: patchright>=1.51.0
+Requires-Dist: playwright>=1.52.0
 Requires-Dist: posthog>=3.7.0
 Requires-Dist: psutil>=7.0.0
 Requires-Dist: pydantic<2.11.0,>=2.10.4
@@ -37,6 +36,8 @@ Requires-Dist: rich>=14.0.0
 Requires-Dist: screeninfo>=0.8.1; platform_system != 'darwin'
 Requires-Dist: textual>=3.2.0
 Requires-Dist: typing-extensions>=4.12.2
+Provides-Extra: examples
+Requires-Dist: botocore>=1.37.23; extra == 'examples'
 Provides-Extra: memory
 Requires-Dist: sentence-transformers>=4.0.2; extra == 'memory'
 Description-Content-Type: text/markdown
@@ -77,9 +78,9 @@ For memory functionality (requires Python<3.13 due to PyTorch compatibility):
 pip install "browser-use[memory]"
 ```
 
-Install Patchright:
+Install the browser:
 ```bash
-patchright install chromium
+playwright install chromium --with-deps --no-shell
 ```
 
 Spin up your agent:
@@ -140,7 +141,7 @@ $ browser-use
 
 Prompt: Add my latest LinkedIn follower to my leads in Salesforce.
 
-![LinkedIn to Salesforce](https://github.com/user-attachments/assets/1440affc-a552-442e-b702-d0d3b277b0ae)
+![LinkedIn to Salesforce](https://github.com/user-attachments/assets/50d6e691-b66b-4077-a46c-49e9d4707e07)
 
 <br/><br/>
 

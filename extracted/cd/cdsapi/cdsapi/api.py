@@ -65,7 +65,7 @@ def get_url_key_verify(url, key, verify):
             if verify is None:
                 verify = bool(int(config.get("verify", 1)))
 
-    if url is None or key is None or key is None:
+    if url is None or key is None:
         raise Exception("Missing/incomplete configuration file: %s" % (dotrc))
 
     # If verify is still None, then we set to default value of True
@@ -282,9 +282,9 @@ class Client(object):
         if ":" in token:
             return super().__new__(cls)
 
-        import datapi.legacy_api_client
+        from ecmwf.datastores.legacy_client import LegacyClient
 
-        return super().__new__(datapi.legacy_api_client.LegacyApiClient)
+        return super().__new__(LegacyClient)
 
     def __init__(
         self,

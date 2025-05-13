@@ -92,6 +92,8 @@ def run_rust_build(context: CertoraContext, build_cmd: List[str]) -> None:
 
         if context.test == str(Util.TestValue.AFTER_BUILD_RUST):
             raise Util.TestResultsReady(context)
+        assert not context.files, f"run_rust_build: expecting files to be empty, got: {context.files}"
+        context.files = [os.path.join(context.rust_project_directory, context.rust_executables)]
 
     except Util.TestResultsReady as e:
         raise e

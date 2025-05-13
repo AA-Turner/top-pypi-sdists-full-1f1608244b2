@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: edx-rbac
-Version: 1.10.0
+Version: 2.1.0
 Summary: Library to help managing role based access controls for django apps
 Home-page: https://github.com/openedx/edx-rbac
 Author: edX
@@ -10,11 +10,11 @@ Keywords: Django edx
 Classifier: Development Status :: 3 - Alpha
 Classifier: Framework :: Django
 Classifier: Framework :: Django :: 4.2
+Classifier: Framework :: Django :: 5.2
 Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)
 Classifier: Natural Language :: English
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 License-File: LICENSE
@@ -26,6 +26,16 @@ Requires-Dist: django-model-utils
 Requires-Dist: edx-drf-extensions
 Requires-Dist: setuptools
 Requires-Dist: six
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: summary
 
 edx-rbac
 =============================
@@ -120,6 +130,12 @@ Change Log
 
 Unreleased
 --------------------
+[2.1.0]
+--------
+* Add Support for Djanog5.2
+
+[2.0.0]
+* Drop support for Python 3.8
 
 [1.10.0]
 --------

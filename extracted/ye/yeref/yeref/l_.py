@@ -517,6 +517,14 @@ l_payment_check_token = {
     'zh': "🌏<b>选择</b>一种可用语言",
     'ar': "🌏 <b>اختر</b> إحدى اللغات المتاحة",
 }
+l_payment_check_token_chn = {
+    'ru': "👩🏽‍💻 <b>Проверьте</b> свой токен для получения платажей (бот для приема платежей также должен быть Администратором канала)",
+    'en': "🌏 <b>Select</b> one of the available languages",
+    'es': "🌏 <b>Seleccione</b> uno de los idiomas disponibles",
+    'fr': "🌏 <b>Sélectionnez</b> une des langues disponibles",
+    'zh': "🌏<b>选择</b>一种可用语言",
+    'ar': "🌏 <b>اختر</b> إحدى اللغات المتاحة",
+}
 l_media_content_successfully_changed = {
     'ru': "👩🏽‍💻 <b>Медиа</b>-контент успешно изменен",
     'en': "🌏 <b>Select</b> one of the available languages",

@@ -14,10 +14,13 @@ from cdp.evm_token_balances import (
 )
 from cdp.evm_transaction_types import TransactionRequestEIP1559
 from cdp.openapi_client.cdp_api_client import CdpApiClient
+from cdp.openapi_client.errors import ApiError
 from cdp.openapi_client.models.create_evm_account_request import CreateEvmAccountRequest
 from cdp.openapi_client.models.create_evm_smart_account_request import (
     CreateEvmSmartAccountRequest,
 )
+from cdp.openapi_client.models.eip712_domain import EIP712Domain
+from cdp.openapi_client.models.eip712_message import EIP712Message
 from cdp.openapi_client.models.request_evm_faucet_request import RequestEvmFaucetRequest
 from cdp.openapi_client.models.send_evm_transaction200_response import SendEvmTransaction200Response
 from cdp.openapi_client.models.send_evm_transaction_request import SendEvmTransactionRequest
@@ -26,6 +29,7 @@ from cdp.openapi_client.models.sign_evm_message_request import SignEvmMessageReq
 from cdp.openapi_client.models.sign_evm_transaction_request import (
     SignEvmTransactionRequest,
 )
+from cdp.openapi_client.models.sign_evm_typed_data200_response import SignEvmTypedData200Response
 
 
 def test_init():
@@ -155,6 +159,41 @@ async def test_get_account_throws_error_if_neither_address_nor_name_is_provided(
 
 
 @pytest.mark.asyncio
+async def test_get_or_create_account(server_account_model_factory):
+    """Test getting or creating an EVM account."""
+    mock_evm_accounts_api = AsyncMock()
+    mock_api_clients = AsyncMock()
+    mock_api_clients.evm_accounts = mock_evm_accounts_api
+
+    evm_server_account_model = server_account_model_factory()
+    client = EvmClient(api_clients=mock_api_clients)
+
+    mock_evm_accounts_api.get_evm_account_by_name = AsyncMock(
+        side_effect=[
+            ApiError(404, "not_found", "Account not found"),
+            evm_server_account_model,
+        ]
+    )
+
+    mock_evm_accounts_api.create_evm_account = AsyncMock(return_value=evm_server_account_model)
+
+    test_name = "test-account"
+    result = await client.get_or_create_account(name=test_name)
+    result2 = await client.get_or_create_account(name=test_name)
+
+    assert mock_evm_accounts_api.get_evm_account_by_name.call_count == 2
+    mock_evm_accounts_api.create_evm_account.assert_called_once_with(
+        x_idempotency_key=None,
+        create_evm_account_request=CreateEvmAccountRequest(name=test_name),
+    )
+
+    assert result.address == evm_server_account_model.address
+    assert result.name == evm_server_account_model.name
+    assert result2.address == evm_server_account_model.address
+    assert result2.name == evm_server_account_model.name
+
+
+@pytest.mark.asyncio
 async def test_create_smart_account(smart_account_model_factory):
     """Test creating an EVM smart account."""
     mock_evm_smart_accounts_api = AsyncMock()
@@ -203,7 +242,8 @@ async def test_send_user_operation(mock_send_user_operation, smart_account_model
 
     mock_send_user_operation.assert_called_once_with(
         client.api_clients,
-        smart_account_model,
+        smart_account_model.address,
+        smart_account_model.owners[0],
         mock_calls,
         test_network,
         test_paymaster_url,
@@ -402,6 +442,63 @@ async def test_sign_message():
     mock_evm_accounts_api.sign_evm_message.assert_called_once_with(
         address=test_address,
         sign_evm_message_request=SignEvmMessageRequest(message=test_message),
+        x_idempotency_key=test_idempotency_key,
+    )
+
+    assert result == "0x123"
+
+
+@pytest.mark.asyncio
+async def test_sign_typed_data():
+    """Test signing an EVM typed data."""
+    mock_evm_accounts_api = AsyncMock()
+    mock_api_clients = AsyncMock()
+    mock_api_clients.evm_accounts = mock_evm_accounts_api
+
+    test_address = "0x1234567890123456789012345678901234567890"
+    domain = EIP712Domain(
+        name="Test",
+        chain_id=1,
+        verifying_contract="0x0000000000000000000000000000000000000000",
+    )
+    types = {
+        "EIP712Domain": [
+            {"name": "name", "type": "string"},
+            {"name": "chainId", "type": "uint256"},
+            {"name": "verifyingContract", "type": "address"},
+        ],
+    }
+    primary_type = "EIP712Domain"
+    message = {
+        "name": "EIP712Domain",
+        "chainId": 1,
+        "verifyingContract": "0x0000000000000000000000000000000000000000",
+    }
+    test_idempotency_key = "test-idempotency-key"
+
+    mock_evm_accounts_api.sign_evm_typed_data = AsyncMock(
+        return_value=SignEvmTypedData200Response(signature="0x123")
+    )
+
+    client = EvmClient(api_clients=mock_api_clients)
+
+    result = await client.sign_typed_data(
+        address=test_address,
+        domain=domain,
+        types=types,
+        primary_type=primary_type,
+        message=message,
+        idempotency_key=test_idempotency_key,
+    )
+
+    mock_evm_accounts_api.sign_evm_typed_data.assert_called_once_with(
+        address=test_address,
+        eip712_message=EIP712Message(
+            domain=domain,
+            types=types,
+            primary_type=primary_type,
+            message=message,
+        ),
         x_idempotency_key=test_idempotency_key,
     )
 

@@ -9,6 +9,7 @@ import structlog
 from langchain_core.messages import (
     BaseMessage,
     BaseMessageChunk,
+    convert_to_messages,
     message_chunk_to_message,
 )
 from langchain_core.runnables.config import run_in_executor
@@ -178,7 +179,11 @@ async def astream_state(
                             else:
                                 yield "messages", chunk
                         else:
-                            msg, meta = cast(tuple[BaseMessage, dict[str, Any]], chunk)
+                            msg, meta = cast(
+                                tuple[BaseMessage | dict, dict[str, Any]], chunk
+                            )
+                            if isinstance(msg, dict):
+                                msg = convert_to_messages([msg])[0]
                             if msg.id in messages:
                                 messages[msg.id] += msg
                             else:
@@ -233,7 +238,11 @@ async def astream_state(
                         else:
                             yield "messages", chunk
                     else:
-                        msg, meta = cast(tuple[BaseMessage, dict[str, Any]], chunk)
+                        msg, meta = cast(
+                            tuple[BaseMessage | dict, dict[str, Any]], chunk
+                        )
+                        if isinstance(msg, dict):
+                            msg = convert_to_messages([msg])[0]
                         if msg.id in messages:
                             messages[msg.id] += msg
                         else:

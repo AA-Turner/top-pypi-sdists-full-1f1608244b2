@@ -26,6 +26,7 @@ from myskoda.anonymize import (
     anonymize_trip_statistics,
     anonymize_url,
     anonymize_user,
+    anonymize_vehicle_connection_status,
 )
 from myskoda.models.charging import ChargeMode
 from myskoda.models.garage import Garage
@@ -54,6 +55,7 @@ from .models.spin import Spin
 from .models.status import Status
 from .models.trip_statistics import TripStatistics
 from .models.user import User
+from .models.vehicle_connection_status import VehicleConnectionStatus
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -324,6 +326,20 @@ class RestApi:
         url = anonymize_url(url) if anonymize else url
         return GetEndpointResult(url=url, raw=raw, result=result)
 
+    async def get_vehicle_connection_status(
+        self, vin: str, anonymize: bool = False
+    ) -> GetEndpointResult[VehicleConnectionStatus]:
+        """Retrieve vehicle connection status."""
+        url = f"/v2/connection-status/{vin}/readiness"
+        raw = self.process_json(
+            data=await self._make_get_request(url),
+            anonymize=anonymize,
+            anonymization_fn=anonymize_vehicle_connection_status,
+        )
+        result = self._deserialize(raw, VehicleConnectionStatus.from_json)
+        url = anonymize_url(url) if anonymize else url
+        return GetEndpointResult(url=url, raw=raw, result=result)
+
     async def _headers(self) -> dict[str, str]:
         return {"authorization": f"Bearer {await self.authorization.get_access_token()}"}
 
@@ -351,6 +367,16 @@ class RestApi:
             url=f"/v2/air-conditioning/{vin}/start",
             json=json_data,
         )
+
+    async def stop_ventilation(self, vin: str) -> None:
+        """Start the ventilation."""
+        _LOGGER.debug("Stopping ventilation for vehicle %s", vin)
+        await self._make_post_request(url=f"/v2/air-conditioning/{vin}/active-ventilation/stop")
+
+    async def start_ventilation(self, vin: str) -> None:
+        """Start the ventilation."""
+        _LOGGER.debug("Starting ventilation for vehicle %s", vin)
+        await self._make_post_request(url=f"/v2/air-conditioning/{vin}/active-ventilation/start")
 
     async def stop_auxiliary_heating(self, vin: str) -> None:
         """Stop the auxiliary heating."""

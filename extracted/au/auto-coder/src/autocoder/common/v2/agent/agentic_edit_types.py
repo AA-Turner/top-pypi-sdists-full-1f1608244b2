@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from typing import List, Dict, Any, Callable, Optional, Type
 from pydantic import SkipValidation
 
-
 # Result class used by Tool Resolvers
 class ToolResult(BaseModel):
     success: bool
@@ -97,6 +96,10 @@ class ErrorEvent(BaseModel):
     """Represents an error during the process."""
     message: str
 
+class WindowLengthChangeEvent(BaseModel):
+    """Represents the token usage in the conversation window."""
+    tokens_used: int
+
 # Deprecated: Will be replaced by specific Event types
 # class PlainTextOutput(BaseModel):
 #     text: str
@@ -115,7 +118,7 @@ TOOL_MODEL_MAP: Dict[str, Type[BaseTool]] = {
     "attempt_completion": AttemptCompletionTool,
     "plan_mode_respond": PlanModeRespondTool,
     "use_mcp_tool": UseMcpTool,
-    "list_package_info": ListPackageInfoTool,
+    "list_package_info": ListPackageInfoTool,    
 }
 
 class FileChangeEntry(BaseModel):

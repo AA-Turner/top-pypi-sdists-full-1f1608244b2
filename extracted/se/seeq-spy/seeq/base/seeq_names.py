@@ -12,6 +12,9 @@ class SeeqNames:
         sample = 'Sample'
         condition = 'Condition'
         capsule = 'Capsule'
+        formula_item = 'FormulaItem'
+        onnx_prediction_model = 'OnnxPredictionModel'
+        onnx_anomaly_model = 'OnnxAnomalyModel'
     
     class AuditTrail:
         configuration_option = 'ConfigurationOption'
@@ -51,6 +54,14 @@ class SeeqNames:
         vantage_label_category_namespace = '__Vantage'
     
     class MlService:
+        class Clustering:
+            class Connection:
+                name = 'Seeq ML Clustering'
+                url = 'cluster'
+                udf_package = 'seeqClustering'
+                udf_name = 'cluster'
+            
+        
         class IsolationForest:
             class Connection:
                 name = 'Seeq ML Isolation Forest'
@@ -155,6 +166,7 @@ class SeeqNames:
         context_table_prefix = 'context_'
         created_at_column = 'created at'
         unique_row_id = 'Existing Row Identifier'
+        csv_item_id_column = 'csv item id'
         class Parameters:
             property_name = 'propertyName'
             property_names = 'propertyNames'
@@ -190,6 +202,8 @@ class SeeqNames:
             lookup_value = 'lookupValue'
             variable_parameters = 'variableParameters'
             variable_parameter_strings = 'variableParameterStrings'
+            prefix = 'prefix'
+            suffix = 'suffix'
         
         class Rules:
             ancestor = 'ancestor'
@@ -211,6 +225,7 @@ class SeeqNames:
             manager = 'manager'
             item_type = 'itemType'
             datasource = 'datasource'
+            context_condition = 'contextCondition'
             class ScalarCreator:
                 base_scalar_creator = 'scalarCreator'
                 numeric_scalar_creator = 'numericScalarCreator'
@@ -757,6 +772,7 @@ class SeeqNames:
         datasource = 'Datasource'
         datafile = 'Datafile'
         calculated_signal = 'CalculatedSignal'
+        formula_item = 'FormulaItem'
         signal = 'Signal'
         tree_definition = 'TreeDefinition'
         identity = 'Identity'
@@ -1082,7 +1098,6 @@ class SeeqNames:
         last_result_hash = 'Last Result Hash'
         cache_id = 'Cache ID'
         asset_path_depth = 'Asset Path Depth'
-        last_run_at = 'Last Run At'
         last_run_state = 'Last Run State'
         query_range_look_ahead = 'Query Range Look Ahead'
         webhook_url = 'Webhook Url'
@@ -1094,17 +1109,20 @@ class SeeqNames:
         resource_size = 'Resource Size'
         project_type = 'Project Type'
         startup_environment = 'Startup Environment'
+        binary_data = 'Binary Data'
+        last_run_at = 'Last Run At'
+        # DEPRECATED, Deprecated. See SeeqNames.java for more info
+        previous_run_time = 'Previous Run Time'
+        total_run_time = 'Total Run Time'
+        average_run_time = 'Average Run Time'
         cron_schedule = 'Cron Schedule'
         background = 'Background'
         condition_formula_now = 'Condition Formula Now'
         notebook_path = 'Notebook Path'
-        previous_run_time = 'Previous Run Time'
         cron_schedules_to_indices = 'Cron Schedules To Indices'
         label = 'Label'
         notify_on_skipped_execution = 'Notify On Skipped Execution'
         notify_on_automatic_unschedule = 'Notify On Automatic Unschedule'
-        total_run_time = 'Total Run Time'
-        average_run_time = 'Average Run Time'
         is_fixed_with = 'Is Fixed Width'
         margin_top = 'Margin Top'
         margin_bottom = 'Margin Bottom'
@@ -1157,6 +1175,8 @@ class SeeqNames:
         is_context_condition = 'Is Context Condition'
         versioned_item_type = 'Versioned Item Type'
         versions = 'Versions'
+        inputs = 'Inputs'
+        result_type = 'Result Type'
     
 
 

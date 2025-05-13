@@ -3,10 +3,76 @@ Language parser for JSX
 '''
 
 from .javascript import JavaScriptReader
-from .typescript import JSTokenizer, Tokenizer
+from .typescript import JSTokenizer, Tokenizer, TypeScriptStates
 from .code_reader import CodeReader
 from .js_style_regex_expression import js_style_regex_expression
 from .js_style_language_states import JavaScriptStyleLanguageStates
+
+
+class JSXTypeScriptStates(TypeScriptStates):
+    """State machine for JSX/TSX files extending TypeScriptStates"""
+    
+    def __init__(self, context):
+        super().__init__(context)
+        # Initialize attributes that might be accessed later
+        self._parent_function_name = None
+        self.in_variable_declaration = False
+        self.last_variable_name = None
+    
+    def statemachine_before_return(self):
+        # Ensure the main function is closed at the end
+        if self.started_function:
+            self._pop_function_from_stack()
+            # After popping, if current_function is not *global*, pop again to add to function_list
+            if self.context.current_function and self.context.current_function.name != "*global*":
+                self.context.end_of_function()
+
+    def _state_global(self, token):
+        # Handle variable declarations
+        if token in ('const', 'let', 'var'):
+            self.in_variable_declaration = True
+            super()._state_global(token)
+            return
+            
+        if self.in_variable_declaration:
+            if token == '=':
+                # Save the variable name when we see the assignment
+                self.last_variable_name = self.last_tokens.strip()
+                super()._state_global(token)
+                return
+            elif token == '=>':
+                # We're in an arrow function with a variable assignment
+                if self.last_variable_name and not self.started_function:
+                    self.function_name = self.last_variable_name
+                    self._push_function_to_stack()
+                    self.in_variable_declaration = False
+                    # Switch to arrow function state to handle the body
+                    self._state = self._arrow_function
+                    return
+            elif token == ';' or self.context.newline:
+                self.in_variable_declaration = False
+                
+        # Handle arrow function in JSX/TSX prop context
+        if token == '=>' and not self.in_variable_declaration:
+            if not self.started_function:
+                self.function_name = '(anonymous)'
+                self._push_function_to_stack()
+                return
+                
+        if not self.as_object:
+            if token == ':':
+                self._consume_type_annotation()
+                return
+                
+        # Pop anonymous function after closing '}' in TSX/JSX prop
+        if token == '}' and self.started_function and self.function_name == '(anonymous)':
+            self._pop_function_from_stack()
+                    
+        # Continue with regular TypeScript state handling
+        super()._state_global(token)
+
+    def _arrow_function(self, token):
+        self.next(self._state_global, token)
 
 
 class TSXTokenizer(JSTokenizer):
@@ -95,7 +161,8 @@ class JSXJavaScriptStyleLanguageStates(JavaScriptStyleLanguageStates):
         super(JSXJavaScriptStyleLanguageStates, self).__init__(context)
         
     def _state_global(self, token):
-        if token == 'const' or token == 'let' or token == 'var':
+        # Handle variable declarations
+        if token in ('const', 'let', 'var'):
             # Remember that we're in a variable declaration
             self.in_variable_declaration = True
             super()._state_global(token)
@@ -104,12 +171,13 @@ class JSXJavaScriptStyleLanguageStates(JavaScriptStyleLanguageStates):
         if hasattr(self, 'in_variable_declaration') and self.in_variable_declaration:
             if token == '=':
                 # We're in a variable assignment
-                self.function_name = self.last_tokens
+                self.function_name = self.last_tokens.strip()
                 super()._state_global(token)
                 return
             elif token == '=>':
                 # We're in an arrow function with a variable assignment
-                self._push_function_to_stack()
+                if not self.started_function and self.function_name:
+                    self._push_function_to_stack()
                 self._state = self._arrow_function
                 return
             elif token == ';' or self.context.newline:
@@ -153,8 +221,8 @@ class JSXReader(JavaScriptReader, JSXMixin):
 
     def __init__(self, context):
         super(JSXReader, self).__init__(context)
-        # Use our custom JavaScriptStyleLanguageStates subclass
-        self.parallel_states = [JSXJavaScriptStyleLanguageStates(context)]
+        # Use our JSXTypeScriptStates for better handling of JSX
+        self.parallel_states = [JSXTypeScriptStates(context)]
 
 
 class XMLTagWithAttrTokenizer(Tokenizer):
@@ -171,7 +239,11 @@ class XMLTagWithAttrTokenizer(Tokenizer):
         if not token.isspace():
             result = self.state(token)
             if result is not None:
-                return result
+                if isinstance(result, list):
+                    for tok in result:
+                        yield tok
+                else:
+                    return result
         return ()
 
     def abort(self):

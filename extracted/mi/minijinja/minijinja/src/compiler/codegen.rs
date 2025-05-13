@@ -325,14 +325,14 @@ impl<'source> CodeGenerator<'source> {
             }
             #[cfg(feature = "multi_template")]
             ast::Stmt::Import(import) => {
-                self.add(Instruction::BeginCapture(CaptureMode::Discard));
+                self.add(Instruction::BeginCapture(CaptureMode::Capture));
                 self.add(Instruction::PushWith);
                 self.compile_expr(&import.expr);
                 self.add_with_span(Instruction::Include(false), import.span());
+                self.add(Instruction::EndCapture);
                 self.add(Instruction::ExportLocals);
                 self.add(Instruction::PopFrame);
                 self.compile_assignment(&import.name);
-                self.add(Instruction::EndCapture);
             }
             #[cfg(feature = "multi_template")]
             ast::Stmt::FromImport(from_import) => {
@@ -615,7 +615,7 @@ impl<'source> CodeGenerator<'source> {
                 if let Some(ref start) = s.start {
                     self.compile_expr(start);
                 } else {
-                    self.add(Instruction::LoadConst(Value::from(0)));
+                    self.add(Instruction::LoadConst(Value::from(())));
                 }
                 if let Some(ref stop) = s.stop {
                     self.compile_expr(stop);
@@ -625,7 +625,7 @@ impl<'source> CodeGenerator<'source> {
                 if let Some(ref step) = s.step {
                     self.compile_expr(step);
                 } else {
-                    self.add(Instruction::LoadConst(Value::from(1)));
+                    self.add(Instruction::LoadConst(Value::from(())));
                 }
                 self.add(Instruction::Slice);
                 self.pop_span();

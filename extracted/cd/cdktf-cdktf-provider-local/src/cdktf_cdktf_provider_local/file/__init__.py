@@ -1,7 +1,7 @@
 r'''
 # `local_file`
 
-Refer to the Terraform Registry for docs: [`local_file`](https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file).
+Refer to the Terraform Registry for docs: [`local_file`](https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class File(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-local.file.File",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file local_file}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file local_file}.'''
 
     def __init__(
         self,
@@ -66,17 +66,17 @@ class File(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file local_file} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file local_file} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param filename: The path to the file that will be created. Missing parent directories will be created. If the file already exists, it will be overridden with the given content. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#filename File#filename}
-        :param content: Content to store in the file, expected to be a UTF-8 encoded string. Conflicts with ``sensitive_content``, ``content_base64`` and ``source``. Exactly one of these four arguments must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#content File#content}
-        :param content_base64: Content to store in the file, expected to be binary encoded as base64 string. Conflicts with ``content``, ``sensitive_content`` and ``source``. Exactly one of these four arguments must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#content_base64 File#content_base64}
-        :param directory_permission: Permissions to set for directories created (before umask), expressed as string in `numeric notation <https://en.wikipedia.org/wiki/File-system_permissions#Numeric_notation>`_. Default value is ``"0777"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#directory_permission File#directory_permission}
-        :param file_permission: Permissions to set for the output file (before umask), expressed as string in `numeric notation <https://en.wikipedia.org/wiki/File-system_permissions#Numeric_notation>`_. Default value is ``"0777"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#file_permission File#file_permission}
-        :param sensitive_content: Sensitive content to store in the file, expected to be an UTF-8 encoded string. Will not be displayed in diffs. Conflicts with ``content``, ``content_base64`` and ``source``. Exactly one of these four arguments must be specified. If in need to use *sensitive* content, please use the ```local_sensitive_file`` <./sensitive_file.html>`_ resource instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#sensitive_content File#sensitive_content}
-        :param source: Path to file to use as source for the one we are creating. Conflicts with ``content``, ``sensitive_content`` and ``content_base64``. Exactly one of these four arguments must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#source File#source}
+        :param filename: The path to the file that will be created. Missing parent directories will be created. If the file already exists, it will be overridden with the given content. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#filename File#filename}
+        :param content: Content to store in the file, expected to be a UTF-8 encoded string. Conflicts with ``sensitive_content``, ``content_base64`` and ``source``. Exactly one of these four arguments must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#content File#content}
+        :param content_base64: Content to store in the file, expected to be binary encoded as base64 string. Conflicts with ``content``, ``sensitive_content`` and ``source``. Exactly one of these four arguments must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#content_base64 File#content_base64}
+        :param directory_permission: Permissions to set for directories created (before umask), expressed as string in `numeric notation <https://en.wikipedia.org/wiki/File-system_permissions#Numeric_notation>`_. Default value is ``"0777"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#directory_permission File#directory_permission}
+        :param file_permission: Permissions to set for the output file (before umask), expressed as string in `numeric notation <https://en.wikipedia.org/wiki/File-system_permissions#Numeric_notation>`_. Default value is ``"0777"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#file_permission File#file_permission}
+        :param sensitive_content: Sensitive content to store in the file, expected to be an UTF-8 encoded string. Will not be displayed in diffs. Conflicts with ``content``, ``content_base64`` and ``source``. Exactly one of these four arguments must be specified. If in need to use *sensitive* content, please use the ```local_sensitive_file`` <./sensitive_file.html>`_ resource instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#sensitive_content File#sensitive_content}
+        :param source: Path to file to use as source for the one we are creating. Conflicts with ``content``, ``sensitive_content`` and ``content_base64``. Exactly one of these four arguments must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#source File#source}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -121,7 +121,7 @@ class File(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the File to import.
-        :param import_from_id: The id of the existing File that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing File that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the File to import is found.
         '''
         if __debug__:
@@ -371,13 +371,13 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param filename: The path to the file that will be created. Missing parent directories will be created. If the file already exists, it will be overridden with the given content. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#filename File#filename}
-        :param content: Content to store in the file, expected to be a UTF-8 encoded string. Conflicts with ``sensitive_content``, ``content_base64`` and ``source``. Exactly one of these four arguments must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#content File#content}
-        :param content_base64: Content to store in the file, expected to be binary encoded as base64 string. Conflicts with ``content``, ``sensitive_content`` and ``source``. Exactly one of these four arguments must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#content_base64 File#content_base64}
-        :param directory_permission: Permissions to set for directories created (before umask), expressed as string in `numeric notation <https://en.wikipedia.org/wiki/File-system_permissions#Numeric_notation>`_. Default value is ``"0777"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#directory_permission File#directory_permission}
-        :param file_permission: Permissions to set for the output file (before umask), expressed as string in `numeric notation <https://en.wikipedia.org/wiki/File-system_permissions#Numeric_notation>`_. Default value is ``"0777"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#file_permission File#file_permission}
-        :param sensitive_content: Sensitive content to store in the file, expected to be an UTF-8 encoded string. Will not be displayed in diffs. Conflicts with ``content``, ``content_base64`` and ``source``. Exactly one of these four arguments must be specified. If in need to use *sensitive* content, please use the ```local_sensitive_file`` <./sensitive_file.html>`_ resource instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#sensitive_content File#sensitive_content}
-        :param source: Path to file to use as source for the one we are creating. Conflicts with ``content``, ``sensitive_content`` and ``content_base64``. Exactly one of these four arguments must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#source File#source}
+        :param filename: The path to the file that will be created. Missing parent directories will be created. If the file already exists, it will be overridden with the given content. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#filename File#filename}
+        :param content: Content to store in the file, expected to be a UTF-8 encoded string. Conflicts with ``sensitive_content``, ``content_base64`` and ``source``. Exactly one of these four arguments must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#content File#content}
+        :param content_base64: Content to store in the file, expected to be binary encoded as base64 string. Conflicts with ``content``, ``sensitive_content`` and ``source``. Exactly one of these four arguments must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#content_base64 File#content_base64}
+        :param directory_permission: Permissions to set for directories created (before umask), expressed as string in `numeric notation <https://en.wikipedia.org/wiki/File-system_permissions#Numeric_notation>`_. Default value is ``"0777"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#directory_permission File#directory_permission}
+        :param file_permission: Permissions to set for the output file (before umask), expressed as string in `numeric notation <https://en.wikipedia.org/wiki/File-system_permissions#Numeric_notation>`_. Default value is ``"0777"``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#file_permission File#file_permission}
+        :param sensitive_content: Sensitive content to store in the file, expected to be an UTF-8 encoded string. Will not be displayed in diffs. Conflicts with ``content``, ``content_base64`` and ``source``. Exactly one of these four arguments must be specified. If in need to use *sensitive* content, please use the ```local_sensitive_file`` <./sensitive_file.html>`_ resource instead. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#sensitive_content File#sensitive_content}
+        :param source: Path to file to use as source for the one we are creating. Conflicts with ``content``, ``sensitive_content`` and ``content_base64``. Exactly one of these four arguments must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#source File#source}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -498,7 +498,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         Missing parent directories will be created.
         If the file already exists, it will be overridden with the given content.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#filename File#filename}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#filename File#filename}
         '''
         result = self._values.get("filename")
         assert result is not None, "Required property 'filename' is missing"
@@ -511,7 +511,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         Conflicts with ``sensitive_content``, ``content_base64`` and ``source``.
         Exactly one of these four arguments must be specified.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#content File#content}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#content File#content}
         '''
         result = self._values.get("content")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -523,7 +523,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         Conflicts with ``content``, ``sensitive_content`` and ``source``.
         Exactly one of these four arguments must be specified.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#content_base64 File#content_base64}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#content_base64 File#content_base64}
         '''
         result = self._values.get("content_base64")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -532,7 +532,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def directory_permission(self) -> typing.Optional[builtins.str]:
         '''Permissions to set for directories created (before umask), expressed as string in  `numeric notation <https://en.wikipedia.org/wiki/File-system_permissions#Numeric_notation>`_.  Default value is ``"0777"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#directory_permission File#directory_permission}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#directory_permission File#directory_permission}
         '''
         result = self._values.get("directory_permission")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -541,7 +541,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def file_permission(self) -> typing.Optional[builtins.str]:
         '''Permissions to set for the output file (before umask), expressed as string in  `numeric notation <https://en.wikipedia.org/wiki/File-system_permissions#Numeric_notation>`_.  Default value is ``"0777"``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#file_permission File#file_permission}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#file_permission File#file_permission}
         '''
         result = self._values.get("file_permission")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -556,7 +556,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         If in need to use *sensitive* content, please use the ```local_sensitive_file`` <./sensitive_file.html>`_
         resource instead.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#sensitive_content File#sensitive_content}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#sensitive_content File#sensitive_content}
         '''
         result = self._values.get("sensitive_content")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -568,7 +568,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         Conflicts with ``content``, ``sensitive_content`` and ``content_base64``.
         Exactly one of these four arguments must be specified.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.2/docs/resources/file#source File#source}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/local/2.5.3/docs/resources/file#source File#source}
         '''
         result = self._values.get("source")
         return typing.cast(typing.Optional[builtins.str], result)

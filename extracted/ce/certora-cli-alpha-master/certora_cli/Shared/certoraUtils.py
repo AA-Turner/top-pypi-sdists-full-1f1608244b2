@@ -121,6 +121,9 @@ MAP_SUFFIX = '_map'
 SUPPRESS_HELP_MSG = "==SUPPRESS=="
 MAX_FLAG_LENGTH = 31
 HELP_TABLE_WIDTH = 97
+DEFAULT_RANGER_RANGE = '5'
+DEFAULT_RANGER_LOOP_ITER = '3'
+DEFAULT_RANGER_FAILURE_LIMIT = '1'
 
 T = TypeVar('T')
 
@@ -295,6 +298,10 @@ class ImplementationError(Exception):
 class BadMutationError(Exception):
     pass
 
+class ExitException(Exception):
+    def __init__(self, message: str, exit_code: int):
+        super().__init__(message)
+        self.exit_code = exit_code  # Store the integer data
 
 MIN_JAVA_VERSION = 11  # minimal java version to run the local type checker jar
 
@@ -1269,6 +1276,7 @@ class TestValue(NoValEnum):
     AFTER_BUILD_RUST = auto()
     AFTER_RULE_SPLIT = auto()
     SOLANA_BUILD_CMD = auto()
+    CHECK_ZIP = auto()
 
 class FeValue(NoValEnum):
     PRODUCTION = auto()

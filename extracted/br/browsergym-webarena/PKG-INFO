@@ -1,6 +1,6 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: browsergym-webarena
-Version: 0.13.3
+Version: 0.13.4
 Summary: WebArena benchmark for BrowserGym
 Project-URL: homepage, https://github.com/ServiceNow/BrowserGym
 Author: Maxime Gasse, Tom Marty
@@ -12,7 +12,7 @@ Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
 Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Requires-Python: >3.7
-Requires-Dist: browsergym-core==0.13.3
+Requires-Dist: browsergym-core==0.13.4
 Requires-Dist: libwebarena==0.0.4
 Description-Content-Type: text/markdown
 
@@ -28,7 +28,7 @@ You have two options to setup your webarena instance:
  - option 1: follow the official [webarena README](https://github.com/web-arena-x/webarena/blob/main/environment_docker/README.md)
  - option 2: use our [unofficial setup scripts](https://github.com/gasse/webarena-setup/tree/main/webarena)
 
-We recommend **option 2** as it allows you to easily customize the ports of each webarena domain, and offers a reset functionality that allwos browsergym to trigger a full instance reset remotely.
+We recommend **option 2** as it allows you to easily customize the ports of each webarena domain, and offers a reset functionality that allows browsergym to trigger a full instance reset remotely.
 
 ## Setup
 

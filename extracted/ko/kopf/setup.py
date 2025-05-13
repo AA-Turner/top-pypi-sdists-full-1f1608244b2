@@ -33,7 +33,6 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
@@ -54,12 +53,11 @@ setup(
         ],
     },
 
-    python_requires='>=3.8',
+    python_requires='>=3.9',
     setup_requires=[
         'setuptools_scm',
     ],
     install_requires=[
-        'typing_extensions',    # 0.20 MB
         'python-json-logger',   # 0.05 MB
         'iso8601',              # 0.07 MB
         'click',                # 0.60 MB

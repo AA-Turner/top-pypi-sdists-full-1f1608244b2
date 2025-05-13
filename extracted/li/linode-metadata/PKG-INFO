@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: linode_metadata
-Version: 0.3.0
+Version: 0.3.1
 Summary: A client to interact with the Linode Metadata service in Python.
 Author-email: Linode <developers@linode.com>
 License: BSD-3-Clause
@@ -12,12 +12,12 @@ Classifier: Topic :: Software Development :: Libraries
 Classifier: License :: OSI Approved :: BSD License
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
-Requires-Python: >=3.8
+Classifier: Programming Language :: Python :: 3.13
+Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: httpx
@@ -32,6 +32,7 @@ Requires-Dist: pytest-asyncio; extra == "dev"
 Requires-Dist: sphinx-lint; extra == "dev"
 Provides-Extra: doc
 Requires-Dist: Sphinx>=7.2.6; extra == "doc"
+Dynamic: license-file
 
 # Linode Metadata Client for Python
 
@@ -46,13 +47,13 @@ This package allows Python projects to easily interact with the [Linode Metadata
 
 ### Prerequisites
 
-- Python >= 3.8
+- Python >= 3.9
 - A running [Linode Instance](https://www.linode.com/docs/api/linode-instances/)
 
 ### Installation
 
 ```bash
-pip install linode_metadata
+pip install linode-metadata
 ```
 
 ### Building from Source
@@ -81,7 +82,7 @@ user_data = client.get_user_data()
 
 print("Instance ID:", instance_info.id)
 print("Public IPv4:", network_info.ipv4.public[0])
-print("SSH Keys:", "; ".join(ssh_info.users.root))
+print("SSH Keys:", "; ".join(ssh_info.users))
 print("User Data:", user_data)
 ```
 

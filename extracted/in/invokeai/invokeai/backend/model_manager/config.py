@@ -144,6 +144,7 @@ class ModelConfigBase(ABC, BaseModel):
     submodels: Optional[Dict[SubModelType, SubmodelDefinition]] = Field(
         description="Loadable submodels in this model", default=None
     )
+    usage_info: Optional[str] = Field(default=None, description="Usage information for this model")
 
     _USING_LEGACY_PROBE: ClassVar[set] = set()
     _USING_CLASSIFY_API: ClassVar[set] = set()
@@ -600,6 +601,21 @@ class LlavaOnevisionConfig(DiffusersConfigBase, ModelConfigBase):
         }
 
 
+class ApiModelConfig(MainConfigBase, ModelConfigBase):
+    """Model config for API-based models."""
+
+    format: Literal[ModelFormat.Api] = ModelFormat.Api
+
+    @classmethod
+    def matches(cls, mod: ModelOnDisk) -> bool:
+        # API models are not stored on disk, so we can't match them.
+        return False
+
+    @classmethod
+    def parse(cls, mod: ModelOnDisk) -> dict[str, Any]:
+        raise NotImplementedError("API models are not parsed from disk.")
+
+
 def get_model_discriminator_value(v: Any) -> str:
     """
     Computes the discriminator value for a model config.
@@ -667,6 +683,7 @@ AnyModelConfig = Annotated[
         Annotated[SigLIPConfig, SigLIPConfig.get_tag()],
         Annotated[FluxReduxConfig, FluxReduxConfig.get_tag()],
         Annotated[LlavaOnevisionConfig, LlavaOnevisionConfig.get_tag()],
+        Annotated[ApiModelConfig, ApiModelConfig.get_tag()],
     ],
     Discriminator(get_model_discriminator_value),
 ]

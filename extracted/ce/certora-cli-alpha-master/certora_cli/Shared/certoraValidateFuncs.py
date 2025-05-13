@@ -550,6 +550,13 @@ def validate_assert_contracts(contract: str) -> str:
     return contract
 
 
+def validate_equivalence_contracts(equiv_string: str) -> str:
+    if not re.match(f'^{Util.SOLIDITY_ID_SUBSTRING_RE}={Util.SOLIDITY_ID_SUBSTRING_RE}$', equiv_string):
+        raise Util.CertoraUserInputError(
+            f"Equivalence check must be ContractA=ContractB, got {equiv_string}"
+        )
+    return equiv_string
+
 def validate_packages(package: str) -> str:
     if not re.search("^[^=]+=[^=]+$", package):
         raise Util.CertoraUserInputError("a package must have the form name=path")
