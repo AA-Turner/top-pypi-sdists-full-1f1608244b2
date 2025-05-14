@@ -2836,6 +2836,20 @@ class GetQueueResponse(_message.Message):
     queue: Queue
     def __init__(self, queue: _Optional[_Union[Queue, _Mapping]] = ...) -> None: ...
 
+class ResolveQueueNameRequest(_message.Message):
+    __slots__ = ("author_name", "queue_name")
+    AUTHOR_NAME_FIELD_NUMBER: _ClassVar[int]
+    QUEUE_NAME_FIELD_NUMBER: _ClassVar[int]
+    author_name: str
+    queue_name: str
+    def __init__(self, author_name: _Optional[str] = ..., queue_name: _Optional[str] = ...) -> None: ...
+
+class ResolveQueueNameResponse(_message.Message):
+    __slots__ = ("queue_id",)
+    QUEUE_ID_FIELD_NUMBER: _ClassVar[int]
+    queue_id: str
+    def __init__(self, queue_id: _Optional[str] = ...) -> None: ...
+
 class ListQueuesRequest(_message.Message):
     __slots__ = ("next_page_token", "options")
     class Opts(_message.Message):

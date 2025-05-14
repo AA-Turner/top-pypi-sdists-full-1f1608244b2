@@ -6,6 +6,7 @@ from typing import List
 
 from openapi_client import ResponseCodeRefsV2, ResponseGitHubCodeRef
 from vessl import logger
+from vessl.util.common import safe_cast
 from vessl.util.downloader import Downloader
 
 
@@ -103,8 +104,13 @@ def clone_by_force_reset(code_ref: ResponseCodeRefsV2):
     def _command(command: List[str], **kwargs):
         return subprocess.run(command, cwd=mount_path, text=True, **kwargs)
 
+    allow_insecure = safe_cast(os.environ.get('VESSL_INSECURE_SKIP_TLS_VERIFY'), bool, False)
+    base_git_command = ["git"]
+    if allow_insecure:
+        base_git_command += ["-c", "http.sslVerify=false"]
+
     # 1. init git repo
-    _command(["git", "init"]).check_returncode()
+    _command(base_git_command + ["init"]).check_returncode()
 
     # 2. add origin with code_ref
     origin = ""
@@ -114,16 +120,16 @@ def clone_by_force_reset(code_ref: ResponseCodeRefsV2):
         # currently there's no way to inject ssh key for git in vessl
         # we just assume that the repo is public
         origin = code_ref.ref_ssh.host
-    _command(["git", "remote", "add", "origin", origin]).check_returncode()
+    _command(base_git_command + ["remote", "add", "origin", origin]).check_returncode()
 
     # 3. fetch
-    _command(["git", "fetch"]).check_returncode()
+    _command(base_git_command + ["fetch"]).check_returncode()
 
     # 4. reset with ref. if ref is not provided, use short symbolic ref.
     ref = code_ref.git_ref
     if not ref:
         tokens = _command(
-            ["git", "remote", "show", "origin"],
+            base_git_command + ["remote", "show", "origin"],
             check=True,
             stdout=subprocess.PIPE,
         ).stdout.split("\n")
@@ -137,7 +143,7 @@ def clone_by_force_reset(code_ref: ResponseCodeRefsV2):
 
     try:
         # 4-1. if ref is sha format, resetting without remote is enough
-        _command(["git", "reset", "--hard", ref], stderr=subprocess.DEVNULL).check_returncode()
+        _command(base_git_command + ["reset", "--hard", ref], stderr=subprocess.DEVNULL).check_returncode()
     except subprocess.CalledProcessError:
         # 4-2. if ref is not sha format, we need prepend remote keyword.
-        _command(["git", "reset", "--hard", f"origin/{ref}"]).check_returncode()
+        _command(base_git_command + ["reset", "--hard", f"origin/{ref}"]).check_returncode()

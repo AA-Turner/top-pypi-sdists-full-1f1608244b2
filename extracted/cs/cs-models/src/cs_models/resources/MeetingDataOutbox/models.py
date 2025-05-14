@@ -17,6 +17,11 @@ class MeetingDataOutboxModel(Base):
     __tablename__ = "meeting_data_outbox"
 
     id = Column(Integer, primary_key=True)
+    meeting_id = Column(
+        Integer,
+        ForeignKey('meetings.id'),
+        nullable=True,
+    )
     meeting_name = Column(String(191), nullable=False, index=True)
     start_date = Column(DateTime, nullable=False)
     end_date = Column(DateTime, nullable=False)
@@ -32,7 +37,7 @@ class MeetingDataOutboxModel(Base):
     file_id = Column(
         Integer,
         ForeignKey('files.id'),
-        nullable=False,
+        nullable=True,
     )
     error = Column(Text, nullable=True)
     checks = Column(Text, nullable=True)

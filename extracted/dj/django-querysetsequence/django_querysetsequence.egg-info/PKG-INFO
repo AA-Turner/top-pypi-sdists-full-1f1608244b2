@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: django-querysetsequence
-Version: 0.17
+Version: 0.18
 Summary: Chain together multiple (disparate) QuerySets to treat them as a single QuerySet.
 Home-page: https://github.com/clokep/django-querysetsequence
 Author: Patrick Cloke
@@ -18,19 +18,21 @@ Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Environment :: Web Environment
 Classifier: Topic :: Internet
 Classifier: Framework :: Django
-Classifier: Framework :: Django :: 3.2
-Classifier: Framework :: Django :: 4.0
-Classifier: Framework :: Django :: 4.1
 Classifier: Framework :: Django :: 4.2
+Classifier: Framework :: Django :: 5.1
+Classifier: Framework :: Django :: 5.2
 Classifier: Programming Language :: Python
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: License :: OSI Approved :: ISC License (ISCL)
-Requires-Python: >=3.8
+Requires-Python: >=3.9
 Description-Content-Type: text/x-rst
 License-File: LICENSE
+Requires-Dist: django>=4.2
+Dynamic: license-file
 
 Django QuerySetSequence
 #######################
@@ -109,7 +111,7 @@ Project Information
 
 django-querysetsequence is released under the ISC license, its documentation lives
 on `Read the Docs`_, the code on `GitHub`_, and the latest release on `PyPI`_. It
-supports Python 3.7+, Django 3.2/4.0/4.1/4.2, and is optionally compatible with
+supports Python 3.9+, Django 4.2/5.1/5.2, and is optionally compatible with
 `Django REST Framework`_ 3.11+.
 
 .. _Read the Docs: https://django-querysetsequence.readthedocs.io/

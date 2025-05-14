@@ -11,12 +11,20 @@ from pygls.server import LanguageServer
 from sqlmesh._version import __version__
 from sqlmesh.core.context import Context
 from sqlmesh.core.linter.definition import AnnotatedRuleViolation
+from sqlmesh.lsp.api import (
+    API_FEATURE,
+    ApiRequest,
+    ApiResponseGetLineage,
+    ApiResponseGetModels,
+)
 from sqlmesh.lsp.completions import get_sql_completions
 from sqlmesh.lsp.context import LSPContext, ModelTarget
 from sqlmesh.lsp.custom import ALL_MODELS_FEATURE, AllModelsRequest, AllModelsResponse
 from sqlmesh.lsp.reference import (
     get_references,
 )
+from web.server.api.endpoints.lineage import model_lineage
+from web.server.api.endpoints.models import get_models
 
 
 class SQLMeshLanguageServer:
@@ -78,6 +86,23 @@ class SQLMeshLanguageServer:
                 return get_sql_completions(context, params.textDocument.uri)
             except Exception as e:
                 return get_sql_completions(None, params.textDocument.uri)
+
+        @self.server.feature(API_FEATURE)
+        def api(
+            ls: LanguageServer, request: ApiRequest
+        ) -> t.Union[ApiResponseGetModels, ApiResponseGetLineage]:
+            ls.log_trace(f"API request: {request}")
+            if self.lsp_context is None:
+                raise RuntimeError("No context found")
+            if request.url == "/api/models":
+                response = ApiResponseGetModels(data=get_models(self.lsp_context.context))
+                return response
+            if request.url.startswith("/api/lineage"):
+                name = request.url.split("/")[-1]
+                lineage = model_lineage(name, self.lsp_context.context)
+                non_set_lineage = {k: v for k, v in lineage.items() if v is not None}
+                return ApiResponseGetLineage(data=non_set_lineage)
+            raise NotImplementedError(f"API request not implemented: {request.url}")
 
         @self.server.feature(types.TEXT_DOCUMENT_DID_OPEN)
         def did_open(ls: LanguageServer, params: types.DidOpenTextDocumentParams) -> None:
@@ -151,7 +176,7 @@ class SQLMeshLanguageServer:
             """Format the document using SQLMesh `format_model_expressions`."""
             try:
                 self._ensure_context_for_document(params.text_document.uri)
-                document = ls.workspace.get_document(params.text_document.uri)
+                document = ls.workspace.get_text_document(params.text_document.uri)
                 if self.lsp_context is None:
                     raise RuntimeError(f"No context found for document: {document.path}")
 
@@ -182,7 +207,7 @@ class SQLMeshLanguageServer:
             """Provide hover information for an object."""
             try:
                 self._ensure_context_for_document(params.text_document.uri)
-                document = ls.workspace.get_document(params.text_document.uri)
+                document = ls.workspace.get_text_document(params.text_document.uri)
                 if self.lsp_context is None:
                     raise RuntimeError(f"No context found for document: {document.path}")
 
@@ -212,7 +237,7 @@ class SQLMeshLanguageServer:
             """Jump to an object's definition."""
             try:
                 self._ensure_context_for_document(params.text_document.uri)
-                document = ls.workspace.get_document(params.text_document.uri)
+                document = ls.workspace.get_text_document(params.text_document.uri)
                 if self.lsp_context is None:
                     raise RuntimeError(f"No context found for document: {document.path}")
 
@@ -293,6 +318,12 @@ class SQLMeshLanguageServer:
             return None
         with open(diagnostic.model._path, "r", encoding="utf-8") as file:
             lines = file.readlines()
+
+        # Get rule definition location for diagnostics link
+        rule_location = diagnostic.rule.get_definition_location()
+        rule_uri = f"file://{rule_location.file_path}#L{rule_location.start_line}"
+
+        # Use URI format to create a link for "related information"
         return types.Diagnostic(
             range=types.Range(
                 start=types.Position(line=0, character=0),
@@ -302,6 +333,9 @@ class SQLMeshLanguageServer:
             severity=types.DiagnosticSeverity.Error
             if diagnostic.violation_type == "error"
             else types.DiagnosticSeverity.Warning,
+            source="sqlmesh",
+            code=diagnostic.rule.name,
+            code_description=types.CodeDescription(href=rule_uri),
         )
 
     @staticmethod

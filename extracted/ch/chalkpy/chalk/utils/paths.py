@@ -10,14 +10,17 @@ def get_classpath(x: object) -> Path | None:
     module = inspect.getmodule(x)
     if module is None:
         return
-    filepath = module.__file__
+    filepath = getattr(module, "__file__", None)
     if filepath is None:
         return
     return Path(os.path.abspath(filepath))
 
 
 def get_classpath_or_name(x: object) -> str | None:
-    return str(get_classpath(x)) or getattr(x, "__module__", None)
+    classpath = get_classpath(x)
+    if classpath is not None:
+        return str(classpath)
+    return getattr(x, "__module__", None)
 
 
 def get_directory_root() -> Optional[Path]:

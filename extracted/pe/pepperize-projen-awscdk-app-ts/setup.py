@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "pepperize.projen-awscdk-app-ts",
-    "version": "0.0.704",
+    "version": "0.0.707",
     "description": "This project provides a projen project type providing presets for an AWS CDK construct library project",
     "license": "MIT",
     "url": "https://github.com/pepperize/projen-awscdk-app-ts.git",
@@ -26,7 +26,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "pepperize_projen_awscdk_app_ts._jsii": [
-            "projen-awscdk-app-ts@0.0.704.jsii.tgz"
+            "projen-awscdk-app-ts@0.0.707.jsii.tgz"
         ],
         "pepperize_projen_awscdk_app_ts": [
             "py.typed"

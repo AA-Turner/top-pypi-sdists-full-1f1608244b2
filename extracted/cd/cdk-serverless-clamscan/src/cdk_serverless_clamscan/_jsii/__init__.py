@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "cdk-serverless-clamscan",
-    "2.11.28",
+    "2.11.29",
     __name__[0:-6],
-    "cdk-serverless-clamscan@2.11.28.jsii.tgz",
+    "cdk-serverless-clamscan@2.11.29.jsii.tgz",
 )
 
 __all__ = [

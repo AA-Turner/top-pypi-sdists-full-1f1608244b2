@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: dandi
-Version: 0.68.0
+Version: 0.68.1
 Summary: Command line client for interaction with DANDI instances
 Home-page: http://dandiarchive.org
 Author: DANDI developers
@@ -27,7 +27,7 @@ Requires-Python: >=3.9
 Description-Content-Type: text/markdown; charset=UTF-8
 License-File: LICENSE
 Requires-Dist: bidsschematools~=1.0
-Requires-Dist: click>=7.1
+Requires-Dist: click!=8.2.0,>=7.1
 Requires-Dist: click-didyoumean
 Requires-Dist: dandischema<0.12.0,>=0.11.0
 Requires-Dist: etelemetry>=0.2.2

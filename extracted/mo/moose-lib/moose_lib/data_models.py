@@ -1,11 +1,13 @@
 import dataclasses
 from decimal import Decimal
 import re
+from enum import Enum
 from uuid import UUID
 from datetime import datetime, date
 
 from typing import Literal, Tuple, Union, Any, get_origin, get_args, TypeAliasType, Annotated, Type
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PlainSerializer, GetCoreSchemaHandler
+from pydantic_core import CoreSchema, core_schema
 
 type Key[T: (str, int)] = T
 type JWT[T] = T
@@ -13,7 +15,7 @@ type JWT[T] = T
 type Aggregated[T, agg_func] = Annotated[T, agg_func]
 
 
-@dataclasses.dataclass # a base model in the annotations will confuse pydantic
+@dataclasses.dataclass  # a base model in the annotations will confuse pydantic
 class ClickhousePrecision:
     precision: int
 
@@ -44,9 +46,16 @@ class AggregateFunction(BaseModel):
         }
 
 
+def enum_value_serializer(value: int | str):
+    if isinstance(value, int):
+        return {"Int": value}
+    else:
+        return {"String": value}
+
+
 class EnumValue(BaseModel):
     name: str
-    value: int | str
+    value: Annotated[int | str, PlainSerializer(enum_value_serializer, return_type=dict)]
 
 
 class DataEnum(BaseModel):
@@ -156,6 +165,9 @@ def py_type_to_column_type(t: type, mds: list[Any]) -> Tuple[bool, list[Any], Da
             name=t.__name__,
             columns=_to_columns(t),
         )
+    elif issubclass(t, Enum):
+        values = [EnumValue(name=member.name, value=member.value) for member in t]
+        data_type = DataEnum(name=t.__name__, values=values)
     else:
         raise ValueError(f"Unknown type {t}")
     return optional, mds, data_type
@@ -175,11 +187,15 @@ def _to_columns(model: type[BaseModel]) -> list[Column]:
         optional, md, data_type = py_type_to_column_type(field_type, field_info.metadata)
 
         annotations = []
-        agg_fn = next((m for m in md if isinstance(m, AggregateFunction)), None)
-        if agg_fn is not None:
-            annotations.append(
-                ("aggregationFunction", agg_fn.to_dict())
-            )
+        for m in md:
+            if isinstance(m, AggregateFunction):
+                annotations.append(
+                    ("aggregationFunction", m.to_dict())
+                )
+            if m == "LowCardinality":
+                annotations.append(
+                    ("LowCardinality", True)
+                )
 
         columns.append(
             Column(
@@ -192,3 +208,17 @@ def _to_columns(model: type[BaseModel]) -> list[Column]:
             )
         )
     return columns
+
+
+class StringToEnumMixin:
+    @classmethod
+    def __get_pydantic_core_schema__(cls, _source_type: Any, _handler: GetCoreSchemaHandler) -> CoreSchema:
+        def validate(value: Any, _: Any) -> Any:
+            if isinstance(value, str):
+                try:
+                    return cls[value]
+                except KeyError:
+                    raise ValueError(f"Invalid enum name: {value}")
+            return cls(value)  # fallback to default enum validation
+
+        return core_schema.with_info_before_validator_function(validate, core_schema.enum_schema(cls, list(cls)))

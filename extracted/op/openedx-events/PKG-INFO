@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: openedx-events
-Version: 10.2.0
+Version: 10.2.1
 Summary: Open edX events from the Hooks Extensions Framework
 Home-page: https://github.com/openedx/openedx-events
 Author: edX
@@ -184,6 +184,14 @@ Change Log
 
 Unreleased
 __________
+
+[10.2.1] - 2025-05-13
+---------------------
+
+Added
+~~~~~
+
+* Adding django52 support.
 
 
 [10.2.0] - 2024-05-08

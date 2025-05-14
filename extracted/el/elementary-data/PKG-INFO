@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: elementary-data
-Version: 0.18.1
+Version: 0.18.2
 Summary: Data monitoring and lineage
 License: Apache-2.0
 Keywords: data,lineage,data lineage,data warehouse,DWH,observability,data monitoring,data observability,Snowflake,BigQuery,Redshift,data reliability,analytics engineering
@@ -15,6 +15,7 @@ Classifier: Programming Language :: Python :: 3.12
 Provides-Extra: all
 Provides-Extra: athena
 Provides-Extra: bigquery
+Provides-Extra: clickhouse
 Provides-Extra: databricks
 Provides-Extra: postgres
 Provides-Extra: redshift
@@ -26,15 +27,16 @@ Requires-Dist: azure-storage-blob (>=12.11.0)
 Requires-Dist: beautifulsoup4 (<5.0.0)
 Requires-Dist: boto3 (<2.0.0)
 Requires-Dist: click (>=7.0,<9.0)
-Requires-Dist: dbt-athena-community (>=1.6.3,<2.0.0) ; extra == "athena"
+Requires-Dist: dbt-athena-community (>=1.6.3,<2.0.0) ; extra == "athena" or extra == "all"
 Requires-Dist: dbt-bigquery (>=0.20,<2.0.0) ; extra == "bigquery" or extra == "all"
+Requires-Dist: dbt-clickhouse (>=0.20,<2.0.0) ; extra == "clickhouse" or extra == "all"
 Requires-Dist: dbt-core (>=0.20,<2.0.0)
 Requires-Dist: dbt-databricks (>=0.20,<2.0.0) ; extra == "databricks" or extra == "all"
 Requires-Dist: dbt-postgres (>=0.20,<2.0.0) ; extra == "postgres" or extra == "all"
 Requires-Dist: dbt-redshift (>=0.20,<2.0.0) ; extra == "redshift" or extra == "all"
 Requires-Dist: dbt-snowflake (>=0.20,<2.0.0) ; extra == "snowflake" or extra == "all"
 Requires-Dist: dbt-spark (>=0.20,<2.0.0) ; extra == "spark" or extra == "all"
-Requires-Dist: dbt-trino (>=1.5.0,<2.0.0) ; extra == "trino"
+Requires-Dist: dbt-trino (>=1.5.0,<2.0.0) ; extra == "trino" or extra == "all"
 Requires-Dist: google-cloud-storage (<3.0.0)
 Requires-Dist: networkx (>=2.3,<3)
 Requires-Dist: numpy (<2.0.0)
@@ -150,6 +152,8 @@ For additional information and help, you can use one of these channels:
 <a href="https://github.com/noaKurman"><img src="https://avatars.githubusercontent.com/u/16741969?v=4" width="50" height="50" alt=""/></a>
 <a href="https://github.com/NoyaArie"><img src="https://avatars.githubusercontent.com/u/31591071?v=4" width="50" height="50" alt=""/></a>
 <a href="https://github.com/ellakz"><img src="https://avatars.githubusercontent.com/u/18530437?v=4" width="50" height="50" alt=""/></a>
+<a href="https://github.com/NoyaOffer"><img src="https://avatars.githubusercontent.com/u/192613179?v=4" width="50" height="50" alt=""/></a>
+<a href="https://github.com/elazarlachkar"><img src="https://avatars.githubusercontent.com/u/62235929?v=4" width="50" height="50" alt=""/></a>
 <a href="https://github.com/ofek1weiss"><img src="https://avatars.githubusercontent.com/u/55920061?v=4" width="50" height="50" alt=""/></a>
 <a href="https://github.com/erikzaadi"><img src="https://avatars.githubusercontent.com/u/77775?v=4" width="50" height="50" alt=""/></a>
 <a href="https://github.com/dapollak"><img src="https://avatars.githubusercontent.com/u/13542197?v=4" width="50" height="50" alt=""/></a>
@@ -248,6 +252,10 @@ For additional information and help, you can use one of these channels:
 <a href="https://github.com/JanDintel"><img src="https://avatars.githubusercontent.com/u/3646888?v=4" width="50" height="50" alt=""/></a>
 <a href="https://github.com/kokorin"><img src="https://avatars.githubusercontent.com/u/1089148?v=4" width="50" height="50" alt=""/></a>
 <a href="https://github.com/slaupster"><img src="https://avatars.githubusercontent.com/u/9283885?v=4" width="50" height="50" alt=""/></a>
+<a href="https://github.com/talperetz1"><img src="https://avatars.githubusercontent.com/u/82938736?v=4" width="50" height="50" alt=""/></a>
+<a href="https://github.com/nkmr-jp"><img src="https://avatars.githubusercontent.com/u/8490118?v=4" width="50" height="50" alt=""/></a>
+<a href="https://github.com/dbt-markwan"><img src="https://avatars.githubusercontent.com/u/114556261?v=4" width="50" height="50" alt=""/></a>
+<a href="https://github.com/pedro-klein-ext-bayer"><img src="https://avatars.githubusercontent.com/u/181362556?v=4" width="50" height="50" alt=""/></a>
 
 
 <!-- markdownlint-restore -->

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: qpsolvers
-Version: 4.6.0
+Version: 4.7.0
 Summary: Quadratic programming solvers in Python with a unified API.
 Keywords: quadratic programming,solver,numerical optimization
 Author-email: Stéphane Caron <stephane.caron@normalesup.org>
@@ -29,15 +29,16 @@ Requires-Dist: jaxopt >=0.8.3 ; extra == "jaxopt"
 Requires-Dist: kvxopt >=1.3.2 ; extra == "kvxopt"
 Requires-Dist: cvxopt >=1.2.6 ; extra == "mosek"
 Requires-Dist: mosek >=10.0.40 ; extra == "mosek"
-Requires-Dist: qpsolvers[clarabel,cvxopt,daqp,ecos,highs,jaxopt,osqp,piqp,proxqp,qpalm,quadprog,scs,qpax] ; extra == "open_source_solvers"
-Requires-Dist: osqp >=0.6.2,<1 ; extra == "osqp"
+Requires-Dist: qpsolvers[clarabel,cvxopt,daqp,ecos,highs,jaxopt,osqp,piqp,proxqp,qpalm,quadprog,scs,sip,qpax] ; extra == "open_source_solvers"
+Requires-Dist: osqp >=0.6.2 ; extra == "osqp"
 Requires-Dist: piqp >=0.2.2 ; extra == "piqp"
 Requires-Dist: proxsuite >=0.2.9 ; extra == "proxqp"
 Requires-Dist: qpalm >=1.2.1 ; extra == "qpalm"
 Requires-Dist: qpax>=0.0.9 ; extra == "qpax"
 Requires-Dist: quadprog >=0.1.11 ; extra == "quadprog"
 Requires-Dist: scs >=3.2.0 ; extra == "scs"
-Requires-Dist: qpsolvers[cvxopt,daqp,ecos,highs,piqp,proxqp,qpalm] ; extra == "wheels_only"
+Requires-Dist: sip-python >=0.0.2 ; extra == "sip"
+Requires-Dist: qpsolvers[cvxopt,daqp,ecos,highs,piqp,proxqp,qpalm,sip] ; extra == "wheels_only"
 Project-URL: Changelog, https://github.com/qpsolvers/qpsolvers/blob/main/CHANGELOG.md
 Project-URL: Documentation, https://qpsolvers.github.io/qpsolvers/
 Project-URL: Homepage, https://github.com/qpsolvers/qpsolvers
@@ -60,6 +61,7 @@ Provides-Extra: qpalm
 Provides-Extra: qpax
 Provides-Extra: quadprog
 Provides-Extra: scs
+Provides-Extra: sip
 Provides-Extra: wheels_only
 
 # Quadratic Programming Solvers in Python
@@ -160,6 +162,7 @@ When imported, qpsolvers loads all the solvers it can find and lists them in ``q
 | [qpSWIFT](https://github.com/qpSWIFT/qpSWIFT) | ``qpswift`` | Interior point | Sparse | GPL-3.0 |
 | [quadprog](https://github.com/quadprog/quadprog) | ``quadprog`` | Active set | Dense | GPL-2.0 |
 | [SCS](https://www.cvxgrp.org/scs/) | ``scs`` | Augmented Lagrangian | Sparse | MIT |
+| [SIP](https://github.com/joaospinto/sip_python) | ``sip`` | Barrier Augmented Lagrangian | Sparse | MIT |
 
 Matrix arguments are NumPy arrays for dense solvers and SciPy Compressed Sparse Column (CSC) matrices for sparse ones.
 
@@ -188,13 +191,15 @@ If you find this project useful, please consider giving it a :star: or citing it
 ```bibtex
 @software{qpsolvers,
   title = {{qpsolvers: Quadratic Programming Solvers in Python}},
-  author = {Caron, Stéphane and Arnström, Daniel and Bonagiri, Suraj and Dechaume, Antoine and Flowers, Nikolai and Heins, Adam and Ishikawa, Takuma and Kenefake, Dustin and Mazzamuto, Giacomo and Meoli, Donato and O'Donoghue, Brendan and Oppenheimer, Adam A. and Pandala, Abhishek and Quiroz Omaña, Juan José and Rontsis, Nikitas and Shah, Paarth and St-Jean, Samuel and Vitucci, Nicola and Wolfers, Soeren and Yang, Fengyu and @bdelhaisse and @MeindertHH and @rimaddo and @urob and @shaoanlu and Khalil, Ahmed and Kozlov, Lev and Groudiev, Antoine},
+  author = {Caron, Stéphane and Arnström, Daniel and Bonagiri, Suraj and Dechaume, Antoine and Flowers, Nikolai and Heins, Adam and Ishikawa, Takuma and Kenefake, Dustin and Mazzamuto, Giacomo and Meoli, Donato and O'Donoghue, Brendan and Oppenheimer, Adam A. and Pandala, Abhishek and Quiroz Omaña, Juan José and Rontsis, Nikitas and Shah, Paarth and St-Jean, Samuel and Vitucci, Nicola and Wolfers, Soeren and Yang, Fengyu and @bdelhaisse and @MeindertHH and @rimaddo and @urob and @shaoanlu and Khalil, Ahmed and Kozlov, Lev and Groudiev, Antoine and Sousa Pinto, João},
   license = {LGPL-3.0},
   url = {https://github.com/qpsolvers/qpsolvers},
-  version = {4.6.0},
+  version = {4.7.0},
   year = {2025}
 }
 ```
+
+Don't forget to add yourself to the BibTeX above and to `CITATION.cff` if you contribute to this repository.
 
 ## Contributing
 

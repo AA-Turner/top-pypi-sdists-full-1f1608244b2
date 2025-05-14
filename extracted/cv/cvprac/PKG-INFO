@@ -1,12 +1,12 @@
 Metadata-Version: 2.1
 Name: cvprac
-Version: 1.4.0
+Version: 1.4.1
 Summary: Arista Cloudvision(R) Portal Rest API Client written in python
 Home-page: https://github.com/aristanetworks/cvprac
 Author: Arista Networks, Inc.
 Author-email: eosplus-dev@arista.com
 License: BSD-3
-Download-URL: https://github.com/aristanetworks/cvprac/tarball/1.4.0
+Download-URL: https://github.com/aristanetworks/cvprac/tarball/1.4.1
 Keywords: networking CloudVision development rest api
 Platform: UNKNOWN
 Classifier: Development Status :: 4 - Beta
@@ -104,9 +104,10 @@ using the API methods.
 
 ### Requirements
 
-- Python 2.7 or later
+- Python 3.7 or later
 - Python logging module
-- Python requests module version 1.0.0 or later
+- Python requests module with socks version 2.27.0 or later
+- Python packaging module version 23.2 or later
 
 ## Installation
 

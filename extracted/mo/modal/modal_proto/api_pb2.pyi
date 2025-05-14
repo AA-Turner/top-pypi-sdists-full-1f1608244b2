@@ -9450,6 +9450,30 @@ class VolumeCommitResponse(google.protobuf.message.Message):
 
 global___VolumeCommitResponse = VolumeCommitResponse
 
+class VolumeCopyFiles2Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    VOLUME_ID_FIELD_NUMBER: builtins.int
+    SRC_PATHS_FIELD_NUMBER: builtins.int
+    DST_PATH_FIELD_NUMBER: builtins.int
+    RECURSIVE_FIELD_NUMBER: builtins.int
+    volume_id: builtins.str
+    @property
+    def src_paths(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
+    dst_path: builtins.str
+    recursive: builtins.bool
+    def __init__(
+        self,
+        *,
+        volume_id: builtins.str = ...,
+        src_paths: collections.abc.Iterable[builtins.str] | None = ...,
+        dst_path: builtins.str = ...,
+        recursive: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["dst_path", b"dst_path", "recursive", b"recursive", "src_paths", b"src_paths", "volume_id", b"volume_id"]) -> None: ...
+
+global___VolumeCopyFiles2Request = VolumeCopyFiles2Request
+
 class VolumeCopyFilesRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 

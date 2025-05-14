@@ -32,6 +32,7 @@ from dbos._utils import INTERNAL_QUEUE_NAME
 from . import _serialization
 from ._context import get_local_dbos_context
 from ._error import (
+    DBOSAwaitedWorkflowCancelledError,
     DBOSConflictingWorkflowError,
     DBOSDeadLetterQueueError,
     DBOSNonExistentWorkflowError,
@@ -96,6 +97,10 @@ class WorkflowStatus:
     executor_id: Optional[str]
     # The application version on which this workflow was started
     app_version: Optional[str]
+    # The start-to-close timeout of the workflow in ms
+    workflow_timeout_ms: Optional[int]
+    # The deadline of a workflow, computed by adding its timeout to its start time.
+    workflow_deadline_epoch_ms: Optional[int]
 
     # INTERNAL FIELDS
 
@@ -222,6 +227,47 @@ class StepInfo(TypedDict):
 _dbos_null_topic = "__null__topic__"
 
 
+class ConditionCount(TypedDict):
+    condition: threading.Condition
+    count: int
+
+
+class ThreadSafeConditionDict:
+    def __init__(self) -> None:
+        self._dict: Dict[str, ConditionCount] = {}
+        self._lock = threading.Lock()
+
+    def get(self, key: str) -> Optional[threading.Condition]:
+        with self._lock:
+            if key not in self._dict:
+                # Key does not exist, return None
+                return None
+            return self._dict[key]["condition"]
+
+    def set(
+        self, key: str, value: threading.Condition
+    ) -> tuple[bool, threading.Condition]:
+        with self._lock:
+            if key in self._dict:
+                # Key already exists, do not overwrite. Increment the wait count.
+                cc = self._dict[key]
+                cc["count"] += 1
+                return False, cc["condition"]
+            self._dict[key] = ConditionCount(condition=value, count=1)
+            return True, value
+
+    def pop(self, key: str) -> None:
+        with self._lock:
+            if key in self._dict:
+                cc = self._dict[key]
+                cc["count"] -= 1
+                if cc["count"] == 0:
+                    # No more threads waiting on this condition, remove it
+                    del self._dict[key]
+            else:
+                dbos_logger.warning(f"Key {key} not found in condition dictionary.")
+
+
 class SystemDatabase:
 
     def __init__(
@@ -241,34 +287,63 @@ class SystemDatabase:
             sysdb_name = system_db_url.database + SystemSchema.sysdb_suffix
         system_db_url = system_db_url.set(database=sysdb_name)
 
-        if not debug_mode:
-            # If the system database does not already exist, create it
-            engine = sa.create_engine(
-                system_db_url.set(database="postgres"), **engine_kwargs
-            )
-            with engine.connect() as conn:
-                conn.execution_options(isolation_level="AUTOCOMMIT")
-                if not conn.execute(
-                    sa.text("SELECT 1 FROM pg_database WHERE datname=:db_name"),
-                    parameters={"db_name": sysdb_name},
-                ).scalar():
-                    dbos_logger.info(f"Creating system database {sysdb_name}")
-                    conn.execute(sa.text(f"CREATE DATABASE {sysdb_name}"))
-            engine.dispose()
-
         self.engine = sa.create_engine(
             system_db_url,
             **engine_kwargs,
         )
+        self._engine_kwargs = engine_kwargs
+
+        self.notification_conn: Optional[psycopg.connection.Connection] = None
+        self.notifications_map = ThreadSafeConditionDict()
+        self.workflow_events_map = ThreadSafeConditionDict()
+
+        # Now we can run background processes
+        self._run_background_processes = True
+        self._debug_mode = debug_mode
+
+    # Run migrations
+    def run_migrations(self) -> None:
+        if self._debug_mode:
+            dbos_logger.warning("System database migrations are skipped in debug mode.")
+            return
+        system_db_url = self.engine.url
+        sysdb_name = system_db_url.database
+        # If the system database does not already exist, create it
+        engine = sa.create_engine(
+            system_db_url.set(database="postgres"), **self._engine_kwargs
+        )
+        with engine.connect() as conn:
+            conn.execution_options(isolation_level="AUTOCOMMIT")
+            if not conn.execute(
+                sa.text("SELECT 1 FROM pg_database WHERE datname=:db_name"),
+                parameters={"db_name": sysdb_name},
+            ).scalar():
+                dbos_logger.info(f"Creating system database {sysdb_name}")
+                conn.execute(sa.text(f"CREATE DATABASE {sysdb_name}"))
+        engine.dispose()
 
         # Run a schema migration for the system database
-        if not debug_mode:
-            migration_dir = os.path.join(
-                os.path.dirname(os.path.realpath(__file__)), "_migrations"
+        migration_dir = os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), "_migrations"
+        )
+        alembic_cfg = Config()
+        alembic_cfg.set_main_option("script_location", migration_dir)
+        logging.getLogger("alembic").setLevel(logging.WARNING)
+        # Alembic requires the % in URL-escaped parameters to itself be escaped to %%.
+        escaped_conn_string = re.sub(
+            r"%(?=[0-9A-Fa-f]{2})",
+            "%%",
+            self.engine.url.render_as_string(hide_password=False),
+        )
+        alembic_cfg.set_main_option("sqlalchemy.url", escaped_conn_string)
+        try:
+            command.upgrade(alembic_cfg, "head")
+        except Exception as e:
+            dbos_logger.warning(
+                f"Exception during system database construction. This is most likely because the system database was configured using a later version of DBOS: {e}"
             )
             alembic_cfg = Config()
             alembic_cfg.set_main_option("script_location", migration_dir)
-            logging.getLogger("alembic").setLevel(logging.WARNING)
             # Alembic requires the % in URL-escaped parameters to itself be escaped to %%.
             escaped_conn_string = re.sub(
                 r"%(?=[0-9A-Fa-f]{2})",
@@ -282,29 +357,6 @@ class SystemDatabase:
                 dbos_logger.warning(
                     f"Exception during system database construction. This is most likely because the system database was configured using a later version of DBOS: {e}"
                 )
-                alembic_cfg = Config()
-                alembic_cfg.set_main_option("script_location", migration_dir)
-                # Alembic requires the % in URL-escaped parameters to itself be escaped to %%.
-                escaped_conn_string = re.sub(
-                    r"%(?=[0-9A-Fa-f]{2})",
-                    "%%",
-                    self.engine.url.render_as_string(hide_password=False),
-                )
-                alembic_cfg.set_main_option("sqlalchemy.url", escaped_conn_string)
-                try:
-                    command.upgrade(alembic_cfg, "head")
-                except Exception as e:
-                    dbos_logger.warning(
-                        f"Exception during system database construction. This is most likely because the system database was configured using a later version of DBOS: {e}"
-                    )
-
-        self.notification_conn: Optional[psycopg.connection.Connection] = None
-        self.notifications_map: Dict[str, threading.Condition] = {}
-        self.workflow_events_map: Dict[str, threading.Condition] = {}
-
-        # Now we can run background processes
-        self._run_background_processes = True
-        self._debug_mode = debug_mode
 
     # Destroy the pool when finished
     def destroy(self) -> None:
@@ -714,9 +766,9 @@ class SystemDatabase:
                         error = row[2]
                         raise _serialization.deserialize_exception(error)
                     elif status == WorkflowStatusString.CANCELLED.value:
-                        # Raise a normal exception here, not the cancellation exception
+                        # Raise AwaitedWorkflowCancelledError here, not the cancellation exception
                         # because the awaiting workflow is not being cancelled.
-                        raise Exception(f"Awaited workflow {workflow_id} was cancelled")
+                        raise DBOSAwaitedWorkflowCancelledError(workflow_id)
                 else:
                     pass  # CB: I guess we're assuming the WF will show up eventually.
             time.sleep(1)
@@ -790,6 +842,8 @@ class SystemDatabase:
             SystemSchema.workflow_inputs.c.inputs,
             SystemSchema.workflow_status.c.output,
             SystemSchema.workflow_status.c.error,
+            SystemSchema.workflow_status.c.workflow_deadline_epoch_ms,
+            SystemSchema.workflow_status.c.workflow_timeout_ms,
         ).join(
             SystemSchema.workflow_inputs,
             SystemSchema.workflow_status.c.workflow_uuid
@@ -871,6 +925,8 @@ class SystemDatabase:
             info.input = inputs
             info.output = output
             info.error = exception
+            info.workflow_deadline_epoch_ms = row[18]
+            info.workflow_timeout_ms = row[19]
 
             infos.append(info)
         return infos
@@ -900,6 +956,8 @@ class SystemDatabase:
             SystemSchema.workflow_inputs.c.inputs,
             SystemSchema.workflow_status.c.output,
             SystemSchema.workflow_status.c.error,
+            SystemSchema.workflow_status.c.workflow_deadline_epoch_ms,
+            SystemSchema.workflow_status.c.workflow_timeout_ms,
         ).select_from(
             SystemSchema.workflow_queue.join(
                 SystemSchema.workflow_status,
@@ -977,6 +1035,8 @@ class SystemDatabase:
             info.input = inputs
             info.output = output
             info.error = exception
+            info.workflow_deadline_epoch_ms = row[18]
+            info.workflow_timeout_ms = row[19]
 
             infos.append(info)
 
@@ -1282,7 +1342,12 @@ class SystemDatabase:
         condition = threading.Condition()
         # Must acquire first before adding to the map. Otherwise, the notification listener may notify it before the condition is acquired and waited.
         condition.acquire()
-        self.notifications_map[payload] = condition
+        success, _ = self.notifications_map.set(payload, condition)
+        if not success:
+            # This should not happen, but if it does, it means the workflow is executed concurrently.
+            condition.release()
+            self.notifications_map.pop(payload)
+            raise DBOSWorkflowConflictIDError(workflow_uuid)
 
         # Check if the key is already in the database. If not, wait for the notification.
         init_recv: Sequence[Any]
@@ -1375,11 +1440,11 @@ class SystemDatabase:
                             f"Received notification on channel: {channel}, payload: {notify.payload}"
                         )
                         if channel == "dbos_notifications_channel":
-                            if (
-                                notify.payload
-                                and notify.payload in self.notifications_map
-                            ):
-                                condition = self.notifications_map[notify.payload]
+                            if notify.payload:
+                                condition = self.notifications_map.get(notify.payload)
+                                if condition is None:
+                                    # No condition found for this payload
+                                    continue
                                 condition.acquire()
                                 condition.notify_all()
                                 condition.release()
@@ -1387,11 +1452,11 @@ class SystemDatabase:
                                     f"Signaled notifications condition for {notify.payload}"
                                 )
                         elif channel == "dbos_workflow_events_channel":
-                            if (
-                                notify.payload
-                                and notify.payload in self.workflow_events_map
-                            ):
-                                condition = self.workflow_events_map[notify.payload]
+                            if notify.payload:
+                                condition = self.workflow_events_map.get(notify.payload)
+                                if condition is None:
+                                    # No condition found for this payload
+                                    continue
                                 condition.acquire()
                                 condition.notify_all()
                                 condition.release()
@@ -1529,8 +1594,13 @@ class SystemDatabase:
 
         payload = f"{target_uuid}::{key}"
         condition = threading.Condition()
-        self.workflow_events_map[payload] = condition
         condition.acquire()
+        success, existing_condition = self.workflow_events_map.set(payload, condition)
+        if not success:
+            # Wait on the existing condition
+            condition.release()
+            condition = existing_condition
+            condition.acquire()
 
         # Check if the key is already in the database. If not, wait for the notification.
         init_recv: Sequence[Any]
@@ -1770,8 +1840,13 @@ class SystemDatabase:
                         # If a timeout is set, set the deadline on dequeue
                         workflow_deadline_epoch_ms=sa.case(
                             (
-                                SystemSchema.workflow_status.c.workflow_timeout_ms.isnot(
-                                    None
+                                sa.and_(
+                                    SystemSchema.workflow_status.c.workflow_timeout_ms.isnot(
+                                        None
+                                    ),
+                                    SystemSchema.workflow_status.c.workflow_deadline_epoch_ms.is_(
+                                        None
+                                    ),
                                 ),
                                 sa.func.extract("epoch", sa.func.now()) * 1000
                                 + SystemSchema.workflow_status.c.workflow_timeout_ms,

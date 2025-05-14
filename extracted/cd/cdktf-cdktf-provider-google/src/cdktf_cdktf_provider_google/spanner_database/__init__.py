@@ -1,7 +1,7 @@
 r'''
 # `google_spanner_database`
 
-Refer to the Terraform Registry for docs: [`google_spanner_database`](https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database).
+Refer to the Terraform Registry for docs: [`google_spanner_database`](https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class SpannerDatabase(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-google.spannerDatabase.SpannerDatabase",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database google_spanner_database}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database google_spanner_database}.'''
 
     def __init__(
         self,
@@ -55,6 +55,7 @@ class SpannerDatabase(
         name: builtins.str,
         database_dialect: typing.Optional[builtins.str] = None,
         ddl: typing.Optional[typing.Sequence[builtins.str]] = None,
+        default_time_zone: typing.Optional[builtins.str] = None,
         deletion_protection: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         enable_drop_protection: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         encryption_config: typing.Optional[typing.Union["SpannerDatabaseEncryptionConfig", typing.Dict[builtins.str, typing.Any]]] = None,
@@ -70,21 +71,22 @@ class SpannerDatabase(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database google_spanner_database} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database google_spanner_database} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param instance: The instance to create the database on. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#instance SpannerDatabase#instance}
-        :param name: A unique identifier for the database, which cannot be changed after the instance is created. Values are of the form '[a-z][-_a-z0-9]*[a-z0-9]'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#name SpannerDatabase#name}
-        :param database_dialect: The dialect of the Cloud Spanner Database. If it is not provided, "GOOGLE_STANDARD_SQL" will be used. Possible values: ["GOOGLE_STANDARD_SQL", "POSTGRESQL"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#database_dialect SpannerDatabase#database_dialect}
-        :param ddl: An optional list of DDL statements to run inside the database. Statements can create tables, indexes, etc. During creation these statements execute atomically with the creation of the database and if there is an error in any statement, the database is not created. Terraform does not perform drift detection on this field and assumes that the values recorded in state are accurate. Limited updates to this field are supported, and newly appended DDL statements can be executed in an update. However, modifications to prior statements will create a plan that marks the resource for recreation. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#ddl SpannerDatabase#ddl}
-        :param deletion_protection: Whether Terraform will be prevented from destroying the database. Defaults to true. When a'terraform destroy' or 'terraform apply' would delete the database, the command will fail if this field is not set to false in Terraform state. When the field is set to true or unset in Terraform state, a 'terraform apply' or 'terraform destroy' that would delete the database will fail. When the field is set to false, deleting the database is allowed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#deletion_protection SpannerDatabase#deletion_protection}
-        :param enable_drop_protection: Whether drop protection is enabled for this database. Defaults to false. Drop protection is different from the "deletion_protection" attribute in the following ways: (1) "deletion_protection" only protects the database from deletions in Terraform. whereas setting “enableDropProtection” to true protects the database from deletions in all interfaces. (2) Setting "enableDropProtection" to true also prevents the deletion of the parent instance containing the database. "deletion_protection" attribute does not provide protection against the deletion of the parent instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#enable_drop_protection SpannerDatabase#enable_drop_protection}
-        :param encryption_config: encryption_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#encryption_config SpannerDatabase#encryption_config}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#id SpannerDatabase#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#project SpannerDatabase#project}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#timeouts SpannerDatabase#timeouts}
-        :param version_retention_period: The retention period for the database. The retention period must be between 1 hour and 7 days, and can be specified in days, hours, minutes, or seconds. For example, the values 1d, 24h, 1440m, and 86400s are equivalent. Default value is 1h. If this property is used, you must avoid adding new DDL statements to 'ddl' that update the database's version_retention_period. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#version_retention_period SpannerDatabase#version_retention_period}
+        :param instance: The instance to create the database on. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#instance SpannerDatabase#instance}
+        :param name: A unique identifier for the database, which cannot be changed after the instance is created. Values are of the form '[a-z][-_a-z0-9]*[a-z0-9]'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#name SpannerDatabase#name}
+        :param database_dialect: The dialect of the Cloud Spanner Database. If it is not provided, "GOOGLE_STANDARD_SQL" will be used. Possible values: ["GOOGLE_STANDARD_SQL", "POSTGRESQL"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#database_dialect SpannerDatabase#database_dialect}
+        :param ddl: An optional list of DDL statements to run inside the database. Statements can create tables, indexes, etc. During creation these statements execute atomically with the creation of the database and if there is an error in any statement, the database is not created. Terraform does not perform drift detection on this field and assumes that the values recorded in state are accurate. Limited updates to this field are supported, and newly appended DDL statements can be executed in an update. However, modifications to prior statements will create a plan that marks the resource for recreation. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#ddl SpannerDatabase#ddl}
+        :param default_time_zone: The default time zone for the database. The default time zone must be a valid name from the tz database. Default value is "America/Los_angeles". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#default_time_zone SpannerDatabase#default_time_zone}
+        :param deletion_protection: Whether Terraform will be prevented from destroying the database. Defaults to true. When a'terraform destroy' or 'terraform apply' would delete the database, the command will fail if this field is not set to false in Terraform state. When the field is set to true or unset in Terraform state, a 'terraform apply' or 'terraform destroy' that would delete the database will fail. When the field is set to false, deleting the database is allowed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#deletion_protection SpannerDatabase#deletion_protection}
+        :param enable_drop_protection: Whether drop protection is enabled for this database. Defaults to false. Drop protection is different from the "deletion_protection" attribute in the following ways: (1) "deletion_protection" only protects the database from deletions in Terraform. whereas setting “enableDropProtection” to true protects the database from deletions in all interfaces. (2) Setting "enableDropProtection" to true also prevents the deletion of the parent instance containing the database. "deletion_protection" attribute does not provide protection against the deletion of the parent instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#enable_drop_protection SpannerDatabase#enable_drop_protection}
+        :param encryption_config: encryption_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#encryption_config SpannerDatabase#encryption_config}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#id SpannerDatabase#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#project SpannerDatabase#project}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#timeouts SpannerDatabase#timeouts}
+        :param version_retention_period: The retention period for the database. The retention period must be between 1 hour and 7 days, and can be specified in days, hours, minutes, or seconds. For example, the values 1d, 24h, 1440m, and 86400s are equivalent. Default value is 1h. If this property is used, you must avoid adding new DDL statements to 'ddl' that update the database's version_retention_period. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#version_retention_period SpannerDatabase#version_retention_period}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -102,6 +104,7 @@ class SpannerDatabase(
             name=name,
             database_dialect=database_dialect,
             ddl=ddl,
+            default_time_zone=default_time_zone,
             deletion_protection=deletion_protection,
             enable_drop_protection=enable_drop_protection,
             encryption_config=encryption_config,
@@ -133,7 +136,7 @@ class SpannerDatabase(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the SpannerDatabase to import.
-        :param import_from_id: The id of the existing SpannerDatabase that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing SpannerDatabase that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the SpannerDatabase to import is found.
         '''
         if __debug__:
@@ -152,8 +155,8 @@ class SpannerDatabase(
         kms_key_names: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param kms_key_name: Fully qualified name of the KMS key to use to encrypt this database. This key must exist in the same location as the Spanner Database. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#kms_key_name SpannerDatabase#kms_key_name}
-        :param kms_key_names: Fully qualified name of the KMS keys to use to encrypt this database. The keys must exist in the same locations as the Spanner Database. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#kms_key_names SpannerDatabase#kms_key_names}
+        :param kms_key_name: Fully qualified name of the KMS key to use to encrypt this database. This key must exist in the same location as the Spanner Database. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#kms_key_name SpannerDatabase#kms_key_name}
+        :param kms_key_names: Fully qualified name of the KMS keys to use to encrypt this database. The keys must exist in the same locations as the Spanner Database. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#kms_key_names SpannerDatabase#kms_key_names}
         '''
         value = SpannerDatabaseEncryptionConfig(
             kms_key_name=kms_key_name, kms_key_names=kms_key_names
@@ -170,9 +173,9 @@ class SpannerDatabase(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#create SpannerDatabase#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#delete SpannerDatabase#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#update SpannerDatabase#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#create SpannerDatabase#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#delete SpannerDatabase#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#update SpannerDatabase#update}.
         '''
         value = SpannerDatabaseTimeouts(create=create, delete=delete, update=update)
 
@@ -185,6 +188,10 @@ class SpannerDatabase(
     @jsii.member(jsii_name="resetDdl")
     def reset_ddl(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetDdl", []))
+
+    @jsii.member(jsii_name="resetDefaultTimeZone")
+    def reset_default_time_zone(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDefaultTimeZone", []))
 
     @jsii.member(jsii_name="resetDeletionProtection")
     def reset_deletion_protection(self) -> None:
@@ -251,6 +258,11 @@ class SpannerDatabase(
     @jsii.member(jsii_name="ddlInput")
     def ddl_input(self) -> typing.Optional[typing.List[builtins.str]]:
         return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "ddlInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="defaultTimeZoneInput")
+    def default_time_zone_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "defaultTimeZoneInput"))
 
     @builtins.property
     @jsii.member(jsii_name="deletionProtectionInput")
@@ -328,6 +340,18 @@ class SpannerDatabase(
             type_hints = typing.get_type_hints(_typecheckingstub__1a9337db51c1a07168d5a9495de3e1b6d5bf10b1bab4bd5586990f0fa1002e87)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         jsii.set(self, "ddl", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="defaultTimeZone")
+    def default_time_zone(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "defaultTimeZone"))
+
+    @default_time_zone.setter
+    def default_time_zone(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d5998a72e642d16314876e3431750ce49d8bee2bc92256a5f8bcb94d4b8da047)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "defaultTimeZone", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
     @jsii.member(jsii_name="deletionProtection")
@@ -439,6 +463,7 @@ class SpannerDatabase(
         "name": "name",
         "database_dialect": "databaseDialect",
         "ddl": "ddl",
+        "default_time_zone": "defaultTimeZone",
         "deletion_protection": "deletionProtection",
         "enable_drop_protection": "enableDropProtection",
         "encryption_config": "encryptionConfig",
@@ -463,6 +488,7 @@ class SpannerDatabaseConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         name: builtins.str,
         database_dialect: typing.Optional[builtins.str] = None,
         ddl: typing.Optional[typing.Sequence[builtins.str]] = None,
+        default_time_zone: typing.Optional[builtins.str] = None,
         deletion_protection: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         enable_drop_protection: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         encryption_config: typing.Optional[typing.Union["SpannerDatabaseEncryptionConfig", typing.Dict[builtins.str, typing.Any]]] = None,
@@ -479,17 +505,18 @@ class SpannerDatabaseConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param instance: The instance to create the database on. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#instance SpannerDatabase#instance}
-        :param name: A unique identifier for the database, which cannot be changed after the instance is created. Values are of the form '[a-z][-_a-z0-9]*[a-z0-9]'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#name SpannerDatabase#name}
-        :param database_dialect: The dialect of the Cloud Spanner Database. If it is not provided, "GOOGLE_STANDARD_SQL" will be used. Possible values: ["GOOGLE_STANDARD_SQL", "POSTGRESQL"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#database_dialect SpannerDatabase#database_dialect}
-        :param ddl: An optional list of DDL statements to run inside the database. Statements can create tables, indexes, etc. During creation these statements execute atomically with the creation of the database and if there is an error in any statement, the database is not created. Terraform does not perform drift detection on this field and assumes that the values recorded in state are accurate. Limited updates to this field are supported, and newly appended DDL statements can be executed in an update. However, modifications to prior statements will create a plan that marks the resource for recreation. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#ddl SpannerDatabase#ddl}
-        :param deletion_protection: Whether Terraform will be prevented from destroying the database. Defaults to true. When a'terraform destroy' or 'terraform apply' would delete the database, the command will fail if this field is not set to false in Terraform state. When the field is set to true or unset in Terraform state, a 'terraform apply' or 'terraform destroy' that would delete the database will fail. When the field is set to false, deleting the database is allowed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#deletion_protection SpannerDatabase#deletion_protection}
-        :param enable_drop_protection: Whether drop protection is enabled for this database. Defaults to false. Drop protection is different from the "deletion_protection" attribute in the following ways: (1) "deletion_protection" only protects the database from deletions in Terraform. whereas setting “enableDropProtection” to true protects the database from deletions in all interfaces. (2) Setting "enableDropProtection" to true also prevents the deletion of the parent instance containing the database. "deletion_protection" attribute does not provide protection against the deletion of the parent instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#enable_drop_protection SpannerDatabase#enable_drop_protection}
-        :param encryption_config: encryption_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#encryption_config SpannerDatabase#encryption_config}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#id SpannerDatabase#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#project SpannerDatabase#project}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#timeouts SpannerDatabase#timeouts}
-        :param version_retention_period: The retention period for the database. The retention period must be between 1 hour and 7 days, and can be specified in days, hours, minutes, or seconds. For example, the values 1d, 24h, 1440m, and 86400s are equivalent. Default value is 1h. If this property is used, you must avoid adding new DDL statements to 'ddl' that update the database's version_retention_period. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#version_retention_period SpannerDatabase#version_retention_period}
+        :param instance: The instance to create the database on. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#instance SpannerDatabase#instance}
+        :param name: A unique identifier for the database, which cannot be changed after the instance is created. Values are of the form '[a-z][-_a-z0-9]*[a-z0-9]'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#name SpannerDatabase#name}
+        :param database_dialect: The dialect of the Cloud Spanner Database. If it is not provided, "GOOGLE_STANDARD_SQL" will be used. Possible values: ["GOOGLE_STANDARD_SQL", "POSTGRESQL"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#database_dialect SpannerDatabase#database_dialect}
+        :param ddl: An optional list of DDL statements to run inside the database. Statements can create tables, indexes, etc. During creation these statements execute atomically with the creation of the database and if there is an error in any statement, the database is not created. Terraform does not perform drift detection on this field and assumes that the values recorded in state are accurate. Limited updates to this field are supported, and newly appended DDL statements can be executed in an update. However, modifications to prior statements will create a plan that marks the resource for recreation. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#ddl SpannerDatabase#ddl}
+        :param default_time_zone: The default time zone for the database. The default time zone must be a valid name from the tz database. Default value is "America/Los_angeles". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#default_time_zone SpannerDatabase#default_time_zone}
+        :param deletion_protection: Whether Terraform will be prevented from destroying the database. Defaults to true. When a'terraform destroy' or 'terraform apply' would delete the database, the command will fail if this field is not set to false in Terraform state. When the field is set to true or unset in Terraform state, a 'terraform apply' or 'terraform destroy' that would delete the database will fail. When the field is set to false, deleting the database is allowed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#deletion_protection SpannerDatabase#deletion_protection}
+        :param enable_drop_protection: Whether drop protection is enabled for this database. Defaults to false. Drop protection is different from the "deletion_protection" attribute in the following ways: (1) "deletion_protection" only protects the database from deletions in Terraform. whereas setting “enableDropProtection” to true protects the database from deletions in all interfaces. (2) Setting "enableDropProtection" to true also prevents the deletion of the parent instance containing the database. "deletion_protection" attribute does not provide protection against the deletion of the parent instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#enable_drop_protection SpannerDatabase#enable_drop_protection}
+        :param encryption_config: encryption_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#encryption_config SpannerDatabase#encryption_config}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#id SpannerDatabase#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#project SpannerDatabase#project}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#timeouts SpannerDatabase#timeouts}
+        :param version_retention_period: The retention period for the database. The retention period must be between 1 hour and 7 days, and can be specified in days, hours, minutes, or seconds. For example, the values 1d, 24h, 1440m, and 86400s are equivalent. Default value is 1h. If this property is used, you must avoid adding new DDL statements to 'ddl' that update the database's version_retention_period. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#version_retention_period SpannerDatabase#version_retention_period}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -510,6 +537,7 @@ class SpannerDatabaseConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument name", value=name, expected_type=type_hints["name"])
             check_type(argname="argument database_dialect", value=database_dialect, expected_type=type_hints["database_dialect"])
             check_type(argname="argument ddl", value=ddl, expected_type=type_hints["ddl"])
+            check_type(argname="argument default_time_zone", value=default_time_zone, expected_type=type_hints["default_time_zone"])
             check_type(argname="argument deletion_protection", value=deletion_protection, expected_type=type_hints["deletion_protection"])
             check_type(argname="argument enable_drop_protection", value=enable_drop_protection, expected_type=type_hints["enable_drop_protection"])
             check_type(argname="argument encryption_config", value=encryption_config, expected_type=type_hints["encryption_config"])
@@ -539,6 +567,8 @@ class SpannerDatabaseConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["database_dialect"] = database_dialect
         if ddl is not None:
             self._values["ddl"] = ddl
+        if default_time_zone is not None:
+            self._values["default_time_zone"] = default_time_zone
         if deletion_protection is not None:
             self._values["deletion_protection"] = deletion_protection
         if enable_drop_protection is not None:
@@ -622,7 +652,7 @@ class SpannerDatabaseConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def instance(self) -> builtins.str:
         '''The instance to create the database on.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#instance SpannerDatabase#instance}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#instance SpannerDatabase#instance}
         '''
         result = self._values.get("instance")
         assert result is not None, "Required property 'instance' is missing"
@@ -634,7 +664,7 @@ class SpannerDatabaseConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Values are of the form '[a-z][-_a-z0-9]*[a-z0-9]'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#name SpannerDatabase#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#name SpannerDatabase#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -644,7 +674,7 @@ class SpannerDatabaseConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def database_dialect(self) -> typing.Optional[builtins.str]:
         '''The dialect of the Cloud Spanner Database. If it is not provided, "GOOGLE_STANDARD_SQL" will be used. Possible values: ["GOOGLE_STANDARD_SQL", "POSTGRESQL"].
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#database_dialect SpannerDatabase#database_dialect}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#database_dialect SpannerDatabase#database_dialect}
         '''
         result = self._values.get("database_dialect")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -661,10 +691,22 @@ class SpannerDatabaseConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         newly appended DDL statements can be executed in an update. However, modifications
         to prior statements will create a plan that marks the resource for recreation.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#ddl SpannerDatabase#ddl}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#ddl SpannerDatabase#ddl}
         '''
         result = self._values.get("ddl")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
+
+    @builtins.property
+    def default_time_zone(self) -> typing.Optional[builtins.str]:
+        '''The default time zone for the database.
+
+        The default time zone must be a valid name
+        from the tz database. Default value is "America/Los_angeles".
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#default_time_zone SpannerDatabase#default_time_zone}
+        '''
+        result = self._values.get("default_time_zone")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def deletion_protection(
@@ -679,7 +721,7 @@ class SpannerDatabaseConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         or 'terraform destroy' that would delete the database will fail.
         When the field is set to false, deleting the database is allowed.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#deletion_protection SpannerDatabase#deletion_protection}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#deletion_protection SpannerDatabase#deletion_protection}
         '''
         result = self._values.get("deletion_protection")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -698,7 +740,7 @@ class SpannerDatabaseConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         (2) Setting "enableDropProtection" to true also prevents the deletion of the parent instance containing the database.
         "deletion_protection" attribute does not provide protection against the deletion of the parent instance.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#enable_drop_protection SpannerDatabase#enable_drop_protection}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#enable_drop_protection SpannerDatabase#enable_drop_protection}
         '''
         result = self._values.get("enable_drop_protection")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -707,14 +749,14 @@ class SpannerDatabaseConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def encryption_config(self) -> typing.Optional["SpannerDatabaseEncryptionConfig"]:
         '''encryption_config block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#encryption_config SpannerDatabase#encryption_config}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#encryption_config SpannerDatabase#encryption_config}
         '''
         result = self._values.get("encryption_config")
         return typing.cast(typing.Optional["SpannerDatabaseEncryptionConfig"], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#id SpannerDatabase#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#id SpannerDatabase#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -724,7 +766,7 @@ class SpannerDatabaseConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def project(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#project SpannerDatabase#project}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#project SpannerDatabase#project}.'''
         result = self._values.get("project")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -732,7 +774,7 @@ class SpannerDatabaseConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["SpannerDatabaseTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#timeouts SpannerDatabase#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#timeouts SpannerDatabase#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["SpannerDatabaseTimeouts"], result)
@@ -747,7 +789,7 @@ class SpannerDatabaseConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         If this property is used, you must avoid adding new DDL statements to 'ddl' that
         update the database's version_retention_period.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#version_retention_period SpannerDatabase#version_retention_period}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#version_retention_period SpannerDatabase#version_retention_period}
         '''
         result = self._values.get("version_retention_period")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -777,8 +819,8 @@ class SpannerDatabaseEncryptionConfig:
         kms_key_names: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param kms_key_name: Fully qualified name of the KMS key to use to encrypt this database. This key must exist in the same location as the Spanner Database. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#kms_key_name SpannerDatabase#kms_key_name}
-        :param kms_key_names: Fully qualified name of the KMS keys to use to encrypt this database. The keys must exist in the same locations as the Spanner Database. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#kms_key_names SpannerDatabase#kms_key_names}
+        :param kms_key_name: Fully qualified name of the KMS key to use to encrypt this database. This key must exist in the same location as the Spanner Database. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#kms_key_name SpannerDatabase#kms_key_name}
+        :param kms_key_names: Fully qualified name of the KMS keys to use to encrypt this database. The keys must exist in the same locations as the Spanner Database. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#kms_key_names SpannerDatabase#kms_key_names}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__b02a3db68af0d6314733a36aaf311b8bf30b54e3a374f50cd8f8e04e5c03e2b4)
@@ -797,7 +839,7 @@ class SpannerDatabaseEncryptionConfig:
         This key must exist
         in the same location as the Spanner Database.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#kms_key_name SpannerDatabase#kms_key_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#kms_key_name SpannerDatabase#kms_key_name}
         '''
         result = self._values.get("kms_key_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -809,7 +851,7 @@ class SpannerDatabaseEncryptionConfig:
         The keys must exist
         in the same locations as the Spanner Database.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#kms_key_names SpannerDatabase#kms_key_names}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#kms_key_names SpannerDatabase#kms_key_names}
         '''
         result = self._values.get("kms_key_names")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -918,9 +960,9 @@ class SpannerDatabaseTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#create SpannerDatabase#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#delete SpannerDatabase#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#update SpannerDatabase#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#create SpannerDatabase#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#delete SpannerDatabase#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#update SpannerDatabase#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__4b479327ea65a3cb530bfef310ff53f3e880695c11d074c63f094bd6fbf6b043)
@@ -937,19 +979,19 @@ class SpannerDatabaseTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#create SpannerDatabase#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#create SpannerDatabase#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#delete SpannerDatabase#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#delete SpannerDatabase#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/spanner_database#update SpannerDatabase#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/spanner_database#update SpannerDatabase#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1085,6 +1127,7 @@ def _typecheckingstub__7b6aeb5da33457991ffe16bf7f8e1074992333893ea8ae69c4c1e3b97
     name: builtins.str,
     database_dialect: typing.Optional[builtins.str] = None,
     ddl: typing.Optional[typing.Sequence[builtins.str]] = None,
+    default_time_zone: typing.Optional[builtins.str] = None,
     deletion_protection: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     enable_drop_protection: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     encryption_config: typing.Optional[typing.Union[SpannerDatabaseEncryptionConfig, typing.Dict[builtins.str, typing.Any]]] = None,
@@ -1120,6 +1163,12 @@ def _typecheckingstub__17da1d7b1a1c4193c3257fe9aae9a981befe71a69ddfd736dc249c7a1
 
 def _typecheckingstub__1a9337db51c1a07168d5a9495de3e1b6d5bf10b1bab4bd5586990f0fa1002e87(
     value: typing.List[builtins.str],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d5998a72e642d16314876e3431750ce49d8bee2bc92256a5f8bcb94d4b8da047(
+    value: builtins.str,
 ) -> None:
     """Type checking stubs"""
     pass
@@ -1179,6 +1228,7 @@ def _typecheckingstub__4c43e0ff0a90aae42dfaf2f4fb6ee9952ca81beb04fd0ea7dff7851ab
     name: builtins.str,
     database_dialect: typing.Optional[builtins.str] = None,
     ddl: typing.Optional[typing.Sequence[builtins.str]] = None,
+    default_time_zone: typing.Optional[builtins.str] = None,
     deletion_protection: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     enable_drop_protection: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     encryption_config: typing.Optional[typing.Union[SpannerDatabaseEncryptionConfig, typing.Dict[builtins.str, typing.Any]]] = None,

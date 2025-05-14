@@ -4,9 +4,9 @@ import re
 from enum import Enum
 from typing import TYPE_CHECKING, Any, cast
 
-import tortoise
 from tortoise.backends.base.schema_generator import BaseSchemaGenerator
 
+from aerich._compat import tortoise_version_less_than
 from aerich.utils import is_default_function
 
 if TYPE_CHECKING:
@@ -25,6 +25,7 @@ class BaseDDL:
     )
     _ADD_INDEX_TEMPLATE = 'ALTER TABLE "{table_name}" ADD {index_type}{unique}INDEX "{index_name}" ({column_names}){extra}'
     _DROP_INDEX_TEMPLATE = 'ALTER TABLE "{table_name}" DROP INDEX IF EXISTS "{index_name}"'
+    _DROP_CONSTRAINT_TEMPLATE = 'ALTER TABLE "{table_name}" DROP CONSTRAINT IF EXISTS "{name}"'
     _ADD_FK_TEMPLATE = 'ALTER TABLE "{table_name}" ADD CONSTRAINT "{fk_name}" FOREIGN KEY ("{db_column}") REFERENCES "{table}" ("{field}") ON DELETE {on_delete}'
     _DROP_FK_TEMPLATE = 'ALTER TABLE "{table_name}" DROP FOREIGN KEY "{fk_name}"'
     _M2M_TABLE_TEMPLATE = (
@@ -49,7 +50,7 @@ class BaseDDL:
 
     def create_table(self, model: type[Model]) -> str:
         schema = self.schema_generator._get_table_sql(model, True)["table_creation_string"]
-        if tortoise.__version__ <= "0.23.0":
+        if tortoise_version_less_than("0.23.1"):
             # Remove extra space
             schema = re.sub(r'(["()A-Za-z])  (["()A-Za-z])', r"\1 \2", schema)
         return schema.rstrip(";")
@@ -152,7 +153,7 @@ class BaseDDL:
             is_primary_key=is_pk,
             default=default,
         )
-        if tortoise.__version__ <= "0.23.0":
+        if tortoise_version_less_than("0.23.1"):
             column = column.replace("  ", " ")
         return template.format(table_name=db_table, column=column)
 
@@ -222,6 +223,12 @@ class BaseDDL:
 
     def drop_index_by_name(self, model: type[Model], index_name: str) -> str:
         return self.drop_index(model, [], name=index_name)
+
+    def drop_unique_constraint(self, model: type[Model], name: str) -> str:
+        return self._DROP_CONSTRAINT_TEMPLATE.format(
+            table_name=model._meta.db_table,
+            name=name,
+        )
 
     def _generate_fk_name(
         self, db_table: str, field_describe: dict, reference_table_describe: dict

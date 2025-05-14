@@ -1,28 +1,19 @@
 Metadata-Version: 2.4
 Name: types-gdb
-Version: 15.0.0.20250321
+Version: 15.0.0.20250514
 Summary: Typing stubs for gdb
-Home-page: https://github.com/python/typeshed
-License: Apache-2.0
+License-Expression: Apache-2.0
+Project-URL: Homepage, https://github.com/python/typeshed
 Project-URL: GitHub, https://github.com/python/typeshed
 Project-URL: Changes, https://github.com/typeshed-internal/stub_uploader/blob/main/data/changelogs/gdb.md
 Project-URL: Issue tracker, https://github.com/python/typeshed/issues
 Project-URL: Chat, https://gitter.im/python/typing
-Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Programming Language :: Python :: 3
 Classifier: Typing :: Stubs Only
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: home-page
-Dynamic: license
 Dynamic: license-file
-Dynamic: project-url
-Dynamic: requires-python
-Dynamic: summary
 
 ## Typing stubs for gdb
 
@@ -48,7 +39,7 @@ directory.
 
 This package was tested with
 mypy 1.15.0,
-pyright 1.1.397,
+pyright 1.1.400,
 and pytype 2024.10.11.
 It was generated from typeshed commit
-[`b4e49dd52102348e1bdbd6a83cc1817ec4f8a854`](https://github.com/python/typeshed/commit/b4e49dd52102348e1bdbd6a83cc1817ec4f8a854).
+[`9589e369f8afdd2980e45953e2ca9f2055d74c10`](https://github.com/python/typeshed/commit/9589e369f8afdd2980e45953e2ca9f2055d74c10).

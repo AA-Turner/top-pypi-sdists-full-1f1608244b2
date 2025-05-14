@@ -700,6 +700,11 @@ class ModalClientStub(object):
                 request_serializer=modal__proto_dot_api__pb2.VolumeCopyFilesRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
+        self.VolumeCopyFiles2 = channel.unary_unary(
+                '/modal.client.ModalClient/VolumeCopyFiles2',
+                request_serializer=modal__proto_dot_api__pb2.VolumeCopyFiles2Request.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
         self.VolumeDelete = channel.unary_unary(
                 '/modal.client.ModalClient/VolumeDelete',
                 request_serializer=modal__proto_dot_api__pb2.VolumeDeleteRequest.SerializeToString,
@@ -1621,6 +1626,12 @@ class ModalClientServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def VolumeCopyFiles2(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def VolumeDelete(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -2386,6 +2397,11 @@ def add_ModalClientServicer_to_server(servicer, server):
             'VolumeCopyFiles': grpc.unary_unary_rpc_method_handler(
                     servicer.VolumeCopyFiles,
                     request_deserializer=modal__proto_dot_api__pb2.VolumeCopyFilesRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'VolumeCopyFiles2': grpc.unary_unary_rpc_method_handler(
+                    servicer.VolumeCopyFiles2,
+                    request_deserializer=modal__proto_dot_api__pb2.VolumeCopyFiles2Request.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'VolumeDelete': grpc.unary_unary_rpc_method_handler(
@@ -4788,6 +4804,23 @@ class ModalClient(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/modal.client.ModalClient/VolumeCopyFiles',
             modal__proto_dot_api__pb2.VolumeCopyFilesRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def VolumeCopyFiles2(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/modal.client.ModalClient/VolumeCopyFiles2',
+            modal__proto_dot_api__pb2.VolumeCopyFiles2Request.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

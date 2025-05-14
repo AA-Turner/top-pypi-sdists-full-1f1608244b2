@@ -195,6 +195,18 @@ ODOO_MSGS = {
         "deprecated-name-get",
         CHECK_DESCRIPTION,
     ),
+    "E8147": (
+        'Use string method name `"%s"` to preserve inheritability. '
+        "More info at https://github.com/OCA/odoo-pre-commit-hooks/issues/126",
+        "inheritable-method-string",
+        CHECK_DESCRIPTION,
+    ),
+    "E8148": (
+        "Use `%s=lambda self: self.%s()` to preserve inheritability. "
+        "More info at https://github.com/OCA/odoo-pre-commit-hooks/issues/126",
+        "inheritable-method-lambda",
+        CHECK_DESCRIPTION,
+    ),
     "F8101": ('File "%s": "%s" not found.', "resource-not-exist", CHECK_DESCRIPTION),
     "R8101": (
         "`odoo.exceptions.Warning` is a deprecated alias to `odoo.exceptions.UserError` "
@@ -810,6 +822,8 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
         "bad-builtin-groupby",
         "context-overridden",
         "external-request-timeout",
+        "inheritable-method-lambda",
+        "inheritable-method-string",
         "invalid-commit",
         "method-compute",
         "method-inverse",
@@ -895,6 +909,34 @@ class OdooAddons(OdooBaseChecker, BaseChecker):
                         )
                         if method_name and self.class_odoo_models:
                             self.odoo_computes.add(method_name)
+                    if (
+                        self.linter.is_message_enabled("inheritable-method-string", node.lineno)
+                        and argument.arg in ["compute", "search", "inverse"]
+                        and isinstance(argument.value, nodes.Name)
+                    ):
+                        # Check if the value is a method of the class
+                        infered = utils.safe_infer(argument.value)
+                        if isinstance(infered, nodes.FunctionDef) and infered.is_method():
+                            self.add_message(
+                                "inheritable-method-string", node=argument.value, args=(argument.value.name,)
+                            )
+                    if (
+                        self.linter.is_message_enabled("inheritable-method-lambda", node.lineno)
+                        and argument.arg in ["default", "domain"]
+                        and isinstance(argument.value, nodes.Name)
+                    ):
+                        # Check if the value is a method of the class
+                        infered = utils.safe_infer(argument.value)
+                        if isinstance(infered, nodes.FunctionDef) and infered.is_method():
+                            self.add_message(
+                                "inheritable-method-lambda",
+                                node=argument.value,
+                                args=(
+                                    argument.arg,
+                                    argument.value.name,
+                                ),
+                            )
+
                 if (
                     isinstance(argument_aux, nodes.Call)
                     and self.get_func_name(argument_aux.func) in misc.TRANSLATION_METHODS

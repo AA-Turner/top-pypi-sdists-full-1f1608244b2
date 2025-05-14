@@ -1,8 +1,7 @@
 import os
 import re
-import ctypes
-import ctypes.util
 import msgpack
+import feedparser
 import tgcrypto
 import boltons
 import boltons.timeutils

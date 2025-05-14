@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-archive",
-    "version": "10.3.0",
+    "version": "10.3.1",
     "description": "Prebuilt archive Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-archive.git",
@@ -29,17 +29,17 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_archive._jsii": [
-            "provider-archive@10.3.0.jsii.tgz"
+            "provider-archive@10.3.1.jsii.tgz"
         ],
         "cdktf_cdktf_provider_archive": [
             "py.typed"
         ]
     },
-    "python_requires": "~=3.8",
+    "python_requires": "~=3.9",
     "install_requires": [
         "cdktf>=0.20.0, <0.21.0",
         "constructs>=10.3.0, <11.0.0",
-        "jsii>=1.105.0, <2.0.0",
+        "jsii>=1.111.0, <2.0.0",
         "publication>=0.0.3",
         "typeguard>=2.13.3,<4.3.0"
     ],
@@ -48,7 +48,6 @@ kwargs = json.loads(
         "Operating System :: OS Independent",
         "Programming Language :: JavaScript",
         "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",

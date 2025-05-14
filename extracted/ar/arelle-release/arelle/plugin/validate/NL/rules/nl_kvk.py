@@ -3,20 +3,16 @@ See COPYRIGHT.md for copyright information.
 """
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import date
 
 from arelle.ModelInstanceObject import ModelInlineFact
+from arelle.ValidateDuplicateFacts import getDuplicateFactSets
 from arelle.XmlValidateConst import VALID
-from dateutil import relativedelta
 from collections.abc import Iterable
-from typing import Any, cast, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 
-from regex import regex
-
-from arelle import XmlUtil, XbrlConst
-from arelle.ModelObject import ModelObject
+from arelle import XmlUtil
 from arelle.ValidateXbrl import ValidateXbrl
-from arelle.XmlValidate import INVALID
 from arelle.typing import TypeGetText
 from arelle.utils.PluginHooks import ValidationHook
 from arelle.utils.validate.Decorator import validation
@@ -60,7 +56,7 @@ def rule_nl_kvk_3_1_1_1(
     for entityId in entityIdentifierValues:
         if not XBRLI_IDENTIFIER_PATTERN.match(entityId[1]):
             yield Validation.error(
-                codes='NL.NL-KVK-3.1.1.1',
+                codes='NL.NL-KVK-RTS_Annex_IV_Par_2_G3-1-1_1.invalidIdentifierFormat',
                 msg=_('xbrli:identifier content to match KVK number format that must consist of 8 consecutive digits.'
                       'Additionally the first two digits must not be "00".'),
                 modelObject = val.modelXbrl
@@ -87,7 +83,7 @@ def rule_nl_kvk_3_1_1_2(
     for entityId in entityIdentifierValues:
         if XBRLI_IDENTIFIER_SCHEMA != entityId[0]:
             yield Validation.error(
-                codes='NL.NL-KVK-3.1.1.2',
+                codes='NL.NL-KVK-RTS_Annex_IV_Par_2_G3-1-1_2.invalidIdentifier',
                 msg=_('The scheme attribute of the xbrli:identifier does not match the required content.'
                       'This should be "http://www.kvk.nl/kvk-id".'),
                 modelObject = val.modelXbrl
@@ -209,7 +205,7 @@ def rule_nl_kvk_3_1_4_1 (
     entityIdentifierValues = pluginData.entityIdentifiersInDocument(val.modelXbrl)
     if len(entityIdentifierValues) >1:
         yield Validation.error(
-            codes='NL.NL-KVK-3.1.4.1',
+            codes='NL.NL-KVK-RTS_Annex_IV_Par_1_G3-1-4_1.multipleIdentifiers',
             msg=_('All entity identifiers and schemes must have identical content.'),
             modelObject = entityIdentifierValues
         )
@@ -236,7 +232,7 @@ def rule_nl_kvk_3_1_4_2 (
         regFact = next(iter(registrationNumberFacts))
         if regFact.xValid >= VALID and regFact.xValue != regFact.context.entityIdentifier[1]:
             yield Validation.error(
-                codes='NL-KVK.3.1.4.2',
+                codes='NL.NL-KVK-RTS_Annex_IV_Par_1_G3-1-4_2.nonIdenticalIdentifier',
                 msg=_("xbrli:identifier value must be identical to bw2-titel9:ChamberOfCommerceRegistrationNumber fact value.").format(
                     regFact.xValue,
                     regFact.context.entityIdentifier[1]
@@ -297,6 +293,66 @@ def rule_nl_kvk_3_2_3_1 (
             codes='NL.NL-KVK.3.2.3.1.incorrectTransformationRuleApplied',
             msg=_('Transformation Registry 4 or newer are allowed. Everything else is prohibited.'),
             modelObject = transformRegistryErrors
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_3_2_4_1 (
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.2.4.1: Inconsistent numeric facts are prohibited.
+    """
+    problematicFacts= []
+    numericFacts = [fact for fact in val.modelXbrl.facts if fact is not None and fact.isNumeric]
+    if len(numericFacts) > 0:
+        for duplicateFactSet in getDuplicateFactSets(numericFacts, False):
+            if duplicateFactSet.areAnyInconsistent:
+                for fact in duplicateFactSet:
+                    problematicFacts.append(fact)
+    if len(problematicFacts) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.3.2.4.1.inconsistentDuplicateNumericFactInInlineXbrlDocument',
+            msg=_('Inconsistent numeric facts are prohibited.'),
+            modelObject = problematicFacts
+            )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_3_2_4_2 (
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.2.4.2: Inconsistent non-numeric facts are prohibited.
+    """
+    problematicFacts = []
+    nonNumericFacts = [fact for fact in val.modelXbrl.facts if fact is not None and not fact.isNumeric]
+    if len(nonNumericFacts) > 0:
+        for duplicateFactSet in getDuplicateFactSets(nonNumericFacts, False):
+            if duplicateFactSet.areAnyInconsistent:
+                for fact in duplicateFactSet:
+                    problematicFacts.append(fact)
+    if len(problematicFacts) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.3.2.4.2.inconsistentDuplicateNonnumericFactInInlineXbrlDocument',
+            msg=_('Inconsistent non-numeric facts are prohibited.'),
+            modelObject = problematicFacts
         )
 
 

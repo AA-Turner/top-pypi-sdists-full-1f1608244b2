@@ -726,9 +726,10 @@ class LearnerND(BaseLearner):
 
         if self.nth_neighbors == 0:
             # compute the loss on the scaled simplex
-            return float(
-                self.loss_per_simplex(vertices, values, self._output_multiplier)
-            )
+            loss = self.loss_per_simplex(vertices, values, self._output_multiplier)
+            if isinstance(loss, np.ndarray):
+                return float(loss.item())
+            return float(loss)
 
         # We do need the neighbors
         neighbors = self.tri.get_opposing_vertices(simplex)
@@ -1098,8 +1099,7 @@ class LearnerND(BaseLearner):
         if which == "surface":
             if self.ndim != 3 or self.vdim != 1:
                 raise Exception(
-                    "Isosurface plotting is only supported"
-                    " for a 3D input and 1D output"
+                    "Isosurface plotting is only supported for a 3D input and 1D output"
                 )
             get_surface = True
             get_line = False

@@ -1,7 +1,7 @@
 r'''
 # `google_dialogflow_cx_page`
 
-Refer to the Terraform Registry for docs: [`google_dialogflow_cx_page`](https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page).
+Refer to the Terraform Registry for docs: [`google_dialogflow_cx_page`](https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DialogflowCxPage(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPage",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page google_dialogflow_cx_page}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page google_dialogflow_cx_page}.'''
 
     def __init__(
         self,
@@ -57,6 +57,7 @@ class DialogflowCxPage(
         event_handlers: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DialogflowCxPageEventHandlers", typing.Dict[builtins.str, typing.Any]]]]] = None,
         form: typing.Optional[typing.Union["DialogflowCxPageForm", typing.Dict[builtins.str, typing.Any]]] = None,
         id: typing.Optional[builtins.str] = None,
+        knowledge_connector_settings: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettings", typing.Dict[builtins.str, typing.Any]]] = None,
         language_code: typing.Optional[builtins.str] = None,
         parent: typing.Optional[builtins.str] = None,
         timeouts: typing.Optional[typing.Union["DialogflowCxPageTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
@@ -70,21 +71,22 @@ class DialogflowCxPage(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page google_dialogflow_cx_page} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page google_dialogflow_cx_page} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param display_name: The human-readable name of the page, unique within the agent. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#display_name DialogflowCxPage#display_name}
-        :param advanced_settings: advanced_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#advanced_settings DialogflowCxPage#advanced_settings}
-        :param entry_fulfillment: entry_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#entry_fulfillment DialogflowCxPage#entry_fulfillment}
-        :param event_handlers: event_handlers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#event_handlers DialogflowCxPage#event_handlers}
-        :param form: form block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#form DialogflowCxPage#form}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#id DialogflowCxPage#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param language_code: The language of the following fields in page:. Page.entry_fulfillment.messages Page.entry_fulfillment.conditional_cases Page.event_handlers.trigger_fulfillment.messages Page.event_handlers.trigger_fulfillment.conditional_cases Page.form.parameters.fill_behavior.initial_prompt_fulfillment.messages Page.form.parameters.fill_behavior.initial_prompt_fulfillment.conditional_cases Page.form.parameters.fill_behavior.reprompt_event_handlers.messages Page.form.parameters.fill_behavior.reprompt_event_handlers.conditional_cases Page.transition_routes.trigger_fulfillment.messages Page.transition_routes.trigger_fulfillment.conditional_cases If not specified, the agent's default language is used. Many languages are supported. Note: languages must be enabled in the agent before they can be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#language_code DialogflowCxPage#language_code}
-        :param parent: The flow to create a page for. Format: projects//locations//agents//flows/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parent DialogflowCxPage#parent}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#timeouts DialogflowCxPage#timeouts}
-        :param transition_route_groups: Ordered list of TransitionRouteGroups associated with the page. Transition route groups must be unique within a page. If multiple transition routes within a page scope refer to the same intent, then the precedence order is: page's transition route -> page's transition route group -> flow's transition routes. If multiple transition route groups within a page contain the same intent, then the first group in the ordered list takes precedence. Format:projects//locations//agents//flows//transitionRouteGroups/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#transition_route_groups DialogflowCxPage#transition_route_groups}
-        :param transition_routes: transition_routes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#transition_routes DialogflowCxPage#transition_routes}
+        :param display_name: The human-readable name of the page, unique within the agent. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#display_name DialogflowCxPage#display_name}
+        :param advanced_settings: advanced_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#advanced_settings DialogflowCxPage#advanced_settings}
+        :param entry_fulfillment: entry_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#entry_fulfillment DialogflowCxPage#entry_fulfillment}
+        :param event_handlers: event_handlers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#event_handlers DialogflowCxPage#event_handlers}
+        :param form: form block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#form DialogflowCxPage#form}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#id DialogflowCxPage#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param knowledge_connector_settings: knowledge_connector_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#knowledge_connector_settings DialogflowCxPage#knowledge_connector_settings}
+        :param language_code: The language of the following fields in page:. Page.entry_fulfillment.messages Page.entry_fulfillment.conditional_cases Page.event_handlers.trigger_fulfillment.messages Page.event_handlers.trigger_fulfillment.conditional_cases Page.form.parameters.fill_behavior.initial_prompt_fulfillment.messages Page.form.parameters.fill_behavior.initial_prompt_fulfillment.conditional_cases Page.form.parameters.fill_behavior.reprompt_event_handlers.messages Page.form.parameters.fill_behavior.reprompt_event_handlers.conditional_cases Page.transition_routes.trigger_fulfillment.messages Page.transition_routes.trigger_fulfillment.conditional_cases If not specified, the agent's default language is used. Many languages are supported. Note: languages must be enabled in the agent before they can be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#language_code DialogflowCxPage#language_code}
+        :param parent: The flow to create a page for. Format: projects//locations//agents//flows/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parent DialogflowCxPage#parent}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#timeouts DialogflowCxPage#timeouts}
+        :param transition_route_groups: Ordered list of TransitionRouteGroups associated with the page. Transition route groups must be unique within a page. If multiple transition routes within a page scope refer to the same intent, then the precedence order is: page's transition route -> page's transition route group -> flow's transition routes. If multiple transition route groups within a page contain the same intent, then the first group in the ordered list takes precedence. Format:projects//locations//agents//flows//transitionRouteGroups/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#transition_route_groups DialogflowCxPage#transition_route_groups}
+        :param transition_routes: transition_routes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#transition_routes DialogflowCxPage#transition_routes}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -104,6 +106,7 @@ class DialogflowCxPage(
             event_handlers=event_handlers,
             form=form,
             id=id,
+            knowledge_connector_settings=knowledge_connector_settings,
             language_code=language_code,
             parent=parent,
             timeouts=timeouts,
@@ -133,7 +136,7 @@ class DialogflowCxPage(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DialogflowCxPage to import.
-        :param import_from_id: The id of the existing DialogflowCxPage that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DialogflowCxPage that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DialogflowCxPage to import is found.
         '''
         if __debug__:
@@ -151,7 +154,7 @@ class DialogflowCxPage(
         dtmf_settings: typing.Optional[typing.Union["DialogflowCxPageAdvancedSettingsDtmfSettings", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param dtmf_settings: dtmf_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
+        :param dtmf_settings: dtmf_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
         '''
         value = DialogflowCxPageAdvancedSettings(dtmf_settings=dtmf_settings)
 
@@ -169,12 +172,12 @@ class DialogflowCxPage(
         webhook: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
-        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
-        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
-        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
-        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
-        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         value = DialogflowCxPageEntryFulfillment(
             conditional_cases=conditional_cases,
@@ -207,11 +210,38 @@ class DialogflowCxPage(
         parameters: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DialogflowCxPageFormParameters", typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
-        :param parameters: parameters block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parameters DialogflowCxPage#parameters}
+        :param parameters: parameters block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameters DialogflowCxPage#parameters}
         '''
         value = DialogflowCxPageForm(parameters=parameters)
 
         return typing.cast(None, jsii.invoke(self, "putForm", [value]))
+
+    @jsii.member(jsii_name="putKnowledgeConnectorSettings")
+    def put_knowledge_connector_settings(
+        self,
+        *,
+        data_store_connections: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        target_flow: typing.Optional[builtins.str] = None,
+        target_page: typing.Optional[builtins.str] = None,
+        trigger_fulfillment: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment", typing.Dict[builtins.str, typing.Any]]] = None,
+    ) -> None:
+        '''
+        :param data_store_connections: data_store_connections block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#data_store_connections DialogflowCxPage#data_store_connections}
+        :param enabled: Whether Knowledge Connector is enabled or not. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
+        :param target_flow: The target flow to transition to. Format: projects//locations//agents//flows/. This field is part of a union field 'target': Only one of 'targetPage' or 'targetFlow' may be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
+        :param target_page: The target page to transition to. Format: projects//locations//agents//flows//pages/. The page must be in the same host flow (the flow that owns this 'KnowledgeConnectorSettings'). This field is part of a union field 'target': Only one of 'targetPage' or 'targetFlow' may be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
+        :param trigger_fulfillment: trigger_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
+        '''
+        value = DialogflowCxPageKnowledgeConnectorSettings(
+            data_store_connections=data_store_connections,
+            enabled=enabled,
+            target_flow=target_flow,
+            target_page=target_page,
+            trigger_fulfillment=trigger_fulfillment,
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putKnowledgeConnectorSettings", [value]))
 
     @jsii.member(jsii_name="putTimeouts")
     def put_timeouts(
@@ -222,9 +252,9 @@ class DialogflowCxPage(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#create DialogflowCxPage#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#delete DialogflowCxPage#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#update DialogflowCxPage#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#create DialogflowCxPage#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#delete DialogflowCxPage#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#update DialogflowCxPage#update}.
         '''
         value = DialogflowCxPageTimeouts(create=create, delete=delete, update=update)
 
@@ -262,6 +292,10 @@ class DialogflowCxPage(
     @jsii.member(jsii_name="resetId")
     def reset_id(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetId", []))
+
+    @jsii.member(jsii_name="resetKnowledgeConnectorSettings")
+    def reset_knowledge_connector_settings(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetKnowledgeConnectorSettings", []))
 
     @jsii.member(jsii_name="resetLanguageCode")
     def reset_language_code(self) -> None:
@@ -317,6 +351,13 @@ class DialogflowCxPage(
         return typing.cast("DialogflowCxPageFormOutputReference", jsii.get(self, "form"))
 
     @builtins.property
+    @jsii.member(jsii_name="knowledgeConnectorSettings")
+    def knowledge_connector_settings(
+        self,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsOutputReference":
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsOutputReference", jsii.get(self, "knowledgeConnectorSettings"))
+
+    @builtins.property
     @jsii.member(jsii_name="name")
     def name(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "name"))
@@ -366,6 +407,13 @@ class DialogflowCxPage(
     @jsii.member(jsii_name="idInput")
     def id_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "idInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="knowledgeConnectorSettingsInput")
+    def knowledge_connector_settings_input(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettings"]:
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettings"], jsii.get(self, "knowledgeConnectorSettingsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="languageCodeInput")
@@ -471,7 +519,7 @@ class DialogflowCxPageAdvancedSettings:
         dtmf_settings: typing.Optional[typing.Union["DialogflowCxPageAdvancedSettingsDtmfSettings", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param dtmf_settings: dtmf_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
+        :param dtmf_settings: dtmf_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
         '''
         if isinstance(dtmf_settings, dict):
             dtmf_settings = DialogflowCxPageAdvancedSettingsDtmfSettings(**dtmf_settings)
@@ -488,7 +536,7 @@ class DialogflowCxPageAdvancedSettings:
     ) -> typing.Optional["DialogflowCxPageAdvancedSettingsDtmfSettings"]:
         '''dtmf_settings block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
         '''
         result = self._values.get("dtmf_settings")
         return typing.cast(typing.Optional["DialogflowCxPageAdvancedSettingsDtmfSettings"], result)
@@ -523,9 +571,9 @@ class DialogflowCxPageAdvancedSettingsDtmfSettings:
         max_digits: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param enabled: If true, incoming audio is processed for DTMF (dual tone multi frequency) events. For example, if the caller presses a button on their telephone keypad and DTMF processing is enabled, Dialogflow will detect the event (e.g. a "3" was pressed) in the incoming audio and pass the event to the bot to drive business logic (e.g. when 3 is pressed, return the account balance). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
-        :param finish_digit: The digit that terminates a DTMF digit sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
-        :param max_digits: Max length of DTMF digits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
+        :param enabled: If true, incoming audio is processed for DTMF (dual tone multi frequency) events. For example, if the caller presses a button on their telephone keypad and DTMF processing is enabled, Dialogflow will detect the event (e.g. a "3" was pressed) in the incoming audio and pass the event to the bot to drive business logic (e.g. when 3 is pressed, return the account balance). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
+        :param finish_digit: The digit that terminates a DTMF digit sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
+        :param max_digits: Max length of DTMF digits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__2dc27bcbe8f8e53a3bc08f9bd3fc80ecca9638c2dd1341048271efdd57d64128)
@@ -548,7 +596,7 @@ class DialogflowCxPageAdvancedSettingsDtmfSettings:
 
         For example, if the caller presses a button on their telephone keypad and DTMF processing is enabled, Dialogflow will detect the event (e.g. a "3" was pressed) in the incoming audio and pass the event to the bot to drive business logic (e.g. when 3 is pressed, return the account balance).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
         '''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -557,7 +605,7 @@ class DialogflowCxPageAdvancedSettingsDtmfSettings:
     def finish_digit(self) -> typing.Optional[builtins.str]:
         '''The digit that terminates a DTMF digit sequence.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
         '''
         result = self._values.get("finish_digit")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -566,7 +614,7 @@ class DialogflowCxPageAdvancedSettingsDtmfSettings:
     def max_digits(self) -> typing.Optional[jsii.Number]:
         '''Max length of DTMF digits.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
         '''
         result = self._values.get("max_digits")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -718,9 +766,9 @@ class DialogflowCxPageAdvancedSettingsOutputReference(
         max_digits: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param enabled: If true, incoming audio is processed for DTMF (dual tone multi frequency) events. For example, if the caller presses a button on their telephone keypad and DTMF processing is enabled, Dialogflow will detect the event (e.g. a "3" was pressed) in the incoming audio and pass the event to the bot to drive business logic (e.g. when 3 is pressed, return the account balance). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
-        :param finish_digit: The digit that terminates a DTMF digit sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
-        :param max_digits: Max length of DTMF digits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
+        :param enabled: If true, incoming audio is processed for DTMF (dual tone multi frequency) events. For example, if the caller presses a button on their telephone keypad and DTMF processing is enabled, Dialogflow will detect the event (e.g. a "3" was pressed) in the incoming audio and pass the event to the bot to drive business logic (e.g. when 3 is pressed, return the account balance). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
+        :param finish_digit: The digit that terminates a DTMF digit sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
+        :param max_digits: Max length of DTMF digits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
         '''
         value = DialogflowCxPageAdvancedSettingsDtmfSettings(
             enabled=enabled, finish_digit=finish_digit, max_digits=max_digits
@@ -779,6 +827,7 @@ class DialogflowCxPageAdvancedSettingsOutputReference(
         "event_handlers": "eventHandlers",
         "form": "form",
         "id": "id",
+        "knowledge_connector_settings": "knowledgeConnectorSettings",
         "language_code": "languageCode",
         "parent": "parent",
         "timeouts": "timeouts",
@@ -803,6 +852,7 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         event_handlers: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DialogflowCxPageEventHandlers", typing.Dict[builtins.str, typing.Any]]]]] = None,
         form: typing.Optional[typing.Union["DialogflowCxPageForm", typing.Dict[builtins.str, typing.Any]]] = None,
         id: typing.Optional[builtins.str] = None,
+        knowledge_connector_settings: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettings", typing.Dict[builtins.str, typing.Any]]] = None,
         language_code: typing.Optional[builtins.str] = None,
         parent: typing.Optional[builtins.str] = None,
         timeouts: typing.Optional[typing.Union["DialogflowCxPageTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
@@ -817,17 +867,18 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param display_name: The human-readable name of the page, unique within the agent. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#display_name DialogflowCxPage#display_name}
-        :param advanced_settings: advanced_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#advanced_settings DialogflowCxPage#advanced_settings}
-        :param entry_fulfillment: entry_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#entry_fulfillment DialogflowCxPage#entry_fulfillment}
-        :param event_handlers: event_handlers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#event_handlers DialogflowCxPage#event_handlers}
-        :param form: form block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#form DialogflowCxPage#form}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#id DialogflowCxPage#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param language_code: The language of the following fields in page:. Page.entry_fulfillment.messages Page.entry_fulfillment.conditional_cases Page.event_handlers.trigger_fulfillment.messages Page.event_handlers.trigger_fulfillment.conditional_cases Page.form.parameters.fill_behavior.initial_prompt_fulfillment.messages Page.form.parameters.fill_behavior.initial_prompt_fulfillment.conditional_cases Page.form.parameters.fill_behavior.reprompt_event_handlers.messages Page.form.parameters.fill_behavior.reprompt_event_handlers.conditional_cases Page.transition_routes.trigger_fulfillment.messages Page.transition_routes.trigger_fulfillment.conditional_cases If not specified, the agent's default language is used. Many languages are supported. Note: languages must be enabled in the agent before they can be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#language_code DialogflowCxPage#language_code}
-        :param parent: The flow to create a page for. Format: projects//locations//agents//flows/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parent DialogflowCxPage#parent}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#timeouts DialogflowCxPage#timeouts}
-        :param transition_route_groups: Ordered list of TransitionRouteGroups associated with the page. Transition route groups must be unique within a page. If multiple transition routes within a page scope refer to the same intent, then the precedence order is: page's transition route -> page's transition route group -> flow's transition routes. If multiple transition route groups within a page contain the same intent, then the first group in the ordered list takes precedence. Format:projects//locations//agents//flows//transitionRouteGroups/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#transition_route_groups DialogflowCxPage#transition_route_groups}
-        :param transition_routes: transition_routes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#transition_routes DialogflowCxPage#transition_routes}
+        :param display_name: The human-readable name of the page, unique within the agent. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#display_name DialogflowCxPage#display_name}
+        :param advanced_settings: advanced_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#advanced_settings DialogflowCxPage#advanced_settings}
+        :param entry_fulfillment: entry_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#entry_fulfillment DialogflowCxPage#entry_fulfillment}
+        :param event_handlers: event_handlers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#event_handlers DialogflowCxPage#event_handlers}
+        :param form: form block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#form DialogflowCxPage#form}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#id DialogflowCxPage#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param knowledge_connector_settings: knowledge_connector_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#knowledge_connector_settings DialogflowCxPage#knowledge_connector_settings}
+        :param language_code: The language of the following fields in page:. Page.entry_fulfillment.messages Page.entry_fulfillment.conditional_cases Page.event_handlers.trigger_fulfillment.messages Page.event_handlers.trigger_fulfillment.conditional_cases Page.form.parameters.fill_behavior.initial_prompt_fulfillment.messages Page.form.parameters.fill_behavior.initial_prompt_fulfillment.conditional_cases Page.form.parameters.fill_behavior.reprompt_event_handlers.messages Page.form.parameters.fill_behavior.reprompt_event_handlers.conditional_cases Page.transition_routes.trigger_fulfillment.messages Page.transition_routes.trigger_fulfillment.conditional_cases If not specified, the agent's default language is used. Many languages are supported. Note: languages must be enabled in the agent before they can be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#language_code DialogflowCxPage#language_code}
+        :param parent: The flow to create a page for. Format: projects//locations//agents//flows/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parent DialogflowCxPage#parent}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#timeouts DialogflowCxPage#timeouts}
+        :param transition_route_groups: Ordered list of TransitionRouteGroups associated with the page. Transition route groups must be unique within a page. If multiple transition routes within a page scope refer to the same intent, then the precedence order is: page's transition route -> page's transition route group -> flow's transition routes. If multiple transition route groups within a page contain the same intent, then the first group in the ordered list takes precedence. Format:projects//locations//agents//flows//transitionRouteGroups/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#transition_route_groups DialogflowCxPage#transition_route_groups}
+        :param transition_routes: transition_routes block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#transition_routes DialogflowCxPage#transition_routes}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -837,6 +888,8 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             entry_fulfillment = DialogflowCxPageEntryFulfillment(**entry_fulfillment)
         if isinstance(form, dict):
             form = DialogflowCxPageForm(**form)
+        if isinstance(knowledge_connector_settings, dict):
+            knowledge_connector_settings = DialogflowCxPageKnowledgeConnectorSettings(**knowledge_connector_settings)
         if isinstance(timeouts, dict):
             timeouts = DialogflowCxPageTimeouts(**timeouts)
         if __debug__:
@@ -854,6 +907,7 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument event_handlers", value=event_handlers, expected_type=type_hints["event_handlers"])
             check_type(argname="argument form", value=form, expected_type=type_hints["form"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
+            check_type(argname="argument knowledge_connector_settings", value=knowledge_connector_settings, expected_type=type_hints["knowledge_connector_settings"])
             check_type(argname="argument language_code", value=language_code, expected_type=type_hints["language_code"])
             check_type(argname="argument parent", value=parent, expected_type=type_hints["parent"])
             check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
@@ -886,6 +940,8 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["form"] = form
         if id is not None:
             self._values["id"] = id
+        if knowledge_connector_settings is not None:
+            self._values["knowledge_connector_settings"] = knowledge_connector_settings
         if language_code is not None:
             self._values["language_code"] = language_code
         if parent is not None:
@@ -965,7 +1021,7 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def display_name(self) -> builtins.str:
         '''The human-readable name of the page, unique within the agent.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#display_name DialogflowCxPage#display_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#display_name DialogflowCxPage#display_name}
         '''
         result = self._values.get("display_name")
         assert result is not None, "Required property 'display_name' is missing"
@@ -975,7 +1031,7 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def advanced_settings(self) -> typing.Optional[DialogflowCxPageAdvancedSettings]:
         '''advanced_settings block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#advanced_settings DialogflowCxPage#advanced_settings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#advanced_settings DialogflowCxPage#advanced_settings}
         '''
         result = self._values.get("advanced_settings")
         return typing.cast(typing.Optional[DialogflowCxPageAdvancedSettings], result)
@@ -984,7 +1040,7 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def entry_fulfillment(self) -> typing.Optional["DialogflowCxPageEntryFulfillment"]:
         '''entry_fulfillment block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#entry_fulfillment DialogflowCxPage#entry_fulfillment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#entry_fulfillment DialogflowCxPage#entry_fulfillment}
         '''
         result = self._values.get("entry_fulfillment")
         return typing.cast(typing.Optional["DialogflowCxPageEntryFulfillment"], result)
@@ -995,7 +1051,7 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageEventHandlers"]]]:
         '''event_handlers block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#event_handlers DialogflowCxPage#event_handlers}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#event_handlers DialogflowCxPage#event_handlers}
         '''
         result = self._values.get("event_handlers")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageEventHandlers"]]], result)
@@ -1004,20 +1060,31 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def form(self) -> typing.Optional["DialogflowCxPageForm"]:
         '''form block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#form DialogflowCxPage#form}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#form DialogflowCxPage#form}
         '''
         result = self._values.get("form")
         return typing.cast(typing.Optional["DialogflowCxPageForm"], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#id DialogflowCxPage#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#id DialogflowCxPage#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         result = self._values.get("id")
         return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def knowledge_connector_settings(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettings"]:
+        '''knowledge_connector_settings block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#knowledge_connector_settings DialogflowCxPage#knowledge_connector_settings}
+        '''
+        result = self._values.get("knowledge_connector_settings")
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettings"], result)
 
     @builtins.property
     def language_code(self) -> typing.Optional[builtins.str]:
@@ -1035,7 +1102,7 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         Page.transition_routes.trigger_fulfillment.conditional_cases
         If not specified, the agent's default language is used. Many languages are supported. Note: languages must be enabled in the agent before they can be used.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#language_code DialogflowCxPage#language_code}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#language_code DialogflowCxPage#language_code}
         '''
         result = self._values.get("language_code")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1044,7 +1111,7 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def parent(self) -> typing.Optional[builtins.str]:
         '''The flow to create a page for. Format: projects//locations//agents//flows/.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parent DialogflowCxPage#parent}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parent DialogflowCxPage#parent}
         '''
         result = self._values.get("parent")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1053,7 +1120,7 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["DialogflowCxPageTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#timeouts DialogflowCxPage#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#timeouts DialogflowCxPage#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["DialogflowCxPageTimeouts"], result)
@@ -1067,7 +1134,7 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         If multiple transition route groups within a page contain the same intent, then the first group in the ordered list takes precedence.
         Format:projects//locations//agents//flows//transitionRouteGroups/.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#transition_route_groups DialogflowCxPage#transition_route_groups}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#transition_route_groups DialogflowCxPage#transition_route_groups}
         '''
         result = self._values.get("transition_route_groups")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1078,7 +1145,7 @@ class DialogflowCxPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageTransitionRoutes"]]]:
         '''transition_routes block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#transition_routes DialogflowCxPage#transition_routes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#transition_routes DialogflowCxPage#transition_routes}
         '''
         result = self._values.get("transition_routes")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageTransitionRoutes"]]], result)
@@ -1119,12 +1186,12 @@ class DialogflowCxPageEntryFulfillment:
         webhook: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
-        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
-        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
-        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
-        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
-        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__71dd5966ad8a933ab4a894dbb073a900bc484ab8d156c35b52c846bd0603c4a6)
@@ -1154,7 +1221,7 @@ class DialogflowCxPageEntryFulfillment:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageEntryFulfillmentConditionalCases"]]]:
         '''conditional_cases block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
         '''
         result = self._values.get("conditional_cases")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageEntryFulfillmentConditionalCases"]]], result)
@@ -1165,7 +1232,7 @@ class DialogflowCxPageEntryFulfillment:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageEntryFulfillmentMessages"]]]:
         '''messages block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
         '''
         result = self._values.get("messages")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageEntryFulfillmentMessages"]]], result)
@@ -1178,7 +1245,7 @@ class DialogflowCxPageEntryFulfillment:
 
         If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
         '''
         result = self._values.get("return_partial_responses")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1189,7 +1256,7 @@ class DialogflowCxPageEntryFulfillment:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageEntryFulfillmentSetParameterActions"]]]:
         '''set_parameter_actions block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
         '''
         result = self._values.get("set_parameter_actions")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageEntryFulfillmentSetParameterActions"]]], result)
@@ -1200,7 +1267,7 @@ class DialogflowCxPageEntryFulfillment:
 
         This field is required if webhook is specified.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
         '''
         result = self._values.get("tag")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1209,7 +1276,7 @@ class DialogflowCxPageEntryFulfillment:
     def webhook(self) -> typing.Optional[builtins.str]:
         '''The webhook to call. Format: projects//locations//agents//webhooks/.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         result = self._values.get("webhook")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1234,7 +1301,7 @@ class DialogflowCxPageEntryFulfillment:
 class DialogflowCxPageEntryFulfillmentConditionalCases:
     def __init__(self, *, cases: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param cases: A JSON encoded list of cascading if-else conditions. Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored. See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
+        :param cases: A JSON encoded list of cascading if-else conditions. Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored. See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__41d585dc3d116965de82971528c72684a85e927c44d68a81038ea69b7f119f8a)
@@ -1250,7 +1317,7 @@ class DialogflowCxPageEntryFulfillmentConditionalCases:
         Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored.
         See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
         '''
         result = self._values.get("cases")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1453,14 +1520,14 @@ class DialogflowCxPageEntryFulfillmentMessages:
         text: typing.Optional[typing.Union["DialogflowCxPageEntryFulfillmentMessagesText", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param channel: The channel which the response is associated with. Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
-        :param conversation_success: conversation_success block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
-        :param live_agent_handoff: live_agent_handoff block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
-        :param output_audio_text: output_audio_text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
-        :param payload: A custom, platform-specific payload. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
-        :param play_audio: play_audio block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
-        :param telephony_transfer_call: telephony_transfer_call block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
-        :param text: text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param channel: The channel which the response is associated with. Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
+        :param conversation_success: conversation_success block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
+        :param live_agent_handoff: live_agent_handoff block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
+        :param output_audio_text: output_audio_text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
+        :param payload: A custom, platform-specific payload. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
+        :param play_audio: play_audio block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
+        :param telephony_transfer_call: telephony_transfer_call block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
+        :param text: text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if isinstance(conversation_success, dict):
             conversation_success = DialogflowCxPageEntryFulfillmentMessagesConversationSuccess(**conversation_success)
@@ -1508,7 +1575,7 @@ class DialogflowCxPageEntryFulfillmentMessages:
 
         Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
         '''
         result = self._values.get("channel")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1519,7 +1586,7 @@ class DialogflowCxPageEntryFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageEntryFulfillmentMessagesConversationSuccess"]:
         '''conversation_success block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
         '''
         result = self._values.get("conversation_success")
         return typing.cast(typing.Optional["DialogflowCxPageEntryFulfillmentMessagesConversationSuccess"], result)
@@ -1530,7 +1597,7 @@ class DialogflowCxPageEntryFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageEntryFulfillmentMessagesLiveAgentHandoff"]:
         '''live_agent_handoff block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
         '''
         result = self._values.get("live_agent_handoff")
         return typing.cast(typing.Optional["DialogflowCxPageEntryFulfillmentMessagesLiveAgentHandoff"], result)
@@ -1541,7 +1608,7 @@ class DialogflowCxPageEntryFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageEntryFulfillmentMessagesOutputAudioText"]:
         '''output_audio_text block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
         '''
         result = self._values.get("output_audio_text")
         return typing.cast(typing.Optional["DialogflowCxPageEntryFulfillmentMessagesOutputAudioText"], result)
@@ -1550,7 +1617,7 @@ class DialogflowCxPageEntryFulfillmentMessages:
     def payload(self) -> typing.Optional[builtins.str]:
         '''A custom, platform-specific payload.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
         '''
         result = self._values.get("payload")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1561,7 +1628,7 @@ class DialogflowCxPageEntryFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageEntryFulfillmentMessagesPlayAudio"]:
         '''play_audio block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
         '''
         result = self._values.get("play_audio")
         return typing.cast(typing.Optional["DialogflowCxPageEntryFulfillmentMessagesPlayAudio"], result)
@@ -1572,7 +1639,7 @@ class DialogflowCxPageEntryFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageEntryFulfillmentMessagesTelephonyTransferCall"]:
         '''telephony_transfer_call block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
         '''
         result = self._values.get("telephony_transfer_call")
         return typing.cast(typing.Optional["DialogflowCxPageEntryFulfillmentMessagesTelephonyTransferCall"], result)
@@ -1581,7 +1648,7 @@ class DialogflowCxPageEntryFulfillmentMessages:
     def text(self) -> typing.Optional["DialogflowCxPageEntryFulfillmentMessagesText"]:
         '''text block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional["DialogflowCxPageEntryFulfillmentMessagesText"], result)
@@ -1606,7 +1673,7 @@ class DialogflowCxPageEntryFulfillmentMessages:
 class DialogflowCxPageEntryFulfillmentMessagesConversationSuccess:
     def __init__(self, *, metadata: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__e4a589cb1b88663ef1899817b26ef8f98b20e8d574d0471c301d0cffba3dd4e6)
@@ -1619,7 +1686,7 @@ class DialogflowCxPageEntryFulfillmentMessagesConversationSuccess:
     def metadata(self) -> typing.Optional[builtins.str]:
         '''Custom metadata. Dialogflow doesn't impose any structure on this.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         result = self._values.get("metadata")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1796,7 +1863,7 @@ class DialogflowCxPageEntryFulfillmentMessagesList(
 class DialogflowCxPageEntryFulfillmentMessagesLiveAgentHandoff:
     def __init__(self, *, metadata: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__1af518f20749fd68eb9f57c02271445ed79c9fb61c5735c1016ccd32a2aba71d)
@@ -1809,7 +1876,7 @@ class DialogflowCxPageEntryFulfillmentMessagesLiveAgentHandoff:
     def metadata(self) -> typing.Optional[builtins.str]:
         '''Custom metadata. Dialogflow doesn't impose any structure on this.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         result = self._values.get("metadata")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1898,8 +1965,8 @@ class DialogflowCxPageEntryFulfillmentMessagesOutputAudioText:
         text: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
-        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__193bdaf74ac9a22e2eb8d8c7c41a54852e77637a20bb9acd6ebc6eb6b4f2c8f1)
@@ -1915,7 +1982,7 @@ class DialogflowCxPageEntryFulfillmentMessagesOutputAudioText:
     def ssml(self) -> typing.Optional[builtins.str]:
         '''The SSML text to be synthesized. For more information, see SSML.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
         '''
         result = self._values.get("ssml")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1924,7 +1991,7 @@ class DialogflowCxPageEntryFulfillmentMessagesOutputAudioText:
     def text(self) -> typing.Optional[builtins.str]:
         '''The raw text to be synthesized.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2059,7 +2126,7 @@ class DialogflowCxPageEntryFulfillmentMessagesOutputReference(
         metadata: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         value = DialogflowCxPageEntryFulfillmentMessagesConversationSuccess(
             metadata=metadata
@@ -2074,7 +2141,7 @@ class DialogflowCxPageEntryFulfillmentMessagesOutputReference(
         metadata: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         value = DialogflowCxPageEntryFulfillmentMessagesLiveAgentHandoff(
             metadata=metadata
@@ -2090,8 +2157,8 @@ class DialogflowCxPageEntryFulfillmentMessagesOutputReference(
         text: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
-        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         value = DialogflowCxPageEntryFulfillmentMessagesOutputAudioText(
             ssml=ssml, text=text
@@ -2102,7 +2169,7 @@ class DialogflowCxPageEntryFulfillmentMessagesOutputReference(
     @jsii.member(jsii_name="putPlayAudio")
     def put_play_audio(self, *, audio_uri: builtins.str) -> None:
         '''
-        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         value = DialogflowCxPageEntryFulfillmentMessagesPlayAudio(audio_uri=audio_uri)
 
@@ -2111,7 +2178,7 @@ class DialogflowCxPageEntryFulfillmentMessagesOutputReference(
     @jsii.member(jsii_name="putTelephonyTransferCall")
     def put_telephony_transfer_call(self, *, phone_number: builtins.str) -> None:
         '''
-        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         value = DialogflowCxPageEntryFulfillmentMessagesTelephonyTransferCall(
             phone_number=phone_number
@@ -2126,7 +2193,7 @@ class DialogflowCxPageEntryFulfillmentMessagesOutputReference(
         text: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         value = DialogflowCxPageEntryFulfillmentMessagesText(text=text)
 
@@ -2306,7 +2373,7 @@ class DialogflowCxPageEntryFulfillmentMessagesOutputReference(
 class DialogflowCxPageEntryFulfillmentMessagesPlayAudio:
     def __init__(self, *, audio_uri: builtins.str) -> None:
         '''
-        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__ab8a645c5c6e3de3b3e18b28afae319c59913634ae339ae458dc9f365861d1e0)
@@ -2321,7 +2388,7 @@ class DialogflowCxPageEntryFulfillmentMessagesPlayAudio:
 
         Dialogflow does not impose any validation on this value. It is specific to the client that reads it.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         result = self._values.get("audio_uri")
         assert result is not None, "Required property 'audio_uri' is missing"
@@ -2407,7 +2474,7 @@ class DialogflowCxPageEntryFulfillmentMessagesPlayAudioOutputReference(
 class DialogflowCxPageEntryFulfillmentMessagesTelephonyTransferCall:
     def __init__(self, *, phone_number: builtins.str) -> None:
         '''
-        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__af500d65bfacaf611bc0a3d20a4dcee4edf2f2c1ec83fa1c5ab78af5066cb5d5)
@@ -2420,7 +2487,7 @@ class DialogflowCxPageEntryFulfillmentMessagesTelephonyTransferCall:
     def phone_number(self) -> builtins.str:
         '''Transfer the call to a phone number in E.164 format.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         result = self._values.get("phone_number")
         assert result is not None, "Required property 'phone_number' is missing"
@@ -2505,7 +2572,7 @@ class DialogflowCxPageEntryFulfillmentMessagesText:
         text: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__2af505c57abee7200d8cb160c49ca52acbdeb6045dcf61e0299d03ae4462e2e5)
@@ -2518,7 +2585,7 @@ class DialogflowCxPageEntryFulfillmentMessagesText:
     def text(self) -> typing.Optional[typing.List[builtins.str]]:
         '''A collection of text responses.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -2807,8 +2874,8 @@ class DialogflowCxPageEntryFulfillmentSetParameterActions:
         value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param parameter: Display name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
-        :param value: The new JSON-encoded value of the parameter. A null value clears the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
+        :param parameter: Display name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
+        :param value: The new JSON-encoded value of the parameter. A null value clears the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__008dc86fbfe60acf8c7e060533552e76880507e7e07dd3d0983f8ad6cc18abac)
@@ -2824,7 +2891,7 @@ class DialogflowCxPageEntryFulfillmentSetParameterActions:
     def parameter(self) -> typing.Optional[builtins.str]:
         '''Display name of the parameter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
         '''
         result = self._values.get("parameter")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2833,7 +2900,7 @@ class DialogflowCxPageEntryFulfillmentSetParameterActions:
     def value(self) -> typing.Optional[builtins.str]:
         '''The new JSON-encoded value of the parameter. A null value clears the parameter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
         '''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3049,10 +3116,10 @@ class DialogflowCxPageEventHandlers:
         trigger_fulfillment: typing.Optional[typing.Union["DialogflowCxPageEventHandlersTriggerFulfillment", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param event: The name of the event to handle. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#event DialogflowCxPage#event}
-        :param target_flow: The target flow to transition to. Format: projects//locations//agents//flows/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
-        :param target_page: The target page to transition to. Format: projects//locations//agents//flows//pages/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
-        :param trigger_fulfillment: trigger_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
+        :param event: The name of the event to handle. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#event DialogflowCxPage#event}
+        :param target_flow: The target flow to transition to. Format: projects//locations//agents//flows/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
+        :param target_page: The target page to transition to. Format: projects//locations//agents//flows//pages/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
+        :param trigger_fulfillment: trigger_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
         '''
         if isinstance(trigger_fulfillment, dict):
             trigger_fulfillment = DialogflowCxPageEventHandlersTriggerFulfillment(**trigger_fulfillment)
@@ -3076,7 +3143,7 @@ class DialogflowCxPageEventHandlers:
     def event(self) -> typing.Optional[builtins.str]:
         '''The name of the event to handle.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#event DialogflowCxPage#event}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#event DialogflowCxPage#event}
         '''
         result = self._values.get("event")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3085,7 +3152,7 @@ class DialogflowCxPageEventHandlers:
     def target_flow(self) -> typing.Optional[builtins.str]:
         '''The target flow to transition to. Format: projects//locations//agents//flows/.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
         '''
         result = self._values.get("target_flow")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3094,7 +3161,7 @@ class DialogflowCxPageEventHandlers:
     def target_page(self) -> typing.Optional[builtins.str]:
         '''The target page to transition to. Format: projects//locations//agents//flows//pages/.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
         '''
         result = self._values.get("target_page")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3105,7 +3172,7 @@ class DialogflowCxPageEventHandlers:
     ) -> typing.Optional["DialogflowCxPageEventHandlersTriggerFulfillment"]:
         '''trigger_fulfillment block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
         '''
         result = self._values.get("trigger_fulfillment")
         return typing.cast(typing.Optional["DialogflowCxPageEventHandlersTriggerFulfillment"], result)
@@ -3250,12 +3317,12 @@ class DialogflowCxPageEventHandlersOutputReference(
         webhook: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
-        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
-        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
-        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
-        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
-        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         value = DialogflowCxPageEventHandlersTriggerFulfillment(
             conditional_cases=conditional_cases,
@@ -3396,12 +3463,12 @@ class DialogflowCxPageEventHandlersTriggerFulfillment:
         webhook: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
-        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
-        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
-        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
-        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
-        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__1bf85d749a19598291bf90632116cb8cb83eb3f2a07c3e7ea06b5b228e5f520c)
@@ -3431,7 +3498,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillment:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageEventHandlersTriggerFulfillmentConditionalCases"]]]:
         '''conditional_cases block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
         '''
         result = self._values.get("conditional_cases")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageEventHandlersTriggerFulfillmentConditionalCases"]]], result)
@@ -3442,7 +3509,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillment:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageEventHandlersTriggerFulfillmentMessages"]]]:
         '''messages block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
         '''
         result = self._values.get("messages")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageEventHandlersTriggerFulfillmentMessages"]]], result)
@@ -3455,7 +3522,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillment:
 
         If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
         '''
         result = self._values.get("return_partial_responses")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -3466,7 +3533,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillment:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageEventHandlersTriggerFulfillmentSetParameterActions"]]]:
         '''set_parameter_actions block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
         '''
         result = self._values.get("set_parameter_actions")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageEventHandlersTriggerFulfillmentSetParameterActions"]]], result)
@@ -3477,7 +3544,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillment:
 
         This field is required if webhook is specified.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
         '''
         result = self._values.get("tag")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3486,7 +3553,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillment:
     def webhook(self) -> typing.Optional[builtins.str]:
         '''The webhook to call. Format: projects//locations//agents//webhooks/.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         result = self._values.get("webhook")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3511,7 +3578,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillment:
 class DialogflowCxPageEventHandlersTriggerFulfillmentConditionalCases:
     def __init__(self, *, cases: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param cases: A JSON encoded list of cascading if-else conditions. Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored. See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
+        :param cases: A JSON encoded list of cascading if-else conditions. Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored. See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__376d46d915f41b280a077a263fed3d085e118c282b803747288126e5b7e2781d)
@@ -3527,7 +3594,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentConditionalCases:
         Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored.
         See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
         '''
         result = self._values.get("cases")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3730,14 +3797,14 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessages:
         text: typing.Optional[typing.Union["DialogflowCxPageEventHandlersTriggerFulfillmentMessagesText", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param channel: The channel which the response is associated with. Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
-        :param conversation_success: conversation_success block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
-        :param live_agent_handoff: live_agent_handoff block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
-        :param output_audio_text: output_audio_text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
-        :param payload: A custom, platform-specific payload. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
-        :param play_audio: play_audio block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
-        :param telephony_transfer_call: telephony_transfer_call block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
-        :param text: text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param channel: The channel which the response is associated with. Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
+        :param conversation_success: conversation_success block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
+        :param live_agent_handoff: live_agent_handoff block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
+        :param output_audio_text: output_audio_text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
+        :param payload: A custom, platform-specific payload. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
+        :param play_audio: play_audio block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
+        :param telephony_transfer_call: telephony_transfer_call block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
+        :param text: text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if isinstance(conversation_success, dict):
             conversation_success = DialogflowCxPageEventHandlersTriggerFulfillmentMessagesConversationSuccess(**conversation_success)
@@ -3785,7 +3852,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessages:
 
         Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
         '''
         result = self._values.get("channel")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3796,7 +3863,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageEventHandlersTriggerFulfillmentMessagesConversationSuccess"]:
         '''conversation_success block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
         '''
         result = self._values.get("conversation_success")
         return typing.cast(typing.Optional["DialogflowCxPageEventHandlersTriggerFulfillmentMessagesConversationSuccess"], result)
@@ -3807,7 +3874,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageEventHandlersTriggerFulfillmentMessagesLiveAgentHandoff"]:
         '''live_agent_handoff block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
         '''
         result = self._values.get("live_agent_handoff")
         return typing.cast(typing.Optional["DialogflowCxPageEventHandlersTriggerFulfillmentMessagesLiveAgentHandoff"], result)
@@ -3818,7 +3885,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageEventHandlersTriggerFulfillmentMessagesOutputAudioText"]:
         '''output_audio_text block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
         '''
         result = self._values.get("output_audio_text")
         return typing.cast(typing.Optional["DialogflowCxPageEventHandlersTriggerFulfillmentMessagesOutputAudioText"], result)
@@ -3827,7 +3894,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessages:
     def payload(self) -> typing.Optional[builtins.str]:
         '''A custom, platform-specific payload.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
         '''
         result = self._values.get("payload")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3838,7 +3905,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageEventHandlersTriggerFulfillmentMessagesPlayAudio"]:
         '''play_audio block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
         '''
         result = self._values.get("play_audio")
         return typing.cast(typing.Optional["DialogflowCxPageEventHandlersTriggerFulfillmentMessagesPlayAudio"], result)
@@ -3849,7 +3916,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageEventHandlersTriggerFulfillmentMessagesTelephonyTransferCall"]:
         '''telephony_transfer_call block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
         '''
         result = self._values.get("telephony_transfer_call")
         return typing.cast(typing.Optional["DialogflowCxPageEventHandlersTriggerFulfillmentMessagesTelephonyTransferCall"], result)
@@ -3860,7 +3927,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageEventHandlersTriggerFulfillmentMessagesText"]:
         '''text block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional["DialogflowCxPageEventHandlersTriggerFulfillmentMessagesText"], result)
@@ -3885,7 +3952,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessages:
 class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesConversationSuccess:
     def __init__(self, *, metadata: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__66d3776604393cf66068ec3466c5254d1e5c62a980a678f84858c1ae1935682d)
@@ -3898,7 +3965,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesConversationSuccess
     def metadata(self) -> typing.Optional[builtins.str]:
         '''Custom metadata. Dialogflow doesn't impose any structure on this.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         result = self._values.get("metadata")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4075,7 +4142,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesList(
 class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesLiveAgentHandoff:
     def __init__(self, *, metadata: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__6c8a575ddbefc9dea3ed7744844cbbbfd63555d8e6cba3db07cad82e69e4aa96)
@@ -4088,7 +4155,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesLiveAgentHandoff:
     def metadata(self) -> typing.Optional[builtins.str]:
         '''Custom metadata. Dialogflow doesn't impose any structure on this.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         result = self._values.get("metadata")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4177,8 +4244,8 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesOutputAudioText:
         text: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
-        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__d41a2c2abfb25b3f1b0a30724aa72dfbb48ee7c970dcd611866f4c47d04eb2ce)
@@ -4194,7 +4261,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesOutputAudioText:
     def ssml(self) -> typing.Optional[builtins.str]:
         '''The SSML text to be synthesized. For more information, see SSML.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
         '''
         result = self._values.get("ssml")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4203,7 +4270,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesOutputAudioText:
     def text(self) -> typing.Optional[builtins.str]:
         '''The raw text to be synthesized.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4338,7 +4405,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesOutputReference(
         metadata: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         value = DialogflowCxPageEventHandlersTriggerFulfillmentMessagesConversationSuccess(
             metadata=metadata
@@ -4353,7 +4420,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesOutputReference(
         metadata: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         value = DialogflowCxPageEventHandlersTriggerFulfillmentMessagesLiveAgentHandoff(
             metadata=metadata
@@ -4369,8 +4436,8 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesOutputReference(
         text: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
-        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         value = DialogflowCxPageEventHandlersTriggerFulfillmentMessagesOutputAudioText(
             ssml=ssml, text=text
@@ -4381,7 +4448,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesOutputReference(
     @jsii.member(jsii_name="putPlayAudio")
     def put_play_audio(self, *, audio_uri: builtins.str) -> None:
         '''
-        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         value = DialogflowCxPageEventHandlersTriggerFulfillmentMessagesPlayAudio(
             audio_uri=audio_uri
@@ -4392,7 +4459,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesOutputReference(
     @jsii.member(jsii_name="putTelephonyTransferCall")
     def put_telephony_transfer_call(self, *, phone_number: builtins.str) -> None:
         '''
-        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         value = DialogflowCxPageEventHandlersTriggerFulfillmentMessagesTelephonyTransferCall(
             phone_number=phone_number
@@ -4407,7 +4474,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesOutputReference(
         text: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         value = DialogflowCxPageEventHandlersTriggerFulfillmentMessagesText(text=text)
 
@@ -4589,7 +4656,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesOutputReference(
 class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesPlayAudio:
     def __init__(self, *, audio_uri: builtins.str) -> None:
         '''
-        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__49fca395691b291967124071233db405ddde577368b9e02adeff8918e01a0b59)
@@ -4604,7 +4671,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesPlayAudio:
 
         Dialogflow does not impose any validation on this value. It is specific to the client that reads it.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         result = self._values.get("audio_uri")
         assert result is not None, "Required property 'audio_uri' is missing"
@@ -4690,7 +4757,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesPlayAudioOutputRefe
 class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesTelephonyTransferCall:
     def __init__(self, *, phone_number: builtins.str) -> None:
         '''
-        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__9ca7a4a996a2144cdd7b594ff967bfb1a387f9fb8e537fc6b5e35996baf60add)
@@ -4703,7 +4770,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesTelephonyTransferCa
     def phone_number(self) -> builtins.str:
         '''Transfer the call to a phone number in E.164 format.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         result = self._values.get("phone_number")
         assert result is not None, "Required property 'phone_number' is missing"
@@ -4788,7 +4855,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesText:
         text: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__0d098a2973481bf30bea7d9ee978a15fdc45eb04edfde0e74952118233cbc7db)
@@ -4801,7 +4868,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentMessagesText:
     def text(self) -> typing.Optional[typing.List[builtins.str]]:
         '''A collection of text responses.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -5094,8 +5161,8 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentSetParameterActions:
         value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param parameter: Display name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
-        :param value: The new JSON-encoded value of the parameter. A null value clears the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
+        :param parameter: Display name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
+        :param value: The new JSON-encoded value of the parameter. A null value clears the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__8424b4270698ae56ac5a1c9d7388ce4f62c7a18670b891c951c6a26b094101fd)
@@ -5111,7 +5178,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentSetParameterActions:
     def parameter(self) -> typing.Optional[builtins.str]:
         '''Display name of the parameter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
         '''
         result = self._values.get("parameter")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5120,7 +5187,7 @@ class DialogflowCxPageEventHandlersTriggerFulfillmentSetParameterActions:
     def value(self) -> typing.Optional[builtins.str]:
         '''The new JSON-encoded value of the parameter. A null value clears the parameter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
         '''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5328,7 +5395,7 @@ class DialogflowCxPageForm:
         parameters: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DialogflowCxPageFormParameters", typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
-        :param parameters: parameters block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parameters DialogflowCxPage#parameters}
+        :param parameters: parameters block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameters DialogflowCxPage#parameters}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__7d0be360a713e2ab0a0f26268fcc80f8bb6a4ee71845eac9521c248dbfee8c7c)
@@ -5343,7 +5410,7 @@ class DialogflowCxPageForm:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParameters"]]]:
         '''parameters block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parameters DialogflowCxPage#parameters}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameters DialogflowCxPage#parameters}
         '''
         result = self._values.get("parameters")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParameters"]]], result)
@@ -5450,14 +5517,14 @@ class DialogflowCxPageFormParameters:
         required: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param advanced_settings: advanced_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#advanced_settings DialogflowCxPage#advanced_settings}
-        :param default_value: The default value of an optional parameter. If the parameter is required, the default value will be ignored. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#default_value DialogflowCxPage#default_value}
-        :param display_name: The human-readable name of the parameter, unique within the form. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#display_name DialogflowCxPage#display_name}
-        :param entity_type: The entity type of the parameter. Format: projects/-/locations/-/agents/-/entityTypes/ for system entity types (for example, projects/-/locations/-/agents/-/entityTypes/sys.date), or projects//locations//agents//entityTypes/ for developer entity types. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#entity_type DialogflowCxPage#entity_type}
-        :param fill_behavior: fill_behavior block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#fill_behavior DialogflowCxPage#fill_behavior}
-        :param is_list: Indicates whether the parameter represents a list of values. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#is_list DialogflowCxPage#is_list}
-        :param redact: Indicates whether the parameter content should be redacted in log. If redaction is enabled, the parameter content will be replaced by parameter name during logging. Note: the parameter content is subject to redaction if either parameter level redaction or entity type level redaction is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#redact DialogflowCxPage#redact}
-        :param required: Indicates whether the parameter is required. Optional parameters will not trigger prompts; however, they are filled if the user specifies them. Required parameters must be filled before form filling concludes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#required DialogflowCxPage#required}
+        :param advanced_settings: advanced_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#advanced_settings DialogflowCxPage#advanced_settings}
+        :param default_value: The default value of an optional parameter. If the parameter is required, the default value will be ignored. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#default_value DialogflowCxPage#default_value}
+        :param display_name: The human-readable name of the parameter, unique within the form. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#display_name DialogflowCxPage#display_name}
+        :param entity_type: The entity type of the parameter. Format: projects/-/locations/-/agents/-/entityTypes/ for system entity types (for example, projects/-/locations/-/agents/-/entityTypes/sys.date), or projects//locations//agents//entityTypes/ for developer entity types. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#entity_type DialogflowCxPage#entity_type}
+        :param fill_behavior: fill_behavior block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#fill_behavior DialogflowCxPage#fill_behavior}
+        :param is_list: Indicates whether the parameter represents a list of values. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#is_list DialogflowCxPage#is_list}
+        :param redact: Indicates whether the parameter content should be redacted in log. If redaction is enabled, the parameter content will be replaced by parameter name during logging. Note: the parameter content is subject to redaction if either parameter level redaction or entity type level redaction is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#redact DialogflowCxPage#redact}
+        :param required: Indicates whether the parameter is required. Optional parameters will not trigger prompts; however, they are filled if the user specifies them. Required parameters must be filled before form filling concludes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#required DialogflowCxPage#required}
         '''
         if isinstance(advanced_settings, dict):
             advanced_settings = DialogflowCxPageFormParametersAdvancedSettings(**advanced_settings)
@@ -5497,7 +5564,7 @@ class DialogflowCxPageFormParameters:
     ) -> typing.Optional["DialogflowCxPageFormParametersAdvancedSettings"]:
         '''advanced_settings block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#advanced_settings DialogflowCxPage#advanced_settings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#advanced_settings DialogflowCxPage#advanced_settings}
         '''
         result = self._values.get("advanced_settings")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersAdvancedSettings"], result)
@@ -5506,7 +5573,7 @@ class DialogflowCxPageFormParameters:
     def default_value(self) -> typing.Optional[builtins.str]:
         '''The default value of an optional parameter. If the parameter is required, the default value will be ignored.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#default_value DialogflowCxPage#default_value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#default_value DialogflowCxPage#default_value}
         '''
         result = self._values.get("default_value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5515,7 +5582,7 @@ class DialogflowCxPageFormParameters:
     def display_name(self) -> typing.Optional[builtins.str]:
         '''The human-readable name of the parameter, unique within the form.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#display_name DialogflowCxPage#display_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#display_name DialogflowCxPage#display_name}
         '''
         result = self._values.get("display_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5526,7 +5593,7 @@ class DialogflowCxPageFormParameters:
 
         Format: projects/-/locations/-/agents/-/entityTypes/ for system entity types (for example, projects/-/locations/-/agents/-/entityTypes/sys.date), or projects//locations//agents//entityTypes/ for developer entity types.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#entity_type DialogflowCxPage#entity_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#entity_type DialogflowCxPage#entity_type}
         '''
         result = self._values.get("entity_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5537,7 +5604,7 @@ class DialogflowCxPageFormParameters:
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehavior"]:
         '''fill_behavior block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#fill_behavior DialogflowCxPage#fill_behavior}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#fill_behavior DialogflowCxPage#fill_behavior}
         '''
         result = self._values.get("fill_behavior")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehavior"], result)
@@ -5548,7 +5615,7 @@ class DialogflowCxPageFormParameters:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Indicates whether the parameter represents a list of values.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#is_list DialogflowCxPage#is_list}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#is_list DialogflowCxPage#is_list}
         '''
         result = self._values.get("is_list")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -5561,7 +5628,7 @@ class DialogflowCxPageFormParameters:
 
         If redaction is enabled, the parameter content will be replaced by parameter name during logging. Note: the parameter content is subject to redaction if either parameter level redaction or entity type level redaction is enabled.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#redact DialogflowCxPage#redact}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#redact DialogflowCxPage#redact}
         '''
         result = self._values.get("redact")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -5575,7 +5642,7 @@ class DialogflowCxPageFormParameters:
         Optional parameters will not trigger prompts; however, they are filled if the user specifies them.
         Required parameters must be filled before form filling concludes.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#required DialogflowCxPage#required}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#required DialogflowCxPage#required}
         '''
         result = self._values.get("required")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -5604,7 +5671,7 @@ class DialogflowCxPageFormParametersAdvancedSettings:
         dtmf_settings: typing.Optional[typing.Union["DialogflowCxPageFormParametersAdvancedSettingsDtmfSettings", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param dtmf_settings: dtmf_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
+        :param dtmf_settings: dtmf_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
         '''
         if isinstance(dtmf_settings, dict):
             dtmf_settings = DialogflowCxPageFormParametersAdvancedSettingsDtmfSettings(**dtmf_settings)
@@ -5621,7 +5688,7 @@ class DialogflowCxPageFormParametersAdvancedSettings:
     ) -> typing.Optional["DialogflowCxPageFormParametersAdvancedSettingsDtmfSettings"]:
         '''dtmf_settings block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
         '''
         result = self._values.get("dtmf_settings")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersAdvancedSettingsDtmfSettings"], result)
@@ -5656,9 +5723,9 @@ class DialogflowCxPageFormParametersAdvancedSettingsDtmfSettings:
         max_digits: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param enabled: If true, incoming audio is processed for DTMF (dual tone multi frequency) events. For example, if the caller presses a button on their telephone keypad and DTMF processing is enabled, Dialogflow will detect the event (e.g. a "3" was pressed) in the incoming audio and pass the event to the bot to drive business logic (e.g. when 3 is pressed, return the account balance). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
-        :param finish_digit: The digit that terminates a DTMF digit sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
-        :param max_digits: Max length of DTMF digits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
+        :param enabled: If true, incoming audio is processed for DTMF (dual tone multi frequency) events. For example, if the caller presses a button on their telephone keypad and DTMF processing is enabled, Dialogflow will detect the event (e.g. a "3" was pressed) in the incoming audio and pass the event to the bot to drive business logic (e.g. when 3 is pressed, return the account balance). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
+        :param finish_digit: The digit that terminates a DTMF digit sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
+        :param max_digits: Max length of DTMF digits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__26a8fc021fe4f0bf6d645fe60ac419fd76551c20d194869445d2318024e9aa2f)
@@ -5681,7 +5748,7 @@ class DialogflowCxPageFormParametersAdvancedSettingsDtmfSettings:
 
         For example, if the caller presses a button on their telephone keypad and DTMF processing is enabled, Dialogflow will detect the event (e.g. a "3" was pressed) in the incoming audio and pass the event to the bot to drive business logic (e.g. when 3 is pressed, return the account balance).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
         '''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -5690,7 +5757,7 @@ class DialogflowCxPageFormParametersAdvancedSettingsDtmfSettings:
     def finish_digit(self) -> typing.Optional[builtins.str]:
         '''The digit that terminates a DTMF digit sequence.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
         '''
         result = self._values.get("finish_digit")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5699,7 +5766,7 @@ class DialogflowCxPageFormParametersAdvancedSettingsDtmfSettings:
     def max_digits(self) -> typing.Optional[jsii.Number]:
         '''Max length of DTMF digits.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
         '''
         result = self._values.get("max_digits")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -5851,9 +5918,9 @@ class DialogflowCxPageFormParametersAdvancedSettingsOutputReference(
         max_digits: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param enabled: If true, incoming audio is processed for DTMF (dual tone multi frequency) events. For example, if the caller presses a button on their telephone keypad and DTMF processing is enabled, Dialogflow will detect the event (e.g. a "3" was pressed) in the incoming audio and pass the event to the bot to drive business logic (e.g. when 3 is pressed, return the account balance). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
-        :param finish_digit: The digit that terminates a DTMF digit sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
-        :param max_digits: Max length of DTMF digits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
+        :param enabled: If true, incoming audio is processed for DTMF (dual tone multi frequency) events. For example, if the caller presses a button on their telephone keypad and DTMF processing is enabled, Dialogflow will detect the event (e.g. a "3" was pressed) in the incoming audio and pass the event to the bot to drive business logic (e.g. when 3 is pressed, return the account balance). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
+        :param finish_digit: The digit that terminates a DTMF digit sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
+        :param max_digits: Max length of DTMF digits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
         '''
         value = DialogflowCxPageFormParametersAdvancedSettingsDtmfSettings(
             enabled=enabled, finish_digit=finish_digit, max_digits=max_digits
@@ -5913,8 +5980,8 @@ class DialogflowCxPageFormParametersFillBehavior:
         reprompt_event_handlers: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlers", typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
-        :param initial_prompt_fulfillment: initial_prompt_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#initial_prompt_fulfillment DialogflowCxPage#initial_prompt_fulfillment}
-        :param reprompt_event_handlers: reprompt_event_handlers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#reprompt_event_handlers DialogflowCxPage#reprompt_event_handlers}
+        :param initial_prompt_fulfillment: initial_prompt_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#initial_prompt_fulfillment DialogflowCxPage#initial_prompt_fulfillment}
+        :param reprompt_event_handlers: reprompt_event_handlers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#reprompt_event_handlers DialogflowCxPage#reprompt_event_handlers}
         '''
         if isinstance(initial_prompt_fulfillment, dict):
             initial_prompt_fulfillment = DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillment(**initial_prompt_fulfillment)
@@ -5934,7 +6001,7 @@ class DialogflowCxPageFormParametersFillBehavior:
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillment"]:
         '''initial_prompt_fulfillment block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#initial_prompt_fulfillment DialogflowCxPage#initial_prompt_fulfillment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#initial_prompt_fulfillment DialogflowCxPage#initial_prompt_fulfillment}
         '''
         result = self._values.get("initial_prompt_fulfillment")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillment"], result)
@@ -5945,7 +6012,7 @@ class DialogflowCxPageFormParametersFillBehavior:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlers"]]]:
         '''reprompt_event_handlers block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#reprompt_event_handlers DialogflowCxPage#reprompt_event_handlers}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#reprompt_event_handlers DialogflowCxPage#reprompt_event_handlers}
         '''
         result = self._values.get("reprompt_event_handlers")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlers"]]], result)
@@ -5986,12 +6053,12 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillment:
         webhook: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
-        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
-        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
-        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
-        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
-        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__692fc3e920f6f72518c79c0969c1f2eae22c21ab21da05fa77856067192cfe62)
@@ -6021,7 +6088,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillment:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentConditionalCases"]]]:
         '''conditional_cases block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
         '''
         result = self._values.get("conditional_cases")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentConditionalCases"]]], result)
@@ -6032,7 +6099,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillment:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages"]]]:
         '''messages block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
         '''
         result = self._values.get("messages")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages"]]], result)
@@ -6045,7 +6112,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillment:
 
         If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
         '''
         result = self._values.get("return_partial_responses")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -6056,7 +6123,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillment:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentSetParameterActions"]]]:
         '''set_parameter_actions block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
         '''
         result = self._values.get("set_parameter_actions")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentSetParameterActions"]]], result)
@@ -6067,7 +6134,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillment:
 
         This field is required if webhook is specified.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
         '''
         result = self._values.get("tag")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6076,7 +6143,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillment:
     def webhook(self) -> typing.Optional[builtins.str]:
         '''The webhook to call. Format: projects//locations//agents//webhooks/.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         result = self._values.get("webhook")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6101,7 +6168,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillment:
 class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentConditionalCases:
     def __init__(self, *, cases: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param cases: A JSON encoded list of cascading if-else conditions. Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored. See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
+        :param cases: A JSON encoded list of cascading if-else conditions. Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored. See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__0e482207f5ce17bfdf97425c075711086264b23ab546b9746aa9e3fa34cf2ee3)
@@ -6117,7 +6184,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentConditio
         Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored.
         See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
         '''
         result = self._values.get("cases")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6320,14 +6387,14 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
         text: typing.Optional[typing.Union["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesText", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param channel: The channel which the response is associated with. Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
-        :param conversation_success: conversation_success block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
-        :param live_agent_handoff: live_agent_handoff block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
-        :param output_audio_text: output_audio_text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
-        :param payload: A custom, platform-specific payload. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
-        :param play_audio: play_audio block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
-        :param telephony_transfer_call: telephony_transfer_call block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
-        :param text: text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param channel: The channel which the response is associated with. Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
+        :param conversation_success: conversation_success block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
+        :param live_agent_handoff: live_agent_handoff block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
+        :param output_audio_text: output_audio_text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
+        :param payload: A custom, platform-specific payload. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
+        :param play_audio: play_audio block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
+        :param telephony_transfer_call: telephony_transfer_call block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
+        :param text: text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if isinstance(conversation_success, dict):
             conversation_success = DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesConversationSuccess(**conversation_success)
@@ -6375,7 +6442,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
 
         Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
         '''
         result = self._values.get("channel")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6386,7 +6453,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesConversationSuccess"]:
         '''conversation_success block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
         '''
         result = self._values.get("conversation_success")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesConversationSuccess"], result)
@@ -6397,7 +6464,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesLiveAgentHandoff"]:
         '''live_agent_handoff block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
         '''
         result = self._values.get("live_agent_handoff")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesLiveAgentHandoff"], result)
@@ -6408,7 +6475,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesOutputAudioText"]:
         '''output_audio_text block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
         '''
         result = self._values.get("output_audio_text")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesOutputAudioText"], result)
@@ -6417,7 +6484,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     def payload(self) -> typing.Optional[builtins.str]:
         '''A custom, platform-specific payload.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
         '''
         result = self._values.get("payload")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6428,7 +6495,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesPlayAudio"]:
         '''play_audio block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
         '''
         result = self._values.get("play_audio")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesPlayAudio"], result)
@@ -6439,7 +6506,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesTelephonyTransferCall"]:
         '''telephony_transfer_call block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
         '''
         result = self._values.get("telephony_transfer_call")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesTelephonyTransferCall"], result)
@@ -6450,7 +6517,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesText"]:
         '''text block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesText"], result)
@@ -6475,7 +6542,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
 class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesConversationSuccess:
     def __init__(self, *, metadata: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__bc510bad6ccc125383ff53d636cf742088a99ff42d945d40c4de9ceec5574636)
@@ -6488,7 +6555,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     def metadata(self) -> typing.Optional[builtins.str]:
         '''Custom metadata. Dialogflow doesn't impose any structure on this.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         result = self._values.get("metadata")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6665,7 +6732,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
 class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesLiveAgentHandoff:
     def __init__(self, *, metadata: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__ec5d6aa875fe82b0c1b312fed8ef6db0c55a8f5db6d76185bf5222b1c2174bec)
@@ -6678,7 +6745,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     def metadata(self) -> typing.Optional[builtins.str]:
         '''Custom metadata. Dialogflow doesn't impose any structure on this.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         result = self._values.get("metadata")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6767,8 +6834,8 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
         text: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
-        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__fd7a2efb0b3fc8b68679ee6954385f03e7cbea23b0847e0ed95a4591eb6505d5)
@@ -6784,7 +6851,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     def ssml(self) -> typing.Optional[builtins.str]:
         '''The SSML text to be synthesized. For more information, see SSML.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
         '''
         result = self._values.get("ssml")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6793,7 +6860,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     def text(self) -> typing.Optional[builtins.str]:
         '''The raw text to be synthesized.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -6928,7 +6995,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
         metadata: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         value = DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesConversationSuccess(
             metadata=metadata
@@ -6943,7 +7010,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
         metadata: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         value = DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesLiveAgentHandoff(
             metadata=metadata
@@ -6959,8 +7026,8 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
         text: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
-        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         value = DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesOutputAudioText(
             ssml=ssml, text=text
@@ -6971,7 +7038,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     @jsii.member(jsii_name="putPlayAudio")
     def put_play_audio(self, *, audio_uri: builtins.str) -> None:
         '''
-        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         value = DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesPlayAudio(
             audio_uri=audio_uri
@@ -6982,7 +7049,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     @jsii.member(jsii_name="putTelephonyTransferCall")
     def put_telephony_transfer_call(self, *, phone_number: builtins.str) -> None:
         '''
-        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         value = DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesTelephonyTransferCall(
             phone_number=phone_number
@@ -6997,7 +7064,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
         text: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         value = DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesText(
             text=text
@@ -7181,7 +7248,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
 class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesPlayAudio:
     def __init__(self, *, audio_uri: builtins.str) -> None:
         '''
-        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__111e9595e9d9cea9fe99291727304cd80bb1505494e03bc9609aeeb092eb1673)
@@ -7196,7 +7263,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
 
         Dialogflow does not impose any validation on this value. It is specific to the client that reads it.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         result = self._values.get("audio_uri")
         assert result is not None, "Required property 'audio_uri' is missing"
@@ -7282,7 +7349,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
 class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessagesTelephonyTransferCall:
     def __init__(self, *, phone_number: builtins.str) -> None:
         '''
-        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__2aa4839e97b2f271ea666b3e239d459997941d574e178d95fa92ecf4eab2fc18)
@@ -7295,7 +7362,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     def phone_number(self) -> builtins.str:
         '''Transfer the call to a phone number in E.164 format.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         result = self._values.get("phone_number")
         assert result is not None, "Required property 'phone_number' is missing"
@@ -7380,7 +7447,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
         text: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__6697996e7afbaa35fc7858b33c1854be7d09b753f5d12a9fd567381649ebe89c)
@@ -7393,7 +7460,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentMessages
     def text(self) -> typing.Optional[typing.List[builtins.str]]:
         '''A collection of text responses.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -7688,8 +7755,8 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentSetParam
         value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param parameter: Display name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
-        :param value: The new JSON-encoded value of the parameter. A null value clears the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
+        :param parameter: Display name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
+        :param value: The new JSON-encoded value of the parameter. A null value clears the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__a2f8d250084b41386398fc1417fc29bfb5af84ba5f4796207a63be51789147a4)
@@ -7705,7 +7772,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentSetParam
     def parameter(self) -> typing.Optional[builtins.str]:
         '''Display name of the parameter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
         '''
         result = self._values.get("parameter")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -7714,7 +7781,7 @@ class DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillmentSetParam
     def value(self) -> typing.Optional[builtins.str]:
         '''The new JSON-encoded value of the parameter. A null value clears the parameter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
         '''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -7942,12 +8009,12 @@ class DialogflowCxPageFormParametersFillBehaviorOutputReference(
         webhook: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
-        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
-        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
-        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
-        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
-        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         value = DialogflowCxPageFormParametersFillBehaviorInitialPromptFulfillment(
             conditional_cases=conditional_cases,
@@ -8047,10 +8114,10 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlers:
         trigger_fulfillment: typing.Optional[typing.Union["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillment", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param event: The name of the event to handle. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#event DialogflowCxPage#event}
-        :param target_flow: The target flow to transition to. Format: projects//locations//agents//flows/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
-        :param target_page: The target page to transition to. Format: projects//locations//agents//flows//pages/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
-        :param trigger_fulfillment: trigger_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
+        :param event: The name of the event to handle. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#event DialogflowCxPage#event}
+        :param target_flow: The target flow to transition to. Format: projects//locations//agents//flows/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
+        :param target_page: The target page to transition to. Format: projects//locations//agents//flows//pages/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
+        :param trigger_fulfillment: trigger_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
         '''
         if isinstance(trigger_fulfillment, dict):
             trigger_fulfillment = DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillment(**trigger_fulfillment)
@@ -8074,7 +8141,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlers:
     def event(self) -> typing.Optional[builtins.str]:
         '''The name of the event to handle.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#event DialogflowCxPage#event}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#event DialogflowCxPage#event}
         '''
         result = self._values.get("event")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8083,7 +8150,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlers:
     def target_flow(self) -> typing.Optional[builtins.str]:
         '''The target flow to transition to. Format: projects//locations//agents//flows/.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
         '''
         result = self._values.get("target_flow")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8092,7 +8159,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlers:
     def target_page(self) -> typing.Optional[builtins.str]:
         '''The target page to transition to. Format: projects//locations//agents//flows//pages/.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
         '''
         result = self._values.get("target_page")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8103,7 +8170,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlers:
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillment"]:
         '''trigger_fulfillment block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
         '''
         result = self._values.get("trigger_fulfillment")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillment"], result)
@@ -8251,12 +8318,12 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersOutputRefer
         webhook: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
-        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
-        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
-        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
-        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
-        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         value = DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillment(
             conditional_cases=conditional_cases,
@@ -8397,12 +8464,12 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
         webhook: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
-        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
-        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
-        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
-        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
-        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__23a2f9247a15b225c9aeed35e0047e1672a3f98ae21acf9b14fd336f113c7e6f)
@@ -8432,7 +8499,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentConditionalCases"]]]:
         '''conditional_cases block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
         '''
         result = self._values.get("conditional_cases")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentConditionalCases"]]], result)
@@ -8443,7 +8510,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessages"]]]:
         '''messages block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
         '''
         result = self._values.get("messages")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessages"]]], result)
@@ -8456,7 +8523,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
 
         If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
         '''
         result = self._values.get("return_partial_responses")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -8467,7 +8534,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentSetParameterActions"]]]:
         '''set_parameter_actions block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
         '''
         result = self._values.get("set_parameter_actions")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentSetParameterActions"]]], result)
@@ -8478,7 +8545,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
 
         This field is required if webhook is specified.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
         '''
         result = self._values.get("tag")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8487,7 +8554,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     def webhook(self) -> typing.Optional[builtins.str]:
         '''The webhook to call. Format: projects//locations//agents//webhooks/.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         result = self._values.get("webhook")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8512,7 +8579,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
 class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentConditionalCases:
     def __init__(self, *, cases: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param cases: A JSON encoded list of cascading if-else conditions. Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored. See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
+        :param cases: A JSON encoded list of cascading if-else conditions. Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored. See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__81849e2f2275e16ae439e717051e89bcb7e653815fb68b8723368eef16c00317)
@@ -8528,7 +8595,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
         Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored.
         See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
         '''
         result = self._values.get("cases")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8731,14 +8798,14 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
         text: typing.Optional[typing.Union["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesText", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param channel: The channel which the response is associated with. Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
-        :param conversation_success: conversation_success block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
-        :param live_agent_handoff: live_agent_handoff block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
-        :param output_audio_text: output_audio_text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
-        :param payload: A custom, platform-specific payload. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
-        :param play_audio: play_audio block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
-        :param telephony_transfer_call: telephony_transfer_call block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
-        :param text: text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param channel: The channel which the response is associated with. Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
+        :param conversation_success: conversation_success block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
+        :param live_agent_handoff: live_agent_handoff block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
+        :param output_audio_text: output_audio_text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
+        :param payload: A custom, platform-specific payload. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
+        :param play_audio: play_audio block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
+        :param telephony_transfer_call: telephony_transfer_call block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
+        :param text: text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if isinstance(conversation_success, dict):
             conversation_success = DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesConversationSuccess(**conversation_success)
@@ -8786,7 +8853,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
 
         Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
         '''
         result = self._values.get("channel")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8797,7 +8864,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesConversationSuccess"]:
         '''conversation_success block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
         '''
         result = self._values.get("conversation_success")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesConversationSuccess"], result)
@@ -8808,7 +8875,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesLiveAgentHandoff"]:
         '''live_agent_handoff block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
         '''
         result = self._values.get("live_agent_handoff")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesLiveAgentHandoff"], result)
@@ -8819,7 +8886,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesOutputAudioText"]:
         '''output_audio_text block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
         '''
         result = self._values.get("output_audio_text")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesOutputAudioText"], result)
@@ -8828,7 +8895,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     def payload(self) -> typing.Optional[builtins.str]:
         '''A custom, platform-specific payload.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
         '''
         result = self._values.get("payload")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8839,7 +8906,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesPlayAudio"]:
         '''play_audio block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
         '''
         result = self._values.get("play_audio")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesPlayAudio"], result)
@@ -8850,7 +8917,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesTelephonyTransferCall"]:
         '''telephony_transfer_call block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
         '''
         result = self._values.get("telephony_transfer_call")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesTelephonyTransferCall"], result)
@@ -8861,7 +8928,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     ) -> typing.Optional["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesText"]:
         '''text block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional["DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesText"], result)
@@ -8886,7 +8953,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
 class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesConversationSuccess:
     def __init__(self, *, metadata: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__749602d06cb6937ec1ac7c38f71919593f78a9f81e1a295ad6c8437ce8539f86)
@@ -8899,7 +8966,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     def metadata(self) -> typing.Optional[builtins.str]:
         '''Custom metadata. Dialogflow doesn't impose any structure on this.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         result = self._values.get("metadata")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -9076,7 +9143,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
 class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesLiveAgentHandoff:
     def __init__(self, *, metadata: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__6208f60cdee1ec1d059f52b7a1a552c3aa97719c80ec991c759208e39b34e8e4)
@@ -9089,7 +9156,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     def metadata(self) -> typing.Optional[builtins.str]:
         '''Custom metadata. Dialogflow doesn't impose any structure on this.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         result = self._values.get("metadata")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -9178,8 +9245,8 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
         text: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
-        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__b7f5e3d583137cf5ffdbd07bf0aa2289f5ac4e070470d1f93a8c0a929c5d357f)
@@ -9195,7 +9262,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     def ssml(self) -> typing.Optional[builtins.str]:
         '''The SSML text to be synthesized. For more information, see SSML.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
         '''
         result = self._values.get("ssml")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -9204,7 +9271,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     def text(self) -> typing.Optional[builtins.str]:
         '''The raw text to be synthesized.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -9339,7 +9406,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
         metadata: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         value = DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesConversationSuccess(
             metadata=metadata
@@ -9354,7 +9421,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
         metadata: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         value = DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesLiveAgentHandoff(
             metadata=metadata
@@ -9370,8 +9437,8 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
         text: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
-        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         value = DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesOutputAudioText(
             ssml=ssml, text=text
@@ -9382,7 +9449,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     @jsii.member(jsii_name="putPlayAudio")
     def put_play_audio(self, *, audio_uri: builtins.str) -> None:
         '''
-        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         value = DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesPlayAudio(
             audio_uri=audio_uri
@@ -9393,7 +9460,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     @jsii.member(jsii_name="putTelephonyTransferCall")
     def put_telephony_transfer_call(self, *, phone_number: builtins.str) -> None:
         '''
-        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         value = DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesTelephonyTransferCall(
             phone_number=phone_number
@@ -9408,7 +9475,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
         text: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         value = DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesText(
             text=text
@@ -9592,7 +9659,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
 class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesPlayAudio:
     def __init__(self, *, audio_uri: builtins.str) -> None:
         '''
-        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__fead30325e1ae4827ecc8c98fabfc2d6ae173c8794d226407d3b6e638770c8b5)
@@ -9607,7 +9674,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
 
         Dialogflow does not impose any validation on this value. It is specific to the client that reads it.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         result = self._values.get("audio_uri")
         assert result is not None, "Required property 'audio_uri' is missing"
@@ -9693,7 +9760,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
 class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentMessagesTelephonyTransferCall:
     def __init__(self, *, phone_number: builtins.str) -> None:
         '''
-        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__5c72605d1f13aabe9951226594e81aa5a36c4e7ea0186f7e1e695111129ebc9d)
@@ -9706,7 +9773,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     def phone_number(self) -> builtins.str:
         '''Transfer the call to a phone number in E.164 format.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         result = self._values.get("phone_number")
         assert result is not None, "Required property 'phone_number' is missing"
@@ -9791,7 +9858,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
         text: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__41a0efa64aa0a4660eebe1feff25627ec5d21e7e776e8a55124de8575831f369)
@@ -9804,7 +9871,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     def text(self) -> typing.Optional[typing.List[builtins.str]]:
         '''A collection of text responses.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -10099,8 +10166,8 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
         value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param parameter: Display name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
-        :param value: The new JSON-encoded value of the parameter. A null value clears the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
+        :param parameter: Display name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
+        :param value: The new JSON-encoded value of the parameter. A null value clears the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__87ccd17d2816cd632b1a300960f7e835be028001289b71c5935650b9d539732b)
@@ -10116,7 +10183,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     def parameter(self) -> typing.Optional[builtins.str]:
         '''Display name of the parameter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
         '''
         result = self._values.get("parameter")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10125,7 +10192,7 @@ class DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulf
     def value(self) -> typing.Optional[builtins.str]:
         '''The new JSON-encoded value of the parameter. A null value clears the parameter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
         '''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10447,7 +10514,7 @@ class DialogflowCxPageFormParametersOutputReference(
         dtmf_settings: typing.Optional[typing.Union[DialogflowCxPageFormParametersAdvancedSettingsDtmfSettings, typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param dtmf_settings: dtmf_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
+        :param dtmf_settings: dtmf_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
         '''
         value = DialogflowCxPageFormParametersAdvancedSettings(
             dtmf_settings=dtmf_settings
@@ -10463,8 +10530,8 @@ class DialogflowCxPageFormParametersOutputReference(
         reprompt_event_handlers: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlers, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
-        :param initial_prompt_fulfillment: initial_prompt_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#initial_prompt_fulfillment DialogflowCxPage#initial_prompt_fulfillment}
-        :param reprompt_event_handlers: reprompt_event_handlers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#reprompt_event_handlers DialogflowCxPage#reprompt_event_handlers}
+        :param initial_prompt_fulfillment: initial_prompt_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#initial_prompt_fulfillment DialogflowCxPage#initial_prompt_fulfillment}
+        :param reprompt_event_handlers: reprompt_event_handlers block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#reprompt_event_handlers DialogflowCxPage#reprompt_event_handlers}
         '''
         value = DialogflowCxPageFormParametersFillBehavior(
             initial_prompt_fulfillment=initial_prompt_fulfillment,
@@ -10669,6 +10736,4160 @@ class DialogflowCxPageFormParametersOutputReference(
 
 
 @jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettings",
+    jsii_struct_bases=[],
+    name_mapping={
+        "data_store_connections": "dataStoreConnections",
+        "enabled": "enabled",
+        "target_flow": "targetFlow",
+        "target_page": "targetPage",
+        "trigger_fulfillment": "triggerFulfillment",
+    },
+)
+class DialogflowCxPageKnowledgeConnectorSettings:
+    def __init__(
+        self,
+        *,
+        data_store_connections: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        target_flow: typing.Optional[builtins.str] = None,
+        target_page: typing.Optional[builtins.str] = None,
+        trigger_fulfillment: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment", typing.Dict[builtins.str, typing.Any]]] = None,
+    ) -> None:
+        '''
+        :param data_store_connections: data_store_connections block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#data_store_connections DialogflowCxPage#data_store_connections}
+        :param enabled: Whether Knowledge Connector is enabled or not. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
+        :param target_flow: The target flow to transition to. Format: projects//locations//agents//flows/. This field is part of a union field 'target': Only one of 'targetPage' or 'targetFlow' may be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
+        :param target_page: The target page to transition to. Format: projects//locations//agents//flows//pages/. The page must be in the same host flow (the flow that owns this 'KnowledgeConnectorSettings'). This field is part of a union field 'target': Only one of 'targetPage' or 'targetFlow' may be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
+        :param trigger_fulfillment: trigger_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
+        '''
+        if isinstance(trigger_fulfillment, dict):
+            trigger_fulfillment = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment(**trigger_fulfillment)
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__46b9ab50a6a53eb12c9eb6445e75adffc136a7f9a00baf28499404988305d5ef)
+            check_type(argname="argument data_store_connections", value=data_store_connections, expected_type=type_hints["data_store_connections"])
+            check_type(argname="argument enabled", value=enabled, expected_type=type_hints["enabled"])
+            check_type(argname="argument target_flow", value=target_flow, expected_type=type_hints["target_flow"])
+            check_type(argname="argument target_page", value=target_page, expected_type=type_hints["target_page"])
+            check_type(argname="argument trigger_fulfillment", value=trigger_fulfillment, expected_type=type_hints["trigger_fulfillment"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if data_store_connections is not None:
+            self._values["data_store_connections"] = data_store_connections
+        if enabled is not None:
+            self._values["enabled"] = enabled
+        if target_flow is not None:
+            self._values["target_flow"] = target_flow
+        if target_page is not None:
+            self._values["target_page"] = target_page
+        if trigger_fulfillment is not None:
+            self._values["trigger_fulfillment"] = trigger_fulfillment
+
+    @builtins.property
+    def data_store_connections(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections"]]]:
+        '''data_store_connections block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#data_store_connections DialogflowCxPage#data_store_connections}
+        '''
+        result = self._values.get("data_store_connections")
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections"]]], result)
+
+    @builtins.property
+    def enabled(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''Whether Knowledge Connector is enabled or not.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
+        '''
+        result = self._values.get("enabled")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    @builtins.property
+    def target_flow(self) -> typing.Optional[builtins.str]:
+        '''The target flow to transition to.
+
+        Format: projects//locations//agents//flows/.
+        This field is part of a union field 'target': Only one of 'targetPage' or 'targetFlow' may be set.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
+        '''
+        result = self._values.get("target_flow")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def target_page(self) -> typing.Optional[builtins.str]:
+        '''The target page to transition to.
+
+        Format: projects//locations//agents//flows//pages/.
+        The page must be in the same host flow (the flow that owns this 'KnowledgeConnectorSettings').
+        This field is part of a union field 'target': Only one of 'targetPage' or 'targetFlow' may be set.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
+        '''
+        result = self._values.get("target_page")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def trigger_fulfillment(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment"]:
+        '''trigger_fulfillment block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
+        '''
+        result = self._values.get("trigger_fulfillment")
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment"], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettings(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections",
+    jsii_struct_bases=[],
+    name_mapping={
+        "data_store": "dataStore",
+        "data_store_type": "dataStoreType",
+        "document_processing_mode": "documentProcessingMode",
+    },
+)
+class DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections:
+    def __init__(
+        self,
+        *,
+        data_store: typing.Optional[builtins.str] = None,
+        data_store_type: typing.Optional[builtins.str] = None,
+        document_processing_mode: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param data_store: The full name of the referenced data store. Formats: projects/{project}/locations/{location}/collections/{collection}/dataStores/{dataStore} projects/{project}/locations/{location}/dataStores/{dataStore}. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#data_store DialogflowCxPage#data_store}
+        :param data_store_type: The type of the connected data store. - PUBLIC_WEB: A data store that contains public web content. - UNSTRUCTURED: A data store that contains unstructured private data. - STRUCTURED: A data store that contains structured data (for example FAQ). Possible values: ["PUBLIC_WEB", "UNSTRUCTURED", "STRUCTURED"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#data_store_type DialogflowCxPage#data_store_type}
+        :param document_processing_mode: The document processing mode for the data store connection. Should only be set for PUBLIC_WEB and UNSTRUCTURED data stores. If not set it is considered as DOCUMENTS, as this is the legacy mode. - DOCUMENTS: Documents are processed as documents. - CHUNKS: Documents are converted to chunks. Possible values: ["DOCUMENTS", "CHUNKS"] Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#document_processing_mode DialogflowCxPage#document_processing_mode}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0dfff30fa674843c5382d4b23b77b284c139f517f1e2b90ceb45189def347719)
+            check_type(argname="argument data_store", value=data_store, expected_type=type_hints["data_store"])
+            check_type(argname="argument data_store_type", value=data_store_type, expected_type=type_hints["data_store_type"])
+            check_type(argname="argument document_processing_mode", value=document_processing_mode, expected_type=type_hints["document_processing_mode"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if data_store is not None:
+            self._values["data_store"] = data_store
+        if data_store_type is not None:
+            self._values["data_store_type"] = data_store_type
+        if document_processing_mode is not None:
+            self._values["document_processing_mode"] = document_processing_mode
+
+    @builtins.property
+    def data_store(self) -> typing.Optional[builtins.str]:
+        '''The full name of the referenced data store. Formats: projects/{project}/locations/{location}/collections/{collection}/dataStores/{dataStore} projects/{project}/locations/{location}/dataStores/{dataStore}.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#data_store DialogflowCxPage#data_store}
+        '''
+        result = self._values.get("data_store")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def data_store_type(self) -> typing.Optional[builtins.str]:
+        '''The type of the connected data store.
+
+        - PUBLIC_WEB: A data store that contains public web content.
+        - UNSTRUCTURED: A data store that contains unstructured private data.
+        - STRUCTURED: A data store that contains structured data (for example FAQ). Possible values: ["PUBLIC_WEB", "UNSTRUCTURED", "STRUCTURED"]
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#data_store_type DialogflowCxPage#data_store_type}
+        '''
+        result = self._values.get("data_store_type")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def document_processing_mode(self) -> typing.Optional[builtins.str]:
+        '''The document processing mode for the data store connection.
+
+        Should only be set for PUBLIC_WEB and UNSTRUCTURED data stores. If not set it is considered as DOCUMENTS, as this is the legacy mode.
+
+        - DOCUMENTS: Documents are processed as documents.
+        - CHUNKS: Documents are converted to chunks. Possible values: ["DOCUMENTS", "CHUNKS"]
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#document_processing_mode DialogflowCxPage#document_processing_mode}
+        '''
+        result = self._values.get("document_processing_mode")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnectionsList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnectionsList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e9a35762480860b170b952d7c1cecb615654c73e09d3a51744aa8a414f0039ec)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnectionsOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1473c7fa5880376fad19b052b2ef1590f799e09fd6edc17a71fc6ff9ec83a04b)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnectionsOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0ad7e468b3157c1bf0fdd2ce2b1d3ad7ba9d99c7dc1d8918f4f4271222195ff0)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__a1cee64b1cfe55ac9d3cb1e656ee68f46b833e9d05c02df2f11cae02cefe6f74)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4f75f4ccc4d06fbabcd1f551c103445f5287d830f57ed2c85cbdc59bf07c8d84)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections]]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections]]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__022c76db79499f8caeecd7e43b21a2b3992f2afcd216fd87f23b708f7cb3fbef)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnectionsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnectionsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ade449a28e6161065c33bd80fd23bbb8b5bb9a7fa14607d70d31b5ce0efde693)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @jsii.member(jsii_name="resetDataStore")
+    def reset_data_store(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDataStore", []))
+
+    @jsii.member(jsii_name="resetDataStoreType")
+    def reset_data_store_type(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDataStoreType", []))
+
+    @jsii.member(jsii_name="resetDocumentProcessingMode")
+    def reset_document_processing_mode(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDocumentProcessingMode", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="dataStoreInput")
+    def data_store_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "dataStoreInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="dataStoreTypeInput")
+    def data_store_type_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "dataStoreTypeInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="documentProcessingModeInput")
+    def document_processing_mode_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "documentProcessingModeInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="dataStore")
+    def data_store(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "dataStore"))
+
+    @data_store.setter
+    def data_store(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7a54aaf9e1d02aefaf5f8a4a47a40c3ca3fb3288c559daf7f2954e2cf472e5ac)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "dataStore", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="dataStoreType")
+    def data_store_type(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "dataStoreType"))
+
+    @data_store_type.setter
+    def data_store_type(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7a6b796d3e81ce9c6e340031da22e808b5df040ec20cdd92092a9cd5fa7bcfe7)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "dataStoreType", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="documentProcessingMode")
+    def document_processing_mode(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "documentProcessingMode"))
+
+    @document_processing_mode.setter
+    def document_processing_mode(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e2e59f5fc28e756b802deeb79e4d1dbae5f41e61b33138c66da7f1ba212f4573)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "documentProcessingMode", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9157b82482b5ff231b9df3ba33cb15751ea86f932fadca13d1af653c6d8164fa)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f9297291abb33feb01d5c8e4ad5e1895693a6765c8cfe761eb2ce15b5a6eb04b)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="putDataStoreConnections")
+    def put_data_store_connections(
+        self,
+        value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections, typing.Dict[builtins.str, typing.Any]]]],
+    ) -> None:
+        '''
+        :param value: -
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__96abf2a3cf29883d3d91e6fa9feadd6216c762c20cbd18567df1f4bc2df8cdbe)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        return typing.cast(None, jsii.invoke(self, "putDataStoreConnections", [value]))
+
+    @jsii.member(jsii_name="putTriggerFulfillment")
+    def put_trigger_fulfillment(
+        self,
+        *,
+        advanced_settings: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings", typing.Dict[builtins.str, typing.Any]]] = None,
+        conditional_cases: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        enable_generative_fallback: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        messages: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        return_partial_responses: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        set_parameter_actions: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        tag: typing.Optional[builtins.str] = None,
+        webhook: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param advanced_settings: advanced_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#advanced_settings DialogflowCxPage#advanced_settings}
+        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        :param enable_generative_fallback: If the flag is true, the agent will utilize LLM to generate a text response. If LLM generation fails, the defined responses in the fulfillment will be respected. This flag is only useful for fulfillments associated with no-match event handlers. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enable_generative_fallback DialogflowCxPage#enable_generative_fallback}
+        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        '''
+        value = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment(
+            advanced_settings=advanced_settings,
+            conditional_cases=conditional_cases,
+            enable_generative_fallback=enable_generative_fallback,
+            messages=messages,
+            return_partial_responses=return_partial_responses,
+            set_parameter_actions=set_parameter_actions,
+            tag=tag,
+            webhook=webhook,
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTriggerFulfillment", [value]))
+
+    @jsii.member(jsii_name="resetDataStoreConnections")
+    def reset_data_store_connections(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDataStoreConnections", []))
+
+    @jsii.member(jsii_name="resetEnabled")
+    def reset_enabled(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetEnabled", []))
+
+    @jsii.member(jsii_name="resetTargetFlow")
+    def reset_target_flow(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTargetFlow", []))
+
+    @jsii.member(jsii_name="resetTargetPage")
+    def reset_target_page(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTargetPage", []))
+
+    @jsii.member(jsii_name="resetTriggerFulfillment")
+    def reset_trigger_fulfillment(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTriggerFulfillment", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="dataStoreConnections")
+    def data_store_connections(
+        self,
+    ) -> DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnectionsList:
+        return typing.cast(DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnectionsList, jsii.get(self, "dataStoreConnections"))
+
+    @builtins.property
+    @jsii.member(jsii_name="triggerFulfillment")
+    def trigger_fulfillment(
+        self,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentOutputReference":
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentOutputReference", jsii.get(self, "triggerFulfillment"))
+
+    @builtins.property
+    @jsii.member(jsii_name="dataStoreConnectionsInput")
+    def data_store_connections_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections]]], jsii.get(self, "dataStoreConnectionsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="enabledInput")
+    def enabled_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "enabledInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="targetFlowInput")
+    def target_flow_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "targetFlowInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="targetPageInput")
+    def target_page_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "targetPageInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="triggerFulfillmentInput")
+    def trigger_fulfillment_input(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment"]:
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment"], jsii.get(self, "triggerFulfillmentInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="enabled")
+    def enabled(self) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "enabled"))
+
+    @enabled.setter
+    def enabled(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__a9cec7fab5ad72afb705577dfda3f250d5cf3976fb50fa338ea77ba08dcbc7cb)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "enabled", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="targetFlow")
+    def target_flow(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "targetFlow"))
+
+    @target_flow.setter
+    def target_flow(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ddec46e3ca0fc1989fddf59f5c7ee9d8351acc8ba8d38b27e952b3deda683f88)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "targetFlow", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="targetPage")
+    def target_page(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "targetPage"))
+
+    @target_page.setter
+    def target_page(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__419ed3b3f6a0662130a9e783328fc92e8a37565a4286bc4752044db7e98d7289)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "targetPage", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettings]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettings], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettings],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ca917074758723325b4e4b79557ba381984deb0d73c3e1e1738bc390498a5afe)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment",
+    jsii_struct_bases=[],
+    name_mapping={
+        "advanced_settings": "advancedSettings",
+        "conditional_cases": "conditionalCases",
+        "enable_generative_fallback": "enableGenerativeFallback",
+        "messages": "messages",
+        "return_partial_responses": "returnPartialResponses",
+        "set_parameter_actions": "setParameterActions",
+        "tag": "tag",
+        "webhook": "webhook",
+    },
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment:
+    def __init__(
+        self,
+        *,
+        advanced_settings: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings", typing.Dict[builtins.str, typing.Any]]] = None,
+        conditional_cases: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        enable_generative_fallback: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        messages: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        return_partial_responses: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        set_parameter_actions: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions", typing.Dict[builtins.str, typing.Any]]]]] = None,
+        tag: typing.Optional[builtins.str] = None,
+        webhook: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param advanced_settings: advanced_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#advanced_settings DialogflowCxPage#advanced_settings}
+        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        :param enable_generative_fallback: If the flag is true, the agent will utilize LLM to generate a text response. If LLM generation fails, the defined responses in the fulfillment will be respected. This flag is only useful for fulfillments associated with no-match event handlers. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enable_generative_fallback DialogflowCxPage#enable_generative_fallback}
+        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        '''
+        if isinstance(advanced_settings, dict):
+            advanced_settings = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings(**advanced_settings)
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__da324fe443c9d49585919333e29167763cb4c88be509fdefc4ceb9d92be3effe)
+            check_type(argname="argument advanced_settings", value=advanced_settings, expected_type=type_hints["advanced_settings"])
+            check_type(argname="argument conditional_cases", value=conditional_cases, expected_type=type_hints["conditional_cases"])
+            check_type(argname="argument enable_generative_fallback", value=enable_generative_fallback, expected_type=type_hints["enable_generative_fallback"])
+            check_type(argname="argument messages", value=messages, expected_type=type_hints["messages"])
+            check_type(argname="argument return_partial_responses", value=return_partial_responses, expected_type=type_hints["return_partial_responses"])
+            check_type(argname="argument set_parameter_actions", value=set_parameter_actions, expected_type=type_hints["set_parameter_actions"])
+            check_type(argname="argument tag", value=tag, expected_type=type_hints["tag"])
+            check_type(argname="argument webhook", value=webhook, expected_type=type_hints["webhook"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if advanced_settings is not None:
+            self._values["advanced_settings"] = advanced_settings
+        if conditional_cases is not None:
+            self._values["conditional_cases"] = conditional_cases
+        if enable_generative_fallback is not None:
+            self._values["enable_generative_fallback"] = enable_generative_fallback
+        if messages is not None:
+            self._values["messages"] = messages
+        if return_partial_responses is not None:
+            self._values["return_partial_responses"] = return_partial_responses
+        if set_parameter_actions is not None:
+            self._values["set_parameter_actions"] = set_parameter_actions
+        if tag is not None:
+            self._values["tag"] = tag
+        if webhook is not None:
+            self._values["webhook"] = webhook
+
+    @builtins.property
+    def advanced_settings(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings"]:
+        '''advanced_settings block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#advanced_settings DialogflowCxPage#advanced_settings}
+        '''
+        result = self._values.get("advanced_settings")
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings"], result)
+
+    @builtins.property
+    def conditional_cases(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases"]]]:
+        '''conditional_cases block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        '''
+        result = self._values.get("conditional_cases")
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases"]]], result)
+
+    @builtins.property
+    def enable_generative_fallback(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''If the flag is true, the agent will utilize LLM to generate a text response.
+
+        If LLM generation fails, the defined responses in the fulfillment will be respected. This flag is only useful for fulfillments associated with no-match event handlers.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enable_generative_fallback DialogflowCxPage#enable_generative_fallback}
+        '''
+        result = self._values.get("enable_generative_fallback")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    @builtins.property
+    def messages(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages"]]]:
+        '''messages block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        '''
+        result = self._values.get("messages")
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages"]]], result)
+
+    @builtins.property
+    def return_partial_responses(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs.
+
+        If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        '''
+        result = self._values.get("return_partial_responses")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    @builtins.property
+    def set_parameter_actions(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions"]]]:
+        '''set_parameter_actions block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        '''
+        result = self._values.get("set_parameter_actions")
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions"]]], result)
+
+    @builtins.property
+    def tag(self) -> typing.Optional[builtins.str]:
+        '''The tag used by the webhook to identify which fulfillment is being called.
+
+        This field is required if webhook is specified.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        '''
+        result = self._values.get("tag")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def webhook(self) -> typing.Optional[builtins.str]:
+        '''The webhook to call. Format: projects//locations//agents//webhooks/.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        '''
+        result = self._values.get("webhook")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings",
+    jsii_struct_bases=[],
+    name_mapping={
+        "dtmf_settings": "dtmfSettings",
+        "logging_settings": "loggingSettings",
+        "speech_settings": "speechSettings",
+    },
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings:
+    def __init__(
+        self,
+        *,
+        dtmf_settings: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings", typing.Dict[builtins.str, typing.Any]]] = None,
+        logging_settings: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings", typing.Dict[builtins.str, typing.Any]]] = None,
+        speech_settings: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings", typing.Dict[builtins.str, typing.Any]]] = None,
+    ) -> None:
+        '''
+        :param dtmf_settings: dtmf_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
+        :param logging_settings: logging_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#logging_settings DialogflowCxPage#logging_settings}
+        :param speech_settings: speech_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#speech_settings DialogflowCxPage#speech_settings}
+        '''
+        if isinstance(dtmf_settings, dict):
+            dtmf_settings = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings(**dtmf_settings)
+        if isinstance(logging_settings, dict):
+            logging_settings = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings(**logging_settings)
+        if isinstance(speech_settings, dict):
+            speech_settings = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings(**speech_settings)
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__17e0190331cf3e16b7697574e76032b665c225a4dc42694215d7b6f0dff830f0)
+            check_type(argname="argument dtmf_settings", value=dtmf_settings, expected_type=type_hints["dtmf_settings"])
+            check_type(argname="argument logging_settings", value=logging_settings, expected_type=type_hints["logging_settings"])
+            check_type(argname="argument speech_settings", value=speech_settings, expected_type=type_hints["speech_settings"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if dtmf_settings is not None:
+            self._values["dtmf_settings"] = dtmf_settings
+        if logging_settings is not None:
+            self._values["logging_settings"] = logging_settings
+        if speech_settings is not None:
+            self._values["speech_settings"] = speech_settings
+
+    @builtins.property
+    def dtmf_settings(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings"]:
+        '''dtmf_settings block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
+        '''
+        result = self._values.get("dtmf_settings")
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings"], result)
+
+    @builtins.property
+    def logging_settings(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings"]:
+        '''logging_settings block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#logging_settings DialogflowCxPage#logging_settings}
+        '''
+        result = self._values.get("logging_settings")
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings"], result)
+
+    @builtins.property
+    def speech_settings(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings"]:
+        '''speech_settings block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#speech_settings DialogflowCxPage#speech_settings}
+        '''
+        result = self._values.get("speech_settings")
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings"], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings",
+    jsii_struct_bases=[],
+    name_mapping={
+        "enabled": "enabled",
+        "endpointing_timeout_duration": "endpointingTimeoutDuration",
+        "finish_digit": "finishDigit",
+        "interdigit_timeout_duration": "interdigitTimeoutDuration",
+        "max_digits": "maxDigits",
+    },
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings:
+    def __init__(
+        self,
+        *,
+        enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        endpointing_timeout_duration: typing.Optional[builtins.str] = None,
+        finish_digit: typing.Optional[builtins.str] = None,
+        interdigit_timeout_duration: typing.Optional[builtins.str] = None,
+        max_digits: typing.Optional[jsii.Number] = None,
+    ) -> None:
+        '''
+        :param enabled: If true, incoming audio is processed for DTMF (dual tone multi frequtectency) events. For example, if the caller presses a button on their telephone keypad and DTMF processing is enabled, Dialogflow will de the event (e.g. a "3" was pressed) in the incoming audio and pass the event to the bot to drive business logic (e.g. when 3 is pressed, return the account balance). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
+        :param endpointing_timeout_duration: Endpoint timeout setting for matching dtmf input to regex. A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.500s". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#endpointing_timeout_duration DialogflowCxPage#endpointing_timeout_duration}
+        :param finish_digit: The digit that terminates a DTMF digit sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
+        :param interdigit_timeout_duration: Interdigit timeout setting for matching dtmf input to regex. A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.500s". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#interdigit_timeout_duration DialogflowCxPage#interdigit_timeout_duration}
+        :param max_digits: Max length of DTMF digits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ff4836d788d93ab71f6c1a41ff2dacb0285e71dc9d4fe4a68caa1c6e1f38ebd8)
+            check_type(argname="argument enabled", value=enabled, expected_type=type_hints["enabled"])
+            check_type(argname="argument endpointing_timeout_duration", value=endpointing_timeout_duration, expected_type=type_hints["endpointing_timeout_duration"])
+            check_type(argname="argument finish_digit", value=finish_digit, expected_type=type_hints["finish_digit"])
+            check_type(argname="argument interdigit_timeout_duration", value=interdigit_timeout_duration, expected_type=type_hints["interdigit_timeout_duration"])
+            check_type(argname="argument max_digits", value=max_digits, expected_type=type_hints["max_digits"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if enabled is not None:
+            self._values["enabled"] = enabled
+        if endpointing_timeout_duration is not None:
+            self._values["endpointing_timeout_duration"] = endpointing_timeout_duration
+        if finish_digit is not None:
+            self._values["finish_digit"] = finish_digit
+        if interdigit_timeout_duration is not None:
+            self._values["interdigit_timeout_duration"] = interdigit_timeout_duration
+        if max_digits is not None:
+            self._values["max_digits"] = max_digits
+
+    @builtins.property
+    def enabled(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''If true, incoming audio is processed for DTMF (dual tone multi frequtectency) events.
+
+        For example, if the caller presses a button on their telephone keypad and DTMF processing is enabled, Dialogflow will de the event (e.g. a "3" was pressed) in the incoming audio and pass the event to the bot to drive business logic (e.g. when 3 is pressed, return the account balance).
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
+        '''
+        result = self._values.get("enabled")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    @builtins.property
+    def endpointing_timeout_duration(self) -> typing.Optional[builtins.str]:
+        '''Endpoint timeout setting for matching dtmf input to regex.
+
+        A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.500s".
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#endpointing_timeout_duration DialogflowCxPage#endpointing_timeout_duration}
+        '''
+        result = self._values.get("endpointing_timeout_duration")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def finish_digit(self) -> typing.Optional[builtins.str]:
+        '''The digit that terminates a DTMF digit sequence.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
+        '''
+        result = self._values.get("finish_digit")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def interdigit_timeout_duration(self) -> typing.Optional[builtins.str]:
+        '''Interdigit timeout setting for matching dtmf input to regex.
+
+        A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.500s".
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#interdigit_timeout_duration DialogflowCxPage#interdigit_timeout_duration}
+        '''
+        result = self._values.get("interdigit_timeout_duration")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def max_digits(self) -> typing.Optional[jsii.Number]:
+        '''Max length of DTMF digits.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
+        '''
+        result = self._values.get("max_digits")
+        return typing.cast(typing.Optional[jsii.Number], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettingsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettingsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__47eb425e27e3d0e1e9a872a6010f5612bf46d1ad576b09590fab7ee02ec380b8)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetEnabled")
+    def reset_enabled(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetEnabled", []))
+
+    @jsii.member(jsii_name="resetEndpointingTimeoutDuration")
+    def reset_endpointing_timeout_duration(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetEndpointingTimeoutDuration", []))
+
+    @jsii.member(jsii_name="resetFinishDigit")
+    def reset_finish_digit(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetFinishDigit", []))
+
+    @jsii.member(jsii_name="resetInterdigitTimeoutDuration")
+    def reset_interdigit_timeout_duration(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetInterdigitTimeoutDuration", []))
+
+    @jsii.member(jsii_name="resetMaxDigits")
+    def reset_max_digits(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetMaxDigits", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="enabledInput")
+    def enabled_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "enabledInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="endpointingTimeoutDurationInput")
+    def endpointing_timeout_duration_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "endpointingTimeoutDurationInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="finishDigitInput")
+    def finish_digit_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "finishDigitInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="interdigitTimeoutDurationInput")
+    def interdigit_timeout_duration_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "interdigitTimeoutDurationInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="maxDigitsInput")
+    def max_digits_input(self) -> typing.Optional[jsii.Number]:
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "maxDigitsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="enabled")
+    def enabled(self) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "enabled"))
+
+    @enabled.setter
+    def enabled(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__57b3bd00008d170f4d76ae8c85a0313c9a1a5ce79ff35012e7c4a20c6aaf4baf)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "enabled", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="endpointingTimeoutDuration")
+    def endpointing_timeout_duration(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "endpointingTimeoutDuration"))
+
+    @endpointing_timeout_duration.setter
+    def endpointing_timeout_duration(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__908364f5279758a2d66b3e5b1dec23f663e23a65f1045ccdea70d0a7fc3c4426)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "endpointingTimeoutDuration", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="finishDigit")
+    def finish_digit(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "finishDigit"))
+
+    @finish_digit.setter
+    def finish_digit(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6d7007857da5826df9c27bccefe154dc0e9863f47f72888dbb846b74788b6338)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "finishDigit", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="interdigitTimeoutDuration")
+    def interdigit_timeout_duration(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "interdigitTimeoutDuration"))
+
+    @interdigit_timeout_duration.setter
+    def interdigit_timeout_duration(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9cb9f57894a7a415adf24bce8f517b8602581c232ec4d922366f1feaf3c5500d)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "interdigitTimeoutDuration", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="maxDigits")
+    def max_digits(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "maxDigits"))
+
+    @max_digits.setter
+    def max_digits(self, value: jsii.Number) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3213775552d8f5cf0fb2e978085850bb5f7fbe983d8cd6f3729524a66f9ee89f)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "maxDigits", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d6173c0737b389ab947e791e7115fa9b798ceca90eca3f0df6cb7203d6bd3f5e)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings",
+    jsii_struct_bases=[],
+    name_mapping={
+        "enable_consent_based_redaction": "enableConsentBasedRedaction",
+        "enable_interaction_logging": "enableInteractionLogging",
+        "enable_stackdriver_logging": "enableStackdriverLogging",
+    },
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings:
+    def __init__(
+        self,
+        *,
+        enable_consent_based_redaction: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        enable_interaction_logging: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        enable_stackdriver_logging: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    ) -> None:
+        '''
+        :param enable_consent_based_redaction: Enables consent-based end-user input redaction, if true, a pre-defined session parameter **$session.params.conversation-redaction** will be used to determine if the utterance should be redacted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enable_consent_based_redaction DialogflowCxPage#enable_consent_based_redaction}
+        :param enable_interaction_logging: Enables DF Interaction logging. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enable_interaction_logging DialogflowCxPage#enable_interaction_logging}
+        :param enable_stackdriver_logging: Enables Google Cloud Logging. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enable_stackdriver_logging DialogflowCxPage#enable_stackdriver_logging}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__466bcf761caf3e9c235afb1bd474cd5b8ab26cef29c765d2fcf5186f3c6d943d)
+            check_type(argname="argument enable_consent_based_redaction", value=enable_consent_based_redaction, expected_type=type_hints["enable_consent_based_redaction"])
+            check_type(argname="argument enable_interaction_logging", value=enable_interaction_logging, expected_type=type_hints["enable_interaction_logging"])
+            check_type(argname="argument enable_stackdriver_logging", value=enable_stackdriver_logging, expected_type=type_hints["enable_stackdriver_logging"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if enable_consent_based_redaction is not None:
+            self._values["enable_consent_based_redaction"] = enable_consent_based_redaction
+        if enable_interaction_logging is not None:
+            self._values["enable_interaction_logging"] = enable_interaction_logging
+        if enable_stackdriver_logging is not None:
+            self._values["enable_stackdriver_logging"] = enable_stackdriver_logging
+
+    @builtins.property
+    def enable_consent_based_redaction(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''Enables consent-based end-user input redaction, if true, a pre-defined session parameter **$session.params.conversation-redaction** will be used to determine if the utterance should be redacted.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enable_consent_based_redaction DialogflowCxPage#enable_consent_based_redaction}
+        '''
+        result = self._values.get("enable_consent_based_redaction")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    @builtins.property
+    def enable_interaction_logging(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''Enables DF Interaction logging.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enable_interaction_logging DialogflowCxPage#enable_interaction_logging}
+        '''
+        result = self._values.get("enable_interaction_logging")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    @builtins.property
+    def enable_stackdriver_logging(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''Enables Google Cloud Logging.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enable_stackdriver_logging DialogflowCxPage#enable_stackdriver_logging}
+        '''
+        result = self._values.get("enable_stackdriver_logging")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettingsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettingsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7a9987e8098b4fb8bfbcd9d6f52075e8aca4b9422b15ff97636bff57c4daceed)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetEnableConsentBasedRedaction")
+    def reset_enable_consent_based_redaction(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetEnableConsentBasedRedaction", []))
+
+    @jsii.member(jsii_name="resetEnableInteractionLogging")
+    def reset_enable_interaction_logging(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetEnableInteractionLogging", []))
+
+    @jsii.member(jsii_name="resetEnableStackdriverLogging")
+    def reset_enable_stackdriver_logging(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetEnableStackdriverLogging", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="enableConsentBasedRedactionInput")
+    def enable_consent_based_redaction_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "enableConsentBasedRedactionInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="enableInteractionLoggingInput")
+    def enable_interaction_logging_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "enableInteractionLoggingInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="enableStackdriverLoggingInput")
+    def enable_stackdriver_logging_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "enableStackdriverLoggingInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="enableConsentBasedRedaction")
+    def enable_consent_based_redaction(
+        self,
+    ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "enableConsentBasedRedaction"))
+
+    @enable_consent_based_redaction.setter
+    def enable_consent_based_redaction(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__930e9f8367cd4386d578227a825f764e0f15183e917631e302bbca1601dcc493)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "enableConsentBasedRedaction", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="enableInteractionLogging")
+    def enable_interaction_logging(
+        self,
+    ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "enableInteractionLogging"))
+
+    @enable_interaction_logging.setter
+    def enable_interaction_logging(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f5b84a1957f7e9c4940c351e9a564c5cd283a8a4f9b6652dd2590ad6799d83ad)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "enableInteractionLogging", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="enableStackdriverLogging")
+    def enable_stackdriver_logging(
+        self,
+    ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "enableStackdriverLogging"))
+
+    @enable_stackdriver_logging.setter
+    def enable_stackdriver_logging(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3d91ca5b63c2528fe144a26659f98f3caffed6cf13ed0dd6d0f030ac18452164)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "enableStackdriverLogging", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__40ef3b7c453d5c890aec6722852cf8f97ee3e46781941e4f68507c9f5f6e2f5b)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e79ecefe6682990702f25c819da5ef6a2ebe28be21247b503b190cca8ae6e10a)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="putDtmfSettings")
+    def put_dtmf_settings(
+        self,
+        *,
+        enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        endpointing_timeout_duration: typing.Optional[builtins.str] = None,
+        finish_digit: typing.Optional[builtins.str] = None,
+        interdigit_timeout_duration: typing.Optional[builtins.str] = None,
+        max_digits: typing.Optional[jsii.Number] = None,
+    ) -> None:
+        '''
+        :param enabled: If true, incoming audio is processed for DTMF (dual tone multi frequtectency) events. For example, if the caller presses a button on their telephone keypad and DTMF processing is enabled, Dialogflow will de the event (e.g. a "3" was pressed) in the incoming audio and pass the event to the bot to drive business logic (e.g. when 3 is pressed, return the account balance). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enabled DialogflowCxPage#enabled}
+        :param endpointing_timeout_duration: Endpoint timeout setting for matching dtmf input to regex. A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.500s". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#endpointing_timeout_duration DialogflowCxPage#endpointing_timeout_duration}
+        :param finish_digit: The digit that terminates a DTMF digit sequence. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#finish_digit DialogflowCxPage#finish_digit}
+        :param interdigit_timeout_duration: Interdigit timeout setting for matching dtmf input to regex. A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.500s". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#interdigit_timeout_duration DialogflowCxPage#interdigit_timeout_duration}
+        :param max_digits: Max length of DTMF digits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#max_digits DialogflowCxPage#max_digits}
+        '''
+        value = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings(
+            enabled=enabled,
+            endpointing_timeout_duration=endpointing_timeout_duration,
+            finish_digit=finish_digit,
+            interdigit_timeout_duration=interdigit_timeout_duration,
+            max_digits=max_digits,
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putDtmfSettings", [value]))
+
+    @jsii.member(jsii_name="putLoggingSettings")
+    def put_logging_settings(
+        self,
+        *,
+        enable_consent_based_redaction: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        enable_interaction_logging: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        enable_stackdriver_logging: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    ) -> None:
+        '''
+        :param enable_consent_based_redaction: Enables consent-based end-user input redaction, if true, a pre-defined session parameter **$session.params.conversation-redaction** will be used to determine if the utterance should be redacted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enable_consent_based_redaction DialogflowCxPage#enable_consent_based_redaction}
+        :param enable_interaction_logging: Enables DF Interaction logging. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enable_interaction_logging DialogflowCxPage#enable_interaction_logging}
+        :param enable_stackdriver_logging: Enables Google Cloud Logging. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#enable_stackdriver_logging DialogflowCxPage#enable_stackdriver_logging}
+        '''
+        value = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings(
+            enable_consent_based_redaction=enable_consent_based_redaction,
+            enable_interaction_logging=enable_interaction_logging,
+            enable_stackdriver_logging=enable_stackdriver_logging,
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putLoggingSettings", [value]))
+
+    @jsii.member(jsii_name="putSpeechSettings")
+    def put_speech_settings(
+        self,
+        *,
+        endpointer_sensitivity: typing.Optional[jsii.Number] = None,
+        models: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
+        no_speech_timeout: typing.Optional[builtins.str] = None,
+        use_timeout_based_endpointing: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    ) -> None:
+        '''
+        :param endpointer_sensitivity: Sensitivity of the speech model that detects the end of speech. Scale from 0 to 100. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#endpointer_sensitivity DialogflowCxPage#endpointer_sensitivity}
+        :param models: Mapping from language to Speech-to-Text model. The mapped Speech-to-Text model will be selected for requests from its corresponding language. For more information, see `Speech models <https://cloud.google.com/dialogflow/cx/docs/concept/speech-models>`_. An object containing a list of **"key": value** pairs. Example: **{ "name": "wrench", "mass": "1.3kg", "count": "3" }**. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#models DialogflowCxPage#models}
+        :param no_speech_timeout: Timeout before detecting no speech. A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.500s". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#no_speech_timeout DialogflowCxPage#no_speech_timeout}
+        :param use_timeout_based_endpointing: Use timeout based endpointing, interpreting endpointer sensitivity as seconds of timeout value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#use_timeout_based_endpointing DialogflowCxPage#use_timeout_based_endpointing}
+        '''
+        value = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings(
+            endpointer_sensitivity=endpointer_sensitivity,
+            models=models,
+            no_speech_timeout=no_speech_timeout,
+            use_timeout_based_endpointing=use_timeout_based_endpointing,
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putSpeechSettings", [value]))
+
+    @jsii.member(jsii_name="resetDtmfSettings")
+    def reset_dtmf_settings(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDtmfSettings", []))
+
+    @jsii.member(jsii_name="resetLoggingSettings")
+    def reset_logging_settings(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetLoggingSettings", []))
+
+    @jsii.member(jsii_name="resetSpeechSettings")
+    def reset_speech_settings(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetSpeechSettings", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="dtmfSettings")
+    def dtmf_settings(
+        self,
+    ) -> DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettingsOutputReference:
+        return typing.cast(DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettingsOutputReference, jsii.get(self, "dtmfSettings"))
+
+    @builtins.property
+    @jsii.member(jsii_name="loggingSettings")
+    def logging_settings(
+        self,
+    ) -> DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettingsOutputReference:
+        return typing.cast(DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettingsOutputReference, jsii.get(self, "loggingSettings"))
+
+    @builtins.property
+    @jsii.member(jsii_name="speechSettings")
+    def speech_settings(
+        self,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettingsOutputReference":
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettingsOutputReference", jsii.get(self, "speechSettings"))
+
+    @builtins.property
+    @jsii.member(jsii_name="dtmfSettingsInput")
+    def dtmf_settings_input(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings], jsii.get(self, "dtmfSettingsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="loggingSettingsInput")
+    def logging_settings_input(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings], jsii.get(self, "loggingSettingsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="speechSettingsInput")
+    def speech_settings_input(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings"]:
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings"], jsii.get(self, "speechSettingsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6417921821576d21a7fda216da2264afd29daa88061d82a869870a7266fc25ec)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings",
+    jsii_struct_bases=[],
+    name_mapping={
+        "endpointer_sensitivity": "endpointerSensitivity",
+        "models": "models",
+        "no_speech_timeout": "noSpeechTimeout",
+        "use_timeout_based_endpointing": "useTimeoutBasedEndpointing",
+    },
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings:
+    def __init__(
+        self,
+        *,
+        endpointer_sensitivity: typing.Optional[jsii.Number] = None,
+        models: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
+        no_speech_timeout: typing.Optional[builtins.str] = None,
+        use_timeout_based_endpointing: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    ) -> None:
+        '''
+        :param endpointer_sensitivity: Sensitivity of the speech model that detects the end of speech. Scale from 0 to 100. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#endpointer_sensitivity DialogflowCxPage#endpointer_sensitivity}
+        :param models: Mapping from language to Speech-to-Text model. The mapped Speech-to-Text model will be selected for requests from its corresponding language. For more information, see `Speech models <https://cloud.google.com/dialogflow/cx/docs/concept/speech-models>`_. An object containing a list of **"key": value** pairs. Example: **{ "name": "wrench", "mass": "1.3kg", "count": "3" }**. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#models DialogflowCxPage#models}
+        :param no_speech_timeout: Timeout before detecting no speech. A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.500s". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#no_speech_timeout DialogflowCxPage#no_speech_timeout}
+        :param use_timeout_based_endpointing: Use timeout based endpointing, interpreting endpointer sensitivity as seconds of timeout value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#use_timeout_based_endpointing DialogflowCxPage#use_timeout_based_endpointing}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6f806ea3b5a2964c03015c422685accffa54efcc2c88f467148b1703d3306e04)
+            check_type(argname="argument endpointer_sensitivity", value=endpointer_sensitivity, expected_type=type_hints["endpointer_sensitivity"])
+            check_type(argname="argument models", value=models, expected_type=type_hints["models"])
+            check_type(argname="argument no_speech_timeout", value=no_speech_timeout, expected_type=type_hints["no_speech_timeout"])
+            check_type(argname="argument use_timeout_based_endpointing", value=use_timeout_based_endpointing, expected_type=type_hints["use_timeout_based_endpointing"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if endpointer_sensitivity is not None:
+            self._values["endpointer_sensitivity"] = endpointer_sensitivity
+        if models is not None:
+            self._values["models"] = models
+        if no_speech_timeout is not None:
+            self._values["no_speech_timeout"] = no_speech_timeout
+        if use_timeout_based_endpointing is not None:
+            self._values["use_timeout_based_endpointing"] = use_timeout_based_endpointing
+
+    @builtins.property
+    def endpointer_sensitivity(self) -> typing.Optional[jsii.Number]:
+        '''Sensitivity of the speech model that detects the end of speech. Scale from 0 to 100.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#endpointer_sensitivity DialogflowCxPage#endpointer_sensitivity}
+        '''
+        result = self._values.get("endpointer_sensitivity")
+        return typing.cast(typing.Optional[jsii.Number], result)
+
+    @builtins.property
+    def models(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
+        '''Mapping from language to Speech-to-Text model.
+
+        The mapped Speech-to-Text model will be selected for requests from its corresponding language. For more information, see `Speech models <https://cloud.google.com/dialogflow/cx/docs/concept/speech-models>`_.
+        An object containing a list of **"key": value** pairs. Example: **{ "name": "wrench", "mass": "1.3kg", "count": "3" }**.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#models DialogflowCxPage#models}
+        '''
+        result = self._values.get("models")
+        return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
+
+    @builtins.property
+    def no_speech_timeout(self) -> typing.Optional[builtins.str]:
+        '''Timeout before detecting no speech. A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.500s".
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#no_speech_timeout DialogflowCxPage#no_speech_timeout}
+        '''
+        result = self._values.get("no_speech_timeout")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def use_timeout_based_endpointing(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''Use timeout based endpointing, interpreting endpointer sensitivity as seconds of timeout value.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#use_timeout_based_endpointing DialogflowCxPage#use_timeout_based_endpointing}
+        '''
+        result = self._values.get("use_timeout_based_endpointing")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettingsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettingsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__37a1c2b8a0dc0d63bd73d0918094f4a9891cd7d7d71a46c958935acf8628c7c3)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetEndpointerSensitivity")
+    def reset_endpointer_sensitivity(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetEndpointerSensitivity", []))
+
+    @jsii.member(jsii_name="resetModels")
+    def reset_models(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetModels", []))
+
+    @jsii.member(jsii_name="resetNoSpeechTimeout")
+    def reset_no_speech_timeout(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetNoSpeechTimeout", []))
+
+    @jsii.member(jsii_name="resetUseTimeoutBasedEndpointing")
+    def reset_use_timeout_based_endpointing(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUseTimeoutBasedEndpointing", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="endpointerSensitivityInput")
+    def endpointer_sensitivity_input(self) -> typing.Optional[jsii.Number]:
+        return typing.cast(typing.Optional[jsii.Number], jsii.get(self, "endpointerSensitivityInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="modelsInput")
+    def models_input(
+        self,
+    ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
+        return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], jsii.get(self, "modelsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="noSpeechTimeoutInput")
+    def no_speech_timeout_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "noSpeechTimeoutInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="useTimeoutBasedEndpointingInput")
+    def use_timeout_based_endpointing_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "useTimeoutBasedEndpointingInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="endpointerSensitivity")
+    def endpointer_sensitivity(self) -> jsii.Number:
+        return typing.cast(jsii.Number, jsii.get(self, "endpointerSensitivity"))
+
+    @endpointer_sensitivity.setter
+    def endpointer_sensitivity(self, value: jsii.Number) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e381477db3a587c521342962ed31e9d175a932fd06b68d0431598b88d3893bf2)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "endpointerSensitivity", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="models")
+    def models(self) -> typing.Mapping[builtins.str, builtins.str]:
+        return typing.cast(typing.Mapping[builtins.str, builtins.str], jsii.get(self, "models"))
+
+    @models.setter
+    def models(self, value: typing.Mapping[builtins.str, builtins.str]) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__fd08116c62c0fd0dbc6ab9e9d93bc6bc85a544434ffde1330e149c5ff17b7f1d)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "models", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="noSpeechTimeout")
+    def no_speech_timeout(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "noSpeechTimeout"))
+
+    @no_speech_timeout.setter
+    def no_speech_timeout(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f834454bb59c1fda9fb9ef6c46e7f6b5af7132f0f2da18175baec4c6b26557be)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "noSpeechTimeout", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="useTimeoutBasedEndpointing")
+    def use_timeout_based_endpointing(
+        self,
+    ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "useTimeoutBasedEndpointing"))
+
+    @use_timeout_based_endpointing.setter
+    def use_timeout_based_endpointing(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6ba39401a8e00ad730ee360a85c0a5df6048bea44871249196949be341345bef)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "useTimeoutBasedEndpointing", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7a96c888d0314ae04a418183e443eaae1466da97b2d633eac9d846d6e02ee4bd)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases",
+    jsii_struct_bases=[],
+    name_mapping={"cases": "cases"},
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases:
+    def __init__(self, *, cases: typing.Optional[builtins.str] = None) -> None:
+        '''
+        :param cases: A JSON encoded list of cascading if-else conditions. Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored. See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9ca3ebc167045b4a8224938034f985eae722ff48ed25b4db84cff57be983c38b)
+            check_type(argname="argument cases", value=cases, expected_type=type_hints["cases"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if cases is not None:
+            self._values["cases"] = cases
+
+    @builtins.property
+    def cases(self) -> typing.Optional[builtins.str]:
+        '''A JSON encoded list of cascading if-else conditions.
+
+        Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored.
+        See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
+        '''
+        result = self._values.get("cases")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCasesList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCasesList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__722c45c7a151cc97348b8aea2c48f6251f38845e062de82901fce813a90f671e)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCasesOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4a0805eebf31280c9d256d10c8494b6410171fa932133d2ca4e34008f8b7860a)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCasesOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4d325c70905984d77a46b018f91bb24cd5deb731df66ac1d5f7a27040598d91e)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__40e31e248080c78a5d151d663c9482ea58f7f3dab79f8238740b2863712cf9db)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4992c4ef41c00dbdb524ce1048659d597322e3ab2d0325bb4574909652eb4340)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases]]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases]]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__cb08f435a15367c075e2b30efa3dd67d617422668d14bda24e78e381d1f94219)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCasesOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCasesOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__634d8c6a6262ae089c2978257ff9a7e23dc8cb9b756dcae7e67d84d12f69c6a6)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @jsii.member(jsii_name="resetCases")
+    def reset_cases(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCases", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="casesInput")
+    def cases_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "casesInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="cases")
+    def cases(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "cases"))
+
+    @cases.setter
+    def cases(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d1c8e50db7e498f54d4620599fbc569b6cccb439049be10017769c9f4a14d841)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "cases", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__833d941e422417d3ed56548040e2e059f50a3b3c7966e62dc20d18a5f43c1ed8)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages",
+    jsii_struct_bases=[],
+    name_mapping={
+        "channel": "channel",
+        "conversation_success": "conversationSuccess",
+        "knowledge_info_card": "knowledgeInfoCard",
+        "live_agent_handoff": "liveAgentHandoff",
+        "output_audio_text": "outputAudioText",
+        "payload": "payload",
+        "play_audio": "playAudio",
+        "telephony_transfer_call": "telephonyTransferCall",
+        "text": "text",
+    },
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages:
+    def __init__(
+        self,
+        *,
+        channel: typing.Optional[builtins.str] = None,
+        conversation_success: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess", typing.Dict[builtins.str, typing.Any]]] = None,
+        knowledge_info_card: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard", typing.Dict[builtins.str, typing.Any]]] = None,
+        live_agent_handoff: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff", typing.Dict[builtins.str, typing.Any]]] = None,
+        output_audio_text: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText", typing.Dict[builtins.str, typing.Any]]] = None,
+        payload: typing.Optional[builtins.str] = None,
+        play_audio: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio", typing.Dict[builtins.str, typing.Any]]] = None,
+        telephony_transfer_call: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall", typing.Dict[builtins.str, typing.Any]]] = None,
+        text: typing.Optional[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText", typing.Dict[builtins.str, typing.Any]]] = None,
+    ) -> None:
+        '''
+        :param channel: The channel which the response is associated with. Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
+        :param conversation_success: conversation_success block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
+        :param knowledge_info_card: knowledge_info_card block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#knowledge_info_card DialogflowCxPage#knowledge_info_card}
+        :param live_agent_handoff: live_agent_handoff block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
+        :param output_audio_text: output_audio_text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
+        :param payload: Returns a response containing a custom, platform-specific payload. This field is part of a union field 'message': Only one of 'text', 'payload', 'conversationSuccess', 'outputAudioText', 'liveAgentHandoff', 'endInteraction', 'playAudio', 'mixedAudio', 'telephonyTransferCall', or 'knowledgeInfoCard' may be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
+        :param play_audio: play_audio block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
+        :param telephony_transfer_call: telephony_transfer_call block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
+        :param text: text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        '''
+        if isinstance(conversation_success, dict):
+            conversation_success = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess(**conversation_success)
+        if isinstance(knowledge_info_card, dict):
+            knowledge_info_card = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard(**knowledge_info_card)
+        if isinstance(live_agent_handoff, dict):
+            live_agent_handoff = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff(**live_agent_handoff)
+        if isinstance(output_audio_text, dict):
+            output_audio_text = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText(**output_audio_text)
+        if isinstance(play_audio, dict):
+            play_audio = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio(**play_audio)
+        if isinstance(telephony_transfer_call, dict):
+            telephony_transfer_call = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall(**telephony_transfer_call)
+        if isinstance(text, dict):
+            text = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText(**text)
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__76de6c405acdf51f3046508a697882e62ea5b8d31672c0ffc37bc75ca9d58cee)
+            check_type(argname="argument channel", value=channel, expected_type=type_hints["channel"])
+            check_type(argname="argument conversation_success", value=conversation_success, expected_type=type_hints["conversation_success"])
+            check_type(argname="argument knowledge_info_card", value=knowledge_info_card, expected_type=type_hints["knowledge_info_card"])
+            check_type(argname="argument live_agent_handoff", value=live_agent_handoff, expected_type=type_hints["live_agent_handoff"])
+            check_type(argname="argument output_audio_text", value=output_audio_text, expected_type=type_hints["output_audio_text"])
+            check_type(argname="argument payload", value=payload, expected_type=type_hints["payload"])
+            check_type(argname="argument play_audio", value=play_audio, expected_type=type_hints["play_audio"])
+            check_type(argname="argument telephony_transfer_call", value=telephony_transfer_call, expected_type=type_hints["telephony_transfer_call"])
+            check_type(argname="argument text", value=text, expected_type=type_hints["text"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if channel is not None:
+            self._values["channel"] = channel
+        if conversation_success is not None:
+            self._values["conversation_success"] = conversation_success
+        if knowledge_info_card is not None:
+            self._values["knowledge_info_card"] = knowledge_info_card
+        if live_agent_handoff is not None:
+            self._values["live_agent_handoff"] = live_agent_handoff
+        if output_audio_text is not None:
+            self._values["output_audio_text"] = output_audio_text
+        if payload is not None:
+            self._values["payload"] = payload
+        if play_audio is not None:
+            self._values["play_audio"] = play_audio
+        if telephony_transfer_call is not None:
+            self._values["telephony_transfer_call"] = telephony_transfer_call
+        if text is not None:
+            self._values["text"] = text
+
+    @builtins.property
+    def channel(self) -> typing.Optional[builtins.str]:
+        '''The channel which the response is associated with.
+
+        Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
+        '''
+        result = self._values.get("channel")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def conversation_success(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess"]:
+        '''conversation_success block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
+        '''
+        result = self._values.get("conversation_success")
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess"], result)
+
+    @builtins.property
+    def knowledge_info_card(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard"]:
+        '''knowledge_info_card block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#knowledge_info_card DialogflowCxPage#knowledge_info_card}
+        '''
+        result = self._values.get("knowledge_info_card")
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard"], result)
+
+    @builtins.property
+    def live_agent_handoff(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff"]:
+        '''live_agent_handoff block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
+        '''
+        result = self._values.get("live_agent_handoff")
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff"], result)
+
+    @builtins.property
+    def output_audio_text(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText"]:
+        '''output_audio_text block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
+        '''
+        result = self._values.get("output_audio_text")
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText"], result)
+
+    @builtins.property
+    def payload(self) -> typing.Optional[builtins.str]:
+        '''Returns a response containing a custom, platform-specific payload.
+
+        This field is part of a union field 'message': Only one of 'text', 'payload', 'conversationSuccess', 'outputAudioText', 'liveAgentHandoff', 'endInteraction', 'playAudio', 'mixedAudio', 'telephonyTransferCall', or 'knowledgeInfoCard' may be set.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
+        '''
+        result = self._values.get("payload")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def play_audio(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio"]:
+        '''play_audio block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
+        '''
+        result = self._values.get("play_audio")
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio"], result)
+
+    @builtins.property
+    def telephony_transfer_call(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall"]:
+        '''telephony_transfer_call block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
+        '''
+        result = self._values.get("telephony_transfer_call")
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall"], result)
+
+    @builtins.property
+    def text(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText"]:
+        '''text block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        '''
+        result = self._values.get("text")
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText"], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess",
+    jsii_struct_bases=[],
+    name_mapping={"metadata": "metadata"},
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess:
+    def __init__(self, *, metadata: typing.Optional[builtins.str] = None) -> None:
+        '''
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1ff6283b0d81f928452bb89ad77824077e654255ad802abeb7c7eba1e997e81b)
+            check_type(argname="argument metadata", value=metadata, expected_type=type_hints["metadata"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if metadata is not None:
+            self._values["metadata"] = metadata
+
+    @builtins.property
+    def metadata(self) -> typing.Optional[builtins.str]:
+        '''Custom metadata. Dialogflow doesn't impose any structure on this.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        '''
+        result = self._values.get("metadata")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccessOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccessOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__db5919882ea57e48f2666a94c3ebd690a81762b26d37098788f28375f77b4da8)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetMetadata")
+    def reset_metadata(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetMetadata", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="metadataInput")
+    def metadata_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "metadataInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="metadata")
+    def metadata(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "metadata"))
+
+    @metadata.setter
+    def metadata(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__561e9a1774200ff42bca6e1bfde7e1603a0c107bc7981ac53bcafb5480e7f8c9)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "metadata", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__beb08b9905cce7bc9f8d165f8de3bc88180dc944decb1971a69066e34d54f0d7)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteraction",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteraction:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteraction(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteractionList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteractionList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d5d4197702e63533407b318c93bdd38b9aefdbdb04716c1a8c43a813adde5c49)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteractionOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__fbcec2317c81b5dc40e3081638ed5ac1876f16c4b97a74904e7043a69d3ac2c9)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteractionOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1f5821fd80b3cff8758775a45cb3ae7cd3b7d18edf0d54a643face411a1188db)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__38a3815d81dea93a9d00ea7807f74a47fa3d8e2b50a0f3ab8eb603b3de64febe)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__59e9de5d945431527c75872988282dad8bd000745714b657629f881786f4f355)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteractionOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteractionOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__35da30f2d5cbe3f8e9f407c6bf80a8ee16fdc95298eccb36ad4706a792c2eb90)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteraction]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteraction], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteraction],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__99bc0b6e2797312a7da56e5bb20dd57b50a196b99d459fcbd631db618d47a659)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCardOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCardOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__592539b2650aa5cf22353936d6f120458594463918eb82f991d24d2dd0416891)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f8f53efa6efb56efb7ef8b4b1f510fe45f64134625a8c4af3b398aba4425c1be)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9805f759bd7c4ca440b5a4789465688a530443e2dcab95004cccf6d493e8fcb9)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0c1a8733057973663b0f0c74bc98b71273e2355e8244921628421d593c07db2f)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__eb901cbdea21f406f3ba10e6718cd21b10e85d3f844bc2759a34035d798474d4)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__55b01944af918b79241c057c6d168d5bce16f4b23537e3c3b4c66935493d73ce)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ebf20ade16e25eb64257c7b128a63cc138bfd4e6c01e6500446271d179882e7a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages]]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages]]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__8c5322423e8c89abd802ab5ce848e7ab012253285f110ae207c3dc31194aaa00)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff",
+    jsii_struct_bases=[],
+    name_mapping={"metadata": "metadata"},
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff:
+    def __init__(self, *, metadata: typing.Optional[builtins.str] = None) -> None:
+        '''
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__db39c2d1a21e05f6069402d338ce4f06b0dcb986aceeec24e39ccd04f3b7caa2)
+            check_type(argname="argument metadata", value=metadata, expected_type=type_hints["metadata"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if metadata is not None:
+            self._values["metadata"] = metadata
+
+    @builtins.property
+    def metadata(self) -> typing.Optional[builtins.str]:
+        '''Custom metadata. Dialogflow doesn't impose any structure on this.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        '''
+        result = self._values.get("metadata")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoffOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoffOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c90765bc42905fa6ef62bd034d187d56350826a2d6e10cb4a357653e02190b82)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetMetadata")
+    def reset_metadata(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetMetadata", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="metadataInput")
+    def metadata_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "metadataInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="metadata")
+    def metadata(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "metadata"))
+
+    @metadata.setter
+    def metadata(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6ce0917b6bbb47885a89b2cc72a7e1003badf0f698b78684c17b3fc801e4d09c)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "metadata", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__2166bc1664bef4aed10f37a3e527e306d047b3227d56280202acfaee85903d6e)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudio",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudio:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudio(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__2953762d244a060d219fe4e15394181b64f6496d66dbccacd8edc6a9c9025e01)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1c7a9a89e200564f8b88f018bab349cfa610fffbb54e97c74d9a287d02a10678)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f49743b53eb89b154fad66306dbdb92a625d637d9d3a40783a1d7078523ce955)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f161e68cab6670a7711945c624b6acd77b5e4b6ae3531709c0498f671958e348)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__55635c3a11c046981d8cc4d9b83049e123627dbf7bd7303b62e0e1078d85919b)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__171d69949d9e1b7e85a099eaf8c6ad199cf36fd7b76993a06fbe4ce4afcc82cc)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="segments")
+    def segments(
+        self,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegmentsList":
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegmentsList", jsii.get(self, "segments"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudio]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudio], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudio],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__edc83ce4bb5e424165db2f7f1d31c89429f337d3a5017d0dd283a1b3b3de781a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegments",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegments:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegments(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegmentsList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegmentsList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0c252d1ea3b8728171af887e0b07c02d266bcffc053189becc36b040c6edd51d)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegmentsOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__358f248a4c2d3a8ed81391e26d7590c4fb92f565419ae45fce5af91140c7a1ef)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegmentsOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__35d5a1fb6e08fac08598af42ff204e1202851c1391e1a891ba45def84c1fd920)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__01ac592fa7040427bf356fbd81a64e0a5de72f29158d259dff1f279248ee9571)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f64ff8a96032522557798fa9acedf8a702b3e549939b4d8e7b9a71b1c0d09ebe)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegmentsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegmentsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__85da42512a40ff5e49d99fc90ac91f01346fd8e576425d69804a082e3a6d85c2)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="allowPlaybackInterruption")
+    def allow_playback_interruption(self) -> _cdktf_9a9027ec.IResolvable:
+        return typing.cast(_cdktf_9a9027ec.IResolvable, jsii.get(self, "allowPlaybackInterruption"))
+
+    @builtins.property
+    @jsii.member(jsii_name="audio")
+    def audio(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "audio"))
+
+    @builtins.property
+    @jsii.member(jsii_name="uri")
+    def uri(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "uri"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegments]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegments], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegments],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3851013e198ffa9e4c434cd30ccc0ff1837089d28569d2aa956cfd1d735207d5)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText",
+    jsii_struct_bases=[],
+    name_mapping={"ssml": "ssml", "text": "text"},
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText:
+    def __init__(
+        self,
+        *,
+        ssml: typing.Optional[builtins.str] = None,
+        text: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param ssml: The SSML text to be synthesized. For more information, see SSML. This field is part of a union field 'source': Only one of 'text' or 'ssml' may be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        :param text: The raw text to be synthesized. This field is part of a union field 'source': Only one of 'text' or 'ssml' may be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ceb0e96b8b48af6bf3d09fdedb90677bfffe85382ddf6aa85b616aa57d5eb2c2)
+            check_type(argname="argument ssml", value=ssml, expected_type=type_hints["ssml"])
+            check_type(argname="argument text", value=text, expected_type=type_hints["text"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if ssml is not None:
+            self._values["ssml"] = ssml
+        if text is not None:
+            self._values["text"] = text
+
+    @builtins.property
+    def ssml(self) -> typing.Optional[builtins.str]:
+        '''The SSML text to be synthesized.
+
+        For more information, see SSML.
+        This field is part of a union field 'source': Only one of 'text' or 'ssml' may be set.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        '''
+        result = self._values.get("ssml")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def text(self) -> typing.Optional[builtins.str]:
+        '''The raw text to be synthesized.
+
+        This field is part of a union field 'source': Only one of 'text' or 'ssml' may be set.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        '''
+        result = self._values.get("text")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioTextOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioTextOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__691d6c6aab050e83c642b54934af74bb7e9b1f2986855ea778f2a4f1e1c1f76c)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetSsml")
+    def reset_ssml(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetSsml", []))
+
+    @jsii.member(jsii_name="resetText")
+    def reset_text(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetText", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="allowPlaybackInterruption")
+    def allow_playback_interruption(self) -> _cdktf_9a9027ec.IResolvable:
+        return typing.cast(_cdktf_9a9027ec.IResolvable, jsii.get(self, "allowPlaybackInterruption"))
+
+    @builtins.property
+    @jsii.member(jsii_name="ssmlInput")
+    def ssml_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "ssmlInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="textInput")
+    def text_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "textInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="ssml")
+    def ssml(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "ssml"))
+
+    @ssml.setter
+    def ssml(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__213bb4987062df7cb611b643236d470372b1fb1a97a8dc72a7fc5954c6f713e1)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "ssml", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="text")
+    def text(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "text"))
+
+    @text.setter
+    def text(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__90816a4fa086ff4cdcac32e91cae2613ab6b9eb0f1cbaad3914bc73ec2d82ea1)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "text", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__6eb3738f3a46660a242edd44471b165b3fe0c46d61c60e99676a75b77dcad731)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3189594151bf3810098612b5a2a1307901d4473c3133b56844daba5e639bc8ac)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @jsii.member(jsii_name="putConversationSuccess")
+    def put_conversation_success(
+        self,
+        *,
+        metadata: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        '''
+        value = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess(
+            metadata=metadata
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putConversationSuccess", [value]))
+
+    @jsii.member(jsii_name="putKnowledgeInfoCard")
+    def put_knowledge_info_card(self) -> None:
+        value = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard()
+
+        return typing.cast(None, jsii.invoke(self, "putKnowledgeInfoCard", [value]))
+
+    @jsii.member(jsii_name="putLiveAgentHandoff")
+    def put_live_agent_handoff(
+        self,
+        *,
+        metadata: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        '''
+        value = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff(
+            metadata=metadata
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putLiveAgentHandoff", [value]))
+
+    @jsii.member(jsii_name="putOutputAudioText")
+    def put_output_audio_text(
+        self,
+        *,
+        ssml: typing.Optional[builtins.str] = None,
+        text: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param ssml: The SSML text to be synthesized. For more information, see SSML. This field is part of a union field 'source': Only one of 'text' or 'ssml' may be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        :param text: The raw text to be synthesized. This field is part of a union field 'source': Only one of 'text' or 'ssml' may be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        '''
+        value = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText(
+            ssml=ssml, text=text
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putOutputAudioText", [value]))
+
+    @jsii.member(jsii_name="putPlayAudio")
+    def put_play_audio(self, *, audio_uri: builtins.str) -> None:
+        '''
+        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        '''
+        value = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio(
+            audio_uri=audio_uri
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putPlayAudio", [value]))
+
+    @jsii.member(jsii_name="putTelephonyTransferCall")
+    def put_telephony_transfer_call(self, *, phone_number: builtins.str) -> None:
+        '''
+        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        '''
+        value = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall(
+            phone_number=phone_number
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTelephonyTransferCall", [value]))
+
+    @jsii.member(jsii_name="putText")
+    def put_text(
+        self,
+        *,
+        text: typing.Optional[typing.Sequence[builtins.str]] = None,
+    ) -> None:
+        '''
+        :param text: A collection of text response variants. If multiple variants are defined, only one text response variant is returned at runtime. required: true Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        '''
+        value = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText(
+            text=text
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putText", [value]))
+
+    @jsii.member(jsii_name="resetChannel")
+    def reset_channel(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetChannel", []))
+
+    @jsii.member(jsii_name="resetConversationSuccess")
+    def reset_conversation_success(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetConversationSuccess", []))
+
+    @jsii.member(jsii_name="resetKnowledgeInfoCard")
+    def reset_knowledge_info_card(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetKnowledgeInfoCard", []))
+
+    @jsii.member(jsii_name="resetLiveAgentHandoff")
+    def reset_live_agent_handoff(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetLiveAgentHandoff", []))
+
+    @jsii.member(jsii_name="resetOutputAudioText")
+    def reset_output_audio_text(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetOutputAudioText", []))
+
+    @jsii.member(jsii_name="resetPayload")
+    def reset_payload(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetPayload", []))
+
+    @jsii.member(jsii_name="resetPlayAudio")
+    def reset_play_audio(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetPlayAudio", []))
+
+    @jsii.member(jsii_name="resetTelephonyTransferCall")
+    def reset_telephony_transfer_call(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTelephonyTransferCall", []))
+
+    @jsii.member(jsii_name="resetText")
+    def reset_text(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetText", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="conversationSuccess")
+    def conversation_success(
+        self,
+    ) -> DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccessOutputReference:
+        return typing.cast(DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccessOutputReference, jsii.get(self, "conversationSuccess"))
+
+    @builtins.property
+    @jsii.member(jsii_name="endInteraction")
+    def end_interaction(
+        self,
+    ) -> DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteractionList:
+        return typing.cast(DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteractionList, jsii.get(self, "endInteraction"))
+
+    @builtins.property
+    @jsii.member(jsii_name="knowledgeInfoCard")
+    def knowledge_info_card(
+        self,
+    ) -> DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCardOutputReference:
+        return typing.cast(DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCardOutputReference, jsii.get(self, "knowledgeInfoCard"))
+
+    @builtins.property
+    @jsii.member(jsii_name="liveAgentHandoff")
+    def live_agent_handoff(
+        self,
+    ) -> DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoffOutputReference:
+        return typing.cast(DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoffOutputReference, jsii.get(self, "liveAgentHandoff"))
+
+    @builtins.property
+    @jsii.member(jsii_name="mixedAudio")
+    def mixed_audio(
+        self,
+    ) -> DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioList:
+        return typing.cast(DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioList, jsii.get(self, "mixedAudio"))
+
+    @builtins.property
+    @jsii.member(jsii_name="outputAudioText")
+    def output_audio_text(
+        self,
+    ) -> DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioTextOutputReference:
+        return typing.cast(DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioTextOutputReference, jsii.get(self, "outputAudioText"))
+
+    @builtins.property
+    @jsii.member(jsii_name="playAudio")
+    def play_audio(
+        self,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudioOutputReference":
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudioOutputReference", jsii.get(self, "playAudio"))
+
+    @builtins.property
+    @jsii.member(jsii_name="telephonyTransferCall")
+    def telephony_transfer_call(
+        self,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCallOutputReference":
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCallOutputReference", jsii.get(self, "telephonyTransferCall"))
+
+    @builtins.property
+    @jsii.member(jsii_name="text")
+    def text(
+        self,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTextOutputReference":
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTextOutputReference", jsii.get(self, "text"))
+
+    @builtins.property
+    @jsii.member(jsii_name="channelInput")
+    def channel_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "channelInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="conversationSuccessInput")
+    def conversation_success_input(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess], jsii.get(self, "conversationSuccessInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="knowledgeInfoCardInput")
+    def knowledge_info_card_input(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard], jsii.get(self, "knowledgeInfoCardInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="liveAgentHandoffInput")
+    def live_agent_handoff_input(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff], jsii.get(self, "liveAgentHandoffInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="outputAudioTextInput")
+    def output_audio_text_input(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText], jsii.get(self, "outputAudioTextInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="payloadInput")
+    def payload_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "payloadInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="playAudioInput")
+    def play_audio_input(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio"]:
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio"], jsii.get(self, "playAudioInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="telephonyTransferCallInput")
+    def telephony_transfer_call_input(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall"]:
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall"], jsii.get(self, "telephonyTransferCallInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="textInput")
+    def text_input(
+        self,
+    ) -> typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText"]:
+        return typing.cast(typing.Optional["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText"], jsii.get(self, "textInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="channel")
+    def channel(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "channel"))
+
+    @channel.setter
+    def channel(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__aef6de2cb5370abd4488cbfbc52b96b2cfb5d06c576938bb0ed76229fac458a8)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "channel", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="payload")
+    def payload(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "payload"))
+
+    @payload.setter
+    def payload(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__5533de9c2f0d2d74b389d97a4627c623179f9b78a8c46ba1cbed9fb3c36bf9ec)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "payload", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__07826e11416f495b5926459d713881005b43842e0791bc43bf796c49b1c4fef3)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio",
+    jsii_struct_bases=[],
+    name_mapping={"audio_uri": "audioUri"},
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio:
+    def __init__(self, *, audio_uri: builtins.str) -> None:
+        '''
+        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__fd58d35524e776fe5a7d0638fad8b65d2ec96f9fd93e298b14451d7b5175dc9c)
+            check_type(argname="argument audio_uri", value=audio_uri, expected_type=type_hints["audio_uri"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {
+            "audio_uri": audio_uri,
+        }
+
+    @builtins.property
+    def audio_uri(self) -> builtins.str:
+        '''URI of the audio clip.
+
+        Dialogflow does not impose any validation on this value. It is specific to the client that reads it.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        '''
+        result = self._values.get("audio_uri")
+        assert result is not None, "Required property 'audio_uri' is missing"
+        return typing.cast(builtins.str, result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudioOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudioOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__50e8d8943ed6e51367f3a3b97b70b6b3f3aa2eeff1bbb3fffc9f1620dbc4cc9e)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @builtins.property
+    @jsii.member(jsii_name="allowPlaybackInterruption")
+    def allow_playback_interruption(self) -> _cdktf_9a9027ec.IResolvable:
+        return typing.cast(_cdktf_9a9027ec.IResolvable, jsii.get(self, "allowPlaybackInterruption"))
+
+    @builtins.property
+    @jsii.member(jsii_name="audioUriInput")
+    def audio_uri_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "audioUriInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="audioUri")
+    def audio_uri(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "audioUri"))
+
+    @audio_uri.setter
+    def audio_uri(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__197d5a0ae83c324ec7beaf8fb381f5b6a875bce096599610879a038b21e35c38)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "audioUri", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__11ca78191bdb6000aa9c05555f238c7ba67e9b58043d1b53a5ec005505316c74)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall",
+    jsii_struct_bases=[],
+    name_mapping={"phone_number": "phoneNumber"},
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall:
+    def __init__(self, *, phone_number: builtins.str) -> None:
+        '''
+        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__b3a54a6ba7f0537d74d74fd428278b2ddde064d3fec215b99c5ec94ac2c8aed8)
+            check_type(argname="argument phone_number", value=phone_number, expected_type=type_hints["phone_number"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {
+            "phone_number": phone_number,
+        }
+
+    @builtins.property
+    def phone_number(self) -> builtins.str:
+        '''Transfer the call to a phone number in E.164 format.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        '''
+        result = self._values.get("phone_number")
+        assert result is not None, "Required property 'phone_number' is missing"
+        return typing.cast(builtins.str, result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCallOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCallOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c4af75ef74e9b61449fbf9cdb9c78b5959cb9fc8afd410f5a434ed0088f4b55c)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @builtins.property
+    @jsii.member(jsii_name="phoneNumberInput")
+    def phone_number_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "phoneNumberInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="phoneNumber")
+    def phone_number(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "phoneNumber"))
+
+    @phone_number.setter
+    def phone_number(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1b8e376691b5099d3f52d5fca56f2bd5401331d3c3cc29c807a655dca50a9613)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "phoneNumber", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__dd97e820b747bfb55ddb2c97491e1092b03a3444c3c8923ebbc10a13b345824a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText",
+    jsii_struct_bases=[],
+    name_mapping={"text": "text"},
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText:
+    def __init__(
+        self,
+        *,
+        text: typing.Optional[typing.Sequence[builtins.str]] = None,
+    ) -> None:
+        '''
+        :param text: A collection of text response variants. If multiple variants are defined, only one text response variant is returned at runtime. required: true Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1014b217dfbdc73c17b865ba54ba5e6b74bfc89b879fc8e3f5923fffef4fe0a5)
+            check_type(argname="argument text", value=text, expected_type=type_hints["text"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if text is not None:
+            self._values["text"] = text
+
+    @builtins.property
+    def text(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''A collection of text response variants.
+
+        If multiple variants are defined, only one text response variant is returned at runtime.
+        required: true
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        '''
+        result = self._values.get("text")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTextOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTextOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7f8a20fe1e017b7173ef7387509b7dc94c539716d2f563a544b62055180fb60f)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetText")
+    def reset_text(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetText", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="allowPlaybackInterruption")
+    def allow_playback_interruption(self) -> _cdktf_9a9027ec.IResolvable:
+        return typing.cast(_cdktf_9a9027ec.IResolvable, jsii.get(self, "allowPlaybackInterruption"))
+
+    @builtins.property
+    @jsii.member(jsii_name="textInput")
+    def text_input(self) -> typing.Optional[typing.List[builtins.str]]:
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "textInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="text")
+    def text(self) -> typing.List[builtins.str]:
+        return typing.cast(typing.List[builtins.str], jsii.get(self, "text"))
+
+    @text.setter
+    def text(self, value: typing.List[builtins.str]) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9b7ed375abdf05c5ce217a70ce019ab20114633264eda9240a5628fd4d32fb6a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "text", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e66d9b659600071d41ba3f5ff99fb02aa3c1184c40dfa5214f60d034e2cffb68)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__8c5937b17c51e41fa395e7f133e09729359d196387df83753d0db1e5a80a0a47)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="putAdvancedSettings")
+    def put_advanced_settings(
+        self,
+        *,
+        dtmf_settings: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings, typing.Dict[builtins.str, typing.Any]]] = None,
+        logging_settings: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings, typing.Dict[builtins.str, typing.Any]]] = None,
+        speech_settings: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings, typing.Dict[builtins.str, typing.Any]]] = None,
+    ) -> None:
+        '''
+        :param dtmf_settings: dtmf_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#dtmf_settings DialogflowCxPage#dtmf_settings}
+        :param logging_settings: logging_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#logging_settings DialogflowCxPage#logging_settings}
+        :param speech_settings: speech_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#speech_settings DialogflowCxPage#speech_settings}
+        '''
+        value = DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings(
+            dtmf_settings=dtmf_settings,
+            logging_settings=logging_settings,
+            speech_settings=speech_settings,
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putAdvancedSettings", [value]))
+
+    @jsii.member(jsii_name="putConditionalCases")
+    def put_conditional_cases(
+        self,
+        value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases, typing.Dict[builtins.str, typing.Any]]]],
+    ) -> None:
+        '''
+        :param value: -
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__efa40e35e67ae3bcb01ad4dbc078743591cd5b5594df5965968c04fdbcb73175)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        return typing.cast(None, jsii.invoke(self, "putConditionalCases", [value]))
+
+    @jsii.member(jsii_name="putMessages")
+    def put_messages(
+        self,
+        value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages, typing.Dict[builtins.str, typing.Any]]]],
+    ) -> None:
+        '''
+        :param value: -
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e30d5175438e90b067bed00c9ab49dd88c61b4e6022abccb3b6dde2fabcafd15)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        return typing.cast(None, jsii.invoke(self, "putMessages", [value]))
+
+    @jsii.member(jsii_name="putSetParameterActions")
+    def put_set_parameter_actions(
+        self,
+        value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions", typing.Dict[builtins.str, typing.Any]]]],
+    ) -> None:
+        '''
+        :param value: -
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9d9653977e5a405117940841d9cca9b4a9651d0600890194bf9fe92b7d4c91c4)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        return typing.cast(None, jsii.invoke(self, "putSetParameterActions", [value]))
+
+    @jsii.member(jsii_name="resetAdvancedSettings")
+    def reset_advanced_settings(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetAdvancedSettings", []))
+
+    @jsii.member(jsii_name="resetConditionalCases")
+    def reset_conditional_cases(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetConditionalCases", []))
+
+    @jsii.member(jsii_name="resetEnableGenerativeFallback")
+    def reset_enable_generative_fallback(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetEnableGenerativeFallback", []))
+
+    @jsii.member(jsii_name="resetMessages")
+    def reset_messages(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetMessages", []))
+
+    @jsii.member(jsii_name="resetReturnPartialResponses")
+    def reset_return_partial_responses(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetReturnPartialResponses", []))
+
+    @jsii.member(jsii_name="resetSetParameterActions")
+    def reset_set_parameter_actions(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetSetParameterActions", []))
+
+    @jsii.member(jsii_name="resetTag")
+    def reset_tag(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTag", []))
+
+    @jsii.member(jsii_name="resetWebhook")
+    def reset_webhook(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetWebhook", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="advancedSettings")
+    def advanced_settings(
+        self,
+    ) -> DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsOutputReference:
+        return typing.cast(DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsOutputReference, jsii.get(self, "advancedSettings"))
+
+    @builtins.property
+    @jsii.member(jsii_name="conditionalCases")
+    def conditional_cases(
+        self,
+    ) -> DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCasesList:
+        return typing.cast(DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCasesList, jsii.get(self, "conditionalCases"))
+
+    @builtins.property
+    @jsii.member(jsii_name="messages")
+    def messages(
+        self,
+    ) -> DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesList:
+        return typing.cast(DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesList, jsii.get(self, "messages"))
+
+    @builtins.property
+    @jsii.member(jsii_name="setParameterActions")
+    def set_parameter_actions(
+        self,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActionsList":
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActionsList", jsii.get(self, "setParameterActions"))
+
+    @builtins.property
+    @jsii.member(jsii_name="advancedSettingsInput")
+    def advanced_settings_input(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings], jsii.get(self, "advancedSettingsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="conditionalCasesInput")
+    def conditional_cases_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases]]], jsii.get(self, "conditionalCasesInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="enableGenerativeFallbackInput")
+    def enable_generative_fallback_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "enableGenerativeFallbackInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="messagesInput")
+    def messages_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages]]], jsii.get(self, "messagesInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="returnPartialResponsesInput")
+    def return_partial_responses_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "returnPartialResponsesInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="setParameterActionsInput")
+    def set_parameter_actions_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions"]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions"]]], jsii.get(self, "setParameterActionsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="tagInput")
+    def tag_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "tagInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="webhookInput")
+    def webhook_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "webhookInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="enableGenerativeFallback")
+    def enable_generative_fallback(
+        self,
+    ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "enableGenerativeFallback"))
+
+    @enable_generative_fallback.setter
+    def enable_generative_fallback(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__51353008f11e5013caae1d7f4e7717e4a06f35726ef6ece1876e250d07dd8a00)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "enableGenerativeFallback", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="returnPartialResponses")
+    def return_partial_responses(
+        self,
+    ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "returnPartialResponses"))
+
+    @return_partial_responses.setter
+    def return_partial_responses(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ec96e703aa20e7a82a2a9da496540d0434f91cd07c201b5c6b9dc3fe3dc769eb)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "returnPartialResponses", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="tag")
+    def tag(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "tag"))
+
+    @tag.setter
+    def tag(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0571537a1deb7c9e8c64ce14328fadaabaa4d2d566aedc8d5e56328b309f9a75)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "tag", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="webhook")
+    def webhook(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "webhook"))
+
+    @webhook.setter
+    def webhook(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ffecd96ee166a5741b758fd6898ae6bae0796756e077360ee357de9a05c968be)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "webhook", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment]:
+        return typing.cast(typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d9d2708cc7e2d369a460fdf337f2339db0695561ca204026f6c7418af5a0de3e)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions",
+    jsii_struct_bases=[],
+    name_mapping={"parameter": "parameter", "value": "value"},
+)
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions:
+    def __init__(
+        self,
+        *,
+        parameter: typing.Optional[builtins.str] = None,
+        value: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param parameter: Display name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
+        :param value: The new JSON-encoded value of the parameter. A null value clears the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ad436d8713cf4074a4c91a320eb56624907ac6b5b88714b20371e74dec076058)
+            check_type(argname="argument parameter", value=parameter, expected_type=type_hints["parameter"])
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if parameter is not None:
+            self._values["parameter"] = parameter
+        if value is not None:
+            self._values["value"] = value
+
+    @builtins.property
+    def parameter(self) -> typing.Optional[builtins.str]:
+        '''Display name of the parameter.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
+        '''
+        result = self._values.get("parameter")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def value(self) -> typing.Optional[builtins.str]:
+        '''The new JSON-encoded value of the parameter. A null value clears the parameter.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
+        '''
+        result = self._values.get("value")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActionsList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActionsList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__af3c029837b69953bf138a9ba500b84f155830145e4837f85f23991e79d91c2d)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActionsOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4d346f4931652bf2b7cd779c6fcd8e23bc0dc812a97f87147b41aaeda88e41b7)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActionsOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__a4d0063a6037fbe3596cfe2f8ac2b9cff86a5189b750f7b805ae706acc006ecf)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__8ad648625b5b95c58d27c85fe6f5eebc71c010162c689c2d09f953e0955ecc49)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d14ab9428643c9a2c1cfc8665ace95631d79bf5766b30a9bd2d3668e58038fbe)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions]]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions]]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions]]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__867461c08e1a7a30b8448fa7075499a8990d35e8c67010abe982725733c599fa)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActionsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActionsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__a6364152b49bed0008024c00a699e5340d22cec9cf26d4e71725e42245ad3e75)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @jsii.member(jsii_name="resetParameter")
+    def reset_parameter(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetParameter", []))
+
+    @jsii.member(jsii_name="resetValue")
+    def reset_value(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetValue", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="parameterInput")
+    def parameter_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "parameterInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="valueInput")
+    def value_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "valueInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="parameter")
+    def parameter(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "parameter"))
+
+    @parameter.setter
+    def parameter(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__bcc6c14de40b7ca81acce05f2efb0abf54feed3208413be77f6f478e4ed6066b)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "parameter", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="value")
+    def value(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "value"))
+
+    @value.setter
+    def value(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1430fe5e7334e1b60548f010de48b51eaf5f61ad1579e0577fde58c3cdfb28bb)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "value", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ffe2601265fac045df008edaa09d74b0dafe53ea44cf3bf8fae9d7a36725ab0b)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
     jsii_type="@cdktf/provider-google.dialogflowCxPage.DialogflowCxPageTimeouts",
     jsii_struct_bases=[],
     name_mapping={"create": "create", "delete": "delete", "update": "update"},
@@ -10682,9 +14903,9 @@ class DialogflowCxPageTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#create DialogflowCxPage#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#delete DialogflowCxPage#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#update DialogflowCxPage#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#create DialogflowCxPage#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#delete DialogflowCxPage#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#update DialogflowCxPage#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__a2e19156a49b1e0987ceb69d743e69217491db69c64a86751513a4ce9e2ae312)
@@ -10701,19 +14922,19 @@ class DialogflowCxPageTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#create DialogflowCxPage#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#create DialogflowCxPage#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#delete DialogflowCxPage#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#delete DialogflowCxPage#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#update DialogflowCxPage#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#update DialogflowCxPage#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -10852,11 +15073,11 @@ class DialogflowCxPageTransitionRoutes:
         trigger_fulfillment: typing.Optional[typing.Union["DialogflowCxPageTransitionRoutesTriggerFulfillment", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param condition: The condition to evaluate against form parameters or session parameters. At least one of intent or condition must be specified. When both intent and condition are specified, the transition can only happen when both are fulfilled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#condition DialogflowCxPage#condition}
-        :param intent: The unique identifier of an Intent. Format: projects//locations//agents//intents/. Indicates that the transition can only happen when the given intent is matched. At least one of intent or condition must be specified. When both intent and condition are specified, the transition can only happen when both are fulfilled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#intent DialogflowCxPage#intent}
-        :param target_flow: The target flow to transition to. Format: projects//locations//agents//flows/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
-        :param target_page: The target page to transition to. Format: projects//locations//agents//flows//pages/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
-        :param trigger_fulfillment: trigger_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
+        :param condition: The condition to evaluate against form parameters or session parameters. At least one of intent or condition must be specified. When both intent and condition are specified, the transition can only happen when both are fulfilled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#condition DialogflowCxPage#condition}
+        :param intent: The unique identifier of an Intent. Format: projects//locations//agents//intents/. Indicates that the transition can only happen when the given intent is matched. At least one of intent or condition must be specified. When both intent and condition are specified, the transition can only happen when both are fulfilled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#intent DialogflowCxPage#intent}
+        :param target_flow: The target flow to transition to. Format: projects//locations//agents//flows/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
+        :param target_page: The target page to transition to. Format: projects//locations//agents//flows//pages/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
+        :param trigger_fulfillment: trigger_fulfillment block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
         '''
         if isinstance(trigger_fulfillment, dict):
             trigger_fulfillment = DialogflowCxPageTransitionRoutesTriggerFulfillment(**trigger_fulfillment)
@@ -10885,7 +15106,7 @@ class DialogflowCxPageTransitionRoutes:
 
         At least one of intent or condition must be specified. When both intent and condition are specified, the transition can only happen when both are fulfilled.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#condition DialogflowCxPage#condition}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#condition DialogflowCxPage#condition}
         '''
         result = self._values.get("condition")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10896,7 +15117,7 @@ class DialogflowCxPageTransitionRoutes:
 
         Format: projects//locations//agents//intents/. Indicates that the transition can only happen when the given intent is matched. At least one of intent or condition must be specified. When both intent and condition are specified, the transition can only happen when both are fulfilled.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#intent DialogflowCxPage#intent}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#intent DialogflowCxPage#intent}
         '''
         result = self._values.get("intent")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10905,7 +15126,7 @@ class DialogflowCxPageTransitionRoutes:
     def target_flow(self) -> typing.Optional[builtins.str]:
         '''The target flow to transition to. Format: projects//locations//agents//flows/.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_flow DialogflowCxPage#target_flow}
         '''
         result = self._values.get("target_flow")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10914,7 +15135,7 @@ class DialogflowCxPageTransitionRoutes:
     def target_page(self) -> typing.Optional[builtins.str]:
         '''The target page to transition to. Format: projects//locations//agents//flows//pages/.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#target_page DialogflowCxPage#target_page}
         '''
         result = self._values.get("target_page")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10925,7 +15146,7 @@ class DialogflowCxPageTransitionRoutes:
     ) -> typing.Optional["DialogflowCxPageTransitionRoutesTriggerFulfillment"]:
         '''trigger_fulfillment block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#trigger_fulfillment DialogflowCxPage#trigger_fulfillment}
         '''
         result = self._values.get("trigger_fulfillment")
         return typing.cast(typing.Optional["DialogflowCxPageTransitionRoutesTriggerFulfillment"], result)
@@ -11073,12 +15294,12 @@ class DialogflowCxPageTransitionRoutesOutputReference(
         webhook: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
-        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
-        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
-        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
-        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
-        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         value = DialogflowCxPageTransitionRoutesTriggerFulfillment(
             conditional_cases=conditional_cases,
@@ -11240,12 +15461,12 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillment:
         webhook: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
-        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
-        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
-        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
-        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
-        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        :param conditional_cases: conditional_cases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        :param messages: messages block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        :param return_partial_responses: Whether Dialogflow should return currently queued fulfillment response messages in streaming APIs. If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        :param set_parameter_actions: set_parameter_actions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        :param tag: The tag used by the webhook to identify which fulfillment is being called. This field is required if webhook is specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        :param webhook: The webhook to call. Format: projects//locations//agents//webhooks/. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__a97a872305ddc645dd18929371877893606a6c501a3b834ec0f824adf60e91fd)
@@ -11275,7 +15496,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillment:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageTransitionRoutesTriggerFulfillmentConditionalCases"]]]:
         '''conditional_cases block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conditional_cases DialogflowCxPage#conditional_cases}
         '''
         result = self._values.get("conditional_cases")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageTransitionRoutesTriggerFulfillmentConditionalCases"]]], result)
@@ -11286,7 +15507,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillment:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessages"]]]:
         '''messages block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#messages DialogflowCxPage#messages}
         '''
         result = self._values.get("messages")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessages"]]], result)
@@ -11299,7 +15520,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillment:
 
         If a webhook is specified, it happens before Dialogflow invokes webhook. Warning: 1) This flag only affects streaming API. Responses are still queued and returned once in non-streaming API. 2) The flag can be enabled in any fulfillment but only the first 3 partial responses will be returned. You may only want to apply it to fulfillments that have slow webhooks.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#return_partial_responses DialogflowCxPage#return_partial_responses}
         '''
         result = self._values.get("return_partial_responses")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -11310,7 +15531,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillment:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageTransitionRoutesTriggerFulfillmentSetParameterActions"]]]:
         '''set_parameter_actions block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#set_parameter_actions DialogflowCxPage#set_parameter_actions}
         '''
         result = self._values.get("set_parameter_actions")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DialogflowCxPageTransitionRoutesTriggerFulfillmentSetParameterActions"]]], result)
@@ -11321,7 +15542,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillment:
 
         This field is required if webhook is specified.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#tag DialogflowCxPage#tag}
         '''
         result = self._values.get("tag")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -11330,7 +15551,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillment:
     def webhook(self) -> typing.Optional[builtins.str]:
         '''The webhook to call. Format: projects//locations//agents//webhooks/.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#webhook DialogflowCxPage#webhook}
         '''
         result = self._values.get("webhook")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -11355,7 +15576,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillment:
 class DialogflowCxPageTransitionRoutesTriggerFulfillmentConditionalCases:
     def __init__(self, *, cases: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param cases: A JSON encoded list of cascading if-else conditions. Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored. See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
+        :param cases: A JSON encoded list of cascading if-else conditions. Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored. See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__b83c74829229872c98e1ed0124487bb8f099acc8be3aeac4f2f7b0714d3f52bc)
@@ -11371,7 +15592,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentConditionalCases:
         Cases are mutually exclusive. The first one with a matching condition is selected, all the rest ignored.
         See `Case <https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#case>`_ for the schema.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#cases DialogflowCxPage#cases}
         '''
         result = self._values.get("cases")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -11574,14 +15795,14 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessages:
         text: typing.Optional[typing.Union["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesText", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param channel: The channel which the response is associated with. Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
-        :param conversation_success: conversation_success block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
-        :param live_agent_handoff: live_agent_handoff block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
-        :param output_audio_text: output_audio_text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
-        :param payload: A custom, platform-specific payload. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
-        :param play_audio: play_audio block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
-        :param telephony_transfer_call: telephony_transfer_call block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
-        :param text: text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param channel: The channel which the response is associated with. Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
+        :param conversation_success: conversation_success block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
+        :param live_agent_handoff: live_agent_handoff block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
+        :param output_audio_text: output_audio_text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
+        :param payload: A custom, platform-specific payload. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
+        :param play_audio: play_audio block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
+        :param telephony_transfer_call: telephony_transfer_call block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
+        :param text: text block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if isinstance(conversation_success, dict):
             conversation_success = DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesConversationSuccess(**conversation_success)
@@ -11629,7 +15850,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessages:
 
         Clients can specify the channel via QueryParameters.channel, and only associated channel response will be returned.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#channel DialogflowCxPage#channel}
         '''
         result = self._values.get("channel")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -11640,7 +15861,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesConversationSuccess"]:
         '''conversation_success block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#conversation_success DialogflowCxPage#conversation_success}
         '''
         result = self._values.get("conversation_success")
         return typing.cast(typing.Optional["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesConversationSuccess"], result)
@@ -11651,7 +15872,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesLiveAgentHandoff"]:
         '''live_agent_handoff block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#live_agent_handoff DialogflowCxPage#live_agent_handoff}
         '''
         result = self._values.get("live_agent_handoff")
         return typing.cast(typing.Optional["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesLiveAgentHandoff"], result)
@@ -11662,7 +15883,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesOutputAudioText"]:
         '''output_audio_text block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#output_audio_text DialogflowCxPage#output_audio_text}
         '''
         result = self._values.get("output_audio_text")
         return typing.cast(typing.Optional["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesOutputAudioText"], result)
@@ -11671,7 +15892,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessages:
     def payload(self) -> typing.Optional[builtins.str]:
         '''A custom, platform-specific payload.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#payload DialogflowCxPage#payload}
         '''
         result = self._values.get("payload")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -11682,7 +15903,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesPlayAudio"]:
         '''play_audio block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#play_audio DialogflowCxPage#play_audio}
         '''
         result = self._values.get("play_audio")
         return typing.cast(typing.Optional["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesPlayAudio"], result)
@@ -11693,7 +15914,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesTelephonyTransferCall"]:
         '''telephony_transfer_call block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#telephony_transfer_call DialogflowCxPage#telephony_transfer_call}
         '''
         result = self._values.get("telephony_transfer_call")
         return typing.cast(typing.Optional["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesTelephonyTransferCall"], result)
@@ -11704,7 +15925,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessages:
     ) -> typing.Optional["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesText"]:
         '''text block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional["DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesText"], result)
@@ -11729,7 +15950,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessages:
 class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesConversationSuccess:
     def __init__(self, *, metadata: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__d0af7c427fa2f7ff2969025807f3153756f8bb0024db2ba1e9cba182e67d5314)
@@ -11742,7 +15963,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesConversationSucc
     def metadata(self) -> typing.Optional[builtins.str]:
         '''Custom metadata. Dialogflow doesn't impose any structure on this.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         result = self._values.get("metadata")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -11919,7 +16140,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesList(
 class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesLiveAgentHandoff:
     def __init__(self, *, metadata: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__415a0ba89f2c3f9a528509d439e875ccdf09c2b3af4e4c9e8fc65134d8ead551)
@@ -11932,7 +16153,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesLiveAgentHandoff
     def metadata(self) -> typing.Optional[builtins.str]:
         '''Custom metadata. Dialogflow doesn't impose any structure on this.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         result = self._values.get("metadata")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -12021,8 +16242,8 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesOutputAudioText:
         text: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
-        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__e56430df76cb33cff7367f84097006c77f5add1c6017331d1455bfc7b37bad1f)
@@ -12038,7 +16259,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesOutputAudioText:
     def ssml(self) -> typing.Optional[builtins.str]:
         '''The SSML text to be synthesized. For more information, see SSML.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
         '''
         result = self._values.get("ssml")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -12047,7 +16268,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesOutputAudioText:
     def text(self) -> typing.Optional[builtins.str]:
         '''The raw text to be synthesized.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -12182,7 +16403,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesOutputReference(
         metadata: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         value = DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesConversationSuccess(
             metadata=metadata
@@ -12197,7 +16418,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesOutputReference(
         metadata: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
+        :param metadata: Custom metadata. Dialogflow doesn't impose any structure on this. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#metadata DialogflowCxPage#metadata}
         '''
         value = DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesLiveAgentHandoff(
             metadata=metadata
@@ -12213,8 +16434,8 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesOutputReference(
         text: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
-        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param ssml: The SSML text to be synthesized. For more information, see SSML. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#ssml DialogflowCxPage#ssml}
+        :param text: The raw text to be synthesized. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         value = DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesOutputAudioText(
             ssml=ssml, text=text
@@ -12225,7 +16446,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesOutputReference(
     @jsii.member(jsii_name="putPlayAudio")
     def put_play_audio(self, *, audio_uri: builtins.str) -> None:
         '''
-        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         value = DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesPlayAudio(
             audio_uri=audio_uri
@@ -12236,7 +16457,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesOutputReference(
     @jsii.member(jsii_name="putTelephonyTransferCall")
     def put_telephony_transfer_call(self, *, phone_number: builtins.str) -> None:
         '''
-        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         value = DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesTelephonyTransferCall(
             phone_number=phone_number
@@ -12251,7 +16472,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesOutputReference(
         text: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         value = DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesText(
             text=text
@@ -12435,7 +16656,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesOutputReference(
 class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesPlayAudio:
     def __init__(self, *, audio_uri: builtins.str) -> None:
         '''
-        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        :param audio_uri: URI of the audio clip. Dialogflow does not impose any validation on this value. It is specific to the client that reads it. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__32fa8953e5eddde87dfce36af9d4ab29166121ed6bc1c3e7496e958f708df679)
@@ -12450,7 +16671,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesPlayAudio:
 
         Dialogflow does not impose any validation on this value. It is specific to the client that reads it.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#audio_uri DialogflowCxPage#audio_uri}
         '''
         result = self._values.get("audio_uri")
         assert result is not None, "Required property 'audio_uri' is missing"
@@ -12536,7 +16757,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesPlayAudioOutputR
 class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesTelephonyTransferCall:
     def __init__(self, *, phone_number: builtins.str) -> None:
         '''
-        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        :param phone_number: Transfer the call to a phone number in E.164 format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__18617bd321e91cf3e474fcacecf34e74c11f24f22253feef6e6aa8209e2f7ce7)
@@ -12549,7 +16770,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesTelephonyTransfe
     def phone_number(self) -> builtins.str:
         '''Transfer the call to a phone number in E.164 format.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#phone_number DialogflowCxPage#phone_number}
         '''
         result = self._values.get("phone_number")
         assert result is not None, "Required property 'phone_number' is missing"
@@ -12634,7 +16855,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesText:
         text: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        :param text: A collection of text responses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__f229b0f5398de9819fbd94bb7660e0408e42120b4e82942a08f7d9c65e803c6d)
@@ -12647,7 +16868,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentMessagesText:
     def text(self) -> typing.Optional[typing.List[builtins.str]]:
         '''A collection of text responses.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#text DialogflowCxPage#text}
         '''
         result = self._values.get("text")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -12942,8 +17163,8 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentSetParameterActions:
         value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param parameter: Display name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
-        :param value: The new JSON-encoded value of the parameter. A null value clears the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
+        :param parameter: Display name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
+        :param value: The new JSON-encoded value of the parameter. A null value clears the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__5700713004cb59bc56318b50c1f1c2e38227de5d1bed214451756c09499d80bc)
@@ -12959,7 +17180,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentSetParameterActions:
     def parameter(self) -> typing.Optional[builtins.str]:
         '''Display name of the parameter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#parameter DialogflowCxPage#parameter}
         '''
         result = self._values.get("parameter")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -12968,7 +17189,7 @@ class DialogflowCxPageTransitionRoutesTriggerFulfillmentSetParameterActions:
     def value(self) -> typing.Optional[builtins.str]:
         '''The new JSON-encoded value of the parameter. A null value clears the parameter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/dialogflow_cx_page#value DialogflowCxPage#value}
         '''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -13280,6 +17501,53 @@ __all__ = [
     "DialogflowCxPageFormParametersFillBehaviorRepromptEventHandlersTriggerFulfillmentSetParameterActionsOutputReference",
     "DialogflowCxPageFormParametersList",
     "DialogflowCxPageFormParametersOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettings",
+    "DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections",
+    "DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnectionsList",
+    "DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnectionsOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettingsOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettingsOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettingsOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCasesList",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCasesOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccessOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteraction",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteractionList",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteractionOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCardOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesList",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoffOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudio",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioList",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegments",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegmentsList",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegmentsOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioTextOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudioOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCallOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTextOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentOutputReference",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActionsList",
+    "DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActionsOutputReference",
     "DialogflowCxPageTimeouts",
     "DialogflowCxPageTimeoutsOutputReference",
     "DialogflowCxPageTransitionRoutes",
@@ -13322,6 +17590,7 @@ def _typecheckingstub__00b86788db75afcf01217cbd511e679f06595dd57e1056597a09befbc
     event_handlers: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DialogflowCxPageEventHandlers, typing.Dict[builtins.str, typing.Any]]]]] = None,
     form: typing.Optional[typing.Union[DialogflowCxPageForm, typing.Dict[builtins.str, typing.Any]]] = None,
     id: typing.Optional[builtins.str] = None,
+    knowledge_connector_settings: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettings, typing.Dict[builtins.str, typing.Any]]] = None,
     language_code: typing.Optional[builtins.str] = None,
     parent: typing.Optional[builtins.str] = None,
     timeouts: typing.Optional[typing.Union[DialogflowCxPageTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
@@ -13464,6 +17733,7 @@ def _typecheckingstub__15dea158de3b8394ae860686740472a26b1661a6cdee78808233b0428
     event_handlers: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DialogflowCxPageEventHandlers, typing.Dict[builtins.str, typing.Any]]]]] = None,
     form: typing.Optional[typing.Union[DialogflowCxPageForm, typing.Dict[builtins.str, typing.Any]]] = None,
     id: typing.Optional[builtins.str] = None,
+    knowledge_connector_settings: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettings, typing.Dict[builtins.str, typing.Any]]] = None,
     language_code: typing.Optional[builtins.str] = None,
     parent: typing.Optional[builtins.str] = None,
     timeouts: typing.Optional[typing.Union[DialogflowCxPageTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
@@ -15615,6 +19885,902 @@ def _typecheckingstub__783421a7873f243c8974cd21cf7ec3298e09ee47f7d6e979ea824d0d3
 
 def _typecheckingstub__45f63f6efa57f41d57dc8f7c55c6a185253a2ce1dca840d65f5a02f986d9108e(
     value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageFormParameters]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__46b9ab50a6a53eb12c9eb6445e75adffc136a7f9a00baf28499404988305d5ef(
+    *,
+    data_store_connections: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections, typing.Dict[builtins.str, typing.Any]]]]] = None,
+    enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    target_flow: typing.Optional[builtins.str] = None,
+    target_page: typing.Optional[builtins.str] = None,
+    trigger_fulfillment: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment, typing.Dict[builtins.str, typing.Any]]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0dfff30fa674843c5382d4b23b77b284c139f517f1e2b90ceb45189def347719(
+    *,
+    data_store: typing.Optional[builtins.str] = None,
+    data_store_type: typing.Optional[builtins.str] = None,
+    document_processing_mode: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e9a35762480860b170b952d7c1cecb615654c73e09d3a51744aa8a414f0039ec(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1473c7fa5880376fad19b052b2ef1590f799e09fd6edc17a71fc6ff9ec83a04b(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0ad7e468b3157c1bf0fdd2ce2b1d3ad7ba9d99c7dc1d8918f4f4271222195ff0(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__a1cee64b1cfe55ac9d3cb1e656ee68f46b833e9d05c02df2f11cae02cefe6f74(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4f75f4ccc4d06fbabcd1f551c103445f5287d830f57ed2c85cbdc59bf07c8d84(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__022c76db79499f8caeecd7e43b21a2b3992f2afcd216fd87f23b708f7cb3fbef(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections]]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ade449a28e6161065c33bd80fd23bbb8b5bb9a7fa14607d70d31b5ce0efde693(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7a54aaf9e1d02aefaf5f8a4a47a40c3ca3fb3288c559daf7f2954e2cf472e5ac(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7a6b796d3e81ce9c6e340031da22e808b5df040ec20cdd92092a9cd5fa7bcfe7(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e2e59f5fc28e756b802deeb79e4d1dbae5f41e61b33138c66da7f1ba212f4573(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9157b82482b5ff231b9df3ba33cb15751ea86f932fadca13d1af653c6d8164fa(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f9297291abb33feb01d5c8e4ad5e1895693a6765c8cfe761eb2ce15b5a6eb04b(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__96abf2a3cf29883d3d91e6fa9feadd6216c762c20cbd18567df1f4bc2df8cdbe(
+    value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsDataStoreConnections, typing.Dict[builtins.str, typing.Any]]]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__a9cec7fab5ad72afb705577dfda3f250d5cf3976fb50fa338ea77ba08dcbc7cb(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ddec46e3ca0fc1989fddf59f5c7ee9d8351acc8ba8d38b27e952b3deda683f88(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__419ed3b3f6a0662130a9e783328fc92e8a37565a4286bc4752044db7e98d7289(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ca917074758723325b4e4b79557ba381984deb0d73c3e1e1738bc390498a5afe(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettings],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__da324fe443c9d49585919333e29167763cb4c88be509fdefc4ceb9d92be3effe(
+    *,
+    advanced_settings: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings, typing.Dict[builtins.str, typing.Any]]] = None,
+    conditional_cases: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases, typing.Dict[builtins.str, typing.Any]]]]] = None,
+    enable_generative_fallback: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    messages: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages, typing.Dict[builtins.str, typing.Any]]]]] = None,
+    return_partial_responses: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    set_parameter_actions: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions, typing.Dict[builtins.str, typing.Any]]]]] = None,
+    tag: typing.Optional[builtins.str] = None,
+    webhook: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__17e0190331cf3e16b7697574e76032b665c225a4dc42694215d7b6f0dff830f0(
+    *,
+    dtmf_settings: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings, typing.Dict[builtins.str, typing.Any]]] = None,
+    logging_settings: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings, typing.Dict[builtins.str, typing.Any]]] = None,
+    speech_settings: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings, typing.Dict[builtins.str, typing.Any]]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ff4836d788d93ab71f6c1a41ff2dacb0285e71dc9d4fe4a68caa1c6e1f38ebd8(
+    *,
+    enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    endpointing_timeout_duration: typing.Optional[builtins.str] = None,
+    finish_digit: typing.Optional[builtins.str] = None,
+    interdigit_timeout_duration: typing.Optional[builtins.str] = None,
+    max_digits: typing.Optional[jsii.Number] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__47eb425e27e3d0e1e9a872a6010f5612bf46d1ad576b09590fab7ee02ec380b8(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__57b3bd00008d170f4d76ae8c85a0313c9a1a5ce79ff35012e7c4a20c6aaf4baf(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__908364f5279758a2d66b3e5b1dec23f663e23a65f1045ccdea70d0a7fc3c4426(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6d7007857da5826df9c27bccefe154dc0e9863f47f72888dbb846b74788b6338(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9cb9f57894a7a415adf24bce8f517b8602581c232ec4d922366f1feaf3c5500d(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3213775552d8f5cf0fb2e978085850bb5f7fbe983d8cd6f3729524a66f9ee89f(
+    value: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d6173c0737b389ab947e791e7115fa9b798ceca90eca3f0df6cb7203d6bd3f5e(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsDtmfSettings],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__466bcf761caf3e9c235afb1bd474cd5b8ab26cef29c765d2fcf5186f3c6d943d(
+    *,
+    enable_consent_based_redaction: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    enable_interaction_logging: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    enable_stackdriver_logging: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7a9987e8098b4fb8bfbcd9d6f52075e8aca4b9422b15ff97636bff57c4daceed(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__930e9f8367cd4386d578227a825f764e0f15183e917631e302bbca1601dcc493(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f5b84a1957f7e9c4940c351e9a564c5cd283a8a4f9b6652dd2590ad6799d83ad(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3d91ca5b63c2528fe144a26659f98f3caffed6cf13ed0dd6d0f030ac18452164(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__40ef3b7c453d5c890aec6722852cf8f97ee3e46781941e4f68507c9f5f6e2f5b(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsLoggingSettings],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e79ecefe6682990702f25c819da5ef6a2ebe28be21247b503b190cca8ae6e10a(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6417921821576d21a7fda216da2264afd29daa88061d82a869870a7266fc25ec(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettings],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6f806ea3b5a2964c03015c422685accffa54efcc2c88f467148b1703d3306e04(
+    *,
+    endpointer_sensitivity: typing.Optional[jsii.Number] = None,
+    models: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
+    no_speech_timeout: typing.Optional[builtins.str] = None,
+    use_timeout_based_endpointing: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__37a1c2b8a0dc0d63bd73d0918094f4a9891cd7d7d71a46c958935acf8628c7c3(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e381477db3a587c521342962ed31e9d175a932fd06b68d0431598b88d3893bf2(
+    value: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__fd08116c62c0fd0dbc6ab9e9d93bc6bc85a544434ffde1330e149c5ff17b7f1d(
+    value: typing.Mapping[builtins.str, builtins.str],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f834454bb59c1fda9fb9ef6c46e7f6b5af7132f0f2da18175baec4c6b26557be(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6ba39401a8e00ad730ee360a85c0a5df6048bea44871249196949be341345bef(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7a96c888d0314ae04a418183e443eaae1466da97b2d633eac9d846d6e02ee4bd(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentAdvancedSettingsSpeechSettings],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9ca3ebc167045b4a8224938034f985eae722ff48ed25b4db84cff57be983c38b(
+    *,
+    cases: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__722c45c7a151cc97348b8aea2c48f6251f38845e062de82901fce813a90f671e(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4a0805eebf31280c9d256d10c8494b6410171fa932133d2ca4e34008f8b7860a(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4d325c70905984d77a46b018f91bb24cd5deb731df66ac1d5f7a27040598d91e(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__40e31e248080c78a5d151d663c9482ea58f7f3dab79f8238740b2863712cf9db(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4992c4ef41c00dbdb524ce1048659d597322e3ab2d0325bb4574909652eb4340(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__cb08f435a15367c075e2b30efa3dd67d617422668d14bda24e78e381d1f94219(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases]]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__634d8c6a6262ae089c2978257ff9a7e23dc8cb9b756dcae7e67d84d12f69c6a6(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d1c8e50db7e498f54d4620599fbc569b6cccb439049be10017769c9f4a14d841(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__833d941e422417d3ed56548040e2e059f50a3b3c7966e62dc20d18a5f43c1ed8(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__76de6c405acdf51f3046508a697882e62ea5b8d31672c0ffc37bc75ca9d58cee(
+    *,
+    channel: typing.Optional[builtins.str] = None,
+    conversation_success: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess, typing.Dict[builtins.str, typing.Any]]] = None,
+    knowledge_info_card: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard, typing.Dict[builtins.str, typing.Any]]] = None,
+    live_agent_handoff: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff, typing.Dict[builtins.str, typing.Any]]] = None,
+    output_audio_text: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText, typing.Dict[builtins.str, typing.Any]]] = None,
+    payload: typing.Optional[builtins.str] = None,
+    play_audio: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio, typing.Dict[builtins.str, typing.Any]]] = None,
+    telephony_transfer_call: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall, typing.Dict[builtins.str, typing.Any]]] = None,
+    text: typing.Optional[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText, typing.Dict[builtins.str, typing.Any]]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1ff6283b0d81f928452bb89ad77824077e654255ad802abeb7c7eba1e997e81b(
+    *,
+    metadata: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__db5919882ea57e48f2666a94c3ebd690a81762b26d37098788f28375f77b4da8(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__561e9a1774200ff42bca6e1bfde7e1603a0c107bc7981ac53bcafb5480e7f8c9(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__beb08b9905cce7bc9f8d165f8de3bc88180dc944decb1971a69066e34d54f0d7(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesConversationSuccess],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d5d4197702e63533407b318c93bdd38b9aefdbdb04716c1a8c43a813adde5c49(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__fbcec2317c81b5dc40e3081638ed5ac1876f16c4b97a74904e7043a69d3ac2c9(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1f5821fd80b3cff8758775a45cb3ae7cd3b7d18edf0d54a643face411a1188db(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__38a3815d81dea93a9d00ea7807f74a47fa3d8e2b50a0f3ab8eb603b3de64febe(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__59e9de5d945431527c75872988282dad8bd000745714b657629f881786f4f355(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__35da30f2d5cbe3f8e9f407c6bf80a8ee16fdc95298eccb36ad4706a792c2eb90(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__99bc0b6e2797312a7da56e5bb20dd57b50a196b99d459fcbd631db618d47a659(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesEndInteraction],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__592539b2650aa5cf22353936d6f120458594463918eb82f991d24d2dd0416891(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f8f53efa6efb56efb7ef8b4b1f510fe45f64134625a8c4af3b398aba4425c1be(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesKnowledgeInfoCard],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9805f759bd7c4ca440b5a4789465688a530443e2dcab95004cccf6d493e8fcb9(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0c1a8733057973663b0f0c74bc98b71273e2355e8244921628421d593c07db2f(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__eb901cbdea21f406f3ba10e6718cd21b10e85d3f844bc2759a34035d798474d4(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__55b01944af918b79241c057c6d168d5bce16f4b23537e3c3b4c66935493d73ce(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ebf20ade16e25eb64257c7b128a63cc138bfd4e6c01e6500446271d179882e7a(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__8c5322423e8c89abd802ab5ce848e7ab012253285f110ae207c3dc31194aaa00(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages]]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__db39c2d1a21e05f6069402d338ce4f06b0dcb986aceeec24e39ccd04f3b7caa2(
+    *,
+    metadata: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c90765bc42905fa6ef62bd034d187d56350826a2d6e10cb4a357653e02190b82(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6ce0917b6bbb47885a89b2cc72a7e1003badf0f698b78684c17b3fc801e4d09c(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__2166bc1664bef4aed10f37a3e527e306d047b3227d56280202acfaee85903d6e(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesLiveAgentHandoff],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__2953762d244a060d219fe4e15394181b64f6496d66dbccacd8edc6a9c9025e01(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1c7a9a89e200564f8b88f018bab349cfa610fffbb54e97c74d9a287d02a10678(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f49743b53eb89b154fad66306dbdb92a625d637d9d3a40783a1d7078523ce955(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f161e68cab6670a7711945c624b6acd77b5e4b6ae3531709c0498f671958e348(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__55635c3a11c046981d8cc4d9b83049e123627dbf7bd7303b62e0e1078d85919b(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__171d69949d9e1b7e85a099eaf8c6ad199cf36fd7b76993a06fbe4ce4afcc82cc(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__edc83ce4bb5e424165db2f7f1d31c89429f337d3a5017d0dd283a1b3b3de781a(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudio],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0c252d1ea3b8728171af887e0b07c02d266bcffc053189becc36b040c6edd51d(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__358f248a4c2d3a8ed81391e26d7590c4fb92f565419ae45fce5af91140c7a1ef(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__35d5a1fb6e08fac08598af42ff204e1202851c1391e1a891ba45def84c1fd920(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__01ac592fa7040427bf356fbd81a64e0a5de72f29158d259dff1f279248ee9571(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f64ff8a96032522557798fa9acedf8a702b3e549939b4d8e7b9a71b1c0d09ebe(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__85da42512a40ff5e49d99fc90ac91f01346fd8e576425d69804a082e3a6d85c2(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3851013e198ffa9e4c434cd30ccc0ff1837089d28569d2aa956cfd1d735207d5(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesMixedAudioSegments],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ceb0e96b8b48af6bf3d09fdedb90677bfffe85382ddf6aa85b616aa57d5eb2c2(
+    *,
+    ssml: typing.Optional[builtins.str] = None,
+    text: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__691d6c6aab050e83c642b54934af74bb7e9b1f2986855ea778f2a4f1e1c1f76c(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__213bb4987062df7cb611b643236d470372b1fb1a97a8dc72a7fc5954c6f713e1(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__90816a4fa086ff4cdcac32e91cae2613ab6b9eb0f1cbaad3914bc73ec2d82ea1(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__6eb3738f3a46660a242edd44471b165b3fe0c46d61c60e99676a75b77dcad731(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesOutputAudioText],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3189594151bf3810098612b5a2a1307901d4473c3133b56844daba5e639bc8ac(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__aef6de2cb5370abd4488cbfbc52b96b2cfb5d06c576938bb0ed76229fac458a8(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__5533de9c2f0d2d74b389d97a4627c623179f9b78a8c46ba1cbed9fb3c36bf9ec(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__07826e11416f495b5926459d713881005b43842e0791bc43bf796c49b1c4fef3(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__fd58d35524e776fe5a7d0638fad8b65d2ec96f9fd93e298b14451d7b5175dc9c(
+    *,
+    audio_uri: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__50e8d8943ed6e51367f3a3b97b70b6b3f3aa2eeff1bbb3fffc9f1620dbc4cc9e(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__197d5a0ae83c324ec7beaf8fb381f5b6a875bce096599610879a038b21e35c38(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__11ca78191bdb6000aa9c05555f238c7ba67e9b58043d1b53a5ec005505316c74(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesPlayAudio],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__b3a54a6ba7f0537d74d74fd428278b2ddde064d3fec215b99c5ec94ac2c8aed8(
+    *,
+    phone_number: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c4af75ef74e9b61449fbf9cdb9c78b5959cb9fc8afd410f5a434ed0088f4b55c(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1b8e376691b5099d3f52d5fca56f2bd5401331d3c3cc29c807a655dca50a9613(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__dd97e820b747bfb55ddb2c97491e1092b03a3444c3c8923ebbc10a13b345824a(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesTelephonyTransferCall],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1014b217dfbdc73c17b865ba54ba5e6b74bfc89b879fc8e3f5923fffef4fe0a5(
+    *,
+    text: typing.Optional[typing.Sequence[builtins.str]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7f8a20fe1e017b7173ef7387509b7dc94c539716d2f563a544b62055180fb60f(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9b7ed375abdf05c5ce217a70ce019ab20114633264eda9240a5628fd4d32fb6a(
+    value: typing.List[builtins.str],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e66d9b659600071d41ba3f5ff99fb02aa3c1184c40dfa5214f60d034e2cffb68(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessagesText],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__8c5937b17c51e41fa395e7f133e09729359d196387df83753d0db1e5a80a0a47(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__efa40e35e67ae3bcb01ad4dbc078743591cd5b5594df5965968c04fdbcb73175(
+    value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentConditionalCases, typing.Dict[builtins.str, typing.Any]]]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e30d5175438e90b067bed00c9ab49dd88c61b4e6022abccb3b6dde2fabcafd15(
+    value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentMessages, typing.Dict[builtins.str, typing.Any]]]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9d9653977e5a405117940841d9cca9b4a9651d0600890194bf9fe92b7d4c91c4(
+    value: typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions, typing.Dict[builtins.str, typing.Any]]]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__51353008f11e5013caae1d7f4e7717e4a06f35726ef6ece1876e250d07dd8a00(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ec96e703aa20e7a82a2a9da496540d0434f91cd07c201b5c6b9dc3fe3dc769eb(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0571537a1deb7c9e8c64ce14328fadaabaa4d2d566aedc8d5e56328b309f9a75(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ffecd96ee166a5741b758fd6898ae6bae0796756e077360ee357de9a05c968be(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d9d2708cc7e2d369a460fdf337f2339db0695561ca204026f6c7418af5a0de3e(
+    value: typing.Optional[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillment],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ad436d8713cf4074a4c91a320eb56624907ac6b5b88714b20371e74dec076058(
+    *,
+    parameter: typing.Optional[builtins.str] = None,
+    value: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__af3c029837b69953bf138a9ba500b84f155830145e4837f85f23991e79d91c2d(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4d346f4931652bf2b7cd779c6fcd8e23bc0dc812a97f87147b41aaeda88e41b7(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__a4d0063a6037fbe3596cfe2f8ac2b9cff86a5189b750f7b805ae706acc006ecf(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__8ad648625b5b95c58d27c85fe6f5eebc71c010162c689c2d09f953e0955ecc49(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d14ab9428643c9a2c1cfc8665ace95631d79bf5766b30a9bd2d3668e58038fbe(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__867461c08e1a7a30b8448fa7075499a8990d35e8c67010abe982725733c599fa(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions]]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__a6364152b49bed0008024c00a699e5340d22cec9cf26d4e71725e42245ad3e75(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__bcc6c14de40b7ca81acce05f2efb0abf54feed3208413be77f6f478e4ed6066b(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1430fe5e7334e1b60548f010de48b51eaf5f61ad1579e0577fde58c3cdfb28bb(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ffe2601265fac045df008edaa09d74b0dafe53ea44cf3bf8fae9d7a36725ab0b(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, DialogflowCxPageKnowledgeConnectorSettingsTriggerFulfillmentSetParameterActions]],
 ) -> None:
     """Type checking stubs"""
     pass

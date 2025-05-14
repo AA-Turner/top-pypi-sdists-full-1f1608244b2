@@ -80,6 +80,7 @@ class MgmtV1:
     # jwt
     update_jwt_path = "/v1/mgmt/jwt/update"
     impersonate_path = "/v1/mgmt/impersonate"
+    stop_impersonation_path = "/v1/mgmt/stop/impersonation"
     mgmt_sign_in_path = "/v1/mgmt/auth/signin"
     mgmt_sign_up_path = "/v1/mgmt/auth/signup"
     mgmt_sign_up_or_in_path = "/v1/mgmt/auth/signup-in"
@@ -141,6 +142,8 @@ class MgmtV1:
     fga_create_relations = "/v1/mgmt/fga/relations"
     fga_delete_relations = "/v1/mgmt/fga/relations/delete"
     fga_check = "/v1/mgmt/fga/check"
+    fga_resources_load = "/v1/mgmt/fga/resources/load"
+    fga_resources_save = "/v1/mgmt/fga/resources/save"
 
     # Project
     project_update_name = "/v1/mgmt/project/update/name"
@@ -155,8 +158,10 @@ class MgmtSignUpOptions:
     def __init__(
         self,
         custom_claims: Optional[dict] = None,
+        refresh_duration: Optional[int] = None,
     ):
         self.custom_claims = custom_claims
+        self.refresh_duration = refresh_duration
 
 
 class MgmtLoginOptions:
@@ -167,12 +172,14 @@ class MgmtLoginOptions:
         revoke_other_sessions: Optional[bool] = None,
         custom_claims: Optional[dict] = None,
         jwt: Optional[str] = None,
+        refresh_duration: Optional[int] = None,
     ):
         self.stepup = stepup
         self.custom_claims = custom_claims
         self.mfa = mfa
         self.revoke_other_sessions = revoke_other_sessions
         self.jwt = jwt
+        self.refresh_duration = refresh_duration
 
 
 def is_jwt_required(lgo: MgmtLoginOptions) -> bool:

@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="lumibot",
-    version="3.12.13",
+    version="3.13.4",
     author="Robert Grzesik",
     author_email="rob@lumiwealth.com",
     description="Backtesting and Trading Library, Made by Lumiwealth",
@@ -14,12 +14,13 @@ setuptools.setup(
     url="https://github.com/Lumiwealth/lumibot",
     packages=setuptools.find_packages(),
     license="MIT",  # Add license argument
+    include_package_data=True, 
     install_requires=[
         "polygon-api-client>=1.13.3",
         "alpaca-py>=0.28.1",
         "alpha_vantage",
         "ibapi==9.81.1.post1",
-        "yfinance>=0.2.54",
+        "yfinance>=0.2.61",
         "matplotlib>=3.3.3",
         "quandl",
         # Numpy greater than 1.20.0 and less than 2 because v2 has compatibility issues with a few libraries
@@ -33,7 +34,7 @@ setuptools.setup(
         "scipy>=1.13.0",
         "quantstats-lumi>=0.3.3",
         "python-dotenv",  # Secret Storage
-        "ccxt>=4.4.68",
+        "ccxt>=4.4.80",
         "termcolor",
         "jsonpickle",
         "apscheduler>=3.10.4",

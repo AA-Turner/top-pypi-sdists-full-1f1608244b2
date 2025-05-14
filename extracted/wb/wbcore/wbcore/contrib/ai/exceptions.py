@@ -1,10 +1,12 @@
 from langchain_core.exceptions import LangChainException, OutputParserException
 
 APIStatusErrors = [LangChainException, OutputParserException]
+BadRequestErrors = []
 
 try:
     from openai._exceptions import (
         AuthenticationError,
+        BadRequestError,
         ConflictError,
         InternalServerError,
         NotFoundError,
@@ -24,17 +26,15 @@ try:
             InternalServerError,
         ]
     )
+    BadRequestErrors.append(BadRequestError)
 except ImportError:
     pass
 
 
 try:
-    from anthropic._exceptions import (
-        APIConnectionError,
-        APIResponseValidationError,
-        APIStatusError,
-    )
+    from anthropic._exceptions import APIConnectionError, APIResponseValidationError, APIStatusError, BadRequestError
 
     APIStatusErrors.extend([APIResponseValidationError, APIStatusError, APIConnectionError])
+    BadRequestErrors.append(BadRequestError)
 except ImportError:
     pass

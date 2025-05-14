@@ -114,12 +114,12 @@ def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, rename=Fal
             file_path = whl_path/member.filename
             timestamp = datetime(*member.date_time).timestamp()
             try:
-                os.utime(str(file_path), (timestamp, timestamp))
+                os.utime(file_path, (timestamp, timestamp))
             except Exception:
                 pass  # ignore errors
             permission_bits = (member.external_attr >> 16) & 0o777
             try:
-                os.chmod(str(file_path), permission_bits)
+                os.chmod(file_path, permission_bits)
             except Exception:
                 pass  # ignore errors
 
@@ -134,7 +134,7 @@ def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, rename=Fal
             whl_file.replace(whl_file.with_suffix(whl_file.suffix + ".bak"))
         if rename:
             pyc_whl_path = create_pyc_whl_path(whl_file)
-            whl_file_zip.replace(pyc_whl_path)
+            shutil.move(whl_file_zip, pyc_whl_path)
             if whl_file != pyc_whl_path:
                 whl_file.unlink(missing_ok=True)
                 if rename == "symlink":
@@ -143,7 +143,7 @@ def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, rename=Fal
                     print("Renamed wheel: {!s} -> {!s}".format(whl_file, pyc_whl_path))
             whl_file = pyc_whl_path
         else:
-            whl_file_zip.replace(whl_file)
+            shutil.move(whl_file_zip, whl_file)
         return whl_file
     finally:
         # Clean up original directory

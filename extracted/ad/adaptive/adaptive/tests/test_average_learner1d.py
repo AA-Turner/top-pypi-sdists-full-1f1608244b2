@@ -1,5 +1,4 @@
 from itertools import chain
-from typing import TYPE_CHECKING
 
 import numpy as np
 
@@ -10,9 +9,6 @@ from adaptive.tests.test_learners import (
     simple_run,
 )
 
-if TYPE_CHECKING:
-    pass
-
 
 def almost_equal_dicts(a, b):
     assert a.keys() == b.keys()
@@ -21,7 +17,7 @@ def almost_equal_dicts(a, b):
         if (
             v1 is None
             or v2 is None
-            or isinstance(v1, (tuple, list))
+            or isinstance(v1, tuple | list)
             and any(x is None for x in chain(v1, v2))
         ):
             assert v1 == v2

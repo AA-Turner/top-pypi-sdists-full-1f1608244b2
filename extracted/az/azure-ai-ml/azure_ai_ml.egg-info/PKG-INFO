@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: azure-ai-ml
-Version: 1.27.0
+Version: 1.27.1
 Summary: Microsoft Azure Machine Learning Client Library for Python
 Home-page: https://github.com/Azure/azure-sdk-for-python
 Author: Microsoft Corporation
@@ -192,6 +192,11 @@ This project has adopted the [Microsoft Open Source Code of Conduct][code_of_con
 
 
 # Release History
+
+## 1.27.1 (2025-05-13)
+
+### Bugs Fixed
+  - Handled key error for missing props in PAT url case.
 
 ## 1.27.0 (2025-05-06)
 

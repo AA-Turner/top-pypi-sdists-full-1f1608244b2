@@ -28,6 +28,7 @@ __all__ = (
     "ControlOperationTypeType",
     "ControlTowerServiceName",
     "DriftStatusType",
+    "EnabledBaselineDriftStatusType",
     "EnablementStatusType",
     "LandingZoneDriftStatusType",
     "LandingZoneOperationStatusType",
@@ -54,6 +55,7 @@ ControlOperationTypeType = Literal[
     "DISABLE_CONTROL", "ENABLE_CONTROL", "RESET_ENABLED_CONTROL", "UPDATE_ENABLED_CONTROL"
 ]
 DriftStatusType = Literal["DRIFTED", "IN_SYNC", "NOT_CHECKING", "UNKNOWN"]
+EnabledBaselineDriftStatusType = Literal["DRIFTED", "IN_SYNC"]
 EnablementStatusType = Literal["FAILED", "SUCCEEDED", "UNDER_CHANGE"]
 LandingZoneDriftStatusType = Literal["DRIFTED", "IN_SYNC"]
 LandingZoneOperationStatusType = Literal["FAILED", "IN_PROGRESS", "SUCCEEDED"]

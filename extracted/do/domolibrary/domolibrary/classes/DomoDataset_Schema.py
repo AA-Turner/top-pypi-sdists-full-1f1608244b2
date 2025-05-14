@@ -37,13 +37,17 @@ class DomoDataset_Schema_Column:
     order: int = 0
     visible: bool = True
     upsert_key: bool = False
+    tags: List[Any] = field(default_factory=list) # DomoTag
 
     def __eq__(self, other):
         return self.id == other.id
 
     @classmethod
     def _from_json(cls, json_obj):
+        # import domolibrary.classes.DomoTag as dmtg
+
         dd = util_dd.DictDot(json_obj)
+
         return cls(
             name=dd.name,
             id=dd.id,
@@ -67,7 +71,7 @@ class DomoDataset_Schema:
     """class for interacting with dataset schemas"""
 
     auth : dmda.DomoAuth = field(repr = False)
-    dataset_id : str 
+    dataset_id : str
 
     parent: Any = field(repr = False, default = None)
     columns: List[DomoDataset_Schema_Column] = field(default_factory=list)
@@ -75,21 +79,33 @@ class DomoDataset_Schema:
     def __post_init__(self):
         if self.parent: 
             self.auth = self.parent.auth
-            self.dataset_id = self.parent.id
-
+            self.parent_id = self.parent.id
 
     @classmethod
+    async def get_by_dataset_id(cls, dataset_id: str, auth: dmda.DomoAuth):
+        import domolibrary.classes.DomoDataset as dmds
+
+        ds = await dmds.DomoDataset.get_by_id(
+            auth=auth,
+            dataset_id=dataset_id,
+        )
+
+        await ds.Schema.get_columns()
+
+        return ds.Schema
+    
+    @classmethod
     def _from_parent(cls, parent):
-        ds = cls(
+        schema = cls(
             parent = parent,
             auth = parent.auth,
             dataset_id = parent.id
         )
 
-        parent.Schema = ds
-        return ds
-
-    async def get(
+        parent.Schema = schema
+        return schema
+    
+    async def get_columns(
         self,
         debug_api: bool = False,
         return_raw: bool = False,  # return the raw response
@@ -111,7 +127,7 @@ class DomoDataset_Schema:
 
         return self.columns
 
-# %% ../../nbs/classes/50_DomoDataset_Schema.ipynb 11
+# %% ../../nbs/classes/50_DomoDataset_Schema.ipynb 12
 class DatasetSchema_InvalidSchema(dmde.DomoError):
     def __init__(self, domo_instance, dataset_id, missing_columns, dataset_name=None, message = None):
 
@@ -132,7 +148,7 @@ async def _test_missing_columns(
     dataset_id = dataset_id or self.parent.id
     auth = auth or self.parent.auth
 
-    await self.get()
+    await self.get_columns()
 
     missing_columns = [
         col for col in df.columns if col not in [scol.name for scol in self.columns]
@@ -147,7 +163,7 @@ async def _test_missing_columns(
 
     return False
 
-# %% ../../nbs/classes/50_DomoDataset_Schema.ipynb 14
+# %% ../../nbs/classes/50_DomoDataset_Schema.ipynb 15
 @patch_to(DomoDataset_Schema)
 async def reset_col_order(self: DomoDataset_Schema, df: pd.DataFrame):
 
@@ -168,12 +184,12 @@ async def reset_col_order(self: DomoDataset_Schema, df: pd.DataFrame):
     # import domolibrary.routes.dataset as dataset_routes
     # await dataset_routes.alter_schema(auth = consol_auth, dataset_id = consol_ds.id, schema_obj = schema)
 
-# %% ../../nbs/classes/50_DomoDataset_Schema.ipynb 15
+# %% ../../nbs/classes/50_DomoDataset_Schema.ipynb 16
 @patch_to(DomoDataset_Schema)
 def to_dict(self: DomoDataset_Schema):
     return {"columns": [col.to_dict() for col in self.columns]}
 
-# %% ../../nbs/classes/50_DomoDataset_Schema.ipynb 17
+# %% ../../nbs/classes/50_DomoDataset_Schema.ipynb 18
 @patch_to(DomoDataset_Schema)
 def add_col(
     self: DomoDataset_Schema, col: DomoDataset_Schema_Column, debug_prn: bool = False
@@ -205,7 +221,7 @@ def remove_col(
 
     return self.columns
 
-# %% ../../nbs/classes/50_DomoDataset_Schema.ipynb 19
+# %% ../../nbs/classes/50_DomoDataset_Schema.ipynb 20
 class CRUD_Dataset_Error(dmde.DomoError):
     def __init__(self, auth, res, message):
         super().__init__(

@@ -1,6 +1,6 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: jurigged
-Version: 0.6.0
+Version: 0.6.1
 Summary: Live update of Python functions
 Project-URL: Homepage, https://github.com/breuleux/jurigged
 Project-URL: Repository, https://github.com/breuleux/jurigged
@@ -10,7 +10,7 @@ License-File: LICENSE
 Requires-Python: >=3.9
 Requires-Dist: blessed>=1.20.0
 Requires-Dist: codefind~=0.1.7
-Requires-Dist: ovld~=0.4.0
+Requires-Dist: ovld>=0.4.0
 Requires-Dist: watchdog>=4.0.2
 Provides-Extra: develoop
 Requires-Dist: giving~=0.4.3; extra == 'develoop'

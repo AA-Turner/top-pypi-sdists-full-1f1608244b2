@@ -1,5 +1,6 @@
 from chalk._gen.chalk.common.v1 import chalk_error_pb2 as _chalk_error_pb2
 from chalk._gen.chalk.expression.v1 import expression_pb2 as _expression_pb2
+from chalk._gen.chalk.graph.v1 import graph_pb2 as _graph_pb2
 from google.protobuf import duration_pb2 as _duration_pb2
 from google.protobuf import struct_pb2 as _struct_pb2
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
@@ -162,6 +163,7 @@ class OnlineQueryContext(_message.Message):
         "options",
         "value_metrics_tag_by_features",
         "query_context",
+        "overlay_graph",
     )
     class OptionsEntry(_message.Message):
         __slots__ = ("key", "value")
@@ -194,6 +196,7 @@ class OnlineQueryContext(_message.Message):
     OPTIONS_FIELD_NUMBER: _ClassVar[int]
     VALUE_METRICS_TAG_BY_FEATURES_FIELD_NUMBER: _ClassVar[int]
     QUERY_CONTEXT_FIELD_NUMBER: _ClassVar[int]
+    OVERLAY_GRAPH_FIELD_NUMBER: _ClassVar[int]
     environment: str
     tags: _containers.RepeatedScalarFieldContainer[str]
     required_resolver_tags: _containers.RepeatedScalarFieldContainer[str]
@@ -205,6 +208,7 @@ class OnlineQueryContext(_message.Message):
     options: _containers.MessageMap[str, _struct_pb2.Value]
     value_metrics_tag_by_features: _containers.RepeatedCompositeFieldContainer[OutputExpr]
     query_context: _containers.MessageMap[str, _struct_pb2.Value]
+    overlay_graph: _graph_pb2.OverlayGraph
     def __init__(
         self,
         environment: _Optional[str] = ...,
@@ -218,6 +222,7 @@ class OnlineQueryContext(_message.Message):
         options: _Optional[_Mapping[str, _struct_pb2.Value]] = ...,
         value_metrics_tag_by_features: _Optional[_Iterable[_Union[OutputExpr, _Mapping]]] = ...,
         query_context: _Optional[_Mapping[str, _struct_pb2.Value]] = ...,
+        overlay_graph: _Optional[_Union[_graph_pb2.OverlayGraph, _Mapping]] = ...,
     ) -> None: ...
 
 class OnlineQueryResponseOptions(_message.Message):

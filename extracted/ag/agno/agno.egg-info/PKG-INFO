@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: agno
-Version: 1.4.6
+Version: 1.5.0
 Summary: Agno: a lightweight library for building Reasoning Agents
 Author-email: Ashpreet Bedi <ashpreet@agno.com>
 License: Copyright (c) Agno, Inc.
@@ -430,6 +430,11 @@ Requires-Dist: weave; extra == "weave"
 Provides-Extra: openlit
 Requires-Dist: openlit; extra == "openlit"
 Requires-Dist: agno[opentelemetry]; extra == "openlit"
+Provides-Extra: arize
+Requires-Dist: arize-phoenix; extra == "arize"
+Requires-Dist: agno[opentelemetry]; extra == "arize"
+Requires-Dist: opentelemetry-exporter-otlp-proto-grpc; extra == "arize"
+Requires-Dist: opentelemetry-distro; extra == "arize"
 Provides-Extra: langfuse
 Requires-Dist: langfuse; extra == "langfuse"
 Provides-Extra: azure

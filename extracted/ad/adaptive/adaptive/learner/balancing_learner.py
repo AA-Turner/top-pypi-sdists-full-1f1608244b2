@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 import itertools
-import sys
 from collections import defaultdict
-from collections.abc import Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 from contextlib import suppress
 from functools import partial
 from operator import itemgetter
-from typing import Any, Callable, Union, cast
+from typing import Any, Literal, TypeAlias, cast
 
 import numpy as np
 
@@ -15,13 +14,6 @@ from adaptive.learner.base_learner import BaseLearner, LearnerType
 from adaptive.notebook_integration import ensure_holoviews
 from adaptive.types import Int, Real
 from adaptive.utils import cache_latest, named_product, restore
-
-if sys.version_info >= (3, 10):
-    from typing import TypeAlias
-else:
-    from typing_extensions import TypeAlias
-
-from typing import Literal
 
 try:
     import pandas
@@ -38,11 +30,9 @@ def dispatch(child_functions: list[Callable], arg: Any) -> Any:
 
 STRATEGY_TYPE: TypeAlias = Literal["loss_improvements", "loss", "npoints", "cycle"]
 
-CDIMS_TYPE: TypeAlias = Union[
-    Sequence[dict[str, Any]],
-    tuple[Sequence[str], Sequence[tuple[Any, ...]]],
-    None,
-]
+CDIMS_TYPE: TypeAlias = (
+    Sequence[dict[str, Any]] | tuple[Sequence[str], Sequence[tuple[Any, ...]]] | None
+)
 
 
 class BalancingLearner(BaseLearner):
@@ -116,9 +106,7 @@ class BalancingLearner(BaseLearner):
         self._cdims_default = cdims
 
         if len({learner.__class__ for learner in self.learners}) > 1:
-            raise TypeError(
-                "A BalacingLearner can handle only one type" " of learners."
-            )
+            raise TypeError("A BalacingLearner can handle only one type of learners.")
 
         self.strategy: STRATEGY_TYPE = strategy
 
@@ -279,17 +267,17 @@ class BalancingLearner(BaseLearner):
             return self._ask_and_tell(n)
 
     def tell(self, x: tuple[Int, Any], y: Any) -> None:
-        index, x = x
+        index, x_ = x
         self._ask_cache.pop(index, None)
         self._loss.pop(index, None)
         self._pending_loss.pop(index, None)
-        self.learners[index].tell(x, y)
+        self.learners[index].tell(x_, y)
 
     def tell_pending(self, x: tuple[Int, Any]) -> None:
-        index, x = x
+        index, x_ = x
         self._ask_cache.pop(index, None)
         self._loss.pop(index, None)
-        self.learners[index].tell_pending(x)
+        self.learners[index].tell_pending(x_)
 
     def _losses(self, real: bool = True) -> list[float]:
         losses = []

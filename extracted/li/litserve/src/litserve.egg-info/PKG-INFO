@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: litserve
-Version: 0.2.9
+Version: 0.2.10
 Summary: Lightweight AI server.
 Home-page: https://github.com/Lightning-AI/litserve
 Download-URL: https://github.com/Lightning-AI/litserve

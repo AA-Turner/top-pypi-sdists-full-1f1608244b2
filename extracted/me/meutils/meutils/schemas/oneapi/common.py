@@ -35,6 +35,7 @@ MODEL_PRICE = {
     "gemini-2.0-flash-search": 0.01,
     "gemini-2.0-flash-exp-image-generation": 0.03,
 
+    "gemini-2.0-flash-audio": 0.025,
     "gemini-2.5-flash-audio": 0.025,
     "gemini-2.5-pro-audio": 0.05,
 
@@ -252,6 +253,8 @@ MODEL_PRICE = {
 
     # textin
     "api-textin-image/watermark_remove": 0.03,
+    "api-textin-pdf_to_markdown": 0.03,
+    "api-textin-crop_enhance_image": 0.03,
 
     # suno
     "suno_music": 0.4,
@@ -758,13 +761,13 @@ MODEL_RATIO = {
     "google/gemini-flash-1.5-exp": 0.1,  # openrouter免费
     "google/gemini-flash-1.5-8b-exp": 0.1,  # openrouter免费
 
-    "gemini-2.0-flash": 0.0625,
-    "gemini-2.0-flash-001": 0.0625,
-    "gemini-2.0-flash-lite-preview-02-05": 0.0625,
-    "gemini-2.0-flash-exp": 0.0625,
-    "gemini-2.0-flash-thinking-exp": 1,
-    "gemini-2.0-flash-thinking-exp-1219": 1,
-    "gemini-2.0-flash-thinking-exp-01-21": 1,
+    "gemini-2.0-flash": 0.075,
+    "gemini-2.0-flash-001": 0.075,
+    "gemini-2.0-flash-lite-preview-02-05": 0.075,
+    "gemini-2.0-flash-exp": 0.075,
+    "gemini-2.0-flash-thinking-exp": 0.075,
+    "gemini-2.0-flash-thinking-exp-1219": 0.075,
+    "gemini-2.0-flash-thinking-exp-01-21": 0.075,
 
     "gemini-2.5-flash-preview-04-17": 0.075,
 
@@ -791,6 +794,8 @@ MODEL_RATIO = {
     "gemini-2.5-pro-thinking": 0.625 * 2,
     "gemini-2.5-pro-exp-03-25-thinking": 0.625 * 2,
     "gemini-2.5-pro-preview-03-25-thinking": 0.625 * 2,
+
+    "gemini-thinking": 0.625 * 2,  # 逆向
 
     "gpt-3.5-turbo": 0.75,
     "gpt-3.5-turbo-0125": 0.25,

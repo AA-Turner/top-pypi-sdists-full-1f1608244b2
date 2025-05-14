@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: recommender-xblock
-Version: 3.0.0
+Version: 3.1.0
 Summary: recommender XBlock
 Home-page: https://github.com/openedx/RecommenderXBlock
 Author: edX
@@ -15,6 +15,15 @@ Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 License-File: LICENSE
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: summary
 
 RecommenderXBlock
 =================

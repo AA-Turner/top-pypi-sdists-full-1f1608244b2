@@ -310,17 +310,23 @@ class Block(google.protobuf.message.Message):
         NAME_FIELD_NUMBER: builtins.int
         AVATAR_FIELD_NUMBER: builtins.int
         AVATAR_TYPE_FIELD_NUMBER: builtins.int
+        WIDTH_CONFIG_FIELD_NUMBER: builtins.int
         name: builtins.str
         avatar: builtins.str
         avatar_type: global___Block.ChatMessage.AvatarType.ValueType
+        @property
+        def width_config(self) -> streamlit.proto.WidthConfig_pb2.WidthConfig: ...
         def __init__(
             self,
             *,
             name: builtins.str = ...,
             avatar: builtins.str = ...,
             avatar_type: global___Block.ChatMessage.AvatarType.ValueType = ...,
+            width_config: streamlit.proto.WidthConfig_pb2.WidthConfig | None = ...,
         ) -> None: ...
-        def ClearField(self, field_name: typing.Literal["avatar", b"avatar", "avatar_type", b"avatar_type", "name", b"name"]) -> None: ...
+        def HasField(self, field_name: typing.Literal["_width_config", b"_width_config", "width_config", b"width_config"]) -> builtins.bool: ...
+        def ClearField(self, field_name: typing.Literal["_width_config", b"_width_config", "avatar", b"avatar", "avatar_type", b"avatar_type", "name", b"name", "width_config", b"width_config"]) -> None: ...
+        def WhichOneof(self, oneof_group: typing.Literal["_width_config", b"_width_config"]) -> typing.Literal["width_config"] | None: ...
 
     VERTICAL_FIELD_NUMBER: builtins.int
     HORIZONTAL_FIELD_NUMBER: builtins.int

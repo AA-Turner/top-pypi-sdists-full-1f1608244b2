@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: eth-event
-Version: 1.2.6
+Version: 1.2.7
 Summary: Ethereum event decoder and topic generator
 Home-page: https://github.com/iamdefinitelyahuman/eth-event
 Author: Benjamin Hauser
@@ -15,9 +15,9 @@ Classifier: Programming Language :: Python :: 3
 Requires-Python: >=3.6, <4
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: cchecksum<0.3,>=0.2.6
 Requires-Dist: eth-abi<6,>=4
 Requires-Dist: eth-hash[pycryptodome]<1.0.0,>=0.2.0
-Requires-Dist: eth-utils<4,>=2
 Requires-Dist: hexbytes<1
 Dynamic: author
 Dynamic: author-email

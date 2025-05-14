@@ -1,12 +1,12 @@
 [build-system]
 build-backend = "setuptools.build_meta"
 requires = [
-  "setuptools",
+  "setuptools>=77",
 ]
 
 [project]
 name = "django-mysql"
-version = "4.16.0"
+version = "4.17.0"
 description = "Django-MySQL extends Django's built-in MySQL and MariaDB support their specific features not available on other databases."
 readme = "README.rst"
 keywords = [
@@ -14,6 +14,8 @@ keywords = [
   "MariaDB",
   "MySQL",
 ]
+license = "MIT"
+license-files = [ "LICENSE" ]
 authors = [
   { name = "Adam Johnson", email = "me@adamj.eu" },
 ]
@@ -26,7 +28,6 @@ classifiers = [
   "Framework :: Django :: 5.1",
   "Framework :: Django :: 5.2",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
   "Natural Language :: English",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3 :: Only",
@@ -46,6 +47,24 @@ urls.Changelog = "https://django-mysql.readthedocs.io/en/latest/changelog.html"
 urls.Documentation = "https://django-mysql.readthedocs.io/"
 urls.Funding = "https://adamj.eu/books/"
 urls.Repository = "https://github.com/adamchainz/django-mysql"
+
+[dependency-groups]
+test = [
+  "coverage[toml]",
+  "django-jsonfield-backport",
+  "mariadb-dyncol",
+  "mysqlclient>=1.4.3",
+  "parameterized",
+  "pytest",
+  "pytest-django",
+  "pytest-flake8-path",
+  "pytest-randomly",
+  "typing-extensions",
+]
+django42 = [ "django>=4.2a1,<5; python_version>='3.8'" ]
+django50 = [ "django>=5.0a1,<5.1; python_version>='3.10'" ]
+django51 = [ "django>=5.1a1,<5.2; python_version>='3.10'" ]
+django52 = [ "django>=5.2a1,<6; python_version>='3.10'" ]
 
 [tool.isort]
 add_imports = [
@@ -108,3 +127,13 @@ ignore_directives = [
   "automodule",
 ]
 report_level = "ERROR"
+
+[tool.uv]
+conflicts = [
+  [
+    { group = "django42" },
+    { group = "django50" },
+    { group = "django51" },
+    { group = "django52" },
+  ],
+]

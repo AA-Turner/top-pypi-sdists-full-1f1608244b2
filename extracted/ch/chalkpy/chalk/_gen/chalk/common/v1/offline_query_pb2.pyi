@@ -1,6 +1,7 @@
 from chalk._gen.chalk.common.v1 import chalk_error_pb2 as _chalk_error_pb2
 from chalk._gen.chalk.common.v1 import online_query_pb2 as _online_query_pb2
 from chalk._gen.chalk.expression.v1 import expression_pb2 as _expression_pb2
+from chalk._gen.chalk.graph.v1 import graph_pb2 as _graph_pb2
 from google.protobuf import struct_pb2 as _struct_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf import descriptor as _descriptor
@@ -115,6 +116,7 @@ class OfflineQueryRequest(_message.Message):
         "num_shards",
         "num_workers",
         "query_context",
+        "overlay_graph",
     )
     class PlannerOptionsEntry(_message.Message):
         __slots__ = ("key", "value")
@@ -162,6 +164,7 @@ class OfflineQueryRequest(_message.Message):
     NUM_SHARDS_FIELD_NUMBER: _ClassVar[int]
     NUM_WORKERS_FIELD_NUMBER: _ClassVar[int]
     QUERY_CONTEXT_FIELD_NUMBER: _ClassVar[int]
+    OVERLAY_GRAPH_FIELD_NUMBER: _ClassVar[int]
     inputs: OfflineQueryInputs
     outputs: _containers.RepeatedScalarFieldContainer[str]
     required_outputs: _containers.RepeatedScalarFieldContainer[str]
@@ -188,6 +191,7 @@ class OfflineQueryRequest(_message.Message):
     num_shards: int
     num_workers: int
     query_context: _containers.MessageMap[str, _struct_pb2.Value]
+    overlay_graph: _graph_pb2.OverlayGraph
     def __init__(
         self,
         inputs: _Optional[_Union[OfflineQueryInputs, _Mapping]] = ...,
@@ -216,6 +220,7 @@ class OfflineQueryRequest(_message.Message):
         num_shards: _Optional[int] = ...,
         num_workers: _Optional[int] = ...,
         query_context: _Optional[_Mapping[str, _struct_pb2.Value]] = ...,
+        overlay_graph: _Optional[_Union[_graph_pb2.OverlayGraph, _Mapping]] = ...,
     ) -> None: ...
 
 class ColumnMetadataList(_message.Message):

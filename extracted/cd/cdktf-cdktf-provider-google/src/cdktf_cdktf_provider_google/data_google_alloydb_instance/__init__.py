@@ -1,7 +1,7 @@
 r'''
 # `data_google_alloydb_instance`
 
-Refer to the Terraform Registry for docs: [`data_google_alloydb_instance`](https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance).
+Refer to the Terraform Registry for docs: [`data_google_alloydb_instance`](https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataGoogleAlloydbInstance(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-google.dataGoogleAlloydbInstance.DataGoogleAlloydbInstance",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance google_alloydb_instance}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance google_alloydb_instance}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class DataGoogleAlloydbInstance(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance google_alloydb_instance} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance google_alloydb_instance} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param cluster_id: The ID of the alloydb cluster that the instance belongs to.'alloydb_cluster_id'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#cluster_id DataGoogleAlloydbInstance#cluster_id}
-        :param instance_id: The ID of the alloydb instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#instance_id DataGoogleAlloydbInstance#instance_id}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#id DataGoogleAlloydbInstance#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param location: The canonical ID for the location. For example: "us-east1". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#location DataGoogleAlloydbInstance#location}
-        :param project: Project ID of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#project DataGoogleAlloydbInstance#project}
+        :param cluster_id: The ID of the alloydb cluster that the instance belongs to.'alloydb_cluster_id'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#cluster_id DataGoogleAlloydbInstance#cluster_id}
+        :param instance_id: The ID of the alloydb instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#instance_id DataGoogleAlloydbInstance#instance_id}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#id DataGoogleAlloydbInstance#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param location: The canonical ID for the location. For example: "us-east1". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#location DataGoogleAlloydbInstance#location}
+        :param project: Project ID of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#project DataGoogleAlloydbInstance#project}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class DataGoogleAlloydbInstance(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataGoogleAlloydbInstance to import.
-        :param import_from_id: The id of the existing DataGoogleAlloydbInstance that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataGoogleAlloydbInstance that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataGoogleAlloydbInstance to import is found.
         '''
         if __debug__:
@@ -713,11 +713,11 @@ class DataGoogleAlloydbInstanceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param cluster_id: The ID of the alloydb cluster that the instance belongs to.'alloydb_cluster_id'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#cluster_id DataGoogleAlloydbInstance#cluster_id}
-        :param instance_id: The ID of the alloydb instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#instance_id DataGoogleAlloydbInstance#instance_id}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#id DataGoogleAlloydbInstance#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param location: The canonical ID for the location. For example: "us-east1". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#location DataGoogleAlloydbInstance#location}
-        :param project: Project ID of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#project DataGoogleAlloydbInstance#project}
+        :param cluster_id: The ID of the alloydb cluster that the instance belongs to.'alloydb_cluster_id'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#cluster_id DataGoogleAlloydbInstance#cluster_id}
+        :param instance_id: The ID of the alloydb instance. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#instance_id DataGoogleAlloydbInstance#instance_id}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#id DataGoogleAlloydbInstance#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param location: The canonical ID for the location. For example: "us-east1". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#location DataGoogleAlloydbInstance#location}
+        :param project: Project ID of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#project DataGoogleAlloydbInstance#project}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -828,7 +828,7 @@ class DataGoogleAlloydbInstanceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def cluster_id(self) -> builtins.str:
         '''The ID of the alloydb cluster that the instance belongs to.'alloydb_cluster_id'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#cluster_id DataGoogleAlloydbInstance#cluster_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#cluster_id DataGoogleAlloydbInstance#cluster_id}
         '''
         result = self._values.get("cluster_id")
         assert result is not None, "Required property 'cluster_id' is missing"
@@ -838,7 +838,7 @@ class DataGoogleAlloydbInstanceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def instance_id(self) -> builtins.str:
         '''The ID of the alloydb instance.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#instance_id DataGoogleAlloydbInstance#instance_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#instance_id DataGoogleAlloydbInstance#instance_id}
         '''
         result = self._values.get("instance_id")
         assert result is not None, "Required property 'instance_id' is missing"
@@ -846,7 +846,7 @@ class DataGoogleAlloydbInstanceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#id DataGoogleAlloydbInstance#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#id DataGoogleAlloydbInstance#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -858,7 +858,7 @@ class DataGoogleAlloydbInstanceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def location(self) -> typing.Optional[builtins.str]:
         '''The canonical ID for the location. For example: "us-east1".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#location DataGoogleAlloydbInstance#location}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#location DataGoogleAlloydbInstance#location}
         '''
         result = self._values.get("location")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -867,7 +867,7 @@ class DataGoogleAlloydbInstanceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def project(self) -> typing.Optional[builtins.str]:
         '''Project ID of the project.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/data-sources/alloydb_instance#project DataGoogleAlloydbInstance#project}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/data-sources/alloydb_instance#project DataGoogleAlloydbInstance#project}
         '''
         result = self._values.get("project")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1464,6 +1464,13 @@ class DataGoogleAlloydbInstancePscInstanceConfigOutputReference(
         return typing.cast(typing.List[builtins.str], jsii.get(self, "allowedConsumerProjects"))
 
     @builtins.property
+    @jsii.member(jsii_name="pscAutoConnections")
+    def psc_auto_connections(
+        self,
+    ) -> "DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnectionsList":
+        return typing.cast("DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnectionsList", jsii.get(self, "pscAutoConnections"))
+
+    @builtins.property
     @jsii.member(jsii_name="pscDnsName")
     def psc_dns_name(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "pscDnsName"))
@@ -1494,6 +1501,172 @@ class DataGoogleAlloydbInstancePscInstanceConfigOutputReference(
     ) -> None:
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__8493cddfd1fa2ac88030a1a279b6e24ecffb0f444f40c97a604dbe793846ecb9)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-google.dataGoogleAlloydbInstance.DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnections",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnections:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnections(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnectionsList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleAlloydbInstance.DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnectionsList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4f02c9fc5d3096207a60186343cee9255ca835fb56bc4ef481689f1de7beb222)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnectionsOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__2d5ba7f6a838ee89aa746ece6905efd2d478bd22ea075cf1893f58dde3609f2e)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnectionsOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0f5e9e63df77b9e1c653adbfa4823e084bdae4b8e685ff1af63391460bb1253e)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3c63ce64d2ad4c50c259cc5247bf1483685de5e9edb553bd9f27e00b3116a29c)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__4170b0e8f45aa874b118b39c42908ca91688c3eeb0d81d4da4c0e4ae02233ca3)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnectionsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-google.dataGoogleAlloydbInstance.DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnectionsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__7b3e794ed69fb7108a22c3c39319ab6b9880b2293034a53c880bf01f44ced377)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="consumerNetwork")
+    def consumer_network(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "consumerNetwork"))
+
+    @builtins.property
+    @jsii.member(jsii_name="consumerNetworkStatus")
+    def consumer_network_status(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "consumerNetworkStatus"))
+
+    @builtins.property
+    @jsii.member(jsii_name="consumerProject")
+    def consumer_project(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "consumerProject"))
+
+    @builtins.property
+    @jsii.member(jsii_name="ipAddress")
+    def ip_address(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "ipAddress"))
+
+    @builtins.property
+    @jsii.member(jsii_name="status")
+    def status(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "status"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnections]:
+        return typing.cast(typing.Optional[DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnections], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnections],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0ad23afe72fbcba8ca4b49218aea08e9ce7bac737089860044d476ed355bb612)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
@@ -1972,6 +2145,9 @@ __all__ = [
     "DataGoogleAlloydbInstancePscInstanceConfig",
     "DataGoogleAlloydbInstancePscInstanceConfigList",
     "DataGoogleAlloydbInstancePscInstanceConfigOutputReference",
+    "DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnections",
+    "DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnectionsList",
+    "DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnectionsOutputReference",
     "DataGoogleAlloydbInstancePscInstanceConfigPscInterfaceConfigs",
     "DataGoogleAlloydbInstancePscInstanceConfigPscInterfaceConfigsList",
     "DataGoogleAlloydbInstancePscInstanceConfigPscInterfaceConfigsOutputReference",
@@ -2340,6 +2516,53 @@ def _typecheckingstub__7dc14442f1d196ee767cefe5ba48aa9fd2570cb22dc5d33eb7f267633
 
 def _typecheckingstub__8493cddfd1fa2ac88030a1a279b6e24ecffb0f444f40c97a604dbe793846ecb9(
     value: typing.Optional[DataGoogleAlloydbInstancePscInstanceConfig],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4f02c9fc5d3096207a60186343cee9255ca835fb56bc4ef481689f1de7beb222(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__2d5ba7f6a838ee89aa746ece6905efd2d478bd22ea075cf1893f58dde3609f2e(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0f5e9e63df77b9e1c653adbfa4823e084bdae4b8e685ff1af63391460bb1253e(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3c63ce64d2ad4c50c259cc5247bf1483685de5e9edb553bd9f27e00b3116a29c(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__4170b0e8f45aa874b118b39c42908ca91688c3eeb0d81d4da4c0e4ae02233ca3(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__7b3e794ed69fb7108a22c3c39319ab6b9880b2293034a53c880bf01f44ced377(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0ad23afe72fbcba8ca4b49218aea08e9ce7bac737089860044d476ed355bb612(
+    value: typing.Optional[DataGoogleAlloydbInstancePscInstanceConfigPscAutoConnections],
 ) -> None:
     """Type checking stubs"""
     pass

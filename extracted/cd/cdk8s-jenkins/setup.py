@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdk8s-jenkins",
-    "version": "0.0.500",
+    "version": "0.0.501",
     "description": "Jenkins construct for CDK8s",
     "license": "Apache-2.0",
     "url": "https://github.com/cdk8s-team/cdk8s-jenkins.git",
@@ -26,7 +26,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdk8s_jenkins._jsii": [
-            "cdk8s-jenkins@0.0.500.jsii.tgz"
+            "cdk8s-jenkins@0.0.501.jsii.tgz"
         ],
         "cdk8s_jenkins": [
             "py.typed"

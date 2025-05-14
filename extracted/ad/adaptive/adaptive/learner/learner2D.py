@@ -3,15 +3,14 @@ from __future__ import annotations
 import itertools
 import warnings
 from collections import OrderedDict
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from copy import copy
 from math import sqrt
-from typing import Callable
 
 import cloudpickle
 import numpy as np
 from scipy import interpolate
-from scipy.interpolate import LinearNDInterpolator
+from scipy.interpolate import CloughTocher2DInterpolator, LinearNDInterpolator
 
 from adaptive.learner.base_learner import BaseLearner
 from adaptive.learner.triangulation import simplex_volume_in_embedding
@@ -49,9 +48,7 @@ def deviations(ip: LinearNDInterpolator) -> list[np.ndarray]:
         The deviation per triangle.
     """
     values = ip.values / (np.ptp(ip.values, axis=0).max() or 1)
-    gradients = interpolate.interpnd.estimate_gradients_2d_global(
-        ip.tri, values, tol=1e-6
-    )
+    gradients = CloughTocher2DInterpolator(ip.tri, values, tol=1e-6).grad
 
     simplices = ip.tri.simplices
     p = ip.tri.points[simplices]
@@ -290,6 +287,10 @@ def thresholded_loss_function(
     return custom_loss
 
 
+def _cross_2d(x, y):
+    return x[..., 0] * y[..., 1] - x[..., 1] * y[..., 0]
+
+
 def choose_point_in_triangle(triangle: np.ndarray, max_badness: int) -> np.ndarray:
     """Choose a new point in inside a triangle.
 
@@ -313,7 +314,7 @@ def choose_point_in_triangle(triangle: np.ndarray, max_badness: int) -> np.ndarr
         The x and y coordinate of the suggested new point.
     """
     a, b, c = triangle
-    area = 0.5 * np.cross(b - a, c - a)
+    area = 0.5 * _cross_2d(b - a, c - a)
     triangle_roll = np.roll(triangle, 1, axis=0)
     edge_lengths = np.linalg.norm(triangle - triangle_roll, axis=1)
     i = edge_lengths.argmax()
@@ -451,7 +452,7 @@ class Learner2D(BaseLearner):
         self.aspect_ratio = 1
 
         self._bounds_points = list(itertools.product(*bounds))
-        self._stack.update({p: np.inf for p in self._bounds_points})
+        self._stack.update(dict.fromkeys(self._bounds_points, np.inf))
         self.function = function  # type: ignore
         self._ip = self._ip_combined = None
 

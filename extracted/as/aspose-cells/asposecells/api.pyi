@@ -5191,6 +5191,12 @@ class Cells:
         ''':deprecated: Use Cells.GetMergedAreas() instead.'''
         raise NotImplementedError()
 
+    def getFirstDataRow(self, column : int) -> int:
+        '''Gets the first row index of cell which contains data in the specified column.
+        :param column: Column index.
+        :returns: first row index.'''
+        raise NotImplementedError()
+
     def setViewColumnWidthPixel(self, column : int, pixels : int) -> None:
         '''Sets the width of the column in different view.
         :param column: The column index.
@@ -19198,33 +19204,19 @@ class ImageFormat:
 class ImageOrPrintOptions:
     '''Allows to specify options when rendering worksheet to images, printing worksheet or rendering chart to image.'''
 
-    def setTransparent(self, value : bool) -> None:
-        '''Indicates if the background of generated image should be transparent.
+    def setSvgCssPrefix(self, value : str) -> None:
+        ''':deprecated: Use SvgImageOptions.CssPrefix property instead.'''
+        raise NotImplementedError()
+
+    def setCheckWorkbookDefaultFont(self, value : bool) -> None:
+        '''When characters in the Excel are Unicode and not be set with correct font in cell style,
+        They may appear as block in pdf,image.
+        Set this to true to try to use workbook's default font to show these characters first.
         :param value: '''
         raise NotImplementedError()
 
-    def setDrawObjectEventHandler(self, value : DrawObjectEventHandler) -> None:
-        '''Implements this interface to get DrawObject and Bound when rendering.
-        :param value: '''
-        raise NotImplementedError()
-
-    def isCellAutoFit(self) -> bool:
-        ''':deprecated: Use Worksheet.AutoFitColumns(AutoFitterOptions) and Worksheet.AutoFitRows(AutoFitterOptions) instead.'''
-        raise NotImplementedError()
-
-    def getOutputBlankPageWhenNothingToPrint(self) -> bool:
-        '''Indicates whether to output a blank page when there is nothing to print.'''
-        raise NotImplementedError()
-
-    def setQuality(self, value : int) -> None:
-        '''Sets a value determining the quality of the generated  images
-        to apply only when saving pages to the <code>Jpeg</code> format. The default value is 100
-        :param value: '''
-        raise NotImplementedError()
-
-    def getDefaultEditLanguage(self) -> int:
-        '''Gets default edit language.
-        See :class:`DefaultEditLanguage`'''
+    def getPageCount(self) -> int:
+        '''Gets the number of pages to save.'''
         raise NotImplementedError()
 
     def setEmfRenderSetting(self, value : int) -> None:
@@ -19233,10 +19225,118 @@ class ImageOrPrintOptions:
         :param value: '''
         raise NotImplementedError()
 
-    def getCheckWorkbookDefaultFont(self) -> bool:
-        '''When characters in the Excel are Unicode and not be set with correct font in cell style,
-        They may appear as block in pdf,image.
-        Set this to true to try to use workbook's default font to show these characters first.'''
+    def getSaveFormat(self) -> int:
+        ''':deprecated: For Tiff/Svg, use ImageType; For Xps, use Workbook.Save(string, SaveOptions) with XpsSaveOptions'''
+        raise NotImplementedError()
+
+    def setSaveFormat(self, value : int) -> None:
+        ''':deprecated: For Tiff/Svg, use ImageType; For Xps, use Workbook.Save(string, SaveOptions) with XpsSaveOptions'''
+        raise NotImplementedError()
+
+    def getVerticalResolution(self) -> int:
+        '''Gets the vertical resolution for generated images, in dots per inch.'''
+        raise NotImplementedError()
+
+    def getDrawObjectEventHandler(self) -> DrawObjectEventHandler:
+        '''Implements this interface to get DrawObject and Bound when rendering.'''
+        raise NotImplementedError()
+
+    def setOptimized(self, value : bool) -> None:
+        '''Indicates whether to optimize the output elements.
+        :param value: '''
+        raise NotImplementedError()
+
+    def getPageSavingCallback(self) -> IPageSavingCallback:
+        '''Control/Indicate progress of page saving process.'''
+        raise NotImplementedError()
+
+    def getDefaultEditLanguage(self) -> int:
+        '''Gets default edit language.
+        See :class:`DefaultEditLanguage`'''
+        raise NotImplementedError()
+
+    def setImageType(self, value : int) -> None:
+        '''Sets the format of the generated images.
+        default value: PNG.
+        See :class:`ImageType`
+        :param value: '''
+        raise NotImplementedError()
+
+    def getEmfRenderSetting(self) -> int:
+        '''Setting for rendering Emf metafiles in source file.
+        See :class:`EmfRenderSetting`'''
+        raise NotImplementedError()
+
+    def setOutputBlankPageWhenNothingToPrint(self, value : bool) -> None:
+        '''Indicates whether to output a blank page when there is nothing to print.
+        :param value: '''
+        raise NotImplementedError()
+
+    def getTextCrossType(self) -> int:
+        '''Gets displaying text type when the text width is larger than cell width.
+        See :class:`TextCrossType`'''
+        raise NotImplementedError()
+
+    def setHorizontalResolution(self, value : int) -> None:
+        '''Sets the horizontal resolution for generated images, in dots per inch.
+        :param value: '''
+        raise NotImplementedError()
+
+    def setEmbededImageNameInSvg(self, value : str) -> None:
+        ''':deprecated: Images are now always embedded in Svg with base64 format, please remove this property.'''
+        raise NotImplementedError()
+
+    def setTextCrossType(self, value : int) -> None:
+        '''Sets displaying text type when the text width is larger than cell width.
+        See :class:`TextCrossType`
+        :param value: '''
+        raise NotImplementedError()
+
+    def getTiffColorDepth(self) -> int:
+        '''Gets bit depth to apply only when saving pages to the <code>Tiff</code> format.
+        See :class:`ColorDepth`'''
+        raise NotImplementedError()
+
+    def getHorizontalResolution(self) -> int:
+        '''Gets the horizontal resolution for generated images, in dots per inch.'''
+        raise NotImplementedError()
+
+    def getImageType(self) -> int:
+        '''Gets the format of the generated images.
+        default value: PNG.
+        See :class:`ImageType`'''
+        raise NotImplementedError()
+
+    def setTransparent(self, value : bool) -> None:
+        '''Indicates if the background of generated image should be transparent.
+        :param value: '''
+        raise NotImplementedError()
+
+    def isFontSubstitutionCharGranularity(self) -> bool:
+        '''Indicates whether to only substitute the font of character when the cell font is not compatibility for it.'''
+        raise NotImplementedError()
+
+    def setTiffColorDepth(self, value : int) -> None:
+        '''Sets bit depth to apply only when saving pages to the <code>Tiff</code> format.
+        See :class:`ColorDepth`
+        :param value: '''
+        raise NotImplementedError()
+
+    def setOnePagePerSheet(self, value : bool) -> None:
+        '''If OnePagePerSheet is true , all content of one sheet will output to only one page in result.
+        The paper size of pagesetup will be invalid, and the other settings of pagesetup
+        will still take effect.
+        :param value: '''
+        raise NotImplementedError()
+
+    def setWarningCallback(self, value : IWarningCallback) -> None:
+        '''Sets warning callback.
+        :param value: '''
+        raise NotImplementedError()
+
+    def getPrintWithStatusDialog(self) -> bool:
+        '''If PrintWithStatusDialog = true , there will be a dialog that shows current print status.
+        else no such dialog will show.'''
         raise NotImplementedError()
 
     @overload
@@ -19252,264 +19352,21 @@ class ImageOrPrintOptions:
         :param keepAspectRatio: whether to keep aspect ratio of origin image'''
         raise NotImplementedError()
 
-    def getPageIndex(self) -> int:
-        '''Gets the 0-based index of the first page to save.'''
-        raise NotImplementedError()
-
-    def setOnePagePerSheet(self, value : bool) -> None:
-        '''If OnePagePerSheet is true , all content of one sheet will output to only one page in result.
-        The paper size of pagesetup will be invalid, and the other settings of pagesetup
-        will still take effect.
-        :param value: '''
-        raise NotImplementedError()
-
-    def getGridlineType(self) -> int:
-        '''Gets gridline type.
-        See :class:`GridlineType`'''
-        raise NotImplementedError()
-
-    def getWarningCallback(self) -> IWarningCallback:
-        '''Gets warning callback.'''
-        raise NotImplementedError()
-
-    def getAllColumnsInOnePagePerSheet(self) -> bool:
-        '''If AllColumnsInOnePagePerSheet is true , all column content of one sheet will output to only one page in result.
-        The width of paper size of pagesetup will be invalid, and the other settings of pagesetup
-        will still take effect.'''
-        raise NotImplementedError()
-
-    def getHorizontalResolution(self) -> int:
-        '''Gets the horizontal resolution for generated images, in dots per inch.'''
-        raise NotImplementedError()
-
-    def setTextCrossType(self, value : int) -> None:
-        '''Sets displaying text type when the text width is larger than cell width.
-        See :class:`TextCrossType`
-        :param value: '''
-        raise NotImplementedError()
-
-    def setPageSavingCallback(self, value : IPageSavingCallback) -> None:
-        '''Control/Indicate progress of page saving process.
-        :param value: '''
-        raise NotImplementedError()
-
-    def getDefaultFont(self) -> str:
+    def setDefaultFont(self, value : str) -> None:
         '''When characters in the Excel are Unicode and not be set with correct font in cell style,
         They may appear as block in pdf,image.
         Set the DefaultFont such as MingLiu or MS Gothic to show these characters.
-        If this property is not set, Aspose.Cells will use system default font to show these unicode characters.'''
-        raise NotImplementedError()
-
-    def setOptimized(self, value : bool) -> None:
-        '''Indicates whether to optimize the output elements.
+        If this property is not set, Aspose.Cells will use system default font to show these unicode characters.
         :param value: '''
-        raise NotImplementedError()
-
-    def setOnlyArea(self, value : bool) -> None:
-        '''If this property is true , one Area will be output, and no scale will take effect.
-        :param value: '''
-        raise NotImplementedError()
-
-    def getEmfRenderSetting(self) -> int:
-        '''Setting for rendering Emf metafiles in source file.
-        See :class:`EmfRenderSetting`'''
-        raise NotImplementedError()
-
-    def getTransparent(self) -> bool:
-        '''Indicates if the background of generated image should be transparent.'''
-        raise NotImplementedError()
-
-    def setHorizontalResolution(self, value : int) -> None:
-        '''Sets the horizontal resolution for generated images, in dots per inch.
-        :param value: '''
-        raise NotImplementedError()
-
-    def getTiffColorDepth(self) -> int:
-        '''Gets bit depth to apply only when saving pages to the <code>Tiff</code> format.
-        See :class:`ColorDepth`'''
-        raise NotImplementedError()
-
-    def getPageCount(self) -> int:
-        '''Gets the number of pages to save.'''
-        raise NotImplementedError()
-
-    def setVerticalResolution(self, value : int) -> None:
-        '''Sets the vertical resolution for generated images, in dots per inch.
-        :param value: '''
-        raise NotImplementedError()
-
-    def getDrawObjectEventHandler(self) -> DrawObjectEventHandler:
-        '''Implements this interface to get DrawObject and Bound when rendering.'''
-        raise NotImplementedError()
-
-    def getChartImageType(self) -> ImageFormat:
-        ''':deprecated: Chart and Shape are always rendered as vector elements(e.g. point, line) for rendering quality.'''
-        raise NotImplementedError()
-
-    def setSVGFitToViewPort(self, value : bool) -> None:
-        ''':deprecated: Use SvgImageOptions.FitToViewPort property instead.'''
-        raise NotImplementedError()
-
-    def isFontSubstitutionCharGranularity(self) -> bool:
-        '''Indicates whether to only substitute the font of character when the cell font is not compatibility for it.'''
-        raise NotImplementedError()
-
-    def getSaveFormat(self) -> int:
-        ''':deprecated: For Tiff/Svg, use ImageType; For Xps, use Workbook.Save(string, SaveOptions) with XpsSaveOptions'''
-        raise NotImplementedError()
-
-    def getPrintingPage(self) -> int:
-        '''Indicates which pages will not be printed.
-        See :class:`PrintingPageType`'''
-        raise NotImplementedError()
-
-    def getSVGFitToViewPort(self) -> bool:
-        ''':deprecated: Use SvgImageOptions.FitToViewPort property instead.'''
-        raise NotImplementedError()
-
-    def setWarningCallback(self, value : IWarningCallback) -> None:
-        '''Sets warning callback.
-        :param value: '''
-        raise NotImplementedError()
-
-    def setImageType(self, value : int) -> None:
-        '''Sets the format of the generated images.
-        default value: PNG.
-        See :class:`ImageType`
-        :param value: '''
-        raise NotImplementedError()
-
-    def getSheetSet(self) -> SheetSet:
-        '''Gets the sheets to render. Default is all visible sheets in the workbook: :meth:`com.aspose.cells.SheetSet.getVisible()`.'''
-        raise NotImplementedError()
-
-    def setGridlineType(self, value : int) -> None:
-        '''Sets gridline type.
-        See :class:`GridlineType`
-        :param value: '''
-        raise NotImplementedError()
-
-    def setCheckWorkbookDefaultFont(self, value : bool) -> None:
-        '''When characters in the Excel are Unicode and not be set with correct font in cell style,
-        They may appear as block in pdf,image.
-        Set this to true to try to use workbook's default font to show these characters first.
-        :param value: '''
-        raise NotImplementedError()
-
-    def getPageSavingCallback(self) -> IPageSavingCallback:
-        '''Control/Indicate progress of page saving process.'''
-        raise NotImplementedError()
-
-    def getQuality(self) -> int:
-        '''Gets a value determining the quality of the generated  images
-        to apply only when saving pages to the <code>Jpeg</code> format. The default value is 100'''
-        raise NotImplementedError()
-
-    def setPageIndex(self, value : int) -> None:
-        '''Sets the 0-based index of the first page to save.
-        :param value: '''
-        raise NotImplementedError()
-
-    def setAllColumnsInOnePagePerSheet(self, value : bool) -> None:
-        '''If AllColumnsInOnePagePerSheet is true , all column content of one sheet will output to only one page in result.
-        The width of paper size of pagesetup will be invalid, and the other settings of pagesetup
-        will still take effect.
-        :param value: '''
-        raise NotImplementedError()
-
-    def getTiffPhotometricInterpretation(self) -> int:
-        '''Gets the type of PhotometricInterpretation to apply only when saving pages to the <code>Tiff</code> format.'''
-        raise NotImplementedError()
-
-    def getTextCrossType(self) -> int:
-        '''Gets displaying text type when the text width is larger than cell width.
-        See :class:`TextCrossType`'''
-        raise NotImplementedError()
-
-    def setCellAutoFit(self, value : bool) -> None:
-        ''':deprecated: Use Worksheet.AutoFitColumns(AutoFitterOptions) and Worksheet.AutoFitRows(AutoFitterOptions) instead.'''
-        raise NotImplementedError()
-
-    def setRenderingHint(self, key : Key, value : Object) -> None:
-        '''Sets the value of a single preference for the rendering algorithms. Hint categories include controls for rendering quality and overall time/quality trade-off in the rendering process. Refer to the RenderingHints class for definitions of some common keys and values.
-        :param key: the key of the hint to be set.
-        :param value: the value indicating preferences for the specified hint category.'''
-        raise NotImplementedError()
-
-    def getSvgCssPrefix(self) -> str:
-        ''':deprecated: Use SvgImageOptions.CssPrefix property instead.'''
-        raise NotImplementedError()
-
-    def setSheetSet(self, value : SheetSet) -> None:
-        '''Sets the sheets to render. Default is all visible sheets in the workbook: :meth:`com.aspose.cells.SheetSet.getVisible()`.
-        :param value: '''
-        raise NotImplementedError()
-
-    def setPrintWithStatusDialog(self, value : bool) -> None:
-        '''If PrintWithStatusDialog = true , there will be a dialog that shows current print status.
-        else no such dialog will show.
-        :param value: '''
-        raise NotImplementedError()
-
-    def getVerticalResolution(self) -> int:
-        '''Gets the vertical resolution for generated images, in dots per inch.'''
-        raise NotImplementedError()
-
-    def setPrintingPage(self, value : int) -> None:
-        '''Indicates which pages will not be printed.
-        See :class:`PrintingPageType`
-        :param value: '''
-        raise NotImplementedError()
-
-    def setTiffColorDepth(self, value : int) -> None:
-        '''Sets bit depth to apply only when saving pages to the <code>Tiff</code> format.
-        See :class:`ColorDepth`
-        :param value: '''
-        raise NotImplementedError()
-
-    def getTiffCompression(self) -> int:
-        '''Gets the type of compression to apply only when saving pages to the <code>Tiff</code> format.
-        See :class:`TiffCompression`'''
-        raise NotImplementedError()
-
-    def isOptimized(self) -> bool:
-        '''Indicates whether to optimize the output elements.'''
-        raise NotImplementedError()
-
-    def getPrintWithStatusDialog(self) -> bool:
-        '''If PrintWithStatusDialog = true , there will be a dialog that shows current print status.
-        else no such dialog will show.'''
-        raise NotImplementedError()
-
-    def setSaveFormat(self, value : int) -> None:
-        ''':deprecated: For Tiff/Svg, use ImageType; For Xps, use Workbook.Save(string, SaveOptions) with XpsSaveOptions'''
-        raise NotImplementedError()
-
-    def setEmbededImageNameInSvg(self, value : str) -> None:
-        ''':deprecated: Images are always embedded in Svg with base64 format, please remove this property.'''
-        raise NotImplementedError()
-
-    def setPageCount(self, value : int) -> None:
-        '''Sets the number of pages to save.
-        :param value: '''
-        raise NotImplementedError()
-
-    def setChartImageType(self, value : ImageFormat) -> None:
-        ''':deprecated: Chart and Shape are always rendered as vector elements(e.g. point, line) for rendering quality.'''
-        raise NotImplementedError()
-
-    def setDefaultEditLanguage(self, value : int) -> None:
-        '''Sets default edit language.
-        See :class:`DefaultEditLanguage`
-        :param value: '''
-        raise NotImplementedError()
-
-    def getEmbededImageNameInSvg(self) -> str:
-        ''':deprecated: Images are always embedded in Svg with base64 format, please remove this property.'''
         raise NotImplementedError()
 
     def setTiffPhotometricInterpretation(self, value : int) -> None:
         '''Sets the type of PhotometricInterpretation to apply only when saving pages to the <code>Tiff</code> format.
+        :param value: '''
+        raise NotImplementedError()
+
+    def setSheetSet(self, value : SheetSet) -> None:
+        '''Sets the sheets to render. Default is all visible sheets in the workbook: :meth:`com.aspose.cells.SheetSet.getVisible()`.
         :param value: '''
         raise NotImplementedError()
 
@@ -19519,27 +19376,83 @@ class ImageOrPrintOptions:
         will still take effect.'''
         raise NotImplementedError()
 
-    def setFontSubstitutionCharGranularity(self, value : bool) -> None:
-        '''Indicates whether to only substitute the font of character when the cell font is not compatibility for it.
+    def getGridlineType(self) -> int:
+        '''Gets gridline type.
+        See :class:`GridlineType`'''
+        raise NotImplementedError()
+
+    def getQuality(self) -> int:
+        '''Gets a value determining the quality of the generated  images
+        to apply only when saving pages to the <code>Jpeg</code> format. The default value is 100'''
+        raise NotImplementedError()
+
+    def getChartImageType(self) -> ImageFormat:
+        ''':deprecated: Chart and Shape are always rendered as vector elements(e.g. point, line) for rendering quality.'''
+        raise NotImplementedError()
+
+    def setDrawObjectEventHandler(self, value : DrawObjectEventHandler) -> None:
+        '''Implements this interface to get DrawObject and Bound when rendering.
         :param value: '''
         raise NotImplementedError()
 
-    def setDefaultFont(self, value : str) -> None:
+    def getTransparent(self) -> bool:
+        '''Indicates if the background of generated image should be transparent.'''
+        raise NotImplementedError()
+
+    def getDefaultFont(self) -> str:
         '''When characters in the Excel are Unicode and not be set with correct font in cell style,
         They may appear as block in pdf,image.
         Set the DefaultFont such as MingLiu or MS Gothic to show these characters.
-        If this property is not set, Aspose.Cells will use system default font to show these unicode characters.
+        If this property is not set, Aspose.Cells will use system default font to show these unicode characters.'''
+        raise NotImplementedError()
+
+    def setSVGFitToViewPort(self, value : bool) -> None:
+        ''':deprecated: Use SvgImageOptions.FitToViewPort property instead.'''
+        raise NotImplementedError()
+
+    def setChartImageType(self, value : ImageFormat) -> None:
+        ''':deprecated: Chart and Shape are always rendered as vector elements(e.g. point, line) for rendering quality.'''
+        raise NotImplementedError()
+
+    def setVerticalResolution(self, value : int) -> None:
+        '''Sets the vertical resolution for generated images, in dots per inch.
         :param value: '''
         raise NotImplementedError()
 
-    def getImageType(self) -> int:
-        '''Gets the format of the generated images.
-        default value: PNG.
-        See :class:`ImageType`'''
+    def isCellAutoFit(self) -> bool:
+        ''':deprecated: This property is not used, please remove this property.'''
         raise NotImplementedError()
 
-    def getOnlyArea(self) -> bool:
-        '''If this property is true , one Area will be output, and no scale will take effect.'''
+    def setPageSavingCallback(self, value : IPageSavingCallback) -> None:
+        '''Control/Indicate progress of page saving process.
+        :param value: '''
+        raise NotImplementedError()
+
+    def getWarningCallback(self) -> IWarningCallback:
+        '''Gets warning callback.'''
+        raise NotImplementedError()
+
+    def getOutputBlankPageWhenNothingToPrint(self) -> bool:
+        '''Indicates whether to output a blank page when there is nothing to print.'''
+        raise NotImplementedError()
+
+    def isOptimized(self) -> bool:
+        '''Indicates whether to optimize the output elements.'''
+        raise NotImplementedError()
+
+    def getTiffPhotometricInterpretation(self) -> int:
+        '''Gets the type of PhotometricInterpretation to apply only when saving pages to the <code>Tiff</code> format.'''
+        raise NotImplementedError()
+
+    def setGridlineType(self, value : int) -> None:
+        '''Sets gridline type.
+        See :class:`GridlineType`
+        :param value: '''
+        raise NotImplementedError()
+
+    def setOnlyArea(self, value : bool) -> None:
+        '''If this property is true , one Area will be output, and no scale will take effect.
+        :param value: '''
         raise NotImplementedError()
 
     def setTiffCompression(self, value : int) -> None:
@@ -19548,13 +19461,115 @@ class ImageOrPrintOptions:
         :param value: '''
         raise NotImplementedError()
 
-    def setOutputBlankPageWhenNothingToPrint(self, value : bool) -> None:
-        '''Indicates whether to output a blank page when there is nothing to print.
+    def setPageIndex(self, value : int) -> None:
+        '''Sets the 0-based index of the first page to save.
         :param value: '''
         raise NotImplementedError()
 
-    def setSvgCssPrefix(self, value : str) -> None:
+    def getSheetSet(self) -> SheetSet:
+        '''Gets the sheets to render. Default is all visible sheets in the workbook: :meth:`com.aspose.cells.SheetSet.getVisible()`.'''
+        raise NotImplementedError()
+
+    def getAllColumnsInOnePagePerSheet(self) -> bool:
+        '''If AllColumnsInOnePagePerSheet is true , all column content of one sheet will output to only one page in result.
+        The width of paper size of pagesetup will be invalid, and the other settings of pagesetup
+        will still take effect.'''
+        raise NotImplementedError()
+
+    def setPrintWithStatusDialog(self, value : bool) -> None:
+        '''If PrintWithStatusDialog = true , there will be a dialog that shows current print status.
+        else no such dialog will show.
+        :param value: '''
+        raise NotImplementedError()
+
+    def getSVGFitToViewPort(self) -> bool:
+        ''':deprecated: Use SvgImageOptions.FitToViewPort property instead.'''
+        raise NotImplementedError()
+
+    def setCellAutoFit(self, value : bool) -> None:
+        ''':deprecated: This property is not used, please remove this property.'''
+        raise NotImplementedError()
+
+    def setDefaultEditLanguage(self, value : int) -> None:
+        '''Sets default edit language.
+        See :class:`DefaultEditLanguage`
+        :param value: '''
+        raise NotImplementedError()
+
+    def getOnlyArea(self) -> bool:
+        '''If this property is true , one Area will be output, and no scale will take effect.'''
+        raise NotImplementedError()
+
+    def getTiffCompression(self) -> int:
+        '''Gets the type of compression to apply only when saving pages to the <code>Tiff</code> format.
+        See :class:`TiffCompression`'''
+        raise NotImplementedError()
+
+    def getSvgCssPrefix(self) -> str:
         ''':deprecated: Use SvgImageOptions.CssPrefix property instead.'''
+        raise NotImplementedError()
+
+    def setQuality(self, value : int) -> None:
+        '''Sets a value determining the quality of the generated  images
+        to apply only when saving pages to the <code>Jpeg</code> format. The default value is 100
+        :param value: '''
+        raise NotImplementedError()
+
+    def getGridlineColor(self) -> Color:
+        '''Gets gridline colr.'''
+        raise NotImplementedError()
+
+    def getEmbededImageNameInSvg(self) -> str:
+        ''':deprecated: Images are now always embedded in Svg with base64 format, please remove this property.'''
+        raise NotImplementedError()
+
+    def setGridlineColor(self, value : Color) -> None:
+        '''Sets gridline colr.
+        :param value: '''
+        raise NotImplementedError()
+
+    def getPrintingPage(self) -> int:
+        '''Indicates which pages will not be printed.
+        See :class:`PrintingPageType`'''
+        raise NotImplementedError()
+
+    def setAllColumnsInOnePagePerSheet(self, value : bool) -> None:
+        '''If AllColumnsInOnePagePerSheet is true , all column content of one sheet will output to only one page in result.
+        The width of paper size of pagesetup will be invalid, and the other settings of pagesetup
+        will still take effect.
+        :param value: '''
+        raise NotImplementedError()
+
+    def getPageIndex(self) -> int:
+        '''Gets the 0-based index of the first page to save.'''
+        raise NotImplementedError()
+
+    def setRenderingHint(self, key : Key, value : Object) -> None:
+        '''Sets the value of a single preference for the rendering algorithms. Hint categories include controls for rendering quality and overall time/quality trade-off in the rendering process. Refer to the RenderingHints class for definitions of some common keys and values.
+        :param key: the key of the hint to be set.
+        :param value: the value indicating preferences for the specified hint category.'''
+        raise NotImplementedError()
+
+    def setPageCount(self, value : int) -> None:
+        '''Sets the number of pages to save.
+        :param value: '''
+        raise NotImplementedError()
+
+    def setPrintingPage(self, value : int) -> None:
+        '''Indicates which pages will not be printed.
+        See :class:`PrintingPageType`
+        :param value: '''
+        raise NotImplementedError()
+
+    def getCheckWorkbookDefaultFont(self) -> bool:
+        '''When characters in the Excel are Unicode and not be set with correct font in cell style,
+        They may appear as block in pdf,image.
+        Set this to true to try to use workbook's default font to show these characters first.'''
+        raise NotImplementedError()
+
+    def setFontSubstitutionCharGranularity(self, value : bool) -> None:
+        '''Indicates whether to only substitute the font of character when the cell font is not compatibility for it.
+        :param value: '''
         raise NotImplementedError()
 
 
@@ -21486,13 +21501,17 @@ class ListColumn:
         :param value: '''
         raise NotImplementedError()
 
+    def getFormula(self) -> str:
+        '''Gets the formula of the list column.'''
+        raise NotImplementedError()
+
     def setName(self, value : str) -> None:
         '''Sets the name of the column.
         :param value: '''
         raise NotImplementedError()
 
-    def getFormula(self) -> str:
-        '''Gets the formula of the list column.'''
+    def isArrayFormula(self) -> bool:
+        '''Indicates whether the fomula is array formula.'''
         raise NotImplementedError()
 
     def getTotalsCalculation(self) -> int:
@@ -22769,8 +22788,17 @@ class MapChartRegionType:
 class MarkdownSaveOptions:
     '''Represents the save options for markdown.'''
 
+    def getStreamProvider(self) -> IStreamProvider:
+        '''Gets the IStreamProvider for exporting objects.'''
+        raise NotImplementedError()
+
     def setLightCellsDataProvider(self, value : LightCellsDataProvider) -> None:
         '''The Data provider to provide cells data for saving workbook in light mode.
+        :param value: '''
+        raise NotImplementedError()
+
+    def setStreamProvider(self, value : IStreamProvider) -> None:
+        '''Sets the IStreamProvider for exporting objects.
         :param value: '''
         raise NotImplementedError()
 
@@ -22798,6 +22826,11 @@ class MarkdownSaveOptions:
         '''Gets the line separator.'''
         raise NotImplementedError()
 
+    def setExportImagesAsBase64(self, value : bool) -> None:
+        '''Specifies whether images are saved in Base64 format to Markdown.
+        :param value: '''
+        raise NotImplementedError()
+
     def setSheetSet(self, value : SheetSet) -> None:
         '''Sets the sheets to render. Default is all visible sheets in the workbook: :meth:`com.aspose.cells.SheetSet.getActive()`.
         :param value: '''
@@ -22808,8 +22841,16 @@ class MarkdownSaveOptions:
         See :class:`MarkdownTableHeaderType`'''
         raise NotImplementedError()
 
+    def getExportImagesAsBase64(self) -> bool:
+        '''Specifies whether images are saved in Base64 format to Markdown.'''
+        raise NotImplementedError()
+
     def getLightCellsDataProvider(self) -> LightCellsDataProvider:
         '''The Data provider to provide cells data for saving workbook in light mode.'''
+        raise NotImplementedError()
+
+    def getImageOptions(self) -> ImageOrPrintOptions:
+        '''Get the ImageOrPrintOptions object before exporting'''
         raise NotImplementedError()
 
     def getFormatStrategy(self) -> int:
@@ -25743,6 +25784,10 @@ class PaginatedSaveOptions:
         See :class:`DefaultEditLanguage`'''
         raise NotImplementedError()
 
+    def getGridlineColor(self) -> Color:
+        '''Gets gridline colr.'''
+        raise NotImplementedError()
+
     def setCheckFontCompatibility(self, value : bool) -> None:
         '''Indicates whether to check font compatibility for every character in text.
         :param value: '''
@@ -25863,6 +25908,11 @@ class PaginatedSaveOptions:
         '''If AllColumnsInOnePagePerSheet is true , all column content of one sheet will output to only one page in result.
         The width of paper size of pagesetup will be ignored, and the other settings of pagesetup
         will still take effect.
+        :param value: '''
+        raise NotImplementedError()
+
+    def setGridlineColor(self, value : Color) -> None:
+        '''Sets gridline colr.
         :param value: '''
         raise NotImplementedError()
 
@@ -27254,6 +27304,13 @@ class PictureCollection:
         '''Gets the :class:`Picture` element at the specified index.
         :param index: The zero based index of the element.
         :returns: The element at the specified index.'''
+        raise NotImplementedError()
+
+    def camera(self, row : int, column : int, range : str) -> int:
+        '''Takes a photo of the range.
+        :param row: The row index of this picture.
+        :param column: The column index of this picture.
+        :param range: The area that requires photography'''
         raise NotImplementedError()
 
     @overload
@@ -32362,6 +32419,10 @@ class RadioButtonActiveXControl:
 class Range:
     '''Encapsulates the object that represents a range of cells within a spreadsheet.'''
 
+    def clearComments(self) -> None:
+        '''Clears the comments of this range.'''
+        raise NotImplementedError()
+
     def getTop(self) -> int:
         '''Gets the distance, in points, from the top edge of row 1 to the top edge of the range.'''
         raise NotImplementedError()
@@ -32415,6 +32476,11 @@ class Range:
         :param range: Source :class:`Range` object.'''
         raise NotImplementedError()
 
+    def clearHyperlinks(self, clearFormat : bool) -> None:
+        '''Only removes hyperlinks.
+        :param clearFormat: '''
+        raise NotImplementedError()
+
     def addHyperlink(self, address : str, textToDisplay : str, screenTip : str) -> Hyperlink:
         '''Adds a hyperlink to a specified cell or a range of cells.
         :param address: Address of the hyperlink.
@@ -32451,6 +32517,10 @@ class Range:
 
     def transpose(self) -> None:
         '''Transpose (rotate) data from rows to columns or vice versa.'''
+        raise NotImplementedError()
+
+    def clearFormats(self) -> None:
+        '''Clears the formats of this range.'''
         raise NotImplementedError()
 
     def getEntireColumn(self) -> Range:
@@ -32520,6 +32590,10 @@ class Range:
         ''':deprecated: Use Range.UnionRanges() instead.'''
         raise NotImplementedError()
 
+    def clearContents(self) -> None:
+        '''Clears the contents of this range.'''
+        raise NotImplementedError()
+
     def getCellOrNull(self, rowOffset : int, columnOffset : int) -> Cell:
         '''Gets :class:`Cell` object or null in this range.
         :param rowOffset: Row offset in this range, zero based.
@@ -32553,6 +32627,10 @@ class Range:
     def setValue(self, value : Object) -> None:
         '''Sets the value of the range.
         :param value: '''
+        raise NotImplementedError()
+
+    def clear(self) -> None:
+        '''Clears this range.'''
         raise NotImplementedError()
 
     @overload
@@ -42740,7 +42818,8 @@ class TickLabels:
         raise NotImplementedError()
 
     def getOffset(self) -> int:
-        '''Gets the distance between the axis labels and the axis line.'''
+        '''Gets the distance of labels from the category axis.
+        Only for category (x) axis.'''
         raise NotImplementedError()
 
     def getNumberFormatLinked(self) -> bool:
@@ -42841,7 +42920,8 @@ class TickLabels:
         raise NotImplementedError()
 
     def setOffset(self, value : int) -> None:
-        '''Sets the distance between the axis labels and the axis line.
+        '''Sets the distance of labels from the category axis.
+        Only for category (x) axis.
         :param value: '''
         raise NotImplementedError()
 

@@ -431,7 +431,10 @@ class TTSRequest(BaseModel):
     voice: Optional[Union[str, Literal["alloy", "echo", "fable", "onyx", "nova", "shimmer"]]] = ""
     speed: Optional[float] = None
 
-    response_format: Literal["mp3", "opus", "aac", "flac", "wav", "pcm"] = "mp3"
+    response_format: Literal["mp3", "opus", "aac", "flac", "wav", "pcm", "url"] = "mp3"
+
+    # 新增
+    emotion: Optional[Literal["happy", "angry", "surprise", "coldness", "disgust", "fear", "excited", "hate"]] = None
 
     class Config:
         json_schema_extra = {
@@ -612,7 +615,6 @@ if __name__ == '__main__':
 
     # print(chat_completion_chunk)
     # print(chat_completion)
-
 
     chat_completion_chunk.usage = dict(
         completion_tokens=10,

@@ -1,9 +1,12 @@
-import urllib.request
+from datetime import timedelta
 from typing import Optional
+import requests
+from requests import Response
 
 from _qwak_proto.qwak.builds.build_url_pb2 import BuildVersioningTagsType
 from _qwak_proto.qwak.builds.builds_orchestrator_service_pb2 import (
     GetBuildVersioningUploadURLResponse,
+    GetBuildVersioningDownloadURLResponse,
 )
 from qwak.clients.build_orchestrator.client import BuildOrchestratorClient
 from qwak.clients.file_versioning.client import FileVersioningManagementClient
@@ -14,6 +17,8 @@ from qwak.inner.model_loggers_utils import (
     validate_model,
     validate_tag,
 )
+
+MAX_CHUNK_SIZE = 8 * 1024
 
 
 def log_file(
@@ -80,21 +85,40 @@ def load_file(
     Returns:
         the path to the newly created data file
     """
+    print(f"Loading file to {to_path}")
     if not validate_tag(tag):
         raise QwakException(
             "Tag should contain only letters, numbers, underscore or hyphen"
         )
 
     model_id = validate_model(model_id)
-    download_url_response = BuildOrchestratorClient().get_build_versioning_download_url(
-        build_id=build_id, model_id=model_id, tag=tag
+    download_url_response: GetBuildVersioningDownloadURLResponse = (
+        BuildOrchestratorClient().get_build_versioning_download_url(
+            build_id=build_id,
+            model_id=model_id,
+            tag=tag,
+            tag_type=BuildVersioningTagsType.FILE_TAG_TYPE,
+        )
     )
 
     try:
-        filename, headers = urllib.request.urlretrieve(  # nosec B310
-            url=download_url_response.download_url, filename=to_path
+        response: Response = requests.get(
+            download_url_response.download_url,
+            headers=download_url_response.headers,
+            stream=True,
+            timeout=(
+                timedelta(seconds=10).total_seconds(),  # timeout to connect
+                timedelta(minutes=20).total_seconds(),  # timeout to read
+            ),
         )
+        print(f"Downloading file finished with status {response.status_code}")
+        response.raise_for_status()
 
-        return filename
+        with open(to_path, "wb") as f:
+            for chunk in response.iter_content(chunk_size=MAX_CHUNK_SIZE):
+                if chunk:
+                    f.write(chunk)
+
+        return to_path
     except Exception as error:
         raise QwakException(f"Unable to load save artifact locally: {str(error)}")

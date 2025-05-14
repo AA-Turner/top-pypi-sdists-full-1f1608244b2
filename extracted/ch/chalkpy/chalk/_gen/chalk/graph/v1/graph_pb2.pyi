@@ -148,6 +148,21 @@ class Graph(_message.Message):
         stream_sources_v2: _Optional[_Iterable[_Union[_sources_pb2_1.StreamSource, _Mapping]]] = ...,
     ) -> None: ...
 
+class OverlayGraph(_message.Message):
+    __slots__ = ("feature_sets", "feature_fields", "resolvers")
+    FEATURE_SETS_FIELD_NUMBER: _ClassVar[int]
+    FEATURE_FIELDS_FIELD_NUMBER: _ClassVar[int]
+    RESOLVERS_FIELD_NUMBER: _ClassVar[int]
+    feature_sets: _containers.RepeatedCompositeFieldContainer[FeatureSet]
+    feature_fields: _containers.RepeatedCompositeFieldContainer[FeatureType]
+    resolvers: _containers.RepeatedCompositeFieldContainer[Resolver]
+    def __init__(
+        self,
+        feature_sets: _Optional[_Iterable[_Union[FeatureSet, _Mapping]]] = ...,
+        feature_fields: _Optional[_Iterable[_Union[FeatureType, _Mapping]]] = ...,
+        resolvers: _Optional[_Iterable[_Union[Resolver, _Mapping]]] = ...,
+    ) -> None: ...
+
 class NamedQuery(_message.Message):
     __slots__ = (
         "name",

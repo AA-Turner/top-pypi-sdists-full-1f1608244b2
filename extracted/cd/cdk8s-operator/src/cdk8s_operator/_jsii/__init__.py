@@ -32,7 +32,7 @@ import cdk8s._jsii
 import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
-    "cdk8s-operator", "0.1.357", __name__[0:-6], "cdk8s-operator@0.1.357.jsii.tgz"
+    "cdk8s-operator", "0.1.358", __name__[0:-6], "cdk8s-operator@0.1.358.jsii.tgz"
 )
 
 __all__ = [

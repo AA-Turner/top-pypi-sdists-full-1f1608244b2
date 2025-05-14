@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: ophyd
-Version: 1.10.5
+Version: 1.10.6
 Summary: Bluesky hardware abstraction with an emphasis on EPICS
 Home-page: https://github.com/bluesky/ophyd
 License: BSD
@@ -20,7 +20,7 @@ Provides-Extra: dev
 Requires-Dist: attrs>=19.3.0; extra == "dev"
 Requires-Dist: black==22.3.0; extra == "dev"
 Requires-Dist: bluesky>=1.11.0; extra == "dev"
-Requires-Dist: caproto[standard]>=0.4.2rc1; extra == "dev"
+Requires-Dist: caproto[standard]!=1.2.0,>=0.4.2rc1; extra == "dev"
 Requires-Dist: pytest-codecov; extra == "dev"
 Requires-Dist: databroker>=1.0.0b1; extra == "dev"
 Requires-Dist: doctr; extra == "dev"

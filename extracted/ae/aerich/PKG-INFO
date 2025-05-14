@@ -1,15 +1,14 @@
 Metadata-Version: 2.3
 Name: aerich
-Version: 0.8.2
+Version: 0.9.0
 Summary: A database migrations tool for Tortoise ORM.
 License: Apache-2.0
 Keywords: migrate,Tortoise-ORM,mysql
 Author: long2ice
 Author-email: long2ice@gmail.com>
-Requires-Python: >=3.8
+Requires-Python: >=3.9
 Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
@@ -30,7 +29,7 @@ Requires-Dist: psycopg[binary,pool] (>=3.0.12,<4.0.0) ; extra == "psycopg"
 Requires-Dist: pydantic (>=2.0.2,!=2.1.0,!=2.7.0,<3.0.0)
 Requires-Dist: tomli-w (>=1.1.0,<2.0.0) ; (python_version >= "3.11") and (extra == "toml")
 Requires-Dist: tomlkit (>=0.11.4,<1.0.0) ; (python_version < "3.11") and (extra == "toml")
-Requires-Dist: tortoise-orm (>=0.21.0,<1.0.0) ; python_version < "4.0"
+Requires-Dist: tortoise-orm (>=0.24.0,<1.0.0)
 Project-URL: Documentation, https://github.com/tortoise/aerich
 Project-URL: Homepage, https://github.com/tortoise/aerich
 Project-URL: Repository, https://github.com/tortoise/aerich.git

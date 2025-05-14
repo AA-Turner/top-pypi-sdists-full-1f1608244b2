@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: qiskit-ibm-runtime
-Version: 0.38.0
+Version: 0.39.0
 Summary: IBM Quantum client for Qiskit Runtime.
 Author-email: Qiskit Development Team <qiskit@us.ibm.com>
 License: Apache 2.0
@@ -30,7 +30,7 @@ Requires-Dist: numpy>=1.13
 Requires-Dist: urllib3>=1.21.1
 Requires-Dist: python-dateutil>=2.8.0
 Requires-Dist: ibm-platform-services>=0.22.6
-Requires-Dist: pydantic<2.10,>=2.5.0
+Requires-Dist: pydantic>=2.5.0
 Requires-Dist: qiskit>=1.4.1
 Requires-Dist: packaging
 Provides-Extra: common

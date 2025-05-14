@@ -3369,6 +3369,312 @@ def nth_bucket_end(value: Underscore, bucket_duration: str, n: int, initial_buck
     )
 
 
+########################################################################################################################
+# ML Models                                                                                                            #
+########################################################################################################################
+
+
+def ordinal_encode(feature: Underscore, options: list[Any], default: int | None = None) -> Underscore:
+    """
+    Encode a categorical feature into an ordinal integer value.
+
+    Parameters
+    ----------
+    feature
+        The feature to encode.
+    options
+        The options to encode. The order of the values determines the encoding.
+        The type must be hashable, orderable and consistent with the feature
+        type.
+    default
+        The value to use for any values not in the list of values.
+
+    Examples
+    --------
+    >>> import chalk.functions as F
+    >>> from chalk.features import _, features
+    >>> @features
+    ... class User:
+    ...     id: str
+    ...     category: str
+    ...     category_ord: str = F.ordinal_encode(_.category, options=["A", "B", "C"], default_value="A")
+    """
+    return map_dict({v: i for i, v in enumerate(sorted(options))}, feature, default=default)
+
+
+def sklearn_decision_tree_regressor(
+    *features: Underscore,
+    model_path: str,
+):
+    """
+    Load scikit-learn decision tree regressor into an expression from a joblib or pickle file.
+
+    The model must be trained on the same version of scikit-learn that is deployed in your
+    Chalk environment.
+
+    Parameters
+    ----------
+    features
+        A list of features which were used to train the model.
+    model_path
+        A filepath to the scikit-learn logistic regression model.
+
+    Examples
+    --------
+    >>> import chalk.functions as F
+    >>> @features
+    ... class User:
+    ...    id: str
+    ...    a: float
+    ...    b: float
+    ...    c: float
+    ...    d: float
+    ...    e: float
+    ...    prediction: bool = F.decision_tree_regressor(
+    ...       _.a, _.b, _.c, _.d, _.e,
+    ...       model_path=os.path.join(os.environ.get("TARGET_ROOT", "."), "models", "./dt_regressor.joblib")
+    ...    )
+    """
+    return UnderscoreFunction(
+        "decision_tree_regressor",
+        *features,
+        model_path=model_path,
+    )
+
+
+def sklearn_decision_tree_classifier(
+    *features: Underscore,
+    model_path: str,
+    return_probability: bool = False,
+    threshold: float | Underscore = 0.5,
+):
+    """
+    Load scikit-learn decision tree classifier into an expression from a joblib or pickle file.
+
+    The model must be trained on the same version of scikit-learn that is deployed in your
+    Chalk environment.
+
+    Only binary classification is supported.
+
+    Parameters
+    ----------
+    features
+        A list of features which were used to train the model.
+    model_path
+        A filepath to the scikit-learn logistic regression model.
+    probability:
+        Whether to return the prediction probability or the predicted class.
+    threshold:
+        The decision threshold for the model (ignored if probability = True).
+
+    Examples
+    --------
+    >>> import chalk.functions as F
+    >>> @features
+    ... class User:
+    ...    id: str
+    ...    a: float
+    ...    b: float
+    ...    c: float
+    ...    d: float
+    ...    e: float
+    ...    prediction: bool = F.decision_tree_classifier(
+    ...       _.a, _.b, _.c, _.d, _.e,
+    ...       model_path=os.path.join(os.environ.get("TARGET_ROOT", "."), "models", "./dt_classifier.joblib")
+    ...       probabiliy=True, threshold=0.7,
+    ...    )
+    """
+    return UnderscoreFunction(
+        "decision_tree_classifier",
+        *features,
+        model_path=model_path,
+        return_probability=return_probability,
+        threshold=threshold,
+    )
+
+
+def sklearn_random_forest_regressor(
+    *features: Underscore,
+    model_path: str,
+):
+    """
+    Load scikit-learn random forest regressor into an expression from a joblib or pickle file.
+
+    The model must be trained on the same version of scikit-learn that is deployed in your
+    Chalk environment.
+
+    Parameters
+    ----------
+    features
+        A list of features which were used to train the model.
+    model_path
+        A filepath to the scikit-learn logistic regression model.
+
+    Examples
+    --------
+    >>> import chalk.functions as F
+    >>> @features
+    ... class User:
+    ...    id: str
+    ...    a: float
+    ...    b: float
+    ...    c: float
+    ...    d: float
+    ...    e: float
+    ...    prediction: float = F.random_forest_regressor(
+    ...       _.a, _.b, _.c, _.d, _.e,
+    ...       model_path=os.path.join(os.environ.get("TARGET_ROOT", "."), "models", "./rf_regressor.joblib")
+    ...    )
+    """
+    return UnderscoreFunction(
+        "random_forest_regressor",
+        *features,
+        model_path=model_path,
+    )
+
+
+def sklearn_random_forest_classifier(
+    *features: Underscore,
+    model_path: str,
+    return_probability: bool = False,
+    threshold: float = 0.5,
+):
+    """
+    Load scikit-learn random forest classifier into an expression from a joblib or pickle file.
+
+    The model must be trained on the same version of scikit-learn that is deployed in your
+    Chalk environment.
+
+    Only binary classification is supported.
+
+    Parameters
+    ----------
+    features
+        A list of features which were used to train the model.
+    model_path
+        A filepath to the scikit-learn logistic regression model.
+    probability:
+        Whether to return the prediction probability or the predicted class.
+    threshold:
+        The decision threshold for the model (ignored if probability = True).
+
+    Examples
+    --------
+    >>> import chalk.functions as F
+    >>> @features
+    ... class User:
+    ...    id: str
+    ...    a: float
+    ...    b: float
+    ...    c: float
+    ...    d: float
+    ...    e: float
+    ...    prediction: float = F.random_forest_classifier(
+    ...       _.a, _.b, _.c, _.d, _.e,
+    ...       model_path=os.path.join(os.environ.get("TARGET_ROOT", "."), "models", "./rf_classifier.joblib"),
+    ...       probabiliy=True, threshold=0.7,
+    ...    )
+    """
+    return UnderscoreFunction(
+        "random_forest_classifier",
+        *features,
+        model_path=model_path,
+        return_probability=return_probability,
+        threshold=threshold,
+    )
+
+
+def sklearn_gradient_boosting_regressor(
+    *features: Underscore,
+    model_path: str,
+):
+    """
+    Load scikit-learn gradient boosting regressor into an expression from a joblib or pickle file.
+
+    The model must be trained on the same version of scikit-learn that is deployed in your
+    Chalk environment.
+
+    Parameters
+    ----------
+    features
+        A list of features which were used to train the model.
+    model_path
+        A filepath to the scikit-learn logistic regression model.
+
+    Examples
+    --------
+    >>> import chalk.functions as F
+    >>> @features
+    ... class User:
+    ...    id: str
+    ...    a: float
+    ...    b: float
+    ...    c: float
+    ...    d: float
+    ...    e: float
+    ...    prediction: float = F.gradient_boosting_regressor(
+    ...       _.a, _.b, _.c, _.d, _.e,
+    ...       model_path=os.path.join(os.environ.get("TARGET_ROOT", "."), "models", "./gb_regressor.joblib"),
+    ...    )
+    """
+    return UnderscoreFunction(
+        "gradient_boosting_regressor",
+        *features,
+        model_path=model_path,
+    )
+
+
+def sklearn_logistic_regression(
+    *features: Underscore,
+    model_path: str,
+    return_probability: bool = False,
+    threshold: float | Underscore = 0.5,
+):
+    """
+    Load scikit-learn logistic regression into an expression from a joblib or pickle file.
+
+    The model must be trained on the same version of scikit-learn that is deployed in your
+    Chalk environment.
+
+    Only binary classification is supported.
+
+    Parameters
+    ----------
+    features
+        A list of features which were used to train the model.
+    model_path
+        A filepath to the scikit-learn logistic regression model.
+    probability:
+        Whether to return the prediction probability or the predicted class.
+    threshold:
+        The decision threshold for the model (ignored if probability = True).
+
+    Examples
+    --------
+    >>> import chalk.functions as F
+    >>> @features
+    ... class User:
+    ...    id: str
+    ...    a: float
+    ...    b: float
+    ...    c: float
+    ...    d: float
+    ...    e: float
+    ...    prediction: float = F.logistic_regression(
+    ...       _.a, _.b, _.c, _.d, _.e,
+    ...       model_path=os.path.join(os.environ.get("TARGET_ROOT", "."), "models", "./logistic.joblib"),
+    ...       probabiliy=True, threshold=0.7,
+    ...    )
+    """
+    return UnderscoreFunction(
+        "logistic_regression",
+        *features,
+        model_path=model_path,
+        return_probability=return_probability,
+        threshold=threshold,
+    )
+
+
 __all__ = (
     "DayOfWeek",
     "Then",

@@ -342,9 +342,7 @@ CACHE_SETTINGS = {
     "EXPIRES_TTL": 600,  # 10 minutes
 }
 
-# The time a RemoteArtifact will be ignored after failure.
-# In on-demand, if a fetching content from a remote failed due to corrupt data,
-# the corresponding RemoteArtifact will be ignored for that time (seconds).
+# The time in seconds a RemoteArtifact will be ignored after failure.
 REMOTE_CONTENT_FETCH_FAILURE_COOLDOWN = 5 * 60  # 5 minutes
 
 SPECTACULAR_SETTINGS = {
@@ -424,6 +422,9 @@ KAFKA_SASL_PASSWORD = None
 
 # opentelemetry settings
 OTEL_ENABLED = False
+
+# Replaces asyncio event loop with uvloop
+UVLOOP_ENABLED = False
 
 # HERE STARTS DYNACONF EXTENSION LOAD (Keep at the very bottom of settings.py)
 # Read more at https://www.dynaconf.com/django/

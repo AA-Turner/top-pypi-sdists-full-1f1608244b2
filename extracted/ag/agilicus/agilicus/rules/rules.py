@@ -29,6 +29,7 @@ ConditionTypes = Enum(
         "mfa_rule_condition",
         "scope_condition",
         "network_protocol_condition",
+        "compound_rule_condition",
     ],
 )
 
@@ -928,40 +929,20 @@ def add_network_protocol_condition_rule(
     standalone_rule_policy_id=None,
     **kwargs,
 ):
-    token = context.get_token(ctx)
-    apiclient = context.get_apiclient(ctx, token)
-    kwargs = strip_none(kwargs)
-
     cond = agilicus.NetworkProtocolCondition(
         condition_type=ConditionTypes.network_protocol_condition.name,
         protocol=protocol,
     )
-    extended_cond = agilicus.RuleCondition(condition=cond, negated=False)
-
-    rule = agilicus.RuleConfig(
-        name=name,
-        extended_condition=extended_cond,
-        actions=[agilicus.RuleAction(action=action) for action in actions],
+    return add_rule(
+        ctx,
+        name,
+        cond,
+        actions,
+        purpose=purpose,
+        protocol=protocol,
+        standalone_rule_policy_id=standalone_rule_policy_id,
+        **kwargs,
     )
-
-    org_id = get_org_from_input_or_ctx(ctx, **kwargs)
-    kwargs["org_id"] = org_id
-    spec = agilicus.StandaloneRuleSpec(org_id=org_id, rule=rule)
-    if purpose is not None:
-        spec.purpose = purpose
-
-    if standalone_rule_policy_id is not None:
-        spec.standalone_rule_policy_id = standalone_rule_policy_id
-
-    req = agilicus.StandaloneRule(spec=spec)
-    result, _ = create_or_update(
-        req,
-        lambda obj: apiclient.rules_api.create_standalone_rule(obj),
-        lambda guid, obj: apiclient.rules_api.replace_standalone_rule(
-            guid, standalone_rule=obj
-        ),
-    )
-    return result
 
 
 def add_agilicus_default_expose_allow(
@@ -984,8 +965,102 @@ def add_agilicus_default_expose_allow(
     add_ruleset(ctx, name, trees=[name], labels=[label], **kwargs)
 
 
+def add_rule(
+    ctx,
+    name,
+    condition,
+    actions,
+    purpose=None,
+    comments=None,
+    roles=None,
+    scope=None,
+    standalone_rule_policy_id=None,
+    **kwargs,
+):
+    token = context.get_token(ctx)
+    apiclient = context.get_apiclient(ctx, token)
+    kwargs = strip_none(kwargs)
+
+    extended_cond = agilicus.RuleCondition(condition=condition, negated=False)
+
+    rule = agilicus.RuleConfig(
+        name=name,
+        extended_condition=extended_cond,
+        actions=[agilicus.RuleAction(action=action) for action in actions],
+    )
+    if roles is not None:
+        rule.roles = roles
+    if scope is not None:
+        rule.scope = agilicus.RuleScopeEnum(scope)
+
+    org_id = get_org_from_input_or_ctx(ctx, **kwargs)
+    kwargs["org_id"] = org_id
+    spec = agilicus.StandaloneRuleSpec(org_id=org_id, rule=rule)
+    if purpose is not None:
+        spec.purpose = purpose
+    if comments:
+        spec.comments = comments
+
+    if standalone_rule_policy_id is not None:
+        spec.standalone_rule_policy_id = standalone_rule_policy_id
+
+    req = agilicus.StandaloneRule(spec=spec)
+    result, _ = create_or_update(
+        req,
+        lambda obj: apiclient.rules_api.create_standalone_rule(obj),
+        lambda guid, obj: apiclient.rules_api.replace_standalone_rule(
+            guid, standalone_rule=obj
+        ),
+    )
+    return result
+
+
+def make_compound_condition(
+    conditions,
+    list_type="cnf",
+):
+    return agilicus.CompoundRuleCondition(
+        condition_type=ConditionTypes.compound_rule_condition.name,
+        condition_list=conditions,
+        list_type=list_type,
+    )
+
+
+def add_agilicus_default_database_allow(
+    ctx,
+    label="agilicus-defaults-policy",
+    name="default_database",
+    action="allow",
+    **kwargs,
+):
+    # The database rule uses an empty cnf compound condition to match everything,
+    # subject to the scope and roles
+    condition = make_compound_condition([], list_type="cnf")
+    add_rule(
+        ctx,
+        name,
+        condition=condition,
+        actions=[action],
+        roles=["owner"],
+        scope="assigned_to_user",
+        **kwargs,
+    )
+    add_label(ctx, label=label, **kwargs)
+    add_rule_tree(ctx, name, children=[], rules=[name], **kwargs)
+    # The scope here ensures this entire set of rules only applies to databases
+    add_ruleset(
+        ctx,
+        name,
+        trees=[name],
+        labels=[label],
+        scopes=["urn:agilicus:database:*"],
+        **kwargs,
+    )
+
+
 def add_agilicus_default_policy(
     ctx,
     **kwargs,
 ):
     add_agilicus_default_expose_allow(ctx)
+    add_agilicus_default_database_allow(ctx)

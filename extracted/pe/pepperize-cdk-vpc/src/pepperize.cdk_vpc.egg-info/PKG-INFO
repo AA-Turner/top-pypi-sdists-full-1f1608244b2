@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pepperize.cdk-vpc
-Version: 0.0.1151
+Version: 0.0.1152
 Summary: Utility constructs for tagging subnets or creating a cheaper vpc.
 Home-page: https://github.com/pepperize/cdk-vpc.git
 Author: Patrick Florek<patrick.florek@gmail.com>

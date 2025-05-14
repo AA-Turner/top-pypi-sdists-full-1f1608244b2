@@ -28,6 +28,7 @@ __all__ = (
     "ControlOperationTypeType",
     "ControlTowerServiceName",
     "DriftStatusType",
+    "EnabledBaselineDriftStatusType",
     "EnablementStatusType",
     "LandingZoneDriftStatusType",
     "LandingZoneOperationStatusType",
@@ -54,6 +55,7 @@ ControlOperationTypeType = Literal[
     "DISABLE_CONTROL", "ENABLE_CONTROL", "RESET_ENABLED_CONTROL", "UPDATE_ENABLED_CONTROL"
 ]
 DriftStatusType = Literal["DRIFTED", "IN_SYNC", "NOT_CHECKING", "UNKNOWN"]
+EnabledBaselineDriftStatusType = Literal["DRIFTED", "IN_SYNC"]
 EnablementStatusType = Literal["FAILED", "SUCCEEDED", "UNDER_CHANGE"]
 LandingZoneDriftStatusType = Literal["DRIFTED", "IN_SYNC"]
 LandingZoneOperationStatusType = Literal["FAILED", "IN_PROGRESS", "SUCCEEDED"]
@@ -424,7 +426,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -432,6 +433,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -505,6 +507,7 @@ RegionName = Literal[
     "ap-southeast-3",
     "ap-southeast-4",
     "ap-southeast-5",
+    "ap-southeast-7",
     "ca-central-1",
     "ca-west-1",
     "eu-central-1",
@@ -518,6 +521,7 @@ RegionName = Literal[
     "il-central-1",
     "me-central-1",
     "me-south-1",
+    "mx-central-1",
     "sa-east-1",
     "us-east-1",
     "us-east-2",

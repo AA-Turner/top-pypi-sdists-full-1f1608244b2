@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-import sys
 from copy import copy
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, TypeAlias
 
 import cloudpickle
 from sortedcontainers import SortedDict, SortedSet
@@ -16,8 +15,7 @@ from adaptive.utils import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from typing import Callable
+    from collections.abc import Callable, Sequence
 
 try:
     import pandas
@@ -27,10 +25,6 @@ try:
 except ModuleNotFoundError:
     with_pandas = False
 
-if sys.version_info >= (3, 10):
-    from typing import TypeAlias
-else:
-    from typing_extensions import TypeAlias
 
 PointType: TypeAlias = tuple[Int, Any]
 
@@ -140,13 +134,13 @@ class SequenceLearner(BaseLearner):
         self.pending_points = set()
 
     def tell(self, point: PointType, value: Any) -> None:
-        index, point = point
+        index, _ = point
         self.data[index] = value
         self.pending_points.discard(index)
         self._to_do_indices.discard(index)
 
     def tell_pending(self, point: PointType) -> None:
-        index, point = point
+        index, _ = point
         self.pending_points.add(index)
         self._to_do_indices.discard(index)
 

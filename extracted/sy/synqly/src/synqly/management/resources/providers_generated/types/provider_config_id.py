@@ -36,6 +36,11 @@ class ProviderConfigId(str, enum.Enum):
     Qualys Vulnerability Management, Detection & Response (VMDR)
     """
 
+    ASSETS_QUALYS_CLOUD_MOCK = "assets_qualys_cloud_mock"
+    """
+    [MOCK] Qualys Vulnerability Management, Detection & Response (VMDR)
+    """
+
     ASSETS_SERVICE_NOW = "assets_servicenow"
     """
     ServiceNow Configuration Management Database (CMDB)
@@ -44,6 +49,11 @@ class ProviderConfigId(str, enum.Enum):
     ASSETS_SERVICE_NOW_MOCK = "assets_servicenow_mock"
     """
     [MOCK] ServiceNow Configuration Management Database (CMDB)
+    """
+
+    ASSETS_TANIUM_CLOUD = "assets_tanium_cloud"
+    """
+    Tanium Vulnerability Management
     """
 
     CLOUD_SECURITY_CROWD_STRIKE = "cloudsecurity_crowdstrike"
@@ -141,6 +151,11 @@ class ProviderConfigId(str, enum.Enum):
     SIEM Test
     """
 
+    SIEM_OPEN_SEARCH = "siem_opensearch"
+    """
+    OpenSearch SIEM
+    """
+
     SIEM_Q_RADAR = "siem_q_radar"
     """
     QRadar
@@ -199,6 +214,11 @@ class ProviderConfigId(str, enum.Enum):
     SINK_MOCK = "sink_mock_sink"
     """
     Sink Test
+    """
+
+    SINK_OPEN_SEARCH = "sink_opensearch"
+    """
+    OpenSearch
     """
 
     SINK_SPLUNK = "sink_splunk"
@@ -313,8 +333,10 @@ class ProviderConfigId(str, enum.Enum):
         assets_nozomi_vantage: typing.Callable[[], T_Result],
         assets_nozomi_vantage_mock: typing.Callable[[], T_Result],
         assets_qualys_cloud: typing.Callable[[], T_Result],
+        assets_qualys_cloud_mock: typing.Callable[[], T_Result],
         assets_service_now: typing.Callable[[], T_Result],
         assets_service_now_mock: typing.Callable[[], T_Result],
+        assets_tanium_cloud: typing.Callable[[], T_Result],
         cloud_security_crowd_strike: typing.Callable[[], T_Result],
         edr_crowd_strike: typing.Callable[[], T_Result],
         edr_defender: typing.Callable[[], T_Result],
@@ -334,6 +356,7 @@ class ProviderConfigId(str, enum.Enum):
         siem_elasticsearch: typing.Callable[[], T_Result],
         siem_google_chronicle: typing.Callable[[], T_Result],
         siem_mock: typing.Callable[[], T_Result],
+        siem_open_search: typing.Callable[[], T_Result],
         siem_q_radar: typing.Callable[[], T_Result],
         siem_rapid_7_insight_idr: typing.Callable[[], T_Result],
         siem_sentinel: typing.Callable[[], T_Result],
@@ -346,6 +369,7 @@ class ProviderConfigId(str, enum.Enum):
         sink_elasticsearch: typing.Callable[[], T_Result],
         sink_google_sec_ops: typing.Callable[[], T_Result],
         sink_mock: typing.Callable[[], T_Result],
+        sink_open_search: typing.Callable[[], T_Result],
         sink_splunk: typing.Callable[[], T_Result],
         storage_aws_s_3: typing.Callable[[], T_Result],
         storage_azure_blob: typing.Callable[[], T_Result],
@@ -378,10 +402,14 @@ class ProviderConfigId(str, enum.Enum):
             return assets_nozomi_vantage_mock()
         if self is ProviderConfigId.ASSETS_QUALYS_CLOUD:
             return assets_qualys_cloud()
+        if self is ProviderConfigId.ASSETS_QUALYS_CLOUD_MOCK:
+            return assets_qualys_cloud_mock()
         if self is ProviderConfigId.ASSETS_SERVICE_NOW:
             return assets_service_now()
         if self is ProviderConfigId.ASSETS_SERVICE_NOW_MOCK:
             return assets_service_now_mock()
+        if self is ProviderConfigId.ASSETS_TANIUM_CLOUD:
+            return assets_tanium_cloud()
         if self is ProviderConfigId.CLOUD_SECURITY_CROWD_STRIKE:
             return cloud_security_crowd_strike()
         if self is ProviderConfigId.EDR_CROWD_STRIKE:
@@ -420,6 +448,8 @@ class ProviderConfigId(str, enum.Enum):
             return siem_google_chronicle()
         if self is ProviderConfigId.SIEM_MOCK:
             return siem_mock()
+        if self is ProviderConfigId.SIEM_OPEN_SEARCH:
+            return siem_open_search()
         if self is ProviderConfigId.SIEM_Q_RADAR:
             return siem_q_radar()
         if self is ProviderConfigId.SIEM_RAPID_7_INSIGHT_IDR:
@@ -444,6 +474,8 @@ class ProviderConfigId(str, enum.Enum):
             return sink_google_sec_ops()
         if self is ProviderConfigId.SINK_MOCK:
             return sink_mock()
+        if self is ProviderConfigId.SINK_OPEN_SEARCH:
+            return sink_open_search()
         if self is ProviderConfigId.SINK_SPLUNK:
             return sink_splunk()
         if self is ProviderConfigId.STORAGE_AWS_S_3:

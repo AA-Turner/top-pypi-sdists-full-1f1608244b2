@@ -86,11 +86,8 @@ def test_accepts_also_plain_strings_as_input():
     assert_same_html(expected_html, actual_html, verbose=True)
 
 
+@pytest.mark.css_inlining
 def test_can_use_css_inlining():
-    try:
-        import css_inline  # noqa: F401 (unused-import)
-    except ImportError:
-        pytest.skip('"css_inline" not installed')
     test_id = 'css-inlining'
     expected_html = load_expected_html(test_id)
     with get_mjml_fp(test_id) as mjml_fp:
@@ -156,5 +153,5 @@ def test_keep_whitespace_before_tag():
     body_actual = BeautifulSoup(result.html, 'html.parser').body
     actual_text = body_actual.get_text().strip()
     assert (expected_text == actual_text)
-    actual_html = (body_actual.select('.mj-column-per-100 div')[0]).renderContents()
+    actual_html = (body_actual.select('.mj-column-per-100 div')[0]).encode_contents()
     assert (b'foo <b>bar</b>.' == actual_html)

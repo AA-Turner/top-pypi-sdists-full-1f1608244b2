@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import sys
 from datetime import datetime
+from typing import Union
 
 from .literals import ClusterStatusType
 
@@ -55,6 +56,9 @@ __all__ = (
     "ListClustersOutputTypeDef",
     "ListTagsForResourceInputTypeDef",
     "ListTagsForResourceOutputTypeDef",
+    "MultiRegionPropertiesOutputTypeDef",
+    "MultiRegionPropertiesTypeDef",
+    "MultiRegionPropertiesUnionTypeDef",
     "PaginatorConfigTypeDef",
     "ResponseMetadataTypeDef",
     "TagResourceInputTypeDef",
@@ -70,10 +74,9 @@ class ClusterSummaryTypeDef(TypedDict):
     arn: str
 
 
-class CreateClusterInputTypeDef(TypedDict):
-    deletionProtectionEnabled: NotRequired[bool]
-    tags: NotRequired[Mapping[str, str]]
-    clientToken: NotRequired[str]
+class MultiRegionPropertiesOutputTypeDef(TypedDict):
+    witnessRegion: NotRequired[str]
+    clusters: NotRequired[List[str]]
 
 
 class ResponseMetadataTypeDef(TypedDict):
@@ -127,6 +130,11 @@ class ListTagsForResourceInputTypeDef(TypedDict):
     resourceArn: str
 
 
+class MultiRegionPropertiesTypeDef(TypedDict):
+    witnessRegion: NotRequired[str]
+    clusters: NotRequired[Sequence[str]]
+
+
 class TagResourceInputTypeDef(TypedDict):
     resourceArn: str
     tags: Mapping[str, str]
@@ -137,17 +145,12 @@ class UntagResourceInputTypeDef(TypedDict):
     tagKeys: Sequence[str]
 
 
-class UpdateClusterInputTypeDef(TypedDict):
-    identifier: str
-    deletionProtectionEnabled: NotRequired[bool]
-    clientToken: NotRequired[str]
-
-
 class CreateClusterOutputTypeDef(TypedDict):
     identifier: str
     arn: str
     status: ClusterStatusType
     creationTime: datetime
+    multiRegionProperties: MultiRegionPropertiesOutputTypeDef
     deletionProtectionEnabled: bool
     ResponseMetadata: ResponseMetadataTypeDef
 
@@ -175,9 +178,11 @@ class GetClusterOutputTypeDef(TypedDict):
     arn: str
     status: ClusterStatusType
     creationTime: datetime
-    deletionProtectionEnabled: bool
     witnessRegion: str
     linkedClusterArns: List[str]
+    deletionProtectionEnabled: bool
+    multiRegionProperties: MultiRegionPropertiesOutputTypeDef
+    tags: Dict[str, str]
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -202,9 +207,9 @@ class UpdateClusterOutputTypeDef(TypedDict):
     arn: str
     status: ClusterStatusType
     creationTime: datetime
-    deletionProtectionEnabled: bool
     witnessRegion: str
     linkedClusterArns: List[str]
+    deletionProtectionEnabled: bool
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -227,3 +232,22 @@ class GetClusterInputWaitTypeDef(TypedDict):
 
 class ListClustersInputPaginateTypeDef(TypedDict):
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
+MultiRegionPropertiesUnionTypeDef = Union[
+    MultiRegionPropertiesTypeDef, MultiRegionPropertiesOutputTypeDef
+]
+
+
+class CreateClusterInputTypeDef(TypedDict):
+    deletionProtectionEnabled: NotRequired[bool]
+    tags: NotRequired[Mapping[str, str]]
+    clientToken: NotRequired[str]
+    multiRegionProperties: NotRequired[MultiRegionPropertiesUnionTypeDef]
+
+
+class UpdateClusterInputTypeDef(TypedDict):
+    identifier: str
+    deletionProtectionEnabled: NotRequired[bool]
+    clientToken: NotRequired[str]
+    multiRegionProperties: NotRequired[MultiRegionPropertiesUnionTypeDef]

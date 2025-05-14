@@ -3,7 +3,7 @@ py-modules = ["vessl"]
 
 [tool.poetry]
 name = "vessl"
-version = "0.1.196" # to be overridden in CI
+version = "0.1.197" # to be overridden in CI
 description = "SDK and CLI for VESSL"
 license = "MIT"
 authors = [

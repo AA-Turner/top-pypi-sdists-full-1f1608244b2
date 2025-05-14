@@ -242,22 +242,13 @@ class ProvisionalConfigurationTypeDef(TypedDict):
     MaxTimeToLiveInMinutes: int
 
 
-class CreateGrantRequestTypeDef(TypedDict):
-    ClientToken: str
-    GrantName: str
-    LicenseArn: str
-    Principals: Sequence[str]
-    HomeRegion: str
-    AllowedOperations: Sequence[AllowedOperationType]
+class TagTypeDef(TypedDict):
+    Key: NotRequired[str]
+    Value: NotRequired[str]
 
 
 class OptionsTypeDef(TypedDict):
     ActivationOverrideBehavior: NotRequired[ActivationOverrideBehaviorType]
-
-
-class TagTypeDef(TypedDict):
-    Key: NotRequired[str]
-    Value: NotRequired[str]
 
 
 class LicenseConversionContextTypeDef(TypedDict):
@@ -651,6 +642,26 @@ class ConsumptionConfigurationTypeDef(TypedDict):
     BorrowConfiguration: NotRequired[BorrowConfigurationTypeDef]
 
 
+class CreateGrantRequestTypeDef(TypedDict):
+    ClientToken: str
+    GrantName: str
+    LicenseArn: str
+    Principals: Sequence[str]
+    HomeRegion: str
+    AllowedOperations: Sequence[AllowedOperationType]
+    Tags: NotRequired[Sequence[TagTypeDef]]
+
+
+class ListTagsForResourceResponseTypeDef(TypedDict):
+    Tags: List[TagTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class TagResourceRequestTypeDef(TypedDict):
+    ResourceArn: str
+    Tags: Sequence[TagTypeDef]
+
+
 class CreateGrantVersionRequestTypeDef(TypedDict):
     ClientToken: str
     GrantArn: str
@@ -674,16 +685,6 @@ class GrantTypeDef(TypedDict):
     GrantedOperations: List[AllowedOperationType]
     StatusReason: NotRequired[str]
     Options: NotRequired[OptionsTypeDef]
-
-
-class ListTagsForResourceResponseTypeDef(TypedDict):
-    Tags: List[TagTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-
-
-class TagResourceRequestTypeDef(TypedDict):
-    ResourceArn: str
-    Tags: Sequence[TagTypeDef]
 
 
 class CreateLicenseConversionTaskForResourceRequestTypeDef(TypedDict):
@@ -925,6 +926,7 @@ class CreateLicenseRequestTypeDef(TypedDict):
     ConsumptionConfiguration: ConsumptionConfigurationTypeDef
     ClientToken: str
     LicenseMetadata: NotRequired[Sequence[MetadataTypeDef]]
+    Tags: NotRequired[Sequence[TagTypeDef]]
 
 
 class CreateLicenseVersionRequestTypeDef(TypedDict):

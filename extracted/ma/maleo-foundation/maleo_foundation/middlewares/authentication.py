@@ -25,14 +25,17 @@ class Backend(AuthenticationBackend):
         auth = conn.headers["Authorization"]
         scheme, token = auth.split()
         if scheme != 'Bearer':
-            raise AuthenticationError("Authorization scheme must be Bearer token")
+            # raise AuthenticationError("Authorization scheme must be Bearer token")
+            return Credentials(), User(authenticated=False)
 
         decode_token_parameters = MaleoFoundationTokenParametersTransfers.Decode(key=self._keys.public, token=token)
         decode_token_result = self._maleo_foundation.services.token.decode(parameters=decode_token_parameters)
         if not decode_token_result.success:
-            raise AuthenticationError("Invalid Bearer token, unable to decode token")
+            # raise AuthenticationError("Invalid Bearer token, unable to decode token")
+            return Credentials(), User(authenticated=False)
         if decode_token_result.data.exp_dt <= datetime.now(tz=timezone.utc):
-            raise AuthenticationError("Expired Bearer token, request new or refresh token")
+            # raise AuthenticationError("Expired Bearer token, request new or refresh token")
+            return Credentials(), User(authenticated=False)
 
         payload = decode_token_result.data
         return (

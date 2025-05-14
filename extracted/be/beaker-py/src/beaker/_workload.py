@@ -98,6 +98,15 @@ class WorkloadClient(ServiceClient):
 
         return jobs[0]
 
+    def get_results(
+        self, workload: pb2.Workload, *, task: pb2.Task | None = None
+    ) -> pb2.Dataset | None:
+        job = self.get_latest_job(workload, task=task)
+        if job is None:
+            return None
+        else:
+            return self.beaker.job.get_results(job)
+
     def list(
         self,
         *,
