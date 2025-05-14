@@ -25,8 +25,11 @@ from collections import OrderedDict, defaultdict
 from enum import Enum
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Optional, Set, Iterator, NoReturn
 from Crypto.Hash import keccak
+import tempfile
+
+from typing import Any, Dict, List, Tuple, Optional, Set, Iterator, NoReturn
+
 
 from CertoraProver.certoraBuildCacheManager import CertoraBuildCacheManager, CachedFiles
 from CertoraProver.certoraBuildDataClasses import CONTRACTS, ImmutableReference, ContractExtension, ContractInSDC, SDC, \
@@ -35,6 +38,7 @@ from CertoraProver.certoraCompilerParameters import SolcParameters
 from CertoraProver.certoraSourceFinders import add_source_finders
 from CertoraProver.certoraVerifyGenerator import CertoraVerifyGenerator
 from CertoraProver.certoraContractFuncs import Func, InternalFunc, STATEMUT, SourceBytes
+
 from Shared.certoraUtils import is_relative_to
 
 scripts_dir_path = Path(__file__).parent.parent.resolve()  # containing directory
@@ -54,7 +58,11 @@ from Shared import certoraValidateFuncs as Vf
 from CertoraProver import certoraContextValidator as Cv
 from Shared import certoraUtils as Util
 import CertoraProver.certoraContext as Ctx
-
+from CertoraProver import storageExtension
+from CertoraProver.storageExtension import (
+    NameSpacedStorage,
+    NewStorageInfo,
+)
 
 BUILD_IS_LIBRARY = False
 AUTO_FINDER_PREFIX = "autoFinder_"
@@ -72,6 +80,7 @@ MUTANTS_LOCATION = "mutants_location"
 
 FunctionSig = Tuple[str, List[str], List[str], str]
 
+
 # logger for building the abstract syntax tree
 ast_logger = logging.getLogger("ast")
 # logger for issues calling/shelling out to external functions
@@ -84,11 +93,9 @@ build_logger = logging.getLogger("build_conf")
 # logger of the build cache
 build_cache_logger = logging.getLogger("build_cache")
 
-
 def fatal_error(logger: logging.Logger, msg: str) -> NoReturn:
     logger.fatal(msg)
     raise Exception(msg)
-
 
 class InputConfig:
     def __init__(self, context: CertoraContext) -> None:
@@ -2672,7 +2679,126 @@ class CertoraBuildGenerator:
         self.handle_links()
         self.handle_struct_links()
         self.handle_contract_extensions()
+        self.handle_erc7201_annotations()
         self.handle_storage_extension_harnesses()
+
+    def extract_slayout(self, original_file: str, ns_storage: Set[NameSpacedStorage]) -> NewStorageInfo:
+        """
+        Given a file containing a contract with namespaced storage, extract the storage information
+        corresponding to the namespaced types.
+
+        Args:
+            original_file: Path to the Solidity file containing namespaced storage declarations
+            ns_storage: Set of tuples (type_name, namespace) for each namespaced storage
+
+        Returns:
+            NewStorageInfo: A tuple (fields, types) where:
+                - fields: List of new fields added by the namespaced storage
+                - types: Dictionary of types referenced by the fields
+        """
+        file_dir = Path(original_file).parent
+
+        # Generate a unique name for the harness contract based on the contract names in the file
+        harness_name = storageExtension.generate_harness_name(original_file)
+
+        with tempfile.NamedTemporaryFile(mode="w+t", suffix=".sol", dir=file_dir, delete=True) as tmp_file:
+            # Copy the original file content
+            with open(original_file, 'r', encoding='utf-8') as orig_file:
+                tmp_file.write(orig_file.read())
+                tmp_file.write("\n")
+
+            # Write the harness contract with dummy fields for each namespaced storage
+            var_to_slot = storageExtension.write_harness_contract(tmp_file, harness_name, ns_storage)
+            tmp_file.flush()
+
+            # normalize the path exactly the way collect_for_file expects it:
+            abs_path = Util.abs_posix_path(tmp_file.name)
+            self.context.file_to_contract[abs_path] = {harness_name}
+
+            try:
+                # Compile & fetch the raw storage_layout
+                compile_idx = storageExtension.get_next_file_index(self.file_to_sdc_name)
+                sdcs = self.collect_for_file(tmp_file.name, compile_idx, CompilerLangSol(), Path.cwd(), Util.abs_posix_path(tmp_file.name), None)
+                if not sdcs:
+                    raise RuntimeError(f"Failed to compile harness contract for {tmp_file}")
+                layout = storageExtension.extract_harness_contract_layout(sdcs, harness_name)
+
+                # Remap each slot according to the ERC-7201 namespace
+                remapped_fields = storageExtension.remapped_fields_from_layout(layout, var_to_slot)
+
+                return (remapped_fields, layout.get('types', {}))
+
+            except Exception as e:
+                build_logger.error(f"Error extracting storage layout for {original_file}: {str(e)}")
+                raise
+            finally:
+                # Delete the key from the context
+                self.context.file_to_contract.pop(abs_path, None)
+
+    def handle_erc7201_annotations(self) -> None:
+        """
+        Look for contracts that use erc-7201 namespaced storage layout
+        (see https://eips.ethereum.org/EIPS/eip-7201).
+
+        Find contracts A s.t. A contain a type declaration with such an annotation, e.g.
+          /** @custom:storage-location erc-7201:some.name.space */
+          struct T { ... }
+
+        Then, for any contract C that has A as a base contract, _extend_ C's storage layout
+        information such that it contains the information for a `T` at the slot
+        erc-7201(some.name.space) as defined in the EIP.
+        """
+        # Find all erc7201-like contracts, generate+compile a harness & extract layout information
+        # maps (path,contract) -> new storage info added by (path,contract)
+        slayouts: Dict[Tuple[str, str], NewStorageInfo] = {}
+
+        # Scan all of the contracts (including dependencies of targets) for namespaced storage
+        # layout information
+        for target_file in self.context.file_paths:
+            for (imported_file, imported_file_ast) in self.asts[target_file].items():
+                for def_node in imported_file_ast.values():
+                    if def_node.get("nodeType") != "ContractDefinition":
+                        continue
+
+                    # Construct a key for the contract definition node
+                    contract_name = def_node.get("name")
+                    key = (imported_file, contract_name)
+                    if key in slayouts:
+                        # We already have this contract's storage layout information
+                        continue
+
+                    # Collect any @custom:storage-location annotations
+                    ns_storage = storageExtension.get_namespace_storage_from_ast(def_node)
+
+                    if not ns_storage:
+                        # No namespaced storage found in this contract
+                        continue
+
+                    # Now that we have all the storage layout information, extract it once
+                    slayouts[(imported_file, def_node.get("name"))] = self.extract_slayout(imported_file, ns_storage)
+
+        # Finally, extend each target contract with the storage layout info from
+        # all of its base contracts
+        for target in self.get_primary_contracts_from_sdcs():
+            if target.name not in self.context.contract_to_file:
+                # This is a contract that was not compiled, so we don't have a file for it
+                continue
+            target_file = self.context.contract_to_file[target.name]
+            base_contracts = self.retrieve_base_contracts_list(
+                target_file,
+                Util.abs_posix_path(target_file),
+                target.name
+            )
+            extensions: Set[str] = set()
+            harnesses: Dict[str, NewStorageInfo] = {}
+            for base in base_contracts:
+                layout = slayouts.get((base[0], base[1]))
+                if layout is not None:
+                    extensions.add(base[1])
+                    harnesses[base[1]] = layout
+                else:
+                    build_logger.warning(f"Could not find storage layout for {base[1]} in {base[0]}")
+            storageExtension.apply_extensions(target, extensions, harnesses)
 
     def handle_storage_extension_harnesses(self) -> None:
         def new_field_of_node(ext_instance: Any, node: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -2760,52 +2886,6 @@ class CertoraBuildGenerator:
                     new_fields.append(new_field)
 
             return (ext_instance, extension_sdc_name, new_fields)
-
-        def apply_extensions(target_contract: Any, extensions: Set[str], to_add: Dict[str, Tuple[List[Dict[str, Any]], Dict[str, Any]]]) -> None:
-            """
-            Apply the fields from each extension to the target contract,
-            """
-            if target_contract.storage_layout.get("storage") is None:
-                target_contract.storage_layout["storage"] = []
-            if target_contract.storage_layout.get("types") is None:
-                target_contract.storage_layout["types"] = {}
-            target_slots = {storage["slot"] for storage in target_contract.storage_layout["storage"]}
-            target_vars = {storage["label"] for storage in target_contract.storage_layout["storage"]}
-            # Keep track of slots we've added, and error if we
-            # find two extensions extending the same slot
-            added_slots: Dict[str, str] = {}
-            added_vars: Dict[str, str] = {}
-            for ext in extensions:
-                (new_fields, new_types) = to_add[ext]
-
-                for f in new_fields:
-                    # See if any of the new fields is a slot or variable name we've already added
-                    slot = f["slot"]
-                    var = f["label"]
-                    if slot in added_slots:
-                        seen = added_slots[slot]
-                        raise Util.CertoraUserInputError(f"Slot {slot} added to {target_contract.name} by {ext} was already added by {seen}")
-
-                    if var in added_vars:
-                        seen = added_vars[var]
-                        raise Util.CertoraUserInputError(f"Var '{var}' added to {target_contract.name} by {ext} was already added by {seen}")
-
-                    if slot in target_slots:
-                        raise Util.CertoraUserInputError(f"Slot {slot} added to {target_contract.name} by {ext} is already mapped by {target_contract.name}")
-
-                    if var in target_vars:
-                        raise Util.CertoraUserInputError(f"Var '{var}' added to {target_contract.name} by {ext} is already declared by {target_contract.name}")
-
-                    added_slots[slot] = ext
-                    added_vars[var] = ext
-
-                target_contract.storage_layout["storage"].extend(new_fields)
-
-                for (new_id, new_ty) in new_types.items():
-                    if new_id in target_contract.storage_layout["types"]:
-                        continue
-                    target_contract.storage_layout["types"][new_id] = new_ty
-
         extension_contracts: Set[str] = set()
         storage_extensions: Dict[str, Set[str]] = defaultdict(set)
         storage_ext = self.context.storage_extension_harnesses
@@ -2834,7 +2914,7 @@ class CertoraBuildGenerator:
             sdc = self.SDCs[target_sdc]
             target_contract = sdc.find_contract(target)
             assert target_contract is not None, f"could not find contract for {target}"
-            apply_extensions(target_contract, extensions, extension_to_fields_and_types)
+            storageExtension.apply_extensions(target_contract, extensions, extension_to_fields_and_types)
 
     def finders_compilation_round(self,
                                   build_arg_contract_file: str,

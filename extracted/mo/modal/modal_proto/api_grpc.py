@@ -567,6 +567,10 @@ class ModalClientBase(abc.ABC):
         pass
 
     @abc.abstractmethod
+    async def VolumeCopyFiles2(self, stream: 'grpclib.server.Stream[modal_proto.api_pb2.VolumeCopyFiles2Request, google.protobuf.empty_pb2.Empty]') -> None:
+        pass
+
+    @abc.abstractmethod
     async def VolumeDelete(self, stream: 'grpclib.server.Stream[modal_proto.api_pb2.VolumeDeleteRequest, google.protobuf.empty_pb2.Empty]') -> None:
         pass
 
@@ -1440,6 +1444,12 @@ class ModalClientBase(abc.ABC):
                 self.VolumeCopyFiles,
                 grpclib.const.Cardinality.UNARY_UNARY,
                 modal_proto.api_pb2.VolumeCopyFilesRequest,
+                google.protobuf.empty_pb2.Empty,
+            ),
+            '/modal.client.ModalClient/VolumeCopyFiles2': grpclib.const.Handler(
+                self.VolumeCopyFiles2,
+                grpclib.const.Cardinality.UNARY_UNARY,
+                modal_proto.api_pb2.VolumeCopyFiles2Request,
                 google.protobuf.empty_pb2.Empty,
             ),
             '/modal.client.ModalClient/VolumeDelete': grpclib.const.Handler(
@@ -2346,6 +2356,12 @@ class ModalClientStub:
             channel,
             '/modal.client.ModalClient/VolumeCopyFiles',
             modal_proto.api_pb2.VolumeCopyFilesRequest,
+            google.protobuf.empty_pb2.Empty,
+        )
+        self.VolumeCopyFiles2 = grpclib.client.UnaryUnaryMethod(
+            channel,
+            '/modal.client.ModalClient/VolumeCopyFiles2',
+            modal_proto.api_pb2.VolumeCopyFiles2Request,
             google.protobuf.empty_pb2.Empty,
         )
         self.VolumeDelete = grpclib.client.UnaryUnaryMethod(

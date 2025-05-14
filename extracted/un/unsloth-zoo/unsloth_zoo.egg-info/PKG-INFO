@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: unsloth_zoo
-Version: 2025.5.1
+Version: 2025.5.4
 Summary: Utils for Unsloth
 Author: Unsloth AI team
 Author-email: info@unsloth.ai
@@ -20,7 +20,7 @@ Requires-Dist: triton-windows; platform_system == "Windows"
 Requires-Dist: packaging
 Requires-Dist: tyro
 Requires-Dist: transformers!=4.47.0,==4.51.3
-Requires-Dist: datasets>=2.16.0
+Requires-Dist: datasets>=3.4.1
 Requires-Dist: sentencepiece>=0.2.0
 Requires-Dist: tqdm
 Requires-Dist: psutil

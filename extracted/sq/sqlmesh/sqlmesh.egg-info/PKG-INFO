@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sqlmesh
-Version: 0.181.1
+Version: 0.182.0
 Summary: Next-generation data transformation framework
 Author-email: "TobikoData Inc." <engineering@tobikodata.com>
 License:                                  Apache License
@@ -243,8 +243,7 @@ Requires-Dist: pymssql; extra == "azuresql"
 Provides-Extra: bigquery
 Requires-Dist: google-cloud-bigquery[pandas]; extra == "bigquery"
 Requires-Dist: google-cloud-bigquery-storage; extra == "bigquery"
-Provides-Extra: bigframes
-Requires-Dist: bigframes>=1.32.0; extra == "bigframes"
+Requires-Dist: bigframes>=1.32.0; extra == "bigquery"
 Provides-Extra: clickhouse
 Requires-Dist: clickhouse-connect; extra == "clickhouse"
 Provides-Extra: databricks
@@ -322,7 +321,7 @@ Requires-Dist: slack_sdk; extra == "slack"
 Provides-Extra: snowflake
 Requires-Dist: cryptography; extra == "snowflake"
 Requires-Dist: snowflake-connector-python[pandas,secure-local-storage]; extra == "snowflake"
-Requires-Dist: snowflake-snowpark-python; python_version < "3.12" and extra == "snowflake"
+Requires-Dist: snowflake-snowpark-python; extra == "snowflake"
 Provides-Extra: trino
 Requires-Dist: trino; extra == "trino"
 Provides-Extra: web

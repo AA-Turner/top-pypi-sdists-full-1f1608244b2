@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdklabs.ecs-codedeploy",
-    "version": "0.0.404",
+    "version": "0.0.405",
     "description": "CDK Constructs for performing ECS Deployments with CodeDeploy",
     "license": "Apache-2.0",
     "url": "https://github.com/cdklabs/cdk-ecs-codedeploy",
@@ -26,7 +26,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdk.ecs_codedeploy._jsii": [
-            "cdk-ecs-codedeploy@0.0.404.jsii.tgz"
+            "cdk-ecs-codedeploy@0.0.405.jsii.tgz"
         ],
         "cdk.ecs_codedeploy": [
             "py.typed"

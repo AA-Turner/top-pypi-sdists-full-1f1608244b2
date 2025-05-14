@@ -102,7 +102,13 @@ def cli(
 
     configs = load_configs(config, Context.CONFIG_TYPE, paths)
     log_limit = list(configs.values())[0].log_limit
-    configure_logging(debug, log_to_stdout, log_limit=log_limit, log_file_dir=log_file_dir)
+    configure_logging(
+        debug,
+        log_to_stdout,
+        log_limit=log_limit,
+        log_file_dir=log_file_dir,
+        ignore_warnings=ignore_warnings,
+    )
     configure_console(ignore_warnings=ignore_warnings)
 
     try:
@@ -544,6 +550,19 @@ def janitor(ctx: click.Context, ignore_ttl: bool, **kwargs: t.Any) -> None:
     The janitor cleans up old environments and expired snapshots.
     """
     ctx.obj.run_janitor(ignore_ttl, **kwargs)
+
+
+@cli.command("destroy")
+@click.pass_context
+@error_handler
+@cli_analytics
+def destroy(ctx: click.Context, **kwargs: t.Any) -> None:
+    """
+    The destroy command removes all project resources.
+
+    This includes engine-managed objects, state tables, the SQLMesh cache and any build artifacts.
+    """
+    ctx.obj.destroy(**kwargs)
 
 
 @cli.command("dag")

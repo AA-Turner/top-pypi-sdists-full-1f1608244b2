@@ -203,6 +203,8 @@ __all__ = (
     "GuardrailContextualGroundingFilterTypeDef",
     "GuardrailContextualGroundingPolicyConfigTypeDef",
     "GuardrailContextualGroundingPolicyTypeDef",
+    "GuardrailCrossRegionConfigTypeDef",
+    "GuardrailCrossRegionDetailsTypeDef",
     "GuardrailManagedWordsConfigTypeDef",
     "GuardrailManagedWordsTypeDef",
     "GuardrailPiiEntityConfigTypeDef",
@@ -398,6 +400,9 @@ class TagTypeDef(TypedDict):
     key: str
     value: str
 
+class GuardrailCrossRegionConfigTypeDef(TypedDict):
+    guardrailProfileIdentifier: str
+
 class CreateGuardrailVersionRequestTypeDef(TypedDict):
     guardrailIdentifier: str
     description: NotRequired[str]
@@ -527,6 +532,10 @@ class GetFoundationModelRequestTypeDef(TypedDict):
 class GetGuardrailRequestTypeDef(TypedDict):
     guardrailIdentifier: str
     guardrailVersion: NotRequired[str]
+
+class GuardrailCrossRegionDetailsTypeDef(TypedDict):
+    guardrailProfileId: NotRequired[str]
+    guardrailProfileArn: NotRequired[str]
 
 class GetImportedModelRequestTypeDef(TypedDict):
     modelIdentifier: str
@@ -671,19 +680,6 @@ class GuardrailRegexTypeDef(TypedDict):
     inputEnabled: NotRequired[bool]
     outputEnabled: NotRequired[bool]
 
-GuardrailSummaryTypeDef = TypedDict(
-    "GuardrailSummaryTypeDef",
-    {
-        "id": str,
-        "arn": str,
-        "status": GuardrailStatusType,
-        "name": str,
-        "version": str,
-        "createdAt": datetime,
-        "updatedAt": datetime,
-        "description": NotRequired[str],
-    },
-)
 GuardrailTopicConfigTypeDef = TypedDict(
     "GuardrailTopicConfigTypeDef",
     {
@@ -1185,6 +1181,20 @@ class FoundationModelSummaryTypeDef(TypedDict):
     inferenceTypesSupported: NotRequired[List[InferenceTypeType]]
     modelLifecycle: NotRequired[FoundationModelLifecycleTypeDef]
 
+GuardrailSummaryTypeDef = TypedDict(
+    "GuardrailSummaryTypeDef",
+    {
+        "id": str,
+        "arn": str,
+        "status": GuardrailStatusType,
+        "name": str,
+        "version": str,
+        "createdAt": datetime,
+        "updatedAt": datetime,
+        "description": NotRequired[str],
+        "crossRegionDetails": NotRequired[GuardrailCrossRegionDetailsTypeDef],
+    },
+)
 GetInferenceProfileResponseTypeDef = TypedDict(
     "GetInferenceProfileResponseTypeDef",
     {
@@ -1241,11 +1251,6 @@ class GuardrailSensitiveInformationPolicyConfigTypeDef(TypedDict):
 class GuardrailSensitiveInformationPolicyTypeDef(TypedDict):
     piiEntities: NotRequired[List[GuardrailPiiEntityTypeDef]]
     regexes: NotRequired[List[GuardrailRegexTypeDef]]
-
-class ListGuardrailsResponseTypeDef(TypedDict):
-    guardrails: List[GuardrailSummaryTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    nextToken: NotRequired[str]
 
 class GuardrailTopicPolicyConfigTypeDef(TypedDict):
     topicsConfig: Sequence[GuardrailTopicConfigTypeDef]
@@ -1596,6 +1601,11 @@ class ListFoundationModelsResponseTypeDef(TypedDict):
     modelSummaries: List[FoundationModelSummaryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
 
+class ListGuardrailsResponseTypeDef(TypedDict):
+    guardrails: List[GuardrailSummaryTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
 class ListInferenceProfilesResponseTypeDef(TypedDict):
     inferenceProfileSummaries: List[InferenceProfileSummaryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
@@ -1614,6 +1624,7 @@ class CreateGuardrailRequestTypeDef(TypedDict):
     wordPolicyConfig: NotRequired[GuardrailWordPolicyConfigTypeDef]
     sensitiveInformationPolicyConfig: NotRequired[GuardrailSensitiveInformationPolicyConfigTypeDef]
     contextualGroundingPolicyConfig: NotRequired[GuardrailContextualGroundingPolicyConfigTypeDef]
+    crossRegionConfig: NotRequired[GuardrailCrossRegionConfigTypeDef]
     kmsKeyId: NotRequired[str]
     tags: NotRequired[Sequence[TagTypeDef]]
     clientRequestToken: NotRequired[str]
@@ -1629,6 +1640,7 @@ class UpdateGuardrailRequestTypeDef(TypedDict):
     wordPolicyConfig: NotRequired[GuardrailWordPolicyConfigTypeDef]
     sensitiveInformationPolicyConfig: NotRequired[GuardrailSensitiveInformationPolicyConfigTypeDef]
     contextualGroundingPolicyConfig: NotRequired[GuardrailContextualGroundingPolicyConfigTypeDef]
+    crossRegionConfig: NotRequired[GuardrailCrossRegionConfigTypeDef]
     kmsKeyId: NotRequired[str]
 
 class GetGuardrailResponseTypeDef(TypedDict):
@@ -1643,6 +1655,7 @@ class GetGuardrailResponseTypeDef(TypedDict):
     wordPolicy: GuardrailWordPolicyTypeDef
     sensitiveInformationPolicy: GuardrailSensitiveInformationPolicyTypeDef
     contextualGroundingPolicy: GuardrailContextualGroundingPolicyTypeDef
+    crossRegionDetails: GuardrailCrossRegionDetailsTypeDef
     createdAt: datetime
     updatedAt: datetime
     statusReasons: List[str]

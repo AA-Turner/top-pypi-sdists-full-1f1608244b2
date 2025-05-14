@@ -6,13 +6,13 @@
 
 """Solver interface for `OSQP <https://osqp.org/>`__.
 
-The OSQP solver implements an Operator-Splitting method for large-scale convex
-quadratic programming. It is designed for both dense and sparse problems, and
-convexity is the only assumption it makes on problem data (for instance, it
-does not make any rank assumption contrary to :ref:`CVXOPT <CVXOPT rank
-assumptions>` or :ref:`qpSWIFT <qpSWIFT rank assumptions>`). If you are using
-OSQP in a scientific work, consider citing the corresponding paper
-[Stellato2020]_.
+The OSQP solver implements an operator-splitting method, more precisely an
+alternating direction method of multipliers (ADMM). It is designed for both
+dense and sparse problems, and convexity is the only assumption it makes on
+problem data (for instance, it does not make any rank assumption, contrary to
+solvers such as :ref:`CVXOPT <CVXOPT rank assumptions>` or :ref:`qpSWIFT
+<qpSWIFT rank assumptions>`). If you are using OSQP in a scientific work,
+consider citing the corresponding paper [Stellato2020]_.
 """
 
 import warnings
@@ -106,7 +106,7 @@ def osqp_solve_problem(
     overview of solver tolerances.
     """
     P, q, G, h, A, b, lb, ub = problem.unpack()
-    P, G, A = ensure_sparse_matrices(P, G, A)
+    P, G, A = ensure_sparse_matrices("osqp", P, G, A)
 
     A_osqp = None
     l_osqp = None
@@ -137,13 +137,11 @@ def osqp_solve_problem(
     success_status = osqp.constant("OSQP_SOLVED")
 
     solution = Solution(problem)
-    solution.extras = {"info": res.info}
-
-    # Temporary, see https://github.com/osqp/osqp-python/issues/174
-    if hasattr(res, "dual_inf_cert"):
-        solution.extras["dual_inf_cert"] = res.dual_inf_cert
-    if hasattr(res, "prim_inf_cert"):
-        solution.extras["prim_inf_cert"] = res.prim_inf_cert
+    solution.extras = {
+        "info": res.info,
+        "dual_inf_cert": res.dual_inf_cert,
+        "prim_inf_cert": res.prim_inf_cert,
+    }
 
     solution.found = res.info.status_val == success_status
     if not solution.found:

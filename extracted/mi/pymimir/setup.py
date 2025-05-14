@@ -10,7 +10,7 @@ from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 
 
-__version__ = "0.13.12"
+__version__ = "0.13.14"
 HERE = Path(__file__).resolve().parent
 
 
@@ -82,7 +82,7 @@ class CMakeBuild(build_ext):
         )
 
         # Remove unwanted directories.
-        unwanted_dirs = ["include", "lib"]
+        unwanted_dirs = ["include", "lib", "lib64"]
         for unwanted_dir in unwanted_dirs:
             dir_path = output_directory / unwanted_dir
             if os.path.exists(dir_path):

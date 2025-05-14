@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: django-render-block
-Version: 0.10
+Version: 0.11
 Summary: Render a particular block from a template to a string.
 Home-page: https://github.com/clokep/django-render-block
 Author: Patrick Cloke
@@ -17,21 +17,23 @@ Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Environment :: Web Environment
 Classifier: Topic :: Internet
 Classifier: Framework :: Django
-Classifier: Framework :: Django :: 3.2
-Classifier: Framework :: Django :: 4.1
+Classifier: Framework :: Django :: 4.2
+Classifier: Framework :: Django :: 5.1
+Classifier: Framework :: Django :: 5.2
 Classifier: Programming Language :: Python
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: License :: OSI Approved :: ISC License (ISCL)
-Requires-Python: >=3.8
+Requires-Python: >=3.9
 Description-Content-Type: text/x-rst
 License-File: LICENSE
-Requires-Dist: django>=3.2
+Requires-Dist: django>=4.2
 Provides-Extra: dev
 Requires-Dist: Jinja2>=2.8; extra == "dev"
+Dynamic: license-file
 
 Django Render Block
 ###################
@@ -58,9 +60,9 @@ Features
 Requirements
 ============
 
-Django Render Block supports Django 4.2, 5.0, and 5.1 on Python 3.8, 3.9, 3.10,
-3.11 and 3.12 (see the Django documentation for which versions of Python are
-supported by particular Django versions).
+Django Render Block supports Django 4.2, 5.1, and 5.2 on Python 3.9, 3.10, 3.11,
+3.12, and 3.13 (see the `Django documentation <https://docs.djangoproject.com/en/dev/faq/install/#what-python-version-can-i-use-with-django>`_
+for which versions of Python are supported by particular Django versions).
 
 Examples
 ========
@@ -106,7 +108,7 @@ And from Python:
 API Reference
 =============
 
-The API is simple and attempts to mirror the built-in ``render_to_string`` API.
+The API is simple and attempts to mirror the built-in ``render_to_string`` and ``render`` API.
 
 ``render_block_to_string(template_name, block_name, context=None, request=None)``
 
@@ -129,6 +131,34 @@ The API is simple and attempts to mirror the built-in ``render_to_string`` API.
 
         ``request`` is optional and works only for Django templates. If both context and request
         are provided, a ``RequestContext`` will be used instead of a ``Context``.
+
+Similarly there is a ``render_block`` function which returns an `HttpResponse` with
+the content sent to the result of ``render_block_to_string`` with the same parameters.
+
+``render_block(request, template_name, block_name, context=None, content_type="text/html", status=200)``
+
+    ``request``
+        The request object used to render the template.
+
+    ``template_name``
+        The name of the template to load and render. If it’s a list of template
+        names, Django uses ``select_template()`` instead of ``get_template()``
+        to find the template.
+
+    ``block_name``
+        The name of the block to render from the above template.
+
+    ``context``
+        A ``dict`` to be used as the template’s context for rendering. A ``Context``
+        object can be provided for Django templates.
+
+        ``context`` is optional. If not provided, an empty context will be used.
+
+    ``content_type``
+        A ``str`` content type for the HTTP response.
+
+    ``status``
+        An ``int`` HTTP status code for the HTTP response.
 
 Exceptions
 ----------
@@ -176,6 +206,34 @@ This is based on a few sources:
 
 Changelog
 #########
+
+0.11 (May 12, 2025)
+===================
+
+Improvements
+------------
+
+* Add a new ``render_block`` function which returns a `HttpResponse` with the content
+  set to the result of calling ``render_block_to_string()``. Contributed by
+  `@gogognome <https://github.com/gogognome>`_. (`#60 <https://github.com/clokep/django-render-block/pull/60>`_)
+
+Bugfixes
+--------
+
+* Fix incorrect type hints. Contributed by `@ma11011s <https://github.com/ma11011s>`_. (`#58 <https://github.com/clokep/django-render-block/pull/58>`_)
+
+Maintenance
+-----------
+
+* Include tests in sdist distribution. Contributed by `@Natureshadow <https://github.com/Natureshadow>`_)
+  (`#30 <https://github.com/clokep/django-render-block/pull/30>`_)
+* Update linters and switch to ruff. (`#64 <https://github.com/clokep/django-render-block/pull/64>`_)
+* Support Python 3.13. (`#62 <https://github.com/clokep/django-render-block/pull/62>`_)
+* Drop support for Python 3.8. (`#62 <https://github.com/clokep/django-render-block/pull/62>`_,
+  `#65 <https://github.com/clokep/django-render-block/pull/65>`_)
+* Support Django 5.2. (`#62 <https://github.com/clokep/django-render-block/pull/62>`_)
+* Drop support for Django 5.0. (`#62 <https://github.com/clokep/django-render-block/pull/62>`_,
+  `#65 <https://github.com/clokep/django-render-block/pull/65>`_)
 
 0.10 (July 15, 2024)
 ====================

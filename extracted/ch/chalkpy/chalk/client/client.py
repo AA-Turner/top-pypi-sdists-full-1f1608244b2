@@ -34,7 +34,7 @@ if TYPE_CHECKING:
 
     import pandas as pd
     import polars as pl
-    import pydantic
+    from pydantic import BaseModel
 
     QueryInput = Mapping[FeatureReference, Any] | pd.DataFrame | pl.DataFrame | DataFrame
 
@@ -1885,7 +1885,7 @@ class ChalkClient:
         num_messages: int | None = None,
         message_filepath: str | None = None,
         message_keys: list[str | None] | None = None,
-        message_bodies: list[str | bytes | pydantic.BaseModel] | None = None,
+        message_bodies: "list[str | bytes | BaseModel] | None" = None,
         message_timestamps: list[str | datetime] | None = None,
         branch: BranchId | ellipsis = ...,
         environment: EnvironmentId | None = None,
@@ -1944,7 +1944,7 @@ class ChalkClient:
         >>> from chalk.streams import stream, KafkaSource
         >>> from chalk.client import ChalkClient
         >>> from chalk.features import Features, features
-        >>> import pydantic
+        >>> from pydantic import BaseModel
         >>> # This code is an example of a simple streaming feature setup. Define the source
         >>> stream_source=KafkaSource(...)
         >>> # Define the features
@@ -1954,7 +1954,7 @@ class ChalkClient:
         >>>     user_id: str
         >>>     card_id: str
         >>> # Define the streaming message model
-        >>> class StreamingMessage(pydantic.BaseModel):
+        >>> class StreamingMessage(BaseModel):
         >>>     card_id: str
         >>>     user_id: str
         >>> # Define the mapping resolver

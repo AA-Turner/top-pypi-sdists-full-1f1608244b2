@@ -64,11 +64,6 @@ if TYPE_CHECKING:
     from pydantic import BaseModel
 
     from chalk.features.feature_set import Features
-else:
-    try:
-        from pydantic.v1 import BaseModel
-    except ImportError:
-        from pydantic import BaseModel
 
 TIntStr = TypeVar("TIntStr", int, str)
 DataFrameGetOptions = TypeVar("DataFrameGetOptions", bool, Filter, Underscore, FeatureWrapper, Feature, str)
@@ -232,7 +227,7 @@ class DataFrameMeta(type):
         namespaces = (x for x in namespaces if not x.startswith("__chalk__"))
         return get_unique_item(namespaces, f"dataframe {cls.__name__} column namespaces")
 
-    def _parse_underscore(self, exp: Underscore, pydantic_model: Optional[BaseModel] = None) -> Any:
+    def _parse_underscore(self, exp: Underscore, pydantic_model: "Optional[BaseModel]" = None) -> Any:
         if pydantic_model:
             context = self
             is_pydantic = True
@@ -255,7 +250,7 @@ class DataFrame(metaclass=DataFrameMeta):
     __columns__: ClassVar[Tuple[Feature, ...]] = ()
     references_feature_set: Optional[Type[Features]]  # set via a @property on the metaclass
     __references_feature_set__: ClassVar[Optional[Type[Features]]] = None
-    __pydantic_model__: ClassVar[Optional[Type[BaseModel]]] = None
+    __pydantic_model__: "ClassVar[Optional[Type[BaseModel]]]" = None
     __limit__: int | None = None
     """The maximum number of rows to return"""
 
@@ -284,7 +279,7 @@ class DataFrame(metaclass=DataFrameMeta):
         # in which case the data types should no longer be converted.
         # This is an undocumented parameter, so it does not appear in the docstring
         convert_dtypes: bool = True,
-        pydantic_model: Optional[Type[BaseModel]] = None,
+        pydantic_model: "Optional[Type[BaseModel]]" = None,
         verify_validity: bool = True,
     ):
         """Construct a Chalk `DataFrame`.

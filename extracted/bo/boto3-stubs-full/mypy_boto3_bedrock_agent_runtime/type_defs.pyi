@@ -401,9 +401,6 @@ ParameterTypeDef = TypedDict(
     },
 )
 
-class ActionGroupInvocationOutputTypeDef(TypedDict):
-    text: NotRequired[str]
-
 class AnalyzePromptEventTypeDef(TypedDict):
     message: NotRequired[str]
 
@@ -434,12 +431,6 @@ class CallerTypeDef(TypedDict):
 
 class CodeInterpreterInvocationInputTypeDef(TypedDict):
     code: NotRequired[str]
-    files: NotRequired[List[str]]
-
-class CodeInterpreterInvocationOutputTypeDef(TypedDict):
-    executionError: NotRequired[str]
-    executionOutput: NotRequired[str]
-    executionTimeout: NotRequired[bool]
     files: NotRequired[List[str]]
 
 class CollaboratorConfigurationTypeDef(TypedDict):
@@ -511,10 +502,6 @@ class GuardrailConfigurationTypeDef(TypedDict):
 class PromptTemplateTypeDef(TypedDict):
     textPromptTemplate: NotRequired[str]
 
-class FailureTraceTypeDef(TypedDict):
-    failureReason: NotRequired[str]
-    traceId: NotRequired[str]
-
 class FieldForRerankingTypeDef(TypedDict):
     fieldName: str
 
@@ -533,9 +520,6 @@ class S3ObjectFileTypeDef(TypedDict):
 class FilterAttributeTypeDef(TypedDict):
     key: str
     value: Mapping[str, Any]
-
-class FinalResponseTypeDef(TypedDict):
-    text: NotRequired[str]
 
 class FlowCompletionEventTypeDef(TypedDict):
     completionReason: FlowCompletionReasonType
@@ -1181,6 +1165,11 @@ class MemoryTypeDef(TypedDict):
     sessionSummary: NotRequired[MemorySessionSummaryTypeDef]
 
 class MetadataTypeDef(TypedDict):
+    clientRequestId: NotRequired[str]
+    endTime: NotRequired[datetime]
+    operationTotalTimeMs: NotRequired[int]
+    startTime: NotRequired[datetime]
+    totalTimeMs: NotRequired[int]
     usage: NotRequired[UsageTypeDef]
 
 class ReasoningContentBlockTypeDef(TypedDict):
@@ -1379,6 +1368,27 @@ class GetAgentMemoryResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
     nextToken: NotRequired[str]
 
+class ActionGroupInvocationOutputTypeDef(TypedDict):
+    metadata: NotRequired[MetadataTypeDef]
+    text: NotRequired[str]
+
+class CodeInterpreterInvocationOutputTypeDef(TypedDict):
+    executionError: NotRequired[str]
+    executionOutput: NotRequired[str]
+    executionTimeout: NotRequired[bool]
+    files: NotRequired[List[str]]
+    metadata: NotRequired[MetadataTypeDef]
+
+class FailureTraceTypeDef(TypedDict):
+    failureCode: NotRequired[int]
+    failureReason: NotRequired[str]
+    metadata: NotRequired[MetadataTypeDef]
+    traceId: NotRequired[str]
+
+class FinalResponseTypeDef(TypedDict):
+    metadata: NotRequired[MetadataTypeDef]
+    text: NotRequired[str]
+
 class RoutingClassifierModelInvocationOutputTypeDef(TypedDict):
     metadata: NotRequired[MetadataTypeDef]
     rawResponse: NotRequired[RawResponseTypeDef]
@@ -1475,6 +1485,7 @@ class AgentActionGroupTypeDef(TypedDict):
 class GuardrailTraceTypeDef(TypedDict):
     action: NotRequired[GuardrailActionType]
     inputAssessments: NotRequired[List[GuardrailAssessmentTypeDef]]
+    metadata: NotRequired[MetadataTypeDef]
     outputAssessments: NotRequired[List[GuardrailAssessmentTypeDef]]
     traceId: NotRequired[str]
 
@@ -1551,6 +1562,7 @@ class RetrieveResponseTypeDef(TypedDict):
     nextToken: NotRequired[str]
 
 class KnowledgeBaseLookupOutputTypeDef(TypedDict):
+    metadata: NotRequired[MetadataTypeDef]
     retrievedReferences: NotRequired[List[RetrievedReferenceTypeDef]]
 
 class CitationTypeDef(TypedDict):
@@ -1760,6 +1772,7 @@ class RetrieveAndGenerateStreamResponseTypeDef(TypedDict):
 class AgentCollaboratorInvocationOutputTypeDef(TypedDict):
     agentCollaboratorAliasArn: NotRequired[str]
     agentCollaboratorName: NotRequired[str]
+    metadata: NotRequired[MetadataTypeDef]
     output: NotRequired[AgentCollaboratorOutputPayloadTypeDef]
 
 class ApiResultTypeDef(TypedDict):

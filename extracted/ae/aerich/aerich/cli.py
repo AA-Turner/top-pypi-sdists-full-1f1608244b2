@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import sys
 from pathlib import Path
 from typing import cast
 
@@ -9,22 +8,31 @@ import asyncclick as click
 from asyncclick import Context, UsageError
 
 from aerich import Command
+from aerich._compat import imports_tomlkit, tomllib
 from aerich.enums import Color
 from aerich.exceptions import DowngradeError
 from aerich.utils import add_src_path, get_tortoise_config
 from aerich.version import __version__
 
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    try:
-        import tomli as tomllib
-    except ImportError:
-        import tomlkit as tomllib  # type: ignore
-
 CONFIG_DEFAULT_VALUES = {
     "src_folder": ".",
 }
+
+
+def _patch_context_to_close_tortoise_connections_when_exit() -> None:
+    from tortoise import Tortoise, connections
+
+    origin_aexit = Context.__aexit__
+
+    async def aexit(*args, **kw) -> None:
+        await origin_aexit(*args, **kw)
+        if Tortoise._inited:
+            await connections.close_all()
+
+    Context.__aexit__ = aexit  # type:ignore[method-assign]
+
+
+_patch_context_to_close_tortoise_connections_when_exit()
 
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
@@ -66,7 +74,7 @@ async def cli(ctx: Context, config, app) -> None:
             try:
                 apps_config = cast(dict, tortoise_config["apps"])
             except KeyError:
-                raise UsageError('Config must define "apps" section')
+                raise UsageError('Config must define "apps" section') from None
             app = list(apps_config.keys())[0]
         command = Command(tortoise_config=tortoise_config, app=app, location=location)
         ctx.obj["command"] = command
@@ -81,10 +89,16 @@ async def cli(ctx: Context, config, app) -> None:
 @cli.command(help="Generate a migration file for the current state of the models.")
 @click.option("--name", default="update", show_default=True, help="Migration name.")
 @click.option("--empty", default=False, is_flag=True, help="Generate an empty migration file.")
+@click.option("--no-input", default=False, is_flag=True, help="Do not ask for prompt.")
 @click.pass_context
-async def migrate(ctx: Context, name, empty) -> None:
+async def migrate(ctx: Context, name, empty, no_input) -> None:
     command = ctx.obj["command"]
-    ret = await command.migrate(name, empty)
+    ret = await command.migrate(name, empty, no_input)
+    if ret is None:
+        return click.secho(
+            "Aborted! You may need to run `aerich heads` to list avaliable unapplied migrations.",
+            fg=Color.yellow,
+        )
     if not ret:
         return click.secho("No changes detected", fg=Color.yellow)
     click.secho(f"Success creating migration file {ret}", fg=Color.green)
@@ -183,10 +197,7 @@ async def history(ctx: Context) -> None:
 
 
 def _write_config(config_path, doc, table) -> None:
-    try:
-        import tomli_w as tomlkit
-    except ImportError:
-        import tomlkit  # type: ignore
+    tomlkit = imports_tomlkit()
 
     try:
         doc["tool"]["aerich"] = table

@@ -586,7 +586,7 @@ class LicenseManagerClient(BaseClient):
         self, **kwargs: Unpack[ListTagsForResourceRequestTypeDef]
     ) -> ListTagsForResourceResponseTypeDef:
         """
-        Lists the tags for the specified license configuration.
+        Lists the tags for the specified resource.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/license-manager/client/list_tags_for_resource.html)
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_license_manager/client/#list_tags_for_resource)
@@ -623,7 +623,7 @@ class LicenseManagerClient(BaseClient):
 
     def tag_resource(self, **kwargs: Unpack[TagResourceRequestTypeDef]) -> Dict[str, Any]:
         """
-        Adds the specified tags to the specified license configuration.
+        Adds the specified tags to the specified resource.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/license-manager/client/tag_resource.html)
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_license_manager/client/#tag_resource)
@@ -631,7 +631,7 @@ class LicenseManagerClient(BaseClient):
 
     def untag_resource(self, **kwargs: Unpack[UntagResourceRequestTypeDef]) -> Dict[str, Any]:
         """
-        Removes the specified tags from the specified license configuration.
+        Removes the specified tags from the specified resource.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/license-manager/client/untag_resource.html)
         [Show boto3-stubs documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_license_manager/client/#untag_resource)

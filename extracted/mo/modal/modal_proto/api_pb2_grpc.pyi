@@ -588,6 +588,10 @@ class ModalClientStub:
         modal_proto.api_pb2.VolumeCopyFilesRequest,
         google.protobuf.empty_pb2.Empty,
     ]
+    VolumeCopyFiles2: grpc.UnaryUnaryMultiCallable[
+        modal_proto.api_pb2.VolumeCopyFiles2Request,
+        google.protobuf.empty_pb2.Empty,
+    ]
     VolumeDelete: grpc.UnaryUnaryMultiCallable[
         modal_proto.api_pb2.VolumeDeleteRequest,
         google.protobuf.empty_pb2.Empty,
@@ -1493,6 +1497,12 @@ class ModalClientServicer(metaclass=abc.ABCMeta):
     def VolumeCopyFiles(
         self,
         request: modal_proto.api_pb2.VolumeCopyFilesRequest,
+        context: grpc.ServicerContext,
+    ) -> google.protobuf.empty_pb2.Empty: ...
+    @abc.abstractmethod
+    def VolumeCopyFiles2(
+        self,
+        request: modal_proto.api_pb2.VolumeCopyFiles2Request,
         context: grpc.ServicerContext,
     ) -> google.protobuf.empty_pb2.Empty: ...
     @abc.abstractmethod

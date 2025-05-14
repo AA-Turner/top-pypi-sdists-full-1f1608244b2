@@ -1,7 +1,7 @@
 r'''
 # `archive_file`
 
-Refer to the Terraform Registry for docs: [`archive_file`](https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file).
+Refer to the Terraform Registry for docs: [`archive_file`](https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class File(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-archive.file.File",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file archive_file}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file archive_file}.'''
 
     def __init__(
         self,
@@ -69,20 +69,20 @@ class File(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file archive_file} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file archive_file} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param output_path: The output of the archive file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#output_path File#output_path}
-        :param type: The type of archive to generate. NOTE: ``zip`` and ``tar.gz`` is supported. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#type File#type}
-        :param excludes: Specify files/directories to ignore when reading the ``source_dir``. Supports glob file matching patterns including doublestar/globstar (``**``) patterns. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#excludes File#excludes}
-        :param exclude_symlink_directories: Boolean flag indicating whether symbolically linked directories should be excluded during the creation of the archive. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#exclude_symlink_directories File#exclude_symlink_directories}
-        :param output_file_mode: String that specifies the octal file mode for all archived files. For example: ``"0666"``. Setting this will ensure that cross platform usage of this module will not vary the modes of archived files (and ultimately checksums) resulting in more deterministic behavior. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#output_file_mode File#output_file_mode}
-        :param source: source block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source File#source}
-        :param source_content: Add only this content to the archive with ``source_content_filename`` as the filename. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source_content File#source_content}
-        :param source_content_filename: Set this as the filename when using ``source_content``. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source_content_filename File#source_content_filename}
-        :param source_dir: Package entire contents of this directory into the archive. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source_dir File#source_dir}
-        :param source_file: Package this file into the archive. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source_file File#source_file}
+        :param output_path: The output of the archive file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#output_path File#output_path}
+        :param type: The type of archive to generate. NOTE: ``zip`` and ``tar.gz`` is supported. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#type File#type}
+        :param excludes: Specify files/directories to ignore when reading the ``source_dir``. Supports glob file matching patterns including doublestar/globstar (``**``) patterns. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#excludes File#excludes}
+        :param exclude_symlink_directories: Boolean flag indicating whether symbolically linked directories should be excluded during the creation of the archive. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#exclude_symlink_directories File#exclude_symlink_directories}
+        :param output_file_mode: String that specifies the octal file mode for all archived files. For example: ``"0666"``. Setting this will ensure that cross platform usage of this module will not vary the modes of archived files (and ultimately checksums) resulting in more deterministic behavior. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#output_file_mode File#output_file_mode}
+        :param source: source block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source File#source}
+        :param source_content: Add only this content to the archive with ``source_content_filename`` as the filename. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source_content File#source_content}
+        :param source_content_filename: Set this as the filename when using ``source_content``. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source_content_filename File#source_content_filename}
+        :param source_dir: Package entire contents of this directory into the archive. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source_dir File#source_dir}
+        :param source_file: Package this file into the archive. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source_file File#source_file}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -130,7 +130,7 @@ class File(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the File to import.
-        :param import_from_id: The id of the existing File that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing File that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the File to import is found.
         '''
         if __debug__:
@@ -465,16 +465,16 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param output_path: The output of the archive file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#output_path File#output_path}
-        :param type: The type of archive to generate. NOTE: ``zip`` and ``tar.gz`` is supported. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#type File#type}
-        :param excludes: Specify files/directories to ignore when reading the ``source_dir``. Supports glob file matching patterns including doublestar/globstar (``**``) patterns. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#excludes File#excludes}
-        :param exclude_symlink_directories: Boolean flag indicating whether symbolically linked directories should be excluded during the creation of the archive. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#exclude_symlink_directories File#exclude_symlink_directories}
-        :param output_file_mode: String that specifies the octal file mode for all archived files. For example: ``"0666"``. Setting this will ensure that cross platform usage of this module will not vary the modes of archived files (and ultimately checksums) resulting in more deterministic behavior. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#output_file_mode File#output_file_mode}
-        :param source: source block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source File#source}
-        :param source_content: Add only this content to the archive with ``source_content_filename`` as the filename. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source_content File#source_content}
-        :param source_content_filename: Set this as the filename when using ``source_content``. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source_content_filename File#source_content_filename}
-        :param source_dir: Package entire contents of this directory into the archive. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source_dir File#source_dir}
-        :param source_file: Package this file into the archive. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source_file File#source_file}
+        :param output_path: The output of the archive file. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#output_path File#output_path}
+        :param type: The type of archive to generate. NOTE: ``zip`` and ``tar.gz`` is supported. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#type File#type}
+        :param excludes: Specify files/directories to ignore when reading the ``source_dir``. Supports glob file matching patterns including doublestar/globstar (``**``) patterns. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#excludes File#excludes}
+        :param exclude_symlink_directories: Boolean flag indicating whether symbolically linked directories should be excluded during the creation of the archive. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#exclude_symlink_directories File#exclude_symlink_directories}
+        :param output_file_mode: String that specifies the octal file mode for all archived files. For example: ``"0666"``. Setting this will ensure that cross platform usage of this module will not vary the modes of archived files (and ultimately checksums) resulting in more deterministic behavior. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#output_file_mode File#output_file_mode}
+        :param source: source block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source File#source}
+        :param source_content: Add only this content to the archive with ``source_content_filename`` as the filename. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source_content File#source_content}
+        :param source_content_filename: Set this as the filename when using ``source_content``. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source_content_filename File#source_content_filename}
+        :param source_dir: Package entire contents of this directory into the archive. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source_dir File#source_dir}
+        :param source_file: Package this file into the archive. One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source_file File#source_file}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -600,7 +600,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def output_path(self) -> builtins.str:
         '''The output of the archive file.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#output_path File#output_path}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#output_path File#output_path}
         '''
         result = self._values.get("output_path")
         assert result is not None, "Required property 'output_path' is missing"
@@ -610,7 +610,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> builtins.str:
         '''The type of archive to generate. NOTE: ``zip`` and ``tar.gz`` is supported.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#type File#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#type File#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -620,7 +620,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def excludes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specify files/directories to ignore when reading the ``source_dir``. Supports glob file matching patterns including doublestar/globstar (``**``) patterns.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#excludes File#excludes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#excludes File#excludes}
         '''
         result = self._values.get("excludes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -631,7 +631,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Boolean flag indicating whether symbolically linked directories should be excluded during the creation of the archive. Defaults to ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#exclude_symlink_directories File#exclude_symlink_directories}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#exclude_symlink_directories File#exclude_symlink_directories}
         '''
         result = self._values.get("exclude_symlink_directories")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -642,7 +642,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         For example: ``"0666"``. Setting this will ensure that cross platform usage of this module will not vary the modes of archived files (and ultimately checksums) resulting in more deterministic behavior.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#output_file_mode File#output_file_mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#output_file_mode File#output_file_mode}
         '''
         result = self._values.get("output_file_mode")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -653,7 +653,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FileSource"]]]:
         '''source block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source File#source}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source File#source}
         '''
         result = self._values.get("source")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FileSource"]]], result)
@@ -664,7 +664,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source_content File#source_content}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source_content File#source_content}
         '''
         result = self._values.get("source_content")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -675,7 +675,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source_content_filename File#source_content_filename}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source_content_filename File#source_content_filename}
         '''
         result = self._values.get("source_content_filename")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -686,7 +686,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source_dir File#source_dir}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source_dir File#source_dir}
         '''
         result = self._values.get("source_dir")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -697,7 +697,7 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         One and only one of ``source``, ``source_content_filename`` (with ``source_content``), ``source_file``, or ``source_dir`` must be specified.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#source_file File#source_file}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#source_file File#source_file}
         '''
         result = self._values.get("source_file")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -722,8 +722,8 @@ class FileConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 class FileSource:
     def __init__(self, *, content: builtins.str, filename: builtins.str) -> None:
         '''
-        :param content: Add this content to the archive with ``filename`` as the filename. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#content File#content}
-        :param filename: Set this as the filename when declaring a ``source``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#filename File#filename}
+        :param content: Add this content to the archive with ``filename`` as the filename. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#content File#content}
+        :param filename: Set this as the filename when declaring a ``source``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#filename File#filename}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__b11194e55a06bbf9bdba900600d77ae8dc999b8147683c454f2452321f3945f3)
@@ -738,7 +738,7 @@ class FileSource:
     def content(self) -> builtins.str:
         '''Add this content to the archive with ``filename`` as the filename.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#content File#content}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#content File#content}
         '''
         result = self._values.get("content")
         assert result is not None, "Required property 'content' is missing"
@@ -748,7 +748,7 @@ class FileSource:
     def filename(self) -> builtins.str:
         '''Set this as the filename when declaring a ``source``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs/resources/file#filename File#filename}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs/resources/file#filename File#filename}
         '''
         result = self._values.get("filename")
         assert result is not None, "Required property 'filename' is missing"

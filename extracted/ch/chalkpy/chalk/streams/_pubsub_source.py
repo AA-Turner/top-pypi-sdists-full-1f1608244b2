@@ -8,10 +8,8 @@ if TYPE_CHECKING:
     from pydantic import BaseModel
 else:
     try:
-        import pydantic.v1 as pydantic
         from pydantic.v1 import BaseModel
     except ImportError:
-        import pydantic
         from pydantic import BaseModel
 
 _PUBSUB_PROJECT_ID_NAME = "PUBSUB_PROJECT_ID"

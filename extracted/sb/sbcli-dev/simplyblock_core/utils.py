@@ -13,7 +13,7 @@ import uuid
 import time
 import psutil
 from typing import Set, Union
-
+from kubernetes import client, config
 import docker
 from prettytable import PrettyTable
 from graypy import GELFTCPHandler
@@ -415,6 +415,7 @@ def calculate_core_allocations(vcpu_list, alceml_count=2):
     if (len(vcpu_list) < 12):
         vcpu = reserve_n(1)
         assigned["jm_cpu_core"] = vcpu
+        vcpu = reserve_n(1)
         assigned["jc_singleton_core"] = vcpu
         assigned["alceml_worker_cpu_cores"] = vcpu
         vcpu = reserve_n(1)
@@ -422,6 +423,7 @@ def calculate_core_allocations(vcpu_list, alceml_count=2):
     elif (len(vcpu_list) < 22):
         vcpu = reserve_n(1)
         assigned["jm_cpu_core"] = vcpu
+        vcpu = reserve_n(1)
         assigned["jc_singleton_core"] = vcpu
         vcpus = reserve_n(1)
         assigned["alceml_worker_cpu_cores"] = vcpus
@@ -579,7 +581,7 @@ def decimal_to_hex_power_of_2(decimal_number):
 def get_logger(name=""):
     # first configure a root logger
     logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
-    logg = logging.getLogger(f"root")
+    logg = logging.getLogger()
 
     log_level = os.getenv("SIMPLYBLOCK_LOG_LEVEL")
     log_level = log_level.upper() if log_level else constants.LOG_LEVEL
@@ -594,8 +596,8 @@ def get_logger(name=""):
         logger_handler = logging.StreamHandler(stream=sys.stdout)
         logger_handler.setFormatter(logging.Formatter('%(asctime)s: %(levelname)s: %(message)s'))
         logg.addHandler(logger_handler)
-        gelf_handler = GELFTCPHandler('0.0.0.0', constants.GELF_PORT)
-        logg.addHandler(gelf_handler)
+        # gelf_handler = GELFTCPHandler('0.0.0.0', constants.GELF_PORT)
+        # logg.addHandler(gelf_handler)
 
     if name:
         logg = logging.getLogger(f"root.{name}")
@@ -907,7 +909,12 @@ def load_core_distribution_from_file(file_path, number_of_cores):
 
 def store_config_file(data_config, file_path, create_read_only_file=False):
     # Ensure the directory exists
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    subprocess.run(
+        ["sudo", "mkdir", "-p", os.path.dirname(file_path)],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+        check=True)
+
     cores_config_json = json.dumps(data_config, indent=4)
 
     # Write the dictionary to the JSON file
@@ -1714,3 +1721,12 @@ def validate_config(config, upgrade=False):
     if upgrade:
         return True
     return all_isolated_cores
+
+
+def get_k8s_apps_client():
+    config.load_incluster_config()
+    return client.AppsV1Api()
+
+def get_k8s_core_client():
+    config.load_incluster_config()
+    return client.CoreV1Api()

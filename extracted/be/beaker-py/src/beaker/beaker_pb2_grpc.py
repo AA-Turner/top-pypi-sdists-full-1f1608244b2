@@ -396,6 +396,11 @@ class BeakerStub(object):
                 request_serializer=beaker__pb2.GetQueueRequest.SerializeToString,
                 response_deserializer=beaker__pb2.GetQueueResponse.FromString,
                 _registered_method=True)
+        self.ResolveQueueName = channel.unary_unary(
+                '/allenai.beaker.Beaker/ResolveQueueName',
+                request_serializer=beaker__pb2.ResolveQueueNameRequest.SerializeToString,
+                response_deserializer=beaker__pb2.ResolveQueueNameResponse.FromString,
+                _registered_method=True)
         self.ListQueues = channel.unary_unary(
                 '/allenai.beaker.Beaker/ListQueues',
                 request_serializer=beaker__pb2.ListQueuesRequest.SerializeToString,
@@ -875,6 +880,12 @@ class BeakerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ResolveQueueName(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def ListQueues(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -1285,6 +1296,11 @@ def add_BeakerServicer_to_server(servicer, server):
                     servicer.GetQueue,
                     request_deserializer=beaker__pb2.GetQueueRequest.FromString,
                     response_serializer=beaker__pb2.GetQueueResponse.SerializeToString,
+            ),
+            'ResolveQueueName': grpc.unary_unary_rpc_method_handler(
+                    servicer.ResolveQueueName,
+                    request_deserializer=beaker__pb2.ResolveQueueNameRequest.FromString,
+                    response_serializer=beaker__pb2.ResolveQueueNameResponse.SerializeToString,
             ),
             'ListQueues': grpc.unary_unary_rpc_method_handler(
                     servicer.ListQueues,
@@ -3273,6 +3289,33 @@ class Beaker(object):
             '/allenai.beaker.Beaker/GetQueue',
             beaker__pb2.GetQueueRequest.SerializeToString,
             beaker__pb2.GetQueueResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ResolveQueueName(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/allenai.beaker.Beaker/ResolveQueueName',
+            beaker__pb2.ResolveQueueNameRequest.SerializeToString,
+            beaker__pb2.ResolveQueueNameResponse.FromString,
             options,
             channel_credentials,
             insecure,

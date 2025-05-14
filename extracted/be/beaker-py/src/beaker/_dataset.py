@@ -359,15 +359,7 @@ class DatasetClient(ServiceClient):
         chunk_size: int | None = None,
         validate_checksum: bool = True,
     ) -> Generator[bytes, None, None]:
-        prefix = os.path.dirname(file_path)
-        file: pb2.DatasetFile | None = None
-        for f in self.list_files(dataset, prefix=prefix):
-            if f.path == file_path:
-                file = f
-                break
-        else:
-            raise FileNotFoundError(file_path)
-
+        file = self.get_file_info(dataset, file_path)
         yield from self._stream_file(
             dataset,
             file,
@@ -447,6 +439,13 @@ class DatasetClient(ServiceClient):
             ),
         ):
             yield from response.dataset_files
+
+    def get_file_info(self, dataset: pb2.Dataset, file_path: str) -> pb2.DatasetFile:
+        prefix = os.path.dirname(file_path)
+        for f in self.list_files(dataset, prefix=prefix):
+            if f.path == file_path:
+                return f
+        raise FileNotFoundError(file_path)
 
     def get_file_link(self, dataset: pb2.Dataset, file_path: str) -> str:
         return self.rpc_request(

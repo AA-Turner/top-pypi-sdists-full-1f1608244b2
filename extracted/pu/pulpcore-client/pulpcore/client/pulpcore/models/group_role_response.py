@@ -33,11 +33,12 @@ class GroupRoleResponse(BaseModel):
     pulp_created: Optional[datetime] = Field(default=None, description="Timestamp of creation.")
     pulp_last_updated: Optional[datetime] = Field(default=None, description="Timestamp of the last time this resource was updated. Note: for immutable resources - like content, repository versions, and publication - pulp_created and pulp_last_updated dates will be the same.")
     role: StrictStr
-    content_object: Optional[StrictStr] = Field(description="pulp_href of the object for which role permissions should be asserted. If set to 'null', permissions will act on the model-level.")
+    content_object: Optional[StrictStr] = Field(default=None, description="pulp_href of the object for which role permissions should be asserted. If set to 'null', permissions will act on the model-level.")
+    content_object_prn: Optional[StrictStr] = Field(default=None, description="prn of the object for which role permissions should be asserted. If set to 'null', permissions will act on either domain or model-level.")
     description: Optional[StrictStr] = None
     permissions: Optional[List[StrictStr]] = None
     domain: Optional[StrictStr] = Field(default=None, description="Domain this role should be applied on, mutually exclusive with content_object.")
-    __properties: ClassVar[List[str]] = ["pulp_href", "prn", "pulp_created", "pulp_last_updated", "role", "content_object", "description", "permissions", "domain"]
+    __properties: ClassVar[List[str]] = ["pulp_href", "prn", "pulp_created", "pulp_last_updated", "role", "content_object", "content_object_prn", "description", "permissions", "domain"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -95,6 +96,11 @@ class GroupRoleResponse(BaseModel):
         if self.content_object is None and "content_object" in self.model_fields_set:
             _dict['content_object'] = None
 
+        # set to None if content_object_prn (nullable) is None
+        # and model_fields_set contains the field
+        if self.content_object_prn is None and "content_object_prn" in self.model_fields_set:
+            _dict['content_object_prn'] = None
+
         # set to None if domain (nullable) is None
         # and model_fields_set contains the field
         if self.domain is None and "domain" in self.model_fields_set:
@@ -118,6 +124,7 @@ class GroupRoleResponse(BaseModel):
             "pulp_last_updated": obj.get("pulp_last_updated"),
             "role": obj.get("role"),
             "content_object": obj.get("content_object"),
+            "content_object_prn": obj.get("content_object_prn"),
             "description": obj.get("description"),
             "permissions": obj.get("permissions"),
             "domain": obj.get("domain")

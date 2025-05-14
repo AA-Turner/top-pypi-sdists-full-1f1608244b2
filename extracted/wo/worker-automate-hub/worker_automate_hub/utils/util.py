@@ -3832,12 +3832,12 @@ async def nf_busca_nf_saida_mais_recente() -> RpaRetornoProcessoDTO:
 
             send_keys('%n')
 
-            await worker_sleep(5)
-            return RpaRetornoProcessoDTO(
-                sucesso=True,
-                retorno=f"Processo Executado com Sucesso",
-                status=RpaHistoricoStatusEnum.Sucesso,
-            )
+        await worker_sleep(5)
+        return RpaRetornoProcessoDTO(
+            sucesso=True,
+            retorno=f"Processo Executado com Sucesso",
+            status=RpaHistoricoStatusEnum.Sucesso,
+        )
         
     except Exception as e:
         return RpaRetornoProcessoDTO(

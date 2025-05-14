@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ccxt
-Version: 4.4.80
+Version: 4.4.82
 Summary: A JavaScript / TypeScript / Python / C# / PHP cryptocurrency trading library with support for 100+ exchanges
 Home-page: https://ccxt.com
 Author: Igor Kroitor
@@ -56,8 +56,6 @@ Current feature list:
 - an out of the box unified API that is extremely easy to integrate
 - works in Node 10.4+, Python 3, PHP 8.1+, netstandard2.0/2.1, Go 1.20+ and web browsers
 
-
-## Sponsored Promotion
 
 ## See Also
 
@@ -262,13 +260,13 @@ console.log(version, Object.keys(exchanges));
 
 All-in-one browser bundle (dependencies included), served from a CDN of your choice:
 
-* jsDelivr: https://cdn.jsdelivr.net/npm/ccxt@4.4.80/dist/ccxt.browser.min.js
-* unpkg: https://unpkg.com/ccxt@4.4.80/dist/ccxt.browser.min.js
+* jsDelivr: https://cdn.jsdelivr.net/npm/ccxt@4.4.82/dist/ccxt.browser.min.js
+* unpkg: https://unpkg.com/ccxt@4.4.82/dist/ccxt.browser.min.js
 
 CDNs are not updated in real-time and may have delays. Defaulting to the most recent version without specifying the version number is not recommended. Please, keep in mind that we are not responsible for the correct operation of those CDN servers.
 
 ```HTML
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/ccxt@4.4.80/dist/ccxt.browser.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/ccxt@4.4.82/dist/ccxt.browser.min.js"></script>
 ```
 
 Creates a global `ccxt` object:

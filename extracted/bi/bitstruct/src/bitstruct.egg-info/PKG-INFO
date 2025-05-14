@@ -1,23 +1,23 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: bitstruct
-Version: 8.20.0
+Version: 8.21.0
 Summary: This module performs conversions between Python values and C bit field structs represented as Python byte strings.
 Author: Ilya Petukhov
 Author-email: Erik Moqvist <erik.moqvist@gmail.com>
-License: MIT
+License-Expression: MIT
 Project-URL: Documentation, https://bitstruct.readthedocs.io/en/latest/
 Project-URL: Issues, https://github.com/eerimoq/bitstruct/issues
 Project-URL: Source, https://github.com/eerimoq/bitstruct
 Project-URL: Homepage, https://github.com/eerimoq/bitstruct
 Keywords: bit field,bit parsing,bit unpack,bit pack
 Classifier: Development Status :: 5 - Production/Stable
-Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: Implementation :: CPython
-Requires-Python: >=3.7
+Requires-Python: >=3.9
 Description-Content-Type: text/x-rst
 License-File: LICENSE
+Dynamic: license-file
 
 About
 =====

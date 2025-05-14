@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: browser-use
-Version: 0.1.46
+Version: 0.1.47
 Summary: Make websites accessible for AI agents
 Project-URL: Repository, https://github.com/browser-use/browser-use
 Author: Gregor Zunic
@@ -10,7 +10,6 @@ Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
 Requires-Python: <4.0,>=3.11
 Requires-Dist: anyio>=4.9.0
-Requires-Dist: click>=8.1.8
 Requires-Dist: faiss-cpu>=1.9.0
 Requires-Dist: google-api-core>=2.24.0
 Requires-Dist: httpx>=0.27.2
@@ -32,10 +31,12 @@ Requires-Dist: pyobjc>=11.0; platform_system == 'darwin'
 Requires-Dist: pyperclip>=1.9.0
 Requires-Dist: python-dotenv>=1.0.1
 Requires-Dist: requests>=2.32.3
-Requires-Dist: rich>=14.0.0
 Requires-Dist: screeninfo>=0.8.1; platform_system != 'darwin'
-Requires-Dist: textual>=3.2.0
 Requires-Dist: typing-extensions>=4.12.2
+Provides-Extra: cli
+Requires-Dist: click>=8.1.8; extra == 'cli'
+Requires-Dist: rich>=14.0.0; extra == 'cli'
+Requires-Dist: textual>=3.2.0; extra == 'cli'
 Provides-Extra: examples
 Requires-Dist: botocore>=1.37.23; extra == 'examples'
 Provides-Extra: memory
@@ -86,11 +87,11 @@ playwright install chromium --with-deps --no-shell
 Spin up your agent:
 
 ```python
-from langchain_openai import ChatOpenAI
-from browser_use import Agent
 import asyncio
 from dotenv import load_dotenv
 load_dotenv()
+from browser_use import Agent
+from langchain_openai import ChatOpenAI
 
 async def main():
     agent = Agent(
@@ -109,7 +110,7 @@ OPENAI_API_KEY=
 ANTHROPIC_API_KEY=
 AZURE_OPENAI_ENDPOINT=
 AZURE_OPENAI_KEY=
-GEMINI_API_KEY=
+GOOGLE_API_KEY=
 DEEPSEEK_API_KEY=
 GROK_API_KEY=
 NOVITA_API_KEY=
@@ -123,10 +124,11 @@ You can test browser-use using its [Web UI](https://github.com/browser-use/web-u
 
 ### Test with an interactive CLI
 
-You can also use our interactive CLI (similar to `claude` code):
+You can also use our `browser-use` interactive CLI (similar to `claude` code):
 
 ```bash
-$ browser-use
+pip install browser-use[cli]
+browser-use
 ```
 
 # Demos
@@ -135,7 +137,7 @@ $ browser-use
 
 [Task](https://github.com/browser-use/browser-use/blob/main/examples/use-cases/shopping.py): Add grocery items to cart, and checkout.
 
-[![AI Did My Groceries](https://github.com/user-attachments/assets/d9359085-bde6-41d4-aa4e-6520d0221872)](https://www.youtube.com/watch?v=L2Ya9PYNns8)
+[![AI Did My Groceries](https://github.com/user-attachments/assets/a0ffd23d-9a11-4368-8893-b092703abc14)](https://www.youtube.com/watch?v=L2Ya9PYNns8)
 
 <br/><br/>
 

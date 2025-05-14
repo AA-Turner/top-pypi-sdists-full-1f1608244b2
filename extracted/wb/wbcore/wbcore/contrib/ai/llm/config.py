@@ -8,7 +8,7 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import BaseMessage
 from langchain_openai import ChatOpenAI
 
-from ..exceptions import APIStatusErrors
+from ..exceptions import APIStatusErrors, BadRequestErrors
 from .utils import run_llm
 
 logger = logging.getLogger("llm")
@@ -52,6 +52,8 @@ def invoke_as_task(
         if isinstance(result, BaseModel):
             for field, value in result.model_dump().items():
                 setattr(instance, field, value)
+    except BadRequestErrors:  # we silent bad request error because there is nothing we can do about it
+        pass
     except tuple(APIStatusErrors) as e:  # for APIStatusError, we let celery retry it
         raise e
     except Exception as e:  # otherwise we log the error and silently fail

@@ -26,6 +26,7 @@ from .literals import (
     ControlOperationStatusType,
     ControlOperationTypeType,
     DriftStatusType,
+    EnabledBaselineDriftStatusType,
     EnablementStatusType,
     LandingZoneDriftStatusType,
     LandingZoneOperationStatusType,
@@ -64,7 +65,10 @@ __all__ = (
     "EnableControlInputTypeDef",
     "EnableControlOutputTypeDef",
     "EnabledBaselineDetailsTypeDef",
+    "EnabledBaselineDriftStatusSummaryTypeDef",
+    "EnabledBaselineDriftTypesTypeDef",
     "EnabledBaselineFilterTypeDef",
+    "EnabledBaselineInheritanceDriftTypeDef",
     "EnabledBaselineParameterSummaryTypeDef",
     "EnabledBaselineParameterTypeDef",
     "EnabledBaselineSummaryTypeDef",
@@ -216,9 +220,14 @@ class EnablementStatusSummaryTypeDef(TypedDict):
     lastOperationIdentifier: NotRequired[str]
     status: NotRequired[EnablementStatusType]
 
+class EnabledBaselineInheritanceDriftTypeDef(TypedDict):
+    status: NotRequired[EnabledBaselineDriftStatusType]
+
 class EnabledBaselineFilterTypeDef(TypedDict):
     baselineIdentifiers: NotRequired[Sequence[str]]
+    inheritanceDriftStatuses: NotRequired[Sequence[EnabledBaselineDriftStatusType]]
     parentIdentifiers: NotRequired[Sequence[str]]
+    statuses: NotRequired[Sequence[EnablementStatusType]]
     targetIdentifiers: NotRequired[Sequence[str]]
 
 class EnabledControlParameterSummaryTypeDef(TypedDict):
@@ -429,29 +438,15 @@ class UpdateEnabledControlInputTypeDef(TypedDict):
     enabledControlIdentifier: str
     parameters: Sequence[EnabledControlParameterTypeDef]
 
-class EnabledBaselineDetailsTypeDef(TypedDict):
-    arn: str
-    baselineIdentifier: str
-    statusSummary: EnablementStatusSummaryTypeDef
-    targetIdentifier: str
-    baselineVersion: NotRequired[str]
-    parameters: NotRequired[List[EnabledBaselineParameterSummaryTypeDef]]
-    parentIdentifier: NotRequired[str]
-
-class EnabledBaselineSummaryTypeDef(TypedDict):
-    arn: str
-    baselineIdentifier: str
-    statusSummary: EnablementStatusSummaryTypeDef
-    targetIdentifier: str
-    baselineVersion: NotRequired[str]
-    parentIdentifier: NotRequired[str]
-
 class EnabledControlSummaryTypeDef(TypedDict):
     arn: NotRequired[str]
     controlIdentifier: NotRequired[str]
     driftStatusSummary: NotRequired[DriftStatusSummaryTypeDef]
     statusSummary: NotRequired[EnablementStatusSummaryTypeDef]
     targetIdentifier: NotRequired[str]
+
+class EnabledBaselineDriftTypesTypeDef(TypedDict):
+    inheritance: NotRequired[EnabledBaselineInheritanceDriftTypeDef]
 
 ListEnabledBaselinesInputTypeDef = TypedDict(
     "ListEnabledBaselinesInputTypeDef",
@@ -550,19 +545,17 @@ ListLandingZoneOperationsInputPaginateTypeDef = TypedDict(
 class ListLandingZonesInputPaginateTypeDef(TypedDict):
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
-class GetEnabledBaselineOutputTypeDef(TypedDict):
-    enabledBaselineDetails: EnabledBaselineDetailsTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-
-class ListEnabledBaselinesOutputTypeDef(TypedDict):
-    enabledBaselines: List[EnabledBaselineSummaryTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    nextToken: NotRequired[str]
-
 class ListEnabledControlsOutputTypeDef(TypedDict):
     enabledControls: List[EnabledControlSummaryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     nextToken: NotRequired[str]
+
+EnabledBaselineDriftStatusSummaryTypeDef = TypedDict(
+    "EnabledBaselineDriftStatusSummaryTypeDef",
+    {
+        "types": NotRequired[EnabledBaselineDriftTypesTypeDef],
+    },
+)
 
 class GetEnabledControlOutputTypeDef(TypedDict):
     enabledControlDetails: EnabledControlDetailsTypeDef
@@ -571,3 +564,31 @@ class GetEnabledControlOutputTypeDef(TypedDict):
 class GetLandingZoneOutputTypeDef(TypedDict):
     landingZone: LandingZoneDetailTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
+
+class EnabledBaselineDetailsTypeDef(TypedDict):
+    arn: str
+    baselineIdentifier: str
+    statusSummary: EnablementStatusSummaryTypeDef
+    targetIdentifier: str
+    baselineVersion: NotRequired[str]
+    driftStatusSummary: NotRequired[EnabledBaselineDriftStatusSummaryTypeDef]
+    parameters: NotRequired[List[EnabledBaselineParameterSummaryTypeDef]]
+    parentIdentifier: NotRequired[str]
+
+class EnabledBaselineSummaryTypeDef(TypedDict):
+    arn: str
+    baselineIdentifier: str
+    statusSummary: EnablementStatusSummaryTypeDef
+    targetIdentifier: str
+    baselineVersion: NotRequired[str]
+    driftStatusSummary: NotRequired[EnabledBaselineDriftStatusSummaryTypeDef]
+    parentIdentifier: NotRequired[str]
+
+class GetEnabledBaselineOutputTypeDef(TypedDict):
+    enabledBaselineDetails: EnabledBaselineDetailsTypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class ListEnabledBaselinesOutputTypeDef(TypedDict):
+    enabledBaselines: List[EnabledBaselineSummaryTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]

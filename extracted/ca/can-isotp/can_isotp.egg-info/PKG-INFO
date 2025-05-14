@@ -1,9 +1,9 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: can-isotp
-Version: 2.0.6
+Version: 2.0.7
 Summary: Module enabling the IsoTP protocol defined by ISO-15765
 Home-page: https://github.com/pylessard/python-can-isotp
-Download-URL: https://github.com/pylessard/python-can-isotp/archive/v2.0.6.tar.gz
+Download-URL: https://github.com/pylessard/python-can-isotp/archive/v2.0.7.tar.gz
 Author: Pier-Yves Lessard
 Author-email: py.lessard@gmail.com
 License: MIT
@@ -27,6 +27,18 @@ Requires-Dist: ipdb; extra == "dev"
 Requires-Dist: autopep8; extra == "dev"
 Requires-Dist: coverage; extra == "dev"
 Requires-Dist: python-can; extra == "dev"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: download-url
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: provides-extra
+Dynamic: requires-python
+Dynamic: summary
 
 python-can-isotp
 ################

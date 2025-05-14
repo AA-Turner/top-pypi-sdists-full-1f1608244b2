@@ -4,6 +4,7 @@ import re
 from typing import Dict, List
 
 import eth_abi
+from cchecksum import to_checksum_address
 from eth_abi.exceptions import InsufficientDataBytes, NoEntriesFound, NonEmptyPaddingBytes
 
 try:
@@ -12,7 +13,6 @@ except ImportError:
     # Define a stub exception for older eth-abi versions
     InvalidPointer = type("InvalidPointer", (Exception,), {})
 from eth_hash.auto import keccak
-from eth_utils import to_checksum_address
 from hexbytes import HexBytes
 
 
@@ -131,10 +131,12 @@ def decode_log(log: Dict, topic_map: Dict) -> Dict:
     Dict
         Decoded event log.
     """
-    if not log["topics"]:
+    log_topics = log["topics"]
+    if not log_topics:
         raise EventError("Cannot decode an anonymous event")
 
-    key = _0xstring(log["topics"][0])
+    topic0, *data_topics = log_topics
+    key = _0xstring(topic0)
     if key not in topic_map:
         raise UnknownEvent("Event topic is not present in given ABI")
     abi = topic_map[key]
@@ -142,7 +144,7 @@ def decode_log(log: Dict, topic_map: Dict) -> Dict:
     try:
         event = {
             "name": abi["name"],
-            "data": _decode(abi["inputs"], log["topics"][1:], log["data"]),
+            "data": _decode(abi["inputs"], data_topics, log["data"]),
             "decoded": True,
             "address": to_checksum_address(log["address"]),
         }
@@ -264,14 +266,16 @@ def decode_traceTransaction(
                 address_list.pop()
 
         last_step = step
-        if not step["op"].startswith("LOG"):
+        op = step["op"]
+        if not op.startswith("LOG"):
             continue
 
         try:
-            offset = int(step["stack"][-1], 16)
-            length = int(step["stack"][-2], 16)
-            topic_len = int(step["op"][-1])
-            topics = [_0xstring(i) for i in step["stack"][-3 : -3 - topic_len : -1]]
+            stack = step["stack"]
+            offset = int(stack[-1], 16)
+            length = int(stack[-2], 16)
+            topic_len = int(op[-1])
+            topics = [_0xstring(i) for i in stack[-3 : -3 - topic_len : -1]]
         except KeyError:
             raise StructLogError("StructLog has no stack")
         except (IndexError, TypeError):
@@ -382,7 +386,7 @@ def _decode(inputs: List, topics: List, data: str) -> List:
             encoded = HexBytes(topics.pop())
             try:
                 value = eth_abi.decode([i["type"]], encoded)[0]
-            except (InsufficientDataBytes, NoEntriesFound, OverflowError):
+            except (InsufficientDataBytes, NoEntriesFound, OverflowError, InvalidPointer):
                 # an array or other data type that uses multiple slots
                 result[-1].update({"value": _0xstring(encoded), "decoded": False})
                 continue

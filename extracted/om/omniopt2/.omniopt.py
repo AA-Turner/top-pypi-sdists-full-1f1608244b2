@@ -40,6 +40,10 @@ joined_supported_models: str = ", ".join(SUPPORTED_MODELS)
 special_col_names: list = ["arm_name", "generation_method", "trial_index", "trial_status", "generation_node"]
 IGNORABLE_COLUMNS: list = ["start_time", "end_time", "hostname", "signal", "exit_code", "run_time", "program_string"] + special_col_names
 
+non_ax_constraints: list = []
+abandoned_trial_indices: list = []
+global_param_names: list = []
+
 figlet_loaded: bool = False
 
 try:
@@ -91,6 +95,8 @@ try:
         import yaml
         import toml
         import csv
+
+        import ast
 
         from rich.progress import Progress, TimeRemainingColumn
         from rich.table import Table
@@ -413,6 +419,7 @@ class ConfigLoader:
     show_sixel_general: bool
     show_sixel_scatter: bool
     gpus: int
+    num_cpus_main_job: Optional[int]
     model: Optional[str]
     live_share: bool
     experiment_name: str
@@ -542,6 +549,7 @@ class ConfigLoader:
         optional.add_argument('--external_generator', help='Programm call for an external generator', type=str, default=None)
         optional.add_argument('--username', help='A username for live share', default=None, type=str)
         optional.add_argument('--max_failed_jobs', help='Maximum number of failed jobs before the search is cancelled. Is defaulted to the value of --max_eval', default=None, type=int)
+        optional.add_argument('--num_cpus_main_job', help='Number of CPUs for the main job', default=None, type=int)
 
         slurm.add_argument('--num_parallel_jobs', help='Number of parallel SLURM jobs (default: 20)', type=int, default=20)
         slurm.add_argument('--worker_timeout', help='Timeout for SLURM jobs (i.e. for each single point to be optimized)', type=int, default=30)
@@ -2425,6 +2433,7 @@ def parse_experiment_parameters() -> list:
                 my_exit(181)
 
             param_names.append(name)
+            global_param_names.append(name)
 
             try:
                 param_type = this_args[j + 1]
@@ -3050,6 +3059,24 @@ def write_job_infos_csv(parameters: dict, stdout: Optional[str], program_string_
         print_debug(f"evaluate: get_current_run_folder() {get_current_run_folder()} could not be found")
 
 @beartype
+def human_time_when_larger_than_a_min(seconds: Union[int, float]) -> str:
+    total_seconds = int(seconds)
+
+    if total_seconds < 60:
+        return ""
+
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, secs = divmod(remainder, 60)
+    parts = []
+    if hours:
+        parts.append(f"{hours}h")
+    if minutes:
+        parts.append(f"{minutes}m")
+    if secs or not parts:  # Zeige Sekunden immer, wenn sonst nichts da ist
+        parts.append(f"{secs}s")
+    return f"({''.join(parts)})"
+
+@beartype
 def print_evaluate_times() -> None:
     file_path = f"{get_current_run_folder()}/job_infos.csv"
 
@@ -3086,7 +3113,14 @@ def print_evaluate_times() -> None:
 
         if min_time != max_time or max_time != 0:
             headers = ["Number of values", "Min time", "Max time", "Average time", "Median time"]
-            cols = [str(len(time_values)), f"{min_time:.2f} sec", f"{max_time:.2f} sec", f"{avg_time:.2f} sec", f"{median_time:.2f} sec"]
+
+            cols = [
+                str(len(time_values)),
+                f"{min_time:.2f} sec {human_time_when_larger_than_a_min(min_time)}",
+                f"{max_time:.2f} sec {human_time_when_larger_than_a_min(max_time)}",
+                f"{avg_time:.2f} sec {human_time_when_larger_than_a_min(avg_time)}",
+                f"{median_time:.2f} sec {human_time_when_larger_than_a_min(median_time)}"
+            ]
 
             table = Table(title="Runtime Infos:")
             for h in headers:
@@ -4103,7 +4137,6 @@ def compare_parameters(old_param_json: str, new_param_json: str) -> str:
     except Exception as e:
         return f"Error: {str(e)}"
 
-
 @beartype
 def get_ax_param_representation(data: dict) -> dict:
     if data["type"] == "range":
@@ -4241,6 +4274,129 @@ def parse_equation_item(comparer_found: bool, item: str, parsed: list, parsed_or
     return return_totally, comparer_found, parsed, parsed_order
 
 @beartype
+def is_valid_equation(expr: str, allowed_vars: list) -> bool:
+    try:
+        node = ast.parse(expr, mode='eval')
+    except SyntaxError:
+        return False
+
+    if not isinstance(node, ast.Expression):
+        return False
+
+    def is_valid_op(op: Any) -> bool:
+        return isinstance(op, (
+            ast.LtE, ast.GtE, ast.Eq, ast.NotEq,
+            ast.Add, ast.Sub, ast.Mult, ast.Div
+        ))
+
+    def is_only_allowed_vars(node: Any) -> bool:
+        if isinstance(node, ast.Name):
+            return node.id in allowed_vars
+        if isinstance(node, ast.BinOp):
+            return is_valid_op(node.op) and \
+                   is_only_allowed_vars(node.left) and \
+                   is_only_allowed_vars(node.right)
+        if isinstance(node, ast.UnaryOp):
+            return isinstance(node.op, (ast.UAdd, ast.USub)) and \
+                   is_only_allowed_vars(node.operand)
+        if isinstance(node, ast.Constant):
+            return isinstance(node.value, (int, float))
+        if isinstance(node, ast.Num):  # für Python < 3.8
+            return isinstance(node.n, (int, float))
+        return False
+
+    def is_constant_expr(node: Any) -> bool:
+        if isinstance(node, ast.Constant):
+            return isinstance(node.value, (int, float))
+        if isinstance(node, ast.Num):  # für Python < 3.8
+            return isinstance(node.n, (int, float))
+        if isinstance(node, ast.BinOp):
+            return is_valid_op(node.op) and \
+                   is_constant_expr(node.left) and \
+                   is_constant_expr(node.right)
+        if isinstance(node, ast.UnaryOp):
+            return isinstance(node.op, (ast.UAdd, ast.USub)) and \
+                   is_constant_expr(node.operand)
+        return False
+
+    body = node.body
+    if not isinstance(body, ast.Compare):
+        return False
+    if len(body.ops) != 1 or len(body.comparators) != 1:
+        return False
+
+    left = body.left
+    right = body.comparators[0]
+    op = body.ops[0]
+
+    if not isinstance(op, (ast.LtE, ast.GtE, ast.Eq, ast.NotEq)):
+        return False
+
+    if not is_only_allowed_vars(left):
+        return False
+    if not (is_constant_expr(right) or is_only_allowed_vars(right)):
+        return False
+
+    return True
+
+@beartype
+def is_ax_compatible_constraint(equation: str, variables: List[str]) -> Union[str, bool]:
+    equation = equation.replace("\\*", "*")
+    equation = equation.replace(" * ", "*")
+    equation = equation.replace(" + ", "+")
+    equation = equation.replace(" - ", "-")
+    equation = re.sub(r"\s+", "", equation)
+
+    if ">=" not in equation and "<=" not in equation:
+        return False
+
+    if "==" in equation or re.search(r"(?<![<>])=(?!=)", equation):
+        return False
+
+    comparisons = re.findall(r"(<=|>=)", equation)
+    if len(comparisons) != 1:
+        return False
+
+    operator = comparisons[0]
+    lhs, rhs = equation.split(operator)
+
+    def analyze_expression(expr: str) -> bool:
+        # Zerlege in Terme durch '+' und '-'. Behalte das Vorzeichen.
+        terms = re.findall(r"[+-]?[^+-]+", expr)
+        for term in terms:
+            term = term.strip()
+            if not term:
+                continue
+
+            if "*" in term:
+                parts = term.split("*")
+                if len(parts) != 2:
+                    return False
+
+                factor, var = parts
+                if not re.fullmatch(r"[+-]?[0-9.]+(?:[eE][-+]?[0-9]+)?", factor):
+                    return False
+                if var not in variables:
+                    return False
+            else:
+                # Entweder nur Variable (z. B. "abc") oder nur Konstante
+                if term not in variables:
+                    if not re.fullmatch(r"[+-]?[0-9.]+(?:[eE][-+]?[0-9]+)?", term):
+                        return False
+        return True
+
+    if lhs in variables and rhs in variables:
+        return True
+
+    if not analyze_expression(lhs):
+        return False
+
+    if not re.fullmatch(r"[+-]?[0-9.]+(?:[eE][-+]?[0-9]+)?", rhs):
+        return False
+
+    return True
+
+@beartype
 def check_equation(variables: list, equation: str) -> Union[str, bool]:
     print_debug(f"check_equation({variables}, {equation})")
 
@@ -4332,19 +4488,16 @@ def set_objectives() -> dict:
     return objectives
 
 @beartype
-def set_parameter_constraints(experiment_constraints: Optional[list], experiment_args: dict, experiment_parameters: Union[dict, list]) -> dict:
+def set_experiment_constraints(experiment_constraints: Optional[list], experiment_args: dict, experiment_parameters: Union[dict, list]) -> dict:
     if experiment_constraints and len(experiment_constraints):
-        experiment_constraints = experiment_constraints[0]
 
         experiment_args["parameter_constraints"] = []
 
         if experiment_constraints:
             for _l in range(len(experiment_constraints)):
-                constraints_string = decode_if_base64(" ".join(experiment_constraints[_l]))
-
-                constraints_string = constraints_string.rstrip("\n\r")
-
                 variables = [item['name'] for item in experiment_parameters]
+
+                constraints_string = experiment_constraints[_l]
 
                 equation = check_equation(variables, constraints_string)
 
@@ -4361,9 +4514,9 @@ def set_parameter_constraints(experiment_constraints: Optional[list], experiment
                 with open(file_path, "a", encoding="utf-8") as f:
                     f.write(constraints_string + "\n")
         else:
-            print_debug(f"set_parameter_constraints: not set, content: {experiment_constraints}")
+            print_debug(f"set_experiment_constraints: not set, content: {experiment_constraints}")
     else:
-        print_debug("set_parameter_constraints: no constraints set")
+        print_debug("set_experiment_constraints: no constraints set")
 
     return experiment_args
 
@@ -4422,7 +4575,13 @@ def copy_continue_uuid() -> None:
 
 @beartype
 def get_experiment_parameters(_params: list) -> Tuple[AxClient, Union[list, dict], dict, str, str]:
-    continue_previous_job, seed, experiment_constraints, parameter, cli_params_experiment_parameters, experiment_parameters = _params
+    cli_params_experiment_parameters, experiment_parameters = _params
+
+    continue_previous_job = args.continue_previous_job
+    seed = args.seed
+    parameter = args.parameter
+
+    experiment_constraints = get_constraints()
 
     global ax_client
 
@@ -4489,7 +4648,7 @@ def get_experiment_parameters(_params: list) -> Tuple[AxClient, Union[list, dict
             my_exit(9)
 
         if experiment_constraints:
-            experiment_args = set_parameter_constraints(experiment_constraints, experiment_args, experiment_parameters["experiment"]["search_space"]["parameters"])
+            experiment_args = set_experiment_constraints(experiment_constraints, experiment_args, experiment_parameters["experiment"]["search_space"]["parameters"])
     else:
         objectives = set_objectives()
 
@@ -4511,7 +4670,7 @@ def get_experiment_parameters(_params: list) -> Tuple[AxClient, Union[list, dict
 
         experiment_args, gpu_string, gpu_color = set_torch_device_to_experiment_args(experiment_args)
 
-        experiment_args = set_parameter_constraints(experiment_constraints, experiment_args, experiment_parameters)
+        experiment_args = set_experiment_constraints(experiment_constraints, experiment_args, experiment_parameters)
 
         try:
             if ax_client:
@@ -4601,7 +4760,37 @@ def parse_single_experiment_parameter_table(experiment_parameters: Union[list, d
     return rows
 
 @beartype
-def print_parameter_constraints_table(experiment_args: dict) -> None:
+def print_non_ax_parameter_constraints_table() -> None:
+    if not non_ax_constraints:
+        return None
+
+    table = Table(header_style="bold")
+    columns = ["Post-Generation-Constraints"]
+
+    for column in columns:
+        table.add_column(column)
+
+    for constraint in non_ax_constraints:
+        table.add_row(constraint)
+
+    with console.capture() as capture:
+        console.print(table)
+
+    table_str = capture.get()
+
+    console.print(table)
+
+    fn = f"{get_current_run_folder()}/non_ax_constraints.txt"
+    try:
+        with open(fn, mode="w", encoding="utf-8") as text_file:
+            text_file.write(table_str)
+    except Exception as e:
+        print_red(f"Error writing {fn}: {e}")
+
+    return None
+
+@beartype
+def print_ax_parameter_constraints_table(experiment_args: dict) -> None:
     if not (experiment_args is not None and "parameter_constraints" in experiment_args and len(experiment_args["parameter_constraints"])):
         return None
 
@@ -4737,7 +4926,8 @@ def print_experiment_parameters_table(experiment_parameters: Union[list, dict]) 
 def print_overview_tables(experiment_parameters: Union[list, dict], experiment_args: dict) -> None:
     print_experiment_parameters_table(experiment_parameters)
 
-    print_parameter_constraints_table(experiment_args)
+    print_ax_parameter_constraints_table(experiment_args)
+    print_non_ax_parameter_constraints_table()
 
     print_result_names_overview_table()
 
@@ -6222,6 +6412,29 @@ def _get_trials_message(nr_of_jobs_to_get: int, full_nr_of_jobs_to_get: int, tri
 
     return ret
 
+@beartype
+def has_no_non_ax_constraints_or_matches_constraints(_non_ax_constraints: list, params: dict) -> bool:
+    if not _non_ax_constraints or len(_non_ax_constraints) == 0:
+        return True
+
+    for constraint in _non_ax_constraints:
+        try:
+            expression = constraint
+
+            for var in params:
+                expression = expression.replace(var, f"({repr(params[var])})")
+
+            result = eval(expression, {"__builtins__": {}}, {})
+
+            if not result:
+                return False
+
+        except Exception as e:
+            print_debug(f"Error checking constraint '{constraint}': {e}")
+            return False
+
+    return True
+
 @disable_logs
 @beartype
 def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optional[Tuple[Dict[int, Any], bool]]:
@@ -6252,18 +6465,24 @@ def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optio
                     n=1,
                     pending_observations=get_pending_observation_features(experiment=ax_client.experiment)
                 )
+
                 trial = ax_client.experiment.new_trial(generator_run)
                 params = generator_run.arms[0].parameters
 
-                trial.mark_running(no_runner_required=True)
-
                 trials_dict[trial_index] = params
+                gotten_jobs = gotten_jobs + 1
+
                 print_debug(f"_fetch_next_trials: got trial {k + 1}/{nr_of_jobs_to_get} (trial_index: {trial_index} [gotten_jobs: {gotten_jobs}, k: {k}])")
                 end_time = time.time()
 
-                gotten_jobs = gotten_jobs + 1
-
                 trial_durations.append(float(end_time - start_time))
+
+                if not has_no_non_ax_constraints_or_matches_constraints(non_ax_constraints, params):
+                    print_debug(f"Marking trial as abandoned since it doesn't fit a Post-Generation-constraint: {params}")
+                    trial.mark_abandoned()
+                    abandoned_trial_indices.append(trial_index)
+                else:
+                    trial.mark_running(no_runner_required=True)
             else:
                 print_red("ax_client, ax_client.experiment or global_gs is not defined")
                 my_exit(101)
@@ -6631,7 +6850,9 @@ def create_node(model_name: str, threshold: int, next_model_name: Optional[str])
             selected_model,
             model_gen_kwargs={
                 "random_seed": args.seed,
-                "fallback_to_sample_polytope": True
+                "fallback_to_sample_polytope": True,
+                "check_duplicates": True,
+                "deduplicate_strict": True,
             }
         )
     ]
@@ -6855,7 +7076,17 @@ def create_and_execute_next_runs(next_nr_steps: int, phase: Optional[str], _max_
             if done_optimizing:
                 continue
             if trial_index_to_param:
-                results.extend(execute_trials(trial_index_to_param, next_nr_steps, phase, _max_eval, _progress_bar))
+                nr_jobs_before_removing_abandoned = len(list(trial_index_to_param.keys()))
+
+                trial_index_to_param = {k: v for k, v in trial_index_to_param.items() if k not in abandoned_trial_indices}
+
+                if len(list(trial_index_to_param.keys())):
+                    results.extend(execute_trials(trial_index_to_param, next_nr_steps, phase, _max_eval, _progress_bar))
+                else:
+                    if nr_jobs_before_removing_abandoned > 0:
+                        print_debug(f"Could not get jobs. They've been deleted by abandoned_trial_indices: {abandoned_trial_indices}")
+                    else:
+                        print_debug("Could not generate any jobs")
 
         finish_previous_jobs(["finishing jobs"])
 
@@ -7574,25 +7805,100 @@ def debug_vars_unused_by_python_for_linter() -> None:
 
 @beartype
 def get_constraints() -> list:
-    constraints_list = []
+    constraints_list: List[str] = []
 
-    if args.experiment_constraints:
+    if _has_explicit_constraints():
         constraints_list = args.experiment_constraints
-    elif args.continue_previous_job and not args.disable_previous_job_constraint and (args.experiment_constraints is None or not len(args.experiment_constraints)):
-        prev_job_constraint_file = os.path.join(args.continue_previous_job, "state_files", "constraints")
-        if os.path.exists(prev_job_constraint_file):
-            if os.path.exists(prev_job_constraint_file):
-                with open(prev_job_constraint_file, "r", encoding="utf-8") as f:
-                    constraints_list = [line.strip() for line in f if line.strip()]
+    elif _should_load_previous_constraints():
+        constraints_list = _load_previous_constraints(args.continue_previous_job)
 
-                    constraints_list = [
-                        base64.b64encode(constraint.encode("utf-8")).decode("utf-8")
-                        for constraint in constraints_list
-                    ]
-
-                    constraints_list = [constraints_list]
+    if len(constraints_list):
+        constraints_list = _normalize_constraints_list(constraints_list)
+        constraints_list = _filter_valid_constraints(constraints_list)
 
     return constraints_list
+
+@beartype
+def _has_explicit_constraints() -> bool:
+    return bool(args.experiment_constraints)
+
+@beartype
+def _should_load_previous_constraints() -> bool:
+    return bool(args.continue_previous_job and not args.disable_previous_job_constraint and (args.experiment_constraints is None or not len(args.experiment_constraints)))
+
+@beartype
+def _load_previous_constraints(job_path: str) -> list:
+    constraint_file = os.path.join(job_path, "state_files", "constraints")
+
+    if not os.path.exists(constraint_file):
+        return []
+
+    with open(constraint_file, "r", encoding="utf-8") as f:
+        raw_constraints = [line.strip() for line in f if line.strip()]
+
+    encoded_constraints = [
+        base64.b64encode(c.encode("utf-8")).decode("utf-8") for c in raw_constraints
+    ]
+
+    return [encoded_constraints]  # for historical compatibility
+
+@beartype
+def _normalize_constraints_list(constraints_list: list) -> List[str]:
+    if isinstance(constraints_list, list) and len(constraints_list) == 1 and isinstance(constraints_list[0], list):
+        return constraints_list[0]
+    return constraints_list
+
+@beartype
+def _load_experiment_json(continue_previous_job_path: str) -> dict:
+    experiment_json_data = {}
+
+    json_file_path = os.path.join(continue_previous_job_path, "state_files", "ax_client.experiment.json")
+
+    if os.path.isfile(json_file_path):
+        try:
+            with open(json_file_path, "r", encoding="utf-8") as f:
+                experiment_json_data = json.load(f)
+        except Exception as e:
+            print_yellow(f"Error while reading the file: {json_file_path}\n{str(e)}")
+    else:
+        print_yellow(f"Warning: File not found: {json_file_path}")
+
+    return experiment_json_data
+
+@beartype
+def _filter_valid_constraints(constraints: List[str]) -> List[str]:
+    global global_param_names
+
+    final_constraints_list: List[str] = []
+
+    if len(global_param_names) == 0:
+        if args.continue_previous_job:
+            experiment_json_data = _load_experiment_json(args.continue_previous_job)
+
+            params = experiment_json_data["search_space"]["parameters"]
+
+            global_param_names = [param["name"] for param in params]
+        else:
+            print_red("_filter_valid_constraints: No parameters found, and not a continued job. Constraints will stay empty.")
+
+    for raw_constraint in constraints:
+        decoded = decode_if_base64(" ".join(raw_constraint))
+        decoded = decoded.rstrip("\n\r")
+
+        is_ax = is_ax_compatible_constraint(decoded, global_param_names)
+        is_equation = is_valid_equation(decoded, global_param_names)
+
+        if is_ax:
+            final_constraints_list.append(decoded)
+        elif is_equation:
+            print_debug(f"Added Post-Generation-constraint '{decoded}'")
+            non_ax_constraints.append(decoded)
+        else:
+            print_red(f"Invalid constraint found: '{decoded}' (is valid ax? {is_ax}, is valid equation? {is_equation}).")
+
+            my_exit(19)
+
+    return final_constraints_list
 
 @beartype
 def main() -> None:
@@ -7686,10 +7992,6 @@ def main() -> None:
 
     with console.status("[bold green]Getting experiment parameters..."):
         ax_client, experiment_parameters, experiment_args, gpu_string, gpu_color = get_experiment_parameters([
-            args.continue_previous_job,
-            args.seed,
-            get_constraints(),
-            args.parameter,
             cli_params_experiment_parameters,
             experiment_parameters,
         ])
@@ -7929,6 +8231,78 @@ def run_tests() -> None:
     non_rounded_lower, non_rounded_upper = round_lower_and_upper_if_type_is_int("float", -123.4, 123.4)
     nr_errors += is_equal("non_rounded_lower", non_rounded_lower, -123.4)
     nr_errors += is_equal("non_rounded_upper", non_rounded_upper, 123.4)
+
+    nr_errors += is_equal('is_ax_compatible_constraint("abc", ["abc"])', is_ax_compatible_constraint("abc", ["abc"]), False)
+    nr_errors += is_equal('is_ax_compatible_constraint("abc >= 1", ["abc"])', is_ax_compatible_constraint("abc >= 1", ["abc"]), True)
+    nr_errors += is_equal('is_ax_compatible_constraint("abc * xyz >= 1", ["abc", "xyz"])', is_ax_compatible_constraint("abc * xyz >= 1", ["abc", "xyz"]), False)
+    nr_errors += is_equal('is_ax_compatible_constraint("abc <= xyz", ["abc", "xyz"])', is_ax_compatible_constraint("abc <= xyz", ["abc", "xyz"]), True)
+    nr_errors += is_equal('is_ax_compatible_constraint("2*abc <= 3.5", ["abc", "xyz"])', is_ax_compatible_constraint("2*abc <= 3.5", ["abc", "xyz"]), True)
+    nr_errors += is_equal('is_ax_compatible_constraint("2*abc <= 3.5*xyz", ["abc"])', is_ax_compatible_constraint("2*abc <= 3.5*xyz", ["abc"]), False)
+    nr_errors += is_equal('is_ax_compatible_constraint("2*abc * xyz <= 3.5", ["abc"])', is_ax_compatible_constraint("2*abc * xyz <= 3.5", ["abc"]), False)
+    nr_errors += is_equal('is_ax_compatible_constraint("2*abc * xyz <= 3.5", ["abc", "xyz"])', is_ax_compatible_constraint("2*abc * xyz <= 3.5", ["abc", "xyz"]), False)
+
+    nr_errors += is_equal(
+        "has_no_non_ax_constraints_or_matches_constraints([], {})",
+        has_no_non_ax_constraints_or_matches_constraints([], {}),
+        True
+    )
+
+    nr_errors += is_equal(
+        "has_no_non_ax_constraints_or_matches_constraints(['a > 0'], {'a': 5})",
+        has_no_non_ax_constraints_or_matches_constraints(['a > 0'], {'a': 5}),
+        True
+    )
+
+    nr_errors += is_equal(
+        "has_no_non_ax_constraints_or_matches_constraints(['a > 0'], {'a': -1})",
+        has_no_non_ax_constraints_or_matches_constraints(['a > 0'], {'a': -1}),
+        False
+    )
+
+    nr_errors += is_equal(
+        "has_no_non_ax_constraints_or_matches_constraints(['a + b == 3'], {'a': 1, 'b': 2})",
+        has_no_non_ax_constraints_or_matches_constraints(['a + b == 3'], {'a': 1, 'b': 2}),
+        True
+    )
+
+    nr_errors += is_equal(
+        "has_no_non_ax_constraints_or_matches_constraints(['a + b == 3'], {'a': 1, 'b': 1})",
+        has_no_non_ax_constraints_or_matches_constraints(['a + b == 3'], {'a': 1, 'b': 1}),
+        False
+    )
+
+    nr_errors += is_equal(
+        "has_no_non_ax_constraints_or_matches_constraints(['unknown > 0'], {'a': 1})",
+        has_no_non_ax_constraints_or_matches_constraints(['unknown > 0'], {'a': 1}),
+        False  # unknown bleibt unersetzt → eval Error
+    )
+
+    nr_errors += is_equal(
+        "has_no_non_ax_constraints_or_matches_constraints(['a + '], {'a': 1})",
+        has_no_non_ax_constraints_or_matches_constraints(['a + '], {'a': 1}),
+        False  # Syntaxfehler
+    )
+
+    nr_errors += is_equal('is_valid_equation("abc", ["abc"])',
+                          is_valid_equation("abc", ["abc"]), False)
+    nr_errors += is_equal('is_valid_equation("abc >= 1", ["abc"])',
+                          is_valid_equation("abc >= 1", ["abc"]), True)
+    nr_errors += is_equal('is_valid_equation("abc * xyz >= 1", ["abc", "xyz"])',
+                          is_valid_equation("abc * xyz >= 1", ["abc", "xyz"]), True)
+    nr_errors += is_equal('is_valid_equation("abc <= xyz", ["abc", "xyz"])',
+                          is_valid_equation("abc <= xyz", ["abc", "xyz"]), True)
+    nr_errors += is_equal('is_valid_equation("2*abc <= 3.5", ["abc", "xyz"])',
+                          is_valid_equation("2*abc <= 3.5", ["abc", "xyz"]), True)
+    nr_errors += is_equal('is_valid_equation("2*abc <= 3.5*xyz", ["abc"])',
+                          is_valid_equation("2*abc <= 3.5*xyz", ["abc"]), False)
+    nr_errors += is_equal('is_valid_equation("2*abc * xyz <= 3.5", ["abc"])',
+                          is_valid_equation("2*abc * xyz <= 3.5", ["abc"]), False)
+    nr_errors += is_equal('is_valid_equation("2*abc * xyz <= 3.5", ["abc", "xyz"])',
+                          is_valid_equation("2*abc * xyz <= 3.5", ["abc", "xyz"]), True)
+    nr_errors += is_equal('is_valid_equation("a * b >= 10", ["a", "b"])',
+                          is_valid_equation("a * b >= 10", ["a", "b"]), True)
+    nr_errors += is_equal('is_valid_equation("1*sample_period >= 1/window_size", ["sample_period", "window_size"])',
+                          is_valid_equation("1*sample_period >= 1/window_size", ["sample_period", "window_size"]), True)
 
     rounded_lower, rounded_upper = round_lower_and_upper_if_type_is_int("int", -123.4, 123.4)
     nr_errors += is_equal("rounded_lower", rounded_lower, -124)

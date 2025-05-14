@@ -1,7 +1,7 @@
 r'''
 # `google_netapp_backup_vault`
 
-Refer to the Terraform Registry for docs: [`google_netapp_backup_vault`](https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault).
+Refer to the Terraform Registry for docs: [`google_netapp_backup_vault`](https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class NetappBackupVault(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-google.netappBackupVault.NetappBackupVault",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault google_netapp_backup_vault}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault google_netapp_backup_vault}.'''
 
     def __init__(
         self,
@@ -53,6 +53,8 @@ class NetappBackupVault(
         *,
         location: builtins.str,
         name: builtins.str,
+        backup_region: typing.Optional[builtins.str] = None,
+        backup_vault_type: typing.Optional[builtins.str] = None,
         description: typing.Optional[builtins.str] = None,
         id: typing.Optional[builtins.str] = None,
         labels: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
@@ -66,17 +68,19 @@ class NetappBackupVault(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault google_netapp_backup_vault} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault google_netapp_backup_vault} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param location: Location (region) of the backup vault. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#location NetappBackupVault#location}
-        :param name: The resource name of the backup vault. Needs to be unique per location. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#name NetappBackupVault#name}
-        :param description: An optional description of this resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#description NetappBackupVault#description}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#id NetappBackupVault#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param labels: Labels as key value pairs. Example: '{ "owner": "Bob", "department": "finance", "purpose": "testing" }'. **Note**: This field is non-authoritative, and will only manage the labels present in your configuration. Please refer to the field 'effective_labels' for all of the labels present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#labels NetappBackupVault#labels}
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#project NetappBackupVault#project}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#timeouts NetappBackupVault#timeouts}
+        :param location: Location (region) of the backup vault. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#location NetappBackupVault#location}
+        :param name: The resource name of the backup vault. Needs to be unique per location. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#name NetappBackupVault#name}
+        :param backup_region: Region in which backup is stored. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#backup_region NetappBackupVault#backup_region}
+        :param backup_vault_type: Type of the backup vault to be created. Default is IN_REGION. Possible values: ["BACKUP_VAULT_TYPE_UNSPECIFIED", "IN_REGION", "CROSS_REGION"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#backup_vault_type NetappBackupVault#backup_vault_type}
+        :param description: An optional description of this resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#description NetappBackupVault#description}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#id NetappBackupVault#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param labels: Labels as key value pairs. Example: '{ "owner": "Bob", "department": "finance", "purpose": "testing" }'. **Note**: This field is non-authoritative, and will only manage the labels present in your configuration. Please refer to the field 'effective_labels' for all of the labels present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#labels NetappBackupVault#labels}
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#project NetappBackupVault#project}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#timeouts NetappBackupVault#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -92,6 +96,8 @@ class NetappBackupVault(
         config = NetappBackupVaultConfig(
             location=location,
             name=name,
+            backup_region=backup_region,
+            backup_vault_type=backup_vault_type,
             description=description,
             id=id,
             labels=labels,
@@ -121,7 +127,7 @@ class NetappBackupVault(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the NetappBackupVault to import.
-        :param import_from_id: The id of the existing NetappBackupVault that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing NetappBackupVault that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the NetappBackupVault to import is found.
         '''
         if __debug__:
@@ -141,13 +147,21 @@ class NetappBackupVault(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#create NetappBackupVault#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#delete NetappBackupVault#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#update NetappBackupVault#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#create NetappBackupVault#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#delete NetappBackupVault#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#update NetappBackupVault#update}.
         '''
         value = NetappBackupVaultTimeouts(create=create, delete=delete, update=update)
 
         return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
+
+    @jsii.member(jsii_name="resetBackupRegion")
+    def reset_backup_region(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetBackupRegion", []))
+
+    @jsii.member(jsii_name="resetBackupVaultType")
+    def reset_backup_vault_type(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetBackupVaultType", []))
 
     @jsii.member(jsii_name="resetDescription")
     def reset_description(self) -> None:
@@ -188,9 +202,24 @@ class NetappBackupVault(
         return typing.cast(builtins.str, jsii.get(self, "createTime"))
 
     @builtins.property
+    @jsii.member(jsii_name="destinationBackupVault")
+    def destination_backup_vault(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "destinationBackupVault"))
+
+    @builtins.property
     @jsii.member(jsii_name="effectiveLabels")
     def effective_labels(self) -> _cdktf_9a9027ec.StringMap:
         return typing.cast(_cdktf_9a9027ec.StringMap, jsii.get(self, "effectiveLabels"))
+
+    @builtins.property
+    @jsii.member(jsii_name="sourceBackupVault")
+    def source_backup_vault(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "sourceBackupVault"))
+
+    @builtins.property
+    @jsii.member(jsii_name="sourceRegion")
+    def source_region(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "sourceRegion"))
 
     @builtins.property
     @jsii.member(jsii_name="state")
@@ -206,6 +235,16 @@ class NetappBackupVault(
     @jsii.member(jsii_name="timeouts")
     def timeouts(self) -> "NetappBackupVaultTimeoutsOutputReference":
         return typing.cast("NetappBackupVaultTimeoutsOutputReference", jsii.get(self, "timeouts"))
+
+    @builtins.property
+    @jsii.member(jsii_name="backupRegionInput")
+    def backup_region_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "backupRegionInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="backupVaultTypeInput")
+    def backup_vault_type_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "backupVaultTypeInput"))
 
     @builtins.property
     @jsii.member(jsii_name="descriptionInput")
@@ -245,6 +284,30 @@ class NetappBackupVault(
         self,
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "NetappBackupVaultTimeouts"]]:
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "NetappBackupVaultTimeouts"]], jsii.get(self, "timeoutsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="backupRegion")
+    def backup_region(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "backupRegion"))
+
+    @backup_region.setter
+    def backup_region(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__5a3cec0a135aa03e649cae7bcabfefe01889378140da70d32f3be107678dfdb7)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "backupRegion", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="backupVaultType")
+    def backup_vault_type(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "backupVaultType"))
+
+    @backup_vault_type.setter
+    def backup_vault_type(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__aa1c7667dbfabca2f9bb1323da0aa13980c45ab26703ab0f676c29c03bb35305)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "backupVaultType", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
     @jsii.member(jsii_name="description")
@@ -332,6 +395,8 @@ class NetappBackupVault(
         "provisioners": "provisioners",
         "location": "location",
         "name": "name",
+        "backup_region": "backupRegion",
+        "backup_vault_type": "backupVaultType",
         "description": "description",
         "id": "id",
         "labels": "labels",
@@ -352,6 +417,8 @@ class NetappBackupVaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
         location: builtins.str,
         name: builtins.str,
+        backup_region: typing.Optional[builtins.str] = None,
+        backup_vault_type: typing.Optional[builtins.str] = None,
         description: typing.Optional[builtins.str] = None,
         id: typing.Optional[builtins.str] = None,
         labels: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
@@ -366,13 +433,15 @@ class NetappBackupVaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param location: Location (region) of the backup vault. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#location NetappBackupVault#location}
-        :param name: The resource name of the backup vault. Needs to be unique per location. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#name NetappBackupVault#name}
-        :param description: An optional description of this resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#description NetappBackupVault#description}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#id NetappBackupVault#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param labels: Labels as key value pairs. Example: '{ "owner": "Bob", "department": "finance", "purpose": "testing" }'. **Note**: This field is non-authoritative, and will only manage the labels present in your configuration. Please refer to the field 'effective_labels' for all of the labels present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#labels NetappBackupVault#labels}
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#project NetappBackupVault#project}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#timeouts NetappBackupVault#timeouts}
+        :param location: Location (region) of the backup vault. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#location NetappBackupVault#location}
+        :param name: The resource name of the backup vault. Needs to be unique per location. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#name NetappBackupVault#name}
+        :param backup_region: Region in which backup is stored. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#backup_region NetappBackupVault#backup_region}
+        :param backup_vault_type: Type of the backup vault to be created. Default is IN_REGION. Possible values: ["BACKUP_VAULT_TYPE_UNSPECIFIED", "IN_REGION", "CROSS_REGION"]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#backup_vault_type NetappBackupVault#backup_vault_type}
+        :param description: An optional description of this resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#description NetappBackupVault#description}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#id NetappBackupVault#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param labels: Labels as key value pairs. Example: '{ "owner": "Bob", "department": "finance", "purpose": "testing" }'. **Note**: This field is non-authoritative, and will only manage the labels present in your configuration. Please refer to the field 'effective_labels' for all of the labels present on the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#labels NetappBackupVault#labels}
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#project NetappBackupVault#project}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#timeouts NetappBackupVault#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -389,6 +458,8 @@ class NetappBackupVaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument provisioners", value=provisioners, expected_type=type_hints["provisioners"])
             check_type(argname="argument location", value=location, expected_type=type_hints["location"])
             check_type(argname="argument name", value=name, expected_type=type_hints["name"])
+            check_type(argname="argument backup_region", value=backup_region, expected_type=type_hints["backup_region"])
+            check_type(argname="argument backup_vault_type", value=backup_vault_type, expected_type=type_hints["backup_vault_type"])
             check_type(argname="argument description", value=description, expected_type=type_hints["description"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
             check_type(argname="argument labels", value=labels, expected_type=type_hints["labels"])
@@ -412,6 +483,10 @@ class NetappBackupVaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["provider"] = provider
         if provisioners is not None:
             self._values["provisioners"] = provisioners
+        if backup_region is not None:
+            self._values["backup_region"] = backup_region
+        if backup_vault_type is not None:
+            self._values["backup_vault_type"] = backup_vault_type
         if description is not None:
             self._values["description"] = description
         if id is not None:
@@ -491,7 +566,7 @@ class NetappBackupVaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def location(self) -> builtins.str:
         '''Location (region) of the backup vault.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#location NetappBackupVault#location}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#location NetappBackupVault#location}
         '''
         result = self._values.get("location")
         assert result is not None, "Required property 'location' is missing"
@@ -501,24 +576,42 @@ class NetappBackupVaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''The resource name of the backup vault. Needs to be unique per location.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#name NetappBackupVault#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#name NetappBackupVault#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
+    def backup_region(self) -> typing.Optional[builtins.str]:
+        '''Region in which backup is stored.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#backup_region NetappBackupVault#backup_region}
+        '''
+        result = self._values.get("backup_region")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def backup_vault_type(self) -> typing.Optional[builtins.str]:
+        '''Type of the backup vault to be created. Default is IN_REGION. Possible values: ["BACKUP_VAULT_TYPE_UNSPECIFIED", "IN_REGION", "CROSS_REGION"].
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#backup_vault_type NetappBackupVault#backup_vault_type}
+        '''
+        result = self._values.get("backup_vault_type")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
     def description(self) -> typing.Optional[builtins.str]:
         '''An optional description of this resource.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#description NetappBackupVault#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#description NetappBackupVault#description}
         '''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#id NetappBackupVault#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#id NetappBackupVault#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -533,14 +626,14 @@ class NetappBackupVaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
         Please refer to the field 'effective_labels' for all of the labels present on the resource.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#labels NetappBackupVault#labels}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#labels NetappBackupVault#labels}
         '''
         result = self._values.get("labels")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def project(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#project NetappBackupVault#project}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#project NetappBackupVault#project}.'''
         result = self._values.get("project")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -548,7 +641,7 @@ class NetappBackupVaultConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["NetappBackupVaultTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#timeouts NetappBackupVault#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#timeouts NetappBackupVault#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["NetappBackupVaultTimeouts"], result)
@@ -579,9 +672,9 @@ class NetappBackupVaultTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#create NetappBackupVault#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#delete NetappBackupVault#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#update NetappBackupVault#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#create NetappBackupVault#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#delete NetappBackupVault#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#update NetappBackupVault#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__81a5def4f7241427a8f45ff1b967ba7056a4ede0ac58d1c24a68ade0965fa235)
@@ -598,19 +691,19 @@ class NetappBackupVaultTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#create NetappBackupVault#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#create NetappBackupVault#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#delete NetappBackupVault#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#delete NetappBackupVault#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.34.1/docs/resources/netapp_backup_vault#update NetappBackupVault#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/netapp_backup_vault#update NetappBackupVault#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -742,6 +835,8 @@ def _typecheckingstub__747d36173bcb3891dc90f5ed97be749914a8530bd9408af2e55f832ef
     *,
     location: builtins.str,
     name: builtins.str,
+    backup_region: typing.Optional[builtins.str] = None,
+    backup_vault_type: typing.Optional[builtins.str] = None,
     description: typing.Optional[builtins.str] = None,
     id: typing.Optional[builtins.str] = None,
     labels: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
@@ -763,6 +858,18 @@ def _typecheckingstub__04444129600c14ecafa3e3f547b93858521d70398b2d258c6d012ccc6
     import_to_id: builtins.str,
     import_from_id: builtins.str,
     provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__5a3cec0a135aa03e649cae7bcabfefe01889378140da70d32f3be107678dfdb7(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__aa1c7667dbfabca2f9bb1323da0aa13980c45ab26703ab0f676c29c03bb35305(
+    value: builtins.str,
 ) -> None:
     """Type checking stubs"""
     pass
@@ -814,6 +921,8 @@ def _typecheckingstub__bc95b4be4bd87e1d5a775afc87baee95ac5f018d241e67a8bf89e3004
     provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     location: builtins.str,
     name: builtins.str,
+    backup_region: typing.Optional[builtins.str] = None,
+    backup_vault_type: typing.Optional[builtins.str] = None,
     description: typing.Optional[builtins.str] = None,
     id: typing.Optional[builtins.str] = None,
     labels: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,

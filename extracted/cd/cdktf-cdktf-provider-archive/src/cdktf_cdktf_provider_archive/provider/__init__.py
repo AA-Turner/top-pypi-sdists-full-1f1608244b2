@@ -1,7 +1,7 @@
 r'''
 # `provider`
 
-Refer to the Terraform Registry for docs: [`archive`](https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs).
+Refer to the Terraform Registry for docs: [`archive`](https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class ArchiveProvider(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-archive.provider.ArchiveProvider",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs archive}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs archive}.'''
 
     def __init__(
         self,
@@ -53,11 +53,11 @@ class ArchiveProvider(
         *,
         alias: typing.Optional[builtins.str] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs archive} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs archive} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs#alias ArchiveProvider#alias}
+        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs#alias ArchiveProvider#alias}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__9334d8ee2bfd48a0b6bd3d2efceb54053666d2fefddaec92ffc4d091954d4b64)
@@ -80,7 +80,7 @@ class ArchiveProvider(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the ArchiveProvider to import.
-        :param import_from_id: The id of the existing ArchiveProvider that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing ArchiveProvider that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the ArchiveProvider to import is found.
         '''
         if __debug__:
@@ -134,7 +134,7 @@ class ArchiveProvider(
 class ArchiveProviderConfig:
     def __init__(self, *, alias: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs#alias ArchiveProvider#alias}
+        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs#alias ArchiveProvider#alias}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__3c55b33d0d45082b5aaf9d9b53d8c0dbe974d4f669c09696067c98d7276df49b)
@@ -147,7 +147,7 @@ class ArchiveProviderConfig:
     def alias(self) -> typing.Optional[builtins.str]:
         '''Alias name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs#alias ArchiveProvider#alias}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs#alias ArchiveProvider#alias}
         '''
         result = self._values.get("alias")
         return typing.cast(typing.Optional[builtins.str], result)

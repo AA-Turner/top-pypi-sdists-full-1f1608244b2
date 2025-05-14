@@ -1,19 +1,21 @@
 from __future__ import annotations
 
+import contextlib
 import importlib
 import os
+import re
 from collections.abc import Iterable
 from datetime import datetime
 from pathlib import Path
-from typing import cast
+from typing import Literal, cast, overload
 
 import asyncclick as click
-import tortoise
 from dictdiffer import diff
 from tortoise import BaseDBAsyncClient, Model, Tortoise
 from tortoise.exceptions import OperationalError
 from tortoise.indexes import Index
 
+from aerich._compat import tortoise_version_less_than
 from aerich.coder import load_index
 from aerich.ddl import BaseDDL
 from aerich.enums import Color
@@ -22,7 +24,9 @@ from aerich.utils import (
     get_app_connection,
     get_dict_diff_by_key,
     get_models_describe,
+    import_py_file,
     is_default_function,
+    run_async,
 )
 
 MIGRATE_TEMPLATE = """from tortoise import BaseDBAsyncClient
@@ -134,14 +138,32 @@ class Migrate:
         return version
 
     @classmethod
-    async def _generate_diff_py(cls, name) -> str:
-        version = await cls.generate_version(name)
-        # delete if same version exists
-        for version_file in cls.get_all_version_files():
-            if version_file.startswith(version.split("_")[0]):
+    async def _generate_diff_py(cls, name, no_input: bool = False) -> str | None:
+        content = cls._get_diff_file_content()
+        version = await cls.generate_version(name)  # '<num>_<date>_<name>.py'
+        conflict_files = [
+            version_file
+            for version_file in cls.get_all_version_files()
+            if version_file.startswith(version.split("_")[0])
+        ]
+        if conflict_files:
+            if len(conflict_files) == 1:
+                file = Path(cls.migrate_location, conflict_files[0])
+                tip = f"Miration file exists({file}). Do you want to remove it?"
+            else:
+                tip = f"Miration file exists({conflict_files}). Do you want to remove them?"
+            overwrite = no_input or click.prompt(
+                tip,
+                default=False,
+                type=bool,
+                show_choices=True,
+            )
+            if not overwrite:
+                return None
+            # delete same version files
+            for version_file in conflict_files:
                 os.unlink(Path(cls.migrate_location, version_file))
 
-        content = cls._get_diff_file_content()
         Path(cls.migrate_location, version).write_text(content, encoding="utf-8")
         return version
 
@@ -161,8 +183,16 @@ class Migrate:
             )
         ]
 
+    @overload
     @classmethod
-    async def migrate(cls, name: str, empty: bool) -> str:
+    async def migrate(cls, name: str, empty: bool, no_input: Literal[True]) -> str: ...
+
+    @overload
+    @classmethod
+    async def migrate(cls, name: str, empty: bool, no_input: bool = False) -> str | None: ...
+
+    @classmethod
+    async def migrate(cls, name: str, empty: bool, no_input: bool = False) -> str | None:
         """
         diff old models and new models to generate diff content
         :param name: str name for migration
@@ -170,18 +200,18 @@ class Migrate:
         :return:
         """
         if empty:
-            return await cls._generate_diff_py(name)
+            return await cls._generate_diff_py(name, no_input=no_input)
         new_version_content = get_models_describe(cls.app)
         last_version = cast(dict, cls._last_version_content)
-        cls.diff_models(last_version, new_version_content)
-        cls.diff_models(new_version_content, last_version, False)
+        cls.diff_models(last_version, new_version_content, no_input=no_input)
+        cls.diff_models(new_version_content, last_version, False, no_input=no_input)
 
         cls._merge_operators()
 
         if not cls.upgrade_operators:
             return ""
 
-        return await cls._generate_diff_py(name)
+        return await cls._generate_diff_py(name, no_input=no_input)
 
     @classmethod
     def _get_diff_file_content(cls) -> str:
@@ -222,9 +252,8 @@ class Migrate:
 
     @classmethod
     def _handle_indexes(cls, model: type[Model], indexes: list[tuple[str] | Index]) -> list:
-        if tortoise.__version__ > "0.22.2":
-            # The min version of tortoise is '0.11.0', so we can compare it by a `>`,
-            # tortoise>0.22.2 have __eq__/__hash__ with Index class since 313ee76.
+        if not tortoise_version_less_than("0.23.0"):
+            # tortoise>=0.23.0 have __eq__/__hash__ with Index class since 313ee76.
             return indexes
         if index_classes := set(index.__class__ for index in indexes if isinstance(index, Index)):
             # Leave magic patch here to compare with older version of tortoise-orm
@@ -271,8 +300,26 @@ class Migrate:
             if field.get("managed") is not False
         }
         for action, option, change in get_dict_diff_by_key(old_m2m_fields, new_m2m_fields):
-            if (option and option[-1] == "nullable") or change[0][0] == "db_constraint":
-                continue
+            if action == "change":
+                # Example:: action = 'change'; option = [0, 'unique']; change = (False, True)
+                attr = option[-1]
+                if attr == "indexed":
+                    # Ignore changing of indexed, as it usually changed by unique
+                    continue
+                elif attr == "nullable":
+                    # nullable of m2m relation is constrainted by orm framework, not by db
+                    continue
+                elif attr in ("unique", "db_constraint"):
+                    # TODO: handle 'unique'
+                    if upgrade:
+                        click.secho(
+                            f"Aerich does not handle {attr!r} attribution for m2m field. You may need to change the constraints in db manually.",
+                            fg=Color.yellow,
+                        )
+                    continue
+            with contextlib.suppress(TypeError, KeyError):
+                if change[0][0] == "db_constraint":
+                    continue
             new_value = change[0][1]
             if isinstance(new_value, str):
                 for new_m2m_field in new_m2m_fields:
@@ -376,8 +423,30 @@ class Migrate:
         )
 
     @classmethod
+    def _is_unique_constraint(cls, model: type[Model], index_name: str) -> bool:
+        if cls.dialect != "postgres":
+            return False
+        # For postgresql, if a unique_together was created when generating the table, it is
+        # a constraint. And if it was created after table generated, it will be a unique index.
+        migrate_files = cls.get_all_version_files()
+        if len(migrate_files) < 2:
+            return True
+        pattern = re.compile(rf' "?{index_name}"? ')
+        for filename in reversed(migrate_files[1:]):
+            module = import_py_file(Path(cls.migrate_location, filename))
+            upgrade_sql = run_async(module.upgrade, None)
+            if pattern.search(upgrade_sql):
+                line = [i for i in upgrade_sql.splitlines() if pattern.search(i)][0]
+                prefix_words = pattern.split(line)[0].lower().split()
+                if "drop" in prefix_words:
+                    # The migrate file may be generated by `aerich migrate` without applied by `aerich upgrade`
+                    continue
+                return "constraint" in prefix_words
+        return True
+
+    @classmethod
     def diff_models(
-        cls, old_models: dict[str, dict], new_models: dict[str, dict], upgrade=True
+        cls, old_models: dict[str, dict], new_models: dict[str, dict], upgrade=True, no_input=False
     ) -> None:
         """
         diff models and add operators
@@ -387,7 +456,13 @@ class Migrate:
         :return:
         """
         _aerich = f"{cls.app}.{cls._aerich}"
-        old_models.pop(_aerich, None)
+        try:
+            old_models.pop(_aerich, None)
+        except AttributeError:
+            # Invalid use when app migration directory exists but aerich table not exist
+            raise click.UsageError(
+                "You may need to run `aerich init-db` first to initialize the database."
+            ) from None
         new_models.pop(_aerich, None)
         models_with_rename_field: set[str] = set()  # models that trigger the click.prompt
 
@@ -443,7 +518,15 @@ class Migrate:
                     cls._add_operator(cls._add_index(model, index, True), upgrade, True)
                 # remove unique_together
                 for index in old_unique_together.difference(new_unique_together):
-                    cls._add_operator(cls._drop_index(model, index, True), upgrade, True)
+                    index_name = cls._unique_index_name(model, index)
+                    if upgrade and cls._is_unique_constraint(model, index_name):
+                        cls._add_operator(
+                            cls.ddl.drop_unique_constraint(model, index_name), upgrade, True
+                        )
+                    else:
+                        cls._add_operator(
+                            cls.ddl.drop_index_by_name(model, index_name), upgrade, True
+                        )
                 # add indexes
                 for idx in new_indexes.difference(old_indexes):
                     cls._add_operator(cls._add_index(model, idx), upgrade, fk_m2m_index=True)
@@ -512,7 +595,7 @@ class Migrate:
                                             # print a empty line to warn that is another model
                                             prefix = "\n" + prefix
                                         models_with_rename_field.add(new_model_str)
-                                    is_rename = click.prompt(
+                                    is_rename = no_input or click.prompt(
                                         f"{prefix}Rename {old_data_field_name} to {new_data_field_name}?",
                                         default=True,
                                         type=bool,
@@ -734,6 +817,11 @@ class Migrate:
         return ret
 
     @classmethod
+    def _unique_index_name(cls, model: type[Model], fields_name: Iterable[str]) -> str:
+        field_names = cls._resolve_fk_fields_name(model, fields_name)
+        return cls.ddl._index_name(True, model, field_names)
+
+    @classmethod
     def _drop_index(
         cls, model: type[Model], fields_name: Iterable[str] | Index, unique=False
     ) -> str:
@@ -776,7 +864,7 @@ class Migrate:
                     extra=fields_name.extra,
                 )
             sql = fields_name.get_sql(cls.ddl.schema_generator, model, safe=True)
-            if tortoise.__version__ < "0.24":
+            if tortoise_version_less_than("0.24.0"):
                 sql = sql.replace("  ", " ")
                 if cls.dialect == "postgres" and (exists := "IF NOT EXISTS ") not in sql:
                     idx = " INDEX "

@@ -37,6 +37,8 @@ MODEL_REMAPPING = {"llava-qwen2": "llava_bunny", "bunny-llama": "llava_bunny"}
 
 MAX_FILE_SIZE_GB = 5
 
+MODEL_CONVERSION_DTYPES = ["float16", "bfloat16", "float32"]
+
 
 # A stream on the default device just for generation
 generation_stream = mx.new_stream(mx.default_device())
@@ -463,7 +465,7 @@ def upload_to_hub(path: str, upload_repo: str, hf_path: str):
 
     from . import __version__
 
-    card = ModelCard.load("OpenGVLab/InternVL3-1B")
+    card = ModelCard.load(hf_path)
     card.data.tags = ["mlx"] if card.data.tags is None else card.data.tags + ["mlx"]
     card.text = dedent(
         f"""
@@ -493,37 +495,6 @@ def upload_to_hub(path: str, upload_repo: str, hf_path: str):
         repo_type="model",
     )
     print(f"Upload successful, go to https://huggingface.co/{upload_repo} for details.")
-
-
-def get_model_path(path_or_hf_repo: str, revision: Optional[str] = None) -> Path:
-    """
-    Ensures the model is available locally. If the path does not exist locally,
-    it is downloaded from the Hugging Face Hub.
-
-    Args:
-        path_or_hf_repo (str): The local path or Hugging Face repository ID of the model.
-        revision (str, optional): A revision id which can be a branch name, a tag, or a commit hash.
-
-    Returns:
-        Path: The path to the model.
-    """
-    model_path = Path(path_or_hf_repo)
-    if not model_path.exists():
-        model_path = Path(
-            snapshot_download(
-                repo_id=path_or_hf_repo,
-                revision=revision,
-                allow_patterns=[
-                    "*.json",
-                    "*.safetensors",
-                    "*.py",
-                    "tokenizer.model",
-                    "*.tiktoken",
-                    "*.txt",
-                ],
-            )
-        )
-    return model_path
 
 
 def apply_repetition_penalty(logits: mx.array, generated_tokens: Any, penalty: float):
@@ -730,7 +701,7 @@ def convert(
     quantize: bool = False,
     q_group_size: int = 64,
     q_bits: int = 4,
-    dtype: str = "float16",
+    dtype: Optional[str] = None,
     upload_repo: str = None,
     revision: Optional[str] = None,
     dequantize: bool = False,
@@ -743,9 +714,13 @@ def convert(
         model_path, lazy=True, trust_remote_code=trust_remote_code
     )
 
+    if dtype is None:
+        dtype = config.get("torch_dtype", None)
     weights = dict(tree_flatten(model.parameters()))
-    dtype = getattr(mx, dtype)
-    weights = {k: v.astype(dtype) for k, v in weights.items()}
+    if dtype in MODEL_CONVERSION_DTYPES:
+        print("[INFO] Using dtype:", dtype)
+        dtype = getattr(mx, dtype)
+        weights = {k: v.astype(dtype) for k, v in weights.items()}
 
     if quantize and dequantize:
         raise ValueError("Choose either quantize or dequantize, not both.")
@@ -1321,4 +1296,13 @@ def generate(
         )
         print(f"Peak memory: {last_response.peak_memory:.3f} GB")
 
-    return text
+    usage_stats = {
+        "input_tokens": last_response.prompt_tokens,
+        "output_tokens": last_response.generation_tokens,
+        "total_tokens": last_response.prompt_tokens + last_response.generation_tokens,
+        "prompt_tps": last_response.prompt_tps,
+        "generation_tps": last_response.generation_tps,
+        "peak_memory": last_response.peak_memory,
+    }
+
+    return text, usage_stats

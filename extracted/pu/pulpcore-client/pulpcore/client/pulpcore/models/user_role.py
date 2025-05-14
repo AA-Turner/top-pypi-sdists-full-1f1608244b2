@@ -29,9 +29,10 @@ class UserRole(BaseModel):
     Serializer for UserRole.
     """ # noqa: E501
     role: Annotated[str, Field(min_length=1, strict=True)]
-    content_object: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(description="pulp_href of the object for which role permissions should be asserted. If set to 'null', permissions will act on either domain or model-level.")
+    content_object: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="pulp_href of the object for which role permissions should be asserted. If set to 'null', permissions will act on either domain or model-level.")
+    content_object_prn: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="prn of the object for which role permissions should be asserted. If set to 'null', permissions will act on either domain or model-level.")
     domain: Optional[StrictStr] = Field(default=None, description="Domain this role should be applied on, mutually exclusive with content_object.")
-    __properties: ClassVar[List[str]] = ["role", "content_object", "domain"]
+    __properties: ClassVar[List[str]] = ["role", "content_object", "content_object_prn", "domain"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -77,6 +78,11 @@ class UserRole(BaseModel):
         if self.content_object is None and "content_object" in self.model_fields_set:
             _dict['content_object'] = None
 
+        # set to None if content_object_prn (nullable) is None
+        # and model_fields_set contains the field
+        if self.content_object_prn is None and "content_object_prn" in self.model_fields_set:
+            _dict['content_object_prn'] = None
+
         # set to None if domain (nullable) is None
         # and model_fields_set contains the field
         if self.domain is None and "domain" in self.model_fields_set:
@@ -96,6 +102,7 @@ class UserRole(BaseModel):
         _obj = cls.model_validate({
             "role": obj.get("role"),
             "content_object": obj.get("content_object"),
+            "content_object_prn": obj.get("content_object_prn"),
             "domain": obj.get("domain")
         })
         return _obj

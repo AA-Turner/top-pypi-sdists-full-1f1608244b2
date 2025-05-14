@@ -114,7 +114,7 @@ class AuroraDSQLClient(BaseClient):
         self, **kwargs: Unpack[CreateClusterInputTypeDef]
     ) -> CreateClusterOutputTypeDef:
         """
-        Creates a cluster in Amazon Aurora DSQL.
+        This operation creates a cluster in Amazon Aurora DSQL.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dsql/client/create_cluster.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_dsql/client/#create_cluster)

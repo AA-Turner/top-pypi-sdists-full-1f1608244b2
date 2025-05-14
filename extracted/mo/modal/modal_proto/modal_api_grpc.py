@@ -155,6 +155,7 @@ class ModalClientModal:
         self.TunnelStop = modal.client.UnaryUnaryWrapper(grpclib_stub.TunnelStop, client, server_url)
         self.VolumeCommit = modal.client.UnaryUnaryWrapper(grpclib_stub.VolumeCommit, client, server_url)
         self.VolumeCopyFiles = modal.client.UnaryUnaryWrapper(grpclib_stub.VolumeCopyFiles, client, server_url)
+        self.VolumeCopyFiles2 = modal.client.UnaryUnaryWrapper(grpclib_stub.VolumeCopyFiles2, client, server_url)
         self.VolumeDelete = modal.client.UnaryUnaryWrapper(grpclib_stub.VolumeDelete, client, server_url)
         self.VolumeGetFile = modal.client.UnaryUnaryWrapper(grpclib_stub.VolumeGetFile, client, server_url)
         self.VolumeGetFile2 = modal.client.UnaryUnaryWrapper(grpclib_stub.VolumeGetFile2, client, server_url)

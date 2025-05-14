@@ -4,7 +4,7 @@ import os
 import platform
 from contextlib import AbstractAsyncContextManager
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal, overload
 
 import tortoise
 from tortoise import Tortoise, connections, generate_schema_for_client
@@ -42,7 +42,7 @@ def _init_asyncio_patch():
     """
     if platform.system() == "Windows":
         try:
-            from asyncio import WindowsSelectorEventLoopPolicy
+            from asyncio import WindowsSelectorEventLoopPolicy  # type:ignore
         except ImportError:
             pass  # Can't assign a policy which doesn't exist.
         else:
@@ -114,7 +114,7 @@ def _init_tortoise_0_24_1_patch():
                     "",
                 )  # may have better way
             m2m_create_string += self._post_table_hook()
-            if field_object.create_unique_index:
+            if getattr(field_object, "create_unique_index", field_object.unique):
                 unique_index_create_sql = self._get_unique_index_sql(
                     exists, through_table_name, [backward_key, forward_key]
                 )
@@ -129,7 +129,7 @@ def _init_tortoise_0_24_1_patch():
             m2m_tables_for_create.append(m2m_create_string)
         return m2m_tables_for_create
 
-    BaseSchemaGenerator._get_m2m_tables = _get_m2m_tables
+    setattr(BaseSchemaGenerator, "_get_m2m_tables", _get_m2m_tables)
 
 
 _init_asyncio_patch()
@@ -250,12 +250,29 @@ class Command(AbstractAsyncContextManager):
         inspect = cls(connection, tables)
         return await inspect.inspect()
 
-    async def migrate(self, name: str = "update", empty: bool = False) -> str:
-        return await Migrate.migrate(name, empty)
+    @overload
+    async def migrate(
+        self, name: str = "update", empty: bool = False, no_input: Literal[True] = True
+    ) -> str: ...
+
+    @overload
+    async def migrate(
+        self, name: str = "update", empty: bool = False, no_input: bool = False
+    ) -> str | None: ...
+
+    async def migrate(
+        self, name: str = "update", empty: bool = False, no_input: bool = False
+    ) -> str | None:
+        # return None if same version migration file already exists, and new one not generated
+        return await Migrate.migrate(name, empty, no_input)
 
     async def init_db(self, safe: bool) -> None:
         location = self.location
         app = self.app
+
+        await Tortoise.init(config=self.tortoise_config)
+        connection = get_app_connection(self.tortoise_config, app)
+
         dirname = Path(location, app)
         if not dirname.exists():
             dirname.mkdir(parents=True)
@@ -264,8 +281,6 @@ class Command(AbstractAsyncContextManager):
             for unexpected_file in dirname.glob("*"):
                 raise FileExistsError(str(unexpected_file))
 
-        await Tortoise.init(config=self.tortoise_config)
-        connection = get_app_connection(self.tortoise_config, app)
         await generate_schema_for_client(connection, safe)
 
         schema = get_schema_sql(connection, safe)

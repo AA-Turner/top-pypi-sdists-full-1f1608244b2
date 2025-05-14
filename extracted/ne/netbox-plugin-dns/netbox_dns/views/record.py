@@ -51,7 +51,7 @@ class RecordListView(generic.ObjectListView):
 @register_model_view(Record, "list_managed", path="managed", detail=False)
 class ManagedRecordListView(generic.ObjectListView):
     queryset = Record.objects.filter(managed=True).prefetch_related(
-        "ipam_ip_address", "address_record"
+        "ipam_ip_address", "address_records"
     )
     filterset = RecordFilterSet
     filterset_form = RecordFilterForm
@@ -141,11 +141,26 @@ class RecordView(generic.ObjectView):
 
         if instance.type == RecordTypeChoices.CNAME:
             try:
-                context["cname_target_table"] = self.get_value_records(instance)
+                cname_target_table = self.get_value_records(instance)
+                if cname_target_table is not None:
+                    cname_target_table.configure(request)
+                context["cname_target_table"] = cname_target_table
             except CNAMEWarning as exc:
                 context["cname_warning"] = str(exc)
         else:
-            context["cname_table"] = self.get_cname_records(instance)
+            cname_table = self.get_cname_records(instance)
+            if cname_table is not None:
+                cname_table.configure(request)
+            context["cname_table"] = cname_table
+
+        if instance.ipam_ip_address is not None:
+            context["ipam_ip_address"] = instance.ipam_ip_address
+        elif instance.address_records is not None:
+            address_record = instance.address_records.filter(
+                ipam_ip_address__isnull=False
+            ).first()
+            if address_record is not None:
+                context["ipam_ip_address"] = address_record.ipam_ip_address
 
         if not instance.managed:
             name = dns_name.from_text(instance.name, origin=None)
@@ -155,6 +170,7 @@ class RecordView(generic.ObjectView):
 
                 if Zone.objects.filter(
                     active=True,
+                    view=instance.zone.view,
                     name__iregex=regex_from_list(
                         get_parent_zone_names(
                             instance.fqdn,

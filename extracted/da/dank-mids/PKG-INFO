@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: dank-mids
-Version: 4.20.148
+Version: 4.20.149
 Summary: Multicall batching middleware for asynchronous scripts using web3.py
 License: MIT
 Author: BobTheBuidler
@@ -17,7 +17,7 @@ Requires-Dist: aiofiles
 Requires-Dist: aiolimiter (>=1.2,<1.3)
 Requires-Dist: cchecksum (>=0.0.3,<1)
 Requires-Dist: eth-retry (>=0.3.1,<1)
-Requires-Dist: evmspec (>=0.3.2,<1)
+Requires-Dist: evmspec (>=0.3.4,<1)
 Requires-Dist: ez-a-sync (>=0.28,<1)
 Requires-Dist: multicall (>=0.6.2,<1)
 Requires-Dist: typed-envs (>=0.1.3,<0.2)

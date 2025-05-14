@@ -1,15 +1,23 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: openedx-mongodbproxy
-Version: 0.2.2
+Version: 0.3.0
 Summary: Proxy around MongoDB connection that automatically handles AutoReconnect exceptions.
 Home-page: https://github.com/arngarden/MongoDBProxy
 Author: Gustav Arngarden
 Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.6
-Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
 Description-Content-Type: text/markdown
+Requires-Dist: pymongo
+Dynamic: author
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: summary
 
 MongoDBProxy
 ============

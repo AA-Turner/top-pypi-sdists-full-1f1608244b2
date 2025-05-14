@@ -134,7 +134,12 @@ class SQLMeshMagics(Magics):
         args = parse_argstring(self.context, line)
         configs = load_configs(args.config, Context.CONFIG_TYPE, args.paths)
         log_limit = list(configs.values())[0].log_limit
-        configure_logging(args.debug, log_limit=log_limit, log_file_dir=args.log_file_dir)
+        configure_logging(
+            args.debug,
+            log_limit=log_limit,
+            log_file_dir=args.log_file_dir,
+            ignore_warnings=args.ignore_warnings,
+        )
         configure_console(ignore_warnings=args.ignore_warnings)
         try:
             context = Context(paths=args.paths, config=configs, gateway=args.gateway)
@@ -1110,6 +1115,13 @@ class SQLMeshMagics(Magics):
         """Run linter for target model(s)"""
         args = parse_argstring(self.lint, line)
         context.lint_models(args.models)
+
+    @magic_arguments()
+    @line_magic
+    @pass_sqlmesh_context
+    def destroy(self, context: Context, line: str) -> None:
+        """Removes all project resources, engine-managed objects, state tables and clears the SQLMesh cache."""
+        context.destroy()
 
 
 def register_magics() -> None:

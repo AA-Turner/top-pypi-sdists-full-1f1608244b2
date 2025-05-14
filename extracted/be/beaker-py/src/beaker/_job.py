@@ -17,6 +17,12 @@ class JobClient(ServiceClient):
             exceptions_for_status={grpc.StatusCode.NOT_FOUND: BeakerJobNotFound(job_id)},
         ).job
 
+    def get_results(self, job: pb2.Job) -> pb2.Dataset | None:
+        if job.assignment_details.HasField("result_dataset_id"):
+            return self.beaker.dataset.get(job.assignment_details.result_dataset_id)
+        else:
+            return None
+
     def logs(
         self,
         job: pb2.Job,
@@ -34,6 +40,14 @@ class JobClient(ServiceClient):
 
         retries = 0
         last_log_timestamp = None
+
+        def update_request():
+            # Update request to restart streaming from the last log message received.
+            if last_log_timestamp is not None:
+                request.MergeFrom(pb2.StreamJobLogsRequest(since=last_log_timestamp))
+                request.since.nanos += 1  # NOTE: 'since' timestamp is now a clone of 'last_log_timestamp', so modifying in-place is okay.
+                request.ClearField("tail_lines")
+
         while True:
             try:
                 for job_log in self.rpc_streaming_request(
@@ -44,16 +58,19 @@ class JobClient(ServiceClient):
                     retries = 0  # reset because we've successfully received a new log
                     last_log_timestamp = job_log.timestamp
                     yield job_log
+
+                # NOTE: Work-around for #6602
+                # If we're following the job, continue making streaming requests until the job is officially finalized.
+                if follow and not self.get(job.id).status.HasField("finalized"):
+                    update_request()
+                    continue
+
                 return
             except BeakerServerError as err:
                 if retries < self.beaker.MAX_RETRIES:
                     self._log_and_wait(retries, err)
                     retries += 1
-                    # Update request to restart streaming from the last log message received.
-                    if last_log_timestamp is not None:
-                        request.MergeFrom(pb2.StreamJobLogsRequest(since=last_log_timestamp))
-                        request.since.nanos += 1  # NOTE: 'since' timestamp is now a clone of 'last_log_timestamp', so modifying in-place is okay.
-                        request.ClearField("tail_lines")
+                    update_request()
                 else:
                     raise
 

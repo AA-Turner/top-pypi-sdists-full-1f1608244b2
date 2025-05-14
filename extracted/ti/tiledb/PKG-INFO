@@ -1,6 +1,6 @@
 Metadata-Version: 2.2
 Name: tiledb
-Version: 0.33.6
+Version: 0.34.0
 Summary: Pythonic interface to the TileDB array storage manager
 Author-Email: "TileDB, Inc." <help@tiledb.io>
 Maintainer-Email: "TileDB, Inc." <help@tiledb.io>
@@ -54,9 +54,9 @@ Description-Content-Type: text/markdown
 
 # Quick Links
 
-* [Installation](https://docs.tiledb.com/developer/installation/quick-install)
-* [Build Instructions](https://docs.tiledb.com/main/how-to/installation/building-from-source/python)
-* [TileDB Documentation](https://docs.tiledb.com/main/)
+* [Installation](https://cloud.tiledb.com/academy/structure/arrays/quickstart/)
+* [Build Instructions](docs/building-from-source.md)
+* [TileDB Academy](https://cloud.tiledb.com/academy/)
 * [Python API reference](https://tiledb-inc-tiledb-py.readthedocs-hosted.com/en/stable)
 
 # Quick Installation

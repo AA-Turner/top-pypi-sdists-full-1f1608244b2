@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastembed"
-version = "0.6.1"
+version = "0.7.0"
 description = "Fast, light, accurate library built for retrieval embedding generation"
 authors = ["Qdrant Team <info@qdrant.tech>", "NirantK <nirant.bits@gmail.com>"]
 license = "Apache License"
@@ -19,8 +19,8 @@ numpy = [
     { version = ">=1.21,<2.1.0", python = "<3.10" },
 ]
 onnxruntime = [
-    { version = ">1.20.0", python = ">=3.13" },
     { version = ">=1.17.0,<1.20.0", python = "<3.10" },
+    { version = ">1.20.0", python = ">=3.13" },
     { version = ">=1.17.0,!=1.20.0", python = ">=3.10,<3.13" },
 ]
 tqdm = "^4.66"

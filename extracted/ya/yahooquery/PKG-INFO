@@ -1,27 +1,26 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: yahooquery
-Version: 2.3.7
+Version: 2.4.0
 Summary: Python wrapper for an unofficial Yahoo Finance API
+Author-email: Doug Guthrie <douglas.p.guthrie@gmail.com>
 License: MIT
-Keywords: python,API,finance,stocks,Yahoo Finance
-Author: Doug Guthrie
-Author-email: douglas.p.guthrie@gmail.com
-Requires-Python: >=3.8.1,<4.0
-Classifier: License :: OSI Approved :: MIT License
-Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.9
-Classifier: Programming Language :: Python :: 3.10
-Classifier: Programming Language :: Python :: 3.11
-Classifier: Programming Language :: Python :: 3.12
+License-File: LICENSE.txt
+Keywords: API,Yahoo Finance,finance,python,stocks
+Requires-Python: <4.0,>=3.9
+Requires-Dist: beautifulsoup4>=4.12.2
+Requires-Dist: curl-cffi>=0.10.0
+Requires-Dist: lxml>=4.9.3
+Requires-Dist: pandas>=2.2.0
+Requires-Dist: requests-futures>=1.0.1
+Requires-Dist: tqdm>=4.65.0
+Provides-Extra: dev
+Requires-Dist: mkdocs-material>=9.6.0; extra == 'dev'
+Requires-Dist: pre-commit>=4.2.0; extra == 'dev'
+Requires-Dist: pytest-cov>=6.1.0; extra == 'dev'
+Requires-Dist: pytest>=8.3.0; extra == 'dev'
+Requires-Dist: ruff>=0.11.0; extra == 'dev'
 Provides-Extra: premium
-Requires-Dist: beautifulsoup4 (>=4.12.2,<5.0.0)
-Requires-Dist: lxml (>=4.9.3,<5.0.0)
-Requires-Dist: pandas (>=2.0.3,<3.0.0)
-Requires-Dist: requests (>=2.31.0,<3.0.0)
-Requires-Dist: requests-futures (>=1.0.1,<2.0.0)
-Requires-Dist: selenium (>=4.10.0,<5.0.0) ; extra == "premium"
-Requires-Dist: tqdm (>=4.65.0,<5.0.0)
-Project-URL: Documentation, https://yahooquery.dpguthrie.com
+Requires-Dist: selenium>=4.32.0; extra == 'premium'
 Description-Content-Type: text/markdown
 
 <p align="center">
@@ -31,9 +30,6 @@ Description-Content-Type: text/markdown
     <em>Python wrapper for an unofficial Yahoo Finance API</em>
 </p>
 <p align="center">
-    <a href="https://travis-ci.com/dpguthrie/yahooquery" target="_blank">
-        <img src="https://travis-ci.com/dpguthrie/yahooquery.svg?branch=master" alt="Build Status">
-    </a>
     <a href="https://codecov.io/gh/dpguthrie/yahooquery" target="_blank">
         <img src="https://img.shields.io/codecov/c/github/dpguthrie/yahooquery" alt="Coverage">
     </a>
@@ -70,7 +66,7 @@ Some features of yahooquery:
 
 ## Requirements
 
-Python 2.7, 3.5+
+Python 3.9+ - **Versions on or after 2.4.0 require python 3.9+**
 
 - [Pandas](https://pandas.pydata.org) - Fast, powerful, flexible and easy to use open source data analysis and manipulation tool
 - [Requests](https://requests.readthedocs.io/en/master/) - The elegant and simple HTTP library for Python, built for human beings.
@@ -94,6 +90,11 @@ Otherwise, omit the premium argument:
 
 ```bash
 pip install yahooquery
+```
+
+You can also install with uv if you have that installed:
+```bash
+uv pip install yahooquery
 ```
 
 ## Example
@@ -125,4 +126,3 @@ faang.summary_detail
 ## License
 
 This project is licensed under the terms of the MIT license.
-

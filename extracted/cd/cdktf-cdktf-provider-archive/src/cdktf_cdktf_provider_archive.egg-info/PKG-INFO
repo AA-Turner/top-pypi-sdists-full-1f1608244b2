@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: cdktf-cdktf-provider-archive
-Version: 10.3.0
+Version: 10.3.1
 Summary: Prebuilt archive Provider for Terraform CDK (cdktf)
 Home-page: https://github.com/cdktf/cdktf-provider-archive.git
 Author: HashiCorp
@@ -10,25 +10,24 @@ Classifier: Intended Audience :: Developers
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: JavaScript
 Classifier: Programming Language :: Python :: 3 :: Only
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Typing :: Typed
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: License :: OSI Approved
-Requires-Python: ~=3.8
+Requires-Python: ~=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: cdktf<0.21.0,>=0.20.0
 Requires-Dist: constructs<11.0.0,>=10.3.0
-Requires-Dist: jsii<2.0.0,>=1.105.0
+Requires-Dist: jsii<2.0.0,>=1.111.0
 Requires-Dist: publication>=0.0.3
 Requires-Dist: typeguard<4.3.0,>=2.13.3
 
-# CDKTF prebuilt bindings for hashicorp/archive provider version 2.7.0
+# CDKTF prebuilt bindings for hashicorp/archive provider version 2.7.1
 
-This repo builds and publishes the [Terraform archive provider](https://registry.terraform.io/providers/hashicorp/archive/2.7.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform archive provider](https://registry.terraform.io/providers/hashicorp/archive/2.7.1/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -90,7 +89,7 @@ This project is explicitly not tracking the Terraform archive provider version 1
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform archive provider](https://registry.terraform.io/providers/hashicorp/archive/2.7.0)
+* [Terraform archive provider](https://registry.terraform.io/providers/hashicorp/archive/2.7.1)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.

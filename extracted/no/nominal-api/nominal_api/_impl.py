@@ -50861,13 +50861,19 @@ class scout_compute_resolved_api_LiteralRangesNode(ConjureBeanType):
     @builtins.classmethod
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
+            'granularity': ConjureFieldDefinition('granularity', api_Granularity),
             'literal_ranges': ConjureFieldDefinition('literalRanges', List[scout_compute_resolved_api_LiteralRange])
         }
 
-    __slots__: List[str] = ['_literal_ranges']
+    __slots__: List[str] = ['_granularity', '_literal_ranges']
 
-    def __init__(self, literal_ranges: List["scout_compute_resolved_api_LiteralRange"]) -> None:
+    def __init__(self, granularity: "api_Granularity", literal_ranges: List["scout_compute_resolved_api_LiteralRange"]) -> None:
+        self._granularity = granularity
         self._literal_ranges = literal_ranges
+
+    @builtins.property
+    def granularity(self) -> "api_Granularity":
+        return self._granularity
 
     @builtins.property
     def literal_ranges(self) -> List["scout_compute_resolved_api_LiteralRange"]:
@@ -58357,17 +58363,23 @@ class scout_datareview_api_GeneratedAlertsState(ConjureBeanType):
     @builtins.classmethod
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
-            'rids': ConjureFieldDefinition('rids', List[scout_rids_api_CheckAlertRid])
+            'rids': ConjureFieldDefinition('rids', List[scout_rids_api_CheckAlertRid]),
+            'event_rids': ConjureFieldDefinition('eventRids', List[api_rids_EventRid])
         }
 
-    __slots__: List[str] = ['_rids']
+    __slots__: List[str] = ['_rids', '_event_rids']
 
-    def __init__(self, rids: List[str]) -> None:
+    def __init__(self, event_rids: List[str], rids: List[str]) -> None:
         self._rids = rids
+        self._event_rids = event_rids
 
     @builtins.property
     def rids(self) -> List[str]:
         return self._rids
+
+    @builtins.property
+    def event_rids(self) -> List[str]:
+        return self._event_rids
 
 
 scout_datareview_api_GeneratedAlertsState.__name__ = "GeneratedAlertsState"

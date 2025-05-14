@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: edx-enterprise
-Version: 5.13.4
+Version: 5.13.7
 Summary: Your project description goes here
 Home-page: https://github.com/openedx/edx-enterprise
 Author: edX
@@ -108,6 +108,18 @@ Change Log
 Unreleased
 ----------
 * nothing unreleased
+
+[5.13.7]
+---------
+* feat: adds ENTERPRISE_ADMIN_ONBOARDING toggle, removes obsolete groups toggles
+
+[5.13.6]
+---------
+* fix: flex groups reject enrollments from outside the org
+
+[5.13.5]
+---------
+* chore: upgrades python requirements
 
 [5.13.4]
 ---------

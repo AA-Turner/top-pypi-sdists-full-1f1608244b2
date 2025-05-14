@@ -38,12 +38,12 @@ class TestGroupRole(unittest.TestCase):
             return GroupRole(
                 role = '0',
                 content_object = '0',
+                content_object_prn = '0',
                 domain = ''
             )
         else:
             return GroupRole(
                 role = '0',
-                content_object = '0',
         )
         """
 

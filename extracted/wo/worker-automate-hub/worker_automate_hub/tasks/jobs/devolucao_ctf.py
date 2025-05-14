@@ -4537,7 +4537,7 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
         
 
     except Exception as ex:
-        retorno = f"Erro Processo Devolução Prazo a Faturar: {str(ex)} \nEtapas Executadas:\n{steps}"
+        retorno = f"Erro Processo Devolução CTF: {str(ex)} \nEtapas Executadas:\n{steps}"
         logger.error(retorno)
         console.print(retorno, style="bold red")
         return RpaRetornoProcessoDTO(

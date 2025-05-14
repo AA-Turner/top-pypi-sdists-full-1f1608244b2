@@ -233,7 +233,7 @@ class BaseModel(pl.LightningModule):
             )
 
         # Protections for loss functions
-        if isinstance(self.loss, (losses.IQLoss)):
+        if isinstance(self.loss, (losses.IQLoss, losses.HuberIQLoss)):
             loss_type = type(self.loss)
             if not isinstance(self.valid_loss, loss_type):
                 raise Exception(
@@ -244,7 +244,7 @@ class BaseModel(pl.LightningModule):
                 raise Exception(
                     f"Please set valid_loss to MQLoss() or HuberMQLoss() when training with {type(self.loss).__name__}"
                 )
-        if isinstance(self.valid_loss, losses.IQLoss):
+        if isinstance(self.valid_loss, (losses.IQLoss, losses.HuberIQLoss)):
             valid_loss_type = type(self.valid_loss)
             if not isinstance(self.loss, valid_loss_type):
                 raise Exception(
@@ -415,7 +415,9 @@ class BaseModel(pl.LightningModule):
         )
 
     def _set_quantiles(self, quantiles=None):
-        if quantiles is None and isinstance(self.loss, losses.IQLoss):
+        if quantiles is None and isinstance(
+            self.loss, (losses.IQLoss, losses.HuberIQLoss)
+        ):
             self.loss.update_quantile(q=[0.5])
         elif hasattr(self.loss, "update_quantile") and callable(
             self.loss.update_quantile
@@ -644,7 +646,7 @@ class BaseModel(pl.LightningModule):
             model.load_state_dict(content["state_dict"], strict=True)
         return model
 
-    def _create_windows(self, batch, step, w_idxs=None):
+    def _create_windows(self, batch, step):
         # Parse common data
         window_size = self.input_size + self.h
         temporal_cols = batch["temporal_cols"]
@@ -708,26 +710,7 @@ class BaseModel(pl.LightningModule):
             if final_condition.sum() == 0:
                 raise Exception("No windows available for training")
 
-            # Sample windows
-            if self.windows_batch_size is not None:
-                n_windows = windows.shape[0]
-                w_idxs = np.random.choice(
-                    n_windows,
-                    size=self.windows_batch_size,
-                    replace=(n_windows < self.windows_batch_size),
-                )
-                windows = windows[w_idxs]
-
-                if static is not None and not self.MULTIVARIATE:
-                    static = static[w_idxs]
-
-            windows_batch = dict(
-                temporal=windows,
-                temporal_cols=temporal_cols,
-                static=static,
-                static_cols=static_cols,
-            )
-            return windows_batch
+            return windows, static, static_cols
 
         elif step in ["predict", "val"]:
 
@@ -790,19 +773,7 @@ class BaseModel(pl.LightningModule):
                         static, repeats=windows_per_serie, dim=0
                     )
 
-            # Sample windows for batched prediction
-            if w_idxs is not None:
-                windows = windows[w_idxs]
-                if static is not None and not self.MULTIVARIATE:
-                    static = static[w_idxs]
-
-            windows_batch = dict(
-                temporal=windows,
-                temporal_cols=temporal_cols,
-                static=static,
-                static_cols=static_cols,
-            )
-            return windows_batch
+            return windows, static, static_cols
         else:
             raise ValueError(f"Unknown step {step}")
 
@@ -843,6 +814,31 @@ class BaseModel(pl.LightningModule):
         y_hat = self.scaler.inverse_transform(z=y_hat, x_scale=y_scale, x_shift=y_loc)
 
         return y_hat
+
+    def _sample_windows(
+        self, windows_temporal, static, static_cols, temporal_cols, step, w_idxs=None
+    ):
+        if step == "train" and self.windows_batch_size is not None:
+            n_windows = windows_temporal.shape[0]
+            w_idxs = np.random.choice(
+                n_windows,
+                size=self.windows_batch_size,
+                replace=(n_windows < self.windows_batch_size),
+            )
+        windows_sample = windows_temporal
+        if w_idxs is not None:
+            windows_sample = windows_temporal[w_idxs]
+
+            if static is not None and not self.MULTIVARIATE:
+                static = static[w_idxs]
+
+        windows_batch = dict(
+            temporal=windows_sample,
+            temporal_cols=temporal_cols,
+            static=static,
+            static_cols=static_cols,
+        )
+        return windows_batch
 
     def _parse_windows(self, batch, windows):
         # windows: [Ws, L + h, C, n_series]
@@ -981,16 +977,16 @@ class BaseModel(pl.LightningModule):
         # Set exogenous
         hist_exog_current = None
         if self.hist_exog_size > 0:
-            hist_exog_current = hist_exog[:, : self.input_size + tau - 1]
+            hist_exog_current = hist_exog[:, : self.input_size + tau]
 
         futr_exog_current = None
         if self.futr_exog_size > 0:
-            futr_exog_current = futr_exog[:, : self.input_size + tau - 1]
+            futr_exog_current = futr_exog[:, : self.input_size + tau]
 
         # First forecast step
         y_hat[:, tau], insample_y = self._validate_step_recurrent_single(
-            insample_y=insample_y[:, : self.input_size + tau - 1],
-            insample_mask=insample_mask[:, : self.input_size + tau - 1],
+            insample_y=insample_y[:, : self.input_size + tau],
+            insample_mask=insample_mask[:, : self.input_size + tau],
             hist_exog=hist_exog_current,
             futr_exog=futr_exog_current,
             stat_exog=stat_exog,
@@ -998,7 +994,7 @@ class BaseModel(pl.LightningModule):
         )
 
         # Horizon prediction recursively
-        for tau in range(self.horizon_backup):
+        for tau in range(1, self.horizon_backup):
             # Set exogenous
             if self.hist_exog_size > 0:
                 hist_exog_current = hist_exog[:, self.input_size + tau - 1].unsqueeze(1)
@@ -1087,16 +1083,16 @@ class BaseModel(pl.LightningModule):
         # Set exogenous
         hist_exog_current = None
         if self.hist_exog_size > 0:
-            hist_exog_current = hist_exog[:, : self.input_size + tau - 1]
+            hist_exog_current = hist_exog[:, : self.input_size + tau]
 
         futr_exog_current = None
         if self.futr_exog_size > 0:
-            futr_exog_current = futr_exog[:, : self.input_size + tau - 1]
+            futr_exog_current = futr_exog[:, : self.input_size + tau]
 
         # First forecast step
         y_hat[:, tau], insample_y = self._predict_step_recurrent_single(
-            insample_y=insample_y[:, : self.input_size + tau - 1],
-            insample_mask=insample_mask[:, : self.input_size + tau - 1],
+            insample_y=insample_y[:, : self.input_size + tau],
+            insample_mask=insample_mask[:, : self.input_size + tau],
             hist_exog=hist_exog_current,
             futr_exog=futr_exog_current,
             stat_exog=stat_exog,
@@ -1104,7 +1100,7 @@ class BaseModel(pl.LightningModule):
         )
 
         # Horizon prediction recursively
-        for tau in range(self.horizon_backup):
+        for tau in range(1, self.horizon_backup):
             # Set exogenous
             if self.hist_exog_size > 0:
                 hist_exog_current = hist_exog[:, self.input_size + tau - 1].unsqueeze(1)
@@ -1231,7 +1227,13 @@ class BaseModel(pl.LightningModule):
         # windows: [Ws, L + h, C, n_series] or [Ws, L + h, C]
         y_idx = batch["y_idx"]
 
-        windows = self._create_windows(batch, step="train")
+        temporal_cols = batch["temporal_cols"]
+        windows_temporal, static, static_cols = self._create_windows(
+            batch, step="train"
+        )
+        windows = self._sample_windows(
+            windows_temporal, static, static_cols, temporal_cols, step="train"
+        )
         original_outsample_y = torch.clone(
             windows["temporal"][:, self.input_size :, y_idx]
         )
@@ -1296,9 +1298,9 @@ class BaseModel(pl.LightningModule):
         if self.val_size == 0:
             return np.nan
 
-        # TODO: Hack to compute number of windows
-        windows = self._create_windows(batch, step="val")
-        n_windows = len(windows["temporal"])
+        temporal_cols = batch["temporal_cols"]
+        windows_temporal, static, static_cols = self._create_windows(batch, step="val")
+        n_windows = len(windows_temporal)
         y_idx = batch["y_idx"]
 
         # Number of windows in batch
@@ -1314,7 +1316,14 @@ class BaseModel(pl.LightningModule):
             w_idxs = np.arange(
                 i * windows_batch_size, min((i + 1) * windows_batch_size, n_windows)
             )
-            windows = self._create_windows(batch, step="val", w_idxs=w_idxs)
+            windows = self._sample_windows(
+                windows_temporal,
+                static,
+                static_cols,
+                temporal_cols,
+                step="val",
+                w_idxs=w_idxs,
+            )
             original_outsample_y = torch.clone(
                 windows["temporal"][:, self.input_size :, y_idx]
             )
@@ -1387,9 +1396,11 @@ class BaseModel(pl.LightningModule):
         if self.RECURRENT:
             self.input_size = self.inference_input_size
 
-        # TODO: Hack to compute number of windows
-        windows = self._create_windows(batch, step="predict")
-        n_windows = len(windows["temporal"])
+        temporal_cols = batch["temporal_cols"]
+        windows_temporal, static, static_cols = self._create_windows(
+            batch, step="predict"
+        )
+        n_windows = len(windows_temporal)
         y_idx = batch["y_idx"]
 
         # Number of windows in batch
@@ -1403,7 +1414,14 @@ class BaseModel(pl.LightningModule):
             w_idxs = np.arange(
                 i * windows_batch_size, min((i + 1) * windows_batch_size, n_windows)
             )
-            windows = self._create_windows(batch, step="predict", w_idxs=w_idxs)
+            windows = self._sample_windows(
+                windows_temporal,
+                static,
+                static_cols,
+                temporal_cols,
+                step="predict",
+                w_idxs=w_idxs,
+            )
             windows = self._normalization(windows=windows, y_idx=y_idx)
 
             # Parse windows

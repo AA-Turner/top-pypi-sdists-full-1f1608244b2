@@ -388,6 +388,13 @@ def cli_command_add_agilicus_default_expose_allow(ctx, **kwargs):
     rules.add_agilicus_default_expose_allow(ctx, **kwargs)
 
 
+@click.command(name="add-agilicus-default-policy")
+@click.option("--org-id", default=None)
+@click.pass_context
+def cli_command_add_agilicus_default_policy(ctx, **kwargs):
+    rules.add_agilicus_default_policy(ctx, **kwargs)
+
+
 @click.command(name="add-scope-condition-rule")
 @click.option("--name", required=True)
 @click.option("--action", required=True, multiple=True, type=click.Choice(rules.ACTIONS))

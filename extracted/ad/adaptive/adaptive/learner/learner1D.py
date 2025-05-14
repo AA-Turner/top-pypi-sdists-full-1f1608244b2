@@ -3,10 +3,9 @@ from __future__ import annotations
 import collections.abc
 import itertools
 import math
-import sys
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from copy import copy, deepcopy
-from typing import TYPE_CHECKING, Any, Callable, Optional, Union
+from typing import Any, TypeAlias
 
 import cloudpickle
 import numpy as np
@@ -24,12 +23,6 @@ from adaptive.utils import (
     partial_function_from_dataframe,
 )
 
-if sys.version_info >= (3, 10):
-    from typing import TypeAlias
-else:
-    from typing_extensions import TypeAlias
-
-
 try:
     import pandas
 
@@ -38,32 +31,21 @@ try:
 except ModuleNotFoundError:
     with_pandas = False
 
-if TYPE_CHECKING:
-    # -- types --
 
-    # Commonly used types
-    Interval: TypeAlias = Union[tuple[float, float], tuple[float, float, int]]
-    NeighborsType: TypeAlias = SortedDict[float, list[Optional[float]]]
+# Commonly used types
+Interval: TypeAlias = tuple[float, float] | tuple[float, float, int]
+NeighborsType: TypeAlias = SortedDict[float, list[float | None]]
 
-    # Types for loss_per_interval functions
-    XsType0: TypeAlias = tuple[float, float]
-    YsType0: TypeAlias = Union[tuple[float, float], tuple[np.ndarray, np.ndarray]]
-    XsType1: TypeAlias = tuple[
-        Optional[float], Optional[float], Optional[float], Optional[float]
-    ]
-    YsType1: TypeAlias = Union[
-        tuple[Optional[float], Optional[float], Optional[float], Optional[float]],
-        tuple[
-            Optional[np.ndarray],
-            Optional[np.ndarray],
-            Optional[np.ndarray],
-            Optional[np.ndarray],
-        ],
-    ]
-    XsTypeN: TypeAlias = tuple[Optional[float], ...]
-    YsTypeN: TypeAlias = Union[
-        tuple[Optional[float], ...], tuple[Optional[np.ndarray], ...]
-    ]
+# Types for loss_per_interval functions
+XsType0: TypeAlias = tuple[float, float]
+YsType0: TypeAlias = tuple[float, float] | tuple[np.ndarray, np.ndarray]
+XsType1: TypeAlias = tuple[float | None, float | None, float | None, float | None]
+YsType1: TypeAlias = (
+    tuple[float | None, float | None, float | None, float | None]
+    | tuple[np.ndarray | None, np.ndarray | None, np.ndarray | None, np.ndarray | None]
+)
+XsTypeN: TypeAlias = tuple[float | None, ...]
+YsTypeN: TypeAlias = tuple[float | None, ...] | tuple[np.ndarray | None, ...]
 
 
 __all__ = [
@@ -124,18 +106,18 @@ def abs_min_log_loss(xs: XsType0, ys: YsType0) -> Float:
 @uses_nth_neighbors(1)
 def triangle_loss(xs: XsType1, ys: YsType1) -> Float:
     assert len(xs) == 4
-    xs = [x for x in xs if x is not None]  # type: ignore[assignment]
-    ys = [y for y in ys if y is not None]  # type: ignore[assignment]
+    x = [x for x in xs if x is not None]
+    y = [y for y in ys if y is not None]
 
-    if len(xs) == 2:  # we do not have enough points for a triangle
-        return xs[1] - xs[0]  # type: ignore[operator]
+    if len(x) == 2:  # we do not have enough points for a triangle
+        return x[1] - x[0]  # type: ignore[operator]
 
-    N = len(xs) - 2  # number of constructed triangles
-    if isinstance(ys[0], collections.abc.Iterable):
-        pts = [(x, *y) for x, y in zip(xs, ys)]  # type: ignore[misc]
+    N = len(x) - 2  # number of constructed triangles
+    if isinstance(y[0], collections.abc.Iterable):
+        pts = [(x, *y) for x, y in zip(x, y)]  # type: ignore[misc]
         vol = simplex_volume_in_embedding
     else:
-        pts = list(zip(xs, ys))
+        pts = list(zip(x, y))
         vol = volume
     return sum(vol(pts[i : i + 3]) for i in range(N)) / N
 
@@ -598,7 +580,7 @@ class Learner1D(BaseLearner):
             )
 
         # either it is a float/int, if not, try casting to a np.array
-        if not isinstance(y, (float, int)):
+        if not isinstance(y, float | int):
             y = np.asarray(y, dtype=float)
 
         # Add point to the real data dict
@@ -779,8 +761,9 @@ class Learner1D(BaseLearner):
                 ival is not None
                 and self._loss(self.losses_combined, ival) >= self._loss(quals, qual)
             ):
+                assert ival is not None
                 i += 1
-                quals[(*ival, 2)] = loss_ival / 2
+                quals[(ival[0], ival[1], 2)] = loss_ival / 2
             else:
                 quals.pop(qual, None)
                 *xs, n = qual

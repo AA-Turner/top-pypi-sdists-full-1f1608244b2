@@ -10,15 +10,10 @@ from chalk import DataFrame
 from chalk.client import ChalkBaseException, ChalkError, ErrorCode
 from chalk.features import Feature
 from chalk.utils.missing_dependency import missing_dependency_exception
+from chalk.utils.pydanticutil.pydantic_compat import is_pydantic_basemodel_instance
 
 if TYPE_CHECKING:
     import polars as pl
-    from pydantic import BaseModel
-else:
-    try:
-        from pydantic.v1 import BaseModel
-    except ImportError:
-        from pydantic import BaseModel
 
 
 class _UploadFeaturesValidationErrors:
@@ -71,7 +66,7 @@ def _is_struct_like_object(obj: Any) -> bool:
     return (
         is_dataclass(obj)
         or (isinstance(obj, tuple) and hasattr(obj, "_fields"))
-        or isinstance(obj, BaseModel)
+        or is_pydantic_basemodel_instance(obj)
         or attrs.has(obj.__class__)
         or isinstance(obj, Mapping)
     )

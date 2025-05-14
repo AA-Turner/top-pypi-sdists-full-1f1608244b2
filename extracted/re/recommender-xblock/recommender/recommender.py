@@ -998,14 +998,13 @@ class RecommenderXBlock(HelperXBlock):
         ))
         frag.add_css_url("//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css")
         frag.add_javascript_url("//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js")
-        frag.add_javascript_url('//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js')
         frag.add_javascript_url('//cdnjs.cloudflare.com/ajax/libs/intro.js/0.5.0/intro.min.js')
-        frag.add_css(self.resource_string("static/css/tooltipster.css"))
+        frag.add_css(self.resource_string("static/css/tooltipster.bundle.min.css"))
         frag.add_css(self.resource_string("static/css/recommender.css"))
         frag.add_css(self.resource_string("static/css/introjs.css"))
-        frag.add_javascript(self.resource_string("static/js/src/jquery.tooltipster.min.js"))
+        frag.add_javascript(self.resource_string("static/js/src/tooltipster.bundle.min.js"))
         if statici18n_js_url := self._get_statici18n_js_url():
-            frag.add_javascript(statici18n_js_url)
+            frag.add_javascript_url(statici18n_js_url)
         frag.add_javascript(self.resource_string("static/js/src/cats.js"))
         frag.add_javascript(self.resource_string("static/js/src/recommender.js"))
         frag.initialize_js('RecommenderXBlock', self.get_client_configuration())
@@ -1024,7 +1023,7 @@ class RecommenderXBlock(HelperXBlock):
         frag.add_css(load("static/css/recommenderstudio.css"))
         frag.add_javascript_url("//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js")
         if statici18n_js_url := self._get_statici18n_js_url():
-            frag.add_javascript(statici18n_js_url)
+            frag.add_javascript_url(statici18n_js_url)
         frag.add_javascript(load("static/js/src/recommenderstudio.js"))
         frag.initialize_js('RecommenderXBlock')
         return frag

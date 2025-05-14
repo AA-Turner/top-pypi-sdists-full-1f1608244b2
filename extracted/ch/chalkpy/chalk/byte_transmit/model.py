@@ -17,11 +17,6 @@ BYTEMODEL_NUM_LEN_BYTES: int = 8
 
 if TYPE_CHECKING:
     from pydantic import BaseModel
-else:
-    try:
-        from pydantic.v1 import BaseModel
-    except ImportError:
-        from pydantic import BaseModel
 
 
 class ByteSerializable:
@@ -92,7 +87,7 @@ class ByteBaseModel(ByteSerializable):
 
     @classmethod
     def produce_pydantic_attrs_bytes(cls, start_idx: int, buffer: BytesIO, model: ByteBaseModel) -> Tuple[int, int]:
-        pydantic_map: Dict[str, BaseModel] = model.get_pydantic_models_map()
+        pydantic_map: "Dict[str, BaseModel]" = model.get_pydantic_models_map()
         pydantic_as_json_map = {k: v.json() for k, v in pydantic_map.items()}
         pydantic_map_as_bytes = json.dumps(pydantic_as_json_map).encode("utf-8")
         cur_idx = start_idx
@@ -212,7 +207,6 @@ class ByteBaseModel(ByteSerializable):
         for (field_name, field_bytes), cls_for_bytes in zip(
             byte_serializables_bytes_items.items(), cls.get_byte_serializable_classes()
         ):
-
             byte_serializable_attrs[field_name] = cls_for_bytes.deserialize(field_bytes)
 
         final_attrs.update(byte_serializable_attrs)

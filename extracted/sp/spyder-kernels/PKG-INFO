@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: spyder-kernels
-Version: 3.0.3
+Version: 3.0.4
 Summary: Jupyter kernels for Spyder's console
 Home-page: https://github.com/spyder-ide/spyder-kernels
 Download-URL: https://www.spyder-ide.org/#fh5co-download
@@ -49,6 +49,20 @@ Requires-Dist: pillow; extra == "test"
 Requires-Dist: django; extra == "test"
 Requires-Dist: h5py; extra == "test"
 Requires-Dist: pydicom; extra == "test"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: download-url
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 # Jupyter kernels for the Spyder console
 

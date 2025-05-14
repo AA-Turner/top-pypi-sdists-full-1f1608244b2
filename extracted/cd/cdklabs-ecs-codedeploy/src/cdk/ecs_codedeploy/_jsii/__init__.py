@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@cdklabs/cdk-ecs-codedeploy",
-    "0.0.404",
+    "0.0.405",
     __name__[0:-6],
-    "cdk-ecs-codedeploy@0.0.404.jsii.tgz",
+    "cdk-ecs-codedeploy@0.0.405.jsii.tgz",
 )
 
 __all__ = [

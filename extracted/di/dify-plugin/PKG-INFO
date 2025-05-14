@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: dify_plugin
-Version: 0.2.2
+Version: 0.2.4
 Summary: Dify Plugin SDK
 Keywords: dify,plugin,sdk
 Author-Email: langgenius <hello@dify.ai>
@@ -11,7 +11,7 @@ Requires-Dist: Flask~=3.0.3
 Requires-Dist: Werkzeug~=3.0.3
 Requires-Dist: dpkt~=1.9.8
 Requires-Dist: gevent~=24.11.1
-Requires-Dist: httpx~=0.27.0
+Requires-Dist: httpx~=0.28.1
 Requires-Dist: pydantic_settings<3.0.0,>=2.5.0
 Requires-Dist: pydantic>=2.8.2
 Requires-Dist: pydub~=0.25.1

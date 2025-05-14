@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sourcedefender
-Version: 15.0.11
+Version: 15.0.12
 Summary: Advanced encryption protecting your python codebase.
 Home-page: https://sourcedefender.co.uk/?src=pypi-url
 Author: SOURCEdefender
@@ -37,6 +37,7 @@ Requires-Dist: setuptools
 Requires-Dist: boltons>=25.0.0
 Requires-Dist: docopt>=0.6.2
 Requires-Dist: environs>=10.0.0
+Requires-Dist: feedparser>=6.0.0
 Requires-Dist: msgpack>=1.0.8
 Requires-Dist: ntplib>=0.4.0
 Requires-Dist: packaging>=22.0

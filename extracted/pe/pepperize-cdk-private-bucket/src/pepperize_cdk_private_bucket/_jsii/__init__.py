@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@pepperize/cdk-private-bucket",
-    "0.0.587",
+    "0.0.589",
     __name__[0:-6],
-    "cdk-private-bucket@0.0.587.jsii.tgz",
+    "cdk-private-bucket@0.0.589.jsii.tgz",
 )
 
 __all__ = [

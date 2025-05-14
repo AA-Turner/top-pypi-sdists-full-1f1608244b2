@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: mjml
-Version: 0.11.0
+Version: 0.11.1
 Summary: Python implementation for MJML - a framework that makes responsive-email easy
 Home-page: https://github.com/FelixSchwarz/mjml-python
 Author: Felix Schwarz
@@ -19,13 +19,24 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Communications :: Email
 Classifier: Topic :: Text Processing :: Markup :: HTML
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
-Provides-Extra: testing
-Provides-Extra: css_inlining
 License-File: LICENSE.txt
+Requires-Dist: beautifulsoup4<4.13; python_version <= "3.6"
+Requires-Dist: beautifulsoup4; python_version > "3.6"
+Requires-Dist: dotmap
+Requires-Dist: docopt
+Requires-Dist: jinja2
+Provides-Extra: testing
+Requires-Dist: HTMLCompare>=0.3.0; extra == "testing"
+Requires-Dist: lxml; extra == "testing"
+Requires-Dist: pytest; extra == "testing"
+Provides-Extra: css-inlining
+Requires-Dist: css_inline>=0.11; extra == "css-inlining"
+Dynamic: license-file
 
 # mjml-python
 

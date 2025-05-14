@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "comfy-cli"
 license = { text = "GPL-3.0-only" }
-version = "v1.3.8"                                            # Will be filled in by the CI/CD pipeline. Check publish_package.py.
+version = "v1.3.9"                                            # Will be filled in by the CI/CD pipeline. Check publish_package.py.
 requires-python = ">= 3.9"
 description = "A CLI tool for installing and using ComfyUI."
 readme = "README.md"
@@ -44,6 +44,7 @@ dependencies = [
   "ruff",
   "semver~=3.0.2",
   "cookiecutter",
+  "click<=8.1.8"
 ]
 
 [project.optional-dependencies]
@@ -63,7 +64,7 @@ include = ["comfy_cli*"]
 
 [tool.ruff]
 line-length = 120
-target-version = "v1.3.8"
+target-version = "py39"
 
 [tool.ruff.lint]
 select = [

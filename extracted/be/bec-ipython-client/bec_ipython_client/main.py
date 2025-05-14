@@ -2,9 +2,12 @@ import argparse
 import os
 import sys
 from importlib.metadata import version
-from typing import Iterable, Literal
+from typing import Iterable, Literal, Tuple
 
 import IPython
+import redis
+import redis.exceptions
+import requests
 from IPython.terminal.ipapp import TerminalIPythonApp
 from IPython.terminal.prompts import Prompts, Token
 
@@ -13,6 +16,7 @@ from bec_ipython_client.bec_magics import BECMagics
 from bec_ipython_client.callbacks.ipython_live_updates import IPythonLiveUpdates
 from bec_ipython_client.signals import ScanInterruption, SigintHandler
 from bec_lib import plugin_helper
+from bec_lib.acl_login import BECAuthenticationError
 from bec_lib.alarm_handler import AlarmBase
 from bec_lib.bec_errors import DeviceConfigError
 from bec_lib.bec_service import parse_cmdline_args
@@ -28,17 +32,26 @@ logger = bec_logger.logger
 class CLIBECClient(BECClient):
 
     def _wait_for_server(self):
-        ret = super()._wait_for_server()
+        super()._wait_for_server()
+
+        # NOTE: self._BECClient__init_params is a name mangling attribute of the parent class
+        # pylint: disable=no-member
         cmdline_args = self._BECClient__init_params["config"].config.get("cmdline_args")
         # set stderr logger level to SUCCESS (will not show messages <= INFO level)
         # (see issue #318), except if user explicitely asked for another level from cmd line
         if not cmdline_args or not cmdline_args.get("log_level"):
+            # pylint: disable=protected-access
             bec_logger._stderr_log_level = "SUCCESS"
             bec_logger._update_sinks()
-        return ret
 
 
 class BECIPythonClient:
+
+    # local_only_types is a container for objects that should not be resolved through
+    # the CLIBECClient but directly through the BECIPythonClient. While this is not
+    # needed for normal usage, it is required, e.g. for mocks.
+    _local_only_types: Tuple = ()
+
     def __init__(
         self,
         config: ServiceConfig | None = None,
@@ -47,7 +60,13 @@ class BECIPythonClient:
         forced=False,
     ) -> None:
         self._client = CLIBECClient(
-            config, connector_cls, wait_for_server, forced, parent=self, name="BECIPythonClient"
+            config,
+            connector_cls,
+            wait_for_server,
+            forced,
+            parent=self,
+            name="BECIPythonClient",
+            prompt_for_acl=True,
         )
         self._ip = IPython.get_ipython()
         self.started = False
@@ -64,6 +83,16 @@ class BECIPythonClient:
     def __getattr__(self, name):
         return getattr(self._client, name)
 
+    def __setattr__(self, name, value):
+        if isinstance(value, self._local_only_types):
+            return super().__setattr__(name, value)
+        if name in self.__dict__ or name in self.__class__.__dict__:
+            super().__setattr__(name, value)
+        elif "_client" in self.__dict__ and hasattr(self._client, name):
+            setattr(self._client, name, value)
+        else:
+            super().__setattr__(name, value)
+
     def __dir__(self) -> Iterable[str]:
         return dir(self._client) + dir(self.__class__)
 
@@ -74,7 +103,11 @@ class BECIPythonClient:
         """start the client"""
         if self.started:
             return
-        self._client.start()
+        try:
+            self._client.start()
+        except KeyboardInterrupt:
+            raise KeyboardInterrupt("Login aborted.")
+
         bec_logger.add_console_log()
         self._sighandler = SigintHandler(self)
         self._beamline_mixin = BeamlineMixin()
@@ -89,12 +122,18 @@ class BECIPythonClient:
         if self._ip:
             self._ip.prompts.scan_number = scan_number + 1
 
+    def _refresh_ipython_username(self):
+        if not self._ip:
+            return
+        self._ip.prompts.username = self._client.username
+
     def _configure_ipython(self):
 
         if self._ip is None:
             return
 
-        self._ip.prompts = BECClientPrompt(ip=self._ip, client=self._client, username="demo")
+        self._ip.prompts = BECClientPrompt(ip=self._ip, client=self._client, username="unknown")
+        self._refresh_ipython_username()
         self._load_magics()
         self._ip.events.register("post_run_cell", log_console)
         self._ip.set_custom_exc((Exception,), _ip_exception_handler)  # register your handler
@@ -153,12 +192,19 @@ def _ip_exception_handler(self, etype, evalue, tb, tb_offset=None):
     if issubclass(etype, (AlarmBase, ScanInterruption, DeviceConfigError)):
         print(f"\x1b[31m BEC alarm:\x1b[0m {evalue}")
         return
+    if issubclass(etype, redis.exceptions.NoPermissionError):
+        # pylint: disable=protected-access
+        msg = f"The current user ({bec._client.username}) does not have the required permissions.\n {evalue}"
+        logger.info(f"Unauthorized: {msg}")
+        print(f"\x1b[31m Unauthorized:\x1b[0m {msg}")
+        return
     self.showtraceback((etype, evalue, tb), tb_offset=None)  # standard IPython's printout
 
 
 class BECClientPrompt(Prompts):
     def __init__(self, ip, username, client, status=0):
         self._username = username
+        self.session_name = "bec"
         self.client = client
         self.status = status
         super().__init__(ip)
@@ -177,6 +223,7 @@ class BECClientPrompt(Prompts):
         return [
             (status_led, "\u2022"),
             (Token.Prompt, " " + self.username),
+            (Token.Prompt, "@" + self.session_name),
             (Token.Prompt, " ["),
             (Token.PromptNum, str(self.shell.execution_count)),
             (Token.Prompt, "/"),

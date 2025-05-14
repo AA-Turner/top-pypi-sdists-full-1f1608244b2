@@ -37,7 +37,18 @@ __all__ = (
 
 ClusterActiveWaiterName = Literal["cluster_active"]
 ClusterNotExistsWaiterName = Literal["cluster_not_exists"]
-ClusterStatusType = Literal["ACTIVE", "CREATING", "DELETED", "DELETING", "FAILED", "UPDATING"]
+ClusterStatusType = Literal[
+    "ACTIVE",
+    "CREATING",
+    "DELETED",
+    "DELETING",
+    "FAILED",
+    "IDLE",
+    "INACTIVE",
+    "PENDING_DELETE",
+    "PENDING_SETUP",
+    "UPDATING",
+]
 ListClustersPaginatorName = Literal["list_clusters"]
 AuroraDSQLServiceName = Literal["dsql"]
 ServiceName = Literal[

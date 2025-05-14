@@ -9,8 +9,10 @@ from .assets_armis_centrix_mock import AssetsArmisCentrixMock
 from .assets_nozomi_vantage import AssetsNozomiVantage
 from .assets_nozomi_vantage_mock import AssetsNozomiVantageMock
 from .assets_qualys_cloud import AssetsQualysCloud
+from .assets_qualys_cloud_mock import AssetsQualysCloudMock
 from .assets_service_now import AssetsServiceNow
 from .assets_service_now_mock import AssetsServiceNowMock
+from .assets_tanium_cloud import AssetsTaniumCloud
 from .cloud_security_crowd_strike import CloudSecurityCrowdStrike
 from .edr_crowd_strike import EdrCrowdStrike
 from .edr_defender import EdrDefender
@@ -30,6 +32,7 @@ from .siem_crowdstrike import SiemCrowdstrike
 from .siem_elasticsearch import SiemElasticsearch
 from .siem_google_chronicle import SiemGoogleChronicle
 from .siem_mock import SiemMock
+from .siem_open_search import SiemOpenSearch
 from .siem_q_radar import SiemQRadar
 from .siem_rapid_7_insight_idr import SiemRapid7InsightIdr
 from .siem_sentinel import SiemSentinel
@@ -42,6 +45,7 @@ from .sink_crowdstrike_hec import SinkCrowdstrikeHec
 from .sink_elasticsearch import SinkElasticsearch
 from .sink_google_sec_ops import SinkGoogleSecOps
 from .sink_mock import SinkMock
+from .sink_open_search import SinkOpenSearch
 from .sink_splunk import SinkSplunk
 from .storage_aws_s_3 import StorageAwsS3
 from .storage_azure_blob import StorageAzureBlob
@@ -109,6 +113,15 @@ class ProviderConfig_AssetsQualysCloud(AssetsQualysCloud):
         allow_population_by_field_name = True
 
 
+class ProviderConfig_AssetsQualysCloudMock(AssetsQualysCloudMock):
+    type: typing.Literal["assets_qualys_cloud_mock"]
+
+    class Config:
+        frozen = True
+        smart_union = True
+        allow_population_by_field_name = True
+
+
 class ProviderConfig_AssetsServicenow(AssetsServiceNow):
     type: typing.Literal["assets_servicenow"]
 
@@ -120,6 +133,15 @@ class ProviderConfig_AssetsServicenow(AssetsServiceNow):
 
 class ProviderConfig_AssetsServicenowMock(AssetsServiceNowMock):
     type: typing.Literal["assets_servicenow_mock"]
+
+    class Config:
+        frozen = True
+        smart_union = True
+        allow_population_by_field_name = True
+
+
+class ProviderConfig_AssetsTaniumCloud(AssetsTaniumCloud):
+    type: typing.Literal["assets_tanium_cloud"]
 
     class Config:
         frozen = True
@@ -298,6 +320,15 @@ class ProviderConfig_SiemMockSiem(SiemMock):
         allow_population_by_field_name = True
 
 
+class ProviderConfig_SiemOpensearch(SiemOpenSearch):
+    type: typing.Literal["siem_opensearch"]
+
+    class Config:
+        frozen = True
+        smart_union = True
+        allow_population_by_field_name = True
+
+
 class ProviderConfig_SiemQRadar(SiemQRadar):
     type: typing.Literal["siem_q_radar"]
 
@@ -399,6 +430,15 @@ class ProviderConfig_SinkGoogleSecOps(SinkGoogleSecOps):
 
 class ProviderConfig_SinkMockSink(SinkMock):
     type: typing.Literal["sink_mock_sink"]
+
+    class Config:
+        frozen = True
+        smart_union = True
+        allow_population_by_field_name = True
+
+
+class ProviderConfig_SinkOpensearch(SinkOpenSearch):
+    type: typing.Literal["sink_opensearch"]
 
     class Config:
         frozen = True
@@ -592,8 +632,10 @@ ProviderConfig = typing.Union[
     ProviderConfig_AssetsNozomiVantage,
     ProviderConfig_AssetsNozomiVantageMock,
     ProviderConfig_AssetsQualysCloud,
+    ProviderConfig_AssetsQualysCloudMock,
     ProviderConfig_AssetsServicenow,
     ProviderConfig_AssetsServicenowMock,
+    ProviderConfig_AssetsTaniumCloud,
     ProviderConfig_CloudsecurityCrowdstrike,
     ProviderConfig_EdrCrowdstrike,
     ProviderConfig_EdrDefender,
@@ -613,6 +655,7 @@ ProviderConfig = typing.Union[
     ProviderConfig_SiemElasticsearch,
     ProviderConfig_SiemGoogleChronicle,
     ProviderConfig_SiemMockSiem,
+    ProviderConfig_SiemOpensearch,
     ProviderConfig_SiemQRadar,
     ProviderConfig_SiemRapid7Insightidr,
     ProviderConfig_SiemSentinel,
@@ -625,6 +668,7 @@ ProviderConfig = typing.Union[
     ProviderConfig_SinkElasticsearch,
     ProviderConfig_SinkGoogleSecOps,
     ProviderConfig_SinkMockSink,
+    ProviderConfig_SinkOpensearch,
     ProviderConfig_SinkSplunk,
     ProviderConfig_StorageAwsS3,
     ProviderConfig_StorageAzureBlob,

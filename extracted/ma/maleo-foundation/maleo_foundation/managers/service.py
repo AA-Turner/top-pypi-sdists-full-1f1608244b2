@@ -177,23 +177,30 @@ class ServiceManager:
         return self._maleo_credentials
 
     def _load_configs(self) -> None:
+        #* Load static configurations
         static_configurations_path = Path(self._settings.STATIC_CONFIGURATIONS_PATH)
         if static_configurations_path.exists() and static_configurations_path.is_file():
-            static_configurations = YAMLLoader.load(self._settings.STATIC_CONFIGURATIONS_PATH)
-            static_configs = StaticConfigurations.model_validate(static_configurations)
+            static_configurations = YAMLLoader.load_from_path(self._settings.STATIC_CONFIGURATIONS_PATH)
         else:
-            static_configurations = self._secret_manager.get(f"maleo-static-config-{self._settings.ENVIRONMENT}")
-            static_configs = StaticConfigurations.model_validate_strings(static_configurations)
+            data = self._secret_manager.get(f"maleo-static-config-{self._settings.ENVIRONMENT}")
+            static_configurations = YAMLLoader.load_from_string(data)
+        static_configs = StaticConfigurations.model_validate(static_configurations)
+
+        #* Load runtime configurations
         runtime_configurations_path = Path(self._settings.RUNTIME_CONFIGURATIONS_PATH)
         if runtime_configurations_path.exists() and runtime_configurations_path.is_file():
-            runtime_configurations = YAMLLoader.load(self._settings.RUNTIME_CONFIGURATIONS_PATH)
-            runtime_configs = RuntimeConfigurations.model_validate(runtime_configurations)
+            runtime_configurations = YAMLLoader.load_from_path(self._settings.RUNTIME_CONFIGURATIONS_PATH)
         else:
-            runtime_configurations = self._secret_manager.get(f"{self._settings.SERVICE_KEY}-runtime-config-{self._settings.ENVIRONMENT}")
-            runtime_configs = RuntimeConfigurations.model_validate_strings(runtime_configurations)
+            data = self._secret_manager.get(f"{self._settings.SERVICE_KEY}-runtime-config-{self._settings.ENVIRONMENT}")
+            runtime_configurations = YAMLLoader.load_from_string(data)
+        runtime_configs = RuntimeConfigurations.model_validate(runtime_configurations)
+
+        #* Load database configurations
         password = self._secret_manager.get(name=f"maleo-db-password-{self._settings.ENVIRONMENT}")
         host = self._secret_manager.get(name=f"maleo-db-host-{self._settings.ENVIRONMENT}")
         database = DatabaseConfigurations(password=password, host=host, database=runtime_configs.database)
+
+        #* Load whole configurations
         merged_configs = BaseMergers.deep_merge(static_configs.model_dump(), runtime_configs.model_dump(exclude={"database"}), {"database": database.model_dump()})
         self._configs = Configurations.model_validate(merged_configs)
 
@@ -239,10 +246,16 @@ class ServiceManager:
     def foundation(self) -> MaleoFoundationClientManager:
         return self._foundation
 
+    async def generate_token(self) -> str:
+        raise NotImplementedError()
+
     @property
     def token(self) -> str:
         payload = MaleoFoundationTokenGeneralTransfers.BaseEncodePayload(
+            iss="https://stg-maleo.nexmedis.com",
+            sub=0,
             sr="administrator",
+            u_i=0,
             u_u=self._maleo_credentials.username,
             u_e=self._maleo_credentials.email,
             u_ut="service"

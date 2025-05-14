@@ -1,81 +1,74 @@
-from functools import lru_cache
-from pathlib import Path
-from typing import Any, Dict, Optional, Sequence, Tuple, Union
+import posixpath
+from functools import cached_property
+from typing import TYPE_CHECKING
 
-import tomli
+from fsspec import AbstractFileSystem
 
+if TYPE_CHECKING:
+    import httpx
 
-@lru_cache
-def _load_toml(path: Union[Path, str]) -> Dict[str, Any]:
-    with open(path, "rb") as f:
-        return tomli.load(f)
-
-
-@lru_cache
-def _cached_resolve(path: Path) -> Path:
-    return path.resolve()
+USER_AGENT = "fal-sdk/1.14.0 (python)"
 
 
-@lru_cache
-def find_project_root(srcs: Optional[Sequence[str]]) -> Tuple[Path, str]:
-    """Return a directory containing .git, or pyproject.toml.
+class FalFileSystem(AbstractFileSystem):
+    @cached_property
+    def _client(self) -> "httpx.Client":
+        from httpx import Client
 
-    That directory will be a common parent of all files and directories
-    passed in `srcs`.
+        from fal.flags import REST_URL
+        from fal.sdk import get_default_credentials
 
-    If no directory in the tree contains a marker that would specify it's the
-    project root, the root of the file system is returned.
+        creds = get_default_credentials()
+        return Client(
+            base_url=REST_URL,
+            headers={
+                **creds.to_headers(),
+                "User-Agent": USER_AGENT,
+            },
+        )
 
-    Returns a two-tuple with the first element as the project root path and
-    the second element as a string describing the method by which the
-    project root was discovered.
-    """
-    if not srcs:
-        srcs = [str(_cached_resolve(Path.cwd()))]
+    def ls(self, path, detail=True, **kwargs):
+        response = self._client.get(f"/files/list/{path.lstrip('/')}")
+        response.raise_for_status()
+        files = response.json()
+        if detail:
+            return sorted(
+                (
+                    {
+                        "name": entry["path"],
+                        "size": entry["size"],
+                        "type": "file" if entry["is_file"] else "directory",
+                        "mtime": entry["updated_time"],
+                    }
+                    for entry in files
+                ),
+                key=lambda x: x["name"],
+            )
+        else:
+            return sorted(entry["path"] for entry in files)
 
-    path_srcs = [_cached_resolve(Path(Path.cwd(), src)) for src in srcs]
+    def info(self, path, **kwargs):
+        parent = posixpath.dirname(path)
+        entries = self.ls(parent, detail=True)
+        for entry in entries:
+            if entry["name"] == path:
+                return entry
+        raise FileNotFoundError(f"File not found: {path}")
 
-    # A list of lists of parents for each 'src'. 'src' is included as a
-    # "parent" of itself if it is a directory
-    src_parents = [
-        list(path.parents) + ([path] if path.is_dir() else []) for path in path_srcs
-    ]
+    def get_file(self, rpath, lpath, **kwargs):
+        with open(lpath, "wb") as fobj:
+            response = self._client.get(f"/files/file/{rpath.lstrip('/')}")
+            response.raise_for_status()
+            fobj.write(response.content)
 
-    common_base = max(
-        set.intersection(*(set(parents) for parents in src_parents)),
-        key=lambda path: path.parts,
-    )
+    def put_file(self, lpath, rpath, mode="overwrite", **kwargs):
+        with open(lpath, "rb") as fobj:
+            response = self._client.post(
+                f"/files/file/local/{rpath.lstrip('/')}",
+                files={"file_upload": (posixpath.basename(lpath), fobj, "text/plain")},
+            )
+            response.raise_for_status()
 
-    for directory in (common_base, *common_base.parents):
-        if (directory / ".git").exists():
-            return directory, ".git directory"
-
-        if (directory / "pyproject.toml").is_file():
-            pyproject_toml = _load_toml(directory / "pyproject.toml")
-            if "fal" in pyproject_toml.get("tool", {}):
-                return directory, "pyproject.toml"
-
-    return directory, "file system root"
-
-
-def find_pyproject_toml(
-    path_search_start: Optional[Tuple[str, ...]] = None,
-) -> Optional[str]:
-    """Find the absolute filepath to a pyproject.toml if it exists"""
-    path_project_root, _ = find_project_root(path_search_start)
-    path_pyproject_toml = path_project_root / "pyproject.toml"
-
-    if path_pyproject_toml.is_file():
-        return str(path_pyproject_toml)
-
-
-def parse_pyproject_toml(path_config: str) -> Dict[str, Any]:
-    """Parse a pyproject toml file, pulling out relevant parts for fal.
-
-    If parsing fails, will raise a tomli.TOMLDecodeError.
-    """
-    pyproject_toml = _load_toml(path_config)
-    config: Dict[str, Any] = pyproject_toml.get("tool", {}).get("fal", {})
-    config = {k.replace("--", "").replace("-", "_"): v for k, v in config.items()}
-
-    return config
+    def rm(self, path, **kwargs):
+        response = self._client.delete(f"/files/file/{path.lstrip('/')}")
+        response.raise_for_status()
