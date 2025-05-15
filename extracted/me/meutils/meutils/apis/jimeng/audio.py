@@ -105,7 +105,7 @@ VOICE_MAPPING = {
 
 
 @retrying()
-async def create(request: TTSRequest):  # audio.speech.create
+async def create_tts(request: TTSRequest):  # audio.speech.create
 
     effect_id = VOICE_MAPPING.get(request.voice, request.voice)
 
@@ -123,7 +123,7 @@ async def create(request: TTSRequest):  # audio.speech.create
 
         },
         "id_info": {
-            "id": VOICE_MAPPING.get(request.voice, request.voice),  # 7382552865023201819
+            "id": VOICE_MAPPING.get(request.voice, request.voice) or "7459778019725414962",
             "item_platform": 1
         }
     }
@@ -150,30 +150,35 @@ async def create(request: TTSRequest):  # audio.speech.create
 
         data = response.json()
 
-        if request.response_format == "url" and data.get("ret") == "0":
-            data["data"]["data"] = await to_url(data["data"]["data"], filename=f'{shortuuid.random()}.mp3')
-            return data
+        # logger.debug(data)
 
-        return data
+        if request.response_format == "url":
+            if data.get("ret") == "0":
+                data["data"]["data"] = await to_url(data["data"]["data"], filename=f'{shortuuid.random()}.mp3')
+            return data
+        else:
+            data = await to_bytes(data["data"]["data"])
+            return data
 
 
 if __name__ == '__main__':
     text = """
-展望未来，在变乱交织的世界中，强调“以史为鉴”，坚定做历史记忆的守护者、发展振兴的同行者、国际公平正义的捍卫者，携手为人类前途命运争取更加光明的未来。
+我们不能迟到早退刷脸打卡 中午休息一个小时 进出都得打卡
     """
     request = TTSRequest(
         model="tts-1",
         # input="军杰 快来我的五指山下" * 1,
         input=text,
-        # voice="柔美女友",
-        voice="妩媚女生",
+        voice="柔美女友",
+        # voice="妩媚女生",
         # voice="如来佛祖",
         # voice="京腔小爷",
 
-        response_format="url",
+        # response_format="url",
 
-        emotion="happy"
+        # emotion="happy",
+        emotion="fear"
 
     )
 
-    arun(create(request))
+    arun(create_tts(request))

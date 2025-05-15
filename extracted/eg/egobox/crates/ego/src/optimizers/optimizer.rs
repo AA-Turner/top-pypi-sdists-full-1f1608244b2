@@ -1,4 +1,4 @@
-use crate::optimizers::LhsOptimizer;
+use crate::optimizers::gbnm;
 use crate::InfillObjData;
 use ndarray::{arr1, Array1, Array2, ArrayView1};
 
@@ -10,17 +10,15 @@ use cobyla::RhoBeg;
 #[cfg(feature = "nlopt")]
 use nlopt::ObjFn;
 
-use ndarray_rand::rand::SeedableRng;
-use rand_xoshiro::Xoshiro256Plus;
-
 #[derive(Copy, Clone, Debug)]
 pub enum Algorithm {
     Cobyla,
     Slsqp,
-    Lhs,
+    Gbnm,
 }
 
-pub const MAX_EVAL_DEFAULT: usize = 2000;
+pub const INFILL_MAX_EVAL_DEFAULT: usize = 2000;
+
 /// Facade for various optimization algorithms
 pub(crate) struct Optimizer<'a> {
     algo: Algorithm,
@@ -33,7 +31,6 @@ pub(crate) struct Optimizer<'a> {
     xinit: Option<Array1<f64>>,
     ftol_abs: Option<f64>,
     ftol_rel: Option<f64>,
-    seed: Option<u64>,
 }
 
 impl<'a> Optimizer<'a> {
@@ -51,11 +48,10 @@ impl<'a> Optimizer<'a> {
             cstr_tol: None,
             bounds: bounds.clone(),
             user_data,
-            max_eval: MAX_EVAL_DEFAULT,
+            max_eval: INFILL_MAX_EVAL_DEFAULT,
             xinit: None,
             ftol_abs: None,
             ftol_rel: None,
-            seed: None,
         }
     }
 
@@ -69,18 +65,8 @@ impl<'a> Optimizer<'a> {
         self
     }
 
-    pub fn cstr_tol(&mut self, cstr_tol: Array1<f64>) -> &mut Self {
-        self.cstr_tol = Some(cstr_tol);
-        self
-    }
-
     pub fn max_eval(&mut self, max_eval: usize) -> &mut Self {
         self.max_eval = max_eval;
-        self
-    }
-
-    pub fn seed(&mut self, seed: u64) -> &mut Self {
-        self.seed = Some(seed);
         self
     }
 
@@ -233,14 +219,30 @@ impl<'a> Optimizer<'a> {
                     }
                 }
             }
-            Algorithm::Lhs => {
-                let res = LhsOptimizer::new(&self.bounds, self.fun, &self.cons, self.user_data);
-                let res = if let Some(seed) = self.seed {
-                    res.with_rng(Xoshiro256Plus::seed_from_u64(seed))
-                } else {
-                    res.with_rng(Xoshiro256Plus::from_entropy())
-                };
-                res.minimize()
+            Algorithm::Gbnm => {
+                let bounds: Vec<_> = self
+                    .bounds
+                    .outer_iter()
+                    .map(|row| (row[0], row[1]))
+                    .collect();
+                let res = gbnm::minimize(
+                    self.fun,
+                    &bounds,
+                    &mut self.user_data.clone(),
+                    gbnm::Options {
+                        max_evals: self.max_eval,
+                        ..gbnm::Options::default()
+                    },
+                );
+                let xinit = self.xinit.clone().unwrap().to_vec();
+
+                match res {
+                    Ok(gbnm::Result {
+                        x: x_opt,
+                        fval: y_opt,
+                    }) => (y_opt, arr1(&x_opt)),
+                    Err(_) => (f64::INFINITY, arr1(&xinit)),
+                }
             }
         };
         log::debug!("... end optimization");

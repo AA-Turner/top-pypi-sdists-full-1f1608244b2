@@ -18,7 +18,6 @@ import albumentations.pytorch as AP
 from PIL import Image
 from io import BytesIO
 from packaging import version
-from easydict import EasyDict
 
 filepath = os.path.abspath(__file__)
 repopath = os.path.split(filepath)[0]
@@ -89,7 +88,7 @@ class Remover:
         self.model = InSPyReNet_SwinB(depth=64, pretrained=False, threshold=None, **self.meta)
         self.model.eval()
         self.model.load_state_dict(
-            torch.load(os.path.join(ckpt_dir, ckpt_name), map_location="cpu"),
+            torch.load(os.path.join(ckpt_dir, ckpt_name), map_location="cpu", weights_only=True),
             strict=True,
         )
         self.model = self.model.to(self.device)
@@ -151,6 +150,21 @@ class Remover:
         desc = "Mode={}, Device={}, Torchscript={}".format(
             mode, self.device, "enabled" if jit else "disabled"
         )
+        
+        estimate_foreground_ml = None
+        try:
+            from pymatting.foreground.estimate_foreground_ml_cupy import estimate_foreground_ml_cupy as estimate_foreground_ml
+        except ImportError:
+            try:
+                from pymatting.foreground.estimate_foreground_ml_pyopencl import estimate_foreground_ml_pyopencl as estimate_foreground_ml
+            except ImportError:
+                try:
+                    from pymatting import estimate_foreground_ml
+                except ImportError:
+                    warnings.warn('Failed to load pymatting. Ignore this message if post-processing is not needed')
+                
+        self.matting_fn = estimate_foreground_ml
+        
         print("Settings -> {}".format(desc))
 
     def process(self, img, type="rgba", threshold=None, reverse=False):
@@ -204,6 +218,11 @@ class Remover:
             img = (np.stack([pred] * 3, axis=-1) * 255).astype(np.uint8)
 
         elif type == "rgba":
+            if threshold is None and self.matting_fn is not None:
+                img = self.matting_fn(img / 255.0, pred)
+                img = 255 * np.clip(img, 0., 1.) + 0.5
+                img = img.astype(np.uint8)
+
             r, g, b = cv2.split(img)
             pred = (pred * 255).astype(np.uint8)
             img = cv2.merge([r, g, b, pred])
@@ -217,7 +236,6 @@ class Remover:
             img = img * pred[..., np.newaxis] + bg * (1 - pred[..., np.newaxis])
 
         elif len(type) == 3:
-            print(type)
             bg = np.stack([np.ones_like(pred)] * 3, axis=-1) * type
             img = img * pred[..., np.newaxis] + bg * (1 - pred[..., np.newaxis])
 
@@ -324,8 +342,8 @@ def entry_point(out_type, mode, device, ckpt, source, dest, jit, threshold, resi
     writer = None
 
     for img, name in loader:
-        filename, ext = os.path.splitext(name)
-        ext = ext[1:]
+        filename, ext = os.path.splitext(name) if name is not None else (None, None)
+        ext = ext[1:] if ext is not None else None
         ext = save_format if save_format is not None else ext
         frame_progress.set_description("{}".format(name))
         if out_type.lower().endswith(IMG_EXTS):
@@ -334,7 +352,7 @@ def entry_point(out_type, mode, device, ckpt, source, dest, jit, threshold, resi
                 os.path.splitext(os.path.split(out_type)[-1])[0],
             )
         else:
-            outname = "{}_{}".format(filename, out_type)
+            outname = "{}_{}".format(filename, out_type) if filename is not None else None
 
         if reverse:
             outname += '_reverse'

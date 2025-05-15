@@ -186,7 +186,7 @@ impl<T> Node<T> {
         self.comment_start = start;
     }
 
-    pub fn map_ref<'a, U: 'a>(&'a self, f: fn(&'a T) -> U) -> Node<U> {
+    pub fn map_ref<'a, U: 'a>(&'a self, f: impl Fn(&'a T) -> U) -> Node<U> {
         Node {
             inner: f(&self.inner),
             start: self.start,
@@ -1187,7 +1187,7 @@ impl Expr {
 
     pub fn ident_name(&self) -> Option<&str> {
         match self {
-            Expr::Name(ident) => Some(&ident.name.name),
+            Expr::Name(name) => name.local_ident().map(|n| n.inner),
             _ => None,
         }
     }
@@ -2371,7 +2371,7 @@ impl Name {
 
     pub fn local_ident(&self) -> Option<Node<&str>> {
         if self.path.is_empty() && !self.abs_path {
-            Some(self.name.map_ref(|n| &n.name))
+            Some(self.name.map_ref(|n| &*n.name))
         } else {
             None
         }
@@ -3197,6 +3197,10 @@ pub enum PrimitiveType {
     Boolean,
     /// A tag.
     Tag,
+    /// Imported from other CAD system.
+    ImportedGeometry,
+    /// `fn`, type of functions.
+    Function(FunctionType),
     /// An identifier used as a type (not really a primitive type, but whatever).
     Named(Node<Identifier>),
 }
@@ -3210,6 +3214,7 @@ impl PrimitiveType {
             ("tag", None) => Some(PrimitiveType::Tag),
             ("number", None) => Some(PrimitiveType::Number(NumericSuffix::None)),
             ("number", Some(s)) => Some(PrimitiveType::Number(s)),
+            ("ImportedGeometry", None) => Some(PrimitiveType::ImportedGeometry),
             _ => None,
         }
     }
@@ -3229,7 +3234,54 @@ impl fmt::Display for PrimitiveType {
             PrimitiveType::String => write!(f, "string"),
             PrimitiveType::Boolean => write!(f, "bool"),
             PrimitiveType::Tag => write!(f, "tag"),
+            PrimitiveType::ImportedGeometry => write!(f, "ImportedGeometry"),
+            PrimitiveType::Function(t) => {
+                write!(f, "fn")?;
+                if t.unnamed_arg.is_some() || !t.named_args.is_empty() || t.return_type.is_some() {
+                    write!(f, "(")?;
+                    if let Some(u) = &t.unnamed_arg {
+                        write!(f, "{u}")?;
+                        if !t.named_args.is_empty() {
+                            write!(f, ", ")?;
+                        }
+                    }
+                    for (i, (a, t)) in t.named_args.iter().enumerate() {
+                        if i != 0 {
+                            write!(f, ", ")?;
+                        }
+                        write!(f, "{}: {t}", a.name)?;
+                    }
+                    write!(f, ")")?;
+                    if let Some(r) = &t.return_type {
+                        write!(f, ": {r}")?;
+                    }
+                }
+                Ok(())
+            }
             PrimitiveType::Named(n) => write!(f, "{}", n.name),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, ts_rs::TS, JsonSchema)]
+#[ts(export)]
+pub struct FunctionType {
+    pub unnamed_arg: Option<BoxNode<Type>>,
+    pub named_args: Vec<(Node<Identifier>, Node<Type>)>,
+    pub return_type: Option<BoxNode<Type>>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub digest: Option<Digest>,
+}
+
+impl FunctionType {
+    pub fn empty_fn_type() -> Self {
+        FunctionType {
+            unnamed_arg: None,
+            named_args: Vec::new(),
+            return_type: None,
+            digest: None,
         }
     }
 }
@@ -3285,7 +3337,7 @@ impl fmt::Display for Type {
                     } else {
                         write!(f, ",")?;
                     }
-                    write!(f, "{}: ", p.identifier.name)?;
+                    write!(f, " {}:", p.identifier.name)?;
                     if let Some(ty) = &p.type_ {
                         write!(f, " {}", ty.inner)?;
                     }

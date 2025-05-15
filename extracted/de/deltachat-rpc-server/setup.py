@@ -27,7 +27,7 @@ class BuildCommand(build):
                 "--platform",
                 "musllinux_1_1_" + platform.machine(),
                 "--only-binary=:all:",
-                "deltachat-rpc-server==1.159.4",
+                "deltachat-rpc-server==1.159.5",
             ],
             cwd=tmpdir,
         )

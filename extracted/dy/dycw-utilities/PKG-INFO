@@ -1,12 +1,12 @@
 Metadata-Version: 2.4
 Name: dycw-utilities
-Version: 0.113.5
+Version: 0.114.2
 Author-email: Derek Wan <d.wan@icloud.com>
 License-File: LICENSE
 Requires-Python: >=3.12
 Requires-Dist: typing-extensions<4.14,>=4.13.1
 Provides-Extra: test
-Requires-Dist: hypothesis<6.132,>=6.131.15; extra == 'test'
+Requires-Dist: hypothesis<6.132,>=6.131.17; extra == 'test'
 Requires-Dist: pytest-asyncio<0.27,>=0.26.0; extra == 'test'
 Requires-Dist: pytest-cov<6.2,>=6.1.1; extra == 'test'
 Requires-Dist: pytest-instafail<0.6,>=0.5.0; extra == 'test'
@@ -38,7 +38,7 @@ Provides-Extra: zzz-test-cachetools
 Requires-Dist: cachetools<5.6,>=5.5.2; extra == 'zzz-test-cachetools'
 Provides-Extra: zzz-test-click
 Requires-Dist: click<8.3,>=8.2.0; extra == 'zzz-test-click'
-Requires-Dist: sqlalchemy<2.1,>=2.0.40; extra == 'zzz-test-click'
+Requires-Dist: sqlalchemy<2.1,>=2.0.41; extra == 'zzz-test-click'
 Requires-Dist: whenever<0.8,>=0.7.3; extra == 'zzz-test-click'
 Provides-Extra: zzz-test-contextlib
 Provides-Extra: zzz-test-contextvars
@@ -80,12 +80,12 @@ Provides-Extra: zzz-test-hypothesis
 Requires-Dist: aiosqlite<0.22,>=0.21.0; extra == 'zzz-test-hypothesis'
 Requires-Dist: asyncpg<0.31,>=0.30.0; extra == 'zzz-test-hypothesis'
 Requires-Dist: greenlet<3.3,>=3.2.0; extra == 'zzz-test-hypothesis'
-Requires-Dist: hypothesis<6.132,>=6.131.15; extra == 'zzz-test-hypothesis'
+Requires-Dist: hypothesis<6.132,>=6.131.17; extra == 'zzz-test-hypothesis'
 Requires-Dist: luigi<3.7,>=3.6.0; extra == 'zzz-test-hypothesis'
 Requires-Dist: numpy<2.3,>=2.2.5; extra == 'zzz-test-hypothesis'
 Requires-Dist: pathvalidate<3.3,>=3.2.3; extra == 'zzz-test-hypothesis'
-Requires-Dist: redis<6.1,>=6.0.0; extra == 'zzz-test-hypothesis'
-Requires-Dist: sqlalchemy<2.1,>=2.0.40; extra == 'zzz-test-hypothesis'
+Requires-Dist: redis<6.2,>=6.1.0; extra == 'zzz-test-hypothesis'
+Requires-Dist: sqlalchemy<2.1,>=2.0.41; extra == 'zzz-test-hypothesis'
 Requires-Dist: tenacity<9.0,>=8.5.0; extra == 'zzz-test-hypothesis'
 Requires-Dist: tzlocal<5.4,>=5.3.1; extra == 'zzz-test-hypothesis'
 Requires-Dist: whenever<0.8,>=0.7.3; extra == 'zzz-test-hypothesis'
@@ -164,7 +164,7 @@ Provides-Extra: zzz-test-re
 Provides-Extra: zzz-test-redis
 Requires-Dist: orjson<3.11,>=3.10.15; extra == 'zzz-test-redis'
 Requires-Dist: polars-lts-cpu<1.30,>=1.29.0; extra == 'zzz-test-redis'
-Requires-Dist: redis<6.1,>=6.0.0; extra == 'zzz-test-redis'
+Requires-Dist: redis<6.2,>=6.1.0; extra == 'zzz-test-redis'
 Requires-Dist: rich<14.1,>=14.0.0; extra == 'zzz-test-redis'
 Requires-Dist: tenacity<9.0,>=8.5.0; extra == 'zzz-test-redis'
 Requires-Dist: tzlocal<5.4,>=5.3.1; extra == 'zzz-test-redis'
@@ -184,7 +184,7 @@ Requires-Dist: aiosqlite<0.22,>=0.21.0; extra == 'zzz-test-sqlalchemy'
 Requires-Dist: asyncpg<0.31,>=0.30.0; extra == 'zzz-test-sqlalchemy'
 Requires-Dist: greenlet<3.3,>=3.2.0; extra == 'zzz-test-sqlalchemy'
 Requires-Dist: nest-asyncio<1.7,>=1.6.0; extra == 'zzz-test-sqlalchemy'
-Requires-Dist: sqlalchemy<2.1,>=2.0.40; extra == 'zzz-test-sqlalchemy'
+Requires-Dist: sqlalchemy<2.1,>=2.0.41; extra == 'zzz-test-sqlalchemy'
 Requires-Dist: tenacity<9.0,>=8.5.0; extra == 'zzz-test-sqlalchemy'
 Provides-Extra: zzz-test-sqlalchemy-polars
 Requires-Dist: aiosqlite<0.22,>=0.21.0; extra == 'zzz-test-sqlalchemy-polars'
@@ -192,7 +192,7 @@ Requires-Dist: asyncpg<0.31,>=0.30.0; extra == 'zzz-test-sqlalchemy-polars'
 Requires-Dist: greenlet<3.3,>=3.2.0; extra == 'zzz-test-sqlalchemy-polars'
 Requires-Dist: nest-asyncio<1.7,>=1.6.0; extra == 'zzz-test-sqlalchemy-polars'
 Requires-Dist: polars-lts-cpu<1.30,>=1.29.0; extra == 'zzz-test-sqlalchemy-polars'
-Requires-Dist: sqlalchemy<2.1,>=2.0.40; extra == 'zzz-test-sqlalchemy-polars'
+Requires-Dist: sqlalchemy<2.1,>=2.0.41; extra == 'zzz-test-sqlalchemy-polars'
 Requires-Dist: tenacity<9.0,>=8.5.0; extra == 'zzz-test-sqlalchemy-polars'
 Requires-Dist: whenever<0.8,>=0.7.3; extra == 'zzz-test-sqlalchemy-polars'
 Provides-Extra: zzz-test-streamlit

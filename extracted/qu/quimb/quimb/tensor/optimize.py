@@ -14,12 +14,13 @@ from autoray import astype, get_dtype_name, to_numpy
 
 from ..core import prod
 from ..utils import (
-    default_to_neutral_style,
+    ExponentialGeometricRollingDiffMean,
     ensure_dict,
     tree_flatten,
     tree_map,
     tree_unflatten,
 )
+from ..utils_plot import default_to_neutral_style, plot_multi_series_zoom
 from .interface import get_jax
 from .tensor_core import (
     TensorNetwork,
@@ -876,13 +877,14 @@ class ADAM:
     Adapted from ``autograd/misc/optimizers.py``.
     """
 
-    def __init__(self):
+    def __init__(self, cautious=False):
         from scipy.optimize import OptimizeResult
 
         self.OptimizeResult = OptimizeResult
         self._i = 0
         self._m = None
         self._v = None
+        self._cautious = cautious
 
     def get_m(self, x):
         if self._m is None:
@@ -925,7 +927,20 @@ class ADAM:
             v = (1 - beta2) * (g**2) + beta2 * v  # second moment estimate.
             mhat = m / (1 - beta1**self._i)  # bias correction.
             vhat = v / (1 - beta2**self._i)
-            x = x - learning_rate * mhat / (np.sqrt(vhat) + eps)
+
+            # update vector
+            u = mhat / (np.sqrt(vhat) + eps)
+
+            if self._cautious:
+                # get mask where update matches gradient
+                phi = (u * g) > 0.0
+                # rescale for zeroed out elements
+                eps = learning_rate * phi.size / (phi.sum() + 1)
+                # apply update with mask and modified learning rate
+                x = x - eps * phi * u
+            else:
+                # apply update
+                x = x - learning_rate * u
 
             if bounds is not None:
                 x = np.clip(x, bounds[:, 0], bounds[:, 1])
@@ -937,6 +952,14 @@ class ADAM:
         return self.OptimizeResult(
             x=x, fun=fun(x), jac=g, nit=self._i, nfev=self._i, success=True
         )
+
+
+class CADAM(ADAM):
+    """Cautious ADAM - https://arxiv.org/abs/2411.16085.
+    """
+
+    def __init__(self):
+        super().__init__(cautious=True)
 
 
 class NADAM:
@@ -1100,6 +1123,7 @@ _STOC_GRAD_METHODS = {
     "sgd": SGD,
     "rmsprop": RMSPROP,
     "adam": ADAM,
+    "cadam": CADAM,
     "nadam": NADAM,
     "adabelief": ADABELIEF,
 }
@@ -1293,6 +1317,8 @@ class TNOptimizer:
         self.loss_best = float("inf")
         self.loss_target = loss_target
         self.losses = []
+        self.loss_diffs = []
+        self.lgrdm = ExponentialGeometricRollingDiffMean()
         self._n = 0
         self._pbar = None
 
@@ -1344,6 +1370,8 @@ class TNOptimizer:
         arrays = self.vectorizer.unpack()
         self.loss = self.handler.value(arrays).item()
         self.losses.append(self.loss)
+        self.lgrdm.update(float(self.loss))
+        self.loss_diffs.append(self.lgrdm.value)
         self._n += 1
         self._maybe_update_pbar()
         self._check_loss_target()
@@ -1358,6 +1386,8 @@ class TNOptimizer:
         self._n += 1
         self.loss = result.item()
         self.losses.append(self.loss)
+        self.lgrdm.update(float(self.loss))
+        self.loss_diffs.append(self.lgrdm.value)
         vec_grad = self.vectorizer.pack(grads, "grad")
         self._maybe_update_pbar()
         self._check_loss_target()
@@ -1371,13 +1401,13 @@ class TNOptimizer:
         hp_arrays = self.handler.hessp(primals, tangents)
         self._n += 1
         self.losses.append(self.loss)
+        self.lgrdm.update(float(self.loss))
+        self.loss_diffs.append(self.lgrdm.value)
         self._maybe_update_pbar()
         return self.vectorizer.pack(hp_arrays, "hp")
 
     def __repr__(self):
-        return (
-            f"<TNOptimizer(d={self.d}, " f"backend={self._autodiff_backend})>"
-        )
+        return f"<TNOptimizer(d={self.d}, backend={self._autodiff_backend})>"
 
     @property
     def d(self):
@@ -1416,7 +1446,7 @@ class TNOptimizer:
         """Extract the optimized tensor network, this is a three part process:
 
             1. inject the current optimized vector into the target tensor
-               network,
+               network or pytree,
             2. run it through ``norm_fn``,
             3. drop any tags used to identify variables.
 
@@ -1792,34 +1822,9 @@ class TNOptimizer:
         ax : matplotlib.axes.Axes
             The axes object.
         """
-        import matplotlib.pyplot as plt
-        from matplotlib.colors import hsv_to_rgb
-
-        ys = np.array(self.losses)
-        xs = np.arange(ys.size)
-
-        fig, ax = plt.subplots()
-        ax.plot(xs, ys, ".-")
-        if xscale == "symlog":
-            ax.set_xscale(xscale, linthresh=xscale_linthresh)
-            ax.axvline(xscale_linthresh, color=(0.5, 0.5, 0.5), ls="-", lw=0.5)
-        else:
-            ax.set_xscale(xscale)
-        ax.set_xlabel("Iteration")
-        ax.set_ylabel("Loss")
-
-        if hlines:
-            hlines = dict(hlines)
-            for i, (label, value) in enumerate(hlines.items()):
-                color = hsv_to_rgb([(0.1 * i) % 1.0, 0.9, 0.9])
-                ax.axhline(value, color=color, ls="--", label=label)
-                ax.text(1, value, label, color=color, va="bottom", ha="left")
-
-        if zoom is not None:
-            if zoom == "auto":
-                zoom = min(50, ys.size // 2)
-
-            iax = ax.inset_axes([0.5, 0.5, 0.5, 0.5])
-            iax.plot(xs[-zoom:], ys[-zoom:], ".-")
-
-        return fig, ax
+        return plot_multi_series_zoom(
+            {
+                "losses": self.losses,
+                "loss_diffs": self.loss_diffs,
+            },
+        )

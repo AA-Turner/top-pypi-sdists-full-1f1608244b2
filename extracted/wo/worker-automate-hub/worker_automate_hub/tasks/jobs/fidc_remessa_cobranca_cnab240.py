@@ -190,21 +190,19 @@ async def remessa_cobranca_cnab240(task: RpaProcessoEntradaDTO) -> RpaRetornoPro
         main_window_arquivo_cobranca.set_focus()
         field_total_emsys = main_window_arquivo_cobranca.child_window(class_name="TDBIEditNumber", found_index=3).window_text()
         #Pegando total do banco
-        # total_db = await get_valor_remessa_cobranca(data_atual.strftime("%Y-%m-%d"))
-        total_db = await get_valor_remessa_cobranca("2025-01-29")
+        total_db = await get_valor_remessa_cobranca(data_atual.strftime("%Y-%m-%d"))
         console.print("Total DB: " + str(total_db))
         console.print("Total EMSYS: " + str(field_total_emsys))
-        field_total_emsys = 0
-        total_db = 0
-        if total_db == field_total_emsys:
+        if total_db == float(field_total_emsys):
             #Clica gerar cobrança
             await worker_sleep(5)
             pyautogui.click(1135, 789)
         else:
             log_msg = "Valores divergem! \nValor no EmSys: " + str(field_total_emsys) + " \nValor dos titulos: " + str(total_db)
-            return RpaRetornoProcessoDTO(sucesso=False, 
-                                         retorno=log_msg, status=RpaHistoricoStatusEnum.Falha, 
-                                         tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)])    
+            return RpaRetornoProcessoDTO(
+                sucesso=False, 
+                retorno=log_msg, status=RpaHistoricoStatusEnum.Falha, 
+                tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)])    
 
         await worker_sleep(10)
 

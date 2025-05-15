@@ -1,11 +1,10 @@
 Metadata-Version: 2.3
 Name: Unified-python-sdk
-Version: 0.44.1
+Version: 0.45.0
 Summary: Python Client SDK for Unified.to
 Author: Unified API Inc.
-Requires-Python: >=3.9
+Requires-Python: >=3.9.2
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
@@ -1502,7 +1501,7 @@ from unified_python_sdk.models import shared
 
 
 with UnifiedTo(
-    server_url="https://api.unified.to",
+    server_url="https://api-au.unified.to",
     security=shared.Security(
         jwt="<YOUR_API_KEY_HERE>",
     ),

@@ -22,4 +22,6 @@ class MeetingDataOutboxResourceSchema(Schema):
     error = fields.String(allow_none=True)
     checks = fields.String(allow_none=True)
     completed = fields.Boolean(allow_none=True)
+    data_entry_type = fields.String(allow_none=True)
+    note = fields.String(allow_none=True)
     updated_at = fields.DateTime()

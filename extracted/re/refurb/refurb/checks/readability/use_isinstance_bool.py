@@ -1,8 +1,14 @@
 from dataclasses import dataclass
 
-from mypy.nodes import ComparisonExpr, Expression, ListExpr, NameExpr, SetExpr, TupleExpr
+from mypy.nodes import ComparisonExpr, ListExpr, OpExpr, SetExpr, TupleExpr
 
-from refurb.checks.common import stringify
+from refurb.checks.common import (
+    extract_binary_oper,
+    is_equivalent,
+    is_false_literal,
+    is_true_literal,
+    stringify,
+)
 from refurb.error import Error
 
 
@@ -32,24 +38,7 @@ class ErrorInfo(Error):
     categories = ("readability",)
 
 
-# TODO: move to common
-def is_true(expr: Expression) -> bool:
-    match expr:
-        case NameExpr(fullname="builtins.True"):
-            return True
-
-    return False
-
-
-def is_false(expr: Expression) -> bool:
-    match expr:
-        case NameExpr(fullname="builtins.False"):
-            return True
-
-    return False
-
-
-def check(node: ComparisonExpr, errors: list[Error]) -> None:
+def check(node: ComparisonExpr | OpExpr, errors: list[Error]) -> None:
     match node:
         case ComparisonExpr(
             operators=["in" | "not in" as op],
@@ -57,7 +46,9 @@ def check(node: ComparisonExpr, errors: list[Error]) -> None:
                 lhs,
                 SetExpr(items=[t, f]) | TupleExpr(items=[t, f]) | ListExpr(items=[t, f]),
             ],
-        ) if (is_true(t) and is_false(f)) or (is_false(t) and is_true(f)):
+        ) if (is_true_literal(t) and is_false_literal(f)) or (
+            is_false_literal(t) and is_true_literal(f)
+        ):
             old = stringify(node)
             new = f"isinstance({stringify(lhs)}, bool)"
 
@@ -67,3 +58,23 @@ def check(node: ComparisonExpr, errors: list[Error]) -> None:
             msg = f"Replace `{old}` with `{new}`"
 
             errors.append(ErrorInfo.from_node(node, msg))
+
+        case OpExpr():
+            match extract_binary_oper("or", node):
+                case (
+                    ComparisonExpr(operands=[lhs, t], operators=["is" | "==" as lhs_op]),
+                    ComparisonExpr(operands=[rhs, f], operators=["is" | "==" as rhs_op]),
+                ) if (
+                    lhs_op == rhs_op
+                    and is_equivalent(lhs, rhs)
+                    and (
+                        (is_true_literal(t) and is_false_literal(f))
+                        or (is_false_literal(t) and is_true_literal(f))
+                    )
+                ):
+                    old = stringify(node)
+                    new = f"isinstance({stringify(lhs)}, bool)"
+
+                    msg = f"Replace `{old}` with `{new}`"
+
+                    errors.append(ErrorInfo.from_node(node, msg))

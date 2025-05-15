@@ -34,26 +34,28 @@ class POPOAggregateRecorder(POPORecorder, AggregateRecorder):
     def __init__(self) -> None:
         super().__init__()
         self._stored_events: list[StoredEvent] = []
-        self._stored_events_index: dict[UUID, dict[int, int]] = defaultdict(dict)
+        self._stored_events_index: dict[str, dict[int, int]] = defaultdict(dict)
 
     def insert_events(
-        self, stored_events: list[StoredEvent], **kwargs: Any
+        self, stored_events: Sequence[StoredEvent], **kwargs: Any
     ) -> Sequence[int] | None:
         self._insert_events(stored_events, **kwargs)
         return None
 
     def _insert_events(
-        self, stored_events: list[StoredEvent], **kwargs: Any
+        self, stored_events: Sequence[StoredEvent], **kwargs: Any
     ) -> Sequence[int] | None:
         with self._database_lock:
             self._assert_uniqueness(stored_events, **kwargs)
             return self._update_table(stored_events, **kwargs)
 
-    def _assert_uniqueness(self, stored_events: list[StoredEvent], **_: Any) -> None:
+    def _assert_uniqueness(
+        self, stored_events: Sequence[StoredEvent], **_: Any
+    ) -> None:
         new = set()
         for s in stored_events:
             # Check events don't already exist.
-            if s.originator_version in self._stored_events_index[s.originator_id]:
+            if s.originator_version in self._stored_events_index[str(s.originator_id)]:
                 msg = f"Stored event already recorded: {s}"
                 raise IntegrityError(msg)
             new.add((s.originator_id, s.originator_version))
@@ -63,12 +65,12 @@ class POPOAggregateRecorder(POPORecorder, AggregateRecorder):
             raise IntegrityError(msg)
 
     def _update_table(
-        self, stored_events: list[StoredEvent], **_: Any
+        self, stored_events: Sequence[StoredEvent], **_: Any
     ) -> Sequence[int] | None:
         notification_ids = []
         for s in stored_events:
             self._stored_events.append(s)
-            self._stored_events_index[s.originator_id][s.originator_version] = (
+            self._stored_events_index[str(s.originator_id)][s.originator_version] = (
                 len(self._stored_events) - 1
             )
             notification_ids.append(len(self._stored_events))
@@ -76,17 +78,17 @@ class POPOAggregateRecorder(POPORecorder, AggregateRecorder):
 
     def select_events(
         self,
-        originator_id: UUID,
+        originator_id: UUID | str,
         *,
         gt: int | None = None,
         lte: int | None = None,
         desc: bool = False,
         limit: int | None = None,
-    ) -> list[StoredEvent]:
+    ) -> Sequence[StoredEvent]:
         with self._database_lock:
             results = []
 
-            index = self._stored_events_index[originator_id]
+            index = self._stored_events_index[str(originator_id)]
             positions: Iterable[int]
             positions = reversed_keys(index) if desc else index.keys()
             for p in positions:
@@ -107,7 +109,7 @@ class POPOApplicationRecorder(POPOAggregateRecorder, ApplicationRecorder):
         self._listeners: set[Event] = set()
 
     def insert_events(
-        self, stored_events: list[StoredEvent], **kwargs: Any
+        self, stored_events: Sequence[StoredEvent], **kwargs: Any
     ) -> Sequence[int] | None:
         notification_ids = self._insert_events(stored_events, **kwargs)
         self._notify_listeners()
@@ -121,7 +123,7 @@ class POPOApplicationRecorder(POPOAggregateRecorder, ApplicationRecorder):
         topics: Sequence[str] = (),
         *,
         inclusive_of_start: bool = True,
-    ) -> list[Notification]:
+    ) -> Sequence[Notification]:
         with self._database_lock:
             results = []
             if start is None:
@@ -221,7 +223,7 @@ class POPOProcessRecorder(
     POPOTrackingRecorder, POPOApplicationRecorder, ProcessRecorder
 ):
     def _assert_uniqueness(
-        self, stored_events: list[StoredEvent], **kwargs: Any
+        self, stored_events: Sequence[StoredEvent], **kwargs: Any
     ) -> None:
         super()._assert_uniqueness(stored_events, **kwargs)
         t: Tracking | None = kwargs.get("tracking")
@@ -229,7 +231,7 @@ class POPOProcessRecorder(
             self._assert_tracking_uniqueness(t)
 
     def _update_table(
-        self, stored_events: list[StoredEvent], **kwargs: Any
+        self, stored_events: Sequence[StoredEvent], **kwargs: Any
     ) -> Sequence[int] | None:
         notification_ids = super()._update_table(stored_events, **kwargs)
         t: Tracking | None = kwargs.get("tracking")

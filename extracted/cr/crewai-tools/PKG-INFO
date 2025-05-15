@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: crewai-tools
-Version: 0.44.0
+Version: 0.45.0
 Summary: Set of tools for the crewAI framework
 Project-URL: Homepage, https://crewai.com
 Project-URL: Repository, https://github.com/crewAIInc/crewAI-tools
@@ -10,7 +10,7 @@ License-File: LICENSE
 Requires-Python: <=3.13,>=3.10
 Requires-Dist: chromadb>=0.4.22
 Requires-Dist: click>=8.1.8
-Requires-Dist: crewai>=0.118.0
+Requires-Dist: crewai>=0.119.0
 Requires-Dist: docker>=7.1.0
 Requires-Dist: embedchain>=0.1.114
 Requires-Dist: lancedb>=0.5.4
@@ -65,6 +65,10 @@ Provides-Extra: spider-client
 Requires-Dist: spider-client>=0.1.25; extra == 'spider-client'
 Provides-Extra: sqlalchemy
 Requires-Dist: sqlalchemy>=2.0.35; extra == 'sqlalchemy'
+Provides-Extra: stagehand
+Requires-Dist: stagehand-py>=0.3.6; extra == 'stagehand'
+Provides-Extra: tavily-python
+Requires-Dist: tavily-python>=0.5.4; extra == 'tavily-python'
 Provides-Extra: weaviate-client
 Requires-Dist: weaviate-client>=4.10.2; extra == 'weaviate-client'
 Provides-Extra: xml
@@ -99,7 +103,7 @@ CrewAI provides an extensive collection of powerful tools ready to enhance your 
 - **Web Scraping**: `ScrapeWebsiteTool`, `SeleniumScrapingTool`
 - **Database Integrations**: `PGSearchTool`, `MySQLSearchTool`
 - **API Integrations**: `SerperApiTool`, `EXASearchTool`
-- **AI-powered Tools**: `DallETool`, `VisionTool`
+- **AI-powered Tools**: `DallETool`, `VisionTool`, `StagehandTool`
 
 And many more robust tools to simplify your agent integrations.
 

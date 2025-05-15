@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: wadler_lindig
-Version: 0.1.5
+Version: 0.1.6
 Summary: A Wadler–Lindig pretty-printer for Python.
 Project-URL: repository, https://github.com/patrick-kidger/wadler_lindig
 Author-email: Patrick Kidger <contact@kidger.site>

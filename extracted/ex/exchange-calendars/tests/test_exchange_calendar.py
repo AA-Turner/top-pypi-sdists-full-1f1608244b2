@@ -2232,9 +2232,10 @@ class ExchangeCalendarTestBase:
             try:
                 assert on_cls == on_base or on_cls.__qualname__ == on_base.__qualname__
             except AttributeError:
-                if not (cls.name in ["XKRX", "XMOS"] and name == "day"):
+                if not (cls.name in ["XKRX", "XMOS", "XBOM"] and name == "day"):
                     # allow exchange_calendar_xkrx to overwrite 'day'.
                     # allow exchange_calendar_xmos to overwrite 'day'.
+                    # allow exchange_calendar_xbom to overwrite 'day'.
                     raise
 
     def test_calculated_against_csv(self, default_calendar_with_answers):

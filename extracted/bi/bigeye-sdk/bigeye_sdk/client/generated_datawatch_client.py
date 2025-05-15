@@ -130,7 +130,7 @@ from bigeye_sdk.generated.com.bigeye.models.generated import (
     ListAgentApiKeyResponse, GetWorkspaceAccessorsResponse, CreateLineageNodeV2Request, LineageNodeV2,
     LineageSearchResponse, LineageSearchRequest, GetDebugQueriesResponse, ConfigValueType, SourceMetadataOverrides,
     WarehouseType, BulkChangeGroupGrantsRequest, Grant, RoleV2, IdAndDisplayName, BulkChangeGroupGrantsResponse,
-    IssuePriorityChangeEvent, TableLineageV2Response
+    IssuePriorityChangeEvent, TableLineageV2Response, CreateLineageNodeV2BulkRequest, CreateLineageEdgeV2BulkRequest
 )
 
 # create logger
@@ -1169,15 +1169,6 @@ class GeneratedDatawatchClient(abc.ABC):
         response = self._call_datawatch(Method.POST, url=url, body=json.dumps(request_dict))
         return LineageNodeV2().from_dict(response)
 
-    def search_lineage(self, search: str, limit: int = 15) -> LineageSearchResponse:
-        url = '/api/v2/lineage/search'
-        request = LineageSearchRequest()
-        request.search = search
-        request.limit = limit
-
-        response = self._call_datawatch(Method.POST, url=url, body=request.to_json())
-        return LineageSearchResponse().from_dict(response)
-
     def delete_lineage_node(self, node_id: int):
         url = f'/api/v2/lineage/nodes/{node_id}'
         log.info(f"Deleting lineage node with ID: {node_id}")
@@ -1720,3 +1711,15 @@ class GeneratedDatawatchClient(abc.ABC):
     def delete_agent_api_key(self, *, id: int):
         url = f"/api/v1/agent-api-keys/{id}"
         self._call_datawatch(Method.DELETE, url=url)
+
+    def bulk_create_lineage_nodes(self, nodes: List[CreateLineageNodeV2Request]):
+        url = "/api/v2/lineage/nodes/bulk"
+        request = CreateLineageNodeV2BulkRequest()
+        request.nodes = nodes
+        return self._call_datawatch(Method.POST, url=url, body=request.to_json())
+
+    def bulk_create_lineage_edges(self, edges: List[CreateLineageEdgeV2Request]):
+        url = "/api/v2/lineage/edges/bulk"
+        request = CreateLineageEdgeV2BulkRequest()
+        request.edges = edges
+        return self._call_datawatch(Method.POST, url=url, body=request.to_json())

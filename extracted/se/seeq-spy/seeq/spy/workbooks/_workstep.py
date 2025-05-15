@@ -714,6 +714,40 @@ class AnalysisWorkstep(Workstep):
 
         return df
 
+    @staticmethod
+    def _validate_and_fill_overlay_column(df):
+        # overlay can only exist on conditions, and within a lane must start at 1 and increment upward.
+        # to prevent being very strict on validation, within each lane, sort by the overlay values we have
+        # and increment over that sorted state
+
+        if 'Overlay' not in df.columns:
+            return df
+
+        df = df.copy()
+        if 'Lane' in df.columns:
+            lane_groups = df.groupby('Lane', as_index=False)
+        else:
+            # If no lane is given, _set_display_items is going to set it to 1 (everything in same lane)
+            lane_groups = [(1, df)]
+
+        for lane, items_in_lane in lane_groups:
+            conditions_sorted_by_overlay = items_in_lane[items_in_lane['Type'] == 'Condition'].sort_values(by='Overlay')
+            # if no conditions have overlay enabled, skip
+            if all(pd.isna(conditions_sorted_by_overlay['Overlay'])):
+                continue
+
+            # overlay is only an option if there is more than one condition in the lane
+            if conditions_sorted_by_overlay.shape[0] == 1:
+                df.at[conditions_sorted_by_overlay.index[0], 'Overlay'] = np.nan
+                continue
+
+            overlay_counter = 1
+            for index, _ in conditions_sorted_by_overlay.iterrows():
+                df.at[index, 'Overlay'] = overlay_counter
+                overlay_counter += 1
+
+        return df
+
     def _set_display_items(self, items_df):
         """
         Set the display items
@@ -737,6 +771,9 @@ class AnalysisWorkstep(Workstep):
         for store_name in self._store_map_from_type('all', workstep_version):
             store = _common.get(workstep_stores, store_name, default=dict(), assign_default=True)
             store['items'] = []
+
+        if 'Overlay' in items_df.columns:
+            items_df = AnalysisWorkstep._validate_and_fill_overlay_column(items_df)
 
         lanes = set()
         axes = set()
@@ -779,6 +816,11 @@ class AnalysisWorkstep(Workstep):
                             value = value if value > 0 else 1
                         elif column == 'Axis Align':
                             value = self._workstep_rightAxis_user_to_workstep[value]
+                        elif column == 'Overlay':
+                            if item['Type'] == 'Condition':
+                                value = int(value)
+                            else:
+                                value = np.nan
                         store_items[-1][self._workstep_display_user_to_workstep[column]] = value
                     if column in axis_limit_keys and isinstance(value, (float, int)):
                         current_limits = \
@@ -1042,6 +1084,7 @@ class AnalysisWorkstep(Workstep):
         'Stack': 'stack',
         'Selected': 'selected',
         'Values': 'showDataLabels',
+        'Overlay': 'overlay',
     }
 
     _workstep_display_workstep_to_user = dict((v, k) for k, v in _workstep_display_user_to_workstep.items())

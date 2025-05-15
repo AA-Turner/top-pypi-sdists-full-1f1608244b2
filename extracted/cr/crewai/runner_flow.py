@@ -1,7 +1,6 @@
 import asyncio
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
-import yaml
 from crewai_tools import SerperDevTool
 from pydantic import BaseModel, Field
 

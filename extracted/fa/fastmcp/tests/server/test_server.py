@@ -1,6 +1,7 @@
 from typing import Annotated
 
 import pytest
+from mcp import McpError
 from mcp.types import (
     TextContent,
     TextResourceContents,
@@ -8,7 +9,7 @@ from mcp.types import (
 from pydantic import Field
 
 from fastmcp import Client, FastMCP
-from fastmcp.exceptions import ClientError, NotFoundError
+from fastmcp.exceptions import NotFoundError
 
 
 class TestCreateServer:
@@ -71,6 +72,25 @@ class TestTools:
         mcp_tools = await mcp._mcp_list_tools()
         assert len(mcp_tools) == 1
         assert mcp_tools[0].name == "custom_name"
+
+    async def test_remove_tool_successfully(self):
+        """Test that FastMCP.remove_tool removes the tool from the registry."""
+
+        mcp = FastMCP()
+
+        @mcp.tool(name="adder")
+        def add(a: int, b: int) -> int:
+            return a + b
+
+        mcp_tools = await mcp.get_tools()
+        assert "adder" in mcp_tools
+
+        mcp.remove_tool("adder")
+        mcp_tools = await mcp.get_tools()
+        assert "adder" not in mcp_tools
+
+        with pytest.raises(NotFoundError, match="Unknown tool: adder"):
+            await mcp._mcp_call_tool("adder", {"a": 1, "b": 2})
 
 
 class TestToolDecorator:
@@ -277,7 +297,7 @@ class TestResourceDecorator:
     async def test_no_resources_before_decorator(self):
         mcp = FastMCP()
 
-        with pytest.raises(ClientError, match="Unknown resource"):
+        with pytest.raises(McpError, match="Unknown resource"):
             async with Client(mcp) as client:
                 await client.read_resource("resource://data")
 

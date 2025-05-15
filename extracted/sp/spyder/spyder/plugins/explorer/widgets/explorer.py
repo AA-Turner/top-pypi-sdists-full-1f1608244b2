@@ -844,9 +844,7 @@ class DirView(QTreeView, SpyderWidgetMixin):
         # Needed to handle not initialized menu.
         # See spyder-ide/spyder#6975
         try:
-            fnames = self.get_selected_filenames()
-            if len(fnames) != 0:
-                self.context_menu.popup(event.globalPos())
+            self.context_menu.popup(event.globalPos())
         except AttributeError:
             pass
 
@@ -894,6 +892,13 @@ class DirView(QTreeView, SpyderWidgetMixin):
                 self.expanded_or_colapsed_by_mouse = True
             else:
                 self.expanded_or_colapsed_by_mouse = False
+        else:
+            # Clear selection if users click on an empty region. This improves
+            # the context menu UX because it makes the current directory to be
+            # used for its operations (i.e. creating a new folder or directory,
+            # copying its path, etc).
+            self.selectionModel().clear()
+
         super().mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):
@@ -979,6 +984,8 @@ class DirView(QTreeView, SpyderWidgetMixin):
         """Return filename associated with *index*"""
         if index:
             return osp.normpath(str(self.fsmodel.filePath(index)))
+        else:
+            return osp.normpath(str(self.fsmodel.rootPath()))
 
     def get_index(self, filename):
         """Return index associated with filename"""
@@ -992,6 +999,9 @@ class DirView(QTreeView, SpyderWidgetMixin):
                 fnames = [self.get_filename(idx) for idx in
                           self.selectionModel().selectedRows()]
         else:
+            fnames = [self.get_filename(self.currentIndex())]
+
+        if not fnames:
             fnames = [self.get_filename(self.currentIndex())]
 
         return fnames
@@ -1255,7 +1265,20 @@ class DirView(QTreeView, SpyderWidgetMixin):
         """Show file in external file explorer"""
         if fnames is None or isinstance(fnames, bool):
             fnames = self.get_selected_filenames()
-        show_in_external_file_explorer(fnames)
+
+        try:
+            show_in_external_file_explorer(fnames)
+        except FileNotFoundError as error:
+            if "xdg-open" in str(error):
+                msg_title = _("Error")
+                msg = _(
+                    "Spyder can't show this file in the external file "
+                    "explorer because the <tt>xdg-utils</tt> package is not "
+                    "available on your system."
+                )
+                QMessageBox.critical(
+                    self._parent, msg_title, msg, QMessageBox.Ok
+                )
 
     @Slot()
     def rename(self, fnames=None):

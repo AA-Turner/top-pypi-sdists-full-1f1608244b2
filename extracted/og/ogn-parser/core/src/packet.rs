@@ -66,7 +66,7 @@ impl AprsPacket {
     pub fn encode<W: Write>(&self, buf: &mut W) -> Result<(), EncodeError> {
         write!(buf, "{}>{}", self.from, self.to)?;
         for v in &self.via {
-            write!(buf, ",{}", v).unwrap();
+            write!(buf, ",{v}").unwrap();
         }
         write!(buf, ":")?;
         self.data.encode(buf)?;
@@ -76,7 +76,7 @@ impl AprsPacket {
 }
 
 #[derive(PartialEq, Debug, Clone, Serialize)]
-#[serde(rename_all = "lowercase")]
+#[serde(rename_all = "snake_case")]
 pub enum AprsData {
     Position(AprsPosition),
     Message(AprsMessage),
@@ -104,10 +104,10 @@ impl AprsData {
                 p.encode(buf)?;
             }
             Self::Message(m) => {
-                write!(buf, "{}", m)?;
+                write!(buf, "{m}")?;
             }
             Self::Status(s) => {
-                write!(buf, "{}", s)?;
+                write!(buf, "{s}")?;
             }
             Self::Unknown => return Err(EncodeError::InvalidData),
         }

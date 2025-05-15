@@ -1,6 +1,6 @@
 Metadata-Version: 2.2
 Name: simsopt
-Version: 1.9.2
+Version: 1.9.3
 Summary: Framework for optimizing stellarators
 Keywords: plasma physics,plasma,magnetohydrodynamics,mhd,nuclear fusion reactor,fusion,stellarator,vmec,spec,optimization,Biot-Savart,magnetostatics
 Author-Email: Matt Landreman <mattland@umd.edu>, Bharat Medasani <mbkumar@gmail.com>, Florian Wechsung <wechsung@nyu.edu>

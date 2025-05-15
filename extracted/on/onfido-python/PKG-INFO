@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: onfido-python
-Version: 5.0.0
+Version: 5.1.0
 Summary: Python library for the Onfido API
 Home-page: 
 Author: OpenAPI Generator community
@@ -19,6 +19,7 @@ Dynamic: description
 Dynamic: description-content-type
 Dynamic: keywords
 Dynamic: license
+Dynamic: license-file
 Dynamic: requires-dist
 Dynamic: summary
 

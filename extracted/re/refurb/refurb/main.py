@@ -101,8 +101,11 @@ def is_ignored_via_amend(error: Error, settings: Settings) -> bool:
     assert error.filename
 
     path = Path(error.filename).resolve()
-    error_code = ErrorCode.from_error(type(error))
+    error_code = str(ErrorCode.from_error(type(error)))
     config_root = Path(settings.config_file).parent if settings.config_file else Path()
+
+    errors_to_ignore = set[str]()
+    categories_to_ignore = set[str]()
 
     for ignore in settings.ignore:
         if ignore.path:
@@ -110,11 +113,13 @@ def is_ignored_via_amend(error: Error, settings: Settings) -> bool:
 
             if path.is_relative_to(ignore_path):
                 if isinstance(ignore, ErrorCode):
-                    return str(ignore) == str(error_code)
+                    errors_to_ignore.add(str(ignore))
+                else:
+                    categories_to_ignore.add(ignore.value)
 
-                return ignore.value in error.categories
-
-    return False
+    return error_code in errors_to_ignore or bool(
+        categories_to_ignore.intersection(error.categories)
+    )
 
 
 def should_ignore_error(error: Error | str, settings: Settings) -> bool:
@@ -171,7 +176,7 @@ def run_refurb(settings: Settings) -> Sequence[Error | str]:
         mypy_build_time = time.time() - start
 
     except CompileError as e:
-        return [re.sub("^mypy: ", "refurb: ", msg) for msg in e.messages]
+        return [re.sub(r"^mypy: ", "refurb: ", msg) for msg in e.messages]
 
     errors: list[Error | str] = []
     checks = load_checks(settings)

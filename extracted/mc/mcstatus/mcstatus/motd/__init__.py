@@ -11,7 +11,7 @@ from mcstatus.motd.transformers import AnsiTransformer, HtmlTransformer, Minecra
 if t.TYPE_CHECKING:
     from typing_extensions import Self
 
-    from mcstatus.status_response import RawJavaResponseMotd, RawJavaResponseMotdWhenDict  # circular import
+    from mcstatus.responses import RawJavaResponseMotd, RawJavaResponseMotdWhenDict  # circular import
 else:
     RawJavaResponseMotdWhenDict = dict
 
@@ -20,7 +20,7 @@ __all__ = ["Motd"]
 MOTD_COLORS_RE = re.compile(r"([\xA7|&][0-9A-FK-OR])", re.IGNORECASE)
 
 
-@dataclass
+@dataclass(frozen=True)
 class Motd:
     """Represents parsed MOTD."""
 
@@ -187,7 +187,7 @@ class Motd:
             parsed = [el for index, el in enumerate(parsed) if index not in unused_elements]
 
         parsed = squash_nearby_strings(parsed)
-        return __class__(parsed, self.raw, bedrock=self.bedrock)
+        return self.__class__(parsed, self.raw, bedrock=self.bedrock)
 
     def to_plain(self) -> str:
         """Get plain text from a MOTD, without any colors/formatting.

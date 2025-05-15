@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: cantools
-Version: 40.2.1
+Version: 40.2.2
 Summary: CAN BUS tools.
 Author-email: Erik Moqvist <erik.moqvist@gmail.com>
 License: MIT
@@ -27,6 +27,7 @@ Provides-Extra: plot
 Requires-Dist: matplotlib; extra == "plot"
 Provides-Extra: windows-all
 Requires-Dist: windows-curses; (platform_system == "Windows" and platform_python_implementation == "CPython") and extra == "windows-all"
+Dynamic: license-file
 
 |github-actions| |coverage|
 
@@ -94,7 +95,7 @@ bus using the `python-can`_ package.
    >>> import can
    >>> can_bus = can.interface.Bus('vcan0', bustype='socketcan')
    >>> data = example_message.encode({'Temperature': 250.1, 'AverageRadius': 3.2, 'Enable': 1})
-   >>> message = can.Message(arbitration_id=example_message.frame_id, data=data)
+   >>> message = can.Message(arbitration_id=example_message.frame_id, is_extended_id=example_message.is_extended_frame, data=data)
    >>> can_bus.send(message)
 
 Alternatively, a message can be encoded using the `encode_message()`_

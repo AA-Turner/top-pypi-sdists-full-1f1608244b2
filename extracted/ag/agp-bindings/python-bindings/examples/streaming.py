@@ -16,7 +16,15 @@ async def run_client(
 ):
     # init tracing
     agp_bindings.init_tracing(
-        log_level="info", enable_opentelemetry=enable_opentelemetry
+        {
+            "log_level": "info",
+            "opentelemetry": {
+                "enabled": enable_opentelemetry,
+                "grpc": {
+                    "endpoint": "http://localhost:4317",
+                },
+            },
+        }
     )
 
     # Split the IDs into their respective components
@@ -80,7 +88,7 @@ async def run_client(
                 except Exception as e:
                     print("received error: ", e)
                 finally:
-                    await asyncio.sleep(1)
+                    await asyncio.sleep(0.5)
         else:
             # subscribe to streaming session
             await gateway.subscribe(

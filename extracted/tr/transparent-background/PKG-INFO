@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: transparent-background
-Version: 1.3.3
+Version: 1.3.4
 Summary: Make images with transparent background
 Home-page: https://github.com/plemeri/transparent-background
 Author: Taehun Kim
@@ -14,7 +14,7 @@ License-File: LICENSE
 Requires-Dist: torch>=1.7.1
 Requires-Dist: torchvision>=0.8.2
 Requires-Dist: opencv-python>=4.6.0.66
-Requires-Dist: timm>=0.6.11
+Requires-Dist: timm>=1.0.3
 Requires-Dist: tqdm>=4.64.1
 Requires-Dist: kornia>=0.5.4
 Requires-Dist: gdown>=4.5.4
@@ -22,10 +22,23 @@ Requires-Dist: wget>=3.2
 Requires-Dist: easydict>=1.10
 Requires-Dist: pyyaml>=6.0
 Requires-Dist: albumentations>=1.3.1
-Requires-Dist: albucore==0.0.16
-Requires-Dist: flet>=0.23.1
+Requires-Dist: albucore>=0.0.16
+Requires-Dist: pymatting>=1.1.13
 Provides-Extra: webcam
 Requires-Dist: pyvirtualcam>=0.6.0; extra == "webcam"
+Provides-Extra: gui
+Requires-Dist: flet>=0.23.1; extra == "gui"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 # Transparent Background
 
@@ -39,12 +52,37 @@ Requires-Dist: pyvirtualcam>=0.6.0; extra == "webcam"
     <a href="https://img.shields.io/github/sponsors/plemeri"><image src="https://img.shields.io/github/sponsors/plemeri"></a>    
 </p>
 
+<p align="center">
+    <a href="https://hugovk.github.io/top-pypi-packages/"><img alt="Dynamic JSON Badge" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fplemeri%2Fplemeri%2Frefs%2Fheads%2Fmain%2Frank.json&query=latest-rank&style=flat&logo=pypi&label=PyPI%20Monthly%20Ranking&labelColor=black">
+    <a href="https://hugovk.github.io/top-pypi-packages/"><img alt="Dynamic JSON Badge" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fplemeri%2Fplemeri%2Frefs%2Fheads%2Fmain%2Frank.json&query=latest-downloads&style=flat&logo=pypi&label=PyPI%20Monthly%20Downloads&labelColor=black">
+    <a href="https://hugovk.github.io/top-pypi-packages/"><img alt="Dynamic JSON Badge" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fplemeri%2Fplemeri%2Frefs%2Fheads%2Fmain%2Frank.json&query=all-time-highest-rank&style=flat&logo=pypi&label=PyPI%20Highest%20Ranking%20&labelColor=black&color=red">
+</p>
+
 
 This is a background removing tool powered by [InSPyReNet (ACCV 2022)](https://github.com/plemeri/InSPyReNet.git). You can easily remove background from the image or video or bunch of other stuffs when you can make the background transparent!
 
 Image | Video | Webcam
 :-:|:-:|:-:
 <img src=https://raw.githubusercontent.com/plemeri/transparent-background/main/figures/demo_aeroplane.gif height=200px> | <img src=https://raw.githubusercontent.com/plemeri/transparent-background/main/figures/demo_b5.gif height=200px> | <img src=https://raw.githubusercontent.com/plemeri/transparent-background/main/figures/demo_webcam.gif height=200px>
+
+## ©️ Citation
+If you make use of this work, please cite our work.
+```
+@inproceedings{kim2022revisiting,
+  title={Revisiting Image Pyramid Structure for High Resolution Salient Object Detection},
+  author={Kim, Taehun and Kim, Kunhee and Lee, Joonyeong and Cha, Dongmin and Lee, Jiho and Kim, Daijin},
+  booktitle={Proceedings of the Asian Conference on Computer Vision},
+  pages={108--124},
+  year={2022}
+}
+```
+
+## :rotating_light: Notice
+* `--jit` option, also known as TorchScript option is widely used recently for disabling dynamic resizing for stable output. Since it wasn't mean to be used in this way, I added `--resize` option. For those who used `--jit` option because of the stability, you don't have to specify anymore. You may also access to this option in python API and GUI mode.
+  * Default option is `--resize static` which provides less detailed prediction but more stable
+  * `--resize dynamic` option was the previous default option which was disabled by `--jit` option previously. This will provide more detailed prediction but less stable than `--resize static` option.
+
+* `flet` has been moved to extra dependency since GUI mode is not used for most active users, and causing import error for latest version. Please install with `pip install transparent-background[gui]` 
 
 ## :newspaper: News
 
@@ -56,7 +94,8 @@ Image | Video | Webcam
 * [2024.08.22] [ComfyUI-Inspyrenet-Rembg](https://github.com/john-mnz/ComfyUI-Inspyrenet-Rembg) is implemented by [john-mnz](https://github.com/john-mnz). Thank you for sharing great work!
 * [2024.09.06] `transparent-background` total download counts reached 500,000 and ranked 5969 on [🏆top=pypi-package](https://hugovk.github.io/top-pypi-packages/). Thank you all for your huge support!
 <img src=https://github.com/user-attachments/assets/5252be1c-338c-4340-a6a5-5c421a1bf550 width=400px>
-* [2024.10.05] `--format`, `--resize` and `--reverse` options are implemented.
+
+* [2024.10.05] `--format`, `--resize` and `--reverse` options are implemented. See Command Line and Usage sections for more details.
 
 
 ## :inbox_tray: Installation
@@ -68,7 +107,7 @@ package | version (>=)
 `pytorch`       | `1.7.1`
 `torchvision`   | `0.8.2`
 `opencv-python` | `4.6.0.66`
-`timm`          | `0.6.11`
+`timm`          | `1.0.3`
 `tqdm`          | `4.64.1`
 `kornia`        | `0.5.4`
 `gdown`         | `4.5.4`
@@ -114,13 +153,26 @@ sudo apt install zenity
 
 ### Install `transparent-background`
 * Note: please specify `extra-index-url` as below if you want to use gpu, particularly on Windows.
+  * CUDA 11.8
+    ```
+    --extra-index-url https://download.pytorch.org/whl/cu118
+    ```
+  * CUDA 12.8
+    ```
+    --extra-index-url https://download.pytorch.org/whl/cu128
+    ```
 #### Install from `pypi`
 ```bash
 pip install --extra-index-url https://download.pytorch.org/whl/cu118 transparent-background # install with official pytorch
 ```
   ##### With webcam support (not stable)
   ```bash
-  pip install transparent-background[webcam] # with webcam dependency
+  pip install --extra-index-url https://download.pytorch.org/whl/cu118 transparent-background[webcam] # with webcam dependency
+  ```
+
+  ##### With gui support
+  ```bash
+  pip install --extra-index-url https://download.pytorch.org/whl/cu118 transparent-background[gui] # with gui dependency (flet)
   ```
 
 #### Install from Github
@@ -131,7 +183,7 @@ pip install --extra-index-url https://download.pytorch.org/whl/cu118 git+https:/
 #### Install from local
 ```bash
 git clone https://github.com/plemeri/transparent-background.git
-cd transparent-backbround
+cd transparent-background
 pip install --extra-index-url https://download.pytorch.org/whl/cu118 .
 ```
 
@@ -147,6 +199,10 @@ pip install transparent-background
 pip uninstall torch torchvision torchaudio
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 ```
+
+#### Install GPU acceleration for RGBA output
+
+When generating RGBA output, the foreground color is estimated using [`pymatting.estimate_foreground_ml`](https://pymatting.github.io/foreground.html#estimate_foreground_ml), which implements [Germer et al., 2020](https://arxiv.org/abs/2006.14970).  [pymatting](https://pymatting.github.io/)'s optional GPU acceleration requires installing [CuPy](https://docs.cupy.dev/en/stable/install.html) (if the GPU supports CUDA) or [pyopencl](https://pypi.org/project/pyopencl/). These packages are detected at runtime if available.
 
 ### [New] Configuration
 
@@ -193,7 +249,7 @@ You can use gui with following command after installation.
 ```bash
 transparent-background-gui
 ```
-![image](https://github.com/plemeri/transparent-background/assets/40786892/eac55d75-eea7-438b-bb5c-dd05552a736a)
+![Screenshot 2024-10-05 194115](https://github.com/user-attachments/assets/50aaa2e1-b6f3-4dda-8e05-06f13456212a)
 
 ### :computer: Command Line
 
@@ -211,7 +267,7 @@ $ transparent-background --source [SOURCE] --dest [DEST] --threshold [THRESHOLD]
 * `--dest [DEST]` (optional): Specify your destination folder. Default location is current directory.
 * `--threshold [THRESHOLD]` (optional): Designate threhsold value from `0.0` to `1.0` for hard prediction. Do not use if you want soft prediction.
 * `--type [TYPE]` (optional): Choose between `rgba`, `map` `green`, `blur`, `overlay`, and another image file. Default is `rgba`.
-    * `rgba` will generate RGBA output regarding saliency score as an alpha map. Note that this will not work for video and webcam input. 
+    * `rgba` will generate RGBA output regarding saliency score as an alpha map, and perform foreground color extraction using [pymatting](https://pymatting.github.io/foreground.html) if threshold is not set. Note that this will not work for video and webcam input. 
     * `map` will output saliency map only. 
     * `green` will change the background with green screen. 
     * `white` will change the background with white color. -> [2023.05.24] Contributed by [carpedm20](https://github.com/carpedm20) 
@@ -221,9 +277,9 @@ $ transparent-background --source [SOURCE] --dest [DEST] --threshold [THRESHOLD]
     * Another image file (e.g., `samples/backgroud.png`) will be used as a background, and the object will be overlapped on it.
 * `--ckpt [CKPT]` (optional): Use other checkpoint file. Default is trained with composite dataset and will be automatically downloaded if not available. Please refer to [Model Zoo](https://github.com/plemeri/InSPyReNet/blob/main/docs/model_zoo.md) from [InSPyReNet](https://github.com/plemeri/InSPyReNet) for available pre-trained checkpoints.
 * `--mode [MODE]` (optional): Choose from `base`, `base-nightly` and `fast` mode. Use `base-nightly` for nightly release checkpoint.
-* `--resize [RESIZE]` (optional): Choose between `static` and `dynamic`. Dynamic will produce better results in terms of sharper edges but maybe unstable. Default is `static`
-* `--format [FORMAT]` (optional): Specify output format. If not specified, the output format will be identical to the input format.
-* `--reverse` (optional): Reversing result. In other words, foreground will be removed instead of background. This will make our package's name `transparent-foreground`! :laughing:
+* :star: `--resize [RESIZE]` (optional): Choose between `static` and `dynamic`. Dynamic will produce better results in terms of sharper edges but maybe unstable. Default is `static`
+* :star: `--format [FORMAT]` (optional): Specify output format. If not specified, the output format will be identical to the input format.
+* :star: `--reverse` (optional): Reversing result. In other words, foreground will be removed instead of background. This will make our package's name `transparent-foreground`! :laughing:
 * `--jit` (optional): Torchscript mode. If specified, it will trace model with pytorch built-in torchscript JIT compiler. May cause delay in initialization, but reduces inference time and gpu memory usage.
     
 ### :crystal_ball: Python API
@@ -239,6 +295,7 @@ from transparent_background import Remover
 remover = Remover() # default setting
 remover = Remover(mode='fast', jit=True, device='cuda:0', ckpt='~/latest.pth') # custom setting
 remover = Remover(mode='base-nightly') # nightly release checkpoint
+remover = Remover(resize='dynamic') # use dynamic resizing instead of static resizing
 
 # Usage for image
 img = Image.open('samples/aeroplane.jpg').convert('RGB') # read image
@@ -254,8 +311,10 @@ out = remover.process(img, type='overlay') # overlay object map onto the image
 out = remover.process(img, type='samples/background.jpg') # use another image as a background
 
 out = remover.process(img, threshold=0.5) # use threhold parameter for hard prediction.
+out = remover.process(img, reverse=True) # reverse output. background -> foreground
 
 out.save('output.png') # save result
+out.save('output.jpg') # save as jpg
 
 # Usage for video
 cap = cv2.VideoCapture('samples/b5.mp4') # video reader for input

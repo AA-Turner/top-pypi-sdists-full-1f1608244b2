@@ -1,5 +1,6 @@
 """Misc utility functions."""
 
+import math
 import collections
 import functools
 import itertools
@@ -488,19 +489,61 @@ class LRU(collections.OrderedDict):
             del self[oldest]
 
 
+class RollingDiffMean:
+    """Tracker for the absolute rolling mean of diffs between values, to
+    assess effective convergence.
+    """
+
+    def __init__(self, size=16):
+        self.size = size
+        self.diffs = []
+        self.last_y = None
+        self.dxsum = 0.0
+
+    def update(self, y):
+        y = float(y)
+
+        if not math.isfinite(y):
+            # just ignore non-finite values
+            return
+
+        if self.last_y is not None:
+            dy = y - self.last_y
+            self.diffs.append(dy)
+            self.dxsum += dy / self.size
+        if len(self.diffs) > self.size:
+            dy = self.diffs.pop(0)
+            self.dxsum -= dy / self.size
+        self.last_y = y
+
+    def absmeandiff(self):
+        if len(self.diffs) < self.size:
+            return float("inf")
+        return abs(self.dxsum)
+
+
 class ExponentialGeometricRollingDiffMean:
+    """Track the absolute rolling mean of diffs between values, weighted in a
+    exponentially decaying geometric fashion.
+    """
     def __init__(self, factor=1 / 3, initial=1.0):
+        self.y_prev = None
         self.x_prev = None
-        self.dx = None
+        self.dy = None
         self.value = initial
         self.factor = factor
 
-    def update(self, x):
-        if self.x_prev is not None:
+    def update(self, y, x=None):
+        if self.y_prev is not None:
             # get the absolute change
-            self.dx = abs(x - self.x_prev)
+            self.dy = abs(y - self.y_prev)
+            # get the step size
+            if (x is not None) and (self.x_prev is not None):
+                self.dy /= abs(x - self.x_prev)
             # compute
-            self.value = self.value ** (1 - self.factor) * self.dx**self.factor
+            self.value = self.value ** (1 - self.factor) * self.dy**self.factor
+
+        self.y_prev = y
         self.x_prev = x
 
 
@@ -800,50 +843,6 @@ def tree_apply_dict(f, tree, is_leaf):
 
 
 tree_register_container(dict, tree_map_dict, tree_iter_dict, tree_apply_dict)
-
-
-# a style to use for matplotlib that works with light and dark backgrounds
-NEUTRAL_STYLE = {
-    "axes.edgecolor": (0.5, 0.5, 0.5),
-    "axes.facecolor": (0, 0, 0, 0),
-    "axes.grid": True,
-    "axes.labelcolor": (0.5, 0.5, 0.5),
-    "axes.spines.right": False,
-    "axes.spines.top": False,
-    "figure.facecolor": (0, 0, 0, 0),
-    "grid.alpha": 0.1,
-    "grid.color": (0.5, 0.5, 0.5),
-    "legend.frameon": False,
-    "text.color": (0.5, 0.5, 0.5),
-    "xtick.color": (0.5, 0.5, 0.5),
-    "xtick.minor.visible": True,
-    "ytick.color": (0.5, 0.5, 0.5),
-    "ytick.minor.visible": True,
-}
-
-
-def default_to_neutral_style(fn):
-    """Wrap a function or method to use the neutral style by default."""
-
-    @functools.wraps(fn)
-    def wrapper(*args, style="neutral", show_and_close=True, **kwargs):
-        import matplotlib.pyplot as plt
-
-        if style == "neutral":
-            style = NEUTRAL_STYLE
-        elif not style:
-            style = {}
-
-        with plt.style.context(style):
-            out = fn(*args, **kwargs)
-
-            if show_and_close:
-                plt.show()
-                plt.close()
-
-            return out
-
-    return wrapper
 
 
 def autocorrect_kwargs(func=None, valid_kwargs=None):

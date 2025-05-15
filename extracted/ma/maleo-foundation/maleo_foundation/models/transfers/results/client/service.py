@@ -20,10 +20,11 @@ class BaseClientServiceResultsTransfers:
         def calculate_pagination_component(cls, values: dict) -> dict:
             """Extracts pagination components (page, limit, total_data) before validation."""
             pagination = values.get("pagination")
-
-            if isinstance(pagination, BaseGeneralSchemas.ExtendedPagination):
-                values["page"] = pagination.page
-                values["limit"] = pagination.limit
-                values["total_data"] = pagination.total_data
+            if pagination is None:
+                raise ValueError("Pagination field did not exists")
+            pagination = BaseGeneralSchemas.ExtendedPagination.model_validate(pagination)
+            values["page"] = pagination.page
+            values["limit"] = pagination.limit
+            values["total_data"] = pagination.total_data
 
             return values

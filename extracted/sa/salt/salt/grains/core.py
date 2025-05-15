@@ -40,6 +40,7 @@ import salt.utils.pkg.rpm
 import salt.utils.platform
 import salt.utils.stringutils
 from salt.utils.network import _clear_interfaces, _get_interfaces
+from salt.utils.platform import get_machine_identifier as _get_machine_identifier
 from salt.utils.platform import linux_distribution as _linux_distribution
 
 try:
@@ -286,7 +287,12 @@ def _linux_gpu_data():
         "matrox",
         "aspeed",
     ]
-    gpu_classes = ("vga compatible controller", "3d controller", "display controller")
+    gpu_classes = (
+        "3d controller",
+        "display controller",
+        "processing accelerators",
+        "vga compatible controller",
+    )
 
     devs = []
     try:
@@ -924,6 +930,14 @@ def _virtual(osdata):
                 grains["virtual"] = "container"
                 grains["virtual_subtype"] = "LXC"
                 break
+            elif "podman" in output:
+                grains["virtual"] = "container"
+                grains["virtual_subtype"] = "Podman"
+                break
+            elif "docker" in output:
+                grains["virtual"] = "container"
+                grains["virtual_subtype"] = "Docker"
+                break
             elif "amazon" in output:
                 grains["virtual"] = "Nitro"
                 grains["virtual_subtype"] = "Amazon EC2"
@@ -936,6 +950,10 @@ def _virtual(osdata):
                 elif "lxc" in line:
                     grains["virtual"] = "container"
                     grains["virtual_subtype"] = "LXC"
+                    break
+                elif "docker" in line:
+                    grains["virtual"] = "container"
+                    grains["virtual_subtype"] = "Docker"
                     break
                 elif "vmware" in line:
                     grains["virtual"] = "VMware"
@@ -1275,6 +1293,7 @@ def _virtual(osdata):
             "cannot execute it. Grains output might not be "
             "accurate.",
             command,
+            once=True,
         )
     return grains
 
@@ -1867,6 +1886,7 @@ _OS_FAMILY_MAP = {
     "SLES_SAP": "Suse",
     "Arch ARM": "Arch",
     "Manjaro": "Arch",
+    "Manjaro ARM": "Arch",
     "Antergos": "Arch",
     "EndeavourOS": "Arch",
     "ALT": "RedHat",
@@ -2224,6 +2244,11 @@ def _linux_distribution_data():
 
     log.trace("Getting OS name, release, and codename from freedesktop_os_release")
     try:
+        # If using platform.freedesktop_os_release we must invalidate
+        # the internal platform os_release cache to allow grains to be
+        # actually recalculated during grains_refresh
+        if hasattr(platform, "_os_release_cache"):
+            platform._os_release_cache = None
         os_release = _freedesktop_os_release()
         grains.update(_os_release_to_grains(os_release))
 
@@ -2515,10 +2540,31 @@ def _systemd():
     """
     Return the systemd grain
     """
-    systemd_info = __salt__["cmd.run"]("systemctl --version").splitlines()
+    systemd_version = "UNDEFINED"
+    systemd_features = ""
+    try:
+        systemd_output = __salt__["cmd.run_all"]("systemctl --version")
+    except Exception:  # pylint: disable=broad-except
+        log.error("Exception while executing `systemctl --version`", exc_info=True)
+        return {
+            "version": systemd_version,
+            "features": systemd_features,
+        }
+    if systemd_output.get("retcode") == 0:
+        systemd_info = systemd_output.get("stdout", "").splitlines()
+        try:
+            if systemd_info[0].startswith("systemd "):
+                systemd_version = systemd_info[0].split()[1]
+                systemd_features = systemd_info[1]
+        except IndexError:
+            pass
+    if systemd_version == "UNDEFINED" or systemd_features == "":
+        log.error(
+            "Unexpected output returned by `systemctl --version`: %s", systemd_output
+        )
     return {
-        "version": systemd_info[0].split()[1],
-        "features": systemd_info[1],
+        "version": systemd_version,
+        "features": systemd_features,
     }
 
 
@@ -2653,6 +2699,7 @@ def os_data():
             osrelease_info[1] = osrelease_info[1].lstrip("R")
         else:
             osrelease_info = grains["osrelease"].split(".")
+        osrelease_info = [s for s in osrelease_info if s]
 
         for idx, value in enumerate(osrelease_info):
             if not value.isdigit():
@@ -3049,13 +3096,7 @@ def get_machine_id():
     if platform.system() == "AIX":
         return _aix_get_machine_id()
 
-    locations = ["/etc/machine-id", "/var/lib/dbus/machine-id"]
-    existing_locations = [loc for loc in locations if os.path.exists(loc)]
-    if not existing_locations:
-        return {}
-    else:
-        with salt.utils.files.fopen(existing_locations[0]) as machineid:
-            return {"machine_id": machineid.read().strip()}
+    return _get_machine_identifier()
 
 
 def cwd():

@@ -14,7 +14,11 @@ from cantools.database.errors import DecodeError
 
 from .. import database
 from ..typechecking import SignalDictType
-from .__utils__ import format_multiplexed_name, format_signals
+from .__utils__ import (
+    format_multiplexed_name,
+    format_signals,
+    parse_additional_config,
+)
 
 
 class QuitError(Exception):
@@ -75,6 +79,9 @@ class Monitor(can.Listener):
 
         if args.fd:
             kwargs['fd'] = True
+
+        if args.extra_args:
+            kwargs.update(parse_additional_config(args.extra_args))
 
         try:
             return can.Bus(bustype=args.bus_type,
@@ -368,7 +375,7 @@ class Monitor(can.Listener):
         timestamp = raw_message.timestamp - self._basetime
 
         try:
-            message = self._dbase.get_message_by_frame_id(raw_message.arbitration_id) # type: ignore[union-attr]
+            message = self._dbase.get_message_by_frame_id(raw_message.arbitration_id, raw_message.is_extended_id) # type: ignore[union-attr]
         except KeyError:
             return MessageFormattingResult.UnknownMessage
 
@@ -609,4 +616,11 @@ def add_subparser(subparsers):
     monitor_parser.add_argument(
         'database',
         help='Database file.')
+    monitor_parser.add_argument(
+        'extra_args',
+        nargs=argparse.REMAINDER,
+        help="The remaining arguments will be used for the interface."
+        "For example, `-c can0 -b sockectand --host=192.168.0.10 --port=29536`"
+        "is the equivalent to opening the bus with"
+        " `Bus('can0', 'socketcand', host='192.168.0.10', port=29536)`")
     monitor_parser.set_defaults(func=_do_monitor)

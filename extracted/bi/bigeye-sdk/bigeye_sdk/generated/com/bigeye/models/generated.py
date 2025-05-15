@@ -221,6 +221,7 @@ class ForecastModelType(betterproto.Enum):
     ETS_STL_MODEL_TYPE = 16
     SNAIVE_MODEL_TYPE = 17
     FREQ_INTERVAL_MODEL_TYPE = 18
+    STABLE_MODEL = 19
 
 
 class TimeIntervalType(betterproto.Enum):
@@ -3211,6 +3212,8 @@ class IssueStatusUpdate(betterproto.Message):
     closing_label: "MetricRunLabel" = betterproto.enum_field(5)
     metric_ids_to_adapt: List[int] = betterproto.int32_field(6)
     metric_ids_to_maintain: List[int] = betterproto.int32_field(7)
+    normal_metric_ids: List[int] = betterproto.int32_field(8)
+    anomalous_metric_ids: List[int] = betterproto.int32_field(9)
 
 
 @dataclass

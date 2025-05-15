@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import datetime
-import inspect
 import warnings
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import (
@@ -20,7 +19,7 @@ import pydantic
 import uvicorn
 from mcp.server.auth.provider import OAuthAuthorizationServerProvider
 from mcp.server.lowlevel.helper_types import ReadResourceContents
-from mcp.server.lowlevel.server import LifespanResultT
+from mcp.server.lowlevel.server import LifespanResultT, NotificationOptions
 from mcp.server.lowlevel.server import Server as MCPServer
 from mcp.server.stdio import stdio_server
 from mcp.types import (
@@ -44,7 +43,7 @@ from starlette.routing import BaseRoute, Route
 
 import fastmcp.server
 import fastmcp.settings
-from fastmcp.exceptions import NotFoundError, ResourceError
+from fastmcp.exceptions import NotFoundError
 from fastmcp.prompts import Prompt, PromptManager
 from fastmcp.prompts.prompt import PromptResult
 from fastmcp.resources import Resource, ResourceManager
@@ -54,7 +53,7 @@ from fastmcp.tools import ToolManager
 from fastmcp.tools.tool import Tool
 from fastmcp.utilities.cache import TimedCache
 from fastmcp.utilities.decorators import DecoratedFunction
-from fastmcp.utilities.logging import configure_logging, get_logger
+from fastmcp.utilities.logging import get_logger
 
 if TYPE_CHECKING:
     from fastmcp.client import Client
@@ -62,6 +61,8 @@ if TYPE_CHECKING:
     from fastmcp.server.proxy import FastMCPProxy
 
 logger = get_logger(__name__)
+
+DuplicateBehavior = Literal["warn", "error", "replace", "ignore"]
 
 
 @asynccontextmanager
@@ -107,39 +108,51 @@ class FastMCP(Generic[LifespanResultT]):
             | None
         ) = None,
         tags: set[str] | None = None,
+        dependencies: list[str] | None = None,
         tool_serializer: Callable[[Any], str] | None = None,
+        cache_expiration_seconds: float | None = None,
+        on_duplicate_tools: DuplicateBehavior | None = None,
+        on_duplicate_resources: DuplicateBehavior | None = None,
+        on_duplicate_prompts: DuplicateBehavior | None = None,
         **settings: Any,
     ):
-        self.tags: set[str] = tags or set()
-        self.settings = fastmcp.settings.ServerSettings(**settings)
-        self._cache = TimedCache(
-            expiration=datetime.timedelta(
-                seconds=self.settings.cache_expiration_seconds
+        if settings:
+            # TODO: remove settings. Deprecated since 2.3.4
+            warnings.warn(
+                "Passing runtime and transport-specific settings as kwargs "
+                "to the FastMCP constructor is deprecated (as of 2.3.4), "
+                "including most transport settings. If possible, provide settings when calling "
+                "run() instead.",
+                DeprecationWarning,
+                stacklevel=2,
             )
-        )
+        self.settings = fastmcp.settings.ServerSettings(**settings)
 
+        self.tags: set[str] = tags or set()
+        self.dependencies = dependencies
+        self._cache = TimedCache(
+            expiration=datetime.timedelta(seconds=cache_expiration_seconds or 0)
+        )
         self._mounted_servers: dict[str, MountedServer] = {}
+        self._additional_http_routes: list[BaseRoute] = []
+        self._tool_manager = ToolManager(
+            duplicate_behavior=on_duplicate_tools,
+            serializer=tool_serializer,
+        )
+        self._resource_manager = ResourceManager(
+            duplicate_behavior=on_duplicate_resources
+        )
+        self._prompt_manager = PromptManager(duplicate_behavior=on_duplicate_prompts)
 
         if lifespan is None:
             self._has_lifespan = False
             lifespan = default_lifespan
         else:
             self._has_lifespan = True
-
         self._mcp_server = MCPServer[LifespanResultT](
             name=name or "FastMCP",
             instructions=instructions,
             lifespan=_lifespan_wrapper(self, lifespan),
-        )
-        self._tool_manager = ToolManager(
-            duplicate_behavior=self.settings.on_duplicate_tools,
-            serializer=tool_serializer,
-        )
-        self._resource_manager = ResourceManager(
-            duplicate_behavior=self.settings.on_duplicate_resources
-        )
-        self._prompt_manager = PromptManager(
-            duplicate_behavior=self.settings.on_duplicate_prompts
         )
 
         if (self.settings.auth is not None) != (auth_server_provider is not None):
@@ -150,14 +163,8 @@ class FastMCP(Generic[LifespanResultT]):
             )
         self._auth_server_provider = auth_server_provider
 
-        self._additional_http_routes: list[BaseRoute] = []
-        self.dependencies = self.settings.dependencies
-
         # Set up MCP protocol handlers
         self._setup_handlers()
-
-        # Configure logging
-        configure_logging(self.settings.log_level)
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}({self.name!r})"
@@ -378,16 +385,13 @@ class FastMCP(Generic[LifespanResultT]):
         with fastmcp.server.context.Context(fastmcp=self):
             if self._resource_manager.has_resource(uri):
                 resource = await self._resource_manager.get_resource(uri)
-                try:
-                    content = await resource.read()
-                    return [
-                        ReadResourceContents(
-                            content=content, mime_type=resource.mime_type
-                        )
-                    ]
-                except Exception as e:
-                    logger.error(f"Error reading resource {uri}: {e}")
-                    raise ResourceError(str(e))
+                content = await self._resource_manager.read_resource(uri)
+                return [
+                    ReadResourceContents(
+                        content=content,
+                        mime_type=resource.mime_type,
+                    )
+                ]
             else:
                 for server in self._mounted_servers.values():
                     if server.match_resource(str(uri)):
@@ -414,7 +418,7 @@ class FastMCP(Generic[LifespanResultT]):
                 for server in self._mounted_servers.values():
                     if server.match_prompt(name):
                         new_key = server.strip_prompt_prefix(name)
-                    return await server.server._mcp_get_prompt(new_key, arguments)
+                        return await server.server._mcp_get_prompt(new_key, arguments)
                 else:
                     raise NotFoundError(f"Unknown prompt: {name}")
 
@@ -448,6 +452,18 @@ class FastMCP(Generic[LifespanResultT]):
             tags=tags,
             annotations=annotations,
         )
+        self._cache.clear()
+
+    def remove_tool(self, name: str) -> None:
+        """Remove a tool from the server.
+
+        Args:
+            name: The name of the tool to remove
+
+        Raises:
+            NotFoundError: If the tool is not found
+        """
+        self._tool_manager.remove_tool(name)
         self._cache.clear()
 
     def tool(
@@ -715,7 +731,9 @@ class FastMCP(Generic[LifespanResultT]):
             await self._mcp_server.run(
                 read_stream,
                 write_stream,
-                self._mcp_server.create_initialization_options(),
+                self._mcp_server.create_initialization_options(
+                    NotificationOptions(tools_changed=True)
+                ),
             )
 
     async def run_http_async(
@@ -764,15 +782,14 @@ class FastMCP(Generic[LifespanResultT]):
         uvicorn_config: dict | None = None,
     ) -> None:
         """Run the server using SSE transport."""
+
+        # Deprecated since 2.3.2
         warnings.warn(
-            inspect.cleandoc(
-                """
-                The run_sse_async method is deprecated. Use run_http_async for a
-                modern (non-SSE) alternative, or create an SSE app with
-                `fastmcp.server.http.create_sse_app` and run it directly.
-                """
-            ),
+            "The run_sse_async method is deprecated (as of 2.3.2). Use run_http_async for a "
+            "modern (non-SSE) alternative, or create an SSE app with "
+            "`fastmcp.server.http.create_sse_app` and run it directly.",
             DeprecationWarning,
+            stacklevel=2,
         )
         await self.run_http_async(
             transport="sse",
@@ -797,14 +814,12 @@ class FastMCP(Generic[LifespanResultT]):
             message_path: The path to the message endpoint
             middleware: A list of middleware to apply to the app
         """
+        # Deprecated since 2.3.2
         warnings.warn(
-            inspect.cleandoc(
-                """
-                The sse_app method is deprecated. Use http_app as a modern (non-SSE)
-                alternative, or call `fastmcp.server.http.create_sse_app` directly.
-                """
-            ),
+            "The sse_app method is deprecated (as of 2.3.2). Use http_app as a modern (non-SSE) "
+            "alternative, or call `fastmcp.server.http.create_sse_app` directly.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return create_sse_app(
             server=self,
@@ -829,9 +844,11 @@ class FastMCP(Generic[LifespanResultT]):
             path: The path to the StreamableHTTP endpoint
             middleware: A list of middleware to apply to the app
         """
+        # Deprecated since 2.3.2
         warnings.warn(
-            "The streamable_http_app method is deprecated. Use http_app() instead.",
+            "The streamable_http_app method is deprecated (as of 2.3.2). Use http_app() instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return self.http_app(path=path, middleware=middleware)
 
@@ -886,9 +903,12 @@ class FastMCP(Generic[LifespanResultT]):
         path: str | None = None,
         uvicorn_config: dict | None = None,
     ) -> None:
+        # Deprecated since 2.3.2
         warnings.warn(
-            "The run_streamable_http_async method is deprecated. Use run_http_async instead.",
+            "The run_streamable_http_async method is deprecated (as of 2.3.2). "
+            "Use run_http_async instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         await self.run_http_async(
             transport="streamable-http",

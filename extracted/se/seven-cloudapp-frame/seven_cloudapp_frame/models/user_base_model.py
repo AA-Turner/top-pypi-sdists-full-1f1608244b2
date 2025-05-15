@@ -47,7 +47,7 @@ class UserBaseModel(FrameBaseModel):
         if act_id > 0:
             return CryptoHelper.md5_encrypt_int(f"{act_id}_{user_id}")
         else:
-            return CryptoHelper.md5_encrypt_int(f"{app_id}_0_{user_id}")    
+            return CryptoHelper.md5_encrypt_int(f"{app_id}_0_{user_id}")
 
     def _delete_user_black_cache(self, act_id, user_id, delay_delete_time=0.01):
         """
@@ -190,7 +190,7 @@ class UserBaseModel(FrameBaseModel):
             invoke_result_data.error_code = "param_error"
             invoke_result_data.error_message = "参数不能为空"
             return invoke_result_data
-        
+
         if continue_request_expire > 0 and SevenHelper.is_continue_request(f"continue_request:save_user_by_openid:{app_id}_{open_id}", expire=continue_request_expire * 1000) == True:
             invoke_result_data.success = False
             invoke_result_data.error_code = "error"
@@ -435,13 +435,14 @@ class UserBaseModel(FrameBaseModel):
         invoke_result_data.data = user_info.__dict__
         return invoke_result_data
 
-    def update_user_state_by_black(self, app_id, act_id, user_id, reason=""):
+    def update_user_state_by_black(self, app_id, act_id, user_id, reason="", black_type=2):
         """
         :description: 用户拉入黑名单
         :param app_id：应用标识
         :param act_id：活动标识
         :param user_id：用户标识
         :param reason：拉黑理由
+        :param black_type：拉黑类型(1-自动 2-手动)
         :return:
         :last_editors: HuangJianYi
         """
@@ -482,14 +483,14 @@ class UserBaseModel(FrameBaseModel):
                 user_black.user_id = user_info_dict["user_id"]
                 user_black.open_id = user_info_dict["open_id"]
                 user_black.user_nick = user_info_dict["user_nick"]
-                user_black.black_type = 2
+                user_black.black_type = black_type
                 user_black.refund_order_data = []
                 user_black.reason = reason
                 user_black.create_date = SevenHelper.get_now_datetime()
                 user_black_model.add_entity(user_black)
             else:
                 user_black.audit_status = 0
-                user_black.black_type = 2
+                user_black.black_type = black_type
                 user_black.reason = reason
                 user_black.create_date = SevenHelper.get_now_datetime()
                 user_black_model.update_entity(user_black)
@@ -885,7 +886,7 @@ class UserBaseModel(FrameBaseModel):
         if user_address_id == -1:
             user_address = user_address_model.get_entity("act_id=%s and user_id=%s", params=[act_id, user_id])
             user_address_id = user_address.id if user_address else 0
-        
+
         real_name = self.sensitive_encrypt(real_name)
         telephone = self.sensitive_encrypt(telephone)
         province = self.sensitive_encrypt(province)

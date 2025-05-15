@@ -113,8 +113,6 @@ use argmin::core::observers::ObserverMode;
 use egobox_moe::GpMixtureParams;
 use log::info;
 use ndarray::{concatenate, Array2, ArrayBase, Axis, Data, Ix2};
-use ndarray_rand::rand::SeedableRng;
-use rand_xoshiro::Xoshiro256Plus;
 
 use argmin::core::{observers::Observe, Error, Executor, State, KV};
 use serde::de::DeserializeOwned;
@@ -169,18 +167,13 @@ impl<O: GroupFunc, C: CstrFn> EgorFactory<O, C> {
         self,
         xlimits: &ArrayBase<impl Data<Elem = f64>, Ix2>,
     ) -> Egor<O, C, GpMixtureParams<f64>> {
-        let rng = if let Some(seed) = self.config.seed {
-            Xoshiro256Plus::seed_from_u64(seed)
-        } else {
-            Xoshiro256Plus::from_entropy()
-        };
         let config = EgorConfig {
             xtypes: to_xtypes(xlimits),
             ..self.config.clone()
         };
         Egor {
             fobj: ObjFunc::new(self.fobj).subject_to(self.fcstrs),
-            solver: EgorSolver::new(config, rng),
+            solver: EgorSolver::new(config),
         }
     }
 
@@ -188,18 +181,13 @@ impl<O: GroupFunc, C: CstrFn> EgorFactory<O, C> {
     /// inputs specified with given xtypes where some of components may be
     /// discrete variables (mixed-integer optimization).
     pub fn min_within_mixint_space(self, xtypes: &[XType]) -> Egor<O, C, MixintGpMixtureParams> {
-        let rng = if let Some(seed) = self.config.seed {
-            Xoshiro256Plus::seed_from_u64(seed)
-        } else {
-            Xoshiro256Plus::from_entropy()
-        };
         let config = EgorConfig {
             xtypes: xtypes.into(),
             ..self.config.clone()
         };
         Egor {
             fobj: ObjFunc::new(self.fobj).subject_to(self.fcstrs),
-            solver: EgorSolver::new(config, rng),
+            solver: EgorSolver::new(config),
         }
     }
 }
@@ -363,6 +351,8 @@ mod tests {
     use egobox_doe::{Lhs, SamplingMethod};
     use egobox_moe::NbClusters;
     use ndarray::{array, s, Array1, Array2, ArrayView2, Ix1, Zip};
+    use ndarray_rand::rand::SeedableRng;
+    use rand_xoshiro::Xoshiro256Plus;
 
     use ndarray_npy::read_npy;
 
@@ -396,6 +386,32 @@ mod tests {
                     .doe(&initial_doe)
                     .target(-15.1)
                     .outdir(outdir)
+            })
+            .min_within(&array![[0.0, 25.0]])
+            .run()
+            .expect("Egor should minimize xsinx");
+        let expected = array![-15.1];
+        assert_abs_diff_eq!(expected, res.y_opt, epsilon = 0.5);
+        let saved_doe: Array2<f64> = read_npy(&outfile).unwrap();
+        assert_abs_diff_eq!(initial_doe, saved_doe.slice(s![..3, ..1]), epsilon = 1e-6);
+    }
+
+    #[test]
+    #[serial]
+    fn test_xsinx_gbnm_optimizer_egor_builder() {
+        let outdir = "target/test_egor_builder_01";
+        let outfile = format!("{outdir}/{DOE_INITIAL_FILE}");
+        let _ = std::fs::remove_file(&outfile);
+        let initial_doe = array![[0.], [7.], [25.]];
+        let res = EgorBuilder::optimize(xsinx)
+            .configure(|cfg| {
+                cfg.infill_strategy(InfillStrategy::EI)
+                    .infill_optimizer(InfillOptimizer::Gbnm)
+                    .max_iters(30)
+                    .doe(&initial_doe)
+                    .target(-15.1)
+                    .outdir(outdir)
+                    .seed(42)
             })
             .min_within(&array![[0.0, 25.0]])
             .run()
@@ -699,7 +715,7 @@ mod tests {
     fn test_egor_g24_basic_egor_builder_cobyla() {
         let xlimits = array![[0., 3.], [0., 4.]];
         let doe = Lhs::new(&xlimits)
-            .with_rng(Xoshiro256Plus::seed_from_u64(42))
+            .with_rng(Xoshiro256Plus::seed_from_u64(0))
             .sample(3);
         let res = EgorBuilder::optimize(f_g24)
             .configure(|config| {
@@ -720,7 +736,7 @@ mod tests {
     }
 
     #[test]
-    fn test_egor_g24_basic_egor_builder() {
+    fn test_egor_g24_basic_egor_builder_slsqp() {
         let xlimits = array![[0., 3.], [0., 4.]];
         let doe = Lhs::new(&xlimits)
             .with_rng(Xoshiro256Plus::seed_from_u64(42))
@@ -731,7 +747,7 @@ mod tests {
                     .n_cstr(2)
                     .doe(&doe)
                     .max_iters(20)
-                    .cstr_tol(array![2e-6, 1e-6])
+                    .cstr_tol(array![1e-5, 1e-5])
                     .seed(42)
             })
             .min_within(&xlimits)

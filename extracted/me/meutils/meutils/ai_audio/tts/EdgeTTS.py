@@ -135,8 +135,8 @@ if __name__ == '__main__':
     """
 
     print(cls.find_voices(Locale="zh-CN"))
-    # for i in async2sync_generator(cls.stream_acreate(input)):
-        # print(i)
+    for i in async2sync_generator(cls.stream_acreate(input)):
+        print(i)
 
     # EDGE_TTS_DICT = {
     #     "用英语": "en-US-AriaNeural",
@@ -147,4 +147,4 @@ if __name__ == '__main__':
     #     # add more here
     # }
 
-    arun(cls.acreate(input))
+    # arun(cls.acreate(input))

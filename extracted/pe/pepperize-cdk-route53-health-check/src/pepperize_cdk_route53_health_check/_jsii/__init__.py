@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@pepperize/cdk-route53-health-check",
-    "0.0.733",
+    "0.0.734",
     __name__[0:-6],
-    "cdk-route53-health-check@0.0.733.jsii.tgz",
+    "cdk-route53-health-check@0.0.734.jsii.tgz",
 )
 
 __all__ = [

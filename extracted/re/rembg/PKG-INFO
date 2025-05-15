@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: rembg
-Version: 2.0.65
+Version: 2.0.66
 Summary: Remove image background
 Home-page: https://github.com/danielgatis/rembg
 Author: Daniel Gatis
@@ -46,6 +46,8 @@ Provides-Extra: cpu
 Requires-Dist: onnxruntime; extra == "cpu"
 Provides-Extra: gpu
 Requires-Dist: onnxruntime-gpu; extra == "gpu"
+Provides-Extra: rocm
+Requires-Dist: onnxruntime-rocm; extra == "rocm"
 Provides-Extra: cli
 Requires-Dist: aiohttp; extra == "cli"
 Requires-Dist: asyncer; extra == "cli"
@@ -63,6 +65,7 @@ Dynamic: description
 Dynamic: description-content-type
 Dynamic: home-page
 Dynamic: keywords
+Dynamic: license-file
 Dynamic: provides-extra
 Dynamic: requires-dist
 Dynamic: requires-python
@@ -74,6 +77,8 @@ Dynamic: summary
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://img.shields.io/badge/License-MIT-blue.svg)
 [![Hugging Face Spaces](https://img.shields.io/badge/🤗%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/KenjieDec/RemBG)
 [![Streamlit App](https://img.shields.io/badge/🎈%20Streamlit%20Community-Cloud-blue)](https://bgremoval.streamlit.app/)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/danielgatis/rembg/blob/main/rembg.ipynb)
+
 
 Rembg is a tool to remove images background.
 
@@ -177,7 +182,7 @@ pip install rembg[cpu] # for library
 pip install "rembg[cpu,cli]" # for library + cli
 ```
 
-### GPU support:
+### GPU support (NVidia/Cuda):
 
 First of all, you need to check if your system supports the `onnxruntime-gpu`.
 
@@ -195,6 +200,19 @@ pip install "rembg[gpu,cli]" # for library + cli
 ```
 
 Nvidia GPU may require onnxruntime-gpu, cuda, and cudnn-devel. [#668](https://github.com/danielgatis/rembg/issues/668#issuecomment-2689830314) . If rembg[gpu] doesn't work and you can't install cuda or cudnn-devel, use rembg[cpu] and onnxruntime instead.
+
+### GPU support (AMD/ROCM):
+
+ROCM support requires the `onnxruntime-rocm` package. Install it following
+[AMD's documentation](https://rocm.docs.amd.com/projects/radeon/en/latest/docs/install/native_linux/install-onnx.html).
+
+If `onnxruntime-rocm` is installed and working, install the `rembg[rocm]`
+version of rembg:
+
+```bash
+pip install "rembg[rocm]" # for library
+pip install "rembg[rocm,cli]" # for library + cli
+```
 
 ## Usage as a cli
 
@@ -437,7 +455,8 @@ After you build the image, run it like this as a cli
 sudo docker run --rm -it --gpus all -v /dev/dri:/dev/dri -v $PWD:/rembg rembg-nvidia-cuda-cudnn-gpu i -m birefnet-general input.png output.png
 ```
 
-Trick: Actually you can also make up a nvidia-cuda-cudnn-gpu image and install rembg[gpu, cli] in it.
+- Trick 1: Actually you can also make up a nvidia-cuda-cudnn-gpu image and install rembg[gpu, cli] in it.
+- Trick 2: Try param `-v /somewhereYouStoresModelFiles/:/root/.u2net` so to download/store model files out of docker images. You can even comment the line `RUN rembg d u2net` so when builing the image, it download will no models, so you can download the specific model you want even without the default u2net model.
 
 ## Models
 

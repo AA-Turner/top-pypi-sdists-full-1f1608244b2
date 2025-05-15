@@ -1,20 +1,17 @@
 from __future__ import annotations
 
-import os
-import sys
 import traceback
 import warnings
 from concurrent.futures import ThreadPoolExecutor
 from decimal import Decimal
 from threading import Event, get_ident
 from time import sleep
-from timeit import timeit
 from typing import TYPE_CHECKING, Any, ClassVar
 from unittest import TestCase
 from uuid import UUID, uuid4
 
 from eventsourcing.application import AggregateNotFoundError, Application
-from eventsourcing.domain import Aggregate, datetime_now_with_tzinfo
+from eventsourcing.domain import Aggregate
 from eventsourcing.persistence import (
     InfrastructureFactory,
     InfrastructureFactoryError,
@@ -28,11 +25,8 @@ from eventsourcing.utils import EnvType, get_topic
 if TYPE_CHECKING:
     from datetime import datetime
 
-TIMEIT_FACTOR = int(os.environ.get("TEST_TIMEIT_FACTOR", default="10"))
-
 
 class ExampleApplicationTestCase(TestCase):
-    timeit_number: ClassVar[int] = TIMEIT_FACTOR
     started_ats: ClassVar[dict[type[TestCase], datetime]] = {}
     counts: ClassVar[dict[type[TestCase], int]] = {}
     expected_factory_topic: str
@@ -76,7 +70,7 @@ class ExampleApplicationTestCase(TestCase):
             Decimal("65.00"),
         )
 
-        sleep(1)  # Added to make eventsourcing-axon tests work, perhaps not necessary.
+        # sleep(1)  # Added to make eventsourcing-axon tests work.
         section = app.notification_log["1,10"]
         self.assertEqual(len(section.items), 4)
 
@@ -108,83 +102,6 @@ class ExampleApplicationTestCase(TestCase):
         self.assertEqual(from_snapshot2.version, Aggregate.INITIAL_VERSION + 3)
         self.assertEqual(from_snapshot2.balance, Decimal("65.00"))
 
-    def test__put_performance(self) -> None:
-        app = BankAccounts()
-
-        # Open an account.
-        account_id = app.open_account(
-            full_name="Alice",
-            email_address="alice@example.com",
-        )
-        account = app.get_account(account_id)
-
-        def put() -> None:
-            # Credit the account.
-            account.append_transaction(Decimal("10.00"))
-            app.save(account)
-
-        # Warm up.
-        number = 10
-        timeit(put, number=number)
-
-        duration = timeit(put, number=self.timeit_number)
-        self.print_time("store events", duration)
-
-    def test__get_performance_with_snapshotting_enabled(self) -> None:
-        print()
-        self._test_get_performance(is_snapshotting_enabled=True)
-
-    def test__get_performance_without_snapshotting_enabled(self) -> None:
-        self._test_get_performance(is_snapshotting_enabled=False)
-
-    def _test_get_performance(self, *, is_snapshotting_enabled: bool) -> None:
-        app = BankAccounts(
-            env={"IS_SNAPSHOTTING_ENABLED": "y" if is_snapshotting_enabled else "n"}
-        )
-
-        # Open an account.
-        account_id = app.open_account(
-            full_name="Alice",
-            email_address="alice@example.com",
-        )
-
-        def read() -> None:
-            # Get the account.
-            app.get_account(account_id)
-
-        # Warm up.
-        timeit(read, number=10)
-
-        duration = timeit(read, number=self.timeit_number)
-
-        if is_snapshotting_enabled:
-            test_label = "get with snapshotting"
-        else:
-            test_label = "get without snapshotting"
-        self.print_time(test_label, duration)
-
-    def print_time(self, test_label: str, duration: float) -> None:
-        cls = type(self)
-        if cls not in self.started_ats:
-            self.started_ats[cls] = datetime_now_with_tzinfo()
-            print(f"{cls.__name__: <29} timeit number: {cls.timeit_number}")
-            self.counts[cls] = 1
-        else:
-            self.counts[cls] += 1
-
-        rate = f"{self.timeit_number / duration:.0f} events/s"
-        print(
-            f"{cls.__name__: <29}",
-            f"{test_label: <21}",
-            f"{rate: >15}",
-            f"  {1000 * duration / self.timeit_number:.3f} ms/event",
-        )
-
-        if self.counts[cls] == 3:
-            cls_duration = datetime_now_with_tzinfo() - cls.started_ats[cls]
-            print(f"{cls.__name__: <29} timeit duration: {cls_duration}")
-            sys.stdout.flush()
-
 
 class EmailAddressAsStr(Transcoding):
     type = EmailAddress
@@ -197,7 +114,7 @@ class EmailAddressAsStr(Transcoding):
         return EmailAddress(data)
 
 
-class BankAccounts(Application):
+class BankAccounts(Application[UUID]):
     is_snapshotting_enabled = True
 
     def register_transcodings(self, transcoder: JSONTranscoder) -> None:
@@ -238,19 +155,19 @@ class ApplicationTestCase(TestCase):
     def test_name(self) -> None:
         self.assertEqual(Application.name, "Application")
 
-        class MyApplication1(Application):
+        class MyApplication1(Application[UUID]):
             pass
 
         self.assertEqual(MyApplication1.name, "MyApplication1")
 
-        class MyApplication2(Application):
+        class MyApplication2(Application[UUID]):
             name = "MyBoundedContext"
 
         self.assertEqual(MyApplication2.name, "MyBoundedContext")
 
     def test_resolve_persistence_topics(self) -> None:
         # None specified.
-        app = Application()
+        app = Application[UUID]()
         self.assertIsInstance(app.factory, InfrastructureFactory)
 
         # Legacy 'INFRASTRUCTURE_FACTORY'.
@@ -286,7 +203,7 @@ class ApplicationTestCase(TestCase):
         )
 
     def test_save_returns_recording_event(self) -> None:
-        app = Application()
+        app = Application[UUID]()
 
         recordings = app.save()
         self.assertEqual(recordings, [])
@@ -310,7 +227,7 @@ class ApplicationTestCase(TestCase):
     def test_take_snapshot_raises_assertion_error_if_snapshotting_not_enabled(
         self,
     ) -> None:
-        app = Application()
+        app = Application[UUID]()
         with self.assertRaises(AssertionError) as cm:
             app.take_snapshot(uuid4())
         self.assertEqual(
@@ -323,7 +240,7 @@ class ApplicationTestCase(TestCase):
         )
 
     def test_application_with_cached_aggregates_and_fastforward(self) -> None:
-        app = Application(env={"AGGREGATE_CACHE_MAXSIZE": "10"})
+        app = Application[UUID](env={"AGGREGATE_CACHE_MAXSIZE": "10"})
 
         aggregate = Aggregate()
         app.save(aggregate)
@@ -362,7 +279,7 @@ class ApplicationTestCase(TestCase):
         )
 
     def _check_aggregate_fastforwarding_during_contention(self, env: EnvType) -> None:
-        app = Application(env=env)
+        app = Application[UUID](env=env)
 
         self.assertEqual(len(app.repository._fastforward_locks_inuse), 0)
 
@@ -474,7 +391,7 @@ class ApplicationTestCase(TestCase):
             app.close()
 
     def test_application_with_cached_aggregates_not_fastforward(self) -> None:
-        app = Application(
+        app = Application[UUID](
             env={
                 "AGGREGATE_CACHE_MAXSIZE": "10",
                 "AGGREGATE_CACHE_FASTFORWARD": "f",
@@ -513,7 +430,7 @@ class ApplicationTestCase(TestCase):
             app.save(aggregate4)
 
     def test_application_with_deepcopy_from_cache_arg(self) -> None:
-        app = Application(
+        app = Application[UUID](
             env={
                 "AGGREGATE_CACHE_MAXSIZE": "10",
             }
@@ -530,7 +447,7 @@ class ApplicationTestCase(TestCase):
         self.assertEqual(app.repository.cache.get(aggregate.id).version, 101)
 
     def test_application_with_deepcopy_from_cache_attribute(self) -> None:
-        app = Application(
+        app = Application[UUID](
             env={
                 "AGGREGATE_CACHE_MAXSIZE": "10",
             }
@@ -549,7 +466,7 @@ class ApplicationTestCase(TestCase):
 
     def test_application_log(self) -> None:
         # Check the old 'log' attribute presents the 'notification log' object.
-        app = Application()
+        app = Application[UUID]()
 
         # Verify deprecation warning.
         with warnings.catch_warnings(record=True) as w:

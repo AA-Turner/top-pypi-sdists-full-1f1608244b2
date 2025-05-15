@@ -17,6 +17,7 @@ class SearchInputUiBlockUpdate:
     _id: str
     _type: Union[Unset, SearchInputUiBlockType] = UNSET
     _item_type: Union[Unset, SearchInputUiBlockItemType] = UNSET
+    _placeholder: Union[Unset, None, str] = UNSET
     _schema_id: Union[Unset, None, str] = UNSET
     _label: Union[Unset, None, str] = UNSET
     _required: Union[Unset, None, bool] = UNSET
@@ -29,6 +30,7 @@ class SearchInputUiBlockUpdate:
         fields.append("id={}".format(repr(self._id)))
         fields.append("type={}".format(repr(self._type)))
         fields.append("item_type={}".format(repr(self._item_type)))
+        fields.append("placeholder={}".format(repr(self._placeholder)))
         fields.append("schema_id={}".format(repr(self._schema_id)))
         fields.append("label={}".format(repr(self._label)))
         fields.append("required={}".format(repr(self._required)))
@@ -47,6 +49,7 @@ class SearchInputUiBlockUpdate:
         if not isinstance(self._item_type, Unset):
             item_type = self._item_type.value
 
+        placeholder = self._placeholder
         schema_id = self._schema_id
         label = self._label
         required = self._required
@@ -62,6 +65,8 @@ class SearchInputUiBlockUpdate:
             field_dict["type"] = type
         if item_type is not UNSET:
             field_dict["itemType"] = item_type
+        if placeholder is not UNSET:
+            field_dict["placeholder"] = placeholder
         if schema_id is not UNSET:
             field_dict["schemaId"] = schema_id
         if label is not UNSET:
@@ -126,6 +131,17 @@ class SearchInputUiBlockUpdate:
                 raise
             item_type = cast(Union[Unset, SearchInputUiBlockItemType], UNSET)
 
+        def get_placeholder() -> Union[Unset, None, str]:
+            placeholder = d.pop("placeholder")
+            return placeholder
+
+        try:
+            placeholder = get_placeholder()
+        except KeyError:
+            if strict:
+                raise
+            placeholder = cast(Union[Unset, None, str], UNSET)
+
         def get_schema_id() -> Union[Unset, None, str]:
             schema_id = d.pop("schemaId")
             return schema_id
@@ -185,6 +201,7 @@ class SearchInputUiBlockUpdate:
             id=id,
             type=type,
             item_type=item_type,
+            placeholder=placeholder,
             schema_id=schema_id,
             label=label,
             required=required,
@@ -251,6 +268,20 @@ class SearchInputUiBlockUpdate:
     @item_type.deleter
     def item_type(self) -> None:
         self._item_type = UNSET
+
+    @property
+    def placeholder(self) -> Optional[str]:
+        if isinstance(self._placeholder, Unset):
+            raise NotPresentError(self, "placeholder")
+        return self._placeholder
+
+    @placeholder.setter
+    def placeholder(self, value: Optional[str]) -> None:
+        self._placeholder = value
+
+    @placeholder.deleter
+    def placeholder(self) -> None:
+        self._placeholder = UNSET
 
     @property
     def schema_id(self) -> Optional[str]:

@@ -20,11 +20,14 @@ from typing import TYPE_CHECKING, Dict, Optional
 from pydantic import BaseModel
 
 from zenml.config.docker_settings import DockerSettings
+from zenml.logger import get_logger
 from zenml.utils import json_utils
 
 if TYPE_CHECKING:
     from zenml.code_repositories import BaseCodeRepository
     from zenml.stack import Stack
+
+logger = get_logger(__name__)
 
 
 class BuildConfiguration(BaseModel):
@@ -99,6 +102,24 @@ class BuildConfiguration(BaseModel):
             with open(self.settings.dockerfile, "rb") as f:
                 hash_.update(f.read())
 
+        if self.settings.parent_image and stack.container_registry:
+            digest = stack.container_registry.get_image_repo_digest(
+                self.settings.parent_image
+            )
+            if digest:
+                hash_.update(digest.encode())
+            else:
+                logger.warning(
+                    "Unable to fetch parent image digest for image `%s`. "
+                    "This may lead to ZenML reusing existing builds even "
+                    "though a new version of the parent image has been "
+                    "pushed. Most likely you can fix this error by making sure "
+                    "the parent image is pushed to the container registry of "
+                    "your active stack `%s`.",
+                    self.settings.parent_image,
+                    stack.name,
+                )
+
         return hash_.hexdigest()
 
     def should_include_files(
@@ -114,6 +135,9 @@ class BuildConfiguration(BaseModel):
         Returns:
             Whether files should be included in the image.
         """
+        if self.settings.local_project_install_command:
+            return True
+
         if self.should_download_files(code_repository=code_repository):
             return False
 
@@ -132,6 +156,9 @@ class BuildConfiguration(BaseModel):
         Returns:
             Whether files should be downloaded in the image.
         """
+        if self.settings.local_project_install_command:
+            return False
+
         if self.should_download_files_from_code_repository(
             code_repository=code_repository
         ):
@@ -155,6 +182,9 @@ class BuildConfiguration(BaseModel):
         Returns:
             Whether files should be downloaded from the code repository.
         """
+        if self.settings.local_project_install_command:
+            return False
+
         if (
             code_repository
             and self.settings.allow_download_from_code_repository

@@ -14,12 +14,14 @@ REGEXP_PATH_MARKERS = r"[\\\/\s]"
 """Match directory path from string."""
 REGEXP_INTERFACE_ID = r"\d+(\/\d+)*(\.\d+)?"
 """Match Interface ID lilke 1/1.1."""
-REGEXP_TYPE_EOS_INTERFACE = r"^(Dps|Ethernet|Fabric|Loopback|Management|Port-Channel|Tunnel|Vlan|Vxlan)[0-9]+(\/[0-9]+)*(\.[0-9]+)?$"
+REGEXP_TYPE_EOS_INTERFACE = r"^(Dps|Ethernet|Fabric|Loopback|Management|Port-Channel|Recirc-Channel|Tunnel|Vlan|Vxlan)[0-9]+(\/[0-9]+)*(\.[0-9]+)?$"
 """Match EOS interface types like Ethernet1/1, Vlan1, Loopback1, etc."""
 REGEXP_TYPE_VXLAN_SRC_INTERFACE = r"^(Loopback)([0-9]|[1-9][0-9]{1,2}|[1-7][0-9]{3}|8[01][0-9]{2}|819[01])$"
 """Match Vxlan source interface like Loopback10."""
 REGEX_TYPE_PORTCHANNEL = r"^Port-Channel[0-9]{1,6}$"
 """Match Port Channel interface like Port-Channel5."""
+REGEXP_EOS_INTERFACE_TYPE = r"^(Dps|Ethernet|Fabric|Loopback|Management|Port-Channel|Recirc-Channel|Tunnel|Vlan|Vxlan)$"
+"""Match an EOS interface type like Ethernet or Loopback."""
 REGEXP_TYPE_HOSTNAME = r"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$"
 """Match hostname like `my-hostname`, `my-hostname-1`, `my-hostname-1-2`."""
 
@@ -187,9 +189,26 @@ def update_bgp_redistributed_proto_user(value: str) -> str:
     return value
 
 
+def convert_reload_cause(value: str) -> str:
+    """Convert a reload cause abbreviation into its full descriptive string.
+
+    Examples
+    --------
+    ```python
+    >>> convert_reload_cause("ZTP")
+    'System reloaded due to Zero Touch Provisioning'
+    ```
+    """
+    reload_causes = {"ZTP": "System reloaded due to Zero Touch Provisioning", "USER": "Reload requested by the user.", "FPGA": "Reload requested after FPGA upgrade"}
+    if not reload_causes.get(value.upper()):
+        msg = f"Invalid reload cause: '{value}' - expected causes are {list(reload_causes)}"
+        raise ValueError(msg)
+    return reload_causes[value.upper()]
+
+
 # AntaTest.Input types
 AAAAuthMethod = Annotated[str, AfterValidator(aaa_group_prefix)]
-Vlan = Annotated[int, Field(ge=0, le=4094)]
+VlanId = Annotated[int, Field(ge=0, le=4094)]
 MlagPriority = Annotated[int, Field(ge=1, le=32767)]
 Vni = Annotated[int, Field(ge=1, le=16777215)]
 Interface = Annotated[
@@ -214,6 +233,11 @@ PortChannelInterface = Annotated[
     str,
     Field(pattern=REGEX_TYPE_PORTCHANNEL),
     BeforeValidator(interface_autocomplete),
+    BeforeValidator(interface_case_sensitivity),
+]
+InterfaceType = Annotated[
+    str,
+    Field(pattern=REGEXP_EOS_INTERFACE_TYPE),
     BeforeValidator(interface_case_sensitivity),
 ]
 Afi = Literal["ipv4", "ipv6", "vpn-ipv4", "vpn-ipv6", "evpn", "rt-membership", "path-selection", "link-state"]
@@ -396,3 +420,10 @@ RedistributedProtocol = Annotated[
 ]
 RedistributedAfiSafi = Annotated[Literal["v4u", "v4m", "v6u", "v6m"], BeforeValidator(bgp_redistributed_route_proto_abbreviations)]
 NTPStratumLevel = Annotated[int, Field(ge=0, le=16)]
+PowerSupplyFanStatus = Literal["failed", "ok", "unknownHwStatus", "powerLoss", "unsupported"]
+PowerSupplyStatus = Literal["ok", "unknown", "powerLoss", "failed"]
+ReloadCause = Annotated[
+    Literal["System reloaded due to Zero Touch Provisioning", "Reload requested by the user.", "Reload requested after FPGA upgrade", "USER", "FPGA", "ZTP"],
+    BeforeValidator(convert_reload_cause),
+]
+BgpCommunity = Literal["standard", "extended", "large"]

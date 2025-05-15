@@ -79,6 +79,12 @@ def parse_args() -> Args:
         help="Just compile, skip opening the browser and watching for changes.",
     )
     parser.add_argument(
+        "--ram-disk-size",
+        type=str,
+        default="0",
+        help="Set the size of the ramdisk for the docker container. Use suffixes like '25mb' or '1gb'.",
+    )
+    parser.add_argument(
         "--web",
         "-w",
         type=str,
@@ -155,6 +161,14 @@ def parse_args() -> Args:
     cwd_is_fastled = looks_like_fastled_repo(Path(os.getcwd()))
 
     args = parser.parse_args()
+
+    if args.ram_disk_size != "0":
+        from fastled.docker_manager import set_ramdisk_size
+        from fastled.util import banner_string
+
+        msg = banner_string(f"Setting tmpfs size to {args.ram_disk_size}")
+        print(msg)
+        set_ramdisk_size(args.ram_disk_size)
 
     if args.purge:
         from fastled.docker_manager import DockerManager

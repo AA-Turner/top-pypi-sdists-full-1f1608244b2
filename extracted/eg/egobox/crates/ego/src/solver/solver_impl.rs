@@ -7,22 +7,27 @@ use crate::{find_best_result_index, EgorConfig};
 use crate::{types::*, EgorState};
 use crate::{EgorSolver, DEFAULT_CSTR_TOL, MAX_POINT_ADDITION_RETRY};
 
+use super::solver_computations::GlobalMultiStarter;
 use argmin::argmin_error_closure;
 use argmin::core::{CostFunction, Problem, State};
 
 use egobox_doe::{Lhs, LhsKind};
-use egobox_gp::ThetaTuning;
+use egobox_gp::{ThetaTuning, GP_COBYLA_MIN_EVAL};
 use env_logger::{Builder, Env};
 
 use egobox_moe::{Clustering, MixtureGpSurrogate, NbClusters};
-use log::{debug, info, warn};
+use log::{debug, info};
 use ndarray::{concatenate, s, Array1, Array2, ArrayBase, Axis, Data, Ix1, Ix2, Zip};
 
+use ndarray_rand::rand::SeedableRng;
 use rand_xoshiro::Xoshiro256Plus;
 use rayon::prelude::*;
 use serde::de::DeserializeOwned;
 
 use super::coego::COEGO_IMPROVEMENT_CHECK;
+
+const EGO_GP_OPTIM_N_START: usize = 10;
+const EGO_GP_OPTIM_MAX_EVAL: usize = GP_COBYLA_MIN_EVAL;
 
 impl<SB: SurrogateBuilder + DeserializeOwned, C: CstrFn> EgorSolver<SB, C> {
     /// Constructor of the optimization of the function `f` with specified random generator
@@ -30,7 +35,7 @@ impl<SB: SurrogateBuilder + DeserializeOwned, C: CstrFn> EgorSolver<SB, C> {
     ///
     /// The function `f` should return an objective but also constraint values if any.
     /// Design space is specified by a list of types for input variables `x` of `f` (see [`XType`]).
-    pub fn new(config: EgorConfig, rng: Xoshiro256Plus) -> Self {
+    pub fn new(config: EgorConfig) -> Self {
         let env = Env::new().filter_or("EGOBOX_LOG", "info");
         let mut builder = Builder::from_env(env);
         let builder = builder.target(env_logger::Target::Stdout);
@@ -40,7 +45,6 @@ impl<SB: SurrogateBuilder + DeserializeOwned, C: CstrFn> EgorSolver<SB, C> {
             config,
             xlimits: as_continuous_limits(&xtypes),
             surrogate_builder: SB::new_with_xtypes(&xtypes),
-            rng,
             phantom: PhantomData,
         }
     }
@@ -54,7 +58,11 @@ impl<SB: SurrogateBuilder + DeserializeOwned, C: CstrFn> EgorSolver<SB, C> {
         x_data: &ArrayBase<impl Data<Elem = f64>, Ix2>,
         y_data: &ArrayBase<impl Data<Elem = f64>, Ix2>,
     ) -> Array2<f64> {
-        let rng = self.rng.clone();
+        let rng = if let Some(seed) = self.config.seed {
+            Xoshiro256Plus::seed_from_u64(seed)
+        } else {
+            Xoshiro256Plus::from_entropy()
+        };
         let sampling = Lhs::new(&self.xlimits).with_rng(rng).kind(LhsKind::Maximin);
         let mut clusterings = vec![None; 1 + self.config.n_cstr];
         let mut theta_tunings = vec![None; 1 + self.config.n_cstr];
@@ -83,7 +91,6 @@ impl<SB: SurrogateBuilder + DeserializeOwned, C: CstrFn> EgorSolver<SB, C> {
             &c_data,
             &cstr_tol,
             &sampling,
-            None,
             find_best_result_index(y_data, &c_data, &cstr_tol),
             &fcstrs,
         );
@@ -123,6 +130,7 @@ where
         builder.set_regression_spec(self.config.regression_spec);
         builder.set_correlation_spec(self.config.correlation_spec);
         builder.set_n_clusters(self.config.n_clusters.clone());
+        builder.set_optim_params(EGO_GP_OPTIM_N_START, EGO_GP_OPTIM_MAX_EVAL);
 
         let mut model = None;
         let mut best_likelihood = -f64::INFINITY;
@@ -350,7 +358,7 @@ where
         &mut self,
         problem: &mut Problem<O>,
         state: EgorState<f64>,
-    ) -> Result<(EgorState<f64>, InfillObjData<f64>, usize)> {
+    ) -> Result<EgorState<f64>> {
         let mut new_state = state.clone();
         let mut clusterings = new_state
             .take_clusterings()
@@ -373,21 +381,9 @@ where
             .take_data()
             .ok_or_else(argmin_error_closure!(PotentialBug, "EgorSolver: No data!"))?;
 
-        let (rejected_count, infill_data) = loop {
+        let (rejected_count, _) = loop {
             let recluster = self.have_to_recluster(new_state.added, new_state.prev_added);
             let init = new_state.get_iter() == 0;
-            let lhs_optim_seed = if new_state.no_point_added_retries == 0 {
-                debug!("Try Lhs optimization!");
-                Some(new_state.added as u64)
-            } else {
-                debug!(
-                    "Try point addition {}/{}",
-                    MAX_POINT_ADDITION_RETRY - new_state.no_point_added_retries,
-                    MAX_POINT_ADDITION_RETRY
-                );
-                None
-            };
-
             let pb = problem.take_problem().unwrap();
             let fcstrs = pb.fn_constraints();
             let (x_dat, y_dat, c_dat, infill_value, infill_data) = self.select_next_points(
@@ -402,7 +398,6 @@ where
                 &c_data,
                 &state.cstr_tol,
                 &sampling,
-                lhs_optim_seed,
                 state.best_index.unwrap(),
                 fcstrs,
             );
@@ -439,11 +434,16 @@ where
 
             let rejected_count = x_dat.nrows() - added_indices.len();
             for i in 0..x_dat.nrows() {
-                debug!(
+                let msg = format!(
                     "  {} {}",
                     if added_indices.contains(&i) { "A" } else { "R" },
                     x_dat.row(i)
                 );
+                if added_indices.contains(&i) {
+                    debug!("{}", msg);
+                } else {
+                    info!("{}", msg)
+                }
             }
             if rejected_count > 0 {
                 info!(
@@ -457,12 +457,8 @@ where
                 new_state.no_point_added_retries -= 1;
                 if new_state.no_point_added_retries == 0 {
                     info!("Max number of retries ({}) without adding point", 3);
-                    info!("Use LHS optimization to ensure a point addition");
-                }
-                if new_state.no_point_added_retries < 0 {
-                    // no luck with LHS optimization
-                    warn!("Fail to add another point to improve the surrogate models. Abort!");
-                    return Err(EgoError::GlobalStepNoPointError);
+                    info!("Consider solver has converged");
+                    return Err(EgoError::NoMorePointToAddError(Box::new(new_state)));
                 }
             } else {
                 // ok point added we can go on, just output number of rejected point
@@ -490,7 +486,6 @@ where
         Zip::from(y_data.slice_mut(s![-add_count.., ..]).rows_mut())
             .and(y_actual.rows())
             .for_each(|mut y, val| y.assign(&val));
-
         let best_index = find_best_result_index_from(
             state.best_index.unwrap(),
             y_data.nrows() - add_count as usize,
@@ -501,8 +496,7 @@ where
         new_state.prev_best_index = state.best_index;
         new_state.best_index = Some(best_index);
         new_state = new_state.data((x_data.clone(), y_data.clone(), c_data.clone()));
-
-        Ok((new_state, infill_data, best_index))
+        Ok(new_state)
     }
 
     /// Returns next promising x points together with virtual (predicted) y values
@@ -523,7 +517,6 @@ where
         c_data: &ArrayBase<impl Data<Elem = f64>, Ix2>,
         cstr_tol: &Array1<f64>,
         sampling: &Lhs<f64, Xoshiro256Plus>,
-        lhs_optim: Option<u64>,
         best_index: usize,
         cstr_funcs: &[impl CstrFn],
     ) -> (
@@ -627,16 +620,17 @@ where
                 })
                 .collect::<Vec<_>>();
 
-            let (infill_obj, xk) = self.compute_best_point(
-                sampling,
+            let multistarter = GlobalMultiStarter::new(self.config.n_start, sampling);
+
+            let (infill_obj, xk) = self.optimize_infill_criterion(
                 obj_model.as_ref(),
                 cstr_models,
                 &cstr_funcs,
                 cstr_tol,
-                lhs_optim,
                 &infill_data,
                 (fmin, xbest, ybest, cbest),
                 &actives,
+                multistarter,
             );
 
             match self.compute_virtual_point(&xk, y_data, obj_model.as_ref(), cstr_models) {

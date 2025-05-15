@@ -16,6 +16,7 @@ class DropdownUiBlockCreate:
     _id: str
     _type: Union[Unset, DropdownUiBlockType] = UNSET
     _dropdown_id: Union[Unset, str] = UNSET
+    _placeholder: Union[Unset, None, str] = UNSET
     _label: Union[Unset, None, str] = UNSET
     _required: Union[Unset, None, bool] = UNSET
     _value: Union[Unset, None, str] = UNSET
@@ -27,6 +28,7 @@ class DropdownUiBlockCreate:
         fields.append("id={}".format(repr(self._id)))
         fields.append("type={}".format(repr(self._type)))
         fields.append("dropdown_id={}".format(repr(self._dropdown_id)))
+        fields.append("placeholder={}".format(repr(self._placeholder)))
         fields.append("label={}".format(repr(self._label)))
         fields.append("required={}".format(repr(self._required)))
         fields.append("value={}".format(repr(self._value)))
@@ -41,6 +43,7 @@ class DropdownUiBlockCreate:
             type = self._type.value
 
         dropdown_id = self._dropdown_id
+        placeholder = self._placeholder
         label = self._label
         required = self._required
         value = self._value
@@ -55,6 +58,8 @@ class DropdownUiBlockCreate:
             field_dict["type"] = type
         if dropdown_id is not UNSET:
             field_dict["dropdownId"] = dropdown_id
+        if placeholder is not UNSET:
+            field_dict["placeholder"] = placeholder
         if label is not UNSET:
             field_dict["label"] = label
         if required is not UNSET:
@@ -110,6 +115,17 @@ class DropdownUiBlockCreate:
                 raise
             dropdown_id = cast(Union[Unset, str], UNSET)
 
+        def get_placeholder() -> Union[Unset, None, str]:
+            placeholder = d.pop("placeholder")
+            return placeholder
+
+        try:
+            placeholder = get_placeholder()
+        except KeyError:
+            if strict:
+                raise
+            placeholder = cast(Union[Unset, None, str], UNSET)
+
         def get_label() -> Union[Unset, None, str]:
             label = d.pop("label")
             return label
@@ -158,6 +174,7 @@ class DropdownUiBlockCreate:
             id=id,
             type=type,
             dropdown_id=dropdown_id,
+            placeholder=placeholder,
             label=label,
             required=required,
             value=value,
@@ -223,6 +240,20 @@ class DropdownUiBlockCreate:
     @dropdown_id.deleter
     def dropdown_id(self) -> None:
         self._dropdown_id = UNSET
+
+    @property
+    def placeholder(self) -> Optional[str]:
+        if isinstance(self._placeholder, Unset):
+            raise NotPresentError(self, "placeholder")
+        return self._placeholder
+
+    @placeholder.setter
+    def placeholder(self, value: Optional[str]) -> None:
+        self._placeholder = value
+
+    @placeholder.deleter
+    def placeholder(self) -> None:
+        self._placeholder = UNSET
 
     @property
     def label(self) -> Optional[str]:

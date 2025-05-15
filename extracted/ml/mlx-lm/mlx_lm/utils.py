@@ -6,6 +6,7 @@ import importlib
 import json
 import logging
 import os
+import shutil
 from pathlib import Path
 from textwrap import dedent
 from typing import (
@@ -47,12 +48,6 @@ MODEL_REMAPPING = {
 }
 
 MAX_FILE_SIZE_GB = 5
-
-
-class ModelNotFoundError(Exception):
-    def __init__(self, message):
-        self.message = message
-        super().__init__(self.message)
 
 
 def _get_classes(config: dict):
@@ -103,31 +98,22 @@ def get_model_path(path_or_hf_repo: str, revision: Optional[str] = None) -> Path
     model_path = Path(path_or_hf_repo)
 
     if not model_path.exists():
-        try:
-            model_path = Path(
-                snapshot_download(
-                    path_or_hf_repo,
-                    revision=revision,
-                    allow_patterns=[
-                        "*.json",
-                        "*.safetensors",
-                        "*.py",
-                        "tokenizer.model",
-                        "*.tiktoken",
-                        "tiktoken.model",
-                        "*.txt",
-                        "*.jsonl",
-                    ],
-                )
+        model_path = Path(
+            snapshot_download(
+                path_or_hf_repo,
+                revision=revision,
+                allow_patterns=[
+                    "*.json",
+                    "*.safetensors",
+                    "*.py",
+                    "tokenizer.model",
+                    "*.tiktoken",
+                    "tiktoken.model",
+                    "*.txt",
+                    "*.jsonl",
+                ],
             )
-        except:
-            raise ModelNotFoundError(
-                f"Model not found for path or HF repo: {path_or_hf_repo}.\n"
-                "Please make sure you specified the local path or Hugging Face"
-                " repo id correctly.\nIf you are trying to access a private or"
-                " gated Hugging Face repo, make sure you are authenticated:\n"
-                "https://huggingface.co/docs/huggingface_hub/en/guides/cli#huggingface-cli-login"
-            ) from None
+        )
     return model_path
 
 
@@ -457,6 +443,8 @@ def quantize_model(
     Returns:
         Tuple: Tuple containing quantized weights and config.
     """
+    if "quantization" in config:
+        raise ValueError("Cannot quantize already quantized model")
     quantized_config = copy.deepcopy(config)
     quantized_config["quantization"] = {"group_size": q_group_size, "bits": q_bits}
 
@@ -504,3 +492,52 @@ def save_config(
     # write the updated config to the config_path (if provided)
     with open(config_path, "w") as fid:
         json.dump(config, fid, indent=4)
+
+
+def save(
+    dst_path: Union[str, Path],
+    src_path: Union[str, Path],
+    weights: Dict[str, mx.array],
+    tokenizer: TokenizerWrapper,
+    config: Dict[str, Any],
+    hf_repo: Optional[str] = None,
+    donate_weights: bool = True,
+):
+    src_path = Path(src_path)
+    dst_path = Path(dst_path)
+    save_weights(dst_path, weights, donate_weights=True)
+    save_config(config, config_path=dst_path / "config.json")
+    tokenizer.save_pretrained(dst_path)
+
+    for p in ["*.py", "generation_config.json"]:
+        for file in glob.glob(str(src_path / p)):
+            shutil.copy(file, dst_path)
+
+    if hf_repo is not None:
+        create_model_card(dst_path, hf_repo)
+
+
+def common_prefix_len(list1, list2):
+    """
+    Calculates the length of the common prefix of two lists.
+
+    Args:
+        list1: The first list of strings.
+        list2: The second list of strings.
+
+    Returns:
+        The length of the common prefix. Returns 0 if lists are empty
+        or do not match at the first element.
+    """
+    # Determine the maximum possible length of the common prefix
+    min_len = min(len(list1), len(list2))
+
+    # Iterate up to the length of the shorter list
+    for i in range(min_len):
+        if list1[i] != list2[i]:
+            # Mismatch found, the common prefix length is the current index
+            return i
+
+    # No mismatch found within the bounds of the shorter list,
+    # so the common prefix length is the length of the shorter list.
+    return min_len

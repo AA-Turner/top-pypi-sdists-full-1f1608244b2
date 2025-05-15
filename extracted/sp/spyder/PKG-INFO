@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: spyder
-Version: 6.0.5
+Version: 6.0.6
 Summary: The Scientific Python Development Environment
 Home-page: https://www.spyder-ide.org/
 Download-URL: https://www.spyder-ide.org/#fh5co-download
@@ -40,6 +40,7 @@ Requires-Dist: aiohttp>=3.9.3
 Requires-Dist: applaunchservices>=0.3.0; platform_system == "Darwin"
 Requires-Dist: asyncssh<3.0.0,>=2.14.0
 Requires-Dist: atomicwrites>=1.2.0
+Requires-Dist: bcrypt>=4.3.0
 Requires-Dist: chardet>=2.0.0
 Requires-Dist: cloudpickle>=0.5.0
 Requires-Dist: cookiecutter>=1.6.0
@@ -54,6 +55,7 @@ Requires-Dist: jsonschema>=3.2.0
 Requires-Dist: keyring>=17.0.0
 Requires-Dist: nbconvert>=4.0
 Requires-Dist: numpydoc>=0.6.0
+Requires-Dist: packaging>=20.0
 Requires-Dist: parso<0.9.0,>=0.7.0
 Requires-Dist: pexpect>=4.4.0
 Requires-Dist: pickleshare>=0.4
@@ -73,9 +75,8 @@ Requires-Dist: qstylizer>=0.2.2
 Requires-Dist: qtawesome<1.5.0,>=1.4.0
 Requires-Dist: qtpy>=2.4.0
 Requires-Dist: rtree>=0.9.7
-Requires-Dist: setuptools>=49.6.0
 Requires-Dist: sphinx>=0.6.6
-Requires-Dist: spyder-kernels<3.1.0,>=3.0.3
+Requires-Dist: spyder-kernels<3.1.0,>=3.0.4
 Requires-Dist: superqt<1.0.0,>=0.6.2
 Requires-Dist: textdistance>=4.2.0
 Requires-Dist: three-merge>=0.1.1

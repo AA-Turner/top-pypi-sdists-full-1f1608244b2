@@ -20,7 +20,7 @@ name = "wadler_lindig"
 readme = "README.md"
 requires-python = ">=3.10"
 urls = {repository = "https://github.com/patrick-kidger/wadler_lindig"}
-version = "0.1.5"
+version = "0.1.6"
 
 [project.optional-dependencies]
 dev = ["numpy", "pre-commit", "pytest"]
@@ -31,7 +31,7 @@ docs = [
   "mkdocs-ipynb==0.1.0",
   "mkdocs-material==9.6.7",
   "mkdocstrings[python]==0.28.3",
-  "pymdown-extensions==10.14.3",
+  "pymdown-extensions==10.14.3"
 ]
 
 [tool.hatch.build]
@@ -45,9 +45,14 @@ extend-include = ["*.ipynb"]
 src = []
 
 [tool.ruff.lint]
-fixable = ["I001", "F401"]
+fixable = ["I001", "F401", "UP"]
 ignore = ["E402", "E721", "E731", "E741", "F722"]
-select = ["E", "F", "I001"]
+select = ["E", "F", "I001", "UP"]
+
+[tool.ruff.lint.flake8-import-conventions.extend-aliases]
+"collections" = "co"
+"functools" = "ft"
+"itertools" = "it"
 
 [tool.ruff.lint.isort]
 combine-as-imports = true

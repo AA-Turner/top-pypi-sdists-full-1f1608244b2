@@ -21,8 +21,7 @@ class BaseTransformer(abc.ABC, t.Generic[_HOOK_RETURN_TYPE, _END_RESULT_TYPE]):
         return self._format_output([handled for component in motd_components for handled in self._handle_component(component)])
 
     @abc.abstractmethod
-    def _format_output(self, results: list[_HOOK_RETURN_TYPE]) -> _END_RESULT_TYPE:
-        ...
+    def _format_output(self, results: list[_HOOK_RETURN_TYPE]) -> _END_RESULT_TYPE: ...
 
     def _handle_component(
         self, component: ParsedMotdComponent
@@ -42,24 +41,19 @@ class BaseTransformer(abc.ABC, t.Generic[_HOOK_RETURN_TYPE, _END_RESULT_TYPE]):
         return (additional, handler(component)) if additional is not None else (handler(component),)
 
     @abc.abstractmethod
-    def _handle_str(self, element: str, /) -> _HOOK_RETURN_TYPE:
-        ...
+    def _handle_str(self, element: str, /) -> _HOOK_RETURN_TYPE: ...
 
     @abc.abstractmethod
-    def _handle_translation_tag(self, _: TranslationTag, /) -> _HOOK_RETURN_TYPE:
-        ...
+    def _handle_translation_tag(self, _: TranslationTag, /) -> _HOOK_RETURN_TYPE: ...
 
     @abc.abstractmethod
-    def _handle_web_color(self, element: WebColor, /) -> _HOOK_RETURN_TYPE:
-        ...
+    def _handle_web_color(self, element: WebColor, /) -> _HOOK_RETURN_TYPE: ...
 
     @abc.abstractmethod
-    def _handle_formatting(self, element: Formatting, /) -> _HOOK_RETURN_TYPE:
-        ...
+    def _handle_formatting(self, element: Formatting, /) -> _HOOK_RETURN_TYPE: ...
 
     @abc.abstractmethod
-    def _handle_minecraft_color(self, element: MinecraftColor, /) -> _HOOK_RETURN_TYPE:
-        ...
+    def _handle_minecraft_color(self, element: MinecraftColor, /) -> _HOOK_RETURN_TYPE: ...
 
 
 class NothingTransformer(BaseTransformer[str, str]):
@@ -144,7 +138,7 @@ class HtmlTransformer(PlainTransformer):
 
     def __init__(self, *, bedrock: bool = False) -> None:
         self.bedrock = bedrock
-        self.on_reset = []
+        self.on_reset: list[str] = []
 
     def transform(self, motd_components: Sequence[ParsedMotdComponent]) -> str:
         self.on_reset = []

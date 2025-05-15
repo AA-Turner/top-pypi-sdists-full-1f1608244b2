@@ -45,15 +45,15 @@ def invoke_as_task(
 
         result = run_llm(
             prompt, output_model, chat_model, chat_model_name, max_tokens, query=query, extra_tools=tools, **llm_kwargs
-        )
+        )[0]
         if model_field is not None:
             setattr(instance, model_field, result)
 
         if isinstance(result, BaseModel):
             for field, value in result.model_dump().items():
                 setattr(instance, field, value)
-    except BadRequestErrors:  # we silent bad request error because there is nothing we can do about it
-        pass
+    except BadRequestErrors as e:  # we silent bad request error because there is nothing we can do about it
+        logger.warning(str(e))
     except tuple(APIStatusErrors) as e:  # for APIStatusError, we let celery retry it
         raise e
     except Exception as e:  # otherwise we log the error and silently fail

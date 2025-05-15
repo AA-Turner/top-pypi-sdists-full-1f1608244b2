@@ -1,10 +1,10 @@
-from datetime import datetime, timezone
 from fastapi import FastAPI
 from starlette.authentication import AuthenticationBackend, AuthenticationError
 from starlette.middleware.authentication import AuthenticationMiddleware
 from starlette.requests import HTTPConnection
 from typing import Tuple
 from maleo_foundation.authentication import Credentials, User
+from maleo_foundation.enums import BaseEnums
 from maleo_foundation.client.manager import MaleoFoundationClientManager
 from maleo_foundation.models.schemas import BaseGeneralSchemas
 from maleo_foundation.models.transfers.parameters.token import MaleoFoundationTokenParametersTransfers
@@ -19,37 +19,56 @@ class Backend(AuthenticationBackend):
         self._maleo_foundation = maleo_foundation
 
     async def authenticate(self, conn:HTTPConnection) -> Tuple[Credentials, User]:
-        if "Authorization" not in conn.headers:
-            return Credentials(), User(authenticated=False)
+        if "Authorization" in conn.headers:
+            auth = conn.headers["Authorization"]
+            parts = auth.split()
+            if len(parts) != 2 or parts[0] != "Bearer":
+                raise AuthenticationError("Invalid Authorization header format")
+            scheme, token = parts
+            if scheme != 'Bearer':
+                raise AuthenticationError("Authorization scheme must be Bearer token")
+            
+            #* Decode token
+            decode_token_parameters = MaleoFoundationTokenParametersTransfers.Decode(key=self._keys.public, token=token)
+            decode_token_result = self._maleo_foundation.services.token.decode(parameters=decode_token_parameters)
+            if decode_token_result.success:
+                payload = decode_token_result.data
+                return (
+                    Credentials(
+                        token_type=BaseEnums.TokenType.ACCESS,
+                        token=token,
+                        payload=payload,
+                        scopes=["authenticated", payload.sr]
+                    ),
+                    User(
+                        authenticated=True,
+                        username=payload.u_u,
+                        email=payload.u_e
+                    )
+                )
 
-        auth = conn.headers["Authorization"]
-        scheme, token = auth.split()
-        if scheme != 'Bearer':
-            # raise AuthenticationError("Authorization scheme must be Bearer token")
-            return Credentials(), User(authenticated=False)
+        if "token" in conn.cookies:
+            token = conn.cookies["token"]
+            #* Decode token
+            decode_token_parameters = MaleoFoundationTokenParametersTransfers.Decode(key=self._keys.public, token=token)
+            decode_token_result = self._maleo_foundation.services.token.decode(parameters=decode_token_parameters)
+            if decode_token_result.success:
+                payload = decode_token_result.data
+                return (
+                    Credentials(
+                        token_type=BaseEnums.TokenType.REFRESH,
+                        token=token,
+                        payload=payload,
+                        scopes=["authenticated", payload.sr]
+                    ),
+                    User(
+                        authenticated=True,
+                        username=payload.u_u,
+                        email=payload.u_e
+                    )
+                )
 
-        decode_token_parameters = MaleoFoundationTokenParametersTransfers.Decode(key=self._keys.public, token=token)
-        decode_token_result = self._maleo_foundation.services.token.decode(parameters=decode_token_parameters)
-        if not decode_token_result.success:
-            # raise AuthenticationError("Invalid Bearer token, unable to decode token")
-            return Credentials(), User(authenticated=False)
-        if decode_token_result.data.exp_dt <= datetime.now(tz=timezone.utc):
-            # raise AuthenticationError("Expired Bearer token, request new or refresh token")
-            return Credentials(), User(authenticated=False)
-
-        payload = decode_token_result.data
-        return (
-            Credentials(
-                token=token,
-                payload=payload,
-                scopes=["authenticated", payload.sr]
-            ),
-            User(
-                authenticated=True,
-                username=payload.u_u,
-                email=payload.u_e
-            )
-        )
+        return Credentials(), User(authenticated=False)
 
 def add_authentication_middleware(app:FastAPI, keys:BaseGeneralSchemas.RSAKeys, logger:MiddlewareLogger, maleo_foundation:MaleoFoundationClientManager) -> None:
     """

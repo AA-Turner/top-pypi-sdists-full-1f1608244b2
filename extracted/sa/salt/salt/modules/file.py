@@ -2641,7 +2641,7 @@ def replace(
                 r_data = mmap.mmap(r_file.fileno(), 0, access=mmap.ACCESS_READ)
             except (ValueError, OSError):
                 # size of file in /proc is 0, but contains data
-                r_data = salt.utils.stringutils.to_bytes("".join(r_file))
+                r_data = b"".join(r_file)
             if search_only:
                 # Just search; bail as early as a match is found
                 if re.search(cpattern, r_data):
@@ -4201,9 +4201,10 @@ def stats(path, hash_type=None, follow_symlinks=True):
         salt '*' file.stats /etc/passwd
     """
     path = os.path.expanduser(path)
+    exists = os.path.exists if follow_symlinks else os.path.lexists
 
     ret = {}
-    if not os.path.exists(path):
+    if not exists(path):
         try:
             # Broken symlinks will return False for os.path.exists(), but still
             # have a uid and gid
@@ -4247,7 +4248,7 @@ def stats(path, hash_type=None, follow_symlinks=True):
         ret["type"] = "pipe"
     if stat.S_ISSOCK(pstat.st_mode):
         ret["type"] = "socket"
-    ret["target"] = os.path.realpath(path)
+    ret["target"] = os.path.realpath(path) if follow_symlinks else os.path.abspath(path)
     return ret
 
 

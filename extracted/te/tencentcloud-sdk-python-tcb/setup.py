@@ -8,7 +8,7 @@ ROOT = os.path.dirname(__file__)
 
 setup(
     name='tencentcloud-sdk-python-tcb',
-    install_requires=["tencentcloud-sdk-python-common==3.0.1378"],
+    install_requires=["tencentcloud-sdk-python-common==3.0.1379"],
     version=tencentcloud.__version__,
     description='Tencent Cloud Tcb SDK for Python',
     long_description=open('README.rst').read(),

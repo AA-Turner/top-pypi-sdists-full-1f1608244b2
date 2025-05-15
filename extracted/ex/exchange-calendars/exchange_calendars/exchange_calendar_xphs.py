@@ -27,6 +27,7 @@ from .common_holidays import (
     christmas_eve,
     european_labour_day,
     maundy_thursday,
+    immaculate_conception,
     new_years_day,
     new_years_eve,
 )
@@ -43,6 +44,32 @@ def only_friday(dt: datetime.datetime) -> datetime.datetime | None:
     return dt if dt.weekday() == FRIDAY else None
 
 
+def ninoy_aquino_day_observed(dt: datetime.datetime) -> datetime.datetime | None:
+    """
+    In 2024, Ninoy Aquino Day is observed on 2024-08-23 instead of 2024-08-21.
+    https://www.officialgazette.gov.ph/2024/08/15/proclamation-no-665-s-2024/
+    """
+    special_years = {
+        2024: pd.Timestamp("2024-08-23"),
+    }
+    if dt.year in special_years:
+        return special_years[dt.year]
+    return dt
+
+
+def bonifacio_day_observed(dt: datetime.datetime) -> datetime.datetime | None:
+    """
+    In 2023, Bonifacio Day is observed on 2023-11-27 instead of 2023-11-30.
+    https://pco.gov.ph/wp-content/uploads/2022/11/20221109-PROC-90-FRM.pdf
+    """
+    special_years = {
+        2023: pd.Timestamp("2023-11-27"),
+    }
+    if dt.year in special_years:
+        return special_years[dt.year]
+    return dt
+
+
 # All pre-2011 holidays are pre-computed, so we define Holidays starting
 # in 2011.
 NewYearsDay = new_years_day(start_date="2011")
@@ -52,11 +79,14 @@ ChineseNewYear = chinese_lunar_new_year_dates
 
 ChineseNewYearAfter2011 = ChineseNewYear[ChineseNewYear.year > 2011]
 
+# The People Power Revolution is observed from 2016 to 2022, with a
+# special anniversary on 2023-02-24 added to adhoc_holidays.
 PeoplePowerRevolution = Holiday(
     "People Power Revolution",
     month=2,
     day=25,
     start_date="2016",
+    end_date="2022",
 )
 
 ArawNgKagitingan = Holiday(
@@ -82,6 +112,7 @@ NinoyAquinoDay = Holiday(
     month=8,
     day=21,
     start_date="2011",
+    observance=ninoy_aquino_day_observed,
 )
 
 NationalHeroesDay = Holiday(
@@ -107,7 +138,12 @@ BonifacioDay = Holiday(
     month=11,
     day=30,
     start_date="2011",
+    observance=bonifacio_day_observed,
 )
+
+# Immaculate Conception is observed after 2017.
+# https://www.officialgazette.gov.ph/2017/12/28/republic-act-no-10966/
+ImmaculateConception = immaculate_conception(start_date="2017")
 
 ChristmasEve = christmas_eve(start_date="2011")
 
@@ -137,6 +173,14 @@ philippines_eid_al_fitr = pd.to_datetime(
         "2017-06-26",
         "2018-06-15",
         "2019-06-05",
+        "2020-05-25",
+        "2021-05-13",
+        "2022-05-03",
+        "2023-04-21",
+        "2024-04-10",
+        "2025-04-01",
+        "2026-03-20",
+        "2027-03-10",
     ]
 )
 
@@ -155,6 +199,14 @@ philippines_eid_al_adha = pd.to_datetime(
         "2017-09-01",
         "2018-08-21",
         "2019-08-12",
+        "2020-07-31",
+        "2021-07-20",
+        "2022-07-09",
+        "2023-06-28",
+        "2024-06-17",
+        "2025-06-06",
+        "2026-05-27",
+        "2027-05-17",
     ]
 )
 
@@ -162,6 +214,8 @@ philippines_eid_al_adha = pd.to_datetime(
 class XPHSExchangeCalendar(ExchangeCalendar):
     """
     Exchange calendar for the Philippine Stock Exchange (XPHS).
+    https://www.pse.com.ph/investing-at-pse/#investing2
+    https://www.officialgazette.gov.ph/nationwide-holidays/
 
     Open Time: 9:30 AM, PHT
     Close Time: 3:30 PM, PHT
@@ -180,6 +234,7 @@ class XPHSExchangeCalendar(ExchangeCalendar):
     - National Heroes' Day (last Monday of August)
     - All Saint's Day (Nov 1)
     - Bonifacio Day (Nov 30)
+    - Immaculate Conception (Dec 8)
     - Christmas Eve (Dec 24)
     - Christmas Day (Dec 25)
     - Rizal Day (Dec 30)
@@ -214,6 +269,7 @@ class XPHSExchangeCalendar(ExchangeCalendar):
                 AllSaintsDay,
                 AllSaintsDayExtra,
                 BonifacioDay,
+                ImmaculateConception,
                 ChristmasEve,
                 Christmas,
                 RizalDay,
@@ -224,6 +280,11 @@ class XPHSExchangeCalendar(ExchangeCalendar):
     @property
     def adhoc_holidays(self):
         misc_adhoc = [
+            "2024-02-09",
+            "2023-02-24",
+            "2023-04-10",
+            "2023-11-02",
+            "2020-11-02",
             "2017-04-28",
             "2017-10-16",
             "2015-11-18",
@@ -233,6 +294,9 @@ class XPHSExchangeCalendar(ExchangeCalendar):
             "2013-10-28",
             "2011-06-20",
             # Election Day
+            "2025-05-12",
+            "2023-10-30",
+            "2022-05-09",
             "2019-05-13",
             "2018-05-14",
             "2016-05-09",
@@ -248,14 +312,18 @@ class XPHSExchangeCalendar(ExchangeCalendar):
             "2015-01-15",
             "2015-01-16",
             # Christmas Makeups
+            "2023-12-26",
             "2017-12-26",
             "2016-12-26",
             "2014-12-26",
             # New Years Makeups
+            "2023-01-02",
             "2018-01-02",
             "2017-01-02",
             "2015-01-02",
             # Other Makeups
+            "2025-10-31",  # All Saint's Makeup
+            "2022-10-31",  # All Saint's Makeup
             "2017-10-31",  # All Saint's Makeup
             "2016-10-31",  # All Saint's Makeup
             "2011-10-31",  # All Saint's Makeup

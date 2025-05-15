@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: zenml
-Version: 0.82.0
+Version: 0.82.1
 Summary: ZenML: Write production-ready ML code.
 License: Apache-2.0
 Keywords: machine learning,production,pipeline,mlops,devops
@@ -41,7 +41,7 @@ Provides-Extra: terraform
 Provides-Extra: vertex
 Requires-Dist: Jinja2 ; extra == "server"
 Requires-Dist: adlfs (>=2021.10.0) ; extra == "adlfs"
-Requires-Dist: alembic (>=1.8.1,<1.9.0)
+Requires-Dist: alembic (>=1.8.1,<=1.15.2)
 Requires-Dist: aws-profile-manager (>=0.5.0) ; extra == "connectors-aws"
 Requires-Dist: azure-ai-ml (==1.23.1) ; extra == "azureml"
 Requires-Dist: azure-identity (>=1.4.0) ; extra == "secrets-azure" or extra == "connectors-azure"
@@ -112,7 +112,7 @@ Requires-Dist: ruff (>=0.1.7) ; extra == "templates" or extra == "dev"
 Requires-Dist: s3fs (>=2022.11.0,!=2025.3.1) ; extra == "s3fs"
 Requires-Dist: sagemaker (>=2.237.3) ; extra == "sagemaker"
 Requires-Dist: secure (>=0.3.0,<0.4.0) ; extra == "server"
-Requires-Dist: setuptools
+Requires-Dist: setuptools (>=70.0.0)
 Requires-Dist: sqlalchemy (>=2.0.0,<3.0.0)
 Requires-Dist: sqlalchemy_utils
 Requires-Dist: sqlmodel (==0.0.18)
@@ -532,7 +532,7 @@ the Apache License Version 2.0.
     <a href="https://github.com/zenml-io/zenml-projects">Projects Showcase</a>
     <br />
     <br />
-    🎉 Version 0.82.0 is out. Check out the release notes
+    🎉 Version 0.82.1 is out. Check out the release notes
     <a href="https://github.com/zenml-io/zenml/releases">here</a>.
     <br />
     🖥️ Download our VS Code Extension <a href="https://marketplace.visualstudio.com/items?itemName=ZenML.zenml-vscode">here</a>.

@@ -1,7 +1,8 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.1
 Name: beets
-Version: 2.3.0
+Version: 2.3.1
 Summary: music tagger and library organizer
+Home-page: https://beets.io/
 License: MIT
 Author: Adrian Sampson
 Author-email: adrian@radbox.org
@@ -82,7 +83,6 @@ Requires-Dist: unidecode (>=1.3.6)
 Project-URL: Bug Tracker, https://github.com/beetbox/beets/issues
 Project-URL: Changelog, https://github.com/beetbox/beets/blob/master/docs/changelog.rst
 Project-URL: Documentation, https://beets.readthedocs.io/en/stable/
-Project-URL: Homepage, https://beets.io/
 Project-URL: Repository, https://github.com/beetbox/beets
 Description-Content-Type: text/x-rst
 

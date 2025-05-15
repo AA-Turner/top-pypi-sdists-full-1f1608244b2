@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: eventsourcing
-Version: 9.4.4
+Version: 9.4.5
 Summary: Event sourcing in Python
 License: BSD-3-Clause
 Keywords: event sourcing,event store,domain driven design,domain-driven design,ddd,cqrs,cqs
@@ -54,6 +54,8 @@ experience. Please [read the docs](https://eventsourcing.readthedocs.io/). See a
 
 *"a huge help and time saver"*
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/pyeventsourcing/eventsourcing)
+
 
 ## Installation
 
@@ -75,40 +77,44 @@ from eventsourcing.domain import Aggregate, event
 
 class Dog(Aggregate):
     @event('Registered')
-    def __init__(self, name):
+    def __init__(self, name: str) -> None:
         self.name = name
-        self.tricks = []
+        self.tricks: list[str] = []
 
     @event('TrickAdded')
-    def add_trick(self, trick):
+    def add_trick(self, trick: str) -> None:
         self.tricks.append(trick)
 ```
 
 Define application objects with the `Application` class.
 
 ```python
+from typing import Any
+from uuid import UUID
+
 from eventsourcing.application import Application
 
-class DogSchool(Application):
-    def register_dog(self, name):
+
+class DogSchool(Application[UUID]):
+    def register_dog(self, name: str) -> UUID:
         dog = Dog(name)
         self.save(dog)
         return dog.id
 
-    def add_trick(self, dog_id, trick):
-        dog = self.repository.get(dog_id)
+    def add_trick(self, dog_id: UUID, trick: str) -> None:
+        dog: Dog = self.repository.get(dog_id)
         dog.add_trick(trick)
         self.save(dog)
 
-    def get_dog(self, dog_id):
-        dog = self.repository.get(dog_id)
+    def get_dog(self, dog_id: UUID) -> dict[str, Any]:
+        dog: Dog = self.repository.get(dog_id)
         return {'name': dog.name, 'tricks': tuple(dog.tricks)}
 ```
 
 Write a test.
 
 ```python
-def test_dog_school():
+def test_dog_school() -> None:
     # Construct application object.
     school = DogSchool()
 
@@ -140,7 +146,7 @@ Configure the application to run with an SQLite database. Other persistence modu
 import os
 
 os.environ["PERSISTENCE_MODULE"] = 'eventsourcing.sqlite'
-os.environ["SQLITE_DBNAME"] = 'dog-school.db'
+os.environ["SQLITE_DBNAME"] = ':memory:'
 ```
 
 Run the test with SQLite.

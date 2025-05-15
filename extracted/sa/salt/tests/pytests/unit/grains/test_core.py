@@ -428,6 +428,47 @@ def test__linux_lsb_distrib_data():
 
 
 @pytest.mark.skip_unless_on_linux
+@pytest.mark.skipif(
+    sys.version_info < (3, 10),
+    reason="platform.freedesktop_os_release not available in Python < 3.10",
+)
+def test__freedesktop_os_release_cache_is_invalidated():
+    OS_RELEASE_DATA = {
+        "NAME": "openSUSE Leap",
+        "ID": "opensuse-leap",
+        "PRETTY_NAME": "openSUSE Leap 15.6",
+        "VERSION": "15.6",
+        "ID_LIKE": "suse opensuse",
+        "VERSION_ID": "15.6",
+        "ANSI_COLOR": "0;32",
+        "CPE_NAME": "cpe:/o:opensuse:leap:15.6",
+        "BUG_REPORT_URL": "https://bugs.opensuse.org",
+        "HOME_URL": "https://www.opensuse.org/",
+        "DOCUMENTATION_URL": "https://en.opensuse.org/Portal:Leap",
+        "LOGO": "distributor-logo-Leap",
+    }
+
+    class FreeDesktopOSReleaseMock:
+        def __call__(self):
+            if hasattr(platform, "_os_release_cache"):
+                assert platform._os_release_cache is None
+            return OS_RELEASE_DATA
+
+    with patch.object(
+        core, "_linux_lsb_distrib_data", MagicMock(return_value=({}, None))
+    ), patch.object(
+        core, "_freedesktop_os_release", FreeDesktopOSReleaseMock()
+    ), patch.object(
+        core,
+        "_legacy_linux_distribution_data",
+        MagicMock(return_value={"osrelease": "15.6"}),
+    ):
+        platform._os_release_cache = {"this-cache-should-be-invalidated": "foobar"}
+        ret = core._linux_distribution_data()
+        assert ret == {"osrelease": "15.6"}
+
+
+@pytest.mark.skip_unless_on_linux
 def test_gnu_slash_linux_in_os_name():
     """
     Test to return a list of all enabled services
@@ -1231,6 +1272,39 @@ def test_Parrot_OS_grains():
     _run_os_grains_tests(_os_release_data, _os_release_map, expectation)
 
 
+@pytest.mark.skip_unless_on_linux
+def test_manjaro_arm_grains():
+    """
+    Test if OS grains are parsed correctly in Manjaro ARM
+    """
+    # /etc/os-release data taken from ParrotOS 5.1
+    _os_release_data = {
+        "NAME": "Manjaro ARM",
+        "ID": "manjaro-arm",
+        "ID_LIKE": "manjaro arch",
+        "PRETTY_NAME": "Manjaro ARM",
+        "ANSI_COLOR": "1;32",
+        "HOME_URL": "https://www.manjaro.org/",
+        "SUPPORT_URL": "https://forum.manjaro.org/c/arm/",
+        "LOGO": "manjarolinux",
+    }
+    _os_release_map = {
+        "_linux_distribution": ("Manjaro ARM", "24.03", "n/a"),
+    }
+
+    expectation = {
+        "os": "Manjaro ARM",
+        "os_family": "Arch",
+        "oscodename": "Manjaro ARM",
+        "osfullname": "Manjaro ARM",
+        "osrelease": "24.03",
+        "osrelease_info": (24, 3),
+        "osmajorrelease": 24,
+        "osfinger": "Manjaro ARM-24",
+    }
+    _run_os_grains_tests(_os_release_data, _os_release_map, expectation)
+
+
 def test_unicode_error():
     raise_unicode_mock = MagicMock(name="raise_unicode_error", side_effect=UnicodeError)
     with patch("salt.grains.core.hostname"), patch(
@@ -1519,12 +1593,17 @@ def test_windows_platform_data():
         "2016Server",
         "2019Server",
         "2022Server",
+        "2025Server",
     ]
     assert returned_grains["osrelease"] in valid_releases
 
 
 def test__windows_os_release_grain(subtests):
     versions = {
+        "Windows 11 Enterprise": "11",
+        "Windows 11 Pro": "11",
+        "Windows 11 Home": "11",
+        "Windows 11 Education": "11",
         "Windows 10 Home": "10",
         "Windows 10 Pro": "10",
         "Windows 10 Pro for Workstations": "10",
@@ -1812,6 +1891,89 @@ def test_lxc_virtual_with_virt_what():
         ret = core._virtual(osdata)
         assert ret["virtual"] == "container"
         assert ret["virtual_subtype"] == "LXC"
+
+
+@pytest.mark.skip_on_windows
+def test_podman_virtual_with_systemd_detect_virt():
+    """
+    Test if virtual grains are parsed correctly in Podman using systemd-detect-virt.
+    """
+
+    def _which_side_effect(path):
+        if path == "systemd-detect-virt":
+            return "/usr/bin/systemd-detect-virt"
+        return None
+
+    with patch.object(
+        salt.utils.platform, "is_windows", MagicMock(return_value=False)
+    ), patch.object(
+        salt.utils.path,
+        "which",
+        MagicMock(return_value=True, side_effect=_which_side_effect),
+    ), patch.dict(
+        core.__salt__,
+        {
+            "cmd.run_all": MagicMock(
+                return_value={"pid": 78, "retcode": 0, "stderr": "", "stdout": "podman"}
+            )
+        },
+    ):
+        osdata = {"kernel": "test"}
+        ret = core._virtual(osdata)
+        assert ret["virtual"] == "container"
+        assert ret["virtual_subtype"] == "Podman"
+
+
+@pytest.mark.skip_on_windows
+def test_docker_virtual_with_systemd_detect_virt():
+    """
+    Test if virtual grains are parsed correctly in Docker using systemd-detect-virt.
+    """
+
+    def _which_side_effect(path):
+        if path == "systemd-detect-virt":
+            return "/usr/bin/systemd-detect-virt"
+        return None
+
+    with patch.object(
+        salt.utils.platform, "is_windows", MagicMock(return_value=False)
+    ), patch.object(
+        salt.utils.path,
+        "which",
+        MagicMock(return_value=True, side_effect=_which_side_effect),
+    ), patch.dict(
+        core.__salt__,
+        {
+            "cmd.run_all": MagicMock(
+                return_value={"pid": 78, "retcode": 0, "stderr": "", "stdout": "docker"}
+            )
+        },
+    ):
+        osdata = {"kernel": "test"}
+        ret = core._virtual(osdata)
+        assert ret["virtual"] == "container"
+        assert ret["virtual_subtype"] == "Docker"
+
+
+@pytest.mark.skip_on_windows
+def test_docker_virtual_with_virt_what():
+    """
+    Test if virtual grains are parsed correctly in Docker using virt-what.
+    """
+    with patch.object(
+        salt.utils.platform, "is_windows", MagicMock(return_value=False)
+    ), patch.object(salt.utils.path, "which", MagicMock(return_value=True)), patch.dict(
+        core.__salt__,
+        {
+            "cmd.run_all": MagicMock(
+                return_value={"pid": 78, "retcode": 0, "stderr": "", "stdout": "docker"}
+            )
+        },
+    ):
+        osdata = {"kernel": "test"}
+        ret = core._virtual(osdata)
+        assert ret["virtual"] == "container"
+        assert ret["virtual_subtype"] == "Docker"
 
 
 @pytest.mark.skip_on_windows
@@ -2869,6 +3031,7 @@ def test_virtual_has_virtual_grain():
 
 
 def test__windows_platform_data():
+
     pass
 
 
@@ -2982,6 +3145,25 @@ def test_windows_virtual_has_virtual_grain():
 def test_osdata_virtual_key_win():
     osdata_grains = core.os_data()
     assert "virtual" in osdata_grains
+
+
+@pytest.mark.skip_unless_on_windows
+@pytest.mark.parametrize(
+    "osrelease, expected",
+    [
+        ("2025Server", (2025,)),
+        ("2012ServerR2", (2012, 2)),
+        ("11", (11,)),
+        ("8.1", (8, 1)),
+    ],
+)
+def test_windows_osdata_osrelease_info(osrelease, expected):
+    platform_data = core._windows_platform_data()
+    platform_data["osrelease"] = osrelease
+    mock_platform_data = MagicMock(return_value=platform_data)
+    with patch.object(core, "_windows_platform_data", mock_platform_data):
+        os_data = core.os_data()
+        assert os_data["osrelease_info"] == expected
 
 
 @pytest.mark.skip_unless_on_linux
@@ -3344,6 +3526,12 @@ def test_linux_gpus(caplog):
             "VGA compatible controller",
             "Advanced Micro Devices, Inc. [AMD/ATI]",
             "Vega [Radeon RX Vega]]",
+            "amd",
+        ],  # AMD
+        [
+            "Processing accelerators",
+            "Advanced Micro Devices, Inc. [AMD/ATI]",
+            "Device X",
             "amd",
         ],  # AMD
         [
@@ -4155,34 +4343,93 @@ def test__selinux():
         assert ret == {"enabled": True, "enforced": "Disabled"}
 
 
-def test__systemd():
+@pytest.mark.parametrize(
+    "systemd_data,expected",
+    (
+        (
+            {
+                "pid": 1234,
+                "retcode": 0,
+                "stdout": "systemd 254 (254.3-1)\n+PAM +AUDIT -SELINUX -APPARMOR -IMA +SMACK "
+                "+SECCOMP +GCRYPT +GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS "
+                "+FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 "
+                "-PWQUALITY +P11KIT -QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD "
+                "+BPF_FRAMEWORK +XKBCOMMON +UTMP -SYSVINIT default-hierarchy=unified",
+                "stderr": "",
+            },
+            {
+                "version": "254",
+                "features": "+PAM +AUDIT -SELINUX -APPARMOR -IMA +SMACK +SECCOMP +GCRYPT +GNUTLS +OPENSSL "
+                "+ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP "
+                "+LIBFDISK +PCRE2 -PWQUALITY +P11KIT -QRENCODE +TPM2 +BZIP2 +LZ4 +XZ "
+                "+ZLIB +ZSTD +BPF_FRAMEWORK +XKBCOMMON +UTMP -SYSVINIT default-hierarchy=unified",
+            },
+        ),
+        (
+            {
+                "pid": 2345,
+                "retcode": 1,
+                "stdout": "",
+                "stderr": "some garbage in the output",
+            },
+            {
+                "version": "UNDEFINED",
+                "features": "",
+            },
+        ),
+        (
+            {
+                "pid": 3456,
+                "retcode": 0,
+                "stdout": "unexpected stdout\none more line",
+                "stderr": "",
+            },
+            {
+                "version": "UNDEFINED",
+                "features": "",
+            },
+        ),
+        (
+            {
+                "pid": 4567,
+                "retcode": 0,
+                "stdout": "",
+                "stderr": "",
+            },
+            {
+                "version": "UNDEFINED",
+                "features": "",
+            },
+        ),
+        (
+            Exception("Some exception on calling `systemctl --version`"),
+            {
+                "version": "UNDEFINED",
+                "features": "",
+            },
+        ),
+    ),
+)
+def test__systemd(systemd_data, expected):
     """
     test _systemd
     """
+
+    def mock_run_all_systemd(_):
+        if isinstance(systemd_data, Exception):
+            raise systemd_data
+        return systemd_data
+
     with patch.dict(
         core.__salt__,
         {
-            "cmd.run": MagicMock(
-                return_value=(
-                    "systemd 254 (254.3-1)\n+PAM +AUDIT -SELINUX -APPARMOR -IMA +SMACK "
-                    "+SECCOMP +GCRYPT +GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS "
-                    "+FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 "
-                    "-PWQUALITY +P11KIT -QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD "
-                    "+BPF_FRAMEWORK +XKBCOMMON +UTMP -SYSVINIT default-hierarchy=unified"
-                )
-            ),
+            "cmd.run_all": mock_run_all_systemd,
         },
     ):
         ret = core._systemd()
         assert "version" in ret
         assert "features" in ret
-        assert ret["version"] == "254"
-        assert ret["features"] == (
-            "+PAM +AUDIT -SELINUX -APPARMOR -IMA +SMACK +SECCOMP +GCRYPT +GNUTLS +OPENSSL "
-            "+ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP "
-            "+LIBFDISK +PCRE2 -PWQUALITY +P11KIT -QRENCODE +TPM2 +BZIP2 +LZ4 +XZ "
-            "+ZLIB +ZSTD +BPF_FRAMEWORK +XKBCOMMON +UTMP -SYSVINIT default-hierarchy=unified"
-        )
+        assert ret == expected
 
 
 def test__clean_value_uuid(caplog):

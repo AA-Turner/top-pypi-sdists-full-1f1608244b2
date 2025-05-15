@@ -50,6 +50,8 @@ class Cholesky (ToolTemplate):
         self.read_id_inputs(m, [i, A])
 
         m[A].domain = [m[i],m[i]]
-        l = np.linalg.cholesky(m[A].toDense())
+        a = m[A].toDense()
+        upper = self.is_upper_matrix(a)
+        l = np.linalg.cholesky(a, upper=upper)
         m.addParameter(L,[m[i],m[i]], records=l)
         self.write_id_outputs(m, L)

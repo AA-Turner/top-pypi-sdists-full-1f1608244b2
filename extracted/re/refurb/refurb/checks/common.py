@@ -1,6 +1,6 @@
 from collections.abc import Callable
-from itertools import chain, combinations, starmap
-from typing import Any
+from itertools import chain, combinations
+from typing import Any, TypeGuard
 
 from mypy.nodes import (
     ArgKind,
@@ -145,7 +145,7 @@ def is_equivalent(lhs: Node | None, rhs: Node | None) -> bool:
         case CallExpr() as lhs, CallExpr() as rhs:
             return (
                 is_equivalent(lhs.callee, rhs.callee)
-                and all(starmap(is_equivalent, zip(lhs.args, rhs.args)))
+                and all(map(is_equivalent, lhs.args, rhs.args))
                 and lhs.arg_kinds == rhs.arg_kinds
                 and lhs.arg_names == rhs.arg_names
             )
@@ -156,7 +156,7 @@ def is_equivalent(lhs: Node | None, rhs: Node | None) -> bool:
             | (SetExpr() as lhs, SetExpr() as rhs)
         ):
             return len(lhs.items) == len(rhs.items) and all(  # type: ignore
-                starmap(is_equivalent, zip(lhs.items, rhs.items))  # type: ignore
+                map(is_equivalent, lhs.items, rhs.items)  # type: ignore
             )
 
         case DictExpr() as lhs, DictExpr() as rhs:
@@ -180,7 +180,7 @@ def is_equivalent(lhs: Node | None, rhs: Node | None) -> bool:
 
         case ComparisonExpr() as lhs, ComparisonExpr() as rhs:
             return lhs.operators == rhs.operators and all(
-                starmap(is_equivalent, zip(lhs.operands, rhs.operands))
+                map(is_equivalent, lhs.operands, rhs.operands)
             )
 
         case SliceExpr() as lhs, SliceExpr() as rhs:
@@ -276,7 +276,7 @@ def normalize_os_path(module: str | None) -> str:
     segments = module.split(".")
 
     if segments[0].startswith(("genericpath", "ntpath", "posixpath")):
-        return ".".join(["os", "path"] + segments[1:])
+        return ".".join(["os", "path"] + segments[1:])  # noqa: RUF005
 
     return module
 
@@ -285,11 +285,15 @@ def is_type_none_call(node: Expression) -> bool:
     match node:
         case CallExpr(
             callee=NameExpr(fullname="builtins.type"),
-            args=[NameExpr(fullname="builtins.None")],
-        ):
+            args=[arg],
+        ) if is_none_literal(arg):
             return True
 
     return False
+
+
+def is_none_literal(node: Node) -> TypeGuard[NameExpr]:
+    return isinstance(node, NameExpr) and node.fullname == "builtins.None"
 
 
 def get_fstring_parts(expr: Expression) -> list[tuple[bool, Expression, str]]:
@@ -530,7 +534,7 @@ def slice_expr_to_slice_call(expr: SliceExpr) -> str:
     return f"slice({', '.join(args)})"
 
 
-TypeLike = type | str | None | object
+TypeLike = type | str | object | None
 
 
 def is_same_type(ty: Type | SymbolNode | None, *expected: TypeLike) -> bool:
@@ -623,8 +627,12 @@ def get_mypy_type(node: Node) -> Type | SymbolNode | None:
         case ComplexExpr():
             return _get_builtin_mypy_type("complex")
 
-        case NameExpr(fullname="builtins.True" | "builtins.False"):
-            return _get_builtin_mypy_type("bool")
+        case NameExpr():
+            if is_bool_literal(node):
+                return _get_builtin_mypy_type("bool")
+
+            if node.node:
+                return get_mypy_type(node.node)
 
         case DictExpr():
             return _get_builtin_mypy_type("dict")
@@ -643,9 +651,6 @@ def get_mypy_type(node: Node) -> Type | SymbolNode | None:
 
         case TypeInfo() | TypeAlias() | MypyFile():
             return node
-
-        case NameExpr(node=sym) if sym:
-            return get_mypy_type(sym)
 
         case MemberExpr(expr=lhs, name=name):
             ty = get_mypy_type(lhs)
@@ -669,7 +674,7 @@ def get_mypy_type(node: Node) -> Type | SymbolNode | None:
                     return ty
 
                 case TypeAlias(target=ty):
-                    return ty
+                    return ty  # pragma: no cover
 
                 case TypeInfo() as sym:
                     return Instance(sym, [])
@@ -694,7 +699,10 @@ def get_mypy_type(node: Node) -> Type | SymbolNode | None:
                 case Instance(type=TypeInfo(fullname="typing.Coroutine"), args=[_, _, rtype]):
                     return rtype
 
-                case Instance(type=TypeInfo(fullname="asyncio.tasks.Task"), args=[rtype]):
+                case Instance(
+                    type=TypeInfo(fullname="asyncio.tasks.Task" | "_asyncio.Task"),
+                    args=[rtype],
+                ):
                     return rtype
 
         case LambdaExpr(body=Block(body=[ReturnStmt(expr=expr)])) if expr:
@@ -723,43 +731,56 @@ def mypy_type_to_python_type(ty: Type | SymbolNode | None) -> type | None:
     return None  # pragma: no cover
 
 
-MAPPING_TYPES = (
-    dict,
-    "collections.ChainMap",
-    "collections.Counter",
-    "collections.OrderedDict",
-    "collections.UserDict",
-    "collections.abc.Mapping",
-    "collections.abc.MutableMapping",
-    "collections.defaultdict",
-    "os._Environ",
-    "typing.Mapping",
-    "typing.MutableMapping",
-)
-
-
-# TODO: support any Mapping subclass
 def is_mapping(expr: Expression) -> bool:
     return is_mapping_type(get_mypy_type(expr))
 
 
 def is_mapping_type(ty: Type | SymbolNode | None) -> bool:
-    return is_same_type(ty, *MAPPING_TYPES)
+    return is_subclass(ty, "typing.Mapping")
+
+
+def is_bool_literal(node: Node) -> TypeGuard[NameExpr]:
+    return is_true_literal(node) or is_false_literal(node)
+
+
+def is_true_literal(node: Node) -> TypeGuard[NameExpr]:
+    return isinstance(node, NameExpr) and node.fullname == "builtins.True"
+
+
+def is_false_literal(node: Node) -> TypeGuard[NameExpr]:
+    return isinstance(node, NameExpr) and node.fullname == "builtins.False"
 
 
 def is_sized(node: Expression) -> bool:
     return is_sized_type(get_mypy_type(node))
 
 
-# TODO: support any Sized subclass
 def is_sized_type(ty: Type | SymbolNode | None) -> bool:
-    return is_mapping_type(ty) or is_same_type(
-        ty,
-        frozenset,
-        list,
-        set,
-        str,
-        tuple,
-        "_collections_abc.dict_keys",
-        "_collections_abc.dict_values",
-    )
+    # Certain object MROs (like dict) doesn't reference Sized directly, only Collection. We might
+    # need to add more derived Sized types if Mypy doesn't fully resolve the MRO.
+
+    return is_subclass(ty, "typing.Sized", "typing.Collection")
+
+
+def is_subclass(ty: Any, *expected: TypeLike) -> bool:  # type: ignore[explicit-any]
+    if type_info := extract_typeinfo(ty):
+        return any(is_same_type(x, *expected) for x in type_info.mro)
+
+    return False  # pragma: no cover
+
+
+def extract_typeinfo(ty: Type | SymbolNode | None) -> TypeInfo | None:
+    match ty:
+        case TypeInfo():
+            return ty  # pragma: no cover
+
+        case Instance():
+            return ty.type
+
+        case TupleType():
+            tmp = _get_builtin_mypy_type("tuple")
+            assert tmp
+
+            return tmp.type
+
+    return None  # pragma: no cover

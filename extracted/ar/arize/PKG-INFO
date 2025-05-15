@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: arize
-Version: 7.40.1
+Version: 7.41.0
 Summary: A helper library to interact with Arize AI APIs
 Project-URL: Homepage, https://arize.com
 Project-URL: Documentation, https://docs.arize.com/arize
@@ -32,6 +32,7 @@ Requires-Dist: googleapis-common-protos<2,>=1.51.0
 Requires-Dist: pandas<3,>=0.25.3
 Requires-Dist: protobuf<6,>=4.21.0
 Requires-Dist: pyarrow>=0.15.0
+Requires-Dist: pydantic<3,>=2.0.0
 Requires-Dist: requests-futures==1.0.0
 Requires-Dist: tqdm<5,>=4.60.0
 Provides-Extra: autoembeddings

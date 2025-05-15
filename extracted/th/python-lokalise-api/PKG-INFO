@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: python-lokalise-api
-Version: 3.5.0
+Version: 3.5.1
 Summary: Official Python interface for the Lokalise API v2
 License: BSD-3-Clause
 Keywords: lokalise,api,client

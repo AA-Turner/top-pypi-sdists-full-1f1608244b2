@@ -22,6 +22,7 @@ from livekit.agents.llm.tool_context import (
     is_function_tool,
     is_raw_function_tool,
 )
+from livekit.agents.metrics import RealtimeModelMetrics
 from livekit.agents.types import NOT_GIVEN, NotGivenOr
 from livekit.agents.utils import is_given
 from openai.types.beta.realtime import (
@@ -78,7 +79,7 @@ SAMPLE_RATE = 24000
 NUM_CHANNELS = 1
 OPENAI_BASE_URL = "https://api.openai.com/v1"
 
-_log_oai_events = int(os.getenv("LOG_OAI_EVENTS", 0))
+lk_oai_debug = int(os.getenv("LK_OPENAI_DEBUG", 0))
 
 
 @dataclass
@@ -110,6 +111,11 @@ class _ResponseGeneration:
     function_ch: utils.aio.Chan[llm.FunctionCall]
 
     messages: dict[str, _MessageGeneration]
+
+    _created_timestamp: float
+    """timestamp when the response was created"""
+    _first_token_timestamp: float | None = None
+    """timestamp when the first token was received"""
 
 
 @dataclass
@@ -214,6 +220,7 @@ class RealtimeModel(llm.RealtimeModel):
                 message_truncation=True,
                 turn_detection=turn_detection is not None,
                 user_transcription=input_audio_transcription is not None,
+                auto_tool_reply_generation=False,
             )
         )
 
@@ -490,7 +497,7 @@ class RealtimeSession(
             azure_deployment=self._realtime_model._opts.azure_deployment,
         )
 
-        if _log_oai_events:
+        if lk_oai_debug:
             logger.debug(f"connecting to Realtime API: {url}")
 
         ws_conn = await self._realtime_model._ensure_http_session().ws_connect(
@@ -512,7 +519,7 @@ class RealtimeSession(
                     self.emit("openai_client_event_queued", msg)
                     await ws_conn.send_str(json.dumps(msg))
 
-                    if _log_oai_events:
+                    if lk_oai_debug:
                         msg_copy = msg.copy()
                         if msg_copy["type"] == "input_audio_buffer.append":
                             msg_copy = {**msg_copy, "audio": "..."}
@@ -555,7 +562,7 @@ class RealtimeSession(
                 self.emit("openai_server_event_received", event)
 
                 try:
-                    if _log_oai_events:
+                    if lk_oai_debug:
                         event_copy = event.copy()
                         if event_copy["type"] == "response.audio.delta":
                             event_copy = {**event_copy, "delta": "..."}
@@ -979,6 +986,7 @@ class RealtimeSession(
             message_ch=utils.aio.Chan(),
             function_ch=utils.aio.Chan(),
             messages={},
+            _created_timestamp=time.time(),
         )
 
         if (
@@ -1032,6 +1040,7 @@ class RealtimeSession(
                 )
             )
             self._current_generation.messages[item_id] = item_generation
+            self._current_generation._first_token_timestamp = time.time()
         else:
             self.interrupt()
             if self._text_mode_recovery_retries == 0:
@@ -1139,7 +1148,11 @@ class RealtimeSession(
 
         self.emit(
             "input_audio_transcription_completed",
-            llm.InputTranscriptionCompleted(item_id=event.item_id, transcript=event.transcript),
+            llm.InputTranscriptionCompleted(
+                item_id=event.item_id,
+                transcript=event.transcript,
+                is_final=True,
+            ),
         )
 
     def _handle_conversion_item_input_audio_transcription_failed(
@@ -1207,11 +1220,15 @@ class RealtimeSession(
             item_generation.text_ch.close()
             item_generation.audio_ch.close()
 
-    def _handle_response_done(self, _: ResponseDoneEvent) -> None:
+    def _handle_response_done(self, event: ResponseDoneEvent) -> None:
         if self._current_generation is None:
             return  # OpenAI has a race condition where we could receive response.done without any previous response.created (This happens generally during interruption)  # noqa: E501
 
         assert self._current_generation is not None, "current_generation is None"
+
+        created_timestamp = self._current_generation._created_timestamp
+        first_token_timestamp = self._current_generation._first_token_timestamp
+
         for generation in self._current_generation.messages.values():
             # close all messages that haven't been closed yet
             if not generation.text_ch.closed:
@@ -1222,6 +1239,38 @@ class RealtimeSession(
         self._current_generation.function_ch.close()
         self._current_generation.message_ch.close()
         self._current_generation = None
+
+        # calculate metrics
+        usage = (
+            event.response.usage.model_dump(exclude_defaults=True) if event.response.usage else {}
+        )
+        ttft = first_token_timestamp - created_timestamp if first_token_timestamp else -1
+        duration = time.time() - created_timestamp
+        metrics = RealtimeModelMetrics(
+            timestamp=created_timestamp,
+            request_id=event.response.id,
+            ttft=ttft,
+            duration=duration,
+            cancelled=event.response.status == "cancelled",
+            label=self._realtime_model._label,
+            input_tokens=usage.get("input_tokens", 0),
+            output_tokens=usage.get("output_tokens", 0),
+            total_tokens=usage.get("total_tokens", 0),
+            tokens_per_second=usage.get("output_tokens", 0) / duration,
+            input_token_details=RealtimeModelMetrics.InputTokenDetails(
+                audio_tokens=usage.get("input_token_details", {}).get("audio_tokens", 0),
+                cached_tokens=usage.get("input_token_details", {}).get("cached_tokens", 0),
+                text_tokens=usage.get("input_token_details", {}).get("text_tokens", 0),
+                cached_tokens_details=None,
+                image_tokens=0,
+            ),
+            output_token_details=RealtimeModelMetrics.OutputTokenDetails(
+                text_tokens=usage.get("output_token_details", {}).get("text_tokens", 0),
+                audio_tokens=usage.get("output_token_details", {}).get("audio_tokens", 0),
+                image_tokens=0,
+            ),
+        )
+        self.emit("metrics_collected", metrics)
 
     def _handle_error(self, event: ErrorEvent) -> None:
         if event.error.message.startswith("Cancellation failed"):

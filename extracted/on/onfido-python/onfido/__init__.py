@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "5.0.0"
+__version__ = "5.1.0"
 
 # import apis into sdk package
 from onfido.api.default_api import DefaultApi
@@ -37,6 +37,7 @@ from onfido.models.address_shared import AddressShared
 from onfido.models.addresses_list import AddressesList
 from onfido.models.applicant import Applicant
 from onfido.models.applicant_builder import ApplicantBuilder
+from onfido.models.applicant_consent import ApplicantConsent
 from onfido.models.applicant_consent_builder import ApplicantConsentBuilder
 from onfido.models.applicant_consent_name import ApplicantConsentName
 from onfido.models.applicant_create import ApplicantCreate
@@ -58,12 +59,13 @@ from onfido.models.complete_task_data_builder import CompleteTaskDataBuilder
 from onfido.models.country_codes import CountryCodes
 from onfido.models.device_intelligence_breakdown import DeviceIntelligenceBreakdown
 from onfido.models.device_intelligence_breakdown_breakdown import DeviceIntelligenceBreakdownBreakdown
-from onfido.models.device_intelligence_breakdown_breakdown_device import DeviceIntelligenceBreakdownBreakdownDevice
-from onfido.models.device_intelligence_breakdown_breakdown_device_breakdown import DeviceIntelligenceBreakdownBreakdownDeviceBreakdown
+from onfido.models.device_intelligence_breakdown_device import DeviceIntelligenceBreakdownDevice
+from onfido.models.device_intelligence_breakdown_device_breakdown import DeviceIntelligenceBreakdownDeviceBreakdown
 from onfido.models.device_intelligence_breakdown_properties import DeviceIntelligenceBreakdownProperties
 from onfido.models.device_intelligence_breakdown_properties_device import DeviceIntelligenceBreakdownPropertiesDevice
 from onfido.models.device_intelligence_breakdown_properties_geolocation import DeviceIntelligenceBreakdownPropertiesGeolocation
 from onfido.models.device_intelligence_breakdown_properties_ip import DeviceIntelligenceBreakdownPropertiesIp
+from onfido.models.device_intelligence_properties import DeviceIntelligenceProperties
 from onfido.models.device_intelligence_report import DeviceIntelligenceReport
 from onfido.models.document import Document
 from onfido.models.document_breakdown import DocumentBreakdown
@@ -109,7 +111,7 @@ from onfido.models.document_properties_address_lines import DocumentPropertiesAd
 from onfido.models.document_properties_barcode_inner import DocumentPropertiesBarcodeInner
 from onfido.models.document_properties_document_classification import DocumentPropertiesDocumentClassification
 from onfido.models.document_properties_document_numbers_inner import DocumentPropertiesDocumentNumbersInner
-from onfido.models.document_properties_driving_licence_information import DocumentPropertiesDrivingLicenceInformation
+from onfido.models.document_properties_driving_licence_information_item import DocumentPropertiesDrivingLicenceInformationItem
 from onfido.models.document_properties_extracted_data import DocumentPropertiesExtractedData
 from onfido.models.document_properties_nfc import DocumentPropertiesNfc
 from onfido.models.document_report import DocumentReport

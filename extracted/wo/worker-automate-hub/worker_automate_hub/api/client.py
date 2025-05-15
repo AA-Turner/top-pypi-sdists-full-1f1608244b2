@@ -478,7 +478,7 @@ async def get_valor_remessa_cobranca(date: str):
                     style="bold green",
                 )
                 logger.info(log_msg)
-                return data[0]["coalesce"]
+                return float(data[0]["coalesce"])
 
     except Exception as e:
         err_msg = f"Erro ao comunicar com endpoint do Simplifica: {e}"

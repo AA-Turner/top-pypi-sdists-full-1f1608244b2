@@ -8,9 +8,10 @@ import logging
 import random
 import re
 import time
-from contextvars import ContextVar
+from concurrent.futures import ThreadPoolExecutor
+from contextvars import ContextVar, copy_context
 from datetime import datetime
-from enum import Enum
+from enum import Enum, EnumMeta
 from functools import reduce, wraps
 from typing import Any, Dict, List, Mapping, Optional
 
@@ -471,3 +472,68 @@ def validate_single_required_field(field_names: List[str], values: List[Any]):
         raise ValueError(
             f"Only one of the following parameters are allowed: {', '.join(names)}"
         )
+
+
+class PyAtlanThreadPoolExecutor(ThreadPoolExecutor):
+    """
+    A ThreadPoolExecutor that preserves context variables (e.g: `AtlanClient`)
+    across threads—useful when running SDK methods in multithreading and async environments.
+
+    For example:
+
+    ```
+    import asyncio
+    from functools import partial
+    from pyatlan.model.assets import Table
+    from pyatlan.client.atlan import AtlanClient
+    from pyatlan.utils import PyAtlanThreadPoolExecutor
+
+    client = AtlanClient()
+
+    async def fetch_asset():
+        loop = asyncio.get_running_loop()
+        sdk_func = partial(
+            client.asset.get_by_guid, "ef1ffe2c-8fc9-433a-8cf8-b4583f2d2375", Table
+        )
+        return await loop.run_in_executor(
+            executor=PyAtlanThreadPoolExecutor(), func=sdk_func
+        )
+
+    result = asyncio.run(fetch_asset())
+    ```
+    """
+
+    _SDK_CONTEXT_VAR_NAMES = [
+        "_current_client_ctx",
+        "_401_has_retried_ctx",
+    ]
+
+    def submit(self, fn, /, *args, **kwargs):
+        ctx_vars = copy_context().items()
+
+        def _fn():
+            for var, value in ctx_vars:
+                # Only set the context variables that are used by the SDK
+                if var.name in self._SDK_CONTEXT_VAR_NAMES:
+                    var.set(value)
+            return fn(*args, **kwargs)
+
+        return super().submit(_fn)
+
+
+class ExtendableEnumMeta(EnumMeta):
+    def __init__(cls, name, bases, namespace):
+        super().__init__(name, bases, namespace)
+        cls._additional_members = {}
+
+    def add_value(cls, name, value, category=None):
+        member = str.__new__(cls, value)
+        member._name_ = name
+        member._value_ = value
+        member.category = category
+
+        cls._member_map_[name] = member
+        cls._value2member_map_[value] = member
+        cls._member_names_.append(name)
+        cls._additional_members[name] = member
+        return member
