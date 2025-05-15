@@ -88,6 +88,7 @@ __all__ = (
     "CaptionSourceByteRateLimitType",
     "CaptionSourceConvertPaintOnToPopOnType",
     "CaptionSourceTypeType",
+    "CaptionSourceUpconvertSTLToTeletextType",
     "ChromaPositionModeType",
     "CmafClientCacheType",
     "CmafCodecSpecificationType",
@@ -647,6 +648,7 @@ CaptionSourceTypeType = Literal[
     "TTML",
     "WEBVTT",
 ]
+CaptionSourceUpconvertSTLToTeletextType = Literal["DISABLED", "UPCONVERT"]
 ChromaPositionModeType = Literal["AUTO", "FORCE_CENTER", "FORCE_TOP_LEFT"]
 CmafClientCacheType = Literal["DISABLED", "ENABLED"]
 CmafCodecSpecificationType = Literal["RFC_4281", "RFC_6381"]

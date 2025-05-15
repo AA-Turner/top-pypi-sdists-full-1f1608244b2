@@ -1,5 +1,4 @@
 import os
-from crewai_tools import SerperDevTool
 
 from crewai import Agent, Crew, Task
 from crewai.knowledge.knowledge_config import KnowledgeConfig
@@ -25,7 +24,7 @@ agent = Agent(
 )
 
 task = Task(
-    description="Your goal is to answer the question based on the knowledge sources: {task}",
+    description="Your goal is to answer the question based on the knowledge sources: {task-to-answer}",
     expected_output="Answer the question in 3 paragraphs. Find the most relevant information from the knowledge sources.",
     agent=agent,
 )
@@ -33,8 +32,11 @@ crew = Crew(
     agents=[agent],
     tasks=[task],
     verbose=True,
+    output_log_file="output.json",
     # memory=True,
 )
-result = crew.kickoff(inputs={"task": "what are some large reasoning models?"})
+result = crew.kickoff(
+    inputs={"task-to-answer": "what are some large reasoning models?"}
+)
 print(result)
 print("usage metrics", result.token_usage)

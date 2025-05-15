@@ -29,7 +29,7 @@ from eventsourcing.persistence import (
     Tracking,
     TrackingRecorder,
 )
-from eventsourcing.utils import Environment, resolve_topic, strtobool
+from eventsourcing.utils import Environment, EnvType, resolve_topic, strtobool
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -300,7 +300,7 @@ class SQLiteAggregateRecorder(SQLiteRecorder, AggregateRecorder):
         return statements
 
     def insert_events(
-        self, stored_events: list[StoredEvent], **kwargs: Any
+        self, stored_events: Sequence[StoredEvent], **kwargs: Any
     ) -> Sequence[int] | None:
         with self.datastore.transaction(commit=True) as c:
             return self._insert_events(c, stored_events, **kwargs)
@@ -308,12 +308,16 @@ class SQLiteAggregateRecorder(SQLiteRecorder, AggregateRecorder):
     def _insert_events(
         self,
         c: SQLiteCursor,
-        stored_events: list[StoredEvent],
+        stored_events: Sequence[StoredEvent],
         **_: Any,
     ) -> Sequence[int] | None:
         params = [
             (
-                s.originator_id.hex,
+                (
+                    s.originator_id.hex
+                    if isinstance(s.originator_id, UUID)
+                    else s.originator_id
+                ),
                 s.originator_version,
                 s.topic,
                 s.state,
@@ -325,15 +329,17 @@ class SQLiteAggregateRecorder(SQLiteRecorder, AggregateRecorder):
 
     def select_events(
         self,
-        originator_id: UUID,
+        originator_id: UUID | str,
         *,
         gt: int | None = None,
         lte: int | None = None,
         desc: bool = False,
         limit: int | None = None,
-    ) -> list[StoredEvent]:
+    ) -> Sequence[StoredEvent]:
         statement = self.select_events_statement
-        params: list[Any] = [originator_id.hex]
+        params: list[Any] = [
+            originator_id.hex if isinstance(originator_id, UUID) else originator_id
+        ]
         if gt is not None:
             statement += "AND originator_version>? "
             params.append(gt)
@@ -352,7 +358,7 @@ class SQLiteAggregateRecorder(SQLiteRecorder, AggregateRecorder):
             c.execute(statement, params)
             return [
                 StoredEvent(
-                    originator_id=UUID(row["originator_id"]),
+                    originator_id=row["originator_id"],
                     originator_version=row["originator_version"],
                     topic=row["topic"],
                     state=row["state"],
@@ -391,18 +397,22 @@ class SQLiteApplicationRecorder(
     def _insert_events(
         self,
         c: SQLiteCursor,
-        stored_events: list[StoredEvent],
+        stored_events: Sequence[StoredEvent],
         **_: Any,
     ) -> Sequence[int] | None:
         returning = []
-        for stored_event in stored_events:
+        for s in stored_events:
             c.execute(
                 self.insert_events_statement,
                 (
-                    stored_event.originator_id.hex,
-                    stored_event.originator_version,
-                    stored_event.topic,
-                    stored_event.state,
+                    (
+                        s.originator_id.hex
+                        if isinstance(s.originator_id, UUID)
+                        else s.originator_id
+                    ),
+                    s.originator_version,
+                    s.topic,
+                    s.state,
                 ),
             )
             returning.append(c.lastrowid)
@@ -416,7 +426,7 @@ class SQLiteApplicationRecorder(
         topics: Sequence[str] = (),
         *,
         inclusive_of_start: bool = True,
-    ) -> list[Notification]:
+    ) -> Sequence[Notification]:
         """Returns a list of event notifications
         from 'start', limited by 'limit'.
         """
@@ -457,7 +467,7 @@ class SQLiteApplicationRecorder(
             return [
                 Notification(
                     id=row["rowid"],
-                    originator_id=UUID(row["originator_id"]),
+                    originator_id=row["originator_id"],
                     originator_version=row["originator_version"],
                     topic=row["topic"],
                     state=row["state"],
@@ -650,7 +660,7 @@ class SQLiteProcessRecorder(
     def _insert_events(
         self,
         c: SQLiteCursor,
-        stored_events: list[StoredEvent],
+        stored_events: Sequence[StoredEvent],
         **kwargs: Any,
     ) -> Sequence[int] | None:
         returning = super()._insert_events(c, stored_events, **kwargs)
@@ -671,7 +681,7 @@ class SQLiteFactory(InfrastructureFactory[SQLiteTrackingRecorder]):
     tracking_recorder_class = SQLiteTrackingRecorder
     process_recorder_class = SQLiteProcessRecorder
 
-    def __init__(self, env: Environment):
+    def __init__(self, env: Environment | EnvType | None):
         super().__init__(env)
         db_name = self.env.get(self.SQLITE_DBNAME)
         if not db_name:

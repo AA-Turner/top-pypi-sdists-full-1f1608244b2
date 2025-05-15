@@ -9,6 +9,7 @@ import re
 import shutil
 import subprocess
 import warnings
+from base64 import b64decode
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
@@ -575,7 +576,10 @@ def get_mamba_auth_dict(home_dir: Path | None = None) -> dict[str, tuple[str, st
                 if auth_type == "CondaToken" or auth_type == "BearerToken":
                     domain_auth[domain] = (AUTH_BEARER_USERNAME, auth["token"])
                 elif auth_type == "BasicHTTPAuthentication":
-                    domain_auth[domain] = (auth.get("user") or "", auth.get("password") or "")
+                    domain_auth[domain] = (
+                        auth.get("user") or "",
+                        b64decode(auth.get("password") or "").decode("utf-8"),
+                    )
                 else:
                     logger.debug(f"Encountered unknown mamba auth type {auth_type} for domain {domain}")
     return domain_auth

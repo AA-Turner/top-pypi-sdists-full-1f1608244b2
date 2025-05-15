@@ -135,3 +135,40 @@ def test_large_typesize(shape, typesize, asarray):
     else:
         b = blosc2.zeros(shape, dtype=dtype)
     assert np.array_equal(b[0], a[0])
+
+
+@pytest.mark.parametrize(
+    "dtype",
+    [
+        np.dtype(("<f8", (10,))),
+        np.dtype(("<i8", (10,))),
+        np.dtype(("<i4,>f4", (10,))),
+    ],
+)
+def test_nd_dtype(dtype):
+    # Test that the dtype is correctly set for a 1D array with a nested dtype
+    a = blosc2.zeros((1,), dtype=dtype)
+    assert a.dtype == dtype
+    b = np.zeros((1,), dtype=dtype)
+    if dtype.base.fields:  # ("<i8,>f4", (10,))
+        # Check values by converting to a dtype without a structure
+        a2 = a[:].view(dtype=np.int8)
+        b2 = b[:].view(dtype=np.int8)
+        np.testing.assert_equal(a2, b2)
+    else:
+        np.testing.assert_equal(a[:], b)
+
+
+def test_shape_empty():
+    # Test that the shape is correctly set to () for an empty array
+    a = blosc2.zeros((), dtype=np.int32)
+    assert a.shape == ()
+    assert a.dtype == np.int32
+    b = np.zeros((), dtype=np.int32)
+    np.testing.assert_equal(a[()], b)
+
+
+def test_shape_max_dims():
+    # Test that the shape cannot exceed the maximum number of dimensions
+    with pytest.raises(ValueError):
+        a = blosc2.zeros((1,) * (blosc2.MAX_DIM + 1), dtype=np.int32)

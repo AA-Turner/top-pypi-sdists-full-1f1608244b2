@@ -86,6 +86,7 @@ from .literals import (
     CaptionSourceByteRateLimitType,
     CaptionSourceConvertPaintOnToPopOnType,
     CaptionSourceTypeType,
+    CaptionSourceUpconvertSTLToTeletextType,
     ChromaPositionModeType,
     CmafClientCacheType,
     CmafCodecSpecificationType,
@@ -762,6 +763,7 @@ __all__ = (
     "VideoDescriptionOutputTypeDef",
     "VideoDescriptionTypeDef",
     "VideoDetailTypeDef",
+    "VideoOverlayCropTypeDef",
     "VideoOverlayInputClippingTypeDef",
     "VideoOverlayInputOutputTypeDef",
     "VideoOverlayInputTypeDef",
@@ -1984,6 +1986,14 @@ class Vp9SettingsTypeDef(TypedDict):
     RateControlMode: NotRequired[Literal["VBR"]]
 
 
+class VideoOverlayCropTypeDef(TypedDict):
+    Height: NotRequired[int]
+    Unit: NotRequired[VideoOverlayUnitType]
+    Width: NotRequired[int]
+    X: NotRequired[int]
+    Y: NotRequired[int]
+
+
 class VideoOverlayInputClippingTypeDef(TypedDict):
     EndTimecode: NotRequired[str]
     StartTimecode: NotRequired[str]
@@ -2187,6 +2197,7 @@ class FileSourceSettingsTypeDef(TypedDict):
     SourceFile: NotRequired[str]
     TimeDelta: NotRequired[int]
     TimeDeltaUnits: NotRequired[FileSourceTimeDeltaUnitsType]
+    UpconvertSTLToTeletext: NotRequired[CaptionSourceUpconvertSTLToTeletextType]
 
 
 class ChannelMappingOutputTypeDef(TypedDict):
@@ -3037,6 +3048,7 @@ class DestinationSettingsTypeDef(TypedDict):
 
 
 class VideoOverlayOutputTypeDef(TypedDict):
+    Crop: NotRequired[VideoOverlayCropTypeDef]
     EndTimecode: NotRequired[str]
     InitialPosition: NotRequired[VideoOverlayPositionTypeDef]
     Input: NotRequired[VideoOverlayInputOutputTypeDef]
@@ -3046,6 +3058,7 @@ class VideoOverlayOutputTypeDef(TypedDict):
 
 
 class VideoOverlayTypeDef(TypedDict):
+    Crop: NotRequired[VideoOverlayCropTypeDef]
     EndTimecode: NotRequired[str]
     InitialPosition: NotRequired[VideoOverlayPositionTypeDef]
     Input: NotRequired[VideoOverlayInputTypeDef]

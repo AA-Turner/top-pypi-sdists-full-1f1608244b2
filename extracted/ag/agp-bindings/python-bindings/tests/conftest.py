@@ -1,3 +1,6 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 import asyncio
 
 import pytest_asyncio
@@ -12,7 +15,7 @@ async def server(request):
     svc_server = await agp_bindings.create_pyservice("cisco", "default", "server")
 
     # init tracing
-    agp_bindings.init_tracing(log_level="info")
+    await agp_bindings.init_tracing({"log_level": "info"})
 
     # run gateway server in background
     await agp_bindings.run_server(

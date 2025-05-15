@@ -1,5 +1,7 @@
 import warnings
 from filelock import FileLock
+from typing_extensions import Self
+
 from qwak.inner.di_configuration.session import Session
 from abc import ABC, abstractmethod
 from typing import Optional
@@ -131,6 +133,8 @@ class Auth0ClientBase(BaseAuthClient):
 
 
 class FrogMLAuthClient(BaseAuthClient):
+    __MIN_TOKEN_LENGTH: int = 64
+
     def __init__(self, auth_config: Optional[AuthConfig] = None):
         self.auth_config = auth_config
         self._token = None
@@ -148,32 +152,45 @@ class FrogMLAuthClient(BaseAuthClient):
 
     def login(self) -> None:
         artifactory_url, auth = get_credentials(self.auth_config)
-        if hasattr(auth, "token"):  # For BearerAuth
-            self._token = auth.token
-            # Remove '/artifactory/' from the URL
-            if "/artifactory" in artifactory_url:
-                base_url = artifactory_url.replace("/artifactory", "/ui")
-            else:
-                # Remove trailing slash if it exists and append /ui
-                base_url = artifactory_url.rstrip("/") + "/ui"
-            try:
-                response = requests.get(
-                    f"{base_url}/api/v1/system/auth/screen/footer",
-                    headers={"Authorization": f"Bearer {self._token}"},
-                    timeout=60,
-                )
-                response.raise_for_status()  # Raises an HTTPError for bad responses
-                response_data = response.json()
-                if "serverId" not in response_data:
-                    raise QwakLoginException(
-                        "Failed to authenticate with JFrog. Please check your credentials"
-                    )
-                self._tenant_id = response_data["serverId"]
-            except requests.exceptions.RequestException:
+        # For now, we only support Bearer token authentication
+        if not hasattr(auth, "token"):
+            return
+
+        # noinspection PyUnresolvedReferences
+        self._token = auth.token
+        self.__validate_token()
+
+        # Remove '/artifactory/' from the URL
+        if "/artifactory" in artifactory_url:
+            base_url = artifactory_url.replace("/artifactory", "/ui")
+        else:
+            # Remove trailing slash if it exists and append /ui
+            base_url = artifactory_url.rstrip("/") + "/ui"
+        try:
+            response = requests.get(
+                f"{base_url}/api/v1/system/auth/screen/footer",
+                headers={"Authorization": f"Bearer {self._token}"},
+                timeout=60,
+            )
+            response.raise_for_status()  # Raises an HTTPError for bad responses
+            response_data = response.json()
+            if "serverId" not in response_data:
                 raise QwakLoginException(
                     "Failed to authenticate with JFrog. Please check your credentials"
                 )
-            except ValueError:  # This catches JSON decode errors
-                raise QwakLoginException(
-                    "Failed to authenticate with JFrog. Please check your credentials"
-                )
+            self._tenant_id = response_data["serverId"]
+        except requests.exceptions.RequestException:
+            raise QwakLoginException(
+                "Failed to authenticate with JFrog. Please check your credentials"
+            )
+        except ValueError:  # This catches JSON decode errors
+            raise QwakLoginException(
+                "Failed to authenticate with JFrog. Please check your credentials"
+            )
+
+    def __validate_token(self: Self):
+        if self._token is None or len(self._token) <= self.__MIN_TOKEN_LENGTH:
+            raise QwakLoginException(
+                "Authentication with JFrog failed: Only JWT Access Tokens are supported. "
+                "Please ensure you are using a valid JWT Access Token."
+            )

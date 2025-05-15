@@ -41,7 +41,7 @@ dependencies = [
     "py-cpuinfo; platform_machine != 'wasm32'",
     "requests",
 ]
-version = "3.3.2"
+version = "3.3.3"
 
 
 [project.optional-dependencies]
@@ -111,7 +111,7 @@ extend-select = [
     "RET",
     "RUF",
     "SIM",
-    "TCH",
+    "TC",
     "UP",
 ]
 ignore = [

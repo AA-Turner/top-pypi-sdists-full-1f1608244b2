@@ -27,7 +27,7 @@ if os.path.exists('README.rst'):
 
 setup(
     name='kcli',
-    version='99.0.202505130814',
+    version='99.0.202505141130',
     include_package_data=True,
     packages=find_packages(),
     zip_safe=False,
@@ -57,6 +57,7 @@ setup(
         kcli=kvirt.cli:cli
         kweb=kvirt.web.main:run
         klist.py=kvirt.klist:main
+        kmcp.py=kvirt.mcp:main
         ksushy=kvirt.ksushy.main:run
         ignitionmerger=kvirt.ignitionmerger:cli
         ekstoken=kvirt.ekstoken:cli

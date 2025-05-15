@@ -33,6 +33,7 @@ CONFIG_DIR.mkdir(parents=True, exist_ok=True)
 DB_FILE = CONFIG_DIR / "db.db"
 DISK_CACHE = DiskLRUCache(str(DB_FILE), 10)
 _IS_GITHUB = "GITHUB_ACTIONS" in os.environ
+_DEFAULT_BUILD_DIR = "/js/.pio/build"
 
 
 # Docker uses datetimes in UTC but without the timezone info. If we pass in a tz
@@ -40,6 +41,28 @@ _IS_GITHUB = "GITHUB_ACTIONS" in os.environ
 def _utc_now_no_tz() -> datetime:
     now = datetime.now(timezone.utc)
     return now.replace(tzinfo=None)
+
+
+def set_ramdisk_size(size: str) -> None:
+    """Set the tmpfs size for the container."""
+    # This is a hack to set the tmpfs size from the environment variable.
+    # It should be set in the docker-compose.yml file.
+    # If not set, return 25MB.
+    try:
+        os.environ["TMPFS_SIZE"] = str(size)
+    except ValueError:
+        os.environ["TMPFS_SIZE"] = "0"  # Defaults to off
+
+
+def get_ramdisk_size() -> str | None:
+    """Get the tmpfs size for the container."""
+    # This is a hack to get the tmpfs size from the environment variable.
+    # It should be set in the docker-compose.yml file.
+    # If not set, return 25MB.
+    try:
+        return os.environ.get("TMPFS_SIZE", None)
+    except ValueError:
+        return None  # Defaults to off
 
 
 def _win32_docker_location() -> str | None:
@@ -353,6 +376,66 @@ class DockerManager:
             print(f"Error starting Docker: {str(e)}")
         return False
 
+    def has_newer_version(
+        self, image_name: str, tag: str = "latest"
+    ) -> tuple[bool, str]:
+        """
+        Check if a newer version of the image is available in the registry.
+
+        Args:
+            image_name: The name of the image to check
+            tag: The tag of the image to check
+
+        Returns:
+            A tuple of (has_newer_version, message)
+            has_newer_version: True if a newer version is available, False otherwise
+            message: A message describing the result, including the date of the newer version if available
+        """
+        try:
+            # Get the local image
+            local_image = self.client.images.get(f"{image_name}:{tag}")
+            local_image_id = local_image.id
+            assert local_image_id is not None
+
+            # Get the remote image data
+            remote_image = self.client.images.get_registry_data(f"{image_name}:{tag}")
+            remote_image_hash = remote_image.id
+
+            # Check if we have a cached remote hash for this local image
+            try:
+                remote_image_hash_from_local_image = DISK_CACHE.get(local_image_id)
+            except Exception:
+                remote_image_hash_from_local_image = None
+
+            # Compare the hashes
+            if remote_image_hash_from_local_image == remote_image_hash:
+                return False, f"Local image {image_name}:{tag} is up to date."
+            else:
+                # Get the creation date of the remote image if possible
+                try:
+                    # Try to get detailed image info including creation date
+                    remote_image_details = self.client.api.inspect_image(
+                        f"{image_name}:{tag}"
+                    )
+                    if "Created" in remote_image_details:
+                        created_date = remote_image_details["Created"].split("T")[
+                            0
+                        ]  # Extract just the date part
+                        return (
+                            True,
+                            f"Newer version of {image_name}:{tag} is available (published on {created_date}).",
+                        )
+                except Exception:
+                    pass
+
+                # Fallback if we couldn't get the date
+                return True, f"Newer version of {image_name}:{tag} is available."
+
+        except ImageNotFound:
+            return True, f"Image {image_name}:{tag} not found locally."
+        except DockerException as e:
+            return False, f"Error checking for newer version: {e}"
+
     def validate_or_download_image(
         self, image_name: str, tag: str = "latest", upgrade: bool = False
     ) -> bool:
@@ -534,6 +617,7 @@ class DockerManager:
         ports: dict[int, int] | None = None,
         remove_previous: bool = False,
         environment: dict[str, str] | None = None,
+        tmpfs_size: str | None = None,  # suffixed like 25mb.
     ) -> Container:
         """
         Run a container from an image. If it already exists with matching config, start it.
@@ -544,6 +628,8 @@ class DockerManager:
             ports: Dict mapping host ports to container ports
                     Example: {8080: 80} maps host port 8080 to container port 80
         """
+        tmpfs_size = tmpfs_size or get_ramdisk_size()
+        sys_admin = tmpfs_size is not None and tmpfs_size != "0"
         volumes = _hack_to_fix_mac(volumes)
         # Convert volumes to the format expected by Docker API
         volumes_dict = None
@@ -610,10 +696,16 @@ class DockerManager:
             print("\n" + "#" * msg_len)
             print(out_msg)
             print("#" * msg_len + "\n")
+
+            tmpfs: dict[str, str] | None = None
+            if tmpfs_size:
+                tmpfs = {_DEFAULT_BUILD_DIR: f"size={tmpfs_size}"}
             container = self.client.containers.run(
                 image=image_name,
                 command=command,
                 name=container_name,
+                tmpfs=tmpfs,
+                cap_add=["SYS_ADMIN"] if sys_admin else None,
                 detach=True,
                 tty=True,
                 volumes=volumes_dict,

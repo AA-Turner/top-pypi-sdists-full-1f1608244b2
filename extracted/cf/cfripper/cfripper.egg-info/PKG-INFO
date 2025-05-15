@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: cfripper
-Version: 1.17.1
+Version: 1.17.2
 Summary: Library and CLI tool for analysing CloudFormation templates and check them for security compliance.
 Author-email: Skyscanner Security <security@skyscanner.net>
 License:                                  Apache License

@@ -6,10 +6,9 @@ from maleo_foundation.models.schemas.token import MaleoFoundationTokenSchemas
 
 class MaleoFoundationTokenGeneralTransfers:
     class BasePayload(BaseModel):
-        iss:str = Field(..., description="Token's issuer")
-        sub:int = Field(..., description="Token's subject")
+        iss:BaseTypes.OptionalString = Field(None, description="Token's issuer")
+        sub:BaseTypes.OptionalString = Field(None, description="Token's subject")
         sr:str = Field(..., description="System role")
-        u_i:int = Field(..., description="user's ID")
         u_u:str = Field(..., description="user's username")
         u_e:str = Field(..., description="user's email")
         u_ut:str = Field(..., description="user's type")

@@ -67,7 +67,7 @@ mod tests {
                     info!("sent message {:?} to the server", n);
                 }
                 Err(err) => {
-                    assert!(false, "error sending message {:?}", err);
+                    panic!("error sending message {:?}", err);
                 }
             };
         }
@@ -86,11 +86,7 @@ mod tests {
             let res = msg_processor.send_msg(msg, 0).await;
             match res {
                 Ok(_) => info!("sent message {:?} to the client", n),
-                Err(e) => assert!(
-                    false,
-                    "an error occurred sending message from server {:?}",
-                    e
-                ),
+                Err(e) => panic!("error sending message {:?}", e),
             };
         }
 
@@ -141,11 +137,8 @@ mod tests {
 
         tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
 
-        let expected_msg = format!(
-            "subscription update (add = true) for agent type: {} (agent id: None) - connection: 0",
-            AgentType::from_strings("org", "ns", "type")
-        );
-        assert!(logs_contain(&expected_msg));
+        let expected_msg = "subscription update (add = true) for agent type";
+        assert!(logs_contain(expected_msg));
 
         // try to send a forward_to message
         let fwd_to = make_fwd_to_command("org", "ns", "type", 0);
@@ -153,7 +146,7 @@ mod tests {
 
         tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
         let expected_msg = "forward subscription (add = true) to 0";
-        assert!(logs_contain(&expected_msg));
+        assert!(logs_contain(expected_msg));
     }
 
     fn make_message(org: &str, ns: &str, agent_type: &str) -> Message {

@@ -1,25 +1,25 @@
-import pytest
-import operator
 import importlib
+import operator
 
-import numpy as np
-from numpy.testing import assert_allclose
-import scipy.sparse.linalg as spla
 import autoray as ar
+import numpy as np
+import pytest
+import scipy.sparse.linalg as spla
+from numpy.testing import assert_allclose
 
 import quimb as qu
 import quimb.tensor as qtn
 from quimb.tensor import (
-    bonds,
     MPS_rand_state,
-    oset,
-    rand_tensor,
-    tensor_contract,
-    tensor_direct_product,
     Tensor,
     TensorNetwork,
     TensorNetwork1D,
     TNLinearOperator1D,
+    bonds,
+    oset,
+    rand_tensor,
+    tensor_contract,
+    tensor_direct_product,
 )
 from quimb.tensor.decomp import _compute_number_svals_to_keep_numba
 
@@ -52,7 +52,7 @@ class TestBasicTensorOperations:
             Tensor(x, inds=[0, 2], tags="blue")
 
         assert repr(a) == (
-            "Tensor(shape=(2, 3, 4), " "inds=(0, 1, 2), tags=oset(['blue']))"
+            "Tensor(shape=(2, 3, 4), inds=(0, 1, 2), tags=oset(['blue']))"
         )
         assert str(a) == (
             "Tensor(shape=(2, 3, 4), inds=(0, 1, 2), "
@@ -126,8 +126,11 @@ class TestBasicTensorOperations:
         b = Tensor(np.random.rand(2, 3, 4), inds=[0, 1, 2], tags="red")
         if mismatch:
             b.modify(inds=(0, 1, 3))
-            with pytest.raises(ValueError):
-                op(a, b)
+            c = op(a, b)
+            assert_allclose(
+                c.data,
+                op(a.data.reshape(2, 3, 4, 1), b.data.reshape(2, 3, 1, 4)),
+            )
         else:
             c = op(a, b)
             assert_allclose(c.data, op(a.data, b.data))
@@ -452,6 +455,27 @@ class TestTensorFunctions:
             )
         assert (a_split ^ ...).almost_equals(a)
 
+    @pytest.mark.parametrize("matrix_svals", [False, True])
+    def test_split_tensor_return_svals(self, matrix_svals):
+        t = rand_tensor((2, 3, 4, 5), inds=("a", "b", "c", "d"))
+
+        _, svals, _ = t.split(
+            ["a", "d"], get="arrays", absorb=None, matrix_svals=matrix_svals
+        )
+        if matrix_svals:
+            assert svals.shape == (10, 10)
+        else:
+            assert svals.shape == (10,)
+
+        tn = t.split(["a", "d"], absorb=None, matrix_svals=matrix_svals)
+        assert tn.num_tensors == 3
+        if matrix_svals:
+            assert not tn.get_hyperinds()
+        else:
+            assert tn.get_hyperinds()
+        tc = tn.contract(output_inds=t.inds)
+        assert_allclose(tc.data, t.data)
+
     @pytest.mark.parametrize("method", ["svd", "eig"])
     def test_singular_values(self, method):
         psim = Tensor(np.eye(2) * 2**-0.5, inds="ab")
@@ -703,6 +727,27 @@ class TestTensorFunctions:
         t.new_ind_with_identity("switch", ["a", "c"], ["b", "d"], axis=2)
         assert t.inds == ("a", "b", "switch", "c", "d")
         assert t.isel({"switch": 1}).data.sum() == pytest.approx(6)
+
+    def test_new_ind_pair_diag(self):
+        data = np.array([1, 2, 3])
+        inds = ["a"]
+        t = Tensor(data=data, inds=inds)
+        new_left_ind = "b"
+        new_right_ind = "c"
+        expanded_tensor = t.new_ind_pair_diag(
+            "a", new_left_ind, new_right_ind, inplace=False
+        )
+        assert t.inds == ("a",)
+        assert_allclose(t.data, data)
+        assert expanded_tensor.inds == ("b", "c")
+        assert expanded_tensor.shape == (3, 3)
+        expected_data = np.zeros((3, 3))
+        np.fill_diagonal(expected_data, data)
+        assert_allclose(expanded_tensor.data, expected_data)
+        t.new_ind_pair_diag_("a", new_left_ind, new_right_ind)
+        assert t.inds == ("b", "c")
+        assert t.shape == (3, 3)
+        assert_allclose(t.data, expected_data)
 
     def test_idxmin(self):
         data = np.arange(24).reshape(2, 3, 4)
@@ -1559,8 +1604,8 @@ class TestTensorNetwork:
         plt.close(fig)
 
     def test_pickle(self):
-        import tempfile
         import os
+        import tempfile
 
         pytest.importorskip("joblib")
 
@@ -1605,9 +1650,7 @@ class TestTensorNetwork:
             assert psi.H @ psi == pytest.approx(x_exp, rel=1e-4)
         else:
             assert all(n1 == pytest.approx(value) for n1 in enorms)
-            assert (psi.H @ psi) * 10 ** (2 * psi.exponent) == pytest.approx(
-                x_exp
-            )
+            assert (psi.H @ psi) == pytest.approx(x_exp)
 
     @pytest.mark.parametrize("append", [None, "*"])
     def test_mangle_inner(self, append):
@@ -1622,9 +1665,10 @@ class TestTensorNetwork:
 
     @pytest.mark.parametrize("mode", ["manual", "dense", "mps", "tree"])
     def test_hyperind_resolve(self, mode):
-        import networkx as nx
-        import random
         import collections
+        import random
+
+        import networkx as nx
 
         # create a random interaction ising model
         G = nx.watts_strogatz_graph(10, 4, 0.5, seed=666)

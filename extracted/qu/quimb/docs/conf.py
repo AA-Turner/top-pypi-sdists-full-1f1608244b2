@@ -86,6 +86,9 @@ html_theme_options = {
         # "color-brand-primary": "hsl(45, 80%, 45%)",
         "color-brand-primary": "hsl(210, 50%, 50%)",
         "color-brand-content": "hsl(210, 50%, 50%)",
+        "font-stack": "Atkinson Hyperlegible, sans-serif",
+        "font-stack--monospace": "Spline Sans Mono, monospace",
+        "font-stack--headings": "Spline Sans Mono, monospace",
     },
     "dark_css_variables": {
         "color-brand-primary": "hsl(210, 50%, 60%)",
@@ -108,6 +111,7 @@ def linkcode_resolve(domain, info):
     Determine the URL corresponding to Python object
     """
     import quimb
+    import quimb.tensor  # needs to be imported
     import inspect
 
     if domain != "py":

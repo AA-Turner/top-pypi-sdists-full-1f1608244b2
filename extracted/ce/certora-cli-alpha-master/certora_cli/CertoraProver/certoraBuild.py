@@ -1403,7 +1403,7 @@ class CertoraBuildGenerator:
             if not self.context.strict_solc_optimizer and self.context.solc_via_ir:
                 # The default optimizer steps (taken from libsolidity/interface/OptimiserSettings.h) but with the
                 # full inliner step removed
-                solc0_8_26_to_0_8_29 = ("dhfoDgvulfnTUtnIfxa[r]EscLMVcul[j]Trpeulxa[r]cLCTUca[r]LSsTFOtfDnca[r]" +
+                solc0_8_26_to_0_8_30 = ("dhfoDgvulfnTUtnIfxa[r]EscLMVcul[j]Trpeulxa[r]cLCTUca[r]LSsTFOtfDnca[r]" +
                                         "IulcscCTUtx[scCTUt]TOntnfDIuljmul[jul]VcTOculjmul")
                 solc0_8_13_to_0_8_25 = "dhfoDgvulfnTUtnIf[xa[r]EscLMcCTUtTOntnfDIulLculVcul[j]T" + \
                                        "peulxa[rul]xa[r]cLgvifCTUca[r]LSsTFOtfDnca[r]Iulc]jmul[jul]VcTOculjmul"
@@ -1447,8 +1447,8 @@ class CertoraBuildGenerator:
                     yul_optimizer_steps = solc0_8_12
                 elif minor == 8 and 13 <= patch <= 25:
                     yul_optimizer_steps = solc0_8_13_to_0_8_25
-                elif minor == 8 and 26 <= patch <= 29:
-                    yul_optimizer_steps = solc0_8_26_to_0_8_29
+                elif minor == 8 and 26 <= patch <= 30:
+                    yul_optimizer_steps = solc0_8_26_to_0_8_30
                 assert yul_optimizer_steps is not None, \
                     'Yul Optimizer steps missing for requested Solidity version. Please contact Certora team.'
 

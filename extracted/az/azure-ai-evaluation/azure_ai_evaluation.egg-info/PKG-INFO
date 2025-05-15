@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: azure-ai-evaluation
-Version: 1.6.0
+Version: 1.7.0
 Summary: Microsoft Azure Evaluation Library for Python
 Home-page: https://github.com/Azure/azure-sdk-for-python
 Author: Microsoft Corporation
@@ -30,10 +30,11 @@ Requires-Dist: nltk>=3.9.1
 Requires-Dist: azure-storage-blob>=12.10.0
 Requires-Dist: httpx>=0.25.1
 Requires-Dist: pandas<3.0.0,>=2.1.2
-Requires-Dist: openai>=1.73.0
+Requires-Dist: openai>=1.78.0
 Requires-Dist: ruamel.yaml<1.0.0,>=0.17.10
 Requires-Dist: msrest>=0.6.21
 Requires-Dist: Jinja2>=3.1.6
+Requires-Dist: aiohttp>=3.0
 Provides-Extra: redteam
 Requires-Dist: pyrit==0.8.1; extra == "redteam"
 
@@ -115,12 +116,22 @@ result = relevance_evaluator(
     response="The capital of Japan is Tokyo."
 )
 
-# AI assisted safety evaluator
+# There are two ways to provide Azure AI Project.
+# Option #1 : Using Azure AI Project Details 
 azure_ai_project = {
     "subscription_id": "<subscription_id>",
     "resource_group_name": "<resource_group_name>",
     "project_name": "<project_name>",
 }
+
+violence_evaluator = ViolenceEvaluator(azure_ai_project)
+result = violence_evaluator(
+    query="What is the capital of France?",
+    response="Paris."
+)
+
+# Option # 2 : Using Azure AI Project Url 
+azure_ai_project = "https://{resource_name}.services.ai.azure.com/api/projects/{project_name}"
 
 violence_evaluator = ViolenceEvaluator(azure_ai_project)
 result = violence_evaluator(
@@ -272,11 +283,18 @@ with open("simulator_output.jsonl", "w") as f:
 ```python
 from azure.ai.evaluation.simulator import AdversarialSimulator, AdversarialScenario
 from azure.identity import DefaultAzureCredential
+
+# There are two ways to provide Azure AI Project.
+# Option #1 : Using Azure AI Project 
 azure_ai_project = {
     "subscription_id": <subscription_id>,
     "resource_group_name": <resource_group_name>,
     "project_name": <project_name>
 }
+
+# Option #2 : Using Azure AI Project Url 
+azure_ai_project = "https://{resource_name}.services.ai.azure.com/api/projects/{project_name}"
+
 scenario = AdversarialScenario.ADVERSARIAL_QA
 simulator = AdversarialSimulator(azure_ai_project=azure_ai_project, credential=DefaultAzureCredential())
 
@@ -381,6 +399,11 @@ This project has adopted the [Microsoft Open Source Code of Conduct][code_of_con
 
 
 # Release History
+
+## 1.7.0 (2025-05-12)
+
+### Bugs Fixed
+- azure-ai-evaluation failed with module not found [#40992](https://github.com/Azure/azure-sdk-for-python/issues/40992)
 
 ## 1.6.0 (2025-05-07)
 

@@ -10,12 +10,10 @@ from autoray import do, to_numpy
 from ..core import eye, kron, qarray
 from ..utils import (
     ExponentialGeometricRollingDiffMean,
-    default_to_neutral_style,
     ensure_dict,
 )
-from ..utils import (
-    progbar as Progbar,
-)
+from ..utils import progbar as Progbar
+from ..utils_plot import default_to_neutral_style
 from .drawing import get_colors, get_positions
 from .tensor_core import Tensor
 
@@ -261,7 +259,7 @@ class LocalHamGen:
                     range(ndim_G // 2, ndim_G),
                 )
 
-            U = do("linalg.expm", G * x)
+            U = do("scipy.linalg.expm", G * x)
 
             if need_to_reshape:
                 U = do("reshape", U, shape_orig)

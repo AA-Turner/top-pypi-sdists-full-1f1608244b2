@@ -44,10 +44,13 @@ pub enum ConstraintStrategy {
 /// Optimizer used to optimize the infill criteria
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum InfillOptimizer {
-    /// SLSQP optimizer (gradient from finite differences)
+    /// SLSQP optimizer (gradient based)
     Slsqp,
     /// Cobyla optimizer (gradient free)
     Cobyla,
+    /// GBNM optimizer (gradient free but do not handle constraints)
+    /// Use with constrained infill criterion in presence of constraints
+    Gbnm,
 }
 
 /// Strategy to choose several points at each iteration
@@ -156,6 +159,9 @@ pub trait SurrogateBuilder: Clone + Serialize + Sync {
 
     /// Sets the hyperparameters tuning strategy
     fn set_theta_tunings(&mut self, theta_tunings: &[ThetaTuning<f64>]);
+
+    /// Set likelihood optimization parameters
+    fn set_optim_params(&mut self, n_start: usize, max_eval: usize);
 
     /// Train the surrogate with given training dataset (x, y)
     fn train(

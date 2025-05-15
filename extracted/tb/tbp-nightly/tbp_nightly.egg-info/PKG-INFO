@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: tbp-nightly
-Version: 2.20.4a20250513
+Version: 2.20.4a20250514
 Summary: Profile Tensorboard Plugin
 Home-page: https://github.com/openxla/xprof
 Author: Google Inc.

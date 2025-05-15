@@ -79,6 +79,7 @@ def linear_to_lora_layers(
         keys = set(keys)
     elif model.model_type in [
         "mistral",
+        "mistral3",
         "llama",
         "phi",
         "mixtral",
@@ -106,6 +107,7 @@ def linear_to_lora_layers(
         "olmoe",
         "internlm3",
         "glm4",
+        "mimo",
     ]:
         keys = set(["self_attn.q_proj", "self_attn.v_proj"])
         if model.model_type in ["mixtral", "phimoe"]:

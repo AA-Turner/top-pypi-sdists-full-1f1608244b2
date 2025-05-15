@@ -1,3 +1,4 @@
+from contextlib import suppress
 from typing import Any
 
 from langchain_core.language_models import BaseChatModel
@@ -6,7 +7,7 @@ from langchain_core.messages.base import BaseMessage
 from langchain_core.output_parsers import PydanticOutputParser, StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 type Prompt = str | list[BaseMessage] | BaseMessage
 
@@ -35,17 +36,18 @@ def run_llm(
     extra_tools: list[dict[str, str]] | None = None,
     query: dict[str, Any] | None = None,
     **llm_kwargs,
-) -> dict[str, Any] | BaseModel:
+) -> tuple[BaseModel | None, BaseMessage]:
     llm = chat_model(model=chat_model_name, max_tokens=max_tokens, **llm_kwargs)  # type: ignore
     tools = []
     if not query:
         query = {}
-    if output_model:
-        tools.append(output_model)
+
     if extra_tools:
         tools.extend(extra_tools)
+    if output_model:
+        tools.append(output_model)
     if tools:
-        llm.bind_tools(tools)
+        llm = llm.bind_tools(tools)
 
     # Set up a parser
     if output_model:
@@ -54,10 +56,14 @@ def run_llm(
         parser = StrOutputParser()
     try:
         format_instructions = parser.get_format_instructions()
-    except NotImplementedError():
+    except NotImplementedError:
         format_instructions = None
     chat_prompt_template = _convert_prompt_to_chat_prompt_template(prompt, format_instructions=format_instructions)
-    chain = chat_prompt_template | llm | parser
-    # structured_model = model.with_structured_output(output_model, method="function_calling")
+
+    chain = chat_prompt_template | llm
+
     response = chain.invoke(query)  # type: ignore
-    return response
+    if output_model:
+        with suppress(ValidationError, IndexError):
+            return output_model.model_validate(response.tool_calls[0]["args"]), response
+    return None, response

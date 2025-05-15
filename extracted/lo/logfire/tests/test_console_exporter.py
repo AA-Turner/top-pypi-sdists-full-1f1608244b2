@@ -1,9 +1,12 @@
 # pyright: reportPrivateUsage=false
 from __future__ import annotations
 
+import decimal
 import io
 import sys
+from datetime import datetime
 from typing import Any
+from unittest import mock
 
 import pytest
 from dirty_equals import IsStr
@@ -912,5 +915,47 @@ def test_console_otel_logs(capsys: pytest.CaptureFixture[str]):
             '  msg',
             # Non-event logs don't get the parent span context by default, so no indentation for this line.
             "{'key': 'value'}",
+        ]
+    )
+
+
+def test_truncated_json(capsys: pytest.CaptureFixture[str]) -> None:
+    with mock.patch.dict('os.environ', {'OTEL_ATTRIBUTE_VALUE_LENGTH_LIMIT': '70'}):
+        logfire.configure(
+            send_to_logfire=False,
+            console=ConsoleOptions(verbose=True, colors='never', include_timestamps=False),
+        )
+
+        logfire.info('hi', x=[1] * 100)
+
+        assert capsys.readouterr().out.splitlines() == snapshot(
+            [
+                'hi',
+                IsStr(),
+                "│ x='[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1'",
+            ]
+        )
+
+
+def test_other_json_schema_types(capsys: pytest.CaptureFixture[str]) -> None:
+    logfire.configure(
+        send_to_logfire=False,
+        console=ConsoleOptions(verbose=True, colors='never', include_timestamps=False),
+    )
+
+    logfire.info(
+        'hi',
+        d=datetime(2020, 12, 31, 12, 34, 56),
+        x=None,
+        v=decimal.Decimal('1.0'),
+    )
+
+    assert capsys.readouterr().out.splitlines() == snapshot(
+        [
+            'hi',
+            IsStr(),
+            '│ d=2020-12-31T12:34:56',
+            '│ x=None',
+            '│ v=1.0',
         ]
     )

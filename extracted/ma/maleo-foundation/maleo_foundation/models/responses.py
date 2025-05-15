@@ -30,6 +30,11 @@ class BaseResponses:
         message:str = "Forbidden Request"
         description:str = "You are forbidden from requesting this resource"
 
+    class MethodNotAllowed(Fail):
+        code:str = "MAL-MTA-002"
+        message:str = "Method Not Allowed"
+        description:str = "Method not allowed for requesting this resource"
+
     class ValidationError(Fail):
         code:str = "MAL-VLD-001"
         message:str = "Validation Error"
@@ -99,6 +104,10 @@ class BaseResponses:
         status.HTTP_404_NOT_FOUND: {
             "description": "Not Found Response",
             "model": NotFound
+        },
+        status.HTTP_405_METHOD_NOT_ALLOWED: {
+            "description": "Method Not Allowed Response",
+            "model": MethodNotAllowed
         },
         status.HTTP_422_UNPROCESSABLE_ENTITY: {
             "description": "Validation Error Response",

@@ -37,7 +37,7 @@ from eventsourcing.persistence import (
     Tracking,
     TrackingRecorder,
 )
-from eventsourcing.utils import Environment, resolve_topic, retry, strtobool
+from eventsourcing.utils import Environment, EnvType, resolve_topic, retry, strtobool
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -46,8 +46,8 @@ if TYPE_CHECKING:
     from psycopg.abc import Query
     from typing_extensions import Self
 
-logging.getLogger("psycopg.pool").setLevel(logging.CRITICAL)
-logging.getLogger("psycopg").setLevel(logging.CRITICAL)
+logging.getLogger("psycopg.pool").setLevel(logging.ERROR)
+logging.getLogger("psycopg").setLevel(logging.ERROR)
 
 # Copy of "private" psycopg.errors._NO_TRACEBACK (in case it changes)
 # From psycopg: "Don't show a complete traceback upon raising these exception.
@@ -83,16 +83,16 @@ class PostgresDatastore:
         user: str,
         password: str,
         *,
-        connect_timeout: int = 30,
-        idle_in_transaction_session_timeout: int = 0,
-        pool_size: int = 2,
-        max_overflow: int = 2,
+        connect_timeout: float = 5.0,
+        idle_in_transaction_session_timeout: float = 0,
+        pool_size: int = 1,
+        max_overflow: int = 0,
         max_waiting: int = 0,
         conn_max_age: float = 60 * 60.0,
         pre_ping: bool = False,
         lock_timeout: int = 0,
         schema: str = "",
-        pool_open_timeout: int | None = None,
+        pool_open_timeout: float | None = None,
         get_password_func: Callable[[], str] | None = None,
         single_row_tracking: bool = True,
     ):
@@ -126,8 +126,8 @@ class PostgresDatastore:
         self.schema = schema.strip() or "public"
 
     def after_connect_func(self) -> Callable[[Connection[Any]], None]:
-        statement = SQL("SET idle_in_transaction_session_timeout = '{0}s'").format(
-            self.idle_in_transaction_session_timeout
+        statement = SQL("SET idle_in_transaction_session_timeout = '{0}ms'").format(
+            int(self.idle_in_transaction_session_timeout * 1000)
         )
 
         def after_connect(conn: Connection[DictRow]) -> None:
@@ -271,7 +271,7 @@ class PostgresAggregateRecorder(PostgresRecorder, AggregateRecorder):
 
     @retry((InterfaceError, OperationalError), max_attempts=10, wait=0.2)
     def insert_events(
-        self, stored_events: list[StoredEvent], **kwargs: Any
+        self, stored_events: Sequence[StoredEvent], **kwargs: Any
     ) -> Sequence[int] | None:
         exc: Exception | None = None
         notification_ids: Sequence[int] | None = None
@@ -302,7 +302,7 @@ class PostgresAggregateRecorder(PostgresRecorder, AggregateRecorder):
     def _insert_events(
         self,
         curs: Cursor[DictRow],
-        stored_events: list[StoredEvent],
+        stored_events: Sequence[StoredEvent],
         **_: Any,
     ) -> None:
         pass
@@ -310,7 +310,7 @@ class PostgresAggregateRecorder(PostgresRecorder, AggregateRecorder):
     def _insert_stored_events(
         self,
         curs: Cursor[DictRow],
-        stored_events: list[StoredEvent],
+        stored_events: Sequence[StoredEvent],
         **_: Any,
     ) -> None:
         # Only do something if there is something to do.
@@ -343,7 +343,7 @@ class PostgresAggregateRecorder(PostgresRecorder, AggregateRecorder):
     def _fetch_ids_after_insert_events(
         self,
         curs: Cursor[DictRow],
-        stored_events: list[StoredEvent],
+        stored_events: Sequence[StoredEvent],
         **kwargs: Any,
     ) -> Sequence[int] | None:
         return None
@@ -351,13 +351,13 @@ class PostgresAggregateRecorder(PostgresRecorder, AggregateRecorder):
     @retry((InterfaceError, OperationalError), max_attempts=10, wait=0.2)
     def select_events(
         self,
-        originator_id: UUID,
+        originator_id: UUID | str,
         *,
         gt: int | None = None,
         lte: int | None = None,
         desc: bool = False,
         limit: int | None = None,
-    ) -> list[StoredEvent]:
+    ) -> Sequence[StoredEvent]:
         statement = self.select_events_statement
         params: list[Any] = [originator_id]
         if gt is not None:
@@ -451,7 +451,7 @@ class PostgresApplicationRecorder(PostgresAggregateRecorder, ApplicationRecorder
         topics: Sequence[str] = (),
         *,
         inclusive_of_start: bool = True,
-    ) -> list[Notification]:
+    ) -> Sequence[Notification]:
         """Returns a list of event notifications
         from 'start', limited by 'limit'.
         """
@@ -548,7 +548,7 @@ class PostgresApplicationRecorder(PostgresAggregateRecorder, ApplicationRecorder
     def _fetch_ids_after_insert_events(
         self,
         curs: Cursor[DictRow],
-        stored_events: list[StoredEvent],
+        stored_events: Sequence[StoredEvent],
         **kwargs: Any,
     ) -> Sequence[int] | None:
         notification_ids: list[int] = []
@@ -845,7 +845,7 @@ class PostgresProcessRecorder(
     def _insert_events(
         self,
         curs: Cursor[DictRow],
-        stored_events: list[StoredEvent],
+        stored_events: Sequence[StoredEvent],
         **kwargs: Any,
     ) -> None:
         tracking: Tracking | None = kwargs.get("tracking")
@@ -880,7 +880,7 @@ class PostgresFactory(InfrastructureFactory[PostgresTrackingRecorder]):
     tracking_recorder_class = PostgresTrackingRecorder
     process_recorder_class = PostgresProcessRecorder
 
-    def __init__(self, env: Environment):
+    def __init__(self, env: Environment | EnvType | None):
         super().__init__(env)
         dbname = self.env.get(self.POSTGRES_DBNAME)
         if dbname is None:

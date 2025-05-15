@@ -16,7 +16,15 @@ from maleo_foundation.models.transfers.parameters.token import MaleoFoundationTo
 from maleo_foundation.managers.db import DatabaseConfigurations, DatabaseManager
 from maleo_foundation.managers.client.google.secret import GoogleSecretManager
 from maleo_foundation.managers.client.google.storage import GoogleCloudStorage
-from maleo_foundation.managers.middleware import MiddlewareConfigurations, BaseMiddlewareConfigurations, CORSMiddlewareConfigurations, GeneralMiddlewareConfigurations, MiddlewareLoggers, MiddlewareManager
+from maleo_foundation.managers.middleware import (
+    MiddlewareConfigurations,
+    BaseMiddlewareConfigurations,
+    CORSMiddlewareConfigurations,
+    GeneralMiddlewareConfigurations,
+    MiddlewareLoggers,
+    MiddlewareManager
+)
+from maleo_foundation.types import BaseTypes
 from maleo_foundation.utils.exceptions import BaseExceptions
 from maleo_foundation.utils.loaders.yaml import YAMLLoader
 from maleo_foundation.utils.logging import SimpleConfig, ServiceLogger, MiddlewareLogger
@@ -30,6 +38,7 @@ class Settings(BaseSettings):
     RUNTIME_CONFIGURATIONS_PATH:str = Field("configs/runtime.yaml", description="Service's runtime configurations path")
 
 class MaleoCredentials(BaseModel):
+    id:int = Field(..., description="ID")
     username:str = Field(..., description="Username")
     email:str = Field(..., description="Email")
     password:str = Field(..., description="Password")
@@ -167,13 +176,15 @@ class ServiceManager:
         return self._cloud_storage
 
     def _load_maleo_credentials(self) -> None:
+        environment = BaseEnums.EnvironmentType.STAGING if self._settings.ENVIRONMENT == BaseEnums.EnvironmentType.LOCAL else self._settings.ENVIRONMENT
+        id = int(self._secret_manager.get(f"maleo-service-account-id-{environment}"))
         email = self._secret_manager.get("maleo-service-account-email")
         username = self._secret_manager.get("maleo-service-account-username")
         password = self._secret_manager.get("maleo-service-account-password")
-        self._maleo_credentials = MaleoCredentials(username=username, email=email, password=password)
+        self._maleo_credentials = MaleoCredentials(id=id, username=username, email=email, password=password)
 
     @property
-    def maleo_credentials(self) -> Credentials:
+    def maleo_credentials(self) -> MaleoCredentials:
         return self._maleo_credentials
 
     def _load_configs(self) -> None:
@@ -246,25 +257,22 @@ class ServiceManager:
     def foundation(self) -> MaleoFoundationClientManager:
         return self._foundation
 
-    async def generate_token(self) -> str:
+    async def generate_token(self) -> BaseTypes.OptionalString:
         raise NotImplementedError()
 
     @property
-    def token(self) -> str:
+    def token(self) -> BaseTypes.OptionalString:
         payload = MaleoFoundationTokenGeneralTransfers.BaseEncodePayload(
-            iss="https://stg-maleo.nexmedis.com",
-            sub=0,
+            iss=None,
+            sub=str(self._maleo_credentials.id),
             sr="administrator",
-            u_i=0,
             u_u=self._maleo_credentials.username,
             u_e=self._maleo_credentials.email,
             u_ut="service"
         )
         parameters = MaleoFoundationTokenParametersTransfers.Encode(key=self._keys.private, password=self._keys.password, payload=payload)
         result = self._foundation.services.token.encode(parameters=parameters)
-        if not result.success:
-            raise RuntimeError("Failed encoding payload into token")
-        return result.data.token
+        return result.data.token if result.success else None
 
     def create_app(self, router:APIRouter, lifespan:Optional[Lifespan[AppType]] = None) -> FastAPI:
         self._loggers.application.info("Creating FastAPI application")

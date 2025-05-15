@@ -542,6 +542,7 @@ MAX_TYPESIZE = BLOSC2_MAXTYPESIZE
 MAX_BUFFERSIZE = BLOSC2_MAX_BUFFERSIZE
 MAX_BLOCKSIZE = BLOSC2_MAXBLOCKSIZE
 MAX_OVERHEAD = BLOSC2_MAX_OVERHEAD
+MAX_DIM = B2ND_MAX_DIM
 VERSION_STRING = (<char*>BLOSC2_VERSION_STRING).decode("utf-8")
 VERSION_DATE = (<char*>BLOSC2_VERSION_DATE).decode("utf-8")
 MIN_HEADER_LENGTH = BLOSC_MIN_HEADER_LENGTH
@@ -2391,7 +2392,7 @@ cdef class NDArray:
         str_dtype = bytes_dtype.decode("utf-8")
         try:
             dtype = np.dtype(str_dtype)
-        except TypeError:
+        except (ValueError, TypeError):
             dtype = np.dtype(ast.literal_eval(str_dtype))
         self._dtype = dtype
         return dtype

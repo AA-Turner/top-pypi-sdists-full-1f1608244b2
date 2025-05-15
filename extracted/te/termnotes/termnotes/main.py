@@ -368,10 +368,10 @@ def read_note(folder, name):
       modified_line = f"[bold red]- [/bold red]{clean_line.lstrip('-[]').strip()}"
       modified_lines.append(modified_line)
       words.extend(clean_line.lstrip('-[]').strip().split())
-    elif clean_line.startswith("-[+]"):
-      modified_line = f"[bold green]+ [/bold green]{clean_line.lstrip('-[+]').strip()}"
+    elif clean_line.startswith("-[X]"):
+      modified_line = f"[bold green]+ [/bold green]{clean_line.lstrip('-[X]').strip()}"
       modified_lines.append(modified_line)
-      words.extend(clean_line.lstrip('-[+]').strip().split())
+      words.extend(clean_line.lstrip('-[X]').strip().split())
     elif clean_line.startswith("- "):
       modified_line = f"{" " * 4}• {clean_line.lstrip('- ').strip()}"
       modified_lines.append(modified_line)
@@ -795,16 +795,16 @@ def run():
       search(name)
 
     elif choice == "help":
-        console.print("\n[bold blue]Commands:[/bold blue]\n\no name - open a folder/note\nnf name - create a new folder\nnn name - create a new note\nd name - delete a folder/note\nl - list folders/notes\nb - back to folders\ne name - edit folder/note\ns name - search\ndn - creates a daily note in the 'dailys' folder\nhelp - displays commands\ninst - more specific instructions\nq - quit\nmd - markdown syntax\nmv folder/note destination - moves a note to the destination folder\n")
+        console.print("\n[bold blue]Commands:[/bold blue]\n\no name - open a folder/note\nnf name - create a new folder\nnn name - create a new note\nd name - delete a folder/note\nl - list folders/notes\nb - back to folders\ne name - edit folder/note\ns name - search\ndn - creates a daily note in the 'dailys' folder\nhelp - displays commands\ninst - more specific instructions\nq - quit\nmd - markdown syntax\nq - quit\ntab - autocomplete\nmv folder/note destination - moves a note to the destination folder\n")
 
     elif choice == "inst":
-        console.print("\n[bold blue]Instructions:[/bold blue]\n\n[bold]o name[/bold] - if you're in the root folder, it opens a folder, if you're in a folder, it opens a note\n[bold]nf name[/bold] - creates a folder with the given name into the root folder\n[bold]nn name[/bold] - create a new note with the given name. Must be inside of a folder!\n[bold]dn[/bold] - creates a new note with the current dater. Adds it to the 'dailys' folder, if not created then it will create it.\n[bold]d name[/bold] - if you're in the root folder, it deletes a folder, if you're in a folder, it deletes a note\n[bold]l[/bold] - if you're in the root folder, it lists all folders, if you're in a folder, it lists all notes\n[bold]b[/bold] - takes you back to the root folder\n[bold]e name[/bold] - if you're in the root folder, it allows you to edit a folder name, if you're in a folder, it allows you to edit the note name and its contents\n[bold]s name[/bold] - search for folder or note. If found, you can open the folder in which it was found (search is case sensitive)\n([bold]f[/bold]) - type of (folder)\n([bold]n[/bold]) - type of (note)\n[bold]help[/bold] - displays commands\n[bold]inst[/bold] - more specific instructions\n[bold]q[/bold] - quits the application\n[bold]md[/bold] - markdown syntax\n[bold]mv folder/note destination[/bold] - moves a note to the destination folder. [bold]Does not work for names with spaces[/bold]\n")
+        console.print("\n[bold blue]Instructions:[/bold blue]\n\n[bold]o name[/bold] - if you're in the root folder, it opens a folder, if you're in a folder, it opens a note\n[bold]nf name[/bold] - creates a folder with the given name into the root folder\n[bold]nn name[/bold] - create a new note with the given name. Must be inside of a folder!\n[bold]dn[/bold] - creates a new note with the current dater. Adds it to the 'dailys' folder, if not created then it will create it.\n[bold]d name[/bold] - if you're in the root folder, it deletes a folder, if you're in a folder, it deletes a note\n[bold]l[/bold] - if you're in the root folder, it lists all folders, if you're in a folder, it lists all notes\n[bold]b[/bold] - takes you back to the root folder\n[bold]e name[/bold] - if you're in the root folder, it allows you to edit a folder name, if you're in a folder, it allows you to edit the note name and its contents\n[bold]s name[/bold] - search for folder or note. If found, you can open the folder in which it was found (search is case sensitive)\n([bold]f[/bold]) - type of (folder)\n([bold]n[/bold]) - type of (note)\n[bold]help[/bold] - displays commands\n[bold]inst[/bold] - more specific instructions\n[bold]q[/bold] - quits the application\n[bold]md[/bold] - markdown syntax\n[bold]mv folder/note destination[/bold] - moves a note to the destination folder. [bold]Does not work for names with spaces[/bold]\n[bold]tab[/bold] - autocomplete\n")
 
     elif choice == "q":
       break
     
     elif choice == "md":
-      console.print("\n[bold blue]Markdown:[/bold blue]\n\n[bold]-[][/bold] - uncomplete todo\n[bold]-[+][/bold] - complete todo\n[bold]-[/bold] - list item\n[bold]#[/bold] - header\n")
+      console.print("\n[bold blue]Markdown:[/bold blue]\n\n[bold]-[][/bold] - uncomplete todo\n[bold]-[X][/bold] - complete todo\n[bold]-[/bold] - list item\n[bold]#[/bold] - header\n")
 
     elif choice == "dn":
       if "dailys" not in [f for f in os.listdir(BASE_DIR) if os.path.isdir(os.path.join(BASE_DIR, f))]:

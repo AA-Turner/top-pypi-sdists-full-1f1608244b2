@@ -16,6 +16,7 @@ class SelectorInputMultiValueUiBlockCreate:
     _id: str
     _type: Union[Unset, SelectorInputMultiValueUiBlockType] = UNSET
     _options: Union[Unset, List[str]] = UNSET
+    _placeholder: Union[Unset, None, str] = UNSET
     _label: Union[Unset, None, str] = UNSET
     _required: Union[Unset, None, bool] = UNSET
     _value: Union[Unset, None, List[str]] = UNSET
@@ -27,6 +28,7 @@ class SelectorInputMultiValueUiBlockCreate:
         fields.append("id={}".format(repr(self._id)))
         fields.append("type={}".format(repr(self._type)))
         fields.append("options={}".format(repr(self._options)))
+        fields.append("placeholder={}".format(repr(self._placeholder)))
         fields.append("label={}".format(repr(self._label)))
         fields.append("required={}".format(repr(self._required)))
         fields.append("value={}".format(repr(self._value)))
@@ -44,6 +46,7 @@ class SelectorInputMultiValueUiBlockCreate:
         if not isinstance(self._options, Unset):
             options = self._options
 
+        placeholder = self._placeholder
         label = self._label
         required = self._required
         value: Union[Unset, None, List[Any]] = UNSET
@@ -64,6 +67,8 @@ class SelectorInputMultiValueUiBlockCreate:
             field_dict["type"] = type
         if options is not UNSET:
             field_dict["options"] = options
+        if placeholder is not UNSET:
+            field_dict["placeholder"] = placeholder
         if label is not UNSET:
             field_dict["label"] = label
         if required is not UNSET:
@@ -120,6 +125,17 @@ class SelectorInputMultiValueUiBlockCreate:
                 raise
             options = cast(Union[Unset, List[str]], UNSET)
 
+        def get_placeholder() -> Union[Unset, None, str]:
+            placeholder = d.pop("placeholder")
+            return placeholder
+
+        try:
+            placeholder = get_placeholder()
+        except KeyError:
+            if strict:
+                raise
+            placeholder = cast(Union[Unset, None, str], UNSET)
+
         def get_label() -> Union[Unset, None, str]:
             label = d.pop("label")
             return label
@@ -169,6 +185,7 @@ class SelectorInputMultiValueUiBlockCreate:
             id=id,
             type=type,
             options=options,
+            placeholder=placeholder,
             label=label,
             required=required,
             value=value,
@@ -234,6 +251,20 @@ class SelectorInputMultiValueUiBlockCreate:
     @options.deleter
     def options(self) -> None:
         self._options = UNSET
+
+    @property
+    def placeholder(self) -> Optional[str]:
+        if isinstance(self._placeholder, Unset):
+            raise NotPresentError(self, "placeholder")
+        return self._placeholder
+
+    @placeholder.setter
+    def placeholder(self, value: Optional[str]) -> None:
+        self._placeholder = value
+
+    @placeholder.deleter
+    def placeholder(self) -> None:
+        self._placeholder = UNSET
 
     @property
     def label(self) -> Optional[str]:

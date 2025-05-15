@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: flask-swagger-ui
-Version: 4.11.1
+Version: 5.21.0
 Summary: Swagger UI blueprint for Flask
 Home-page: https://github.com/sveint/flask-swagger-ui
 Author: Svein Tore Koksrud Seljebotn
@@ -17,12 +17,26 @@ Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.6
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: flask
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: summary
 
 # flask-swagger-ui
 
 Simple Flask blueprint for adding [Swagger UI](https://github.com/swagger-api/swagger-ui) to your flask application.
 
-Included Swagger UI version: 4.11.1.
+Included Swagger UI version: 5.21.0.
+
+**This project is not actively maintained, but might receive occasional updates. Please fork it if you need a newer version.**
 
 ## Installation
 
@@ -70,7 +84,7 @@ app.run()
 ## Configuration
 
 The blueprint supports overloading all Swagger UI configuration options that can be JSON serialized.
-See https://github.com/swagger-api/swagger-ui#parameters for options.
+See https://github.com/swagger-api/swagger-ui/blob/master/docs/usage/configuration.md#parameters for options.
 
 Plugins and function parameters are not supported at this time.
 

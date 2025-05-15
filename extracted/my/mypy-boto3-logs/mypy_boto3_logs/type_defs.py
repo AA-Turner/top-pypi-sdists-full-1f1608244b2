@@ -211,6 +211,8 @@ __all__ = (
     "ListLogGroupsForQueryRequestPaginateTypeDef",
     "ListLogGroupsForQueryRequestTypeDef",
     "ListLogGroupsForQueryResponseTypeDef",
+    "ListLogGroupsRequestTypeDef",
+    "ListLogGroupsResponseTypeDef",
     "ListTagsForResourceRequestTypeDef",
     "ListTagsForResourceResponseTypeDef",
     "ListTagsLogGroupRequestTypeDef",
@@ -222,6 +224,7 @@ __all__ = (
     "LiveTailSessionUpdateTypeDef",
     "LogEventTypeDef",
     "LogGroupFieldTypeDef",
+    "LogGroupSummaryTypeDef",
     "LogGroupTypeDef",
     "LogStreamTypeDef",
     "LowerCaseStringOutputTypeDef",
@@ -685,6 +688,7 @@ class DescribeLogGroupsRequestTypeDef(TypedDict):
     limit: NotRequired[int]
     includeLinkedAccounts: NotRequired[bool]
     logGroupClass: NotRequired[LogGroupClassType]
+    logGroupIdentifiers: NotRequired[Sequence[str]]
 
 
 class LogGroupTypeDef(TypedDict):
@@ -971,6 +975,21 @@ class ListLogGroupsForQueryRequestTypeDef(TypedDict):
     queryId: str
     nextToken: NotRequired[str]
     maxResults: NotRequired[int]
+
+
+class ListLogGroupsRequestTypeDef(TypedDict):
+    logGroupNamePattern: NotRequired[str]
+    logGroupClass: NotRequired[LogGroupClassType]
+    includeLinkedAccounts: NotRequired[bool]
+    accountIdentifiers: NotRequired[Sequence[str]]
+    nextToken: NotRequired[str]
+    limit: NotRequired[int]
+
+
+class LogGroupSummaryTypeDef(TypedDict):
+    logGroupName: NotRequired[str]
+    logGroupArn: NotRequired[str]
+    logGroupClass: NotRequired[LogGroupClassType]
 
 
 class ListTagsForResourceRequestTypeDef(TypedDict):
@@ -1558,6 +1577,7 @@ class DescribeLogGroupsRequestPaginateTypeDef(TypedDict):
     logGroupNamePattern: NotRequired[str]
     includeLinkedAccounts: NotRequired[bool]
     logGroupClass: NotRequired[LogGroupClassType]
+    logGroupIdentifiers: NotRequired[Sequence[str]]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 
@@ -1758,6 +1778,12 @@ class PutLogEventsRequestTypeDef(TypedDict):
 class ListIntegrationsResponseTypeDef(TypedDict):
     integrationSummaries: List[IntegrationSummaryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
+
+
+class ListLogGroupsResponseTypeDef(TypedDict):
+    logGroups: List[LogGroupSummaryTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
 
 
 class LiveTailSessionUpdateTypeDef(TypedDict):

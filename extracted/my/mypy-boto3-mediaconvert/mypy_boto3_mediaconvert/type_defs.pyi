@@ -86,6 +86,7 @@ from .literals import (
     CaptionSourceByteRateLimitType,
     CaptionSourceConvertPaintOnToPopOnType,
     CaptionSourceTypeType,
+    CaptionSourceUpconvertSTLToTeletextType,
     ChromaPositionModeType,
     CmafClientCacheType,
     CmafCodecSpecificationType,
@@ -761,6 +762,7 @@ __all__ = (
     "VideoDescriptionOutputTypeDef",
     "VideoDescriptionTypeDef",
     "VideoDetailTypeDef",
+    "VideoOverlayCropTypeDef",
     "VideoOverlayInputClippingTypeDef",
     "VideoOverlayInputOutputTypeDef",
     "VideoOverlayInputTypeDef",
@@ -1828,6 +1830,13 @@ class Vp9SettingsTypeDef(TypedDict):
     QualityTuningLevel: NotRequired[Vp9QualityTuningLevelType]
     RateControlMode: NotRequired[Literal["VBR"]]
 
+class VideoOverlayCropTypeDef(TypedDict):
+    Height: NotRequired[int]
+    Unit: NotRequired[VideoOverlayUnitType]
+    Width: NotRequired[int]
+    X: NotRequired[int]
+    Y: NotRequired[int]
+
 class VideoOverlayInputClippingTypeDef(TypedDict):
     EndTimecode: NotRequired[str]
     StartTimecode: NotRequired[str]
@@ -2014,6 +2023,7 @@ class FileSourceSettingsTypeDef(TypedDict):
     SourceFile: NotRequired[str]
     TimeDelta: NotRequired[int]
     TimeDeltaUnits: NotRequired[FileSourceTimeDeltaUnitsType]
+    UpconvertSTLToTeletext: NotRequired[CaptionSourceUpconvertSTLToTeletextType]
 
 class ChannelMappingOutputTypeDef(TypedDict):
     OutputChannels: NotRequired[List[OutputChannelMappingOutputTypeDef]]
@@ -2788,6 +2798,7 @@ class DestinationSettingsTypeDef(TypedDict):
     S3Settings: NotRequired[S3DestinationSettingsTypeDef]
 
 class VideoOverlayOutputTypeDef(TypedDict):
+    Crop: NotRequired[VideoOverlayCropTypeDef]
     EndTimecode: NotRequired[str]
     InitialPosition: NotRequired[VideoOverlayPositionTypeDef]
     Input: NotRequired[VideoOverlayInputOutputTypeDef]
@@ -2796,6 +2807,7 @@ class VideoOverlayOutputTypeDef(TypedDict):
     Transitions: NotRequired[List[VideoOverlayTransitionTypeDef]]
 
 class VideoOverlayTypeDef(TypedDict):
+    Crop: NotRequired[VideoOverlayCropTypeDef]
     EndTimecode: NotRequired[str]
     InitialPosition: NotRequired[VideoOverlayPositionTypeDef]
     Input: NotRequired[VideoOverlayInputTypeDef]

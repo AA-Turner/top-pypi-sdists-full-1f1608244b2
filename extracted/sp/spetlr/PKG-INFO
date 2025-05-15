@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: spetlr
-Version: 14.3.25
+Version: 14.3.28
 Summary: A python ETL libRary (SPETLR) for Databricks powered by Apache SPark.
 Home-page: https://github.com/spetlr-org/spetlr
 Author: Spetlr.Org

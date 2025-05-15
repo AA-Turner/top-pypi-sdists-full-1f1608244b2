@@ -34,7 +34,7 @@ base_url = "https://chat.qwen.ai/api"
 from fake_useragent import UserAgent
 
 ua = UserAgent()
-cookie = "_gcl_au=1.1.1784604298.1740443944;xlly_s=1;isg=BNHREY3fUiqB6r5JMj56XbBv4NtrPkWwIxqsYLNmGhi8WvWs-YwlgDHw_S68i93o;ssxmod_itna2=iqGxRDuQqWqxgDUxeKYI5q=xBDeMDWK07DzxC5750CDmxjKidKDUiN0bFP=WEj=A0DDkYi+rebDG+eNbK+Wx03aKKp5D/ijo3qEN9C1DyEq+CpSWKry0Bfx4khh0iWP5=wYflEkDv5FNc=0OeAHPkhiPHZGzQtya2oP44PFWnxe7P4q+KCPQr7AwYBoAD4f4zfKGb9gz0Y9w8IywD871wFkhYQfIbODkHaAWqnOhnpAv5ucGctdXFF5pP3QaxNpa=BFWtb0OEaH2F3n6FVLGF57jiHDSFO0GaYlBMzFak07lYlGvuEyKSbENgXT=Y=ZUSmoZQtKn3SnjKfvO2Q2lfSnKOAvwo6LhDu7QRojcn64xfxDI3IUDSpSQbAc29c5LaLvGd5+A89Y0oTvgE3Yo/iDuYv67D5EbS7Dcid2QDr1Ko=L9BuEQNPEWRDK2lISAA3QUfiN9ef22Ie8jhifggQbQo4WxKmw42GxQt+e=y3aEQySbRtPXppvYALY7IEtyDHA5By4oeuZPdPxZZnAnB6lB7/yKdIYjp4naEAgA0gEDxbiG4nPBZIGoePVW4YeI7SOywCjwz7RIbQhGGOHmxYk4YD;acw_tc=364cd7fa3937f891464e5d5489be2d4483c02d92564368d25c7f3c79babb6b66;cna=KP9DIEqqyjUCATrw/+LjJV8F;SERVERCORSID=d9e2ccd165e2341396ecf2215ef69904|1741348489|1741348426;SERVERID=d9e2ccd165e2341396ecf2215ef69904|1741348489|1741348426;ssxmod_itna=iqGxRDuQqWqxgDUxeKYI5q=xBDeMDWK07DzxC5750CDmxjKidKDUiN0bFP=WEj=A0DDkYi+rmCDBL4qbDnqD80DQeDvYxk0I+aeKhDw3HF8YRw3gi00iR=r9jW=kIebftOZzO8V9YoD==hYDmeDUxD1GDDkgWeDxaPD5xDTDWeDGDD3t4DCCfYYD0RpiboIVxRhTABpDYPYPR4YDY56DAqEz4SpVaxXTDDzw4iaPf4vwDi8D7FRG0RpD7P6fmQDXaYDEmWmFk=Dv6Lh+QwI1/oYOT44c2toPO0KKPHPklixYYnDgWXe2q2/WD4WwOU5HzHtiYDG+e4rzRksD2DmAkGTCP+CmizaAtrDNsjYY0DZ7qLozAE5g75ZidqBzqxxKgxNisr0DLg14D;tfstk=gban2TDT-A9jiiwvpRuCD78JvBITJBgSO8L-e4HPbAk_J8IIel0zg-m-4MZLIYDZTUJraHRZZjHGOUS5VPcZwXrKYUkEqbDtZ3lEUb7ZEbGmUzKUrlTuG7adO4CIRWgSztBAkuVQO4GKaHgfMhoZG5JeUGnF-ASaMtBAkNKveXJFHJEXGQsiNAlEa0-FsflSG4lrU05iQbcX4pyrz1fiZbJezekE_VloN4kzU45g_AGo_bjxd2u87Oy34VqrOM4ttDD4TvVLTPJtYHNZIU8zSqME3wHMzUzit5I3Kq8FoArL4y3a8OJ-7SZTLf0crQcgm5uEt8_XR2P4_uo3rgdjFlVaDcq696Gg-S4oic7MQjm07y3QjtYx3lNzrcPCnnGT4SULqJB6zvE0_RmYWdLx7y238c0V4dKw0sqvPf5873tSYfGiH7xhDSTQvqXds1x4rDlsTRCGs3OqYfGiH1fM0OoE1XyO.;token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMxMGNiZGFmLTM3NTQtNDYxYy1hM2ZmLTllYzgwMDUzMjljOSIsImV4cCI6MTc0Mzk0MDQzNX0.CoeqvnyiM2uzcT-ZzpMcBbjqyhqkr6A7AMxWTAzcS2Y;x-ap=ap-southeast-1"
+cookie="_gcl_au=1.1.1784604298.1740443944; cna=KP9DIEqqyjUCATrw/+LjJV8F; _bl_uid=LXmp28z7dwezpmyejeXL9wh6U1Rb; cnaui=310cbdaf-3754-461c-a3ff-9ec8005329c9; aui=310cbdaf-3754-461c-a3ff-9ec8005329c9; x-ap=ap-southeast-1; sca=43897cb0; xlly_s=1; acw_tc=0a03e56417472095089155840e4e574acbd40c39a21ce666c960987382db60; token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMxMGNiZGFmLTM3NTQtNDYxYy1hM2ZmLTllYzgwMDUzMjljOSIsImV4cCI6MTc0OTgwMTUxN30.nbaFZ52NvV-4H4ADG67PAjBIjrfKg6rASaIXpGNzotc; x5sec=7b22733b32223a2237386636303338646236626336396135222c227466652d636c6f75643b32223a223330376232663533623638383863316362363164373062363764313730306434434c75626b634547454f4c52737055424d4b66326e6133362f2f2f2f2f77453d227d; SERVERID=4e5d49f8b8c4de74d3e582effa08efe1|1747210060|1747192080; atpsida=c71f340a491f3cce3e3eac74_1747210060_3; tfstk=gDVmWYm8i0tBFWI-e7GfKQDSk3WRqjGslldtXfnNU0o7MlBjX8ca8kDtQtwYqcmrWZwOlflyz2ikgI71c70r8koZ3KkZaUo-J-eAhA5zz2ZL6Ck4s8OgRPNAlfQjGrGs_MId9R4blfapfz5Lsblr7qftuxJqGbWc57xO96Ubu8oYIx1L64q7w0oZ_xkw43oSJVuabAuya0gs7nuwgaboV2x2QfoqaQuiRfoabf7uz0gi_VrZ_fkW_DVaN7SWLnccpRYQ4qDmYro4kyFPlYJbW0Aw_72oBD5KqCRaZq4Rnoceg6mzHRPxaSSyXbzQeouot1YirJ4rgqq1OIG48zyZn5X9RcwuzJHuFEQjrS43s2DPZ3unK7PxG8jH9Dy775DzlMvIyRzLMRqAVCoYKzrop7KJ9bP0mSkoTgkDUpS5pCgPW7J6CxuSrDeV61GDG-hhDabkdtMqPqIdrav6kxuSrDQlrpTZ34gAv; isg=BMDAlP-3vKe5UE86-2l73onAkUiSSaQTo_fIsTpTDltitWrf7l0Ho-HDzR11BVzr; ssxmod_itna=iqGxRDuQqWqxgDUxeKYI5q=xBDeMDWK07DzxC5750CDmxjKidKDUGWubFP=eODglD2PbK9lY5D/f0GeDZDGKQDqx0ob0KjhitD9ehDw3HW8YRw3gzBTox63aTDo4QY=0DOldLLnzLtbDnne+DibDBKDnx4DjpuFDeeaDCeDQxirDD4DAlYD0cg+GDDd7KOpO4YYYt2+74GWG7YdGDGCc4Gtp/OA747PZtxDBr3DaOA31t4DExGO3q4d74Gacf+RDlIhDm4bbzZcDCKX53RQkSoAGA=rqWyDmjarmCHP4OWxY0cM9ahxNQDHe4Ti0K7DH3+tB4HRrtz5894DGRrArQeOdqA4dnkhkCKfCm7q1xNwQtkxxZGdGhdk0QgGNg75ZGNeGdumoQBxNisZGxKDzegx4D; ssxmod_itna2=iqGxRDuQqWqxgDUxeKYI5q=xBDeMDWK07DzxC5750CDmxjKidKDUGWubFP=eODglD2PbK9lGeDAYZGDqD9i8TP4DFgo4f4yQB2DDlaPrasYl/GSIjQlFhxcYO=09GcBzhgnDC7qCFh8PPOGCYBKQQQG1aacPaCHPoKKxyoeaR7vQKSWFpxuOl2g1n1OPYWKwAO0qz6O49xEaEomH=l54na7UyhApqGkvamKQ083kWacqL3hpRSYmV=QURgeFqTpNTF2WOpcHomFGf2fk0ajtWc3xtdLkYBn1xhakW6DqtRHaqs9jqvAv746sxIwPfuBwU2KI7o6xYv7ezBP27oyPfg=Q0xrllEuaQZ6oOjEtf6rhP/aY4FxvlPq85qjokrYAabgAfPKIR7DVPRRChzO5Vr5qAwMYPnmpy1Auj6t329ovh=Iixqga2==KhK24C6egt9nqLWRyaeDZvx=ExD=OZPv7AWK39UikaIQ7oCgATKIXW3DOpaZ5KgvY4=Utyf6uYINC=oho6xzAipN4TEBzn1OEZPhok6+pXVjhvAOv/AtMgv4njQEPr9=QiDuTgaUM456FQhz69aKBAn=m6e10OgbDZGHIGMOXPfDEU6qoLtOYozdXj5ynI=Y9DRcyojI52PfY/RO/SGFqYUBPhpAbhGQkDy0cQq5UyNSaRt6j5DTBr1HOfpjhemqVhtmYsK80TQbMp3Hw9BerDL2ix+klsArI6=TxCEiEmN0K4YxGhQ+S0KGBDmKrG6BdCYGiDmBkl5tAYbFeDwleHTTWh4BWQwkRKCGmP4AWZemD8i7EAW5WG7DmGSi+Iy3/GwHkj35D4lGf47eejxkxKxuE0DaBG0KkiI1DY4k0DbOKA5dD7lOzpz6PkO4lPfuKieqGb+v8qxmqMiNmw/hQRDBgztPxYrYDD"
 
 thinking_budget_mapping = {
     "low": 1000,
@@ -76,7 +76,10 @@ async def create(request: CompletionRequest, token: Optional[str] = None):  # Ch
         api_key=token,
         default_headers={
             'User-Agent': ua.random,
-            'Cookie': cookie
+            'Cookie': cookie,
+            "bx-v": "2.5.28",
+            "bx-umidtoken": "T2gAeo1Mqj6q05L65Ro3Hjf9KHuOsB63ttVeMP_-13M2-R82AvHnHe-o9nAbz7J8Si4=",
+            "x-request-id": "08cb2785-53d2-4c6d-a24c-069cf0303d1a"
         }
     )
     # qwen结构
@@ -187,31 +190,6 @@ async def create(request: CompletionRequest, token: Optional[str] = None):  # Ch
 
         yield chat_completion
 
-        # if request.stream:
-    #     # stream_options = {"include_usage": True}
-    #     chunks = await client.chat.completions.create(**data)
-    #
-    #     idx = 0
-    #     async for chunk in chunks:
-    #         if not chunk.choices: continue
-    #
-    #         content = chunk.choices[0].delta.content or ""
-    #         if hasattr(chunk.choices[0].delta, "phase") and chunk.choices[0].delta.phase == "think":
-    #             chunk.choices[0].delta.content = ""
-    #             chunk.choices[0].delta.reasoning_content = content
-    #
-    #         yield chunk
-    #
-    #         idx += 1
-    #         if idx == request.max_tokens:
-    #             break
-    #
-    # else:
-    #     response = await client.chat.completions.create(**data)
-    #     if not isinstance(response, str):
-    #         logger.debug(response)
-    #         yield response.choices[0].message.content  # isinstance(response, str)
-
 
 if __name__ == '__main__':
     # [
@@ -239,7 +217,7 @@ if __name__ == '__main__':
     ]
 
     user_content = "1+1"
-    user_content = "/think 1+1"
+    # user_content = "/think 1+1"
 
     # user_content = [
     #     {
@@ -349,6 +327,8 @@ if __name__ == '__main__':
 
     )
     token = None
+
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMxMGNiZGFmLTM3NTQtNDYxYy1hM2ZmLTllYzgwMDUzMjljOSIsImV4cCI6MTc0ODQ3OTE0M30.oAIE1K0XA0YYqlxB8Su-u0UJbY_BBZa4_tvZpFJKxGY"
 
     # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEwNzY1N2Y1LTgxN2ItNDg5Yi1iNjk4LWFhZjAyM2EwZTE4MyIsImV4cCI6MTc0NjI5NTAwNH0.D1uJN44NHiEt6URce4upbHvs7v73_Vd0V1s3T_JzclI"
     arun(create(request, token))

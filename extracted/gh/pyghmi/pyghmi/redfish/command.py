@@ -522,10 +522,8 @@ class Command(object):
             raise exc.InvalidParameterValue(
                 "Unknown power state %s requested" % powerstate)
         powerstate = powerstates[powerstate]
-        result = self.wc.grab_json_response_with_status(
+        self._do_web_request(
             self.powerurl, {'ResetType': powerstate})
-        if result[1] < 200 or result[1] >= 300:
-            raise exc.PyghmiException(result[0])
         if wait and reqpowerstate in ('on', 'off', 'softoff', 'shutdown'):
             if reqpowerstate in ('softoff', 'shutdown'):
                 reqpowerstate = 'off'
@@ -846,6 +844,8 @@ class Command(object):
         self._do_web_request(url, {'ResetType': action})
 
     def set_identify(self, on=True, blink=None):
+        if hasattr(self.oem, 'set_identify'):
+            return self.oem.set_identify(on, blink)
         targurl = self.sysurl
         if not targurl:
             root = self._do_web_request('/redfish/v1')

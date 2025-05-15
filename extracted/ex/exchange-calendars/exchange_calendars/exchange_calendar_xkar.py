@@ -27,6 +27,7 @@ from .exchange_calendar import HolidayCalendar, ExchangeCalendar
 class XKARExchangeCalendar(ExchangeCalendar):
     """
     Exchange calendar for the Pakistan Stock Exchange (XKAR).
+    https://www.psx.com.pk/psx/exchange/general/calendar-holidays
 
     Frequently abbreviated as 'PSX'; not to be confused with the
     the NASDAQ OMX PSX exchange, whose market identifier code is 'XPSX'.
@@ -38,6 +39,7 @@ class XKARExchangeCalendar(ExchangeCalendar):
     - Kashmir Day (Feb 5)
     - Pakistan Day (Mar 23)
     - Labour Day (May 1)
+    - Youm-e-Takbeer (May 28; observed from 2024)
     - Juma-Tul-Wida (last Friday of Ramadan)
     - Eil-ul-Fitr (1st-3rd Shawwal)
     - Eid-ul-Azha (10th-11th Zil-Hajj)
@@ -45,9 +47,7 @@ class XKARExchangeCalendar(ExchangeCalendar):
     - Ashura (9th & 10th Muharram)
     - Eid Milad-un-Nabi (12th Rabi-ul-Awal)
     - Birthday of Quaid-e-Azam & Christmas (Dec 25)
-
-    Formerly-Observed Holidays:
-    - Iqbal Day (Nov 9; ended in 2012)
+    - Iqbal Day (Nov 9; ended in 2012 and resumed in 2022)
 
     Occasional election and bank holidays are also observed.
     """
@@ -89,6 +89,12 @@ class XKARExchangeCalendar(ExchangeCalendar):
                 ),
                 european_labour_day(),
                 Holiday(
+                    "Youm-e-Takbeer",
+                    month=5,
+                    day=28,
+                    start_date="2024",
+                ),
+                Holiday(
                     "Independence Day",
                     month=8,
                     day=14,
@@ -98,6 +104,12 @@ class XKARExchangeCalendar(ExchangeCalendar):
                     month=11,
                     day=9,
                     end_date="2013",
+                ),
+                Holiday(
+                    "Iqbal Day",
+                    month=11,
+                    day=9,
+                    start_date="2022",
                 ),
                 Holiday(
                     "Birthday of Quaid-e-Azam & Christmas",
@@ -129,6 +141,11 @@ class XKARExchangeCalendar(ExchangeCalendar):
             "2018-06-08",
             "2019-05-31",
             "2020-05-22",
+            "2021-05-07",
+            "2022-04-29",
+            "2023-04-21",
+            "2024-04-05",
+            "2025-03-28",
         ]
     )
 
@@ -188,6 +205,23 @@ class XKARExchangeCalendar(ExchangeCalendar):
             "2020-05-25",  # Monday
             "2020-05-26",
             "2020-05-27",
+            "2021-05-10",  # Monday
+            "2021-05-11",
+            "2021-05-12",
+            "2021-05-13",
+            "2021-05-14",
+            "2022-05-02",  # Monday
+            "2022-05-03",
+            "2022-05-04",
+            "2022-05-05",
+            "2023-04-24",  # Monday
+            "2023-04-25",
+            "2024-04-10",
+            "2024-04-11",
+            "2024-04-12",
+            "2025-03-31",  # Monday
+            "2025-04-01",
+            "2025-04-02",
         ]
     )
 
@@ -247,6 +281,21 @@ class XKARExchangeCalendar(ExchangeCalendar):
             "2019-08-13",
             "2019-08-15",
             "2020-07-31",
+            "2021-07-20",
+            "2021-07-21",
+            "2021-07-22",
+            "2022-07-08",  # Friday
+            "2022-07-11",  # Monday
+            "2022-07-12",
+            "2023-06-28",
+            "2023-06-29",
+            "2023-06-30",
+            "2024-06-17",
+            "2024-06-18",
+            "2024-06-19",
+            "2025-06-07",
+            "2025-06-08",
+            "2025-06-09",
         ]
     )
 
@@ -278,6 +327,18 @@ class XKARExchangeCalendar(ExchangeCalendar):
             "2018-09-21",
             "2019-09-09",
             "2019-09-10",
+            "2020-08-29",
+            "2020-08-30",
+            "2021-08-18",
+            "2021-08-19",
+            "2022-08-08",
+            "2022-08-09",
+            "2023-07-28",
+            "2023-07-29",
+            "2024-07-16",
+            "2024-07-17",
+            "2025-07-05",
+            "2025-07-06",
         ]
     )
 
@@ -299,6 +360,12 @@ class XKARExchangeCalendar(ExchangeCalendar):
             "2017-12-01",
             "2018-11-21",
             "2020-10-30",
+            "2021-10-19",
+            "2022-10-09",
+            "2023-09-29",
+            "2024-09-17",
+            "2025-09-05",
+            "2025-09-06",
         ]
     )
 
@@ -349,6 +416,8 @@ class XKARExchangeCalendar(ExchangeCalendar):
             "2012-10-29",  # Birthday of Guru Balmik Sawami Ji
             "2012-09-21",  # Day of Love for the Prophet Muhammad
             "2018-07-25",  # Election day
+            "2023-04-14",  # Baisakhi
+            "2024-02-08",  # Election day
         ]
     )
 

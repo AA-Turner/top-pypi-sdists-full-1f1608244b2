@@ -42,6 +42,8 @@ class MeetingDataOutboxModel(Base):
     error = Column(Text, nullable=True)
     checks = Column(Text, nullable=True)
     completed = Column(Boolean, nullable=True)
+    data_entry_type = Column(String(50), nullable=True)
+    note = Column(String(128), nullable=True)
     updated_at = Column(
         DateTime,
         nullable=False,

@@ -30,7 +30,7 @@ class MaleoFoundationTokenClientService(ClientService):
                 description = "Unexpected error occured while trying to import key"
                 other = "Ensure given key is valid"
                 return MaleoFoundationTokenResultsTransfers.Fail(message=message, description=description, other=other)
-            payload = MaleoFoundationTokenGeneralTransfers.EncodePayload.model_validate(parameters.payload.model_dump()).model_dump(mode="json")
+            payload = MaleoFoundationTokenGeneralTransfers.EncodePayload.model_validate(parameters.payload.model_dump()).model_dump(mode="json", exclude_none=True)
             token = jwt.encode(payload=payload, key=private_key.export_key(), algorithm="RS256")
             data = MaleoFoundationTokenSchemas.Token(token=token)
             return MaleoFoundationTokenResultsTransfers.Encode(data=data)

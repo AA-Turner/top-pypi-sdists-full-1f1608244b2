@@ -40,7 +40,7 @@ joined_supported_models: str = ", ".join(SUPPORTED_MODELS)
 special_col_names: list = ["arm_name", "generation_method", "trial_index", "trial_status", "generation_node"]
 IGNORABLE_COLUMNS: list = ["start_time", "end_time", "hostname", "signal", "exit_code", "run_time", "program_string"] + special_col_names
 
-non_ax_constraints: list = []
+post_generation_constraints: list = []
 abandoned_trial_indices: list = []
 global_param_names: list = []
 
@@ -501,7 +501,7 @@ class ConfigLoader:
         installing = self.parser.add_argument_group('Installing', 'Parameters related to installing')
         debug = self.parser.add_argument_group('Debug', 'These options are mainly useful for debugging')
 
-        required.add_argument('--num_random_steps', help='Number of random steps to start with', type=int, default=20)
+        required.add_argument('--num_random_steps', help='Number of random (SOBOL) steps to start with', type=int, default=20)
         required.add_argument('--max_eval', help='Maximum number of evaluations', type=int)
         required.add_argument('--run_program', action='append', nargs='+', help='A program that should be run. Use, for example, $x for the parameter named x', type=str)
         required.add_argument('--experiment_name', help='Name of the experiment', type=str)
@@ -3622,7 +3622,7 @@ def _count_sobol_or_completed(this_csv_file_path: str, _type: str) -> int:
     assert df is not None, "DataFrame should not be None after reading CSV file"
 
     if _type == "Sobol":
-        rows = df[df["generation_method"] == _type]
+        rows = df[df["generation_node"] == _type]
     else:
         rows = df[df["trial_status"] == _type]
     count = len(rows)
@@ -3631,7 +3631,7 @@ def _count_sobol_or_completed(this_csv_file_path: str, _type: str) -> int:
 
 @beartype
 def _count_sobol_steps(this_csv_file_path: str) -> int:
-    return _count_sobol_or_completed(this_csv_file_path, "Sobol")
+    return _count_sobol_or_completed(this_csv_file_path, "SOBOL")
 
 @beartype
 def _count_done_jobs(this_csv_file_path: str) -> int:
@@ -3649,10 +3649,10 @@ def get_random_steps_from_prev_job() -> int:
     if not args.continue_previous_job:
         return count_sobol_steps()
 
-    prev_step_file: str = f"{args.continue_previous_job}/state_files/phase_random_steps"
+    prev_step_file: str = f"{args.continue_previous_job}/results.csv"
 
     if not os.path.exists(prev_step_file):
-        return count_sobol_steps()
+        return _count_sobol_steps(prev_step_file)
 
     return add_to_phase_counter("random", count_sobol_steps() + _count_sobol_steps(f"{args.continue_previous_job}/results.csv"), args.continue_previous_job)
 
@@ -4761,7 +4761,7 @@ def parse_single_experiment_parameter_table(experiment_parameters: Union[list, d
 
 @beartype
 def print_non_ax_parameter_constraints_table() -> None:
-    if not non_ax_constraints:
+    if not post_generation_constraints:
         return None
 
     table = Table(header_style="bold")
@@ -4770,7 +4770,7 @@ def print_non_ax_parameter_constraints_table() -> None:
     for column in columns:
         table.add_column(column)
 
-    for constraint in non_ax_constraints:
+    for constraint in post_generation_constraints:
         table.add_row(constraint)
 
     with console.capture() as capture:
@@ -4780,7 +4780,7 @@ def print_non_ax_parameter_constraints_table() -> None:
 
     console.print(table)
 
-    fn = f"{get_current_run_folder()}/non_ax_constraints.txt"
+    fn = f"{get_current_run_folder()}/post_generation_constraints.txt"
     try:
         with open(fn, mode="w", encoding="utf-8") as text_file:
             text_file.write(table_str)
@@ -6413,11 +6413,11 @@ def _get_trials_message(nr_of_jobs_to_get: int, full_nr_of_jobs_to_get: int, tri
     return ret
 
 @beartype
-def has_no_non_ax_constraints_or_matches_constraints(_non_ax_constraints: list, params: dict) -> bool:
-    if not _non_ax_constraints or len(_non_ax_constraints) == 0:
+def has_no_post_generation_constraints_or_matches_constraints(_post_generation_constraints: list, params: dict) -> bool:
+    if not _post_generation_constraints or len(_post_generation_constraints) == 0:
         return True
 
-    for constraint in _non_ax_constraints:
+    for constraint in _post_generation_constraints:
         try:
             expression = constraint
 
@@ -6477,7 +6477,7 @@ def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optio
 
                 trial_durations.append(float(end_time - start_time))
 
-                if not has_no_non_ax_constraints_or_matches_constraints(non_ax_constraints, params):
+                if not has_no_post_generation_constraints_or_matches_constraints(post_generation_constraints, params):
                     print_debug(f"Marking trial as abandoned since it doesn't fit a Post-Generation-constraint: {params}")
                     trial.mark_abandoned()
                     abandoned_trial_indices.append(trial_index)
@@ -6883,7 +6883,7 @@ def create_systematic_step(model: Any, _num_trials: int = -1, index: Optional[in
 
 @beartype
 def set_global_generation_strategy() -> None:
-    global global_gs, random_steps, generation_strategy_human_readable
+    global global_gs, generation_strategy_human_readable
 
     args_generation_strategy = args.generation_strategy
 
@@ -6895,7 +6895,7 @@ def set_global_generation_strategy() -> None:
     if args_generation_strategy is None:
         num_imported_jobs: int = get_nr_of_imported_jobs()
         set_max_eval(max_eval + num_imported_jobs)
-        random_steps = random_steps or 0
+        set_random_steps(random_steps or 0)
 
         if max_eval is None:
             set_max_eval(max(1, random_steps))
@@ -6903,7 +6903,7 @@ def set_global_generation_strategy() -> None:
         chosen_model = get_chosen_model()
 
         if chosen_model == "SOBOL":
-            random_steps = max_eval
+            set_random_steps(max_eval)
 
         if random_steps >= 1:
             next_node_name = None
@@ -7892,7 +7892,7 @@ def _filter_valid_constraints(constraints: List[str]) -> List[str]:
             final_constraints_list.append(decoded)
         elif is_equation:
             print_debug(f"Added Post-Generation-constraint '{decoded}'")
-            non_ax_constraints.append(decoded)
+            post_generation_constraints.append(decoded)
         else:
             print_red(f"Invalid constraint found: '{decoded}' (is valid ax? {is_ax}, is valid equation? {is_equation}).")
 
@@ -7902,7 +7902,7 @@ def _filter_valid_constraints(constraints: List[str]) -> List[str]:
 
 @beartype
 def main() -> None:
-    global RESULT_CSV_FILE, ax_client, LOGFILE_DEBUG_GET_NEXT_TRIALS, random_steps
+    global RESULT_CSV_FILE, ax_client, LOGFILE_DEBUG_GET_NEXT_TRIALS
 
     check_if_has_random_steps()
 
@@ -7982,7 +7982,10 @@ def main() -> None:
     disable_logging()
     check_max_eval(max_eval)
 
-    random_steps, second_step_steps = get_number_of_steps(max_eval)
+    _random_steps, second_step_steps = get_number_of_steps(max_eval)
+
+    set_random_steps(_random_steps)
+
     add_exclude_to_defective_nodes()
     handle_random_steps()
 
@@ -8061,11 +8064,18 @@ def write_ui_url_if_present() -> None:
             myfile.write(decode_if_base64(args.ui_url))
 
 @beartype
-def handle_random_steps() -> None:
+def set_random_steps(new_steps: int) -> None:
     global random_steps
+
+    print_debug(f"Setting random_steps from {random_steps} to {new_steps}")
+
+    random_steps = new_steps
+
+@beartype
+def handle_random_steps() -> None:
     if args.parameter and args.continue_previous_job and random_steps <= 0:
         print(f"A parameter has been reset, but the earlier job already had its random phase. To look at the new search space, {args.num_random_steps} random steps will be executed.")
-        random_steps = args.num_random_steps
+        set_random_steps(args.num_random_steps)
 
 @beartype
 def initialize_ax_client() -> None:
@@ -8242,44 +8252,44 @@ def run_tests() -> None:
     nr_errors += is_equal('is_ax_compatible_constraint("2*abc * xyz <= 3.5", ["abc", "xyz"])', is_ax_compatible_constraint("2*abc * xyz <= 3.5", ["abc", "xyz"]), False)
 
     nr_errors += is_equal(
-        "has_no_non_ax_constraints_or_matches_constraints([], {})",
-        has_no_non_ax_constraints_or_matches_constraints([], {}),
+        "has_no_post_generation_constraints_or_matches_constraints([], {})",
+        has_no_post_generation_constraints_or_matches_constraints([], {}),
         True
     )
 
     nr_errors += is_equal(
-        "has_no_non_ax_constraints_or_matches_constraints(['a > 0'], {'a': 5})",
-        has_no_non_ax_constraints_or_matches_constraints(['a > 0'], {'a': 5}),
+        "has_no_post_generation_constraints_or_matches_constraints(['a > 0'], {'a': 5})",
+        has_no_post_generation_constraints_or_matches_constraints(['a > 0'], {'a': 5}),
         True
     )
 
     nr_errors += is_equal(
-        "has_no_non_ax_constraints_or_matches_constraints(['a > 0'], {'a': -1})",
-        has_no_non_ax_constraints_or_matches_constraints(['a > 0'], {'a': -1}),
+        "has_no_post_generation_constraints_or_matches_constraints(['a > 0'], {'a': -1})",
+        has_no_post_generation_constraints_or_matches_constraints(['a > 0'], {'a': -1}),
         False
     )
 
     nr_errors += is_equal(
-        "has_no_non_ax_constraints_or_matches_constraints(['a + b == 3'], {'a': 1, 'b': 2})",
-        has_no_non_ax_constraints_or_matches_constraints(['a + b == 3'], {'a': 1, 'b': 2}),
+        "has_no_post_generation_constraints_or_matches_constraints(['a + b == 3'], {'a': 1, 'b': 2})",
+        has_no_post_generation_constraints_or_matches_constraints(['a + b == 3'], {'a': 1, 'b': 2}),
         True
     )
 
     nr_errors += is_equal(
-        "has_no_non_ax_constraints_or_matches_constraints(['a + b == 3'], {'a': 1, 'b': 1})",
-        has_no_non_ax_constraints_or_matches_constraints(['a + b == 3'], {'a': 1, 'b': 1}),
+        "has_no_post_generation_constraints_or_matches_constraints(['a + b == 3'], {'a': 1, 'b': 1})",
+        has_no_post_generation_constraints_or_matches_constraints(['a + b == 3'], {'a': 1, 'b': 1}),
         False
     )
 
     nr_errors += is_equal(
-        "has_no_non_ax_constraints_or_matches_constraints(['unknown > 0'], {'a': 1})",
-        has_no_non_ax_constraints_or_matches_constraints(['unknown > 0'], {'a': 1}),
+        "has_no_post_generation_constraints_or_matches_constraints(['unknown > 0'], {'a': 1})",
+        has_no_post_generation_constraints_or_matches_constraints(['unknown > 0'], {'a': 1}),
         False  # unknown bleibt unersetzt → eval Error
     )
 
     nr_errors += is_equal(
-        "has_no_non_ax_constraints_or_matches_constraints(['a + '], {'a': 1})",
-        has_no_non_ax_constraints_or_matches_constraints(['a + '], {'a': 1}),
+        "has_no_post_generation_constraints_or_matches_constraints(['a + '], {'a': 1})",
+        has_no_post_generation_constraints_or_matches_constraints(['a + '], {'a': 1}),
         False  # Syntaxfehler
     )
 

@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "refurb"
-version = "2.0.0"
-description = "A tool for refurbish and modernize Python codebases"
+version = "2.1.0"
+description = "A tool for refurbishing and modernizing Python codebases"
 authors = ["dosisod"]
 license = "GPL-3.0-only"
 readme = "README.md"
@@ -17,7 +17,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.10"
-mypy = ">=0.981"
+mypy = ">=0.981,!=1.11.0"
 tomli = {version = "^2.0.1", python = "<3.11"}
 
 [tool.poetry.dev-dependencies]
@@ -82,14 +82,15 @@ lint.select = ["ALL"]
 
 # TODO: fix RUF100 not playing well with refurb
 lint.extend-ignore = [
-  "A001", "A002", "A003",
-  "ANN101", "ANN102", "ANN401", "ARG001",
+  "A001", "A002", "A003", "A005",
+  "ANN401", "ARG001",
   "B905",
   "C901",
   "COM812",
   "D100", "D101", "D102", "D103", "D104", "D105", "D107", "D200", "D202", "D203",
   "D205", "D212", "D214", "D400", "D401", "D404", "D405", "D406", "D407", "D412",
   "D413", "D415", "D416",
+  "DOC201", "DOC402", "DOC501",
   "EM101", "EM102",
   "F821",
   "FBT001",
@@ -100,7 +101,7 @@ lint.extend-ignore = [
   "PGH003",
   "PLR0911", "PLR0912", "PLR0914", "PLR0915", "PLR2004",
   "PT012",
-  "RUF100",
+  "RUF045", "RUF100", "RUF102",
   "S101", "S404",
   "SIM102", "SIM108",
   "SLF001",
@@ -125,6 +126,7 @@ target-version = "py310"
 "refurb/main.py" = ["E501"]
 "refurb/visitor/traverser.py" = ["ALL"]
 "test/e2e/gbk.py" = ["FURB105"]
+"test/e2e/stub_pkg/file.py" = ["ALL"]
 
 [tool.typos.default.extend-words]
 nd = "nd"

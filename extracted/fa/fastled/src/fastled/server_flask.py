@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 import time
 from multiprocessing import Process
 from pathlib import Path
@@ -8,7 +9,8 @@ import httpx
 from livereload import Server
 
 # Logging configuration
-_ENABLE_LOGGING = False  # Set to False to disable logging
+_ENABLE_LOGGING = os.environ.get("FLASK_SERVER_LOGGING", "0") == "1"
+
 
 if _ENABLE_LOGGING:
     logging.basicConfig(
@@ -23,8 +25,15 @@ else:
     logger = logging.getLogger("flask_server")
     logger.disabled = True
 
-_DRAWF_SOURCE_FASTLED = "drawfsource/js/fastled/src/"
-_DRAWF_SOURCE_EMSDK = "drawfsource/js/drawfsource/emsdk/"
+
+def _is_dwarf_source(path: str) -> bool:
+    """Check if the path is a dwarf source file."""
+    # Check if the path starts with "fastledsource/" or "sketchsource/"
+    return (
+        path.startswith("fastledsource/")
+        or path.startswith("sketchsource/")
+        or path.startswith("dwarfsource")
+    )
 
 
 def _run_flask_server(
@@ -126,35 +135,20 @@ def _run_flask_server(
                 logger.error(f"Error forwarding request: {e}", exc_info=True)
                 return Response(f"Error: {str(e)}", status=500)
 
-        def handle_dwarfsource(path: str) -> Response:
-            """Handle requests to /drawfsource/js/fastled/src/
-            or /drawfsource/js/drawfsource/emsdk/*"""
+        def handle_fastledsource(path: str) -> Response:
+            """Handle requests to
+            /fastledsource/js/fastledsource/git/fastled/src/
+            or
+            /sketchsource/js/src/Blink.ino
+
+            The names are a bit mangled due to the way C++ prefixing works near the root directory.
+            """
             from flask import request
 
             start_time = time.time()
             logger.info(f"Processing request: {request.method} {request.url}")
-
-            if "../" in path:
-                # Prevent directory traversal attacks
-                error_msg = "Directory traversal attack detected"
-                logger.error(error_msg)
-                return Response(error_msg, status=400)
-
-            if not path.startswith(_DRAWF_SOURCE_FASTLED) and not path.startswith(
-                _DRAWF_SOURCE_EMSDK
-            ):
-                # unexpected
-                error_msg = f"Unexpected path: {path}"
-                logger.error(error_msg)
-                # Logging disabled
-                return Response("Malformed path", status=400)
-
-            # Weird magic being played with these paths, it's beyond me.
-            if path.startswith(_DRAWF_SOURCE_FASTLED):
-                path = path[len("/drawfsource") :]
-
             # Forward the request to the compile server
-            target_url = f"http://localhost:{compile_server_port}/drawfsource/{path}"
+            target_url = f"http://localhost:{compile_server_port}/dwarfsource/{path}"
             logger.info(f"Requesting: {target_url}")
             logger.info(f"Processing dwarfsource request for {path}")
 
@@ -213,7 +207,7 @@ def _run_flask_server(
             logger.info(f"Processing sourcefile request for {path}")
 
             # Forward the request to the compile server
-            target_url = f"http://localhost:{compile_server_port}/sourcefiles/{path}"
+            target_url = f"http://localhost:{compile_server_port}/{path}"
             logger.info(f"Forwarding to: {target_url}")
 
             # Log request headers
@@ -323,14 +317,27 @@ def _run_flask_server(
                     return Response(f"File not found: {path}", status=404)
                 return Response(f"Error serving file: {str(e)}", status=500)
 
+        @app.route("/fastapi")
+        def server_backend_redirect():
+            """Redirect to the compile server"""
+            logger.info("Redirecting to compile server")
+            target_url = f"http://localhost:{compile_server_port}/docs"
+            logger.info(f"Redirecting to: {target_url}")
+            return Response(
+                f"Redirecting to compile server: <a href='{target_url}'>{target_url}</a>",
+                status=302,
+                headers={"Location": target_url},
+            )
+
         @app.route("/<path:path>")
         def serve_files(path: str):
             logger.info(f"Received request for path: {path}")
 
             try:
-                if path.startswith("drawfsource/"):
+                is_debug_src_code_request = _is_dwarf_source(path)
+                if is_debug_src_code_request:
                     logger.info(f"Handling as drawfsource: {path}")
-                    return handle_dwarfsource(path)
+                    return handle_fastledsource(path)
                 elif path.startswith("sourcefiles/"):
                     logger.info(f"Handling as sourcefiles: {path}")
                     return handle_sourcefile(path)

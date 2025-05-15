@@ -2472,7 +2472,11 @@ class TensorNetwork2D(TensorNetworkGen):
         inplace=False,
         **contract_boundary_opts,
     ):
-        """Contract the boundary of this 2D tensor network inwards::
+        r"""Contract the boundary of this 2D tensor network inwards. By
+        default, if contracting to a scalar, this contracts the two shortest
+        opposing sides inwards. If `around` is specified, or depending on
+        `sequence`, it can contract from in any sequence of directions, and in
+        any order like so::
 
             ●──●──●──●       ●──●──●──●       ●──●──●
             │  │  │  │       │  │  │  │       ║  │  │
@@ -2665,6 +2669,7 @@ class TensorNetwork2D(TensorNetworkGen):
         dense=False,
         compress_opts=None,
         envs=None,
+        equalize_norms=False,
         **contract_boundary_opts,
     ):
         """Compute the 1D boundary tensor networks describing the environments
@@ -2698,6 +2703,10 @@ class TensorNetwork2D(TensorNetworkGen):
             :func:`~quimb.tensor.tensor_core.tensor_compress_bond`.
         envs : dict, optional
             An existing dictionary to store the environments in.
+        equalize_norms : bool or float, optional
+            Whether to equalize the norms of the boundary tensors after each
+            contraction, gathering the overall scaling coefficient, log10, in
+            ``tn.exponent``.
         contract_boundary_opts
             Other options to pass to
             :meth:`~quimb.tensor.tensor_2d.TensorNetwork2D.contract_boundary_from`.
@@ -2731,6 +2740,10 @@ class TensorNetwork2D(TensorNetworkGen):
             iprev = i - sweep.step
             if dense:
                 tn ^= (x_tag(iprevprev), x_tag(iprev))
+
+                if equalize_norms:
+                    tn.equalize_norms_(equalize_norms)
+
             else:
                 tn.contract_boundary_from_(
                     xrange=(
@@ -2746,6 +2759,7 @@ class TensorNetwork2D(TensorNetworkGen):
                     canonize=canonize,
                     layer_tags=layer_tags,
                     compress_opts=compress_opts,
+                    equalize_norms=equalize_norms,
                     **contract_boundary_opts,
                 )
 
@@ -4695,20 +4709,6 @@ class TensorNetwork2DFlat(TensorNetwork2D):
         "_Lx",
         "_Ly",
     )
-
-    def bond(self, coo1, coo2):
-        """Get the name of the index defining the bond between sites at
-        ``coo1`` and ``coo2``.
-        """
-        (b_ix,) = self[coo1].bonds(self[coo2])
-        return b_ix
-
-    def bond_size(self, coo1, coo2):
-        """Return the (combined) size of the bond(s) between sites at ``coo1``
-        and ``coo2``.
-        """
-        b_ix = self.bond(coo1, coo2)
-        return self[coo1].ind_size(b_ix)
 
     def expand_bond_dimension(
         self, new_bond_dim, inplace=True, bra=None, rand_strength=0.0

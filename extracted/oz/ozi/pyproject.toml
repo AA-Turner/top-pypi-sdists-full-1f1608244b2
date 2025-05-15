@@ -13,7 +13,7 @@ ozi-fix = "ozi.fix.__main__:main"
 
 [project]
 name = "OZI"
-version = "1.41.9"
+version = "1.41.10"
 description = 'Package Python projects with Meson.'
 readme = 'README.rst'
 authors = [{name='Eden Ross Duff MSc', email='help@oziproject.dev'}]
@@ -38,7 +38,7 @@ classifiers = [
 ]
 dependencies = [
     'pathvalidate~=3.2.1',
-    'ozi-core==1.19.3',
+    'ozi-core==1.19.8',
     'setuptools_scm[toml]',
     'tomli>=2.0.0;python_version<"3.11"',
 ]
@@ -344,7 +344,6 @@ python =
 [testenv]
 allowlist_externals = 
     rm
-    pipx
     meson
     python
 package = wheel
@@ -358,7 +357,7 @@ commands =
      meson compile -C {env_tmp_dir}
      rm -rf {env_tmp_dir}/.gitignore
 commands_post =
-     {env_python} -m invoke --search-root={env_tmp_dir}/ozi checkpoint --suite={env_name} --ozi {posargs}
+     {env_python} -m invoke --search-root={env_tmp_dir}/ozi checkpoint --suite={env_name} {posargs}
 
 [testenv:dist]
 description = OZI distribution checkpoint
@@ -394,5 +393,5 @@ commands_post =
 description = OZI invoke task entrypoint, for more info use "tox -e invoke -- --list"
 no_package = true
 commands_post =
-     {env_python} -m invoke --search-root={env_tmp_dir}/ozi {posargs} --ozi
+     {env_python} -m invoke --search-root={env_tmp_dir}/ozi {posargs}
 """

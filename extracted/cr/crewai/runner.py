@@ -1,12 +1,10 @@
 import json
-import os
 from typing import List
 
 from crewai_tools import SerperDevTool
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel
 
-from crewai.agent import Agent
 from crewai.agents.agent_adapters.langgraph.langgraph_adapter import (
     LangGraphAgentAdapter,
 )

@@ -4,7 +4,6 @@ from abc import ABC, abstractmethod
 from asyncio import (
     CancelledError,
     Event,
-    Lock,
     PriorityQueue,
     Queue,
     QueueEmpty,
@@ -17,7 +16,7 @@ from asyncio import (
     sleep,
     timeout,
 )
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Hashable, Iterable, Iterator, Mapping
 from contextlib import (
     AsyncExitStack,
     _AsyncGeneratorContextManager,
@@ -31,6 +30,7 @@ from sys import stderr, stdout
 from typing import (
     TYPE_CHECKING,
     Generic,
+    NoReturn,
     Self,
     TextIO,
     TypeVar,
@@ -44,7 +44,6 @@ from utilities.errors import ImpossibleCaseError
 from utilities.functions import ensure_int, ensure_not_none
 from utilities.sentinel import Sentinel, sentinel
 from utilities.types import (
-    Coroutine1,
     MaybeCallableEvent,
     MaybeType,
     THashable,
@@ -240,7 +239,6 @@ class QueueProcessor(AsyncService, Generic[_T]):
     sleep: Duration = MILLISECOND
     _await_upon_aenter: bool = field(default=False, init=False, repr=False)
     _queue: Queue[_T] = field(init=False, repr=False)
-    _lock: Lock = field(default_factory=Lock, init=False, repr=False)
 
     def __post_init__(self) -> None:
         self._queue = self.queue_type(
@@ -265,9 +263,9 @@ class QueueProcessor(AsyncService, Generic[_T]):
             await self._run()
             await sleep_dur(duration=self.sleep)
 
-    async def _get_items_nowait(self, *, max_size: int | None = None) -> Sequence[_T]:
+    def _get_items_nowait(self, *, max_size: int | None = None) -> Sequence[_T]:
         """Get items from the queue; no waiting."""
-        return await get_items_nowait(self._queue, max_size=max_size, lock=self._lock)
+        return get_items_nowait(self._queue, max_size=max_size)
 
     @abstractmethod
     async def _process_item(self, item: _T, /) -> None:
@@ -282,7 +280,7 @@ class QueueProcessor(AsyncService, Generic[_T]):
     async def _run(self) -> None:
         """Run the processer."""
         try:
-            (item,) = await self._get_items_nowait(max_size=1)
+            (item,) = self._get_items_nowait(max_size=1)
         except ValueError:
             raise QueueEmpty from None
         try:
@@ -330,61 +328,155 @@ class ExceptionProcessor(QueueProcessor[Exception | type[Exception]]):
 class InfiniteLooper(ABC, Generic[THashable]):
     """An infinite loop which can throw exceptions by setting events."""
 
-    events: Mapping[THashable, Event] = field(
+    _events: Mapping[THashable, Event] = field(
         default_factory=dict, init=False, repr=False
     )
     sleep_core: Duration = SECOND
     sleep_restart: Duration = MINUTE
 
     def __post_init__(self) -> None:
-        self._reset_events()
+        self._events = {
+            event: Event() for event, _ in self._yield_events_and_exceptions()
+        }
 
-    async def __call__(self) -> Coroutine1[None]:
+    async def __call__(self) -> None:
+        """Create a coroutine to run the looper."""
+        loopers = list(self._yield_loopers())
+        if len(loopers) == 0:
+            return await self._run_looper()
+        return await self._run_multiple_loopers(*loopers)
+
+    async def _run_looper(self) -> None:
+        """Run the looper by itself."""
         while True:
             try:
                 self._reset_events()
                 try:
-                    await self.initialize()
+                    await self._initialize()
                 except Exception as error:  # noqa: BLE001
-                    self.error_upon_initialize(error)
+                    self._error_upon_initialize(error)
                     await sleep_dur(duration=self.sleep_restart)
                 else:
                     while True:
                         try:
                             event = next(
                                 key
-                                for (key, value) in self.events.items()
+                                for (key, value) in self._events.items()
                                 if value.is_set()
                             )
                         except StopIteration:
-                            await self.core()
+                            await self._core()
                             await sleep_dur(duration=self.sleep_core)
                         else:
-                            raise self.events_and_exceptions[event]
+                            self._raise_error(event)
+            except InfiniteLooperError:
+                raise
             except Exception as error:  # noqa: BLE001
-                self.error_upon_core(error)
+                self._error_upon_core(error)
                 await sleep_dur(duration=self.sleep_restart)
 
-    @property
-    @abstractmethod
-    def events_and_exceptions(self) -> Mapping[THashable, MaybeType[BaseException]]:
-        """A mapping of events to exceptions."""
+    async def _run_multiple_loopers(self, *loopers: InfiniteLooper) -> None:
+        """Run multiple loopers."""
+        while True:
+            self._reset_events()
+            try:
+                async with TaskGroup() as tg:
+                    _ = tg.create_task(self._run_looper())
+                    _ = [tg.create_task(looper()) for looper in loopers]
+            except Exception as error:  # noqa: BLE001
+                self._error_upon_core(error)  # pragma: no cover
+                await sleep_dur(duration=self.sleep_restart)  # pragma: no cover
 
-    async def initialize(self) -> None:
+    async def _initialize(self) -> None:
         """Initialize the loop."""
 
-    async def core(self) -> None:
-        """Run the core."""
+    async def _core(self) -> None:
+        """Run the core part of the loop."""
 
-    def error_upon_initialize(self, error: Exception, /) -> None:
+    def _error_upon_initialize(self, error: Exception, /) -> None:
+        """Handle any errors upon initializing the looper."""
         _ = error
 
-    def error_upon_core(self, error: Exception, /) -> None:
+    def _error_upon_core(self, error: Exception, /) -> None:
+        """Handle any errors upon running the core function."""
         _ = error
+
+    def _raise_error(self, event: THashable, /) -> NoReturn:
+        """Raise the error corresponding to given event."""
+        mapping = dict(self._yield_events_and_exceptions())
+        error = mapping.get(event, InfiniteLooperError)
+        raise error
 
     def _reset_events(self) -> None:
         """Reset the events."""
-        self.events = {event: Event() for event in self.events_and_exceptions}
+        self._events = {
+            event: Event() for event, _ in self._yield_events_and_exceptions()
+        }
+
+    def _set_event(self, event: THashable, /) -> None:
+        """Set the given event."""
+        try:
+            event_obj = self._events[event]
+        except KeyError:
+            raise InfiniteLooperError(event=event) from None
+        event_obj.set()
+
+    def _yield_events_and_exceptions(
+        self,
+    ) -> Iterator[tuple[THashable, MaybeType[BaseException]]]:
+        """Yield the events & exceptions."""
+        yield from []
+
+    def _yield_loopers(self) -> Iterator[InfiniteLooper]:
+        """Yield any other infinite loopers which must also be run."""
+        yield from []
+
+
+@dataclass(kw_only=True, slots=True)
+class InfiniteLooperError(Exception):
+    event: Hashable
+
+    @override
+    def __str__(self) -> str:
+        return f"No event {self.event!r} found"
+
+
+##
+
+
+@dataclass(kw_only=True)
+class InfiniteQueueLooper(InfiniteLooper[THashable], Generic[THashable, _T]):
+    """An infinite loop which processes a queue."""
+
+    queue_type: type[Queue[_T]] = field(default=Queue, repr=False)
+    _queue: Queue[_T] = field(init=False)
+    _current: Queue[_T] = field(init=False)
+
+    @override
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        self._queue = self.queue_type()
+        self._current = self.queue_type()
+
+    @override
+    async def _core(self) -> None:
+        """Run the core part of the loop."""
+        items = await get_items(self._queue)
+        _ = get_items_nowait(self._current)
+        put_items_nowait(items, self._current)
+        try:
+            await self._process_items(*items)
+        except Exception:
+            put_items_nowait(items, self._queue)
+            raise
+
+    @abstractmethod
+    async def _process_items(self, *items: _T) -> None:
+        """Process the items."""
+
+    def put_items_nowait(self, *items: _T) -> None:
+        """Put items into the queue."""
+        put_items_nowait(items, self._queue)
 
 
 ##
@@ -465,9 +557,7 @@ def get_event(
 ##
 
 
-async def get_items(
-    queue: Queue[_T], /, *, max_size: int | None = None, lock: Lock | None = None
-) -> list[_T]:
+async def get_items(queue: Queue[_T], /, *, max_size: int | None = None) -> list[_T]:
     """Get items from a queue; if empty then wait."""
     try:
         items = [await queue.get()]
@@ -476,28 +566,12 @@ async def get_items(
             return []
         raise
     max_size_use = None if max_size is None else (max_size - 1)
-    if lock is None:
-        items.extend(await get_items_nowait(queue, max_size=max_size_use))
-    else:
-        async with lock:
-            items.extend(await get_items_nowait(queue, max_size=max_size_use))
+    items.extend(get_items_nowait(queue, max_size=max_size_use))
     return items
 
 
-async def get_items_nowait(
-    queue: Queue[_T], /, *, max_size: int | None = None, lock: Lock | None = None
-) -> list[_T]:
+def get_items_nowait(queue: Queue[_T], /, *, max_size: int | None = None) -> list[_T]:
     """Get items from a queue; no waiting."""
-    if lock is None:
-        return _get_items_nowait_core(queue, max_size=max_size)
-    async with lock:
-        return _get_items_nowait_core(queue, max_size=max_size)
-
-
-def _get_items_nowait_core(
-    queue: Queue[_T], /, *, max_size: int | None = None
-) -> list[_T]:
-    """Get all the items from a queue; no waiting."""
     items: list[_T] = []
     if max_size is None:
         while True:
@@ -512,6 +586,21 @@ def _get_items_nowait_core(
             except QueueEmpty:
                 break
     return items
+
+
+##
+
+
+async def put_items(items: Iterable[_T], queue: Queue[_T], /) -> None:
+    """Put items into a queue; if full then wait."""
+    for item in items:
+        await queue.put(item)
+
+
+def put_items_nowait(items: Iterable[_T], queue: Queue[_T], /) -> None:
+    """Put items into a queue; no waiting."""
+    for item in items:
+        queue.put_nowait(item)
 
 
 ##
@@ -595,6 +684,7 @@ __all__ = [
     "AsyncService",
     "EnhancedTaskGroup",
     "ExceptionProcessor",
+    "InfiniteLooperError",
     "QueueProcessor",
     "StreamCommandOutput",
     "UniquePriorityQueue",
@@ -602,6 +692,8 @@ __all__ = [
     "get_event",
     "get_items",
     "get_items_nowait",
+    "put_items",
+    "put_items_nowait",
     "sleep_dur",
     "stream_command",
     "timeout_dur",

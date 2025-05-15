@@ -27,6 +27,7 @@ from abc import ABC, abstractmethod
 import string
 import shlex
 import os
+import numpy as np
 from gams.tools.errors import GamsToolsException
 
 class ToolTemplate(ABC):
@@ -303,6 +304,15 @@ class ToolTemplate(ABC):
             self.help(long=False)
         raise GamsToolsException(msg, error_code=1, traceback=self._trace>0)
     
+    def is_upper_matrix(self, a):
+        if not np.allclose(a, a.T):
+            if not np.allclose(a, np.tril(a)):
+                if np.allclose(a, np.triu(a)):
+                    return True
+                else:
+                    self.tool_error(f'Matrix {A} is not symmetric and does not have a triangular structure.', print_help=False)
+        return False
+
     @abstractmethod
     def execute(self):
         '''

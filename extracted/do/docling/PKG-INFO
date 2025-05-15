@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: docling
-Version: 2.31.2
+Version: 2.32.0
 Summary: SDK and CLI for parsing PDF, DOCX, HTML, and more, to a unified document representation for powering downstream workflows such as gen AI applications.
 Home-page: https://github.com/docling-project/docling
 License: MIT

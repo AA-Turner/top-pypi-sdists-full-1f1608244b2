@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: ogn_parser
-Version: 0.3.11
+Version: 0.3.12
 Classifier: Programming Language :: Rust
 Classifier: Programming Language :: Python :: Implementation :: CPython
 Classifier: Programming Language :: Python :: Implementation :: PyPy

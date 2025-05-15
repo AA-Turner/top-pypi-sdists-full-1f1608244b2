@@ -50,7 +50,9 @@ class Eigenvector (ToolTemplate):
         m = gt.Container(system_directory=self._system_directory)
         self.read_id_inputs(m, [i, A])
         m[A].domain = [m[i],m[i]]
-        eigval, eigvec = np.linalg.eigh(m[A].toDense())
+        a = m[A].toDense()
+        upper = self.is_upper_matrix(a)
+        eigval, eigvec = np.linalg.eigh(a, UPLO="U" if upper else "L")
         m.addParameter(AVal,[m[i]], records=eigval)
         m.addParameter(AVec,[m[i],m[i]], records=eigvec)
         self.write_id_outputs(m, [AVal, AVec])

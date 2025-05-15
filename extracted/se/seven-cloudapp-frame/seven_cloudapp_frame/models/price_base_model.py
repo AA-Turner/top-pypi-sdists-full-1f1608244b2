@@ -182,9 +182,9 @@ class PriceBaseModel():
             return invoke_result_data
         goods_id =  price_gear_dict["goods_id"]
         if is_clear_goods_sku == True:
-            invoke_result_data.success = price_gear_model.update_table("is_del=%s,goods_id='',sku_id=''", "id=%s", [is_del, price_gear_id])
+            invoke_result_data.success = price_gear_model.update_table("is_del=%s,goods_id='',sku_id='',modify_date=%s", "id=%s", [is_del, TimeHelper.get_now_format_time(), price_gear_id])
         else:
-            invoke_result_data.success = price_gear_model.update_table("is_del=%s", "id=%s", [is_del, price_gear_id])
+            invoke_result_data.success = price_gear_model.update_table("is_del=%s,modify_date=%s", "id=%s", [is_del, TimeHelper.get_now_format_time(), price_gear_id])
         if invoke_result_data.success ==True and is_del == 1:
             if self.process_launch_goods == True:
                 launch_base_model = LaunchBaseModel(context=self.context)

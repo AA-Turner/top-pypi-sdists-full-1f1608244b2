@@ -75,7 +75,7 @@ def _get_translation_fields(
 def translate_string(content: str, language: str) -> str:
     prompt = get_base_prompt(settings.LANGUAGE_CODE, language)
     prompt.append(HumanMessage(content))
-    return str(run_llm(prompt))
+    return str(run_llm(prompt)[0])
 
 
 def translate_dict(content: dict, language: str) -> dict:

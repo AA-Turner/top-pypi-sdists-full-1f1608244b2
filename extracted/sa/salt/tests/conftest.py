@@ -16,6 +16,7 @@ import _pytest.logging
 import _pytest.skipping
 import more_itertools
 import pytest
+import pytestskipmarkers
 
 import salt
 import salt._logging
@@ -426,7 +427,8 @@ def pytest_itemcollected(item):
             pytest.fail(
                 "The test {!r} appears to be written for pytest but it's not under"
                 " {!r}. Please move it there.".format(
-                    item.nodeid, str(PYTESTS_DIR.relative_to(CODE_DIR)), pytrace=False
+                    item.nodeid,
+                    str(PYTESTS_DIR.relative_to(CODE_DIR)),
                 )
             )
 
@@ -801,6 +803,12 @@ def salt_factories_default_root_dir(salt_factories_default_root_dir):
         dictionary, then that's the value used, and not the one returned by
         this fixture.
     """
+    if os.environ.get("CI") and pytestskipmarkers.utils.platform.is_windows():
+        tempdir = pathlib.Path(
+            os.environ.get("RUNNER_TEMP", r"C:\Windows\Temp")
+        ).resolve()
+        return tempdir / "stsuite"
+
     return salt_factories_default_root_dir / "stsuite"
 
 
@@ -991,6 +999,9 @@ def salt_syndic_master_factory(
     config_overrides = {
         "log_level_logfile": "quiet",
         "fips_mode": FIPS_TESTRUN,
+        "publish_signing_algorithm": (
+            "PKCS1v15-SHA224" if FIPS_TESTRUN else "PKCS1v15-SHA1"
+        ),
     }
     ext_pillar = []
     if salt.utils.platform.is_windows():
@@ -1107,6 +1118,9 @@ def salt_master_factory(
     config_overrides = {
         "log_level_logfile": "quiet",
         "fips_mode": FIPS_TESTRUN,
+        "publish_signing_algorithm": (
+            "PKCS1v15-SHA224" if FIPS_TESTRUN else "PKCS1v15-SHA1"
+        ),
     }
     ext_pillar = []
     if salt.utils.platform.is_windows():
@@ -1216,6 +1230,8 @@ def salt_minion_factory(salt_master_factory):
         "file_roots": salt_master_factory.config["file_roots"].copy(),
         "pillar_roots": salt_master_factory.config["pillar_roots"].copy(),
         "fips_mode": FIPS_TESTRUN,
+        "encryption_algorithm": "OAEP-SHA224" if FIPS_TESTRUN else "OAEP-SHA1",
+        "signing_algorithm": "PKCS1v15-SHA224" if FIPS_TESTRUN else "PKCS1v15-SHA1",
     }
 
     virtualenv_binary = get_virtualenv_binary_path()
@@ -1248,6 +1264,8 @@ def salt_sub_minion_factory(salt_master_factory):
         "file_roots": salt_master_factory.config["file_roots"].copy(),
         "pillar_roots": salt_master_factory.config["pillar_roots"].copy(),
         "fips_mode": FIPS_TESTRUN,
+        "encryption_algorithm": "OAEP-SHA224" if FIPS_TESTRUN else "OAEP-SHA1",
+        "signing_algorithm": "PKCS1v15-SHA224" if FIPS_TESTRUN else "PKCS1v15-SHA1",
     }
 
     virtualenv_binary = get_virtualenv_binary_path()

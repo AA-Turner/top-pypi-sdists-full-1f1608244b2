@@ -235,8 +235,12 @@ class TestCircuit:
             ("y", 1, 0),
             ("z", 1, 0),
             ("s", 1, 0),
+            ("sdg", 1, 0),
             ("t", 1, 0),
+            ("tdg", 1, 0),
             ("h", 1, 0),
+            ("sx", 1, 0),
+            ("sxdg", 1, 0),
             ("iden", 1, 0),
             ("x_1_2", 1, 0),
             ("y_1_2", 1, 0),
@@ -273,6 +277,8 @@ class TestCircuit:
             ("fsimg", 2, 5),
             ("givens", 2, 1),
             ("givens2", 2, 2),
+            ("xx_plus_yy", 2, 2),
+            ("xx_minus_yy", 2, 2),
             ("su4", 2, 15),
         ]
         random.shuffle(g_nq_np)

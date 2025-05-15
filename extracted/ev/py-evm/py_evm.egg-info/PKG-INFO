@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: py-evm
-Version: 0.12.0b3
+Version: 0.12.1b1
 Summary: Python implementation of the Ethereum Virtual Machine
 Home-page: https://github.com/ethereum/py-evm
 Author: Ethereum Foundation

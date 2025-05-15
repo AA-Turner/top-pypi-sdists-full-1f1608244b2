@@ -1,7 +1,5 @@
 from crewai.flow import Flow, start, listen
-from typing import Optional
 import asyncio
-from pydantic import BaseModel
 
 
 class ParallelFlow(Flow):

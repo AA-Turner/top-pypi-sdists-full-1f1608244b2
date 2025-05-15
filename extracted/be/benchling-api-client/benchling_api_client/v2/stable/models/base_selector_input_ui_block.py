@@ -1,4 +1,4 @@
-from typing import Any, cast, Dict, List, Optional, Type, TypeVar
+from typing import Any, cast, Dict, List, Optional, Type, TypeVar, Union
 
 import attr
 
@@ -13,22 +13,28 @@ class BaseSelectorInputUIBlock:
     """  """
 
     _options: List[str]
+    _placeholder: Union[Unset, None, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def __repr__(self):
         fields = []
         fields.append("options={}".format(repr(self._options)))
+        fields.append("placeholder={}".format(repr(self._placeholder)))
         fields.append("additional_properties={}".format(repr(self.additional_properties)))
         return "BaseSelectorInputUIBlock({})".format(", ".join(fields))
 
     def to_dict(self) -> Dict[str, Any]:
         options = self._options
 
+        placeholder = self._placeholder
+
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         # Allow the model to serialize even if it was created outside of the constructor, circumventing validation
         if options is not UNSET:
             field_dict["options"] = options
+        if placeholder is not UNSET:
+            field_dict["placeholder"] = placeholder
 
         return field_dict
 
@@ -48,8 +54,20 @@ class BaseSelectorInputUIBlock:
                 raise
             options = cast(List[str], UNSET)
 
+        def get_placeholder() -> Union[Unset, None, str]:
+            placeholder = d.pop("placeholder")
+            return placeholder
+
+        try:
+            placeholder = get_placeholder()
+        except KeyError:
+            if strict:
+                raise
+            placeholder = cast(Union[Unset, None, str], UNSET)
+
         base_selector_input_ui_block = cls(
             options=options,
+            placeholder=placeholder,
         )
 
         base_selector_input_ui_block.additional_properties = d
@@ -83,3 +101,17 @@ class BaseSelectorInputUIBlock:
     @options.setter
     def options(self, value: List[str]) -> None:
         self._options = value
+
+    @property
+    def placeholder(self) -> Optional[str]:
+        if isinstance(self._placeholder, Unset):
+            raise NotPresentError(self, "placeholder")
+        return self._placeholder
+
+    @placeholder.setter
+    def placeholder(self, value: Optional[str]) -> None:
+        self._placeholder = value
+
+    @placeholder.deleter
+    def placeholder(self) -> None:
+        self._placeholder = UNSET

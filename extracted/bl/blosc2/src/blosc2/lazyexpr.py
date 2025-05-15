@@ -37,7 +37,7 @@ import numpy as np
 import blosc2
 from blosc2 import compute_chunks_blocks
 from blosc2.info import InfoReporter
-from blosc2.ndarray import _check_allowed_dtypes, get_chunks_idx, is_inside_new_expr
+from blosc2.ndarray import _check_allowed_dtypes, get_chunks_idx, is_inside_new_expr, process_key
 
 if not blosc2.IS_WASM:
     import numexpr
@@ -628,6 +628,107 @@ def get_expr_operands(expression: str) -> set:
     visitor = OperandVisitor()
     visitor.visit(tree)
     return set(visitor.operands)
+
+
+def conserve_functions(  # noqa: C901
+    expression: str,
+    operands_old: dict[str, blosc2.NDArray | blosc2.LazyExpr],
+    operands_new: dict[str, blosc2.NDArray | blosc2.LazyExpr],
+) -> tuple(str, dict[str, blosc2.NDArray]):
+    """
+    Given an expression in string form, return its operands.
+
+    Parameters
+    ----------
+    expression : str
+        The expression in string form.
+
+    operands_old: dict[str : blosc2.ndarray | blosc2.LazyExpr]
+        Dict of operands from expression prior to eval.
+
+    operands_new: dict[str : blosc2.ndarray | blosc2.LazyExpr]
+        Dict of operands from expression after eval.
+    Returns
+    -------
+    newexpression
+        A modified string expression with the functions/constructors conserved and
+        true operands rebased and written in o- notation.
+    newoperands
+        Dict of the set of rebased operands.
+    """
+
+    operand_to_key = {id(v): k for k, v in operands_new.items()}
+    for k, v in operands_old.items():  # extend operands_to_key with old operands
+        if isinstance(
+            v, blosc2.LazyExpr
+        ):  # unroll operands in LazyExpr (only necessary when have reduced a lazyexpr)
+            d = v.operands
+        else:
+            d = {k: v}
+        for newk, newv in d.items():
+            try:
+                operand_to_key[id(newv)]
+            except KeyError:
+                newk = (
+                    f"o{len(operands_new)}" if newk in operands_new else newk
+                )  # possible that names coincide
+                operand_to_key[id(newv)] = newk
+                operands_new[newk] = newv
+
+    class OperandVisitor(ast.NodeVisitor):
+        def __init__(self):
+            self.operandmap = {}
+            self.operands = {}
+            self.opcounter = 0
+            self.function_names = set()
+
+        def update_func(self, localop):
+            k = operand_to_key[id(localop)]
+            if k not in self.operandmap:
+                newkey = f"o{self.opcounter}"
+                self.operands[newkey] = operands_new[k]
+                self.operandmap[k] = newkey
+                self.opcounter += 1
+                return newkey
+            else:
+                return self.operandmap[k]
+
+        def visit_Name(self, node):
+            if node.id == "np":  # Skip NumPy namespace (e.g. np.int8, which will be treated separately)
+                return
+            if node.id in self.function_names:  # Skip function names
+                return
+            elif node.id not in dtype_symbols:
+                localop = operands_old[node.id]
+                if isinstance(localop, blosc2.LazyExpr):
+                    newexpr = localop.expression
+                    for (
+                        opname,
+                        v,
+                    ) in localop.operands.items():  # expression operands already in terms of basic operands
+                        newopname = self.update_func(v)
+                        newexpr = re.sub(
+                            rf"(?<=\s){opname}|(?<=\(){opname}", newopname, newexpr
+                        )  # replace with newopname
+                    node.id = newexpr
+                else:
+                    node.id = self.update_func(localop)
+            else:
+                pass
+            self.generic_visit(node)
+
+        def visit_Call(self, node):
+            if isinstance(
+                node.func, ast.Name
+            ):  # visits Call first, then Name, so don't increment operandcounter yet
+                self.function_names.add(node.func.id)
+            self.generic_visit(node)
+
+    tree = ast.parse(expression)
+    visitor = OperandVisitor()
+    visitor.visit(tree)
+    newexpression, newoperands = ast.unparse(tree), visitor.operands
+    return newexpression, newoperands
 
 
 class TransformNumpyCalls(ast.NodeTransformer):
@@ -2434,22 +2535,24 @@ class LazyExpr(LazyArray):
             _globals = get_expr_globals(self.expression)
             lazy_expr = eval(self.expression, _globals, self.operands)
             if not isinstance(lazy_expr, blosc2.LazyExpr):
+                key, _ = process_key(item, self.shape)
                 # An immediate evaluation happened (e.g. all operands are numpy arrays)
                 if hasattr(self, "_where_args"):
                     # We need to apply the where() operation
                     if len(self._where_args) == 1:
                         # We have a single argument
                         where_x = self._where_args["_where_x"]
-                        return where_x[:][lazy_expr]
+                        return (where_x[:][lazy_expr])[key]
                     if len(self._where_args) == 2:
                         # We have two arguments
                         where_x = self._where_args["_where_x"]
                         where_y = self._where_args["_where_y"]
-                        return np.where(lazy_expr, where_x, where_y)
+                        return np.where(lazy_expr, where_x, where_y)[key]
                 if hasattr(self, "_output"):
                     # This is not exactly optimized, but it works for now
-                    self._output[:] = lazy_expr
-                return lazy_expr
+                    self._output[:] = lazy_expr[key]
+                    return self._output
+                return lazy_expr[key]
 
             return chunked_eval(lazy_expr.expression, lazy_expr.operands, item, **kwargs)
 
@@ -2676,10 +2779,14 @@ class LazyExpr(LazyArray):
             _dtype = new_expr.dtype
             _shape = new_expr.shape
             if isinstance(new_expr, blosc2.LazyExpr):
-                # Restore the original expression and operands
-                new_expr.expression = f"({_expression})"  # forcibly add parenthesis
-                new_expr.expression_tosave = _expression
-                new_expr.operands = _operands
+                # DO NOT restore the original expression and operands
+                # Instead rebase operands and restore only constructors
+                expression_, operands_ = conserve_functions(
+                    _expression, _operands, new_expr.operands | local_vars
+                )
+                new_expr.expression = f"({expression_})"  # force parenthesis
+                new_expr.expression_tosave = expression
+                new_expr.operands = operands_
                 new_expr.operands_tosave = operands
             else:
                 # An immediate evaluation happened (e.g. all operands are numpy arrays)

@@ -514,6 +514,7 @@ _<p>IMPORTANT: The order of the keys in JSON file determines the order which the
         except Exception as e:
             result = None
             print(f"{type(e).__name__}: {str(e)}")
+            raise
         return result if return_result else None
     
     def __ftp_isdir(self, ftp_connection, path:str) -> bool:
@@ -1946,7 +1947,7 @@ _<p>IMPORTANT: The order of the keys in JSON file determines the order which the
             spark.conf.set("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false")
             spark.conf.set("spark.sql.sources.commitProtocolClass", "org.apache.spark.sql.execution.datasources.SQLHadoopMapReduceCommitProtocol")
         except:
-            pass
+            self.pprint("Error setting spark configs. Skipping", lvl=print_level+1)
         
         if self.__write_options["format"] == "delta":
             self.pprint("Saving data in delta format", lvl=print_level)

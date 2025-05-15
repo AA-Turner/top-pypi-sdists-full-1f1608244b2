@@ -8,10 +8,13 @@ from fastapi import FastAPI, Request, Response, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from typing import Awaitable, Callable, Optional, Sequence
-from maleo_foundation.authentication import Credentials, User
+from maleo_foundation.authentication import Authentication
+from maleo_foundation.enums import BaseEnums
 from maleo_foundation.client.manager import MaleoFoundationClientManager
 from maleo_foundation.models.schemas import BaseGeneralSchemas
 from maleo_foundation.models.responses import BaseResponses
+from maleo_foundation.models.transfers.general.token import MaleoFoundationTokenGeneralTransfers
+from maleo_foundation.models.transfers.parameters.token import MaleoFoundationTokenParametersTransfers
 from maleo_foundation.models.transfers.parameters.signature import MaleoFoundationSignatureParametersTransfers
 from maleo_foundation.utils.extractor import BaseExtractors
 from maleo_foundation.utils.logging import MiddlewareLogger
@@ -117,6 +120,7 @@ class BaseMiddleware(BaseHTTPMiddleware):
     def _add_response_headers(
         self,
         request:Request,
+        authentication:Authentication,
         response:Response,
         request_timestamp:datetime,
         response_timestamp:datetime,
@@ -132,11 +136,22 @@ class BaseMiddleware(BaseHTTPMiddleware):
         if sign_result.success:
             response.headers["X-Signature"] = sign_result.data.signature
         response = self._append_cors_headers(request=request, response=response) #* Re-append CORS headers
+        if authentication.user.is_authenticated \
+            and authentication.credentials.token_type == BaseEnums.TokenType.REFRESH \
+            and authentication.credentials.payload is not None \
+            and (response.status_code >= 200 and response.status_code < 300):
+            #* Regenerate new authorization
+            payload = MaleoFoundationTokenGeneralTransfers.BaseEncodePayload.model_validate(authentication.credentials.payload.model_dump())
+            parameters = MaleoFoundationTokenParametersTransfers.Encode(key=self._keys.private, password=self._keys.password, payload=payload)
+            result = self._maleo_foundation.services.token.encode(parameters=parameters)
+            if result.success:
+                response.headers["X-New-Authorization"] = result.data.token
         return response
 
     def _build_response(
         self,
         request:Request,
+        authentication:Authentication,
         authentication_info:str,
         response:Response,
         request_timestamp:datetime,
@@ -145,7 +160,7 @@ class BaseMiddleware(BaseHTTPMiddleware):
         log_level:str = "info",
         client_ip:str = "unknown"
     ) -> Response:
-        response = self._add_response_headers(request, response, request_timestamp, response_timestamp, process_time)
+        response = self._add_response_headers(request, authentication, response, request_timestamp, response_timestamp, process_time)
         log_func = getattr(self._logger, log_level)
         log_func(
             f"Request {authentication_info} | IP: {client_ip} | Host: {request.client.host} | Port: {request.client.port} | Method: {request.method} | URL: {request.url.path} | "
@@ -156,6 +171,7 @@ class BaseMiddleware(BaseHTTPMiddleware):
     def _handle_exception(
         self,
         request:Request,
+        authentication:Authentication,
         authentication_info:str,
         error,
         request_timestamp:datetime,
@@ -183,7 +199,7 @@ class BaseMiddleware(BaseHTTPMiddleware):
             f"Headers: {dict(request.headers)} - Response | Status: 500 | Exception:\n{json.dumps(error_details, indent=4)}"
         )
 
-        return self._add_response_headers(request, response, request_timestamp, response_timestamp, process_time)
+        return self._add_response_headers(request, authentication, response, request_timestamp, response_timestamp, process_time)
 
     async def _request_processor(self, request:Request) -> Optional[Response]:
         return None
@@ -193,17 +209,21 @@ class BaseMiddleware(BaseHTTPMiddleware):
         request_timestamp = datetime.now(tz=timezone.utc) #* Record the request timestamp
         start_time = time.perf_counter() #* Record the start time
         client_ip = BaseExtractors.extract_client_ip(request) #* Get request IP with improved extraction
-        user:User = request.user
-        if not user.is_authenticated:
+        authentication = Authentication(
+            credentials=request.auth,
+            user=request.user
+        )
+        if not authentication.user.is_authenticated:
             authentication_info = "| Unauthenticated"
         else:
-            authentication_info = f"| Username: {user.display_name} | Email:{user.identity}"
+            authentication_info = f"| Username: {authentication.user.display_name} | Email:{authentication.user.identity}"
 
         try:
             #* 1. Rate limit check
             if self._check_rate_limit(client_ip):
                 return self._build_response(
                     request=request,
+                    authentication=authentication,
                     authentication_info=authentication_info,
                     response=JSONResponse(
                         content=BaseResponses.RateLimitExceeded().model_dump(),
@@ -221,6 +241,7 @@ class BaseMiddleware(BaseHTTPMiddleware):
             if pre_response is not None:
                 return self._build_response(
                     request=request,
+                    authentication=authentication,
                     authentication_info=authentication_info,
                     response=pre_response,
                     request_timestamp=request_timestamp,
@@ -234,6 +255,7 @@ class BaseMiddleware(BaseHTTPMiddleware):
             response = await call_next(request)
             response = self._build_response(
                 request=request,
+                authentication=authentication,
                 authentication_info=authentication_info,
                 response=response,
                 request_timestamp=request_timestamp,
@@ -248,6 +270,7 @@ class BaseMiddleware(BaseHTTPMiddleware):
         except Exception as e:
             return self._handle_exception(
                 request=request,
+                authentication=authentication,
                 authentication_info=authentication_info,
                 error=e,
                 request_timestamp=request_timestamp,

@@ -49,6 +49,8 @@ class Eigenvalue (ToolTemplate):
         m = gt.Container(system_directory=self._system_directory)
         self.read_id_inputs(m, [i, A])
         m[A].domain = [m[i],m[i]]
-        eigval = np.linalg.eigvalsh(m[A].toDense())
+        a = m[A].toDense()
+        upper = self.is_upper_matrix(a)
+        eigval = np.linalg.eigvalsh(a, UPLO="U" if upper else "L")
         m.addParameter(AVal,[m[i]], records=eigval)
         self.write_id_outputs(m, AVal)

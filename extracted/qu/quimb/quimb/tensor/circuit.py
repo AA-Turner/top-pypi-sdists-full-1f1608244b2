@@ -1,11 +1,6 @@
-"""Tools for quantum circuit simulation using tensor networks.
+"""Tools for quantum circuit simulation using tensor networks."""
 
-TODO:
-- [ ] gate-by-gate sampling
-- [ ] sub-MPO apply for MPS simulation
-- [ ] multi qubit gates via MPO for MPS simulation
-"""
-
+import cmath
 import functools
 import itertools
 import math
@@ -419,6 +414,10 @@ register_constant_gate("S", qu.S_gate(), 1)
 register_constant_gate("SDG", qu.S_gate().H, 1)
 register_constant_gate("T", qu.T_gate(), 1)
 register_constant_gate("TDG", qu.T_gate().H, 1)
+register_constant_gate("SX", cmath.rect(1, 0.25 * math.pi) * qu.Xsqrt(), 1)
+register_constant_gate(
+    "SXDG", cmath.rect(1, -0.25 * math.pi) * qu.Xsqrt().H, 1
+)
 register_constant_gate("X_1_2", qu.Xsqrt(), 1, "X_1/2")
 register_constant_gate("Y_1_2", qu.Ysqrt(), 1, "Y_1/2")
 register_constant_gate("Z_1_2", qu.Zsqrt(), 1, "Z_1/2")
@@ -840,6 +839,68 @@ def givens2_param_gen(params):
 
 
 register_param_gate("GIVENS2", givens2_param_gen, num_qubits=2)
+
+
+def xx_plus_yy_param_gen(params):
+    theta, beta = params[0], params[1]
+
+    with backend_like(theta):
+        # get a real backend zero
+        zero = 0.0 * theta
+        half_theta = 0.5 * theta
+
+        a = do("complex", do("cos", half_theta), zero)
+        b = do("exp", do("complex", zero, beta)) * do(
+            "complex", do("sin", half_theta), zero
+        )
+        b_conj = do("exp", do("complex", zero, -beta)) * do(
+            "complex", do("sin", half_theta), zero
+        )
+
+        # get a complex backend zero and backend one
+        zero = do("complex", zero, zero)
+        one = zero + 1.0
+
+        data = (
+            (((one, zero), (zero, zero)), ((zero, a), (-1j * b, zero))),
+            (((zero, -1j * b_conj), (a, zero)), ((zero, zero), (zero, one))),
+        )
+
+        return recursive_stack(data)
+
+
+register_param_gate("XXPLUSYY", xx_plus_yy_param_gen, num_qubits=2)
+
+
+def xx_minus_yy_param_gen(params):
+    theta, beta = params[0], params[1]
+
+    with backend_like(theta):
+        # get a real backend zero
+        zero = 0.0 * theta
+        half_theta = 0.5 * theta
+
+        a = do("complex", do("cos", half_theta), zero)
+        b = do("exp", do("complex", zero, beta)) * do(
+            "complex", do("sin", half_theta), zero
+        )
+        b_conj = do("exp", do("complex", zero, -beta)) * do(
+            "complex", do("sin", half_theta), zero
+        )
+
+        # get a complex backend zero and backend one
+        zero = do("complex", zero, zero)
+        one = zero + 1.0
+
+        data = (
+            (((a, zero), (zero, -1j * b_conj)), ((zero, one), (zero, zero))),
+            (((zero, zero), (one, zero)), ((-1j * b, zero), (zero, a))),
+        )
+
+        return recursive_stack(data)
+
+
+register_param_gate("XXMINUSYY", xx_minus_yy_param_gen, num_qubits=2)
 
 
 def rxx_param_gen(params):
@@ -1280,9 +1341,23 @@ class Gate:
         controls = kwargs.get("controls", self._controls)
         round = kwargs.get("round", self._round)
         parametrize = kwargs.get("parametrize", self._parametrize)
-        return self.__class__(
-            label, params, qubits, controls, round, parametrize
-        )
+
+        if isinstance(params, str) and (params == "raw"):
+            return self.from_raw(
+                U=self._array,
+                qubits=qubits,
+                controls=controls,
+                round=round,
+            )
+        else:
+            return self.__class__(
+                label=label,
+                params=params,
+                qubits=qubits,
+                controls=controls,
+                round=round,
+                parametrize=parametrize,
+            )
 
     def build_array(self):
         """Build the array representation of the gate. For controlled gates
@@ -1414,6 +1489,14 @@ def parse_to_gate(
                 "constructor instead."
             )
         return gate_id
+
+    if isinstance(gate_id, tuple):
+        # if given a tuple just unpack it
+        if gate_args:
+            raise ValueError(
+                "You cannot specify ``gate_args`` when supplying a tuple."
+            )
+        gate_id, gate_args = gate_id[0], gate_id[1:]
 
     if hasattr(gate_id, "shape") and not isinstance(gate_id, str):
         # raw gate (numpy strings have a shape - ignore those)
@@ -1663,8 +1746,7 @@ class Circuit:
 
         if self._ket_site_ind_id == self._bra_site_ind_id:
             raise ValueError(
-                "The 'ket' and 'bra' site ind ids clash : "
-                "'{}' and '{}".format(
+                "The 'ket' and 'bra' site ind ids clash : '{}' and '{}".format(
                     self._ket_site_ind_id, self._bra_site_ind_id
                 )
             )
@@ -1755,15 +1837,15 @@ class Circuit:
         self.clear_storage()
 
     @classmethod
-    def from_qsim_str(cls, contents, **circuit_opts):
+    def from_qsim_str(cls, contents, progbar=False, **circuit_opts):
         """Generate a ``Circuit`` instance from a 'qsim' string."""
         info = parse_qsim_str(contents)
         qc = cls(info["n"], **circuit_opts)
-        qc.apply_gates(info["gates"])
+        qc.apply_gates(info["gates"], progbar=progbar)
         return qc
 
     @classmethod
-    def from_qsim_file(cls, fname, **circuit_opts):
+    def from_qsim_file(cls, fname, progbar=False, **circuit_opts):
         """Generate a ``Circuit`` instance from a 'qsim' file.
 
         The qsim file format is described here:
@@ -1771,15 +1853,15 @@ class Circuit:
         """
         info = parse_qsim_file(fname)
         qc = cls(info["n"], **circuit_opts)
-        qc.apply_gates(info["gates"])
+        qc.apply_gates(info["gates"], progbar=progbar)
         return qc
 
     @classmethod
-    def from_qsim_url(cls, url, **circuit_opts):
+    def from_qsim_url(cls, url, progbar=False, **circuit_opts):
         """Generate a ``Circuit`` instance from a 'qsim' url."""
         info = parse_qsim_url(url)
         qc = cls(info["n"], **circuit_opts)
-        qc.apply_gates(info["gates"])
+        qc.apply_gates(info["gates"], progbar=progbar)
         return qc
 
     from_qasm = deprecated(from_qsim_str, "from_qasm", "from_qsim_str")
@@ -1789,27 +1871,27 @@ class Circuit:
     from_qasm_url = deprecated(from_qsim_url, "from_qasm_url", "from_qsim_url")
 
     @classmethod
-    def from_openqasm2_str(cls, contents, **circuit_opts):
+    def from_openqasm2_str(cls, contents, progbar=False, **circuit_opts):
         """Generate a ``Circuit`` instance from an OpenQASM 2.0 string."""
         info = parse_openqasm2_str(contents)
         qc = cls(info["n"], **circuit_opts)
-        qc.apply_gates(info["gates"])
+        qc.apply_gates(info["gates"], progbar)
         return qc
 
     @classmethod
-    def from_openqasm2_file(cls, fname, **circuit_opts):
+    def from_openqasm2_file(cls, fname, progbar=False, **circuit_opts):
         """Generate a ``Circuit`` instance from an OpenQASM 2.0 file."""
         info = parse_openqasm2_file(fname)
         qc = cls(info["n"], **circuit_opts)
-        qc.apply_gates(info["gates"])
+        qc.apply_gates(info["gates"], progbar=progbar)
         return qc
 
     @classmethod
-    def from_openqasm2_url(cls, url, **circuit_opts):
+    def from_openqasm2_url(cls, url, progbar=False, **circuit_opts):
         """Generate a ``Circuit`` instance from an OpenQASM 2.0 url."""
         info = parse_openqasm2_url(url)
         qc = cls(info["n"], **circuit_opts)
-        qc.apply_gates(info["gates"])
+        qc.apply_gates(info["gates"], progbar=progbar)
         return qc
 
     @classmethod
@@ -1833,7 +1915,7 @@ class Circuit:
 
             N = 0
             for gate in gates:
-                gate = parse_to_gate(*gate)
+                gate = parse_to_gate(gate)
                 if gate.qubits:
                     N = max(N, max(gate.qubits) + 1)
                 if gate.controls:
@@ -2030,6 +2112,12 @@ class Circuit:
 
     def tdg(self, i, gate_round=None, **kwargs):
         self.apply_gate("TDG", i, gate_round=gate_round, **kwargs)
+
+    def sx(self, i, gate_round=None, **kwargs):
+        self.apply_gate("SX", i, gate_round=gate_round, **kwargs)
+
+    def sxdg(self, i, gate_round=None, **kwargs):
+        self.apply_gate("SXDG", i, gate_round=gate_round, **kwargs)
 
     def x_1_2(self, i, gate_round=None, **kwargs):
         self.apply_gate("X_1_2", i, gate_round=gate_round, **kwargs)
@@ -2277,6 +2365,34 @@ class Circuit:
             "GIVENS2",
             theta,
             phi,
+            i,
+            j,
+            gate_round=gate_round,
+            parametrize=parametrize,
+            **kwargs,
+        )
+
+    def xx_plus_yy(
+        self, theta, beta, i, j, gate_round=None, parametrize=False, **kwargs
+    ):
+        self.apply_gate(
+            "XXPLUSYY",
+            theta,
+            beta,
+            i,
+            j,
+            gate_round=gate_round,
+            parametrize=parametrize,
+            **kwargs,
+        )
+
+    def xx_minus_yy(
+        self, theta, beta, i, j, gate_round=None, parametrize=False, **kwargs
+    ):
+        self.apply_gate(
+            "XXMINUSYY",
+            theta,
+            beta,
             i,
             j,
             gate_round=gate_round,
@@ -3150,7 +3266,7 @@ class Circuit:
             return nm_lc
 
         # NB. the tree isn't *neccesarily* the same each time due to the post
-        #     slicing full simplify, however there is also the lower level
+        #     projection full simplify, however there is also the lower level
         #     contraction path cache if the structure generated *is* the same
         #     so still pretty efficient to just overwrite
         tree = nm_lc.contraction_tree(
@@ -4639,9 +4755,7 @@ class CircuitMPS(Circuit):
             )
 
         for gate in gates:
-            if not isinstance(gate, Gate):
-                gate = parse_to_gate(*gate)
-
+            gate = parse_to_gate(gate)
             self._apply_gate(gate, **gate_opts)
 
             if progbar and (gate.total_qubit_count >= 2):

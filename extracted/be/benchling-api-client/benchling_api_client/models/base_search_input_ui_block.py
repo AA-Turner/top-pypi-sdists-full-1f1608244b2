@@ -1,4 +1,4 @@
-from typing import Any, cast, Dict, List, Optional, Type, TypeVar
+from typing import Any, cast, Dict, List, Optional, Type, TypeVar, Union
 
 import attr
 
@@ -15,11 +15,13 @@ class BaseSearchInputUIBlock:
 
     _item_type: SearchInputUiBlockItemType
     _schema_id: Optional[str]
+    _placeholder: Union[Unset, None, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def __repr__(self):
         fields = []
         fields.append("item_type={}".format(repr(self._item_type)))
+        fields.append("placeholder={}".format(repr(self._placeholder)))
         fields.append("schema_id={}".format(repr(self._schema_id)))
         fields.append("additional_properties={}".format(repr(self.additional_properties)))
         return "BaseSearchInputUIBlock({})".format(", ".join(fields))
@@ -27,6 +29,7 @@ class BaseSearchInputUIBlock:
     def to_dict(self) -> Dict[str, Any]:
         item_type = self._item_type.value
 
+        placeholder = self._placeholder
         schema_id = self._schema_id
 
         field_dict: Dict[str, Any] = {}
@@ -34,6 +37,8 @@ class BaseSearchInputUIBlock:
         # Allow the model to serialize even if it was created outside of the constructor, circumventing validation
         if item_type is not UNSET:
             field_dict["itemType"] = item_type
+        if placeholder is not UNSET:
+            field_dict["placeholder"] = placeholder
         if schema_id is not UNSET:
             field_dict["schemaId"] = schema_id
 
@@ -59,6 +64,17 @@ class BaseSearchInputUIBlock:
                 raise
             item_type = cast(SearchInputUiBlockItemType, UNSET)
 
+        def get_placeholder() -> Union[Unset, None, str]:
+            placeholder = d.pop("placeholder")
+            return placeholder
+
+        try:
+            placeholder = get_placeholder()
+        except KeyError:
+            if strict:
+                raise
+            placeholder = cast(Union[Unset, None, str], UNSET)
+
         def get_schema_id() -> Optional[str]:
             schema_id = d.pop("schemaId")
             return schema_id
@@ -72,6 +88,7 @@ class BaseSearchInputUIBlock:
 
         base_search_input_ui_block = cls(
             item_type=item_type,
+            placeholder=placeholder,
             schema_id=schema_id,
         )
 
@@ -106,6 +123,20 @@ class BaseSearchInputUIBlock:
     @item_type.setter
     def item_type(self, value: SearchInputUiBlockItemType) -> None:
         self._item_type = value
+
+    @property
+    def placeholder(self) -> Optional[str]:
+        if isinstance(self._placeholder, Unset):
+            raise NotPresentError(self, "placeholder")
+        return self._placeholder
+
+    @placeholder.setter
+    def placeholder(self, value: Optional[str]) -> None:
+        self._placeholder = value
+
+    @placeholder.deleter
+    def placeholder(self) -> None:
+        self._placeholder = UNSET
 
     @property
     def schema_id(self) -> Optional[str]:

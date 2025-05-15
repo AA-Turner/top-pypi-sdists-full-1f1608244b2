@@ -59,6 +59,9 @@ from bigeye_sdk.generated.com.bigeye.models.generated import (
     TableLineageV2Response,
     ObjectOwnerResponse, SendDbtCoreRunInfoResponse, SendDbtCoreRunInfoRequest, CustomRuleBulkRequest, BulkResponse,
     CustomRulesThresholdType, MetricSchedule, CustomRuleInfo,
+    MetricTemplateParameterType,
+    GetCustomRuleListResponse, Workspace, User, SearchType, SearchResponse, SearchRequest, DataNodeType,
+    LineageSearchResponse, LineageSearchRequest,
     GetCustomRuleListResponse, Workspace, User, BigconfigWorkflowV2StatusResponse
 )
 from bigeye_sdk.log import get_logger
@@ -1069,13 +1072,32 @@ class DatawatchClient(BaseApiClient, GeneratedDatawatchClient, ABC):
             rules.custom_rules = rules_filtered
             return rules
 
-    def get_upstream_nodes(self, node_id: int) -> TableLineageV2Response:
+    def get_upstream_nodes(self, node_id: int, depth: Optional[int] = None) -> TableLineageV2Response:
         url = f"/api/v2/lineage/nodes/{node_id}/graph?direction=upstream"
+        if depth:
+            url += f"&depth={depth}"
         return TableLineageV2Response().from_dict(
             self._call_datawatch_impl(method=Method.GET, url=url)
         )
 
-    def get_downstream_nodes(self, node_id: int) -> TableLineageV2Response:
+    def get_downstream_nodes(self, node_id: int, depth: Optional[int] = None) -> TableLineageV2Response:
         url = f"/api/v2/lineage/nodes/{node_id}/graph?direction=downstream"
+        if depth:
+            url += f"&depth={depth}"
         response = self._call_datawatch_impl(method=Method.GET, url=url)
         return TableLineageV2Response(**response)
+
+    def search_lineage(self, search: str, search_type: Optional[DataNodeType] = None, limit: Optional[int] = 100) -> SearchResponse:
+        url = f"/api/v1/search"
+        request = SearchRequest()
+        request.search = search
+        request.limit = limit
+
+        # properly set the search types
+        request_dict = request.to_dict()
+        if search_type is not None:
+            search_types_dict = {"dataNodeType": search_type.name}
+            request_dict["types"] = [search_types_dict]
+
+        response = self._call_datawatch(Method.POST, url=url, body=json.dumps(request_dict))
+        return SearchResponse().from_dict(response)
