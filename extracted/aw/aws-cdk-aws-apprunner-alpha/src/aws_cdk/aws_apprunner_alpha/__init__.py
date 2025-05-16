@@ -2847,6 +2847,15 @@ class ObservabilityConfiguration(
 
         return typing.cast(IObservabilityConfiguration, jsii.sinvoke(cls, "fromObservabilityConfigurationAttributes", [scope, id, attrs]))
 
+    @jsii.python.classproperty
+    @jsii.member(jsii_name="PROPERTY_INJECTION_ID")
+    def PROPERTY_INJECTION_ID(cls) -> builtins.str:
+        '''(experimental) Uniquely identifies this class.
+
+        :stability: experimental
+        '''
+        return typing.cast(builtins.str, jsii.sget(cls, "PROPERTY_INJECTION_ID"))
+
     @builtins.property
     @jsii.member(jsii_name="observabilityConfigurationArn")
     def observability_configuration_arn(self) -> builtins.str:
@@ -3667,6 +3676,15 @@ class Service(
             type_hints = typing.get_type_hints(_typecheckingstub__5351c83ee7c098c1c4aac40f6a190c1c06bbd214351029437128b80b6a431a49)
             check_type(argname="argument statement", value=statement, expected_type=type_hints["statement"])
         return typing.cast(None, jsii.invoke(self, "addToRolePolicy", [statement]))
+
+    @jsii.python.classproperty
+    @jsii.member(jsii_name="PROPERTY_INJECTION_ID")
+    def PROPERTY_INJECTION_ID(cls) -> builtins.str:
+        '''(experimental) Uniquely identifies this class.
+
+        :stability: experimental
+        '''
+        return typing.cast(builtins.str, jsii.sget(cls, "PROPERTY_INJECTION_ID"))
 
     @builtins.property
     @jsii.member(jsii_name="environment")
@@ -4793,6 +4811,15 @@ class VpcConnector(
 
         return typing.cast(IVpcConnector, jsii.sinvoke(cls, "fromVpcConnectorAttributes", [scope, id, attrs]))
 
+    @jsii.python.classproperty
+    @jsii.member(jsii_name="PROPERTY_INJECTION_ID")
+    def PROPERTY_INJECTION_ID(cls) -> builtins.str:
+        '''(experimental) Uniquely identifies this class.
+
+        :stability: experimental
+        '''
+        return typing.cast(builtins.str, jsii.sget(cls, "PROPERTY_INJECTION_ID"))
+
     @builtins.property
     @jsii.member(jsii_name="connections")
     def connections(self) -> _aws_cdk_aws_ec2_ceddda9d.Connections:
@@ -5203,6 +5230,15 @@ class VpcIngressConnection(
         )
 
         return typing.cast(IVpcIngressConnection, jsii.sinvoke(cls, "fromVpcIngressConnectionAttributes", [scope, id, attrs]))
+
+    @jsii.python.classproperty
+    @jsii.member(jsii_name="PROPERTY_INJECTION_ID")
+    def PROPERTY_INJECTION_ID(cls) -> builtins.str:
+        '''(experimental) Uniquely identifies this class.
+
+        :stability: experimental
+        '''
+        return typing.cast(builtins.str, jsii.sget(cls, "PROPERTY_INJECTION_ID"))
 
     @builtins.property
     @jsii.member(jsii_name="domainName")
@@ -5662,6 +5698,15 @@ class AutoScalingConfiguration(
         )
 
         return typing.cast(IAutoScalingConfiguration, jsii.sinvoke(cls, "fromAutoScalingConfigurationAttributes", [scope, id, attrs]))
+
+    @jsii.python.classproperty
+    @jsii.member(jsii_name="PROPERTY_INJECTION_ID")
+    def PROPERTY_INJECTION_ID(cls) -> builtins.str:
+        '''(experimental) Uniquely identifies this class.
+
+        :stability: experimental
+        '''
+        return typing.cast(builtins.str, jsii.sget(cls, "PROPERTY_INJECTION_ID"))
 
     @builtins.property
     @jsii.member(jsii_name="autoScalingConfigurationArn")

@@ -135,8 +135,8 @@ class SpiritApplication:
                         instance = obj()
                         self.__auto_wired_set__.add(instance)
                         if decorator == "Controller":
-                            params = getattr(obj, "__decorator_params__")
-                            SpiritApplication.__controller_paths_set.add(params)
+                            path = getattr(obj, "__decorator_path__")
+                            SpiritApplication.__controller_paths_set.add(path)
                         elif decorator == "ExceptionAdvice":
                             for method_name, method in inspect.getmembers(instance):
                                 if isinstance(method, MethodType):

@@ -69,11 +69,23 @@ class GroupClient(ServiceClient):
             pb2.GetGroupMetricsExportRequest(group_id=self.resolve_group_id(group)),
         ).csv_data
 
+    def list_task_metrics(self, group: pb2.Group) -> Iterable[pb2.TaskMetrics]:
+        for response in self.rpc_paged_request(
+            RpcMethod[pb2.ListGroupTaskMetricsResponse](self.service.ListGroupTaskMetrics),
+            pb2.ListGroupTaskMetricsRequest(
+                options=pb2.ListGroupTaskMetricsRequest.Opts(
+                    group_id=self.resolve_group_id(group), page_size=self.MAX_PAGE_SIZE
+                )
+            ),
+        ):
+            yield from response.task_metrics
+
     def list(
         self,
         *,
         org: pb2.Organization | None = None,
         workspace: pb2.Workspace | None = None,
+        name_or_description: str | None = None,
         sort_order: BeakerSortOrder | None = None,
         sort_field: Literal["created", "name", "modified"] = "name",
         limit: int | None = None,
@@ -96,6 +108,7 @@ class GroupClient(ServiceClient):
                     workspace_id=None
                     if workspace is None
                     else self.resolve_workspace_id(workspace),
+                    name_or_description_substring=name_or_description,
                     page_size=self.MAX_PAGE_SIZE
                     if limit is None
                     else min(self.MAX_PAGE_SIZE, limit),

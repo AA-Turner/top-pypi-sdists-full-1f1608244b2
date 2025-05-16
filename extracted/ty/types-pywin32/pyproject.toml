@@ -4,7 +4,7 @@ requires = ["setuptools>=77.0.3"]
 
 [project]
 name = "types-pywin32"
-version = "310.0.0.20250429"
+version = "310.0.0.20250516"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 description = "Typing stubs for pywin32"
@@ -34,7 +34,7 @@ mypy 1.15.0,
 pyright 1.1.400,
 and pytype 2024.10.11.
 It was generated from typeshed commit
-[`12ef43c8d01032ab0991365f631f7d79a434f85a`](https://github.com/python/typeshed/commit/12ef43c8d01032ab0991365f631f7d79a434f85a).
+[`126768408a69b7a3a09b7d3992970b289f92937e`](https://github.com/python/typeshed/commit/126768408a69b7a3a09b7d3992970b289f92937e).
 """, content-type = "text/markdown" }
 classifiers = [
   "Programming Language :: Python :: 3",
@@ -51,5 +51,5 @@ dependencies = []
 "Chat" = "https://gitter.im/python/typing"
 
 [tool.setuptools]
-packages = ['win32con-stubs', 'win32comext-stubs', 'win32ui-stubs', 'win32job-stubs', 'win32lz-stubs', 'win32event-stubs', 'win32netcon-stubs', 'winerror-stubs', 'winperf-stubs', 'win32profile-stubs', 'win2kras-stubs', 'win32gui-stubs', 'win32verstamp-stubs', 'win32console-stubs', 'winxpgui-stubs', 'mmsystem-stubs', 'win32pdhquery-stubs', 'win32net-stubs', 'win32pdh-stubs', 'win32com-stubs', 'mmapfile-stubs', 'win32-stubs', 'ntsecuritycon-stubs', 'win32clipboard-stubs', 'winnt-stubs', 'perfmon-stubs', 'win32gui_struct-stubs', 'commctrl-stubs', 'win32service-stubs', 'win32crypt-stubs', 'win32evtlog-stubs', 'pythonwin-stubs', 'win32timezone-stubs', 'isapi-stubs', 'dde-stubs', 'win32file-stubs', 'win32print-stubs', 'regutil-stubs', 'win32uiole-stubs', 'win32wnet-stubs', 'servicemanager-stubs', 'win32security-stubs', 'winioctlcon-stubs', 'winxptheme-stubs', 'win32ts-stubs', 'win32cryptcon-stubs', 'win32transaction-stubs', 'win32help-stubs', 'pywintypes-stubs', 'timer-stubs', 'win32evtlogutil-stubs', 'win32serviceutil-stubs', 'pythoncom-stubs', 'win32api-stubs', 'win32cred-stubs', '_win32typing-stubs', 'win32inet-stubs', 'win32ras-stubs', 'odbc-stubs', 'win32trace-stubs', 'sspicon-stubs', 'win32inetcon-stubs', 'win32pipe-stubs', 'win32process-stubs']
+packages = ['win32gui_struct-stubs', 'win32timezone-stubs', 'winioctlcon-stubs', 'win32security-stubs', 'win32crypt-stubs', 'win32uiole-stubs', 'win32evtlogutil-stubs', 'win32event-stubs', 'win2kras-stubs', 'commctrl-stubs', 'win32service-stubs', 'win32cred-stubs', 'win32netcon-stubs', 'win32evtlog-stubs', 'win32inet-stubs', 'win32console-stubs', 'pywintypes-stubs', 'ntsecuritycon-stubs', 'dde-stubs', 'win32ts-stubs', 'regutil-stubs', '_win32typing-stubs', 'perfmon-stubs', 'servicemanager-stubs', 'win32process-stubs', 'win32wnet-stubs', 'mmsystem-stubs', 'win32clipboard-stubs', 'win32profile-stubs', 'isapi-stubs', 'winxptheme-stubs', 'win32com-stubs', 'timer-stubs', 'win32con-stubs', 'win32api-stubs', 'win32pdhquery-stubs', 'win32verstamp-stubs', 'win32cryptcon-stubs', 'win32serviceutil-stubs', 'win32pipe-stubs', 'win32pdh-stubs', 'win32lz-stubs', 'winperf-stubs', 'win32help-stubs', 'win32-stubs', 'win32net-stubs', 'win32ras-stubs', 'odbc-stubs', 'winnt-stubs', 'winxpgui-stubs', 'win32ui-stubs', 'sspicon-stubs', 'win32gui-stubs', 'winerror-stubs', 'win32inetcon-stubs', 'win32comext-stubs', 'win32job-stubs', 'mmapfile-stubs', 'pythonwin-stubs', 'win32print-stubs', 'win32trace-stubs', 'win32transaction-stubs', 'win32file-stubs', 'pythoncom-stubs']
 include-package-data = false

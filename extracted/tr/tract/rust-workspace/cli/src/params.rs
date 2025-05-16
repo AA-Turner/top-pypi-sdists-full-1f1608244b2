@@ -621,7 +621,7 @@ impl Parameters {
             "before-optimize"
         });
 
-        info!("Will stop at {}", stop_at);
+        info!("Will stop at {stop_at}");
 
         if stop_at == "load" {
             return Ok((raw_model.into(), None, None));
@@ -749,12 +749,23 @@ impl Parameters {
                 tract_core::floats::FloatPrecisionTranslator::<f16, f32>::default().translate_model(&m)
             });
         }
+
+        if let Some(transform) = matches.values_of("transform") {
+            for spec in transform {
+                let transform = super::nnef(matches).get_transform(spec)?.with_context(|| format!("Could not find transform named {spec}"))?;
+                stage!(&transform.name(), typed_model -> typed_model, |m:TypedModel| {
+                    transform.transform_into(m)
+                });
+                stage!(&format!("{}-declutter", transform.name()), typed_model -> typed_model, |m:TypedModel| m.into_decluttered());
+            }
+        }
+
         {
             if matches.is_present("metal") {
                 #[cfg(any(target_os = "macos", target_os = "ios"))]
                 {
                     stage!("metal", typed_model -> typed_model, |m:TypedModel| {
-                        tract_metal::transform::MetalTransform::from_str(matches.value_of("force-metal-backend").unwrap_or(""))?
+                        tract_metal::MetalTransform::from_str(matches.value_of("force-metal-backend").unwrap_or(""))?
                             .transform_into(m)
                     });
                 }
@@ -765,15 +776,6 @@ impl Parameters {
             }
         }
 
-        if let Some(transform) = matches.values_of("transform") {
-            for transform in transform {
-                stage!(transform, typed_model -> typed_model, |m:TypedModel| {
-                    let transform = tract_core::transform::get_transform(transform).with_context(|| format!("Could not find transform named {}", transform))?;
-                    transform.transform_into(m)
-                });
-                stage!(&format!("{}-declutter", transform), typed_model -> typed_model, |m:TypedModel| m.into_decluttered());
-            }
-        }
         if let Some(set) = matches.values_of("set") {
             let mut values = SymbolValues::default();
             for set in set {
@@ -894,7 +896,7 @@ impl Parameters {
         let (mut graph, mut raw_model, tf_model_extensions) =
             Self::load_model(matches, probe, &filename, &tensors_values, symbols.clone())?;
 
-        info!("Model {:?} loaded", filename);
+        info!("Model {filename:?} loaded");
         info_usage("model loaded", probe);
 
         let (need_tensorflow_model, need_reference_model) = match matches.subcommand() {

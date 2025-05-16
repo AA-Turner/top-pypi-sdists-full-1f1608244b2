@@ -66,8 +66,6 @@ MODEL_PRICE = {
     "minimax_video-01": MINIMAX_VIDEO,
     "minimax_video-01-live2d": MINIMAX_VIDEO,
 
-    # free
-
     # chatfire
     "ppu-0001": 0.0001,
     "ppu-001": 0.001,
@@ -93,9 +91,11 @@ MODEL_PRICE = {
     "api-kolors-virtual-try-on": 0.1,
     "official-api-kolors-virtual-try-on": 0.8,
 
-    # 语音克隆
+    # audio 语音克隆
     "official-api-fish-model": 0.1,
     "official-api-fish-tts": 0.01,
+
+    "tts-pro": 0.03,
 
     # 官方api
     "official-api-cogvideox": 0.1,
@@ -179,6 +179,7 @@ MODEL_PRICE = {
     "flux-pro": 0.05,
     "flux-pro-max": 0.1,
     "flux.1.1-pro": 0.1,
+    "flux1.1-pro": 0.1,
     "black-forest-labs/flux.1.1-pro": 0.1,
 
     "step-1x-medium": 0.2,
@@ -506,6 +507,7 @@ MODEL_RATIO = {
     "qwen3-32b": 1,
     "qwen3-30b-a3b": 0.75,
     "qwen3-235b-a22b": 2,
+    "qwen-math-plus": 2,
 
     "qwq-32b": 1,
     "qwq-plus": 0.8,
@@ -663,6 +665,8 @@ MODEL_RATIO = {
     "doubao-1-5-pro-thinking": 2,
 
     "doubao-1-5-vision-thinking": 2,
+    "doubao-1-5-thinking-vision-pro-250428": 1.5,
+
     "doubao-1-5-thinking-pro-250415": 2,
     "doubao-1-5-thinking-pro-vision": 2,
     "doubao-1-5-thinking-pro-vision-250415": 2,
@@ -795,7 +799,7 @@ MODEL_RATIO = {
     "gemini-2.5-pro-exp-03-25-thinking": 0.625 * 2,
     "gemini-2.5-pro-preview-03-25-thinking": 0.625 * 2,
 
-    "gemini-thinking": 0.625 * 2,  # 逆向
+    "gemini-thinking": 0.625,  # 逆向
 
     "gpt-3.5-turbo": 0.75,
     "gpt-3.5-turbo-0125": 0.25,
@@ -830,6 +834,7 @@ MODEL_RATIO = {
     "gpt-4o-all": 2.5,  # 逆向
     "gpt-4o-2024-05-13": 1.25,
     "gpt-4o-mini": 0.075,
+    "gpt-4o-mini-tts": 0.3,
     "gpt-4o-mini-2024-07-18": 0.075,
     "gpt-4o-2024-08-06": 1.25,
     "gpt-4o-2024-11-20": 1.25,
@@ -874,6 +879,8 @@ MODEL_RATIO = {
     "mixtral-8x7b-32768": 0.01,
     "llama-3.1-8b-instant": 0.01,
     "llama-3.1-70b-versatile": 3,
+
+    "llama-vision": 0.1,
 
     # sili
     "gemma2-9b-it": 0.1,
@@ -967,6 +974,7 @@ COMPLETION_RATIO = {
     "gpt-4o-2024-11-20": 4,
 
     "gpt-4o-mini-audio-preview": 4,
+    "gpt-4o-mini-tts": 20,
 
     "gpt-4o-audio-preview": 4,
     "gpt-4o-audio-preview-2024-12-17": 4,
@@ -1002,6 +1010,8 @@ COMPLETION_RATIO = {
     "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8": 3,
 
     "llama-3.3-70b-instruct": 4,
+
+    "llama-vision": 4,
 
     "command": 4,
     "command-light": 4,
@@ -1087,11 +1097,13 @@ COMPLETION_RATIO = {
 
     "qwen-plus": 2.5,
 
+
     "qwq-plus": 2.5,
     "qwq-max": 2.5,
     "qwq-max-search": 4,
     "qwen-max-search": 4,
     "qvq-max-2025-03-25": 4,
+    "qwen-math-plus": 3,
 
     "qwen2.5-7b-instruct": 4,
     "qwen2.5-14b-instruct": 4,
@@ -1149,6 +1161,8 @@ COMPLETION_RATIO = {
     "doubao-1-5-thinking-pro-vision": 4,
     "doubao-1-5-thinking-pro-vision-250415": 4,
     "doubao-1-5-thinking-pro-m-250415": 4,
+
+    "doubao-1-5-thinking-vision-pro-250428": 3,
 
     "deepseek-prover-v2-671b": 4,
     "deepseek-r1:1.5b": 4,

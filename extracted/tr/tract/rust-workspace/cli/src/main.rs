@@ -158,6 +158,7 @@ fn main() -> TractResult<()> {
         .arg(arg!(--"nnef-tract-onnx" "Allow usage of tract-onnx extension in NNEF dump and load"))
         .arg(arg!(--"nnef-tract-pulse" "Allow usage of tract-pulse extension in NNEF dump and load"))
         .arg(arg!(--"nnef-tract-extra" "Allow usage of tract-extra extension in NNEF dump and load"))
+        .arg(arg!(--"nnef-tract-transformers" "Allow usage of tract-transformers extension in NNEF dump and load"))
         .arg(arg!(--"nnef-extended-identifier" "Allow usage of the i\"...\" syntax to escape identifier names"))
 
         .arg(arg!(--"threads" [THREADS] "Setup a thread pool for computing. 0 will guess the number of physical cores"))
@@ -315,8 +316,8 @@ fn main() -> TractResult<()> {
             std::env::set_var("METAL_CAPTURE_ENABLED", "1");
             std::env::set_var("METAL_DEVICE_WRAPPER_TYPE", "1");
             let probe_ref = probe.as_ref();
-            tract_metal::METAL_CONTEXT.with_borrow(move |context| {
-                context.capture_trace(gpu_trace_path, move |_ctxt| handle(matches, probe_ref))
+            tract_metal::METAL_STREAM.with_borrow(move |stream| {
+                stream.capture_trace(gpu_trace_path, move |_stream| handle(matches, probe_ref))
             })
         }
         #[cfg(not(any(target_os = "macos", target_os = "ios")))]
@@ -328,7 +329,7 @@ fn main() -> TractResult<()> {
     };
 
     if let Err(e) = res {
-        error!("{:?}", e);
+        error!("{e:?}");
         std::process::exit(1);
     }
 
@@ -713,7 +714,7 @@ fn handle(matches: clap::ArgMatches, probe: Option<&Probe>) -> TractResult<()> {
         multithread::set_default_executor(multithread::Executor::multithread(threads));
     }
     #[cfg(not(feature = "multithread-mm"))]
-    if let Some(_) = matches.value_of("threads") {
+    if matches.value_of("threads").is_some() {
         bail!("tract is compiled without multithread support")
     }
 
@@ -817,6 +818,17 @@ fn nnef(matches: &clap::ArgMatches) -> tract_nnef::internal::Nnef {
         #[cfg(not(feature = "extra"))]
         {
             panic!("tract is build without tract-extra support")
+        }
+    }
+    if matches.is_present("nnef-tract-transformers") {
+        #[cfg(feature = "transformers")]
+        {
+            use tract_transformers::WithTractTransformers;
+            fw = fw.with_tract_transformers();
+        }
+        #[cfg(not(feature = "transformers"))]
+        {
+            panic!("tract is build without tract-transformers support")
         }
     }
     if matches.is_present("nnef-tract-core") {

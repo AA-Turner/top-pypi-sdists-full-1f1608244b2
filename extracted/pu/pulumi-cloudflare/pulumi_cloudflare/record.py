@@ -486,6 +486,7 @@ class _RecordState:
 warnings.warn("""cloudflare.index/record.Record has been deprecated in favor of cloudflare.index/dnsrecord.DnsRecord""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/record:Record")
 class Record(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/record.Record has been deprecated in favor of cloudflare.index/dnsrecord.DnsRecord""", DeprecationWarning)
 
@@ -717,7 +718,7 @@ class Record(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def data(self) -> pulumi.Output['outputs.RecordData']:
+    def data(self) -> pulumi.Output[Optional['outputs.RecordData']]:
         """
         Components of a CAA record.
         """

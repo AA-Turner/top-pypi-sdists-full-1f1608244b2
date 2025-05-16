@@ -33,23 +33,12 @@ class IAMTokenAuth(RefreshableTokenAuth):
         on_token_refresh: Callable[[], None] | None = None,
     ) -> None:
         RefreshableTokenAuth.__init__(
-            self, api_client, on_token_creation, on_token_refresh, timedelta(minutes=15)
+            self, api_client, on_token_creation, on_token_refresh
         )
 
         if not api_client._is_IAM():
             raise WMLClientError(
                 "api_key for IAM token is not provided in credentials for the client."
-            )
-
-        self._save_token_data(self._generate_token())
-        if self._on_token_creation:
-            self._on_token_creation()
-
-        # update of minimal expiration datetime based on token expiration datetime
-        delta = self._get_expiration_datetime() - datetime.now()
-        if delta < self._expiration_timedelta:
-            self._expiration_timedelta = (
-                delta - timedelta(minutes=1) if delta > timedelta(minutes=1) else delta
             )
 
     def _generate_token(self) -> TokenInfo:

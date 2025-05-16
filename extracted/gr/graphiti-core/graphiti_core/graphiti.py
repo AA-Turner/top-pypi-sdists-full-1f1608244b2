@@ -41,6 +41,7 @@ from graphiti_core.search.search_config_recipes import (
 from graphiti_core.search.search_filters import SearchFilters
 from graphiti_core.search.search_utils import (
     RELEVANT_SCHEMA_LIMIT,
+    get_edge_invalidation_candidates,
     get_mentioned_nodes,
     get_relevant_edges,
 )
@@ -62,9 +63,8 @@ from graphiti_core.utils.maintenance.community_operations import (
 )
 from graphiti_core.utils.maintenance.edge_operations import (
     build_episodic_edges,
-    dedupe_extracted_edge,
     extract_edges,
-    resolve_edge_contradictions,
+    resolve_extracted_edge,
     resolve_extracted_edges,
 )
 from graphiti_core.utils.maintenance.graph_data_operations import (
@@ -77,7 +77,6 @@ from graphiti_core.utils.maintenance.node_operations import (
     extract_nodes,
     resolve_extracted_nodes,
 )
-from graphiti_core.utils.maintenance.temporal_operations import get_edge_contradictions
 from graphiti_core.utils.ontology_utils.entity_types_utils import validate_entity_types
 
 logger = logging.getLogger(__name__)
@@ -380,6 +379,7 @@ class Graphiti:
                 resolve_extracted_edges(
                     self.clients,
                     edges,
+                    episode,
                 ),
                 extract_attributes_from_nodes(
                     self.clients, nodes, episode, previous_episodes, entity_types
@@ -396,7 +396,7 @@ class Graphiti:
                 episode.content = ''
 
             await add_nodes_and_edges_bulk(
-                self.driver, [episode], episodic_edges, hydrated_nodes, entity_edges
+                self.driver, [episode], episodic_edges, hydrated_nodes, entity_edges, self.embedder
             )
 
             # Update any communities
@@ -680,15 +680,17 @@ class Graphiti:
 
         updated_edge = resolve_edge_pointers([edge], uuid_map)[0]
 
-        related_edges = await get_relevant_edges(self.driver, [updated_edge], SearchFilters(), 0.8)
+        related_edges = (await get_relevant_edges(self.driver, [updated_edge], SearchFilters()))[0]
+        existing_edges = (
+            await get_edge_invalidation_candidates(self.driver, [updated_edge], SearchFilters())
+        )[0]
 
-        resolved_edge = await dedupe_extracted_edge(self.llm_client, updated_edge, related_edges[0])
-
-        contradicting_edges = await get_edge_contradictions(self.llm_client, edge, related_edges[0])
-        invalidated_edges = resolve_edge_contradictions(resolved_edge, contradicting_edges)
+        resolved_edge, invalidated_edges = await resolve_extracted_edge(
+            self.llm_client, updated_edge, related_edges, existing_edges
+        )
 
         await add_nodes_and_edges_bulk(
-            self.driver, [], [], resolved_nodes, [resolved_edge] + invalidated_edges
+            self.driver, [], [], resolved_nodes, [resolved_edge] + invalidated_edges, self.embedder
         )
 
     async def remove_episode(self, episode_uuid: str):

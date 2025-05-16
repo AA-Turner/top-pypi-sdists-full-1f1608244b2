@@ -1,8 +1,9 @@
 use crate::kernels::nn::Reducer;
 use crate::ops::MetalEvalOp;
-use crate::{MetalContext, MetalTensorExt};
+use crate::MetalStream;
 use tract_core::internal::*;
 use tract_core::ops::nn as core_ops_nn;
+use tract_gpu::tensor::DeviceTensorExt;
 use tract_itertools::Itertools;
 
 #[derive(Clone, Debug, Hash)]
@@ -45,19 +46,19 @@ crate::impl_eval_op_for_metal_op!(MetalReduce);
 impl MetalEvalOp for MetalReduce {
     fn metal_eval(
         &self,
-        context: &MetalContext,
+        stream: &MetalStream,
         node_id: usize,
         session: &mut SessionState,
         inputs: TVec<TValue>,
     ) -> TractResult<TVec<TValue>> {
         let opaque = args_1!(inputs);
-        let input = opaque.to_metal_tensor()?;
+        let input = opaque.to_device_tensor()?;
         let mut output_shape = input.shape().to_vec();
         output_shape[self.axes[0]] = 1;
         let output =
             crate::ops::make_tensor_for_node(session, node_id, input.datum_type(), &output_shape)?;
 
-        self.reducer.dispatch_eval(context, input, self.axes[0], &output)?;
+        self.reducer.dispatch_eval(stream, input, self.axes[0], &output)?;
 
         Ok(tvec!(output.into_opaque_tensor().into_tvalue()))
     }
@@ -66,7 +67,7 @@ impl MetalEvalOp for MetalReduce {
 impl TypedOp for MetalReduce {
     fn output_facts(&self, inputs: &[&TypedFact]) -> TractResult<TVec<TypedFact>> {
         ensure!(self.axes.iter().tuple_windows().all(|(a, b)| a < b));
-        crate::utils::metal_facts_from_gpu(inputs, |facts| {
+        tract_gpu::utils::facts_to_device_facts(inputs, |facts| {
             let mut shape: TVec<_> = facts[0].shape.to_tvec();
             for &ax in &self.axes {
                 shape[ax] = 1.to_dim();
@@ -74,7 +75,7 @@ impl TypedOp for MetalReduce {
             let dt = facts[0].datum_type;
             Ok(tvec!(dt.fact(shape)))
         })
-        .with_context(|| anyhow::anyhow!("Error while computing facts for {:?}", self.name()))
+        .with_context(|| format!("Error while computing facts for {:?}", self.name()))
     }
 
     as_op!();

@@ -3,9 +3,9 @@ import importlib
 import os
 import sys
 from pathlib import Path
-from types import ModuleType
-from typing import List, Set
+from typing import Any, Dict, Optional, Set, Tuple
 
+from chalk.utils.cached_type_hints import cached_get_type_hints
 from chalk.utils.log_with_context import get_logger
 from chalk.utils.paths import get_directory_root
 
@@ -24,7 +24,7 @@ def py_path_to_module(path: Path, repo_root: Path) -> str:
     return ans
 
 
-def import_only_type_checking_imports(file_path: str) -> List[ModuleType]:
+def import_only_type_checking_imports(file_path: str) -> ast.Module:
     with open(file_path, "r") as f:
         tree = ast.parse(f.read())
 
@@ -77,7 +77,7 @@ def import_only_type_checking_imports(file_path: str) -> List[ModuleType]:
 
     # Remove the file's directory from sys.path
     sys.path.pop(0)
-    return imported_modules
+    return tree
 
 
 def find_type_checking_aliases(tree: ast.AST) -> Set[str]:
@@ -107,3 +107,91 @@ def find_type_checking_aliases(tree: ast.AST) -> Set[str]:
                         aliases.add(alias.asname or alias.name)
 
     return aliases
+
+
+def gather_all_imports_and_local_classes(tree: ast.Module) -> Tuple[list[str], list[str], list[str]]:
+    # Lists to store the different types of imports
+    regular_from_imports: list[str] = []
+    type_checking_imports: list[str] = []
+    local_classes: list[str] = []
+
+    # Track if we're inside a TYPE_CHECKING conditional
+    def is_type_checking_if(node: ast.AST) -> bool:
+        if not isinstance(node, ast.If):
+            return False
+        # Check if the condition is 'TYPE_CHECKING'
+        if isinstance(node.test, ast.Name) and node.test.id == "TYPE_CHECKING":
+            return True
+        # Check if the condition is 'typing.TYPE_CHECKING'
+        if (
+            isinstance(node.test, ast.Attribute)
+            and isinstance(node.test.value, ast.Name)
+            and node.test.value.id == "typing"
+            and node.test.attr == "TYPE_CHECKING"
+        ):
+            return True
+        return False
+
+    def process_node(node: ast.AST, is_in_type_checking: bool = False) -> None:
+        # Only process actual AST nodes, not strings or other types
+        if not isinstance(node, ast.AST):  # pyright: ignore[reportUnnecessaryIsInstance]
+            return
+
+        # Handle class definitions
+        if isinstance(node, ast.ClassDef):
+            local_classes.append(node.name)
+
+        # Handle import statements
+        elif isinstance(node, ast.Import):
+            for name in node.names:
+                if is_in_type_checking:
+                    type_checking_imports.append(name.name)
+        elif isinstance(node, ast.ImportFrom):
+            for name in node.names:
+                if is_in_type_checking:
+                    type_checking_imports.append(name.name)
+                else:
+                    regular_from_imports.append(name.name)
+
+        # Check for TYPE_CHECKING conditionals
+        elif isinstance(node, ast.If) and is_type_checking_if(node):
+            # Process the body of the TYPE_CHECKING if statement
+            for child in node.body:
+                process_node(child, True)
+            return  # Skip normal child processing, we've already handled this if's body
+
+        # Process all child nodes
+        for child_node in ast.iter_child_nodes(node):
+            process_node(child_node, is_in_type_checking)
+
+    # Process the entire AST starting from the root
+    process_node(tree)
+
+    return regular_from_imports, type_checking_imports, local_classes
+
+
+def get_detailed_type_hint_errors(
+    cls: Any, include_extras: bool, globalns: Optional[Dict[str, Any]]
+) -> Dict[str, Exception]:
+    errors = {}
+
+    # Get all annotations (even unevaluated ones)
+    annotations = getattr(cls, "__annotations__", {})
+
+    for attr_name, annotation in annotations.items():
+        # Create a mini class with just this one annotation
+        try:
+
+            class SingleAttr:
+                pass
+
+            # Add just this one annotation to the class
+            SingleAttr.__annotations__ = {attr_name: annotation}
+
+            # Try to get type hints for just this attribute
+            cached_get_type_hints(SingleAttr, include_extras=include_extras, globalns=globalns)
+
+        except Exception as e:
+            errors[attr_name] = e
+
+    return errors

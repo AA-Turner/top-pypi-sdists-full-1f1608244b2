@@ -388,6 +388,7 @@ class _StreamLiveInputState:
         pulumi.set(self, "web_rtc_playback", value)
 
 
+@pulumi.type_token("cloudflare:index/streamLiveInput:StreamLiveInput")
 class StreamLiveInput(pulumi.CustomResource):
     @overload
     def __init__(__self__,

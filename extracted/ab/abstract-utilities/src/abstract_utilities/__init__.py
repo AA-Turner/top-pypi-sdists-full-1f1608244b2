@@ -102,7 +102,9 @@ from .type_utils import (make_bool,
                          get_media_types,
                          get_all_file_types,
                          is_media_type,
-                         get_bool_response)
+                         get_bool_response,
+                         get_mime_type,
+                         get_media_exts)
 from .math_utils import (convert_to_percentage,
                          exponential,
                          get_percentage,

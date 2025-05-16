@@ -11,8 +11,10 @@ from typing import Optional
 from maleo_foundation.client.manager import MaleoFoundationClientManager
 from maleo_foundation.enums import BaseEnums
 from maleo_foundation.models.schemas.general import BaseGeneralSchemas
-from maleo_foundation.models.transfers.general.token import MaleoFoundationTokenGeneralTransfers
-from maleo_foundation.models.transfers.parameters.token import MaleoFoundationTokenParametersTransfers
+from maleo_foundation.models.transfers.general.token \
+    import MaleoFoundationTokenGeneralTransfers
+from maleo_foundation.models.transfers.parameters.token \
+    import MaleoFoundationTokenParametersTransfers
 from maleo_foundation.managers.db import DatabaseConfigurations, DatabaseManager
 from maleo_foundation.managers.client.google.secret import GoogleSecretManager
 from maleo_foundation.managers.client.google.storage import GoogleCloudStorage
@@ -27,7 +29,11 @@ from maleo_foundation.managers.middleware import (
 from maleo_foundation.types import BaseTypes
 from maleo_foundation.utils.exceptions import BaseExceptions
 from maleo_foundation.utils.loaders.yaml import YAMLLoader
-from maleo_foundation.utils.logging import SimpleConfig, ServiceLogger, MiddlewareLogger
+from maleo_foundation.utils.logging import (
+    SimpleConfig,
+    ServiceLogger,
+    MiddlewareLogger
+)
 from maleo_foundation.utils.mergers import BaseMergers
 
 class Settings(BaseSettings):
@@ -161,27 +167,49 @@ class ServiceManager:
         return self._google_credentials
 
     def _initialize_secret_manager(self) -> None:
-        self._secret_manager = GoogleSecretManager(log_config=self._log_config, service_key=self._settings.SERVICE_KEY, credentials=self._google_credentials)
+        self._secret_manager = GoogleSecretManager(
+            log_config=self._log_config,
+            service_key=self._settings.SERVICE_KEY,
+            credentials=self._google_credentials
+        )
 
     @property
     def secret_manager(self) -> GoogleSecretManager:
         return self._secret_manager
 
     def _initialize_cloud_storage(self) -> None:
-        environment = BaseEnums.EnvironmentType.STAGING if self._settings.ENVIRONMENT == BaseEnums.EnvironmentType.LOCAL else self._settings.ENVIRONMENT
-        self._cloud_storage = GoogleCloudStorage(log_config=self._log_config, service_key=self._settings.SERVICE_KEY, bucket_name=f"maleo-suite-{environment}", credentials=self._google_credentials)
+        environment = (
+            BaseEnums.EnvironmentType.STAGING
+            if self._settings.ENVIRONMENT == BaseEnums.EnvironmentType.LOCAL
+            else self._settings.ENVIRONMENT
+        )
+        self._cloud_storage = GoogleCloudStorage(
+            log_config=self._log_config,
+            service_key=self._settings.SERVICE_KEY,
+            bucket_name=f"maleo-suite-{environment}",
+            credentials=self._google_credentials
+        )
 
     @property
     def cloud_storage(self) -> GoogleCloudStorage:
         return self._cloud_storage
 
     def _load_maleo_credentials(self) -> None:
-        environment = BaseEnums.EnvironmentType.STAGING if self._settings.ENVIRONMENT == BaseEnums.EnvironmentType.LOCAL else self._settings.ENVIRONMENT
+        environment = (
+            BaseEnums.EnvironmentType.STAGING
+            if self._settings.ENVIRONMENT == BaseEnums.EnvironmentType.LOCAL
+            else self._settings.ENVIRONMENT
+        )
         id = int(self._secret_manager.get(f"maleo-service-account-id-{environment}"))
         email = self._secret_manager.get("maleo-service-account-email")
         username = self._secret_manager.get("maleo-service-account-username")
         password = self._secret_manager.get("maleo-service-account-password")
-        self._maleo_credentials = MaleoCredentials(id=id, username=username, email=email, password=password)
+        self._maleo_credentials = MaleoCredentials(
+            id=id,
+            username=username,
+            email=email,
+            password=password
+        )
 
     @property
     def maleo_credentials(self) -> MaleoCredentials:
@@ -209,10 +237,18 @@ class ServiceManager:
         #* Load database configurations
         password = self._secret_manager.get(name=f"maleo-db-password-{self._settings.ENVIRONMENT}")
         host = self._secret_manager.get(name=f"maleo-db-host-{self._settings.ENVIRONMENT}")
-        database = DatabaseConfigurations(password=password, host=host, database=runtime_configs.database)
+        database = DatabaseConfigurations(
+            password=password,
+            host=host,
+            database=runtime_configs.database
+        )
 
         #* Load whole configurations
-        merged_configs = BaseMergers.deep_merge(static_configs.model_dump(), runtime_configs.model_dump(exclude={"database"}), {"database": database.model_dump()})
+        merged_configs = BaseMergers.deep_merge(
+            static_configs.model_dump(),
+            runtime_configs.model_dump(exclude={"database"}),
+            {"database": database.model_dump()}
+        )
         self._configs = Configurations.model_validate(merged_configs)
 
     @property
@@ -223,7 +259,11 @@ class ServiceManager:
         password = self._secret_manager.get(name="maleo-key-password")
         private = self._secret_manager.get(name="maleo-private-key")
         public = self._secret_manager.get(name="maleo-public-key")
-        self._keys = BaseGeneralSchemas.RSAKeys(password=password, private=private, public=public)
+        self._keys = BaseGeneralSchemas.RSAKeys(
+            password=password,
+            private=private,
+            public=public
+        )
 
     @property
     def keys(self) -> BaseGeneralSchemas.RSAKeys:
@@ -231,34 +271,58 @@ class ServiceManager:
 
     def _initialize_loggers(self) -> None:
         #* Service's loggers
-        application = ServiceLogger(type=BaseEnums.LoggerType.APPLICATION, service_key=self._configs.service.key, **self._log_config.model_dump())
-        database = ServiceLogger(type=BaseEnums.LoggerType.DATABASE, service_key=self._configs.service.key, **self._log_config.model_dump())
+        application = ServiceLogger(
+            type=BaseEnums.LoggerType.APPLICATION,
+            service_key=self._configs.service.key,
+            **self._log_config.model_dump()
+        )
+        database = ServiceLogger(
+            type=BaseEnums.LoggerType.DATABASE,
+            service_key=self._configs.service.key,
+            **self._log_config.model_dump()
+        )
         #* Middleware's loggers
-        base = MiddlewareLogger(middleware_type=BaseEnums.MiddlewareLoggerType.BASE, service_key=self._configs.service.key, **self._log_config.model_dump())
-        authentication = MiddlewareLogger(middleware_type=BaseEnums.MiddlewareLoggerType.AUTHENTICATION, service_key=self._configs.service.key, **self._log_config.model_dump())
+        base = MiddlewareLogger(
+            middleware_type=BaseEnums.MiddlewareLoggerType.BASE,
+            service_key=self._configs.service.key,
+            **self._log_config.model_dump()
+        )
+        authentication = MiddlewareLogger(
+            middleware_type=BaseEnums.MiddlewareLoggerType.AUTHENTICATION,
+            service_key=self._configs.service.key,
+            **self._log_config.model_dump()
+        )
         middleware = MiddlewareLoggers(base=base, authentication=authentication)
-        self._loggers = Loggers(application=application, database=database, middleware=middleware)
+        self._loggers = Loggers(
+            application=application,
+            database=database,
+            middleware=middleware
+        )
 
     @property
     def loggers(self) -> Loggers:
         return self._loggers
 
     def _initialize_db(self) -> None:
-        self._database = DatabaseManager(metadata=self._db_metadata, logger=self._loggers.database, url=self._configs.database.url)
+        self._database = DatabaseManager(
+            metadata=self._db_metadata,
+            logger=self._loggers.database,
+            url=self._configs.database.url
+        )
 
     @property
     def database(self) -> DatabaseManager:
         return self._database
 
     def _initialize_foundation(self) -> None:
-        self._foundation = MaleoFoundationClientManager(log_config=self._log_config, service_key=self._settings.SERVICE_KEY)
+        self._foundation = MaleoFoundationClientManager(
+            log_config=self._log_config,
+            service_key=self._settings.SERVICE_KEY
+        )
 
     @property
     def foundation(self) -> MaleoFoundationClientManager:
         return self._foundation
-
-    async def generate_token(self) -> BaseTypes.OptionalString:
-        raise NotImplementedError()
 
     @property
     def token(self) -> BaseTypes.OptionalString:
@@ -268,16 +332,29 @@ class ServiceManager:
             sr="administrator",
             u_u=self._maleo_credentials.username,
             u_e=self._maleo_credentials.email,
-            u_ut="service"
+            u_ut="service",
+            exp_in=1
         )
-        parameters = MaleoFoundationTokenParametersTransfers.Encode(key=self._keys.private, password=self._keys.password, payload=payload)
+        parameters = MaleoFoundationTokenParametersTransfers.Encode(
+            key=self._keys.private,
+            password=self._keys.password,
+            payload=payload
+        )
         result = self._foundation.services.token.encode(parameters=parameters)
         return result.data.token if result.success else None
 
-    def create_app(self, router:APIRouter, lifespan:Optional[Lifespan[AppType]] = None) -> FastAPI:
+    def create_app(
+        self,
+        router:APIRouter,
+        lifespan:Optional[Lifespan[AppType]]=None
+    ) -> FastAPI:
         self._loggers.application.info("Creating FastAPI application")
         root_path = "" if self._settings.ENVIRONMENT == "local" else f"/{self._configs.service.key.removeprefix("maleo-")}"
-        self._app = FastAPI(title=self._configs.service.name, lifespan=lifespan, root_path=root_path)
+        self._app = FastAPI(
+            title=self._configs.service.name,
+            lifespan=lifespan,
+            root_path=root_path
+        )
         self._loggers.application.info("FastAPI application created successfully")
 
         #* Add middleware(s)
@@ -294,8 +371,14 @@ class ServiceManager:
 
         #* Add exception handler(s)
         self._loggers.application.info("Adding exception handlers")
-        self._app.add_exception_handler(RequestValidationError, BaseExceptions.validation_exception_handler)
-        self._app.add_exception_handler(HTTPException, BaseExceptions.http_exception_handler)
+        self._app.add_exception_handler(
+            exc_class_or_status_code=RequestValidationError,
+            handler=BaseExceptions.validation_exception_handler
+        )
+        self._app.add_exception_handler(
+            exc_class_or_status_code=HTTPException,
+            handler=BaseExceptions.http_exception_handler
+        )
         self._loggers.application.info("Exception handlers addedd successfully")
 
         #* Include router

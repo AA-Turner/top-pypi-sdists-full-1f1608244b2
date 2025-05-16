@@ -38,6 +38,11 @@ class Config:
     The address of the Beaker server.
     """
 
+    rpc_address: str = "beaker.org:443"
+    """
+    The address of the Beaker gRPC server.
+    """
+
     default_org: Optional[str] = "ai2"
     """
     Default Beaker organization to use.
@@ -65,11 +70,6 @@ class Config:
             self.default_workspace = None
         if self.default_image is not None and len(self.default_image) == 0:
             self.default_image = None
-
-    @property
-    def rpc_address(self) -> str:
-        # TODO: hard-coded for now since this isn't part of the Beaker YAML configs.
-        return "beaker.org:443"
 
     def __str__(self) -> str:
         fields_str = "user_token=***, " + ", ".join(

@@ -65,7 +65,11 @@ from ..base_experiment.base_experiment import BaseExperiment
 __all__ = ["AutoAI"]
 
 from ...credentials import Credentials
-from ...foundation_models.schema import AutoAIRAGModelConfig, AutoAIRAGCustomModelConfig
+from ...foundation_models.schema import (
+    AutoAIRAGModelConfig,
+    AutoAIRAGCustomModelConfig,
+    AutoAIRAGRetrievalConfig,
+)
 
 if TYPE_CHECKING:
     from .optimizers import RAGOptimizer
@@ -942,7 +946,7 @@ class AutoAI(BaseExperiment):
         max_number_of_rag_patterns: int | None = None,
         optimization_metrics: list[str] | None = None,
         generation: dict[str, Any] | None = None,
-        retrieval: list[dict[str, Any]] | None = None,
+        retrieval: list[dict[str, Any] | AutoAIRAGRetrievalConfig] | None = None,
         **kwargs: Any,
     ) -> "RAGOptimizer":
         """Initialize an AutoAi RAG optimizer.
@@ -975,7 +979,7 @@ class AutoAI(BaseExperiment):
         :type generation: dict[str, Any], optional
 
         :param retrieval: Retrieval settings to be used.
-        :type retrieval: list[dict[str, Any]], optional
+        :type retrieval: list[dict[str, Any] | AutoAIRAGRetrievalConfig], optional
 
         :return: AutoAI RAG optimizer
         :rtype: RAGOptimizer

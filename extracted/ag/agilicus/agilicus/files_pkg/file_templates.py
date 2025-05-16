@@ -17,7 +17,7 @@ from ..output.table import (
 )
 
 from ..files import upload
-from ..users import get_user
+from ..users import get_user, list_user_resource_access_info
 
 
 def _args_from_list(arg_list):
@@ -158,6 +158,7 @@ def render_file_template(
     as_attachment=False,
     org_id=None,
     user_id=None,
+    no_access_info=False,
 ) -> io.BufferedReader:
     token = context.get_token(ctx)
     apiclient = context.get_apiclient(ctx, token)
@@ -173,13 +174,30 @@ def render_file_template(
         request._check_type = False
         request.user_information = user
         request._check_type = True
-    if resource_id is not None:
-        svc = apiclient.app_services_api.get_application_service(
-            resource_id, org_id=org_id
-        )
-        request.resource_information = resource_info_from_app_svc(svc)
+
+    _add_resource_info(
+        ctx, apiclient, request, resource_id, user_id, no_access_info, org_id
+    )
 
     return apiclient.files_api.render_file_template(file_template_id, request)
+
+
+def _add_resource_info(
+    ctx, apiclient, request, resource_id, user_id, no_access_info, org_id
+):
+    if not resource_id:
+        return
+    if not no_access_info and user_id:
+        access_info = list_user_resource_access_info(
+            ctx, user_id=user_id, resource_id=resource_id, org_id=org_id
+        )
+        if access_info:
+            request.resource_information = agilicus.FileTemplateResourceInfo()
+            request.resource_information.user_resource_info = access_info[0].status
+            return
+
+    svc = apiclient.app_services_api.get_application_service(resource_id, org_id=org_id)
+    request.resource_information = resource_info_from_app_svc(svc)
 
 
 def resource_info_from_app_svc(svc):

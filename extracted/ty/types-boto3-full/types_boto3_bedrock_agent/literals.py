@@ -31,6 +31,7 @@ __all__ = (
     "AgentsforBedrockServiceName",
     "CachePointTypeType",
     "ChunkingStrategyType",
+    "ConcurrencyTypeType",
     "ConfluenceAuthTypeType",
     "ConfluenceHostTypeType",
     "ContentDataSourceTypeType",
@@ -48,11 +49,13 @@ __all__ = (
     "EnrichmentStrategyMethodType",
     "FlowConnectionTypeType",
     "FlowNodeIODataTypeType",
+    "FlowNodeInputCategoryType",
     "FlowNodeTypeType",
     "FlowStatusType",
     "FlowValidationSeverityType",
     "FlowValidationTypeType",
     "IncludeExcludeType",
+    "IncompatibleLoopNodeTypeType",
     "IngestionJobFilterAttributeType",
     "IngestionJobFilterOperatorType",
     "IngestionJobSortByAttributeType",
@@ -83,6 +86,7 @@ __all__ = (
     "PaginatorName",
     "ParsingModalityType",
     "ParsingStrategyType",
+    "PerformanceConfigLatencyType",
     "PromptStateType",
     "PromptTemplateTypeType",
     "PromptTypeType",
@@ -93,6 +97,7 @@ __all__ = (
     "RedshiftServerlessAuthTypeType",
     "RelayConversationHistoryType",
     "RequireConfirmationType",
+    "RerankingMetadataSelectionModeType",
     "ResourceServiceName",
     "SalesforceAuthTypeType",
     "ServiceName",
@@ -103,6 +108,7 @@ __all__ = (
     "SupplementalDataStorageLocationTypeType",
     "SupportedLanguagesType",
     "TypeType",
+    "VectorSearchRerankingConfigurationTypeType",
     "WebScopeTypeType",
 )
 
@@ -131,6 +137,7 @@ AgentStatusType = Literal[
 ]
 CachePointTypeType = Literal["default"]
 ChunkingStrategyType = Literal["FIXED_SIZE", "HIERARCHICAL", "NONE", "SEMANTIC"]
+ConcurrencyTypeType = Literal["Automatic", "Manual"]
 ConfluenceAuthTypeType = Literal["BASIC", "OAUTH2_CLIENT_CREDENTIALS"]
 ConfluenceHostTypeType = Literal["SAAS"]
 ContentDataSourceTypeType = Literal["CUSTOM", "S3"]
@@ -163,6 +170,7 @@ EmbeddingDataTypeType = Literal["BINARY", "FLOAT32"]
 EnrichmentStrategyMethodType = Literal["CHUNK_ENTITY_EXTRACTION"]
 FlowConnectionTypeType = Literal["Conditional", "Data"]
 FlowNodeIODataTypeType = Literal["Array", "Boolean", "Number", "Object", "String"]
+FlowNodeInputCategoryType = Literal["ExitLoop", "LoopCondition", "ReturnValueToLoopStart"]
 FlowNodeTypeType = Literal[
     "Agent",
     "Collector",
@@ -173,6 +181,9 @@ FlowNodeTypeType = Literal[
     "KnowledgeBase",
     "LambdaFunction",
     "Lex",
+    "Loop",
+    "LoopController",
+    "LoopInput",
     "Output",
     "Prompt",
     "Retrieval",
@@ -185,6 +196,8 @@ FlowValidationTypeType = Literal[
     "DuplicateConditionExpression",
     "DuplicateConnections",
     "IncompatibleConnectionDataType",
+    "InvalidLoopBoundary",
+    "LoopIncompatibleNodeType",
     "MalformedConditionExpression",
     "MalformedNodeInputExpression",
     "MismatchedNodeInputType",
@@ -192,10 +205,14 @@ FlowValidationTypeType = Literal[
     "MissingConnectionConfiguration",
     "MissingDefaultCondition",
     "MissingEndingNodes",
+    "MissingLoopControllerNode",
+    "MissingLoopInputNode",
     "MissingNodeConfiguration",
     "MissingNodeInput",
     "MissingNodeOutput",
     "MissingStartingNodes",
+    "MultipleLoopControllerNodes",
+    "MultipleLoopInputNodes",
     "MultipleNodeInputConnections",
     "UnfulfilledNodeInput",
     "UnknownConnectionCondition",
@@ -210,6 +227,7 @@ FlowValidationTypeType = Literal[
     "Unspecified",
 ]
 IncludeExcludeType = Literal["EXCLUDE", "INCLUDE"]
+IncompatibleLoopNodeTypeType = Literal["Collector", "Condition", "Input", "Iterator"]
 IngestionJobFilterAttributeType = Literal["STATUS"]
 IngestionJobFilterOperatorType = Literal["EQ"]
 IngestionJobSortByAttributeType = Literal["STARTED_AT", "STATUS"]
@@ -251,6 +269,7 @@ MetadataValueTypeType = Literal["BOOLEAN", "NUMBER", "STRING", "STRING_LIST"]
 OrchestrationTypeType = Literal["CUSTOM_ORCHESTRATION", "DEFAULT"]
 ParsingModalityType = Literal["MULTIMODAL"]
 ParsingStrategyType = Literal["BEDROCK_DATA_AUTOMATION", "BEDROCK_FOUNDATION_MODEL"]
+PerformanceConfigLatencyType = Literal["optimized", "standard"]
 PromptStateType = Literal["DISABLED", "ENABLED"]
 PromptTemplateTypeType = Literal["CHAT", "TEXT"]
 PromptTypeType = Literal[
@@ -267,6 +286,7 @@ RedshiftQueryEngineTypeType = Literal["PROVISIONED", "SERVERLESS"]
 RedshiftServerlessAuthTypeType = Literal["IAM", "USERNAME_PASSWORD"]
 RelayConversationHistoryType = Literal["DISABLED", "TO_COLLABORATOR"]
 RequireConfirmationType = Literal["DISABLED", "ENABLED"]
+RerankingMetadataSelectionModeType = Literal["ALL", "SELECTIVE"]
 SalesforceAuthTypeType = Literal["OAUTH2_CLIENT_CREDENTIALS"]
 SharePointAuthTypeType = Literal[
     "OAUTH2_CLIENT_CREDENTIALS", "OAUTH2_SHAREPOINT_APP_ONLY_CLIENT_CREDENTIALS"
@@ -277,6 +297,7 @@ StepTypeType = Literal["POST_CHUNKING"]
 SupplementalDataStorageLocationTypeType = Literal["S3"]
 SupportedLanguagesType = Literal["Python_3"]
 TypeType = Literal["array", "boolean", "integer", "number", "string"]
+VectorSearchRerankingConfigurationTypeType = Literal["BEDROCK_RERANKING_MODEL"]
 WebScopeTypeType = Literal["HOST_ONLY", "SUBDOMAINS"]
 AgentsforBedrockServiceName = Literal["bedrock-agent"]
 ServiceName = Literal[

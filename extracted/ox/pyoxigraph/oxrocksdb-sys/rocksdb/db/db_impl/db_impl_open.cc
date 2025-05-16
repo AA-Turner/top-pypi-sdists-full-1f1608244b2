@@ -35,8 +35,8 @@ Options SanitizeOptions(const std::string& dbname, const Options& src,
   auto db_options =
       SanitizeOptions(dbname, DBOptions(src), read_only, logger_creation_s);
   ImmutableDBOptions immutable_db_options(db_options);
-  auto cf_options = SanitizeOptions(immutable_db_options, read_only,
-                                    ColumnFamilyOptions(src));
+  auto cf_options = SanitizeCfOptions(immutable_db_options, read_only,
+                                      ColumnFamilyOptions(src));
   return Options(db_options, cf_options);
 }
 
@@ -1119,7 +1119,7 @@ void DBOpenLogRecordReadReporter::Corruption(size_t bytes, const Status& s,
                  static_cast<int>(bytes), s.ToString().c_str());
   if (status != nullptr && status->ok()) {
     *status = s;
-    corrupted_log_number_ = log_number;
+    corrupted_wal_number_ = log_number;
   }
 }
 
@@ -1203,12 +1203,23 @@ Status DBImpl::ProcessLogFiles(
   PredecessorWALInfo predecessor_wal_info;
 
   for (auto wal_number : wal_numbers) {
+    // Detecting early break on the next iteration after `wal_number` has been
+    // advanced since this `wal_number` doesn't affect follow-up handling after
+    // breaking out of the for loop.
+    if (!status.ok()) {
+      break;
+    }
+    SequenceNumber prev_next_sequence = *next_sequence;
     if (status.ok()) {
       status = ProcessLogFile(
           wal_number, min_wal_number, is_retry, read_only, job_id,
           next_sequence, &stop_replay_for_corruption,
           &stop_replay_by_wal_filter, &corrupted_wal_number,
           corrupted_wal_found, version_edits, &flushed, predecessor_wal_info);
+    }
+    if (status.ok()) {
+      status = CheckSeqnoNotSetBackDuringRecovery(prev_next_sequence,
+                                                  *next_sequence);
     }
   }
 
@@ -1317,6 +1328,7 @@ Status DBImpl::ProcessLogFile(
     }
 
     // FIXME(hx235): consolidate `process_status` and `status`
+    SequenceNumber prev_next_sequence = *next_sequence;
     Status process_status = ProcessLogRecord(
         record, reader, running_ts_sz, wal_number, fname, read_only, job_id,
         logFileDropped, &reporter, &record_checksum, &last_seqno_observed,
@@ -1325,6 +1337,12 @@ Status DBImpl::ProcessLogFile(
 
     if (!process_status.ok()) {
       return process_status;
+    } else if (Status seqno_check_status = CheckSeqnoNotSetBackDuringRecovery(
+                   prev_next_sequence, *next_sequence);
+               !seqno_check_status.ok()) {
+      // Sequence number being set back indicates a serious software bug, the DB
+      // should not be opened in this case.
+      return seqno_check_status;
     } else if (*stop_replay_for_corruption) {
       break;
     }
@@ -1863,6 +1881,20 @@ Status DBImpl::MaybeFlushFinalMemtableOrRestoreActiveLogFiles(
   return status;
 }
 
+Status DBImpl::CheckSeqnoNotSetBackDuringRecovery(
+    SequenceNumber prev_next_seqno, SequenceNumber current_next_seqno) {
+  if (prev_next_seqno == kMaxSequenceNumber ||
+      prev_next_seqno <= current_next_seqno) {
+    return Status::OK();
+  }
+  std::string msg =
+      "Sequence number is being set backwards during recovery, this is likely "
+      "a software bug or a data corruption. Prev next seqno: " +
+      std::to_string(prev_next_seqno) +
+      " , current next seqno: " + std::to_string(current_next_seqno);
+  return Status::Corruption(msg);
+}
+
 void DBImpl::FinishLogFilesRecovery(int job_id, const Status& status) {
   event_logger_.Log() << "job" << job_id << "event"
                       << (status.ok() ? "recovery_finished" : "recovery_failed")
@@ -1870,8 +1902,8 @@ void DBImpl::FinishLogFilesRecovery(int job_id, const Status& status) {
 }
 
 Status DBImpl::GetLogSizeAndMaybeTruncate(uint64_t wal_number, bool truncate,
-                                          LogFileNumberSize* log_ptr) {
-  LogFileNumberSize log(wal_number);
+                                          WalFileNumberSize* log_ptr) {
+  WalFileNumberSize log(wal_number);
   std::string fname =
       LogFileName(immutable_db_options_.GetWalDir(), wal_number);
   Status s;
@@ -1914,27 +1946,27 @@ Status DBImpl::RestoreAliveLogFiles(const std::vector<uint64_t>& wal_numbers) {
   assert(immutable_db_options_.avoid_flush_during_recovery);
   // Mark these as alive so they'll be considered for deletion later by
   // FindObsoleteFiles()
-  total_log_size_ = 0;
-  log_empty_ = false;
+  wals_total_size_.StoreRelaxed(0);
+  wal_empty_ = false;
   uint64_t min_wal_with_unflushed_data =
       versions_->MinLogNumberWithUnflushedData();
   for (auto wal_number : wal_numbers) {
     if (!allow_2pc() && wal_number < min_wal_with_unflushed_data) {
       // In non-2pc mode, the WAL files not backing unflushed data are not
-      // alive, thus should not be added to the alive_log_files_.
+      // alive, thus should not be added to the alive_wal_files_.
       continue;
     }
     // We preallocate space for wals, but then after a crash and restart, those
     // preallocated space are not needed anymore. It is likely only the last
     // log has such preallocated space, so we only truncate for the last log.
-    LogFileNumberSize log;
+    WalFileNumberSize log;
     s = GetLogSizeAndMaybeTruncate(
         wal_number, /*truncate=*/(wal_number == wal_numbers.back()), &log);
     if (!s.ok()) {
       break;
     }
-    total_log_size_ += log.size;
-    alive_log_files_.push_back(log);
+    wals_total_size_.FetchAddRelaxed(log.size);
+    alive_wal_files_.push_back(log);
   }
   return s;
 }
@@ -1995,8 +2027,9 @@ Status DBImpl::WriteLevel0TableForRecovery(int job_id, ColumnFamilyData* cfd,
     meta.oldest_ancester_time = current_time;
     meta.epoch_number = cfd->NewEpochNumber();
     {
-      auto write_hint =
-          cfd->current()->storage_info()->CalculateSSTWriteHint(/*level=*/0);
+      auto write_hint = cfd->current()->storage_info()->CalculateSSTWriteHint(
+          /*level=*/0,
+          immutable_db_options_.calculate_sst_write_lifetime_hint_set);
       mutex_.Unlock();
 
       SequenceNumber earliest_write_conflict_snapshot;
@@ -2264,6 +2297,7 @@ IOStatus DBImpl::CreateWAL(const WriteOptions& write_options,
       BuildDBOptions(immutable_db_options_, mutable_db_options_);
   FileOptions opt_file_options =
       fs_->OptimizeForLogWrite(file_options_, db_options);
+  opt_file_options.write_hint = CalculateWALWriteHint();
   // DB option takes precedence when not kUnknown
   if (immutable_db_options_.wal_write_temperature != Temperature::kUnknown) {
     opt_file_options.temperature = immutable_db_options_.wal_write_temperature;
@@ -2285,7 +2319,9 @@ IOStatus DBImpl::CreateWAL(const WriteOptions& write_options,
   }
 
   if (io_s.ok()) {
-    lfile->SetWriteLifeTimeHint(CalculateWALWriteHint());
+    // Subsequent attempts to override the hint via SetWriteLifeTimeHint
+    // with the very same value will be ignored by the fs.
+    lfile->SetWriteLifeTimeHint(opt_file_options.write_hint);
     lfile->SetPreallocationBlockSize(preallocate_block_size);
 
     const auto& listeners = immutable_db_options_.listeners;
@@ -2413,18 +2449,18 @@ Status DBImpl::Open(const DBOptions& db_options, const std::string& dbname,
     if (s.ok()) {
       // Prevent log files created by previous instance from being recycled.
       // They might be in alive_log_file_, and might get recycled otherwise.
-      impl->min_log_number_to_recycle_ = new_log_number;
+      impl->min_wal_number_to_recycle_ = new_log_number;
     }
     if (s.ok()) {
-      InstrumentedMutexLock wl(&impl->log_write_mutex_);
-      impl->logfile_number_ = new_log_number;
+      InstrumentedMutexLock wl(&impl->wal_write_mutex_);
+      impl->cur_wal_number_ = new_log_number;
       assert(new_log != nullptr);
       assert(impl->logs_.empty());
       impl->logs_.emplace_back(new_log_number, new_log);
     }
 
     if (s.ok()) {
-      impl->alive_log_files_.emplace_back(impl->logfile_number_);
+      impl->alive_wal_files_.emplace_back(impl->cur_wal_number_);
       // In WritePrepared there could be gap in sequence numbers. This breaks
       // the trick we use in kPointInTimeRecovery which assumes the first seq in
       // the log right after the corrupted log is one larger than the last seq
@@ -2437,14 +2473,14 @@ Status DBImpl::Open(const DBOptions& db_options, const std::string& dbname,
       if (recovered_seq != kMaxSequenceNumber) {
         WriteBatch empty_batch;
         WriteBatchInternal::SetSequence(&empty_batch, recovered_seq);
-        uint64_t log_used, log_size;
+        uint64_t wal_used, log_size;
         log::Writer* log_writer = impl->logs_.back().writer;
-        LogFileNumberSize& log_file_number_size = impl->alive_log_files_.back();
+        WalFileNumberSize& wal_file_number_size = impl->alive_wal_files_.back();
 
-        assert(log_writer->get_log_number() == log_file_number_size.number);
+        assert(log_writer->get_log_number() == wal_file_number_size.number);
         impl->mutex_.AssertHeld();
-        s = impl->WriteToWAL(empty_batch, write_options, log_writer, &log_used,
-                             &log_size, log_file_number_size, recovered_seq);
+        s = impl->WriteToWAL(empty_batch, write_options, log_writer, &wal_used,
+                             &log_size, wal_file_number_size, recovered_seq);
         if (s.ok()) {
           // Need to fsync, otherwise it might get lost after a power reset.
           s = impl->FlushWAL(write_options, false);

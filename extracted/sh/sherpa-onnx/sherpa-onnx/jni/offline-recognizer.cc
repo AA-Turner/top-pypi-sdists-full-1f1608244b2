@@ -5,6 +5,7 @@
 #include "sherpa-onnx/csrc/offline-recognizer.h"
 
 #include "sherpa-onnx/csrc/macros.h"
+#include "sherpa-onnx/csrc/text-utils.h"
 #include "sherpa-onnx/jni/common.h"
 
 namespace sherpa_onnx {
@@ -60,6 +61,9 @@ static OfflineRecognizerConfig GetOfflineConfig(JNIEnv *env, jobject config) {
 
   fid = env->GetFieldID(feat_config_cls, "featureDim", "I");
   ans.feat_config.feature_dim = env->GetIntField(feat_config, fid);
+
+  fid = env->GetFieldID(feat_config_cls, "dither", "F");
+  ans.feat_config.dither = env->GetFloatField(feat_config, fid);
 
   //---------- model config ----------
   fid = env->GetFieldID(cls, "modelConfig",
@@ -327,7 +331,12 @@ Java_com_k2fsa_sherpa_onnx_OfflineRecognizer_newFromAsset(JNIEnv *env,
   }
 #endif
   auto config = sherpa_onnx::GetOfflineConfig(env, _config);
-  SHERPA_ONNX_LOGE("config:\n%s", config.ToString().c_str());
+
+  // logcat truncates long strings, so we split the string into chunks
+  auto str_vec = sherpa_onnx::SplitString(config.ToString(), 128);
+  for (const auto &s : str_vec) {
+    SHERPA_ONNX_LOGE("%s", s.c_str());
+  }
 
   auto model = new sherpa_onnx::OfflineRecognizer(
 #if __ANDROID_API__ >= 9
@@ -344,7 +353,11 @@ Java_com_k2fsa_sherpa_onnx_OfflineRecognizer_newFromFile(JNIEnv *env,
                                                          jobject /*obj*/,
                                                          jobject _config) {
   auto config = sherpa_onnx::GetOfflineConfig(env, _config);
-  SHERPA_ONNX_LOGE("config:\n%s", config.ToString().c_str());
+
+  auto str_vec = sherpa_onnx::SplitString(config.ToString(), 128);
+  for (const auto &s : str_vec) {
+    SHERPA_ONNX_LOGE("%s", s.c_str());
+  }
 
   if (!config.Validate()) {
     SHERPA_ONNX_LOGE("Errors found in config!");

@@ -7,11 +7,11 @@ from pathlib import Path
 from typing import Any, Literal, Optional, Sequence, TypeVar
 
 from pydantic_ai.agent import AgentRunResult
+from pydantic_ai.mcp import MCPServer
 from pydantic_ai.messages import UserContent
 
 import marvin
-import marvin.agents.team
-import marvin.engine.llm
+from marvin._internal.integrations.mcp import manage_mcp_servers
 from marvin.agents.actor import Actor
 from marvin.agents.agent import Agent
 from marvin.database import DBLLMCall
@@ -87,7 +87,7 @@ class Orchestrator:
                 handler._handle(event)
 
     def get_all_tasks(
-        self, filter: Literal["incomplete", "ready"] | None = None
+        self, _filter: Literal["incomplete", "ready"] | None = None
     ) -> list[Task[Any]]:
         """Get all tasks, optionally filtered by status.
 
@@ -122,16 +122,20 @@ class Orchestrator:
         for task in self.tasks:
             collect_tasks(task)
 
-        if filter == "incomplete":
+        if _filter == "incomplete":
             return [t for t in ordered_tasks if t.is_incomplete()]
-        elif filter == "ready":
+        elif _filter == "ready":
             return [t for t in ordered_tasks if t.is_ready()]
-        elif filter:
-            raise ValueError(f"Invalid filter: {filter}")
+        elif _filter:
+            raise ValueError(f"Invalid filter: {_filter}")
         return ordered_tasks
 
-    async def run_once(self, actor: Actor | None = None) -> AgentRunResult:
-        tasks = self.get_all_tasks(filter="ready")
+    async def run_once(
+        self,
+        actor: Actor | None = None,
+        active_mcp_servers: list[MCPServer] | None = None,
+    ) -> AgentRunResult:
+        tasks = self.get_all_tasks(_filter="ready")
 
         if not tasks:
             raise ValueError("No tasks to run")
@@ -165,10 +169,11 @@ class Orchestrator:
             actor=actor, assigned_tasks=assigned_tasks
         )
 
-        # --- run agent
+        # --- run agent, passing active_mcp_servers --- #
         agentlet = await actor.get_agentlet(
             tools=list(tools),
             end_turn_tools=list(end_turn_tools),
+            active_mcp_servers=active_mcp_servers,
         )
 
         with actor:
@@ -231,39 +236,56 @@ class Orchestrator:
             with self.thread:
                 await self.handle_event(OrchestratorStartEvent())
 
-                try:
-                    turns = 0
-                    actor = None
+                # TODO: Handle multi-actor scenarios properly
+                actor = self.tasks[0].get_actor() if self.tasks else None
+                if not actor:
+                    raise ValueError("Cannot run orchestrator without tasks/actors.")
 
-                    # the while loop continues until all the tasks that were
-                    # provided to the orchestrator are complete OR max turns is
-                    # reached. Note this is not the same as checking *every*
-                    # task that `get_all_tasks()` returns. If a task has
-                    # incomplete dependencies, they will be evaluated as part of
-                    # the orchestrator logic, but not considered part of the
-                    # termination condition.
-                    while incomplete_tasks and (max_turns is None or turns < max_turns):
-                        result = await self.run_once(actor=actor)
-                        results.append(result)
-                        turns += 1
+                # --- Manage MCP servers --- #
+                async with manage_mcp_servers(actor) as active_mcp_servers:
+                    if active_mcp_servers:
+                        logger.debug(
+                            f"Orchestrator loop starting with {len(active_mcp_servers)} active MCP servers."
+                        )
+                    try:
+                        turns = 0
+                        # the while loop continues until all the tasks that were
+                        # provided to the orchestrator are complete OR max turns is
+                        # reached. Note this is not the same as checking *every*
+                        # task that `get_all_tasks()` returns. If a task has
+                        # incomplete dependencies, they will be evaluated as part of
+                        # the orchestrator logic, but not considered part of the
+                        # termination condition.
+                        while incomplete_tasks and (
+                            max_turns is None or turns < max_turns
+                        ):
+                            # Pass active_mcp_servers to run_once
+                            result = await self.run_once(
+                                actor=actor, active_mcp_servers=active_mcp_servers
+                            )
+                            results.append(result)
+                            turns += 1
 
-                        if raise_on_failure:
-                            for task in self.tasks:
-                                if task.is_failed() and task in incomplete_tasks:
-                                    raise ValueError(
-                                        f"{task.friendly_name()} failed: {task.result}"
-                                    )
-                        incomplete_tasks = {t for t in self.tasks if t.is_incomplete()}
+                            # Handle potential failures
+                            if raise_on_failure:
+                                for task in self.tasks:
+                                    if task.is_failed() and task in incomplete_tasks:
+                                        raise ValueError(
+                                            f"{task.friendly_name()} failed: {task.result}"
+                                        )
+                            # Update incomplete tasks status
+                            incomplete_tasks = {
+                                t for t in self.tasks if t.is_incomplete()
+                            }
 
-                    if max_turns and turns >= max_turns:
-                        raise ValueError("Max agent turns reached")
+                        if max_turns and turns >= max_turns:
+                            raise ValueError("Max agent turns reached")
 
-                except (Exception, KeyboardInterrupt, CancelledError) as e:
-                    await self.handle_event(OrchestratorErrorEvent(error=str(e)))
-                    raise
-                finally:
-                    await self.handle_event(OrchestratorEndEvent())
-
+                    except (Exception, KeyboardInterrupt, CancelledError) as e:
+                        await self.handle_event(OrchestratorErrorEvent(error=str(e)))
+                        raise
+                    finally:
+                        await self.handle_event(OrchestratorEndEvent())
         finally:
             _current_orchestrator.reset(token)
 

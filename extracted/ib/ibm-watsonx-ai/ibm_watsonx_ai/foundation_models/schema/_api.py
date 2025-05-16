@@ -2,12 +2,17 @@
 #  (C) Copyright IBM Corp. 2024-2025.
 #  https://opensource.org/licenses/BSD-3-Clause
 #  -----------------------------------------------------------------------------------------
-from typing import Any, Type, TypeVar, get_origin, get_args
+from typing import Any, Type, TypeVar, get_origin, get_args, TYPE_CHECKING
 from tabulate import tabulate
 from enum import Enum
 
 from ibm_watsonx_ai.utils.utils import StrEnum
 from dataclasses import dataclass, is_dataclass, fields
+
+if TYPE_CHECKING:
+    from ibm_watsonx_ai.foundation_models.extensions.rag.retriever import (
+        RetrievalMethod,
+    )
 
 
 T = TypeVar("T", bound="BaseSchema")
@@ -396,4 +401,66 @@ class AutoAIRAGCustomModelConfig(BaseSchema):
             "prompt_template_text": "My question {question} related to these documents {reference_documents}.",
             "context_template_text": "My document {document}",
             "word_to_token_ratio": 1.5,
+        }
+
+
+class HybridRankerStrategy(StrEnum):
+    WEIGHTED = "weighted"
+    RRF = "rrf"
+
+
+@dataclass
+class AutoAIRAGHybridRankerParams(BaseSchema):
+    strategy: str | HybridRankerStrategy
+    sparse_vectors: dict[str, str] | None = None
+    alpha: float | None = None
+    k: int | None = None
+
+    @classmethod
+    def get_sample_params(cls) -> dict[str, Any]:
+        """Provide example values for AutoAIRAGHybridRankerParams."""
+        return {
+            "strategy": HybridRankerStrategy.RRF.value,
+            "sparse_vectors": {"model_id": "elser_model_2"},
+            "alpha": 0.9,
+            "k": 70,
+        }
+
+
+@dataclass
+class AutoAIRAGRetrievalConfig(BaseSchema):
+    method: "str | RetrievalMethod"
+    number_of_chunks: int | None = None
+    window_size: int | None = None
+    hybrid_ranker: dict | AutoAIRAGHybridRankerParams | None = None
+
+    @classmethod
+    def get_sample_params(cls) -> dict[str, Any]:
+        """Provide example values for AutoAIRAGRetrievalConfig."""
+        return {
+            "method": "simple",
+            "number_of_chunks": 5,
+            "window_size": 2,
+            "hybrid_ranker": AutoAIRAGHybridRankerParams.get_sample_params(),
+        }
+
+
+#####################
+#  Text Detection   #
+#####################
+
+
+@dataclass
+class GuardianDetectors(BaseSchema):
+    hap: dict | None = None
+    pii: dict | None = None
+    granite_guardian: dict | None = None
+
+    @classmethod
+    def get_sample_params(cls) -> dict[str, Any]:
+        """Provide example values for GuardianDetectors."""
+        return {
+            "hap": {"threshold": 0.4},
+            "pii": {},
+            "granite_guardian": {"threshold": 0.4},
         }

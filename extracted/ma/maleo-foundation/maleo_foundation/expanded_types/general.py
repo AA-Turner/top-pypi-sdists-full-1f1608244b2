@@ -1,6 +1,7 @@
 from typing import Callable, List, Optional
 from maleo_foundation.types import BaseTypes
-from maleo_foundation.models.transfers.parameters.general import BaseGeneralParametersTransfers
+from maleo_foundation.models.transfers.parameters.general \
+    import BaseGeneralParametersTransfers
 
 class BaseGeneralExpandedTypes:
     #* Expansion processor related types

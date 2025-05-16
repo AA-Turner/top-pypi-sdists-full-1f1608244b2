@@ -13,95 +13,7 @@ from pyutils_spirit.spirit_container.spirit_application_container import SpiritA
 
 
 class ContainerAnnotation:
-    __spirit_application_container: SpiritApplicationContainer = SpiritApplicationContainer()
-
-    @classmethod
-    def component(cls, signature: str) -> callable:
-        if not isinstance(signature, str):
-            raise NoneSignatureError
-        if len(signature) == 0:
-            raise ValueError("Component: Signature cannot be empty")
-
-        def get_component_cls(other_cls):
-
-            def get_component_instance(*args, **kwargs) -> object:
-                instance = cls.__spirit_application_container.get_resource(signature=signature)
-                if instance is None:
-                    instance = other_cls(*args, **kwargs)
-                    cls.__spirit_application_container.set_resource(signature=signature, resource=instance)
-                return instance
-
-            get_component_instance.__decorator__ = "Component"
-            get_component_instance.__decorator_params__ = signature
-            return get_component_instance
-
-        return get_component_cls
-
-    @classmethod
-    def mapper(cls, signature: str) -> callable:
-        if not isinstance(signature, str):
-            raise NoneSignatureError
-        if len(signature) == 0:
-            raise ValueError("Mapper: Signature cannot be empty")
-
-        def get_mapper_cls(other_cls):
-
-            def get_mapper_instance(*args, **kwargs) -> object:
-                instance = cls.__spirit_application_container.get_resource(signature=signature)
-                if instance is None:
-                    instance = other_cls(*args, **kwargs)
-                    cls.__spirit_application_container.set_resource(signature=signature, resource=instance)
-                return instance
-
-            get_mapper_instance.__decorator__ = "Mapper"
-            get_mapper_instance.__decorator_params__ = signature
-            return get_mapper_instance
-
-        return get_mapper_cls
-
-    @classmethod
-    def service(cls, signature: str) -> callable:
-        if not isinstance(signature, str):
-            raise NoneSignatureError
-        if len(signature) == 0:
-            raise ValueError("Service: Signature cannot be empty")
-
-        def get_service_cls(other_cls):
-
-            def get_service_instance(*args, **kwargs) -> object:
-                instance = cls.__spirit_application_container.get_resource(signature=signature)
-                if instance is None:
-                    instance = other_cls(*args, **kwargs)
-                    cls.__spirit_application_container.set_resource(signature=signature, resource=instance)
-                return instance
-
-            get_service_instance.__decorator__ = "Service"
-            get_service_instance.__decorator_params__ = signature
-            return get_service_instance
-
-        return get_service_cls
-
-    @classmethod
-    def controller(cls, path: str) -> callable:
-        if not isinstance(path, str):
-            raise NoneSignatureError
-        if len(path) == 0:
-            raise ValueError("Controller: path cannot be empty")
-
-        def get_controller_cls(other_cls):
-
-            def get_controller_instance(*args, **kwargs) -> object:
-                instance = cls.__spirit_application_container.get_resource(signature=path)
-                if instance is None:
-                    instance = other_cls(*args, **kwargs)
-                    cls.__spirit_application_container.set_resource(signature=path, resource=instance)
-                return instance
-
-            get_controller_instance.__decorator__ = "Controller"
-            get_controller_instance.__decorator_params__ = path
-            return get_controller_instance
-
-        return get_controller_cls
+    spirit_application_container: SpiritApplicationContainer = SpiritApplicationContainer()
 
     @classmethod
     def resource(cls, names: list[str] | str) -> callable:
@@ -115,13 +27,13 @@ class ContainerAnnotation:
         def decorator_func(func):
             def wrapper(*args, **kwargs):
                 if isinstance(names, str):
-                    resources = cls.__spirit_application_container.get_resource(signature=names)
+                    resources = cls.spirit_application_container.get_resource(signature=names)
                     if resources is None:
                         raise ValueError(f"the signature {names} does not exist")
                 else:
                     resources = kwargs["resources"]
                     for name in names:
-                        instance = cls.__spirit_application_container.get_resource(signature=name)
+                        instance = cls.spirit_application_container.get_resource(signature=name)
                         if instance is None:
                             raise ValueError(f"the signature {name} does not exist")
                         resources[name] = instance
@@ -188,15 +100,113 @@ class ContainerAnnotation:
 
         return decorator_delete_func
 
-    @classmethod
-    def exception_advice(cls) -> callable:
-        def decorator_advice_func(other_cls) -> type:
-            if not isinstance(other_cls, type):
-                raise TypeError('ExceptionAdvice can only be applied to classes')
-            other_cls.__decorator__ = "ExceptionAdvice"
-            return other_cls
 
-        return decorator_advice_func
+class Component:
+    def __init__(self, signature: str) -> None:
+        if not isinstance(signature, str):
+            raise NoneSignatureError
+        if len(signature) == 0:
+            raise ValueError("Component: Signature cannot be empty")
+        self.__signature: str = signature
+
+    def __call__(self, component_cls: type[object]) -> type[object]:
+        component_cls.__decorator__ = "Component"
+
+        def wrapper_component(__cls: type[object]) -> object:
+            __component: object = (ContainerAnnotation.spirit_application_container
+                                   .get_resource(signature=self.__signature))
+            if __component is None:
+                __component = object.__new__(__cls)
+                ContainerAnnotation.spirit_application_container.set_resource(signature=self.__signature,
+                                                                              resource=__component)
+            return __component
+
+        component_cls.__new__ = wrapper_component
+        return component_cls
+
+
+class Mapper:
+    def __init__(self, signature: str) -> None:
+        if not isinstance(signature, str):
+            raise NoneSignatureError
+        if len(signature) == 0:
+            raise ValueError("Mapper: Signature cannot be empty")
+        self.__signature: str = signature
+
+    def __call__(self, mapper_cls: type[object]) -> type[object]:
+        mapper_cls.__decorator__ = "Mapper"
+
+        def wrapper_mapper(__cls: type[object]) -> object:
+            __mapper: object = (ContainerAnnotation.spirit_application_container
+                                .get_resource(signature=self.__signature))
+            if __mapper is None:
+                __mapper = object.__new__(__cls)
+                ContainerAnnotation.spirit_application_container.set_resource(signature=self.__signature,
+                                                                              resource=__mapper)
+            return __mapper
+
+        mapper_cls.__new__ = wrapper_mapper
+        return mapper_cls
+
+
+class Service:
+    def __init__(self, signature: str) -> None:
+        if not isinstance(signature, str):
+            raise NoneSignatureError
+        if len(signature) == 0:
+            raise ValueError("Service: Signature cannot be empty")
+        self.__signature: str = signature
+
+    def __call__(self, service_cls: type[object]) -> type[object]:
+        service_cls.__decorator__ = "Service"
+
+        def wrapper_service(__cls: type[object]) -> object:
+            __service: object = (ContainerAnnotation.spirit_application_container
+                                 .get_resource(signature=self.__signature))
+            if __service is None:
+                __service = object.__new__(__cls)
+                ContainerAnnotation.spirit_application_container.set_resource(signature=self.__signature,
+                                                                              resource=__service)
+            return __service
+
+        service_cls.__new__ = wrapper_service
+        return service_cls
+
+
+class Controller:
+    def __init__(self, path: str) -> None:
+        if not isinstance(path, str):
+            raise NoneSignatureError
+        if len(path) == 0:
+            raise ValueError("Controller: path cannot be empty")
+        self.__path: str = path
+
+    def __call__(self, controller_cls: type[object]) -> type[object]:
+        controller_cls.__decorator__ = "Controller"
+        controller_cls.__decorator_path__ = self.__path
+
+        def wrapper_controller(__cls: type[object]) -> object:
+            __controller: object = (ContainerAnnotation.spirit_application_container
+                                    .get_resource(signature=self.__path))
+            if __controller is None:
+                __controller = object.__new__(__cls)
+                ContainerAnnotation.spirit_application_container.set_resource(signature=self.__path,
+                                                                              resource=__controller)
+            return __controller
+
+        controller_cls.__new__ = wrapper_controller
+        return controller_cls
+
+
+class ExceptionAdvice:
+    def __init__(self, exception_advice_cls: type) -> None:
+        if not isinstance(exception_advice_cls, type):
+            raise TypeError('ExceptionAdvice can only be applied to classes')
+        exception_advice_cls.__decorator__ = "ExceptionAdvice"
+        self.__exception_advice_cls: type = exception_advice_cls
+
+    def __call__(self):
+        self.__exception_advice_cls()
 
     @classmethod
     def throws_exception(cls, ex_type: type):
@@ -210,29 +220,30 @@ class ContainerAnnotation:
 
         return decorator_throws_exception_func
 
-    @classmethod
-    def request_interceptor(cls, interceptor_paths: set[str]) -> callable:
+
+class RequestInterceptor:
+    def __init__(self, interceptor_paths: set[str]) -> None:
         if not isinstance(interceptor_paths, set):
             raise TypeError('RequestInterceptor: interceptor_paths must be a set')
         for interceptor_path in interceptor_paths:
             if not isinstance(interceptor_path, str):
                 raise TypeError('RequestInterceptor: interceptor_paths must be a string set')
+        self.__interceptor_paths: set[str] = interceptor_paths
 
-        def decorator_request_func(other_cls) -> type:
-            if not isinstance(other_cls, type):
-                raise TypeError('RequestInterceptor can only be applied to classes')
-            other_cls.__decorator__ = "RequestInterceptor"
-            other_cls.__decorator_params__ = interceptor_paths
-            return other_cls
-
-        return decorator_request_func
+    def __call__(self, interceptor_cls: type) -> type:
+        if not isinstance(interceptor_cls, type):
+            raise TypeError('RequestInterceptor can only be applied to classes')
+        interceptor_cls.__decorator__ = "RequestInterceptor"
+        interceptor_cls.__decorator_params__ = self.__interceptor_paths
+        return interceptor_cls
 
     @classmethod
     def interceptor_before(cls) -> callable:
         def decorator_request_func(func) -> callable:
 
             def interceptor_before_method(it_self: object, request: BaseHTTPRequestHandler) -> tuple[int, bool]:
-                if not isinstance(request, BaseHTTPRequestHandler) and not isinstance(it_self, BaseHTTPRequestHandler):
+                if (not isinstance(request, BaseHTTPRequestHandler) and
+                        not isinstance(it_self, BaseHTTPRequestHandler)):
                     raise ArgumentTypeError('InterceptorBefore: argument must be BaseHTTPRequestHandler Type')
                 request.headers["X-Intercepted"] = "True"
                 response_code, response_status = func(it_self, request)
@@ -250,7 +261,8 @@ class ContainerAnnotation:
     def interceptor_after(cls) -> callable:
         def decorator_request_func(func) -> callable:
             def interceptor_after_method(it_self: object, request: BaseHTTPRequestHandler) -> None:
-                if not isinstance(request, BaseHTTPRequestHandler) and not isinstance(it_self, BaseHTTPRequestHandler):
+                if not isinstance(request, BaseHTTPRequestHandler) and not isinstance(it_self,
+                                                                                      BaseHTTPRequestHandler):
                     raise ArgumentTypeError('InterceptorAfter: argument should be BaseHTTPRequestHandler Type')
                 func(it_self, request)
                 return None
@@ -261,17 +273,11 @@ class ContainerAnnotation:
         return decorator_request_func
 
 
-component = ContainerAnnotation.component
-mapper = ContainerAnnotation.mapper
-service = ContainerAnnotation.service
-controller = ContainerAnnotation.controller
 resource = ContainerAnnotation.resource
 get = ContainerAnnotation.get
 post = ContainerAnnotation.post
 put = ContainerAnnotation.put
 delete = ContainerAnnotation.delete
-exception_advice = ContainerAnnotation.exception_advice
-throws_exception = ContainerAnnotation.throws_exception
-request_interceptor = ContainerAnnotation.request_interceptor
-interceptor_before = ContainerAnnotation.interceptor_before
-interceptor_after = ContainerAnnotation.interceptor_after
+throws_exception = ExceptionAdvice.throws_exception
+before = RequestInterceptor.interceptor_before
+after = RequestInterceptor.interceptor_after

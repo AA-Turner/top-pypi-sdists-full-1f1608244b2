@@ -76,7 +76,7 @@ def postprocess_string(s):
     s = s.replace('\\"', '*<d<*')
     s = s.replace('"', "'")
     s = s.replace("*<d<*", '\\"')
-    input(s)
+
     return s
 def replace(data):
     return re.sub(r"(\s*'\s*|\s*'\s*:\s*'\s*|\s*'\s*,\s*'\s*)", lambda x: x.group().replace("'", '*<s<*'), data)

@@ -117,6 +117,7 @@ class _TeamsAccountState:
 warnings.warn("""cloudflare.index/teamsaccount.TeamsAccount has been deprecated in favor of cloudflare.index/zerotrustgatewaysettings.ZeroTrustGatewaySettings""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/teamsAccount:TeamsAccount")
 class TeamsAccount(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/teamsaccount.TeamsAccount has been deprecated in favor of cloudflare.index/zerotrustgatewaysettings.ZeroTrustGatewaySettings""", DeprecationWarning)
 

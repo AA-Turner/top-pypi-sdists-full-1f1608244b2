@@ -18,7 +18,7 @@ import logging
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Type, Union
 
 import torch
 from transformers.utils.quantization_config import QuantizationConfigMixin
@@ -27,7 +27,8 @@ from optimum.configuration_utils import BaseConfig
 
 from ..utils.import_utils import is_nncf_available
 from .utils import (
-    LANGUAGE_DATASETS,
+    PREDEFINED_CAUSAL_LANGUAGE_DATASETS,
+    PREDEFINED_LANGUAGE_DATASETS,
     PREDEFINED_SD_DATASETS,
     PREDEFINED_SPEECH_TO_TEXT_DATASETS,
     PREDEFINED_VISUAL_LM_DATASETS,
@@ -67,7 +68,15 @@ _DEFAULT_4BIT_CONFIGS = {
         "quant_method": OVQuantizationMethod.AWQ,
     },
     "meta-llama/Llama-2-7b-hf": {"bits": 4, "sym": True, "group_size": 128, "ratio": 0.6},
-    "meta-llama/Llama-2-7b-chat-hf": {"bits": 4, "sym": True, "group_size": 128, "ratio": 0.8},
+    "meta-llama/Llama-2-7b-chat-hf": {
+        "bits": 4,
+        "sym": True,
+        "group_size": 128,
+        "ratio": 1.0,
+        "dataset": "wikitext2",
+        "quant_method": OVQuantizationMethod.AWQ,
+        "scale_estimation": True,
+    },
     "meta-llama/Llama-2-13b-chat-hf": {"bits": 4, "sym": True, "group_size": 64, "ratio": 0.8},
     "stabilityai/stablelm-3b-4e1t": {
         "bits": 4,
@@ -89,6 +98,51 @@ _DEFAULT_4BIT_CONFIGS = {
     "pansophic/rocket-3B": {"bits": 4, "sym": True, "group_size": 128, "ratio": 0.8},
     "THUDM/chatglm2-6b": {"bits": 4, "sym": True, "group_size": 128, "ratio": 0.72},
     "Qwen/Qwen-7B-Chat": {"bits": 4, "sym": True, "group_size": 128, "ratio": 0.6},
+    "Qwen/Qwen2.5-1.5B-Instruct": {
+        "bits": 4,
+        "sym": False,
+        "group_size": 128,
+        "ratio": 0.9,
+        "dataset": "wikitext2",
+        "quant_method": OVQuantizationMethod.AWQ,
+        "scale_estimation": True,
+    },
+    "Qwen/Qwen2.5-7B-Instruct": {
+        "bits": 4,
+        "sym": False,
+        "group_size": 128,
+        "ratio": 1.0,
+        "dataset": "wikitext2",
+        "quant_method": OVQuantizationMethod.AWQ,
+        "scale_estimation": True,
+    },
+    "Qwen/Qwen3-1.7B": {
+        "bits": 4,
+        "sym": True,
+        "group_size": 64,
+        "ratio": 1.0,
+        "dataset": "wikitext2",
+        "quant_method": OVQuantizationMethod.AWQ,
+        "scale_estimation": True,
+    },
+    "Qwen/Qwen3-4B": {
+        "bits": 4,
+        "sym": True,
+        "group_size": 128,
+        "ratio": 1.0,
+        "dataset": "wikitext2",
+        "quant_method": OVQuantizationMethod.AWQ,
+        "scale_estimation": True,
+    },
+    "Qwen/Qwen3-8B": {
+        "bits": 4,
+        "sym": False,
+        "group_size": 128,
+        "ratio": 1.0,
+        "dataset": "wikitext2",
+        "quant_method": OVQuantizationMethod.AWQ,
+        "scale_estimation": True,
+    },
     "openlm-research/open_llama_3b": {"bits": 4, "sym": False, "group_size": 64, "all_layers": True},
     "openlm-research/open_llama_3b_v2": {
         "bits": 4,
@@ -151,6 +205,7 @@ _DEFAULT_4BIT_CONFIGS = {
         "scale_estimation": True,
     },
     "bigcode/starcoder2-3b": {"bits": 4, "sym": False, "group_size": 128, "ratio": 0.9},
+    "bigcode/starcoder2-15b": {"bits": 4, "sym": False, "group_size": 64, "ratio": 1.0},
     "TinyLlama/TinyLlama-1.1B-Chat-v1.0": {
         "bits": 4,
         "sym": False,
@@ -185,6 +240,15 @@ _DEFAULT_4BIT_CONFIGS = {
         "dataset": "wikitext2",
         "scale_estimation": True,
     },
+    "meta-llama/Llama-3.2-1B-Instruct": {
+        "bits": 4,
+        "sym": False,
+        "group_size": 128,
+        "ratio": 1.0,
+        "dataset": "wikitext2",
+        "quant_method": OVQuantizationMethod.AWQ,
+        "scale_estimation": True,
+    },
     "meta-llama/Meta-Llama-3.1-8B": {
         "bits": 4,
         "sym": False,
@@ -210,7 +274,63 @@ _DEFAULT_4BIT_CONFIGS = {
         "quant_method": OVQuantizationMethod.AWQ,
         "scale_estimation": True,
     },
+    "microsoft/Phi-4-mini-instruct": {
+        "bits": 4,
+        "sym": False,
+        "group_size": 64,
+        "ratio": 1.0,
+        "dataset": "wikitext2",
+        "quant_method": OVQuantizationMethod.AWQ,
+        "scale_estimation": True,
+    },
+    "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
+        "bits": 4,
+        "sym": False,
+        "group_size": 32,
+        "ratio": 0.7,
+        "dataset": "wikitext2",
+        "quant_method": OVQuantizationMethod.AWQ,
+        "scale_estimation": True,
+    },
+    "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
+        "bits": 4,
+        "sym": False,
+        "group_size": 128,
+        "ratio": 1.0,
+        "dataset": "wikitext2",
+        "quant_method": OVQuantizationMethod.AWQ,
+        "scale_estimation": True,
+    },
+    "deepseek-ai/DeepSeek-R1-Distill-Llama-8B": {
+        "bits": 4,
+        "sym": False,
+        "group_size": 64,
+        "ratio": 0.8,
+        "dataset": "wikitext2",
+        "quant_method": OVQuantizationMethod.AWQ,
+    },
+    "microsoft/Phi-4-multimodal-instruct": {
+        "bits": 4,
+        "sym": False,
+        "group_size": 128,
+        "ignored_scope": {
+            "patterns": [
+                "__module\\.model\\.layers\\.\\d+\\.(mlp\\.(gate_up_proj|down_proj)|self_attn\\.(qkv_proj|o_proj))\\.lora_B\\.speech/ov_ext::linear/MatMul",
+                "__module\\.img_processor\\.encoder\\.layers\\.\\d+\\.mlp\\.fc2/ov_ext::linear/MatMul",
+            ],
+            "validate": False,
+        },
+    },
 }
+
+# Add configs for model id aliases
+# The list below contains pairs of model ids: config for the second model id will be copied from the first model id.
+model_id_aliases = [
+    ("meta-llama/Meta-Llama-3.1-8B-Instruct", "meta-llama/Llama-3.1-8B-Instruct"),
+    ("meta-llama/Meta-Llama-3.1-8B", "meta-llama/Llama-3.1-8B"),
+]
+for m_id_1, m_id_2 in model_id_aliases:
+    _DEFAULT_4BIT_CONFIGS[m_id_2] = _DEFAULT_4BIT_CONFIGS[m_id_1]
 
 _DEFAULT_4BIT_CONFIG = {
     "bits": 4,
@@ -263,25 +383,18 @@ class OVQuantizationConfigBase(QuantizationConfigMixin):
 
     def __init__(
         self,
-        bits: int = 8,
-        sym: bool = False,
-        ignored_scope: Optional[dict] = None,
+        ignored_scope: Optional[Union[dict, "nncf.IgnoredScope"]] = None,
         num_samples: Optional[int] = None,
-        dataset: Optional[Optional[Union[str, List[str]]]] = None,
+        dataset: Optional[Union[str, List[str]]] = None,
         tokenizer: Optional[str] = None,
         processor: Optional[str] = None,
-        trust_remote_code: bool = False,
-        weight_format: Optional[str] = None,
+        trust_remote_code: Optional[bool] = False,
         **kwargs,
     ):
         """
         Args:
-            bits (`int`, defaults to 8):
-                The number of bits to quantize to.
-            sym (`bool`, defaults to `False`):
-                Whether to use symmetric quantization.
-            ignored_scope (`dict`, *optional*):
-                An ignored scope that defines a list of model nodes to be ignored during quantization. Dictionary
+            ignored_scope (`dict` or `nncf.IgnoredScope`, *optional*):
+                An ignored scope that defines the list of model nodes to be ignored during quantization. Dictionary
                 entries provided via this argument are used to create an instance of `nncf.IgnoredScope` class.
             num_samples (`int`, *optional*):
                 The maximum number of samples composing the calibration dataset.
@@ -295,21 +408,16 @@ class OVQuantizationConfigBase(QuantizationConfigMixin):
                 Allows to use custom code for the modeling hosted in the model repository. This option should only be
                 set for repositories you trust and in which you have read the code, as it will execute on your local
                 machine arbitrary code present in the model repository.
-            weight_format (`str`, *optional*):
-                Data format weights are compressed to.
         """
-        self.bits = bits
-        self.sym = sym
         self.num_samples = num_samples
         self.dataset = dataset
         self.tokenizer = tokenizer
         self.processor = processor
         self.trust_remote_code = trust_remote_code
-        self.weight_format = weight_format
-
         if isinstance(ignored_scope, nncf.IgnoredScope):
             ignored_scope = ignored_scope.__dict__
         self.ignored_scope = ignored_scope
+        self.kwargs = kwargs
 
     def post_init(self):
         try:
@@ -326,6 +434,15 @@ class OVQuantizationConfigBase(QuantizationConfigMixin):
             return nncf.IgnoredScope()
         return nncf.IgnoredScope(**copy.deepcopy(self.ignored_scope))
 
+    def clone(self):
+        return copy.deepcopy(self)
+
+    def to_dict(self) -> Dict[str, Any]:
+        # Unpack kwargs dict
+        result = super().to_dict()
+        result = result | result.pop("kwargs", {})
+        return result
+
 
 @dataclass
 class OVWeightQuantizationConfig(OVQuantizationConfigBase):
@@ -337,7 +454,7 @@ class OVWeightQuantizationConfig(OVQuantizationConfigBase):
         bits (`int`, defaults to 8):
             The number of bits to quantize to.
         sym (`bool`, defaults to `False`):
-            Whether to use symmetric quantization on the weights.
+            Whether to use symmetric quantization on the weights. Does not affect backup precision symmetricity.
         group_size (`int`, *optional*):
             The group size to use for quantization. Recommended value is 128 and -1 uses per-column quantization.
         tokenizer (`str`, *optional*):
@@ -370,7 +487,7 @@ class OVWeightQuantizationConfig(OVQuantizationConfigBase):
         sensitivity_metric (`str`, *optional*):
             The sensitivity metric for assigning quantization precision to layers. In order to
             preserve the accuracy of the model, the more sensitive layers receives a higher precision.
-        ignored_scope (`dict`, *optional*):
+        ignored_scope (`dict` or `nncf.IgnoredScope`, *optional*):
             An ignored scope that defines the list of model nodes to be ignored during quantization. Dictionary
             entries provided via this argument are used to create an instance of `nncf.IgnoredScope` class.
         num_samples (`int`, *optional*):
@@ -389,8 +506,8 @@ class OVWeightQuantizationConfig(OVQuantizationConfigBase):
         scale_estimation (`bool`, *optional*):
             Indicates whether to apply a scale estimation algorithm that minimizes the L2 error between the original and
             compressed layers. Providing a dataset is required to run scale estimation.
-        weight_format (`str`, *optional*):
-            Data format weights are compressed to. Possible values: ['int4', 'int8', 'mxfp4', 'nf4'].
+        dtype (`str`, *optional*):
+            Data type weights are compressed to. Possible values: ['int4', 'int8', 'mxfp4', 'nf4'].
         qptq (`bool`, *optional*):
             Whether to apply GPTQ algorithm. GPTQ optimizes compressed weights in a layer-wise fashion to minimize the
             difference between activations of a compressed and original layer. Dataset is required to run GPTQ.
@@ -411,6 +528,7 @@ class OVWeightQuantizationConfig(OVQuantizationConfigBase):
                 retained in their original precision without any quantization.
             - "int8_sym" stands for 8-bit integer symmetric quantization without zero point.
             - "int8_asym" stands for 8-bit integer asymmetric quantization with zero points per each quantization group.
+        kwargs: Additional parameters for nncf.compress_weights() call.
     """
 
     def __init__(
@@ -424,28 +542,35 @@ class OVWeightQuantizationConfig(OVQuantizationConfigBase):
         ratio: float = 1.0,
         all_layers: Optional[bool] = None,
         sensitivity_metric: Optional[str] = None,
-        ignored_scope: Optional[dict] = None,
+        ignored_scope: Optional[Union[dict, "nncf.IgnoredScope"]] = None,
         num_samples: Optional[int] = None,
         quant_method: Union[str, OVQuantizationMethod] = OVQuantizationMethod.DEFAULT,
         scale_estimation: bool = None,
-        weight_format: Optional[str] = None,
+        dtype: Optional[str] = None,
         gptq: bool = None,
         processor: Optional[str] = None,
         lora_correction: bool = None,
         backup_precision: Optional[str] = None,
         **kwargs,
     ):
+        weight_format = kwargs.pop("weight_format", None)
+        if weight_format is not None:
+            logger.warning(
+                "The `weight_format` parameter is deprecated and will be removed in optimum-intel v1.24.0. "
+                "Please use `dtype` instead."
+            )
+            dtype = weight_format
         super().__init__(
-            bits=bits,
-            sym=sym,
             ignored_scope=ignored_scope,
             num_samples=num_samples,
             dataset=dataset,
             tokenizer=tokenizer,
             processor=processor,
             trust_remote_code=trust_remote_code,
-            weight_format=weight_format,
+            **kwargs,
         )
+        self.bits = bits
+        self.sym = sym
         self.group_size = group_size or (-1 if bits == 8 else 128)
         self.ratio = ratio
         self.all_layers = all_layers
@@ -455,6 +580,7 @@ class OVWeightQuantizationConfig(OVQuantizationConfigBase):
         self.gptq = gptq
         self.lora_correction = lora_correction
         self.backup_precision = backup_precision
+        self.dtype = dtype
         self.post_init()
 
     def post_init(self):
@@ -472,17 +598,25 @@ class OVWeightQuantizationConfig(OVQuantizationConfigBase):
                 f"If you wish to provide a custom dataset, please use the `OVQuantizer` instead."
             )
         if self.dataset is not None and isinstance(self.dataset, str):
-            visual_lm_datasets = list(PREDEFINED_VISUAL_LM_DATASETS.keys())
-            stable_diffusion_datasets = list(PREDEFINED_SD_DATASETS.keys())
-            if self.dataset not in LANGUAGE_DATASETS + visual_lm_datasets + stable_diffusion_datasets:
+            visual_lm_datasets = set(PREDEFINED_VISUAL_LM_DATASETS.keys())
+            stable_diffusion_datasets = set(PREDEFINED_SD_DATASETS.keys())
+            language_datasets = set(PREDEFINED_LANGUAGE_DATASETS.keys())
+            if (
+                self.dataset
+                not in PREDEFINED_CAUSAL_LANGUAGE_DATASETS
+                | language_datasets
+                | visual_lm_datasets
+                | stable_diffusion_datasets
+            ):
                 raise ValueError(
-                    f"""You have entered a string value for dataset. You can only choose between
-                    {LANGUAGE_DATASETS} for LLMs, {visual_lm_datasets} for visual LLMs
-                    or {stable_diffusion_datasets} for diffusion models, but we found {self.dataset}"""
+                    "You have entered a string value for dataset. You can only choose between "
+                    f"{language_datasets} for text feature extraction models, "
+                    f"{PREDEFINED_CAUSAL_LANGUAGE_DATASETS} for LLMs, {visual_lm_datasets} for visual LLMs or "
+                    f"{stable_diffusion_datasets} for diffusion models, but we found {self.dataset}."
                 )
 
         if self.dataset is not None and not (
-            self.quant_method == OVQuantizationMethod.AWQ
+            self.quant_method in [OVQuantizationMethod.AWQ, OVQuantizationMethod.HYBRID]
             or self.scale_estimation
             or self.gptq
             or self.lora_correction
@@ -493,10 +627,18 @@ class OVWeightQuantizationConfig(OVQuantizationConfigBase):
                 "quantization algorithm is selected and compression ratio is 1.0."
             )
 
+        if self.dtype in ["int4", "int8"]:
+            bits = 4 if self.dtype == "int4" else 8
+            if self.bits is not None and self.bits != bits:
+                logger.warning(
+                    f"Overriding `bits` parameter to the value `bits`={bits} to match the given {self.dtype} `dtype`."
+                )
+            self.bits = bits
+
         if self.bits not in [4, 8]:
             raise ValueError(f"Only support quantization to [4,8] bits but found {self.bits}")
 
-        if self.bits == 8:
+        if self.bits == 8 and self.dtype:
             if self.ratio != 1:
                 raise ValueError(
                     f"For 8-bit quantization, `ratio` is expected to be set to 1.0, but was set to {self.ratio}"
@@ -542,28 +684,61 @@ class OVWeightQuantizationConfig(OVQuantizationConfigBase):
         if self.processor is not None and not isinstance(self.processor, str):
             raise ValueError(f"Processor is expected to be a string, but found {self.processor}")
 
-        if self.weight_format is None:
-            self.weight_format = "int4" if self.bits == 4 else "int8"
-        if self.weight_format not in ["int4", "int8", "mxfp4", "nf4"]:
+        if self.dtype is None:
+            self.dtype = "int4" if self.bits == 4 else "int8"
+        if self.dtype not in ["int4", "int8", "mxfp4", "nf4"]:
             raise ValueError(
-                f"Weight format must be one of the following: ['int4', 'int8', 'mxfp4', 'nf4'], but found: {self.weight_format}."
+                f"Weights quantization data type must be one of the following: ['int4', 'int8', 'mxfp4', 'nf4'], but found: {self.dtype}."
             )
-        if self.weight_format in ["mxfp4", "nf4"]:
+        if self.dtype in ["mxfp4", "nf4"]:
             if self.bits != 4:
                 raise ValueError(
-                    f"When applying weight compression with '{self.weight_format}' weight format, the `bits` parameter must be set to 4, but found {self.bits}"
+                    f"When applying weight compression with '{self.dtype}' data type, the `bits` parameter must be set to 4, but found {self.bits}"
                 )
-            if self.weight_format == "mxfp4":
+            if self.dtype == "mxfp4":
                 if self.quant_method == OVQuantizationMethod.AWQ:
-                    raise ValueError("The AWQ algorithm is not supported for 'mxpf4' weight format")
+                    raise ValueError("The AWQ algorithm is not supported for 'mxpf4' data type")
                 if self.scale_estimation:
-                    raise ValueError("The Scale Estimation algorithm is not supported for 'mxpf4' weight format")
+                    raise ValueError("The Scale Estimation algorithm is not supported for 'mxpf4' data type")
                 if self.gptq:
-                    raise ValueError("The GPTQ algorithm is not supported for 'mxfp4' weight format")
+                    raise ValueError("The GPTQ algorithm is not supported for 'mxfp4' data type")
                 if self.lora_correction:
-                    raise ValueError("The LoRA Correction algorithm is not supported for 'mxfp4' weight format")
+                    raise ValueError("The LoRA Correction algorithm is not supported for 'mxfp4' data type")
         if self.gptq and self.lora_correction:
             raise ValueError("The GPTQ and LoRA Correction algorithms can't be applied simultaneously")
+
+    def to_nncf_dict(self) -> Dict[str, Any]:
+        """
+        Returns a dictionary with the variables that are ready to use for nncf.quantize() call.
+        """
+
+        signed_bitness = {4: "int4", 8: "int8"}
+        mode = self.dtype if self.dtype else signed_bitness[self.bits]
+        if mode in signed_bitness.values():
+            mode += "_sym" if self.sym else "_asym"
+        if mode == "mxfp4":
+            mode = "e2m1"
+        mode = nncf.CompressWeightsMode(mode)
+
+        awq = True if self.quant_method == OVQuantizationMethod.AWQ else None
+        sensitivity_metric = nncf.SensitivityMetric(self.sensitivity_metric) if self.sensitivity_metric else None
+        backup_mode = nncf.BackupMode(self.backup_precision) if self.backup_precision else None
+        result = {
+            "mode": mode,
+            "ratio": self.ratio,
+            "group_size": self.group_size,
+            "ignored_scope": self.get_ignored_scope_instance(),
+            "all_layers": self.all_layers,
+            "sensitivity_metric": sensitivity_metric,
+            "subset_size": self.num_samples or 128,
+            "awq": awq,
+            "scale_estimation": self.scale_estimation,
+            "gptq": self.gptq,
+            "lora_correction": self.lora_correction,
+            "backup_mode": backup_mode,
+            **self.kwargs,
+        }
+        return result
 
 
 @dataclass
@@ -593,8 +768,8 @@ class OVQuantizationConfig(OVQuantizationConfigBase):
         self,
         bits: int = 8,
         sym: bool = False,
-        ignored_scope: Optional[dict] = None,
-        num_samples: Optional[int] = 300,
+        ignored_scope: Optional[Union[dict, "nncf.IgnoredScope"]] = None,
+        num_samples: Optional[int] = 128,
         model_type: str = "transformer",
         fast_bias_correction: bool = True,
         overflow_fix: str = "disable",
@@ -603,8 +778,7 @@ class OVQuantizationConfig(OVQuantizationConfigBase):
         processor: Optional[str] = None,
         trust_remote_code: bool = False,
         smooth_quant_alpha: Optional[float] = None,
-        weight_format: Optional[str] = "int8",
-        activation_format: Optional[str] = "int8",
+        dtype: Optional[str] = "int8",
         **kwargs,
     ):
         """
@@ -616,7 +790,7 @@ class OVQuantizationConfig(OVQuantizationConfigBase):
                 The number of bits to quantize to.
             sym (`bool`, defaults to `False`):
                 Whether to use symmetric quantization on the activations. Symmetric quantization will be applied on the weights in any case.
-            ignored_scope (`dict`, *optional*):
+            ignored_scope (`dict` or `nncf.IgnoredScope`, *optional*):
                 An ignored scope that defines the list of model nodes to be ignored during quantization. Dictionary
                 entries provided via this argument are used to create an instance of `nncf.IgnoredScope` class.
             num_samples (`int`, *optional*):
@@ -649,33 +823,36 @@ class OVQuantizationConfig(OVQuantizationConfigBase):
             smooth_quant_alpha (`float`, *optional*):
                 SmoothQuant alpha parameter that improves the distribution of activations before MatMul layers and
                 reduces quantization error.
-            weight_format (`str`, defaults to "int8"):
-                Data format weights are quantized to. Possible values: ['int8', 'f8e4m3', 'f8e5m2'].
-            activation_format (`str`, defaults to "int8"):
-                Data format activations are compressed to. Possible values: ['int8', 'f8e4m3', 'f8e5m2'].
+            dtype (`str`, defaults to "int8"):
+                Data type activations are compressed to. Possible values: ['int8', 'f8e4m3', 'f8e5m2'].
+            kwargs: Additional parameters for nncf.quantize() call.
         """
+        activation_format = kwargs.pop("activation_format", None)
+        if activation_format is not None:
+            logger.warning(
+                "The `activation_format` parameter is deprecated and will be removed in optimum-intel v1.24.0. "
+                "Please use `dtype` instead."
+            )
+            dtype = activation_format
         super().__init__(
-            bits=bits,
-            sym=sym,
             ignored_scope=ignored_scope,
             num_samples=num_samples,
             dataset=dataset,
             tokenizer=tokenizer,
             processor=processor,
             trust_remote_code=trust_remote_code,
-            weight_format=weight_format,
+            **kwargs,
         )
+        self.bits = bits
+        self.sym = sym
         self.model_type = model_type
         self.fast_bias_correction = fast_bias_correction
         self.overflow_fix = overflow_fix
         self.smooth_quant_alpha = smooth_quant_alpha
-        self.activation_format = activation_format
+        self.dtype = dtype
 
-        f8_formats = ["f8e4m3", "f8e5m2"]
-        if self.activation_format in f8_formats and self.weight_format in f8_formats:
-            logger.info(
-                f"{self.activation_format} for activations and {self.weight_format} weights were found. A symmetrical scheme will be used."
-            )
+        f8_dtypes = ["f8e4m3", "f8e5m2"]
+        if self.dtype in f8_dtypes:
             self.sym = True
         self.post_init()
 
@@ -686,20 +863,63 @@ class OVQuantizationConfig(OVQuantizationConfigBase):
         super().post_init()
 
         if self.dataset is not None:
-            speech_to_text_datasets = list(PREDEFINED_SPEECH_TO_TEXT_DATASETS.keys())
-            if self.dataset not in LANGUAGE_DATASETS + speech_to_text_datasets:
+            speech_to_text_datasets = set(PREDEFINED_SPEECH_TO_TEXT_DATASETS.keys())
+            stable_diffusion_datasets = set(PREDEFINED_SD_DATASETS.keys())
+            language_datasets = set(PREDEFINED_LANGUAGE_DATASETS.keys())
+            if (
+                self.dataset
+                not in PREDEFINED_CAUSAL_LANGUAGE_DATASETS
+                | language_datasets
+                | speech_to_text_datasets
+                | stable_diffusion_datasets
+            ):
                 raise ValueError(
-                    f"""You can only choose between the following datasets: {LANGUAGE_DATASETS} for LLMs or
-                    {speech_to_text_datasets} for speech-to-text models, but we found {self.dataset}."""
+                    "You can only choose between the following datasets:"
+                    f"{language_datasets} for text feature extraction models, "
+                    f"{PREDEFINED_CAUSAL_LANGUAGE_DATASETS} for LLMs, "
+                    f"{speech_to_text_datasets} for speech-to-text models or "
+                    f"{stable_diffusion_datasets} for diffusion models, but we found {self.dataset}."
                 )
 
         if self.bits != 8:
             raise ValueError(f"Only support 8-bit for static quantization but found {self.bits}")
 
-        if self.smooth_quant_alpha is not None and not (0 <= self.smooth_quant_alpha <= 1):
+        if self.smooth_quant_alpha is not None and (
+            self.smooth_quant_alpha != -1 and not (0 <= self.smooth_quant_alpha <= 1)
+        ):
             raise ValueError(
-                f"SmoothQuant alpha parameter must be in range [0, 1], but found {self.smooth_quant_alpha}"
+                f"SmoothQuant alpha parameter can equal -1 or be in range [0, 1], but found {self.smooth_quant_alpha}"
             )
+
+    def to_nncf_dict(self) -> Dict[str, Any]:
+        """
+        Returns a dictionary with the variables that are ready to use for nncf.compress_weights() call.
+        """
+
+        # Merge advanced parameters from kwargs if they were provided
+        kwargs_copy = copy.deepcopy(self.kwargs)
+        advanced_parameters = kwargs_copy.pop("advanced_parameters", nncf.AdvancedQuantizationParameters())
+        advanced_parameters.overflow_fix = nncf.OverflowFix(self.overflow_fix)
+        if self.smooth_quant_alpha:
+            advanced_parameters.smooth_quant_alphas.matmul = self.smooth_quant_alpha
+
+        mode_map = {"f8e4m3": "fp8_e4m3", "f8e5m2": "fp8_e5m2"}
+        mode = mode_map.get(self.dtype)
+
+        preset = "performance" if self.sym else "mixed"
+        preset = nncf.QuantizationPreset(preset)
+        model_type = nncf.ModelType(self.model_type)
+
+        return {
+            "mode": mode,
+            "preset": preset,
+            "subset_size": self.num_samples or 128,
+            "fast_bias_correction": self.fast_bias_correction,
+            "model_type": model_type,
+            "ignored_scope": self.get_ignored_scope_instance(),
+            "advanced_parameters": advanced_parameters,
+            **kwargs_copy,
+        }
 
 
 class OVConfig(BaseConfig):
@@ -719,13 +939,17 @@ class OVConfig(BaseConfig):
         self.save_onnx_model = save_onnx_model
         self.optimum_version = kwargs.pop("optimum_version", None)
         if isinstance(quantization_config, dict):
-            quantization_config = self._quantization_config_from_dict(quantization_config)
+            quantization_config = self.quantization_config_from_dict(quantization_config)
         self.quantization_config = quantization_config
-        self.compression = kwargs.get(
-            "compression", None
-        )  # A field for backward-compatability of training-time compression parameters
         if self.quantization_config is not None:
-            self.dtype = self.quantization_config.weight_format
+            if isinstance(self.quantization_config, (OVWeightQuantizationConfig, OVQuantizationConfig)):
+                self.dtype = self.quantization_config.dtype
+            elif isinstance(self.quantization_config, OVMixedQuantizationConfig):
+                wc_dtype = self.quantization_config.weight_quantization_config.dtype
+                q_dtype = self.quantization_config.full_quantization_config.dtype
+                self.dtype = f"{wc_dtype}_{q_dtype}"
+            else:
+                raise ValueError(f"Unsupported type of quantization config: {type(self.quantization_config)}")
         else:
             self.dtype = dtype
 
@@ -740,7 +964,9 @@ class OVConfig(BaseConfig):
         ]
 
     @staticmethod
-    def _quantization_config_from_dict(quantization_config: dict) -> OVQuantizationConfigBase:
+    def quantization_config_from_dict(quantization_config: dict) -> OVQuantizationConfigBase:
+        if "weight_quantization_config" in quantization_config and "full_quantization_config" in quantization_config:
+            return OVMixedQuantizationConfig.from_dict(quantization_config)
         wq_args = inspect.getfullargspec(OVWeightQuantizationConfig.__init__).args
         q_args = inspect.getfullargspec(OVQuantizationConfig.__init__).args
         weight_only = quantization_config.pop("weight_only", None)
@@ -782,3 +1008,109 @@ class OVConfig(BaseConfig):
 
     def to_diff_dict(self) -> Dict[str, Any]:
         return self._to_dict_safe(to_diff_dict=True)
+
+
+class OVMixedQuantizationConfig(OVQuantizationConfigBase):
+    def __init__(
+        self,
+        weight_quantization_config: Union[OVWeightQuantizationConfig, dict],
+        full_quantization_config: Union[OVQuantizationConfig, dict],
+        ignored_scope: Optional[Union[dict, "nncf.IgnoredScope"]] = None,
+        num_samples: Optional[int] = None,
+        dataset: Optional[Union[str, List[str]]] = None,
+        tokenizer: Optional[str] = None,
+        processor: Optional[str] = None,
+        trust_remote_code: bool = False,
+        **kwargs,
+    ):
+        """
+        Configuration class for mixed quantization where we separately quantize:
+            (1) weights of weighted layers to the precision given in the `weight_quantization_config`, and
+            (2) weights and activations of other possible layers; precision is given in the `full_quantization_config`.
+
+        By default, weights of all weighted layers are quantized in the first step. In the second step activations of
+        weighted and non-weighted layers are quantized. If some layers are instructed to be ignored in the first step
+        with `weight_quantization_config.ignored_scope` parameter, both weights and activations of these layers are
+        quantized to the precision given in the `full_quantization_config`.
+
+        Args:
+            weight_quantization_config (`OVWeightQuantizationConfig` or `dict`):
+                Configuration related to weight quantization.
+            full_quantization_config (`OVQuantizationConfig` or `dict`):
+                Configuration related to full quantization.
+            ignored_scope (`dict` or `nncf.IgnoredScope`, *optional*):
+                An ignored scope that defines the list of model nodes to be ignored during quantization. Dictionary
+                entries provided via this argument are used to create an instance of `nncf.IgnoredScope` class.
+                Ignored scope provided here will be used for both weight and full quantization steps.
+            num_samples (`int`, *optional*):
+                The maximum number of samples composing the calibration dataset.
+            dataset (`str or List[str]`, *optional*):
+                The dataset used for data-aware optimization with NNCF.
+            tokenizer (`str`, *optional*):
+                The tokenizer used to process the dataset.
+            processor (`str`, *optional*):
+                A transformers processor used to process the dataset inputs.
+            trust_remote_code (`bool`, defaults to `False`):
+                Allows to use custom code for the modeling hosted in the model repository. This option should only be
+                set for repositories you trust and in which you have read the code, as it will execute on your local
+                machine arbitrary code present in the model repository.
+            **kwargs:
+        """
+        self.weight_quantization_config = self._initialize_quantization_config(
+            weight_quantization_config, OVWeightQuantizationConfig
+        )
+        wqc = self.weight_quantization_config
+
+        self.full_quantization_config = self._initialize_quantization_config(
+            full_quantization_config, OVQuantizationConfig
+        )
+        fqc = self.full_quantization_config
+
+        if fqc.dtype in ["f8e4m3", "f8e5m2"] and wqc.backup_precision is None:
+            # Here we simulate FP8 backup weight compression precision through full quantization: during weight
+            # compression step some weighted layers are kept in original precision and later are compressed to FP8
+            # during full precision quantization step.
+            # The issue with current approach is that if one provides an ignored scope for the full quantization step,
+            # then the weights of the layers under this ignored scope won't be compressed to FP8.
+            # TODO: remove once there is support for FP8 weight compression in NNCF
+            wqc.backup_precision = "none"
+
+        # Pull dataset-related parameters from child configs. This is not the intended use case, but we process it just
+        # in case user sets those parameters inside child configs only.
+        num_samples = max((num_samples or 0, wqc.num_samples or 0, fqc.num_samples or 0)) or None
+        dataset = dataset or wqc.dataset or fqc.dataset
+        tokenizer = tokenizer or wqc.tokenizer or fqc.tokenizer
+        processor = processor or wqc.processor or fqc.processor
+        trust_remote_code = trust_remote_code or wqc.trust_remote_code or fqc.trust_remote_code
+        super().__init__(
+            ignored_scope=ignored_scope,
+            num_samples=num_samples,
+            dataset=dataset,
+            tokenizer=tokenizer,
+            processor=processor,
+            trust_remote_code=trust_remote_code,
+            **kwargs,
+        )
+
+        self.post_init()
+
+    @staticmethod
+    def _initialize_quantization_config(
+        config: Union[dict, OVWeightQuantizationConfig, OVQuantizationConfig],
+        config_type: Type[Union[OVWeightQuantizationConfig, OVQuantizationConfig]],
+    ):
+        if isinstance(config, dict):
+            return config_type.from_dict(config)
+        elif isinstance(config, config_type):
+            return config.clone()
+        else:
+            raise ValueError(
+                f"Unsupported type of quantization config. Expected either a dictionary or an instance of "
+                f"{config_type}, but found: {type(config)}."
+            )
+
+    def to_dict(self):
+        result = super().to_dict()
+        result["weight_quantization_config"] = self.weight_quantization_config.to_dict()
+        result["full_quantization_config"] = self.full_quantization_config.to_dict()
+        return result

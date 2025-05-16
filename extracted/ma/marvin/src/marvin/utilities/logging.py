@@ -1,10 +1,13 @@
 import logging
 from functools import lru_cache
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from rich.logging import RichHandler
 
 import marvin
+
+if TYPE_CHECKING:
+    import marvin.settings
 
 
 def maybe_quote(value: Any) -> str:
@@ -51,19 +54,28 @@ def get_logger(name: str | None = None) -> logging.Logger:
     return logger
 
 
-def setup_logging(level: str | None = None) -> None:
+def setup_logging(settings: "marvin.settings.Settings") -> None:
     logger = get_logger()
 
-    if level is not None:
-        logger.setLevel(level)
-    else:
-        logger.setLevel(marvin.settings.log_level)
+    logger.setLevel(settings.log_level)
 
     logger.handlers.clear()
 
     handler = RichHandler(rich_tracebacks=True, markup=False)
     formatter = logging.Formatter("%(name)s: %(message)s")
     handler.setFormatter(formatter)
-
     logger.addHandler(handler)
+
+    if settings.log_file:
+        log_file_path = settings.log_file.expanduser().resolve()
+        log_file_path.parent.mkdir(parents=True, exist_ok=True)
+
+        file_handler = logging.FileHandler(log_file_path)
+        file_formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
+        file_handler.setFormatter(file_formatter)
+        file_handler.setLevel(settings.log_level)
+        logger.addHandler(file_handler)
+
     logger.propagate = False

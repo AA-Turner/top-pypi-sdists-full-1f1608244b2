@@ -776,11 +776,7 @@ impl TypedOp for AxisOp {
                 return Ok(None);
             };
             trace!(
-                "  Change:{:?} self:{:?} -> change:{:?} op:{:?}",
-                change,
-                self,
-                new_change,
-                new_op
+                "  Change:{change:?} self:{self:?} -> change:{new_change:?} op:{new_op:?}"
             );
             let substitute_op: Box<dyn TypedOp> =
                 if let Some(o) = new_op { Box::new(o) as _ } else { Box::new(Identity) };
@@ -841,6 +837,9 @@ impl TypedOp for AxisOp {
         model: &TypedModel,
         node: &TypedNode,
     ) -> TractResult<Option<TypedModelPatch>> {
+        if node.outputs[0].fact.opaque_fact.is_some() {
+            return Ok(None);
+        }
         if let Some(shape) = node.outputs[0].fact.shape.as_concrete() {
             if !matches!(self, AxisOp::Move(_, _)) {
                 let (inputs, outputs) = model.node_facts(node.id)?;

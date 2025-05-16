@@ -27,7 +27,7 @@ class MaleoFoundationTokenGeneralTransfers:
 
     class EncodePayload(DecodePayload):
         iat_dt:datetime = Field(datetime.now(timezone.utc), description="Issued at (datetime)")
-        exp_in:int = Field(5, ge=5, description="Expires in (integer, minutes)", exclude=True)
+        exp_in:int = Field(15, ge=1, description="Expires in (integer, minutes)", exclude=True)
 
         @model_validator(mode="before")
         @classmethod

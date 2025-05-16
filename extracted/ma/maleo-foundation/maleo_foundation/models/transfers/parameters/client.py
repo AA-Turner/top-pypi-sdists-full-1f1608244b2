@@ -10,8 +10,7 @@ class BaseClientParametersTransfers:
         BaseParameterSchemas.SortColumns,
         BaseGeneralSchemas.Search,
         BaseGeneralSchemas.Statuses,
-        BaseParameterSchemas.DateFilters,
-        BaseGeneralSchemas.Ids,
+        BaseParameterSchemas.DateFilters
     ):
         pass
 
@@ -51,15 +50,16 @@ class BaseClientParametersTransfers:
                 self.filters = filter
 
             return self
-            
-        def to_query_params(self) -> dict[str, Any]:
-            params = {
+
+        @property
+        def query_params(self) -> dict[str, Any]:
+            raw_params = {
+                "filters": self.filters,
+                "statuses": self.statuses,
                 "search": self.search,
                 "sorts": self.sorts,
-                "filters": self.filters,
             }
-            if hasattr(self, "statuses") and self.statuses is not None:
-                params["statuses"] = self.statuses
+            params = {k: v for k, v in raw_params.items() if v not in (None, [], "")}
             return params
 
     class GetPaginatedMultiple(
@@ -104,15 +104,16 @@ class BaseClientParametersTransfers:
                 self.filters = filter
 
             return self
-            
-        def to_query_params(self) -> dict[str, Any]:
-            params = {
-                "page": self.page,
-                "limit": self.limit,
+
+        @property
+        def query_params(self) -> dict[str, Any]:
+            raw_params = {
+                "filters": self.filters,
+                "statuses": self.statuses,
                 "search": self.search,
                 "sorts": self.sorts,
-                "filters": self.filters,
+                "page": self.page,
+                "limit": self.limit
             }
-            if hasattr(self, "statuses") and self.statuses is not None:
-                params["statuses"] = self.statuses
+            params = {k: v for k, v in raw_params.items() if v not in (None, [], "")}
             return params

@@ -298,6 +298,7 @@ class _AccountTokenState:
         pulumi.set(self, "value", value)
 
 
+@pulumi.type_token("cloudflare:index/accountToken:AccountToken")
 class AccountToken(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -458,7 +459,7 @@ class AccountToken(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def condition(self) -> pulumi.Output['outputs.AccountTokenCondition']:
+    def condition(self) -> pulumi.Output[Optional['outputs.AccountTokenCondition']]:
         return pulumi.get(self, "condition")
 
     @property

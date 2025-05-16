@@ -471,6 +471,7 @@ class _ZeroTrustAccessPolicyState:
         pulumi.set(self, "updated_at", value)
 
 
+@pulumi.type_token("cloudflare:index/zeroTrustAccessPolicy:ZeroTrustAccessPolicy")
 class ZeroTrustAccessPolicy(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -685,7 +686,7 @@ class ZeroTrustAccessPolicy(pulumi.CustomResource):
 
     @property
     @pulumi.getter(name="approvalGroups")
-    def approval_groups(self) -> pulumi.Output[Sequence['outputs.ZeroTrustAccessPolicyApprovalGroup']]:
+    def approval_groups(self) -> pulumi.Output[Optional[Sequence['outputs.ZeroTrustAccessPolicyApprovalGroup']]]:
         """
         Administrators who can approve a temporary authentication request.
         """
@@ -715,7 +716,7 @@ class ZeroTrustAccessPolicy(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def excludes(self) -> pulumi.Output[Sequence['outputs.ZeroTrustAccessPolicyExclude']]:
+    def excludes(self) -> pulumi.Output[Optional[Sequence['outputs.ZeroTrustAccessPolicyExclude']]]:
         """
         Rules evaluated with a NOT logical operator. To match the policy, a user cannot meet any of the Exclude rules.
         """
@@ -763,7 +764,7 @@ class ZeroTrustAccessPolicy(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def requires(self) -> pulumi.Output[Sequence['outputs.ZeroTrustAccessPolicyRequire']]:
+    def requires(self) -> pulumi.Output[Optional[Sequence['outputs.ZeroTrustAccessPolicyRequire']]]:
         """
         Rules evaluated with an AND logical operator. To match the policy, a user must meet all of the Require rules.
         """

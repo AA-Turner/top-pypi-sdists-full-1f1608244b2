@@ -1,5 +1,6 @@
 use crate::internal::*;
 use crate::ops::einsum::block_quant_aware_input_shape;
+use crate::ops::matmul::pack::OptSimpleMatMulPack;
 use ndarray::*;
 use tract_linalg::block_quant::BlockQuantValue;
 use tract_linalg::mmm::MMMInputValue;
@@ -65,22 +66,33 @@ impl Gather {
         let mut output = unsafe { Tensor::uninitialized::<F>(output_shape)? };
         let indices_slice = indices.as_slice::<i64>()?;
         let vector_len = data_shape[1];
+
+        let block_len = data.fact.format.block_len();
+        let block_bytes = data.fact.format.block_bytes();
         if F::datum_type() == f16::datum_type() {
             let output_slice = output.as_slice_mut::<f16>()?;
             for (pos, ix) in indices_slice.iter().enumerate() {
                 let slice = &mut output_slice[pos * vector_len..][..vector_len];
-                for (i, slot) in slice.iter_mut().enumerate() {
+                for i in (0..vector_len).step_by(block_len) {
                     let offset = data_shape[1] * *ix as usize + i;
-                    *slot = data.fact.format.extract_at_offset_f16(&data.value, offset)
+                    let block_id = offset / block_len;
+                    data.fact.format.dequant_block_f16(
+                        &data.value[block_id * block_bytes..][..block_bytes],
+                        &mut slice[i..i + block_len],
+                    );
                 }
             }
         } else {
             let output_slice = output.as_slice_mut::<f32>()?;
             for (pos, ix) in indices_slice.iter().enumerate() {
                 let slice = &mut output_slice[pos * vector_len..][..vector_len];
-                for (i, slot) in slice.iter_mut().enumerate() {
+                for i in (0..vector_len).step_by(block_len) {
                     let offset = data_shape[1] * *ix as usize + i;
-                    *slot = data.fact.format.extract_at_offset_f32(&data.value, offset)
+                    let block_id = offset / block_len;
+                    data.fact.format.dequant_block_f32(
+                        &data.value[block_id * block_bytes..][..block_bytes],
+                        &mut slice[i..i + block_len],
+                    );
                 }
             }
         }
@@ -170,6 +182,21 @@ impl TypedOp for Gather {
                     },
                     &[wire],
                 )?[0];
+                patch.shunt_outside(model, node.id.into(), wire)?;
+                return Ok(Some(patch));
+            }
+        }
+        if input_fact.konst.is_some() {
+            // look for a OptSimpleMatMulPack *sibling*
+            if let Some(sibling) = model
+                .outlet_successors(node.inputs[0])
+                .iter()
+                .find(|o| o.node != node.id && model.node(o.node).op_is::<OptSimpleMatMulPack>())
+            {
+                let mut patch = TypedModelPatch::default();
+                let mut taps = patch.taps(model, &node.inputs)?;
+                taps[0] = patch.tap_model(model, sibling.node.into())?;
+                let wire = patch.wire_node(&node.name, self.clone(), &taps)?[0];
                 patch.shunt_outside(model, node.id.into(), wire)?;
                 return Ok(Some(patch));
             }

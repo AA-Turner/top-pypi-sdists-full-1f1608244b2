@@ -193,6 +193,7 @@ class _UserState:
         pulumi.set(self, "zipcode", value)
 
 
+@pulumi.type_token("cloudflare:index/user:User")
 class User(pulumi.CustomResource):
     @overload
     def __init__(__self__,

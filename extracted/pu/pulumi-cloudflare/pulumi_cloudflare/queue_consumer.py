@@ -269,6 +269,7 @@ class _QueueConsumerState:
         pulumi.set(self, "type", value)
 
 
+@pulumi.type_token("cloudflare:index/queueConsumer:QueueConsumer")
 class QueueConsumer(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -446,7 +447,7 @@ class QueueConsumer(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def settings(self) -> pulumi.Output['outputs.QueueConsumerSettings']:
+    def settings(self) -> pulumi.Output[Optional['outputs.QueueConsumerSettings']]:
         return pulumi.get(self, "settings")
 
     @property

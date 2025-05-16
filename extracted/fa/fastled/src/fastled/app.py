@@ -2,6 +2,7 @@
 Uses the latest wasm compiler image to compile the FastLED sketch.
 """
 
+import os
 import sys
 import time
 from pathlib import Path
@@ -31,6 +32,7 @@ def run_server(args: Args) -> int:
         auto_updates=auto_update,
         mapped_dir=mapped_dir,
         auto_start=True,
+        remove_previous=args.clear,
     )
 
     if not interactive:
@@ -112,7 +114,7 @@ def main() -> int:
             auto_updates=False,
             mapped_dir=directory,
             auto_start=False,
-            remove_previous=False,
+            remove_previous=args.clear,
         )
 
         server.start(wait_for_startup=False)

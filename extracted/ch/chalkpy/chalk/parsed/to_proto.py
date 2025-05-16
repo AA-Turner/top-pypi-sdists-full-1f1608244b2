@@ -297,7 +297,8 @@ class ToProtoConverter:
             converted_rhs = expr_pb.LogicalExprNode(
                 literal=duration_converter.from_primitive_to_protobuf(raw_rhs.to_std())
             )
-            assert isinstance(converted_lhs, expr_pb.LogicalExprNode), f"lhs is {converted_lhs}"
+            if not isinstance(converted_lhs, expr_pb.LogicalExprNode):
+                raise ValueError(f"lhs '{converted_lhs}' is of type {type(converted_lhs)}")
             return expr_pb.LogicalExprNode(
                 binary_expr=expr_pb.BinaryExprNode(
                     operands=[converted_lhs, converted_rhs],
@@ -510,7 +511,8 @@ class ToProtoConverter:
                 converted.df.ClearField("required_columns")
                 # Selecting only the foreign feature to match
                 # https://github.com/chalk-ai/chalk-private/blob/a480c8518ee2f4c3a97250741a3513167ab650ae/chalkruntime/chalkruntime/loader/converter.py#L517
-                assert path_elem.parent.foreign_join_key is not None, "has-many must have a join key"
+                if path_elem.parent.foreign_join_key is None:
+                    raise ValueError(f"has-many feature '{path_elem.parent.fqn}' missing `foreign_join_key` annotation")
                 converted.df.optional_columns.append(
                     ToProtoConverter.create_feature_reference(path_elem.parent.foreign_join_key)
                 )
@@ -655,7 +657,8 @@ class ToProtoConverter:
             raise ValueError("Feature missing join")
 
         max_staleness_duration = timedelta_to_proto_duration(parse_chalk_duration(f.max_staleness))
-        assert f.joined_class is not None
+        if f.joined_class is None:
+            raise ValueError(f"has-many feature {f.fqn} must reference a Features cls")
         res = pb.FeatureType(
             has_many=pb.HasManyFeatureType(
                 name=f.name,

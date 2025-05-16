@@ -1,9 +1,9 @@
 use crate::encoder::EncoderExt;
 use crate::kernels::utils;
-use crate::{LibraryName, MetalContext, MetalTensor};
-use anyhow::Result;
+use crate::{LibraryName, MetalStream};
 use metal::MTLSize;
 use tract_core::internal::*;
+use tract_gpu::tensor::DeviceTensor;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Reducer {
@@ -22,9 +22,9 @@ impl Reducer {
         matches!(dt, DatumType::F32 | DatumType::F16)
     }
 
-    pub fn kernel_name(&self, dt: DatumType) -> Result<String> {
+    pub fn kernel_name(&self, dt: DatumType) -> TractResult<String> {
         ensure!(Self::is_supported_dt(dt), "Unsupport dt {:?} for metal reduce  op", dt);
-        let tname = MetalTensor::tname(dt)?;
+        let tname = DeviceTensor::tname(dt)?;
         let op = match self {
             Self::MeanOfSquares => "mean_of_squares",
             Self::Sum => "sum",
@@ -37,27 +37,27 @@ impl Reducer {
 
     pub fn eval(
         &self,
-        context: &MetalContext,
-        input: &MetalTensor,
+        stream: &MetalStream,
+        input: &DeviceTensor,
         axis: usize,
-    ) -> Result<MetalTensor> {
+    ) -> TractResult<DeviceTensor> {
         let mut o_shape = input.shape().to_vec();
         o_shape[axis] = 1;
-        let output = unsafe { MetalTensor::uninitialized_dt(input.datum_type(), &o_shape)? };
-        self.dispatch_eval(context, input, axis, &output)?;
-        context.wait_until_completed()?;
+        let output = unsafe { DeviceTensor::uninitialized_dt(input.datum_type(), &o_shape)? };
+        self.dispatch_eval(stream, input, axis, &output)?;
+        stream.wait_until_completed()?;
         Ok(output)
     }
 
     pub fn dispatch_eval(
         &self,
-        context: &MetalContext,
-        input: &MetalTensor,
+        stream: &MetalStream,
+        input: &DeviceTensor,
         axis: usize,
-        output: &MetalTensor,
-    ) -> Result<()> {
-        input.retain_until_completion();
-        output.retained_until_completion();
+        output: &DeviceTensor,
+    ) -> TractResult<()> {
+        stream.retain_tensor(input);
+        stream.retain_tensor(output);
 
         ensure!(output.datum_type() == input.datum_type());
         ensure!(output.shape()[axis] == 1);
@@ -67,11 +67,10 @@ impl Reducer {
         let output_shape_nd3 = utils::reshape_to_rank_3(output.shape(), axis);
         let output_strides_nd3 = Tensor::natural_strides(&output_shape_nd3);
 
-        let pipeline = context
-            .shared_context()
-            .load_pipeline(LibraryName::NNOps, &self.kernel_name(input.datum_type())?)?;
+        let pipeline =
+            stream.load_pipeline(LibraryName::NNOps, &self.kernel_name(input.datum_type())?)?;
 
-        let command_buffer = context.command_buffer();
+        let command_buffer = stream.command_buffer();
         command_buffer.encode(|encoder| {
             encoder.set_compute_pipeline_state(&pipeline);
             encoder.set_metal_tensor(0, input, metal::MTLResourceUsage::Read);
@@ -92,7 +91,7 @@ impl Reducer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::IntoMetal;
+    use crate::utils::with_borrowed_metal_stream;
     use derive_new::new;
     use num_traits::AsPrimitive;
     use num_traits::Float;
@@ -100,6 +99,7 @@ mod tests {
     use proptest::prelude::*;
     use tract_core::internal::Tensor;
     use tract_core::ops::nn::Reducer as TractReducer;
+    use tract_gpu::tensor::IntoDevice;
 
     fn test_case<F>(
         reducer: Reducer,
@@ -107,47 +107,45 @@ mod tests {
         shape: &[usize],
         axis: usize,
         scale: f32,
-    ) -> Result<()>
+    ) -> TractResult<()>
     where
         F: Float + Datum,
         usize: AsPrimitive<f32>,
         f32: AsPrimitive<F>,
     {
-        objc::rc::autoreleasepool(|| {
-            crate::METAL_CONTEXT.with_borrow(|context| {
-                let len = shape.iter().product::<usize>();
+        with_borrowed_metal_stream(|stream| {
+            let len = shape.iter().product::<usize>();
 
-                let a = Tensor::from_shape(
-                    shape,
-                    &(0..len)
-                        .map(|f| -> F {
-                            let v: f32 = f.as_();
-                            (v * scale).as_()
-                        })
-                        .collect::<Vec<_>>(),
-                )?
-                .into_metal()?;
+            let a = Tensor::from_shape(
+                shape,
+                &(0..len)
+                    .map(|f| -> F {
+                        let v: f32 = f.as_();
+                        (v * scale).as_()
+                    })
+                    .collect::<Vec<_>>(),
+            )?
+            .into_device()?;
 
-                let cpu_output = tract_reducer.reduce(&[axis], &a.to_cpu()?.into_tensor())?;
-                let metal_output = reducer.eval(context, &a, axis)?;
-                cpu_output
-                    .close_enough(&metal_output.to_cpu()?.into_tensor(), Approximation::Approximate)
-                    .with_context(|| {
-                        anyhow!(
-                            "A: {:?}, scale: {:?} Cpu: {:?}, Metal: {:?}",
-                            a.to_cpu().and_then(|it| it.dump(true)),
-                            scale,
-                            cpu_output.dump(true),
-                            metal_output.to_cpu().and_then(|it| it.dump(true))
-                        )
-                    })?;
-                Ok(())
-            })
+            let cpu_output = tract_reducer.reduce(&[axis], &a.to_host()?.into_tensor())?;
+            let metal_output = reducer.eval(stream, &a, axis)?;
+            cpu_output
+                .close_enough(&metal_output.to_host()?.into_tensor(), Approximation::Approximate)
+                .with_context(|| {
+                    format!(
+                        "A: {:?}, scale: {:?} Cpu: {:?}, Metal: {:?}",
+                        a.to_host().and_then(|it| it.dump(true)),
+                        scale,
+                        cpu_output.dump(true),
+                        metal_output.to_host().and_then(|it| it.dump(true))
+                    )
+                })?;
+            Ok(())
         })
     }
 
     #[test]
-    fn test_reduce_mean_of_squares() -> Result<()> {
+    fn test_reduce_mean_of_squares() -> TractResult<()> {
         test_case::<f32>(Reducer::MeanOfSquares, TractReducer::MeanOfSquares, &[4, 4], 1, 1.0)?;
         test_case::<f16>(
             Reducer::MeanOfSquares,
@@ -216,7 +214,7 @@ mod tests {
     }
 
     #[test]
-    fn test_reduce_sum() -> Result<()> {
+    fn test_reduce_sum() -> TractResult<()> {
         test_case::<f32>(Reducer::Sum, TractReducer::Sum, &[4, 4], 1, 1.0)?;
         test_case::<f16>(Reducer::Sum, TractReducer::Sum, &[4, 4], 1, 1.0 / 100.0)?;
         test_case::<f16>(Reducer::Sum, TractReducer::Sum, &[1, 10], 0, 1.0 / 100.0)?;
@@ -231,7 +229,7 @@ mod tests {
     }
 
     #[test]
-    fn test_reduce_prod() -> Result<()> {
+    fn test_reduce_prod() -> TractResult<()> {
         test_case::<f32>(Reducer::Prod, TractReducer::Prod, &[4, 4], 1, 1.0)?;
         test_case::<f16>(Reducer::Prod, TractReducer::Prod, &[4, 4], 1, 1.0 / 100.0)?;
         test_case::<f16>(Reducer::Prod, TractReducer::Prod, &[1, 10], 0, 1.0 / 100.0)?;
@@ -246,7 +244,7 @@ mod tests {
     }
 
     #[test]
-    fn test_reduce_max() -> Result<()> {
+    fn test_reduce_max() -> TractResult<()> {
         test_case::<f32>(Reducer::Max, TractReducer::Max, &[4, 4], 1, 1.0)?;
         test_case::<f16>(Reducer::Max, TractReducer::Max, &[4, 4], 1, 1.0 / 100.0)?;
         test_case::<f16>(Reducer::Max, TractReducer::Max, &[1, 10], 0, -1.0 / 100.0)?;
@@ -261,7 +259,7 @@ mod tests {
     }
 
     #[test]
-    fn test_reduce_min() -> Result<()> {
+    fn test_reduce_min() -> TractResult<()> {
         test_case::<f32>(Reducer::Min, TractReducer::Min, &[4, 4], 1, 1.0)?;
         test_case::<f16>(Reducer::Min, TractReducer::Min, &[4, 4], 1, 1.0 / 100.0)?;
         test_case::<f16>(Reducer::Min, TractReducer::Min, &[1, 10], 0, -1.0 / 100.0)?;
@@ -283,7 +281,7 @@ mod tests {
                 let reference = pb.reference()?;
 
                 out.close_enough(&reference, Approximation::Approximate)
-                   .with_context(|| anyhow!("Cpu: {:?}, Metal: {:?}", reference.dump(true), out.dump(true)))
+                   .with_context(|| format!("Cpu: {:?}, Metal: {:?}", reference.dump(true), out.dump(true)))
             }
             run(pb).map_err(|e| TestCaseError::Fail(format!("{:?}", e).into()))?;
         }
@@ -295,7 +293,7 @@ mod tests {
                 let reference = pb.reference()?;
 
                 out.close_enough(&reference, Approximation::Approximate)
-                   .with_context(|| anyhow!("Cpu: {:?}, Metal: {:?}", reference.dump(true), out.dump(true)))
+                   .with_context(|| format!("Cpu: {:?}, Metal: {:?}", reference.dump(true), out.dump(true)))
             }
 
             run(pb).map_err(|e| TestCaseError::Fail(format!("{:?}", e).into()))?;
@@ -346,7 +344,7 @@ mod tests {
         F: Datum + Float + std::ops::AddAssign,
         usize: AsPrimitive<F>,
     {
-        pub fn reference(&self) -> Result<Tensor> {
+        pub fn reference(&self) -> TractResult<Tensor> {
             let a = Tensor::from_shape(self.shape.as_slice(), &self.input)?;
             let cpu_output = match self.op {
                 Reducer::Sum => TractReducer::Sum.reduce(&[self.axis], &a)?,
@@ -358,13 +356,11 @@ mod tests {
             Ok(cpu_output)
         }
 
-        pub fn run(&self) -> Result<Tensor> {
-            objc::rc::autoreleasepool(|| {
-                crate::METAL_CONTEXT.with_borrow(|context| {
-                    let a = Tensor::from_shape(self.shape.as_slice(), &self.input)?.into_metal()?;
-                    let metal_output = self.op.eval(context, &a, self.axis)?;
-                    Ok(metal_output.to_cpu()?.into_tensor())
-                })
+        pub fn run(&self) -> TractResult<Tensor> {
+            with_borrowed_metal_stream(|stream| {
+                let a = Tensor::from_shape(self.shape.as_slice(), &self.input)?.into_device()?;
+                let metal_output = self.op.eval(stream, &a, self.axis)?;
+                Ok(metal_output.to_host()?.into_tensor())
             })
         }
     }

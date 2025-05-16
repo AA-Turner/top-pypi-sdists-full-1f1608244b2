@@ -114,6 +114,7 @@ class _ZeroTrustGatewaySettingsState:
         pulumi.set(self, "updated_at", value)
 
 
+@pulumi.type_token("cloudflare:index/zeroTrustGatewaySettings:ZeroTrustGatewaySettings")
 class ZeroTrustGatewaySettings(pulumi.CustomResource):
     @overload
     def __init__(__self__,

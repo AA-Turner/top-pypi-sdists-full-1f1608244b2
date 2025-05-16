@@ -1,12 +1,12 @@
 import os
 from contextlib import contextmanager
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 from sqlalchemy import MetaData
 from sqlalchemy.engine import Engine, create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.declarative import DeclarativeMeta
 from sqlalchemy.orm import sessionmaker, Session, declarative_base
-from typing import Dict, Generator
+from typing import Generator
 from maleo_foundation.types import BaseTypes
 from maleo_foundation.utils.logging import ServiceLogger
 
@@ -15,10 +15,17 @@ class MetadataManager:
     metadata:MetaData = Base.metadata
 
 class SessionManager:
-    def __init__(self, logger:ServiceLogger, engine:Engine):
+    def __init__(
+        self,
+        logger:ServiceLogger,
+        engine:Engine
+    ):
         self._logger = logger
         self._logger.info("Initializing SessionMaker")
-        self._sessionmaker:sessionmaker[Session] = sessionmaker(bind=engine, expire_on_commit=False)
+        self._sessionmaker:sessionmaker[Session] = sessionmaker(
+            bind=engine,
+            expire_on_commit=False
+        )
         self._logger.info("SessionMaker initialized successfully")
 
     def _session_handler(self) -> Generator[Session, None, None]:
@@ -84,7 +91,11 @@ class DatabaseManager:
         if url is None:
             raise ValueError("DB_URL environment variable must be set if url is not provided")
         self._logger.info("Creating SQlAlchemy engine")
-        self._engine = create_engine(url=url, echo=False, pool_pre_ping=True, pool_recycle=3600)
+        self._engine = create_engine(
+            url=url,
+            echo=False,
+            pool_pre_ping=True,
+            pool_recycle=3600)
         self._logger.info("SQlAlchemy engine created successfully")
 
         #* Creating all table from metadata
@@ -94,7 +105,11 @@ class DatabaseManager:
 
         #* Initializing session manager
         self._logger.info("Initializing session manager")
-        self._session = SessionManager(logger=self._logger, engine=self._engine) #* Define session
+        #* Create session
+        self._session = SessionManager(
+            logger=self._logger,
+            engine=self._engine
+        )
         self._logger.info("Session manager initialized successfully")
 
     @property

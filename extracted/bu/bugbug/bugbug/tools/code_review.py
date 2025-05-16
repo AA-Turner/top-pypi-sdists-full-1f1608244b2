@@ -5,6 +5,7 @@
 
 import enum
 import json
+import os
 import re
 from abc import ABC, abstractmethod
 from collections import defaultdict
@@ -20,6 +21,7 @@ from langchain.chains import ConversationChain, LLMChain
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import PromptTemplate
 from langchain_openai import OpenAIEmbeddings
+from libmozdata.phabricator import ConduitError
 from tenacity import retry, retry_if_exception_type, stop_after_attempt
 from tqdm import tqdm
 from unidiff import Hunk, PatchedFile, PatchSet
@@ -48,6 +50,8 @@ class InlineComment:
     is_done: bool | None = None
     hunk_start_line: int | None = None
     hunk_end_line: int | None = None
+    is_generated: bool | None = None
+    explanation: str | None = None
 
 
 class ModelResultError(Exception):
@@ -115,12 +119,13 @@ Generate code review comments for the patch provided below.
 **Output Format**:
 
 - Write down the comments in a JSON list as shown in the valid comment examples.
-- Do **not** include any explanations about your choices.
+- Include your justification about your choices as part of each JSON object under the key `explanation`.
 - Only return the JSON list.
 
 **Valid Comment Examples**:
 
 {comment_examples}
+{approved_examples}
 
 **Patch to Review**:
 
@@ -148,7 +153,7 @@ Exclude comments that:
 - include praising;
 - ask if changes are intentional or ask to ensure things exist.
 
-Do not report any explanation about your choice. Only return a valid JSON list.
+Only return a valid JSON list. Do not drop any key from the JSON objects.
 
 Comments:
 {comments}
@@ -177,6 +182,7 @@ Adopt the template below as the report format:
         "file": "com/br/main/Pressure.java",
         "code_line": 458,
         "comment" : "In the third code block, you are using `nsAutoStringN<256>` instead of `nsString`. This is a good change as `nsAutoStringN<256>` is more efficient for small strings. However, you should ensure that the size of `tempString` does not exceed 256 characters, as `nsAutoStringN<256>` has a fixed size."
+        "explanation": "THE JUSTIFICATION GOES HERE"
     }}
 ]
 Do not report any explanation about your choice. Only return a valid JSON list.
@@ -208,6 +214,7 @@ STATIC_COMMENT_EXAMPLES = [
             "filename": "netwerk/streamconv/converters/mozTXTToHTMLConv.cpp",
             "start_line": 1211,
             "content": "You are using `nsAutoStringN<256>` instead of `nsString`. This is a good change as `nsAutoStringN<256>` is more efficient for small strings. However, you should ensure that the size of `tempString` does not exceed 256 characters, as `nsAutoStringN<256>` has a fixed size.",
+            "explanation": "THE JUSTIFICATION GOES HERE",
         },
         "raw_hunk": """@@ -1206,11 +1206,11 @@
      } else {
@@ -228,6 +235,7 @@ STATIC_COMMENT_EXAMPLES = [
             "filename": "toolkit/components/extensions/ExtensionDNR.sys.mjs",
             "start_line": 1837,
             "content": "The `filterAAR` function inside `#updateAllowAllRequestRules()` is created every time the method is called. Consider defining this function outside of the method to avoid unnecessary function creation.",
+            "explanation": "THE JUSTIFICATION GOES HERE",
         },
         "raw_hunk": """@@ -1812,18 +1821,27 @@
        rulesets.push(
@@ -263,6 +271,7 @@ STATIC_COMMENT_EXAMPLES = [
             "filename": "devtools/shared/network-observer/NetworkUtils.sys.mjs",
             "start_line": 496,
             "content": "The condition in the `if` statement is a bit complex and could be simplified for better readability. Consider extracting `!Components.isSuccessCode(status) && blockList.includes(ChromeUtils.getXPCOMErrorName(status))` into a separate function with a descriptive name, such as `isBlockedError`.",
+            "explanation": "THE JUSTIFICATION GOES HERE",
         },
         "raw_hunk": """@@ -481,26 +481,21 @@
      }
@@ -325,6 +334,10 @@ class Patch(ABC):
     @abstractmethod
     def raw_diff(self) -> str: ...
 
+    @property
+    @abstractmethod
+    def date_created(self) -> datetime: ...
+
     @cached_property
     def patch_set(self) -> PatchSet:
         return PatchSet.from_string(self.raw_diff)
@@ -354,11 +367,17 @@ class PhabricatorPatch(Patch):
         return r.ok
 
     @cached_property
-    def base_commit_hash(self) -> str:
+    def _diff_metadata(self) -> dict:
         assert phabricator.PHABRICATOR_API is not None
         diffs = phabricator.PHABRICATOR_API.search_diffs(diff_id=self.diff_id)
         assert len(diffs) == 1
         diff = diffs[0]
+
+        return diff
+
+    @cached_property
+    def base_commit_hash(self) -> str:
+        diff = self._diff_metadata
 
         try:
             base_commit_hash = diff["refs"]["base"]["identifier"]
@@ -392,6 +411,10 @@ class PhabricatorPatch(Patch):
 
         assert closest_push is not None
         return closest_push["changesets"][0]
+
+    @property
+    def date_created(self) -> datetime:
+        return datetime.fromtimestamp(self._diff_metadata["dateCreated"])
 
 
 class ReviewData(ABC):
@@ -456,6 +479,11 @@ class ReviewData(ABC):
             # prioritize added lines over deleted lines because comments are more
             # likely to be on added lines than deleted lines.
             if len(matching_hunks) > 1:
+                logger.warning(
+                    "Multiple matching hunks found for comment %s in file %s",
+                    comment.id,
+                    comment.filename,
+                )
                 for hunk in matching_hunks:
                     for line in hunk:
                         if line.is_added and line.target_line_no == comment.start_line:
@@ -469,11 +497,6 @@ class ReviewData(ABC):
                             return hunk
 
             if len(matching_hunks) != 0:
-                logger.warning(
-                    "Multiple matching hunks found for comment %s in file %s",
-                    comment.id,
-                    comment.filename,
-                )
                 return matching_hunks[0]
 
         elif comment.on_removed_code:
@@ -488,6 +511,10 @@ class ReviewData(ABC):
 
     def retrieve_comments_with_hunks(self):
         def comment_filter(comment: InlineComment):
+            # We want to keep all generated comments
+            if comment.is_generated:
+                return True
+
             comment_content = comment.content
 
             # Ignore very short and very long comments
@@ -526,6 +553,9 @@ class ReviewData(ABC):
             except UnidiffParseError:
                 # TODO: use log instead of print
                 print(f"Failed to parse {diff_id}")
+                continue
+            except ConduitError:
+                logger.warning("Failed to load %d", diff_id)
                 continue
 
             file_map = {
@@ -582,10 +612,6 @@ class PhabricatorReviewData(ReviewData):
                 if transaction["fields"]["replyToCommentPHID"] is not None:
                     continue
 
-                # Ignore bot comments
-                if transaction["authorPHID"] == "PHID-USER-cje4weq32o3xyuegalpj":
-                    continue
-
                 if len(transaction["comments"]) != 1:
                     # Follow up: https://github.com/mozilla/bugbug/issues/4218
                     logger.warning(
@@ -595,10 +621,23 @@ class PhabricatorReviewData(ReviewData):
                     continue
 
                 transaction_comment = transaction["comments"][0]
+                comment_content = transaction_comment["content"]["raw"]
+                is_generated = (
+                    # This includes comments generated by Review Helper, but
+                    # excludes any comments that have been edited by the user.
+                    "> This comment was generated automatically and has been approved by"
+                    in comment_content
+                )
+
+                # Ignore bot comments, except the ones by Review Helper
+                if (
+                    transaction["authorPHID"] == "PHID-USER-cje4weq32o3xyuegalpj"
+                    and not is_generated
+                ):
+                    continue
+
                 comment_id = transaction_comment["id"]
                 date_created = transaction_comment["dateCreated"]
-                comment_content = transaction_comment["content"]["raw"]
-
                 diff_id = transaction["fields"]["diff"]["id"]
                 filename = transaction["fields"]["path"]
                 start_line = transaction["fields"]["line"]
@@ -616,15 +655,16 @@ class PhabricatorReviewData(ReviewData):
                 # TODO: we could create an extended dataclass for this
                 # instead of adding optional fields.
                 comment = InlineComment(
-                    filename,
-                    start_line,
-                    end_line,
-                    comment_content,
-                    on_removed_code,
-                    comment_id,
-                    date_created,
-                    date_modified,
-                    is_done,
+                    filename=filename,
+                    start_line=start_line,
+                    end_line=end_line,
+                    content=comment_content,
+                    on_removed_code=on_removed_code,
+                    id=comment_id,
+                    date_created=date_created,
+                    date_modified=date_modified,
+                    is_done=is_done,
+                    is_generated=is_generated,
                 )
 
                 if not comment_filter(comment):
@@ -643,17 +683,29 @@ class SwarmPatch(Patch):
         self.rev_id = int(patch_id)
 
     @cached_property
-    def raw_diff(self) -> str:
+    def _revision_metadata(self) -> dict:
         import swarm
 
-        revisions = swarm.get(self.auth, rev_ids=[self.rev_id], version_l=[0, 1])
+        revisions = swarm.get(self.auth, rev_ids=[self.rev_id])
         assert len(revisions) == 1
 
-        return revisions[0]["fields"]["diff"]
+        return revisions[0]
+
+    @property
+    def raw_diff(self) -> str:
+        revision = self._revision_metadata
+
+        return revision["fields"]["diff"]
 
     @cached_property
     def base_commit_hash(self) -> str:
         raise NotImplementedError
+
+    @property
+    def date_created(self) -> datetime:
+        revision = self._revision_metadata
+
+        return datetime.fromtimestamp(revision["fields"]["created"])
 
 
 class SwarmReviewData(ReviewData):
@@ -1056,6 +1108,7 @@ def generate_processed_output(output: str, patch: PatchSet) -> Iterable[InlineCo
             hunk_end_line=scope["line_end"],
             content=comment["comment"],
             on_removed_code=not scope["has_added_lines"],
+            explanation=comment["explanation"],
         )
 
 
@@ -1083,6 +1136,18 @@ class CodeReviewTool(GenerativeModelTool):
             if hasattr(comment_gen_llms[0], "model_name")
             else ""
         )
+        self.is_experiment_env = os.getenv("EXPERIMENT_ENV", "no").lower() in (
+            "1",
+            "yes",
+            "true",
+        )
+        if self.is_experiment_env:
+            print(
+                "---------------------- WARNING ---------------------\n"
+                "You are using the experiment environment.\n"
+                "This environment is not intended for production use.\n"
+                "----------------------------------------------------"
+            )
 
         self.summarization_chain = LLMChain(
             prompt=PromptTemplate.from_template(
@@ -1242,10 +1307,15 @@ class CodeReviewTool(GenerativeModelTool):
                     },
                 )
 
+            created_before = patch.date_created if self.is_experiment_env else None
+
             cur_output = conversation_chain.predict(
                 input=PROMPT_TEMPLATE_REVIEW.format(
                     patch=formatted_patch,
-                    comment_examples=self._get_comment_examples(patch),
+                    comment_examples=self._get_comment_examples(patch, created_before),
+                    approved_examples=self._get_generated_examples(
+                        patch, created_before
+                    ),
                     target_code_consistency=self.target_software or "rest of the",
                 )
             )
@@ -1298,19 +1368,48 @@ class CodeReviewTool(GenerativeModelTool):
 
         return list(generate_processed_output(raw_output, patch.patch_set))
 
-    def _get_comment_examples(self, patch):
+    def _get_generated_examples(self, patch, created_before: datetime | None = None):
+        """Get examples of comments that were generated by an LLM.
+
+        Since the comments are posted, it means that they were approved by a
+        reviewer. Thus, we can use them as examples of good comments.
+        """
+        if not self.review_comments_db:
+            return ""
+
+        comment_examples = [
+            result.payload["comment"]["content"]
+            for result in self.review_comments_db.find_similar_patch_comments(
+                patch, limit=5, generated=True, created_before=created_before
+            )
+        ]
+        if not comment_examples:
+            return ""
+
+        template = """
+**Examples of comments that you suggested on other patches and developers found useful**:
+
+- {comment_examples}
+"""
+
+        return template.format(comment_examples="\n    - ".join(comment_examples))
+
+    def _get_comment_examples(self, patch, created_before: datetime | None = None):
         comment_examples = []
 
         if self.review_comments_db:
             comment_examples = [
                 result.payload
                 for result in self.review_comments_db.find_similar_patch_comments(
-                    patch, limit=10
+                    patch, limit=10, generated=False, created_before=created_before
                 )
             ]
 
         if not comment_examples:
             comment_examples = STATIC_COMMENT_EXAMPLES
+        else:
+            for example in comment_examples:
+                example["comment"]["explanation"] = "THE JUSTIFICATION GOES HERE"
 
         def format_comment(comment):
             # TODO: change the schema that we expect the model to return so we
@@ -1378,7 +1477,13 @@ class ReviewCommentsDB:
             model="text-embedding-3-large", api_key=get_secret("OPENAI_API_KEY")
         )
 
-    def clean_comment(self, comment):
+    def clean_comment(self, comment: str):
+        # We do not want to keep the LLM note in the comment, it is not useful
+        # when using the comment as examples.
+        llm_note_index = comment.find("> This comment was generated automatically ")
+        if llm_note_index != -1:
+            comment = comment[:llm_note_index]
+
         # TODO: use the nav info instead of removing it
         comment = self.NAV_PATTERN.sub("", comment)
         comment = self.WHITESPACE_PATTERN.sub(" ", comment)
@@ -1388,6 +1493,7 @@ class ReviewCommentsDB:
 
     def add_comments_by_hunk(self, items: Iterable[tuple[Hunk, InlineComment]]):
         point_ids = set(self.vector_db.get_existing_ids())
+        logger.info("Will skip %d comments that already exist", len(point_ids))
 
         def vector_points():
             for hunk, comment in items:
@@ -1396,19 +1502,54 @@ class ReviewCommentsDB:
 
                 str_hunk = str(hunk)
                 vector = self.embeddings.embed_query(str_hunk)
+
+                comment_data = asdict(comment)
+                comment_data["content"] = self.clean_comment(comment.content)
                 payload = {
                     "hunk": str_hunk,
-                    "comment": asdict(comment),
+                    "comment": comment_data,
+                    "version": 2,
                 }
 
                 yield VectorPoint(id=comment.id, vector=vector, payload=payload)
 
         self.vector_db.insert(vector_points())
 
-    def find_similar_hunk_comments(self, hunk: Hunk):
-        return self.vector_db.search(self.embeddings.embed_query(str(hunk)))
+    def find_similar_hunk_comments(
+        self,
+        hunk: Hunk,
+        generated: bool | None = None,
+        created_before: datetime | None = None,
+    ):
+        return self.vector_db.search(
+            self.embeddings.embed_query(str(hunk)),
+            filter=(
+                QueryFilter(
+                    must_match=(
+                        {"comment.is_generated": generated}
+                        if generated is not None
+                        else None
+                    ),
+                    must_range=(
+                        {
+                            "comment.date_created": {
+                                "lt": created_before.timestamp(),
+                            }
+                        }
+                        if created_before is not None
+                        else None
+                    ),
+                )
+            ),
+        )
 
-    def find_similar_patch_comments(self, patch: Patch, limit: int):
+    def find_similar_patch_comments(
+        self,
+        patch: Patch,
+        limit: int,
+        generated: bool | None = None,
+        created_before: datetime | None = None,
+    ):
         assert limit > 0, "Limit must be greater than 0"
 
         patch_set = PatchSet.from_string(patch.raw_diff)
@@ -1421,7 +1562,9 @@ class ReviewCommentsDB:
                 continue
 
             for hunk in patched_file:
-                for result in self.find_similar_hunk_comments(hunk):
+                for result in self.find_similar_hunk_comments(
+                    hunk, generated, created_before
+                ):
                     if result is not None and (
                         result.id not in max_score_per_comment
                         or result.score > max_score_per_comment[result.id].score

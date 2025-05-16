@@ -1,7 +1,8 @@
 pub use crate::kernels::ElementWiseOps;
 use crate::ops::MetalEvalOp;
-use crate::{MetalContext, MetalTensorExt};
+use crate::MetalStream;
 use tract_core::internal::*;
+use tract_gpu::tensor::DeviceTensorExt;
 
 #[derive(Debug, Clone)]
 pub struct MetalElementWiseOp(pub ElementWiseOps);
@@ -28,23 +29,23 @@ crate::impl_eval_op_for_metal_op!(MetalElementWiseOp);
 impl MetalEvalOp for MetalElementWiseOp {
     fn metal_eval(
         &self,
-        context: &MetalContext,
+        stream: &MetalStream,
         node_id: usize,
         session: &mut SessionState,
         inputs: TVec<TValue>,
     ) -> TractResult<TVec<TValue>> {
         let opaque_a = args_1!(inputs);
-        let a = opaque_a.to_metal_tensor()?;
+        let a = opaque_a.to_device_tensor()?;
         let output = crate::ops::make_tensor_for_node(session, node_id, a.datum_type(), a.shape())?;
-        self.0.dispatch_eval(context, a, &output)?;
+        self.0.dispatch_eval(stream, a, &output)?;
         Ok(tvec![output.into_opaque_tensor().into_tvalue()])
     }
 }
 
 impl TypedOp for MetalElementWiseOp {
     fn output_facts(&self, inputs: &[&TypedFact]) -> TractResult<TVec<TypedFact>> {
-        crate::utils::metal_facts_from_gpu(inputs, |facts| Ok(tvec!(facts[0].without_value())))
-            .with_context(|| anyhow::anyhow!("Error while computing facts for {:?}", self.name()))
+        tract_gpu::utils::facts_to_device_facts(inputs, |facts| Ok(tvec!(facts[0].without_value())))
+            .with_context(|| format!("Error while computing facts for {:?}", self.name()))
     }
 
     as_op!();

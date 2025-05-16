@@ -281,6 +281,7 @@ class _ZeroTrustAccessGroupState:
         pulumi.set(self, "zone_id", value)
 
 
+@pulumi.type_token("cloudflare:index/zeroTrustAccessGroup:ZeroTrustAccessGroup")
 class ZeroTrustAccessGroup(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -488,7 +489,7 @@ class ZeroTrustAccessGroup(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def excludes(self) -> pulumi.Output[Sequence['outputs.ZeroTrustAccessGroupExclude']]:
+    def excludes(self) -> pulumi.Output[Optional[Sequence['outputs.ZeroTrustAccessGroupExclude']]]:
         """
         Rules evaluated with a NOT logical operator. To match a policy, a user cannot meet any of the Exclude rules.
         """
@@ -520,7 +521,7 @@ class ZeroTrustAccessGroup(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def requires(self) -> pulumi.Output[Sequence['outputs.ZeroTrustAccessGroupRequire']]:
+    def requires(self) -> pulumi.Output[Optional[Sequence['outputs.ZeroTrustAccessGroupRequire']]]:
         """
         Rules evaluated with an AND logical operator. To match a policy, a user must meet all of the Require rules.
         """

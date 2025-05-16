@@ -409,9 +409,12 @@ class ModelsMixin(metaclass=ABCMeta):
         settings = api_field.get("settings") or {}
         if settings.get("number_style") != column.number_style and column.number_style:
             settings["number_style"] = column.number_style
-            body_field["settings"] = settings
         if settings.get("decimals") != column.decimals and column.decimals:
             settings["decimals"] = column.decimals
+        if settings.get("currency") != column.currency and column.currency:
+            settings["currency"] = column.currency
+
+        if settings:
             body_field["settings"] = settings
 
         # Allow explicit null type to override detected one

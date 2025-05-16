@@ -1,3 +1,4 @@
+import logging
 from functools import reduce
 from operator import add
 from typing import List, Union
@@ -39,38 +40,45 @@ from collate_sqllineage.core.parser.sqlparse.utils import (
 )
 from collate_sqllineage.utils.helpers import trim_comment
 
+logger = logging.getLogger(__name__)
+
 
 class SqlParseLineageAnalyzer(LineageAnalyzer):
     """SQL Statement Level Lineage Analyzer."""
 
     def analyze(self, sql: str) -> StatementLineageHolder:
-        # get rid of comments, which cause inconsistencies in sqlparse output
-        stmt = sqlparse.parse(trim_comment(sql))[0]
-        self.parsed_result = stmt
-        if (
-            stmt.get_type() == "DELETE"
-            or stmt.token_first(skip_cm=True).normalized == "TRUNCATE"
-            or stmt.token_first(skip_cm=True).normalized.upper() == "REFRESH"
-            or stmt.token_first(skip_cm=True).normalized == "CACHE"
-            or stmt.token_first(skip_cm=True).normalized.upper() == "UNCACHE"
-            or stmt.token_first(skip_cm=True).normalized == "SHOW"
-        ):
-            holder = StatementLineageHolder()
-        elif stmt.get_type() == "DROP":
-            holder = self._extract_from_ddl_drop(stmt)
-        elif (
-            stmt.get_type() == "ALTER"
-            or stmt.token_first(skip_cm=True).normalized == "RENAME"
-        ):
-            holder = self._extract_from_ddl_alter(stmt)
-        elif stmt.get_type() == "MERGE":
-            holder = self._extract_from_dml_merge(stmt)
-        else:
-            # DML parsing logic also applies to CREATE DDL
-            holder = StatementLineageHolder.of(
-                self._extract_from_dml(stmt, AnalyzerContext())
-            )
-        return holder
+        try:
+            # get rid of comments, which cause inconsistencies in sqlparse output
+            stmt = sqlparse.parse(trim_comment(sql))[0]
+            self.parsed_result = stmt
+            if (
+                stmt.get_type() == "DELETE"
+                or stmt.token_first(skip_cm=True).normalized == "TRUNCATE"
+                or stmt.token_first(skip_cm=True).normalized.upper() == "REFRESH"
+                or stmt.token_first(skip_cm=True).normalized == "CACHE"
+                or stmt.token_first(skip_cm=True).normalized.upper() == "UNCACHE"
+                or stmt.token_first(skip_cm=True).normalized == "SHOW"
+            ):
+                holder = StatementLineageHolder()
+            elif stmt.get_type() == "DROP":
+                holder = self._extract_from_ddl_drop(stmt)
+            elif (
+                stmt.get_type() == "ALTER"
+                or stmt.token_first(skip_cm=True).normalized == "RENAME"
+            ):
+                holder = self._extract_from_ddl_alter(stmt)
+            elif stmt.get_type() == "MERGE":
+                holder = self._extract_from_dml_merge(stmt)
+            else:
+                # DML parsing logic also applies to CREATE DDL
+                holder = StatementLineageHolder.of(
+                    self._extract_from_dml(stmt, AnalyzerContext())
+                )
+            return holder
+        except RecursionError as e:
+            logger.warning(f"RecursionError occurred: {e}. Using simplified handling.")
+            # Return empty holder when recursion limit exceeded
+            return StatementLineageHolder()
 
     @classmethod
     def _extract_from_ddl_drop(cls, stmt: Statement) -> StatementLineageHolder:

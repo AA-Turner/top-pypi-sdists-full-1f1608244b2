@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: mct-nightly
-Version: 2.3.0.20250515.544
+Version: 2.3.0.20250516.613
 Summary: A Model Compression Toolkit for neural networks
 Author-email: ssi-dnn-dev@sony.com
 Classifier: Programming Language :: Python :: 3
@@ -21,7 +21,7 @@ Requires-Dist: PuLP
 Requires-Dist: matplotlib<3.10.0
 Requires-Dist: scipy
 Requires-Dist: protobuf
-Requires-Dist: mct-quantizers-nightly
+Requires-Dist: mct-quantizers==1.6.0
 Requires-Dist: pydantic>=2.0
 Requires-Dist: edge-mdt-cl-dev
 Dynamic: author-email

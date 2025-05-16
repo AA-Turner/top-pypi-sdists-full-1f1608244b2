@@ -3,17 +3,17 @@
 # @Author: xieyang_ls
 # @Filename: __init__.py.py
 
-from pyutils_spirit.spirit_container.annotation import (component,
-                                                        mapper,
-                                                        service,
-                                                        controller,
+from pyutils_spirit.spirit_container.annotation import (Component,
+                                                        Mapper,
+                                                        Service,
+                                                        Controller,
                                                         resource,
                                                         get, post, put, delete,
-                                                        exception_advice,
+                                                        ExceptionAdvice,
                                                         throws_exception,
-                                                        request_interceptor,
-                                                        interceptor_before,
-                                                        interceptor_after)
+                                                        RequestInterceptor,
+                                                        before,
+                                                        after)
 
 from pyutils_spirit.spirit_container.multipart_file import MultipartFile
 
@@ -23,20 +23,20 @@ from pyutils_spirit.spirit_container.spirit_application import SpiritApplication
 
 from pyutils_spirit.spirit_container.spirit_application_container import SpiritApplicationContainer
 
-__all__ = ["component",
-           "mapper",
-           "service",
-           "controller",
+__all__ = ["Component",
+           "Mapper",
+           "Service",
+           "Controller",
            "resource",
            "get",
            "post",
            "put",
            "delete",
-           "exception_advice",
+           "ExceptionAdvice",
            "throws_exception",
-           "request_interceptor",
-           "interceptor_before",
-           "interceptor_after",
+           "RequestInterceptor",
+           "before",
+           "after",
            "MultipartFile",
            "Result",
            "SpiritApplication",

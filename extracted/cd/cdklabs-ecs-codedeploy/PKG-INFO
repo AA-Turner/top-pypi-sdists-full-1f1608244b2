@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: cdklabs.ecs-codedeploy
-Version: 0.0.406
+Version: 0.0.407
 Summary: CDK Constructs for performing ECS Deployments with CodeDeploy
 Home-page: https://github.com/cdklabs/cdk-ecs-codedeploy
 Author: Amazon Web Services<aws-cdk-dev@amazon.com>

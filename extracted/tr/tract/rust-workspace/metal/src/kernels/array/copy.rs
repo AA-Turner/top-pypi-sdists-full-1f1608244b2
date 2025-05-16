@@ -1,11 +1,10 @@
 use crate::encoder::EncoderExt;
-use crate::MetalTensor;
-use crate::{LibraryName, MetalContext};
-use anyhow::Result;
+use crate::{LibraryName, MetalStream};
 use derive_new::new;
 use metal::{MTLSize, NSUInteger};
 use std::fmt;
 use tract_core::internal::*;
+use tract_gpu::tensor::DeviceTensor;
 
 #[derive(Debug, Clone, new, PartialEq, Eq, Hash)]
 pub struct Memcpy;
@@ -34,30 +33,29 @@ impl Memcpy {
         )
     }
 
-    pub fn kernel_name(&self, dt: DatumType) -> Result<String> {
+    pub fn kernel_name(&self, dt: DatumType) -> TractResult<String> {
         ensure!(Self::is_supported_dt(dt), "Unsupport dt {:?} for metal copy  op", dt);
-        let tname = MetalTensor::tname(dt)?;
+        let tname = DeviceTensor::tname(dt)?;
         Ok(format!("array_ops::copy_unicast_{tname}"))
     }
 
     pub fn dispatch_eval(
         &self,
-        context: &MetalContext,
-        input: &MetalTensor,
+        stream: &MetalStream,
+        input: &DeviceTensor,
         input_offset: usize,
-        output: &MetalTensor,
-    ) -> Result<()> {
+        output: &DeviceTensor,
+    ) -> TractResult<()> {
         ensure!(input_offset % input.datum_type().size_of() == 0);
         ensure!(output.len() <= input.len() - input_offset);
 
-        input.retain_until_completion();
-        output.retain_until_completion();
+        stream.retain_tensor(input);
+        stream.retain_tensor(output);
 
         let kernel_name = self.kernel_name(input.datum_type())?;
 
-        let pipeline =
-            context.shared_context().load_pipeline(LibraryName::ArrayOps, &kernel_name)?;
-        let command_buffer = context.command_buffer();
+        let pipeline = stream.load_pipeline(LibraryName::ArrayOps, &kernel_name)?;
+        let command_buffer = stream.command_buffer();
         command_buffer.encode(|encoder| {
             encoder.set_compute_pipeline_state(&pipeline);
             encoder.set_metal_tensor_with_offset(
@@ -77,14 +75,14 @@ impl Memcpy {
 
     pub fn eval(
         &self,
-        context: &MetalContext,
-        input: &MetalTensor,
+        stream: &MetalStream,
+        input: &DeviceTensor,
         input_offset: usize,
         output_shape: &[usize],
-    ) -> Result<MetalTensor> {
-        let output = unsafe { MetalTensor::uninitialized_dt(input.datum_type(), output_shape)? };
-        self.dispatch_eval(context, input, input_offset, &output)?;
-        context.wait_until_completed()?;
+    ) -> TractResult<DeviceTensor> {
+        let output = unsafe { DeviceTensor::uninitialized_dt(input.datum_type(), output_shape)? };
+        self.dispatch_eval(stream, input, input_offset, &output)?;
+        stream.wait_until_completed()?;
         Ok(output)
     }
 }

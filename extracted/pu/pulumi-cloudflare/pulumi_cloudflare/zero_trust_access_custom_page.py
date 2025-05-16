@@ -233,6 +233,7 @@ class _ZeroTrustAccessCustomPageState:
         pulumi.set(self, "updated_at", value)
 
 
+@pulumi.type_token("cloudflare:index/zeroTrustAccessCustomPage:ZeroTrustAccessCustomPage")
 class ZeroTrustAccessCustomPage(pulumi.CustomResource):
     @overload
     def __init__(__self__,

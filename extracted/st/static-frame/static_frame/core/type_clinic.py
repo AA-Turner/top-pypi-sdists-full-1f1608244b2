@@ -21,6 +21,7 @@ from numpy.typing import NBitBase
 
 from static_frame.core.bus import Bus
 from static_frame.core.frame import Frame
+from static_frame.core.frame import FrameGO
 from static_frame.core.index import Index
 from static_frame.core.index_base import IndexBase
 from static_frame.core.index_datetime import IndexDatetime
@@ -98,7 +99,7 @@ def get_args_unpack(hint: tp.Any) -> tp.Any:
     else:
         # unpack from tp.Unpack to return the tuple generic alias
         [tga] = tp.get_args(hint)
-    assert issubclass(tuple, tp.get_origin(tga))
+    # assert issubclass(tuple, tp.get_origin(tga))
     return (tga,) # clients expect a tuple of size 1
 
 #-------------------------------------------------------------------------------
@@ -116,17 +117,7 @@ def to_name(v: tp.Any,
         func_to_str: tp.Callable[..., str] = str,
         ) -> str:
     if is_generic(v):
-        if hasattr(v, '__name__'):
-            name = v.__name__
-        else:
-            # for older Python, not all generics have __name__
-            origin = tp.get_origin(v)
-            if hasattr(origin, '__name__'):
-                name = origin.__name__
-            elif is_unpack(origin, v): # needed for backwards compat
-                name = 'Unpack'
-            else:
-                name = str(origin)
+        name = v.__name__
         s = f'{name}[{", ".join(to_name(q) for q in tp.get_args(v))}]'
     elif isinstance(v, tp.TypeVar):
         # str() gets tilde, __name__ does not have tilde
@@ -756,6 +747,11 @@ def _value_to_hint(value: tp.Any) -> tp.Any: # tp._GenericAlias
     # --------------------------------------------------------------------------
     # SF containers
 
+    if isinstance(value, FrameGO):
+        # we do not include tvt dtypes for now
+        hints = [_value_to_hint(value.index), _value_to_hint(value.columns)]
+        return value.__class__.__class_getitem__(tuple(hints)) # type: ignore
+
     if isinstance(value, Frame):
         hints = [_value_to_hint(value.index), _value_to_hint(value.columns)]
         hints.extend(dt.type().__class__ for dt in value._blocks._iter_dtypes())
@@ -783,7 +779,7 @@ def _value_to_hint(value: tp.Any) -> tp.Any: # tp._GenericAlias
         return np.dtype.__class_getitem__(value.type().__class__)
 
     if isinstance(value, np.ndarray):
-        return value.__class__.__class_getitem__(_value_to_hint(value.dtype))
+        return value.__class__.__class_getitem__((_value_to_hint(value.shape), _value_to_hint(value.dtype)))
 
     return value.__class__
 
@@ -1141,6 +1137,7 @@ def iter_ndarray_checks(
 
     h_shape, h_dtype = tp.get_args(hint)
     pv_next = parent_values + (value,)
+    yield value.shape, h_shape, parent_hints, pv_next
     yield value.dtype, h_dtype, parent_hints, pv_next
 
 def iter_dtype_checks(

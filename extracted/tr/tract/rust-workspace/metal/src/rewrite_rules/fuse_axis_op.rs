@@ -1,10 +1,10 @@
-use crate::fact::MetalTypedFactExt;
 use crate::kernels::matmul::{GgmlGemm, MfaGemm, MlxGemm};
 use crate::ops::{MetalAxisOp, MetalFusedAxisOp};
 use crate::rewrite_rules::{next_node, previous_node, previous_nodes};
-use crate::rule_ensure;
 use tract_core::internal::*;
 use tract_core::tract_data::itertools::Itertools;
+use tract_gpu::fact::DeviceTypedFactExt;
+use tract_gpu::rule_ensure;
 
 fn is_supported_axis_op(op: &MetalAxisOp) -> bool {
     matches!(op.0, AxisOp::Add(_) | AxisOp::Rm(_) | AxisOp::Reshape(..))
@@ -109,7 +109,7 @@ pub fn fuse_axis_op(
         crate::ops::MetalElementWiseOp,
         crate::ops::MetalRmsNorm,
         crate::ops::MetalSilu,
-        crate::ops::MetalNewGelu,
+        crate::ops::MetalGeluApproximate,
         crate::ops::MetalSoftmax,
         crate::ops::MetalRotateHalf,
         crate::ops::MetalApplyRope,
@@ -149,11 +149,11 @@ pub fn fuse_move_axis(
 
     let in_fact = model.node_input_facts(axis_node.id)?[0];
     let in_shape =
-        in_fact.as_metal_fact().map(|mf| mf.shape.clone()).unwrap_or(in_fact.shape.clone());
+        in_fact.as_device_fact().map(|mf| mf.shape.clone()).unwrap_or(in_fact.shape.clone());
 
     let out_fact = model.node_output_facts(axis_node.id)?[0];
     let out_shape =
-        out_fact.as_metal_fact().map(|mf| mf.shape.clone()).unwrap_or(out_fact.shape.clone());
+        out_fact.as_device_fact().map(|mf| mf.shape.clone()).unwrap_or(out_fact.shape.clone());
 
     // Checks if MoveAxis has no impact on shape + layout
     if in_shape == out_shape {
@@ -167,6 +167,17 @@ pub fn fuse_move_axis(
                 return TypedModelPatch::shunt_one_op(model, axis_node);
             }
         }
+    }
+
+    // Reshape are always fusable. Change Move by Reshape if possible
+    let simpl_op = MetalAxisOp::simplify_axis_op(axis_op.0.clone(), in_shape.dims());
+    if simpl_op != *axis_op {
+        return Ok(Some(TypedModelPatch::replace_single_op(
+            model,
+            axis_node,
+            &[axis_node.inputs[0]],
+            simpl_op,
+        )?));
     }
 
     // Fuse consecutive MoveAxis if possible

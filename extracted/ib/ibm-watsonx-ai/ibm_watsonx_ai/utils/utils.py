@@ -756,6 +756,9 @@ def next_resource_generator(
         if "resources" in details_json:
             resources = details_json["resources"]
 
+            if not resources:
+                next_href = None
+
         elif "metadata" in details_json:
             resources = [details_json]
 
@@ -1087,3 +1090,14 @@ def _get_default_args(func: Callable) -> dict[str, Any]:
         for k, v in signature.parameters.items()
         if v.default is not inspect.Parameter.empty
     }
+
+
+def _handle_fl_removal(client: APIClient):
+    if client.ICP_PLATFORM_SPACES and client.CPD_version >= 5.2:
+        raise WMLClientError(
+            "Federated Learning is removed in IBM Cloud Pak for Data 5.2 and above."
+        )
+    else:
+        FL_DEPRECATED_WARNING = "Federated Learning is deprecated and will be removed in IBM Cloud Pak for Data 5.2."
+
+        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)

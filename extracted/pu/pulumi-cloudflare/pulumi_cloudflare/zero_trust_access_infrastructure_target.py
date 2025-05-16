@@ -172,6 +172,7 @@ class _ZeroTrustAccessInfrastructureTargetState:
         pulumi.set(self, "modified_at", value)
 
 
+@pulumi.type_token("cloudflare:index/zeroTrustAccessInfrastructureTarget:ZeroTrustAccessInfrastructureTarget")
 class ZeroTrustAccessInfrastructureTarget(pulumi.CustomResource):
     @overload
     def __init__(__self__,

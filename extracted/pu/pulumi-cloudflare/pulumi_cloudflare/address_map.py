@@ -274,6 +274,7 @@ class _AddressMapState:
         pulumi.set(self, "modified_at", value)
 
 
+@pulumi.type_token("cloudflare:index/addressMap:AddressMap")
 class AddressMap(pulumi.CustomResource):
     @overload
     def __init__(__self__,

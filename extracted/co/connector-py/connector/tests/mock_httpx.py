@@ -58,7 +58,9 @@ def mock_requests(
                 else:
                     httpx_mock.add_response(
                         method=method,
-                        url=host or "",
+                        url=f"{host or ''}{response.request_path}"
+                        if response.request_path
+                        else host or "",
                         json=response.response_body,
                         status_code=response.status_code,
                         headers=response.headers if response.headers else None,

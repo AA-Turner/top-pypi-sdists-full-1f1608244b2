@@ -39,6 +39,7 @@ from ._actions import (
 from ._common import (
     InstantiatorCallable,
     InstantiatorsDictType,
+    LoggerProperty,
     class_instantiators,
     debug_mode_active,
     get_optionals_as_positionals_actions,
@@ -223,7 +224,7 @@ class ArgumentGroup(ActionsContainer, argparse._ArgumentGroup):
     parser: Optional[Union["ArgumentParser", "ActionsContainer"]] = None
 
 
-class ArgumentParser(ParserDeprecations, ActionsContainer, ArgumentLinking, argparse.ArgumentParser):
+class ArgumentParser(ParserDeprecations, ActionsContainer, ArgumentLinking, LoggerProperty, argparse.ArgumentParser):
     """Parser for command line, configuration files and environment variables."""
 
     formatter_class: Type[DefaultHelpFormatter]
@@ -257,7 +258,7 @@ class ArgumentParser(ParserDeprecations, ActionsContainer, ArgumentLinking, argp
         Args:
             env_prefix: Prefix for environment variables. ``True`` to derive from ``prog``.
             formatter_class: Class for printing help messages.
-            logger: Configures the logger, see :class:`.LoggerProperty`.
+            logger: Logger to use or configuration for logger.
             version: Program version which will be printed by the --version argument.
             print_config: Name for print config argument, ``%s`` is replaced by config dest, set None to disable.
             parser_mode: Mode for parsing values: ``yaml``, ``json``, ``jsonnet`` or added via :func:`.set_loader`.
@@ -786,12 +787,13 @@ class ArgumentParser(ParserDeprecations, ActionsContainer, ArgumentLinking, argp
         check_valid_dump_format(format)
 
         cfg = strip_meta(cfg)
-        if skip_link_targets:
-            ActionLink.strip_link_target_keys(self, cfg)
 
         with parser_context(load_value_mode=self.parser_mode):
             if not skip_validation:
                 self.validate(cfg)
+
+            if skip_link_targets:
+                ActionLink.strip_link_target_keys(self, cfg)
 
             dump_kwargs = {"skip_validation": skip_validation, "skip_none": skip_none}
             self._dump_cleanup_actions(cfg, self._actions, dump_kwargs)
@@ -826,7 +828,7 @@ class ArgumentParser(ParserDeprecations, ActionsContainer, ArgumentLinking, argp
             if isinstance(action, ActionTypeHint):
                 value = cfg.get(action_dest)
                 if value is not None:
-                    with parser_context(parent_parser=self):
+                    with parser_context(parent_parser=self, lenient_check=True):
                         if dump_kwargs.get("skip_validation"):
                             with suppress(ValueError):
                                 value = action.serialize(value, dump_kwargs=dump_kwargs)
@@ -914,11 +916,12 @@ class ArgumentParser(ParserDeprecations, ActionsContainer, ArgumentLinking, argp
 
         else:
             cfg = cfg.clone()
-            ActionLink.strip_link_target_keys(self, cfg)
 
             if not skip_validation:
                 with parser_context(load_value_mode=self.parser_mode):
                     self.validate(strip_meta(cfg), branch=branch)
+
+            ActionLink.strip_link_target_keys(self, cfg)
 
             def save_paths(cfg):
                 for key in cfg.get_sorted_keys():

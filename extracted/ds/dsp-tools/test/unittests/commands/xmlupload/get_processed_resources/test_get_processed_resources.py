@@ -30,6 +30,7 @@ from dsp_tools.commands.xmlupload.prepare_xml_input.get_processed_resources impo
 from dsp_tools.commands.xmlupload.prepare_xml_input.get_processed_resources import _resolve_permission
 from dsp_tools.commands.xmlupload.prepare_xml_input.get_processed_resources import get_processed_resources
 from dsp_tools.error.exceptions import InputError
+from dsp_tools.error.exceptions import InvalidFileTypeError
 from dsp_tools.error.exceptions import PermissionNotExistsError
 from dsp_tools.legacy_models.datetimestamp import DateTimeStamp
 from dsp_tools.utils.data_formats.date_util import Date
@@ -53,10 +54,6 @@ def lookups() -> XmlReferenceLookups:
         listnodes={
             ("list", "node"): "http://rdfh.ch/9999/node",
             ("", "http://rdfh.ch/9999/node"): "http://rdfh.ch/9999/node",
-        },
-        namespaces={
-            "knora-api": "http://api.knora.org/ontology/knora-api/v2#",
-            "onto": "http://0.0.0.0:3333/ontology/9999/onto/v2#",
         },
         authorships={"auth_id": ["author"]},
     )
@@ -300,6 +297,13 @@ class TestFileValue:
         assert result_metadata.copyright_holder == "copy"
         assert result_metadata.authorships == ["author"]
 
+    def test_unknown_file_type(self, lookups: XmlReferenceLookups):
+        metadata = ParsedFileValueMetadata("http://rdfh.ch/licenses/cc-by-nc-4.0", "copy", "auth_id", None)
+        val = ParsedFileValue("file.unknown", None, metadata)
+        expected = regex.escape("The file you entered is not one of the supported file types: file.unknown")
+        with pytest.raises(InvalidFileTypeError, match=expected):
+            _get_file_value(val, lookups, "id", "lbl")
+
     def test_file_value_with_permissions(self, file_with_permission, lookups: XmlReferenceLookups):
         result = _get_file_value(file_with_permission, lookups, "id", "lbl")
         assert isinstance(result, ProcessedFileValue)
@@ -352,9 +356,9 @@ class TestFileMetadata:
         assert result_metadata.authorships == ["author"]
 
     def test_raises_unknown_license(self, lookups):
-        metadata = ParsedFileValueMetadata("http://rdfh.ch/licenses/inexistent-iri", "copy", "auth_id", None)
+        metadata = ParsedFileValueMetadata("inexistent-iri", "copy", "auth_id", None)
         msg = regex.escape(
-            "The license 'http://rdfh.ch/licenses/inexistent-iri' used for an image or iiif-uri is unknown. "
+            "The license 'inexistent-iri' used for an image or iiif-uri is unknown. "
             "See documentation for accepted pre-defined licenses."
         )
         with pytest.raises(InputError, match=msg):

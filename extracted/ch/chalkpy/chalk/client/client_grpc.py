@@ -58,6 +58,7 @@ from chalk.client.models import (
 )
 from chalk.client.serialization.protos import ChalkErrorConverter, OnlineQueryConverter, UploadFeaturesBulkConverter
 from chalk.config.auth_config import TokenConfig, load_token
+from chalk.features import live_updates
 from chalk.features._encoding.inputs import GRPC_ENCODE_OPTIONS, InputEncodeOptions, recursive_encode_bulk_inputs
 from chalk.features._encoding.json import FeatureEncodingOptions
 from chalk.features._encoding.outputs import encode_outputs
@@ -1026,6 +1027,7 @@ class ChalkGRPCClient:
                 options=context_options_proto,
                 query_context=query_context_proto,
                 value_metrics_tag_by_features=value_metrics_tags_proto,
+                overlay_graph=live_updates.build_overlay_graph(),
             ),
             response_options=online_query_pb2.OnlineQueryResponseOptions(
                 include_meta=include_meta,

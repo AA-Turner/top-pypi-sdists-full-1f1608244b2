@@ -154,6 +154,7 @@ def cli_command_delete_file_template(ctx, **kwargs):
 @click.option("--include-user", is_flag=True)
 @click.option("--user-id")
 @click.option("--resource-id")
+@click.option("--no-access-info", is_flag=True, default=False)
 @click.option(
     "--template-argument", multiple=True, type=click.Tuple([str, str]), default=None
 )

@@ -1,10 +1,10 @@
 use crate::encoder::EncoderExt;
 use crate::kernels::{utils, BroadcastKind};
-use crate::MetalTensor;
-use crate::{LibraryName, MetalContext};
-use anyhow::{ensure, Result};
+use crate::{LibraryName, MetalStream};
+use anyhow::ensure;
 use std::fmt;
 use tract_core::internal::*;
+use tract_gpu::tensor::DeviceTensor;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Concat {
@@ -34,34 +34,38 @@ impl Concat {
         )
     }
 
-    pub fn kernel_name(&self, dt: DatumType, broadcast_kind: BroadcastKind) -> Result<String> {
+    pub fn kernel_name(&self, dt: DatumType, broadcast_kind: BroadcastKind) -> TractResult<String> {
         ensure!(Self::is_supported_dt(dt), "Unsupport dt {:?} for metal concat  op", dt);
-        let tname = MetalTensor::tname(dt)?;
-        let broadcast_name = broadcast_kind.to_func_part();
+        let tname = DeviceTensor::tname(dt)?;
+        let broadcast_name = broadcast_kind.name();
         Ok(format!("array_ops::copy_{broadcast_name}_{tname}"))
     }
 
-    pub fn eval(&self, context: &MetalContext, inputs: &[&MetalTensor]) -> Result<MetalTensor> {
+    pub fn eval(
+        &self,
+        stream: &MetalStream,
+        inputs: &[&DeviceTensor],
+    ) -> TractResult<DeviceTensor> {
         ensure!(!inputs.is_empty());
         let mut output_shape = inputs[0].shape().to_vec();
         output_shape[self.axis] = inputs.iter().map(|it| it.shape()[self.axis]).sum();
         let output =
-            unsafe { MetalTensor::uninitialized_dt(inputs[0].datum_type(), &output_shape)? };
+            unsafe { DeviceTensor::uninitialized_dt(inputs[0].datum_type(), &output_shape)? };
 
-        self.dispatch_eval(context, inputs, &output)?;
-        context.wait_until_completed()?;
+        self.dispatch_eval(stream, inputs, &output)?;
+        stream.wait_until_completed()?;
         Ok(output)
     }
 
     pub fn dispatch_eval(
         &self,
-        context: &MetalContext,
-        inputs: &[&MetalTensor],
-        output: &MetalTensor,
-    ) -> Result<()> {
+        stream: &MetalStream,
+        inputs: &[&DeviceTensor],
+        output: &DeviceTensor,
+    ) -> TractResult<()> {
         ensure!(!inputs.is_empty());
 
-        output.retain_until_completion();
+        stream.retain_tensor(output);
 
         let output_shape = output.shape();
         let output_strides = output.strides();
@@ -79,7 +83,7 @@ impl Concat {
         }
 
         let broadcast_kind = BroadcastKind::from_rank(output.rank()).with_context(|| {
-            anyhow!(
+            format!(
                 "Unsupported broadcast for broadcast op: (in: {:?}, out: {:?})",
                 inputs[0].shape(),
                 output_shape
@@ -87,15 +91,15 @@ impl Concat {
         })?;
 
         let kernel_name = self.kernel_name(output.datum_type(), broadcast_kind)?;
-        let pipeline =
-            context.shared_context().load_pipeline(LibraryName::ArrayOps, &kernel_name)?;
-        let command_buffer = context.command_buffer();
+        let pipeline = stream.load_pipeline(LibraryName::ArrayOps, &kernel_name)?;
+        let command_buffer = stream.command_buffer();
 
         for (input, offset) in inputs.iter().zip(offsets.into_iter()) {
             if input.len() == 0 {
                 continue;
             }
-            input.retain_until_completion();
+            stream.retain_tensor(input);
+
             let i_strides = input.strides();
             let i_shape = input.shape();
 
@@ -111,8 +115,11 @@ impl Concat {
                 );
                 encoder.set_slice(3, i_shape);
                 encoder.set_slice(4, output_strides);
-                let grid_size = utils::build_metal_size_for_shape(i_shape);
-                let group_size = utils::build_metal_size_with_ones();
+
+                let (grid_size, group_size) = utils::build_metal_grid_and_groups_for_el_wise_op(
+                    i_shape,
+                    pipeline.max_total_threads_per_threadgroup() as _,
+                );
                 encoder.dispatch_thread_groups(grid_size, group_size);
             });
         }
@@ -123,37 +130,37 @@ impl Concat {
 
 #[cfg(test)]
 mod tests {
+    use crate::utils::with_borrowed_metal_stream;
+
     use super::*;
-    use crate::IntoMetal;
+    use tract_gpu::tensor::IntoDevice;
     use tract_itertools::Itertools;
 
     use num_traits::Zero;
 
     use tract_core::internal::Tensor;
 
-    fn run_test_case<F: Datum + Zero + Copy>(shapes: &[&[usize]], axis: usize) -> Result<()> {
-        objc::rc::autoreleasepool(|| {
-            crate::METAL_CONTEXT.with_borrow(|context| {
-                let mut inputs = tvec![];
-                for shape in shapes {
-                    let len = shape.iter().product::<usize>();
-                    let data = (0..len).map(|f| f as f32).collect::<Vec<_>>();
-                    inputs.push(Tensor::from_shape(shape, &data)?.into_metal()?);
-                }
+    fn run_test_case<F: Datum + Zero + Copy>(shapes: &[&[usize]], axis: usize) -> TractResult<()> {
+        with_borrowed_metal_stream(|stream| {
+            let mut inputs = tvec![];
+            for shape in shapes {
+                let len = shape.iter().product::<usize>();
+                let data = (0..len).map(|f| f as f32).collect::<Vec<_>>();
+                inputs.push(Tensor::from_shape(shape, &data)?.into_device()?);
+            }
 
-                let output = Concat { axis }.eval(context, &inputs.iter().collect_vec())?;
-                let ref_output = Tensor::stack_tensors(
-                    axis,
-                    &inputs.iter().map(|it| it.to_cpu()).collect::<Result<Vec<_>>>()?,
-                )?;
-                assert_eq!(ref_output, output.to_cpu()?.into_tensor());
-                Ok(())
-            })
+            let output = Concat { axis }.eval(stream, &inputs.iter().collect_vec())?;
+            let ref_output = Tensor::stack_tensors(
+                axis,
+                &inputs.iter().map(|it| it.to_host()).collect::<TractResult<Vec<_>>>()?,
+            )?;
+            assert_eq!(output.to_host()?.into_tensor(), ref_output);
+            Ok(())
         })
     }
 
     #[test]
-    fn test_concat() -> Result<()> {
+    fn test_concat() -> TractResult<()> {
         run_test_case::<f32>(&[&[3, 4], &[3, 4]], 0)?;
         run_test_case::<f32>(&[&[3, 4], &[3, 4]], 1)?;
         run_test_case::<f32>(&[&[1, 5, 4], &[2, 5, 4]], 0)?;

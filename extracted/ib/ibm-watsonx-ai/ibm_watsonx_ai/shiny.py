@@ -543,7 +543,7 @@ class Shiny(WMLResource):
 
         .. code-block:: python
 
-            script_details = client.script.update(shiny_id, meta, content_path)
+            shiny_details = client.shiny.update(shiny_id, meta, content_path)
         """
         shiny_id = _get_id_from_deprecated_uid(
             kwargs, shiny_id, "shiny", can_be_none=False

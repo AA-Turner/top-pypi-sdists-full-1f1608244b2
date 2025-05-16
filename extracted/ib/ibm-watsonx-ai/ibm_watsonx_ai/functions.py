@@ -201,7 +201,7 @@ class Functions(WMLResource):
         details = self.get_details(function_id)
 
         patch_payload = self.ConfigurationMetaNames._generate_patch_payload(
-            details["entity"], changes, with_validation=True
+            details, changes, with_validation=True
         )
 
         url = self._client.service_instance._href_definitions.get_function_href(

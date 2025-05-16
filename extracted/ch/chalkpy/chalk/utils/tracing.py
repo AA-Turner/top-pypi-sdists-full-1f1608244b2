@@ -7,12 +7,13 @@ import time
 import types
 from typing import TYPE_CHECKING, Any, Mapping, Union, cast
 
+from chalk.utils._ddtrace_version import can_use_datadog_statsd, can_use_ddtrace
 from chalk.utils.environment_parsing import env_var_bool
 
 if TYPE_CHECKING:
     import ddtrace.context
 
-try:
+if can_use_ddtrace and can_use_datadog_statsd:
     import ddtrace
     from datadog.dogstatsd.base import statsd
 
@@ -73,7 +74,7 @@ try:
     ) -> None:
         ddtrace.tracer.context_provider.activate(ctx)
 
-except ImportError:
+else:
 
     def safe_set_gauge(gauge: str, value: int | float):
         pass
@@ -134,12 +135,12 @@ def configure_tracing(default_service_name: str):
 
     _logger = get_logger(__name__)
 
-    try:
-        import ddtrace
-        from ddtrace.filters import FilterRequestsOnUrl
-    except ImportError:
+    if not can_use_ddtrace:
         _logger.warning("ddtrace is not installed")
         return
+
+    import ddtrace
+    from ddtrace.filters import FilterRequestsOnUrl
 
     if ddtrace.config.service is None:
         ddtrace.config.service = default_service_name

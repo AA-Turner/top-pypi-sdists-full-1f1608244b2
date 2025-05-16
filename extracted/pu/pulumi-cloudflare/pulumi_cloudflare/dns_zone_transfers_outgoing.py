@@ -182,6 +182,7 @@ class _DnsZoneTransfersOutgoingState:
         pulumi.set(self, "zone_id", value)
 
 
+@pulumi.type_token("cloudflare:index/dnsZoneTransfersOutgoing:DnsZoneTransfersOutgoing")
 class DnsZoneTransfersOutgoing(pulumi.CustomResource):
     @overload
     def __init__(__self__,

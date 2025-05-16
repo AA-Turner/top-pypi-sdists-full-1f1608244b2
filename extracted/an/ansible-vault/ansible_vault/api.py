@@ -18,7 +18,6 @@ from __future__ import absolute_import
 
 import yaml
 
-from ._compat import decode_text
 from .parsing import AnsibleVaultLib
 
 
@@ -42,7 +41,10 @@ class Vault(object):
 
     def dump_raw(self, text, stream=None):
         """Encrypt raw data and write to stream."""
-        encrypted = decode_text(self.vault.encrypt(text))
+        encrypted = self.vault.encrypt(text)
+        if isinstance(encrypted, bytes):
+            encrypted = encrypted.decode("utf-8")
+
         if stream:
             stream.write(encrypted)
         else:
@@ -52,7 +54,7 @@ class Vault(object):
         """Read vault steam and return python object."""
         return yaml.safe_load(self.load_raw(stream))
 
-    def dump(self, data, stream=None):
+    def dump(self, data, stream=None, **kwargs):
         """Encrypt data and print stdout or write to stream."""
-        yaml_text = yaml.dump(data, default_flow_style=False, allow_unicode=True)
+        yaml_text = yaml.dump(data, default_flow_style=False, allow_unicode=True, **kwargs)
         return self.dump_raw(yaml_text, stream=stream)

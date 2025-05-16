@@ -37,8 +37,6 @@ from static_frame.core.node_selector import InterGetItemILocCompoundReduces
 from static_frame.core.node_selector import InterGetItemLocCompoundReduces
 from static_frame.core.series import Series
 from static_frame.core.store_client_mixin import StoreClientMixin
-from static_frame.core.store_duckdb import StoreDuckDB
-from static_frame.core.store_hdf5 import StoreHDF5
 from static_frame.core.store_sqlite import StoreSQLite
 from static_frame.core.store_xlsx import StoreXLSX
 from static_frame.core.store_zip import StoreZipCSV
@@ -110,6 +108,7 @@ class Quilt(ContainerBase, StoreClientMixin):
     @classmethod
     def from_frame(cls,
             frame: TFrameAny,
+            /,
             *,
             chunksize: int,
             retain_labels: bool,
@@ -208,6 +207,7 @@ class Quilt(ContainerBase, StoreClientMixin):
     @doc_inject(selector='quilt_constructor')
     def from_zip_tsv(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             axis: int = 0,
@@ -233,6 +233,7 @@ class Quilt(ContainerBase, StoreClientMixin):
     @doc_inject(selector='quilt_constructor')
     def from_zip_csv(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             axis: int = 0,
@@ -258,6 +259,7 @@ class Quilt(ContainerBase, StoreClientMixin):
     @doc_inject(selector='quilt_constructor')
     def from_zip_pickle(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             axis: int = 0,
@@ -283,6 +285,7 @@ class Quilt(ContainerBase, StoreClientMixin):
     @doc_inject(selector='quilt_constructor')
     def from_zip_npz(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             axis: int = 0,
@@ -308,6 +311,7 @@ class Quilt(ContainerBase, StoreClientMixin):
     @doc_inject(selector='quilt_constructor')
     def from_zip_npy(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             axis: int = 0,
@@ -333,6 +337,7 @@ class Quilt(ContainerBase, StoreClientMixin):
     @doc_inject(selector='quilt_constructor')
     def from_zip_parquet(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             axis: int = 0,
@@ -358,6 +363,7 @@ class Quilt(ContainerBase, StoreClientMixin):
     @doc_inject(selector='quilt_constructor')
     def from_xlsx(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             axis: int = 0,
@@ -385,6 +391,7 @@ class Quilt(ContainerBase, StoreClientMixin):
     @doc_inject(selector='quilt_constructor')
     def from_sqlite(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             axis: int = 0,
@@ -406,61 +413,12 @@ class Quilt(ContainerBase, StoreClientMixin):
                 max_persist=max_persist,
                 )
 
-    @classmethod
-    @doc_inject(selector='quilt_constructor')
-    def from_duckdb(cls,
-            fp: TPathSpecifier,
-            *,
-            config: StoreConfigMapInitializer = None,
-            axis: int = 0,
-            retain_labels: bool,
-            deepcopy_from_bus: bool = False,
-            max_persist: tp.Optional[int] = None,
-            ) -> 'Quilt':
-        '''
-        Given a file path to an DuckDB :obj:`Quilt` store, return a :obj:`Quilt` instance.
-
-        {args}
-        '''
-        store = StoreDuckDB(fp)
-        return cls._from_store(store,
-                config=config,
-                axis=axis,
-                retain_labels=retain_labels,
-                deepcopy_from_bus=deepcopy_from_bus,
-                max_persist=max_persist,
-                )
-
-    @classmethod
-    @doc_inject(selector='quilt_constructor')
-    def from_hdf5(cls,
-            fp: TPathSpecifier,
-            *,
-            config: StoreConfigMapInitializer = None,
-            axis: int = 0,
-            retain_labels: bool,
-            deepcopy_from_bus: bool = False,
-            max_persist: tp.Optional[int] = None,
-            ) -> 'Quilt':
-        '''
-        Given a file path to a HDF5 :obj:`Quilt` store, return a :obj:`Quilt` instance.
-
-        {args}
-        '''
-        store = StoreHDF5(fp)
-        return cls._from_store(store,
-                config=config,
-                axis=axis,
-                retain_labels=retain_labels,
-                deepcopy_from_bus=deepcopy_from_bus,
-                max_persist=max_persist,
-                )
-
     #---------------------------------------------------------------------------
 
     @classmethod
     def from_items(cls,
             items: tp.Iterable[tp.Tuple[TLabel, TFrameAny]],
+            /,
             *,
             axis: int = 0,
             name: TName = None,
@@ -480,6 +438,7 @@ class Quilt(ContainerBase, StoreClientMixin):
     @classmethod
     def from_frames(cls,
             frames: tp.Iterable[TFrameAny],
+            /,
             *,
             axis: int = 0,
             name: TName = None,
@@ -498,6 +457,7 @@ class Quilt(ContainerBase, StoreClientMixin):
     #---------------------------------------------------------------------------
     def __init__(self,
             bus: tp.Union[TBusAny, TYarnAny],
+            /,
             *,
             axis: int = 0,
             retain_labels: bool,
@@ -572,7 +532,7 @@ class Quilt(ContainerBase, StoreClientMixin):
         '''{}'''
         return self._bus.name
 
-    def rename(self, name: TName) -> 'Quilt':
+    def rename(self, name: TName, /,) -> 'Quilt':
         '''
         Return a new :obj:`Quilt` with an updated name attribute.
 
@@ -592,6 +552,7 @@ class Quilt(ContainerBase, StoreClientMixin):
     @doc_inject()
     def display(self,
             config: tp.Optional[DisplayConfig] = None,
+            /,
             *,
             style_config: tp.Optional[StyleConfig] = None,
             ) -> Display:
@@ -766,7 +727,7 @@ class Quilt(ContainerBase, StoreClientMixin):
             self._update_axis_labels()
         return self._columns.__iter__()
 
-    def __contains__(self, value: TLabel) -> bool:
+    def __contains__(self, value: TLabel, /,) -> bool:
         '''
         Inclusion of value in column labels.
         '''
@@ -955,8 +916,8 @@ class Quilt(ContainerBase, StoreClientMixin):
 
     #---------------------------------------------------------------------------
     def _extract_array(self,
-            row_key: TLocSelector = None,
-            column_key: TLocSelector = None,
+            row_key: TILocSelector = None,
+            column_key: TILocSelector = None,
             ) -> TNDArrayAny:
         '''
         Extract a consolidated array based on iloc selection.
@@ -1000,21 +961,21 @@ class Quilt(ContainerBase, StoreClientMixin):
         sel[sel_key] = True
 
         # get ordered unique Bus labels
-        axis_map_sub = self._axis_hierarchy.iloc[sel_key] # type: ignore
-        if isinstance(axis_map_sub, tuple): # type: ignore
-            bus_keys = (axis_map_sub[0],) # type: ignore
+        axis_map_sub = self._axis_hierarchy.iloc[sel_key]
+        if isinstance(axis_map_sub, tuple):
+            bus_keys = (axis_map_sub[0],)
         else:
-            bus_keys = axis_map_sub.unique(depth_level=0, order_by_occurrence=True)
+            bus_keys = axis_map_sub.unique(0, order_by_occurrence=True)
 
         for key in bus_keys:
             sel_component = sel[self._axis_hierarchy._loc_to_iloc(HLoc[key])]
 
             if self._axis == 0:
-                component = self._bus.loc[key]._extract_array(sel_component, opposite_key) # pyright: ignore
+                component = self._bus.loc[key]._extract_array(sel_component, opposite_key) # type: ignore
                 if sel_reduces:
                     component = component[0]
             else:
-                component = self._bus.loc[key]._extract_array(opposite_key, sel_component) # pyright: ignore
+                component = self._bus.loc[key]._extract_array(opposite_key, sel_component) # type: ignore
                 if sel_reduces:
                     if component.ndim == 1:
                         component = component[0]
@@ -1145,7 +1106,7 @@ class Quilt(ContainerBase, StoreClientMixin):
             frame_labels = (axis_map_sub[0],)
         else:
             # get the outer level, or just the unique frame labels needed
-            frame_labels = axis_map_sub.unique(depth_level=0, order_by_occurrence=True)
+            frame_labels = axis_map_sub.unique(0, order_by_occurrence=True)
 
         component: tp.Any
         for key_count, key in enumerate(frame_labels):
@@ -1470,7 +1431,7 @@ class Quilt(ContainerBase, StoreClientMixin):
     #---------------------------------------------------------------------------
     # transformations resulting in changed dimensionality
     @doc_inject(selector='head', class_name='Quilt')
-    def head(self, count: int = 5) -> TFrameAny:
+    def head(self, count: int = 5, /,) -> TFrameAny:
         '''{doc}
 
         Args:
@@ -1479,7 +1440,7 @@ class Quilt(ContainerBase, StoreClientMixin):
         return self.iloc[:count]
 
     @doc_inject(selector='tail', class_name='Quilt')
-    def tail(self, count: int = 5) -> TFrameAny:
+    def tail(self, count: int = 5, /,) -> TFrameAny:
         '''{doc}
 
         Args:
@@ -1491,6 +1452,7 @@ class Quilt(ContainerBase, StoreClientMixin):
     @doc_inject()
     def equals(self,
             other: tp.Any,
+            /,
             *,
             compare_name: bool = False,
             compare_dtype: bool = False,

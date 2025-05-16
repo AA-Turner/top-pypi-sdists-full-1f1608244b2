@@ -18,6 +18,7 @@ __all__ = [
     "BeakerNodeNotFound",
     "BeakerBudgetNotFound",
     "BeakerGroupNotFound",
+    "BeakerQueueNotFound",
     "BeakerImageNotFound",
     "BeakerDatasetNotFound",
     "BeakerSecretNotFound",
@@ -91,6 +92,10 @@ class BeakerBudgetNotFound(BeakerNotFoundError):
 
 class BeakerGroupNotFound(BeakerNotFoundError):
     """Raised when a specified group doesn't exist."""
+
+
+class BeakerQueueNotFound(BeakerNotFoundError):
+    """Raised when a specified queue doesn't exist."""
 
 
 class BeakerJobNotFound(BeakerNotFoundError):

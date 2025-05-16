@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: browser-use
-Version: 0.1.47
+Version: 0.1.48
 Summary: Make websites accessible for AI agents
 Project-URL: Repository, https://github.com/browser-use/browser-use
 Author: Gregor Zunic
@@ -33,6 +33,12 @@ Requires-Dist: python-dotenv>=1.0.1
 Requires-Dist: requests>=2.32.3
 Requires-Dist: screeninfo>=0.8.1; platform_system != 'darwin'
 Requires-Dist: typing-extensions>=4.12.2
+Provides-Extra: all
+Requires-Dist: botocore>=1.37.23; extra == 'all'
+Requires-Dist: click>=8.1.8; extra == 'all'
+Requires-Dist: rich>=14.0.0; extra == 'all'
+Requires-Dist: sentence-transformers>=4.0.2; extra == 'all'
+Requires-Dist: textual>=3.2.0; extra == 'all'
 Provides-Extra: cli
 Requires-Dist: click>=8.1.8; extra == 'cli'
 Requires-Dist: rich>=14.0.0; extra == 'cli'

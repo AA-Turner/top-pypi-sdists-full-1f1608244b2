@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: json-schema-to-pydantic
-Version: 0.2.5
+Version: 0.2.6
 Summary: A Python library for automatically generating Pydantic v2 models from JSON Schema definitions
 Project-URL: Homepage, https://github.com/richard-gyiko/json-schema-to-pydantic
 Project-URL: Bug-Tracker, https://github.com/richard-gyiko/json-schema-to-pydantic/issues
@@ -23,7 +23,6 @@ Requires-Dist: pydantic>=2.10.4
 Provides-Extra: dev
 Requires-Dist: pytest-cov>=6.0.0; extra == 'dev'
 Requires-Dist: pytest>=8.3.4; extra == 'dev'
-Requires-Dist: ruff>=0.8.4; extra == 'dev'
 Description-Content-Type: text/markdown
 
 # JSON Schema to Pydantic
@@ -31,6 +30,7 @@ Description-Content-Type: text/markdown
 A Python library for automatically generating Pydantic v2 models from JSON Schema definitions.
 
 ![PyPI - Version](https://img.shields.io/pypi/v/json-schema-to-pydantic)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/json-schema-to-pydantic?logo=pypi)
 [![codecov](https://codecov.io/github/richard-gyiko/json-schema-to-pydantic/graph/badge.svg?token=YA2Y769H1K)](https://codecov.io/github/richard-gyiko/json-schema-to-pydantic)
 
 ## Features

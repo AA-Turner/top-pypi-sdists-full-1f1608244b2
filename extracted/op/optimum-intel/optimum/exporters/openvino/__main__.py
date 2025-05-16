@@ -22,10 +22,10 @@ from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Union
 
 from huggingface_hub.constants import HUGGINGFACE_HUB_CACHE
 from requests.exceptions import ConnectionError as RequestsConnectionError
-from transformers import AutoConfig, AutoTokenizer, PreTrainedTokenizerBase
+from transformers import AutoConfig, AutoTokenizer, PreTrainedTokenizerBase, ProcessorMixin
 from transformers.utils import is_torch_available
 
-from openvino.runtime import Core, Type, save_model
+from openvino import Core, Type, save_model
 from optimum.exporters import TasksManager
 from optimum.exporters.onnx.base import OnnxConfig
 from optimum.exporters.onnx.constants import SDPA_ARCHS_ONNX_EXPORT_NOT_SUPPORTED
@@ -39,17 +39,17 @@ from optimum.intel.utils.modeling_utils import (
     _infer_library_from_model_name_or_path,
     _OpenClipForZeroShotImageClassification,
 )
-from optimum.utils.save_utils import maybe_load_preprocessors
 
 from .utils import (
     _MAX_UNCOMPRESSED_SIZE,
     MULTI_MODAL_TEXT_GENERATION_MODELS,
     clear_class_registry,
     deduce_diffusers_dtype,
+    load_preprocessors,
 )
 
 
-FORCE_ATTN_MODEL_CLASSES = {"phi3-v": "eager", "gemma2": "sdpa"}
+FORCE_ATTN_MODEL_CLASSES = {"phi3-v": "eager", "gemma2": "sdpa", "llama4": "sdpa"}
 
 if TYPE_CHECKING:
     from optimum.intel.openvino.configuration import OVConfig
@@ -240,6 +240,9 @@ def main_export(
     loading_kwargs = model_loading_kwargs or {}
     if variant is not None:
         loading_kwargs["variant"] = variant
+    dtype = loading_kwargs.get("torch_dtype", None)
+    if isinstance(dtype, str):
+        dtype = getattr(torch, dtype) if dtype != "auto" else dtype
     if library_name == "transformers":
         config = AutoConfig.from_pretrained(
             model_name_or_path,
@@ -288,6 +291,11 @@ def main_export(
         # some models force flash_attn attention by default that does not support load model on cpu
         if is_transformers_version(">=", "4.36") and model_type in FORCE_ATTN_MODEL_CLASSES:
             loading_kwargs["_attn_implementation"] = FORCE_ATTN_MODEL_CLASSES[model_type]
+        if model_type == "phi4mm":
+            if "activation_checkpointing" in config.audio_processor["config"]:
+                config.audio_processor["config"]["activation_checkpointing"] = ""
+            config._attn_implementation = "sdpa"
+            loading_kwargs["config"] = config
         # there are some difference between remote and in library representation of past key values for some models,
         # for avoiding confusion we disable remote code for them
         if (
@@ -302,16 +310,15 @@ def main_export(
                 "Please provide custom export config if you want load model with remote code."
             )
             trust_remote_code = False
-        dtype = loading_kwargs.get("torch_dtype")
-        if isinstance(dtype, str):
-            dtype = getattr(config, "torch_dtype") if dtype == "auto" else getattr(torch, dtype)
+        if dtype == "auto":
+            dtype = getattr(config, "torch_dtype")
 
         if (
             dtype is None
             and framework == "pt"
             and (
                 task.startswith("text-generation")
-                or getattr(config, "model_type", None) in MULTI_MODAL_TEXT_GENERATION_MODELS
+                or getattr(config, "model_type", "").replace("_", "-") in MULTI_MODAL_TEXT_GENERATION_MODELS
             )
             and getattr(config, "torch_dtype", torch.float32) in [torch.float16, torch.bfloat16]
         ):
@@ -351,19 +358,28 @@ def main_export(
                 GPTQQuantizer.post_init_model = post_init_model
     elif library_name == "diffusers" and is_openvino_version(">=", "2024.6"):
         _loading_kwargs = {} if variant is None else {"variant": variant}
-        dtype = deduce_diffusers_dtype(
-            model_name_or_path,
-            revision=revision,
-            cache_dir=cache_dir,
-            token=token,
-            local_files_only=local_files_only,
-            force_download=force_download,
-            trust_remote_code=trust_remote_code,
-            **_loading_kwargs,
-        )
+        if dtype == "auto" or dtype is None:
+            dtype = deduce_diffusers_dtype(
+                model_name_or_path,
+                revision=revision,
+                cache_dir=cache_dir,
+                token=token,
+                local_files_only=local_files_only,
+                force_download=force_download,
+                trust_remote_code=trust_remote_code,
+                **_loading_kwargs,
+            )
+            if (
+                dtype in {torch.bfloat16, torch.float16}
+                and ov_config is not None
+                and ov_config.dtype in {"fp16", "fp32"}
+            ):
+                dtype = torch.float16 if ov_config.dtype == "fp16" else torch.float32
         if dtype in [torch.float16, torch.bfloat16]:
             loading_kwargs["torch_dtype"] = dtype
             patch_16bit = True
+        if loading_kwargs.get("torch_dtype") == "auto":
+            loading_kwargs["torch_dtype"] = dtype
 
     try:
         if library_name == "open_clip":
@@ -430,8 +446,8 @@ def main_export(
                 possible_synonyms = ""
             logger.info(f"Automatic task detection to {task}{possible_synonyms}.")
 
-        preprocessors = maybe_load_preprocessors(
-            model_name_or_path, subfolder=subfolder, trust_remote_code=trust_remote_code
+        preprocessors = load_preprocessors(
+            model_name_or_path, subfolder=subfolder, trust_remote_code=trust_remote_code, model_type=model_type
         )
 
         submodel_paths = export_from_model(
@@ -531,10 +547,15 @@ def maybe_convert_tokenizers(library_name: str, output: Path, model=None, prepro
 
     if is_openvino_tokenizers_available():
         if library_name != "diffusers" and preprocessors:
+            processor_chat_template = None
             tokenizer = next(filter(lambda it: isinstance(it, PreTrainedTokenizerBase), preprocessors), None)
+            if len(preprocessors) > 1:
+                for processor in preprocessors:
+                    if isinstance(processor, ProcessorMixin) and hasattr(processor, "chat_template"):
+                        processor_chat_template = processor.chat_template
             if tokenizer:
                 try:
-                    export_tokenizer(tokenizer, output, task=task)
+                    export_tokenizer(tokenizer, output, task=task, processor_chat_template=processor_chat_template)
                 except Exception as exception:
                     logger.warning(
                         "Could not load tokenizer using specified model ID or path. OpenVINO tokenizer/detokenizer "

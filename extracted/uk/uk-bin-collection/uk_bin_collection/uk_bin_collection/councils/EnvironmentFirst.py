@@ -1,3 +1,5 @@
+# Legacy script. Copied to Lewes and Eastbourne.
+
 from bs4 import BeautifulSoup
 
 from uk_bin_collection.uk_bin_collection.common import *

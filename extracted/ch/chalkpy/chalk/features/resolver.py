@@ -63,7 +63,6 @@ from chalk.features.feature_field import Feature
 from chalk.features.feature_set import Features, is_feature_set_class
 from chalk.features.feature_wrapper import FeatureWrapper, unwrap_feature
 from chalk.features.filter import Filter, TimeDelta, time_is_frozen
-from chalk.features.live_updates import register_live_updates_if_in_notebook
 from chalk.features.namespace_context import build_namespaced_name
 from chalk.features.pseudofeatures import CHALK_TS_FEATURE, PSEUDONAMESPACE
 from chalk.features.tag import Environments, Tags
@@ -814,9 +813,6 @@ class Resolver(ResolverProtocol[P, T], abc.ABC):
         RESOLVER_REGISTRY.add_to_registry(self, override=override)
 
 
-register_live_updates_if_in_notebook(RESOLVER_REGISTRY)
-
-
 @final
 class SinkResolver(Resolver[P, T]):
     def __init__(
@@ -1040,7 +1036,8 @@ def _explode_features(ret_val: Type[Features], inputs: list[Feature]) -> Type[Fe
                 ]
             )
         elif f.is_has_one:
-            assert f.joined_class is not None
+            if f.joined_class is None:
+                raise ValueError(f"Has one feature {f.fqn} has no joined class")
             new_features.extend(
                 [
                     f.copy_with_path(x)

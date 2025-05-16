@@ -144,12 +144,12 @@ class _DlpPredefinedProfileState:
         """
         Input properties used for looking up and filtering DlpPredefinedProfile resources.
         :param pulumi.Input['DlpPredefinedProfileContextAwarenessArgs'] context_awareness: Scan the context of predefined entries to only return matches surrounded by keywords.
-        :param pulumi.Input[builtins.str] created_at: When the profile was created
-        :param pulumi.Input[builtins.str] description: The description of the profile
-        :param pulumi.Input[builtins.str] name: The name of the profile
-        :param pulumi.Input[builtins.bool] open_access: Whether this profile can be accessed by anyone
+        :param pulumi.Input[builtins.str] created_at: When the profile was created.
+        :param pulumi.Input[builtins.str] description: The description of the profile.
+        :param pulumi.Input[builtins.str] name: The name of the profile.
+        :param pulumi.Input[builtins.bool] open_access: Whether this profile can be accessed by anyone.
         :param pulumi.Input[builtins.str] type: Available values: "custom".
-        :param pulumi.Input[builtins.str] updated_at: When the profile was lasted updated
+        :param pulumi.Input[builtins.str] updated_at: When the profile was lasted updated.
         """
         if account_id is not None:
             pulumi.set(__self__, "account_id", account_id)
@@ -232,7 +232,7 @@ class _DlpPredefinedProfileState:
     @pulumi.getter(name="createdAt")
     def created_at(self) -> Optional[pulumi.Input[builtins.str]]:
         """
-        When the profile was created
+        When the profile was created.
         """
         return pulumi.get(self, "created_at")
 
@@ -244,7 +244,7 @@ class _DlpPredefinedProfileState:
     @pulumi.getter
     def description(self) -> Optional[pulumi.Input[builtins.str]]:
         """
-        The description of the profile
+        The description of the profile.
         """
         return pulumi.get(self, "description")
 
@@ -265,7 +265,7 @@ class _DlpPredefinedProfileState:
     @pulumi.getter
     def name(self) -> Optional[pulumi.Input[builtins.str]]:
         """
-        The name of the profile
+        The name of the profile.
         """
         return pulumi.get(self, "name")
 
@@ -286,7 +286,7 @@ class _DlpPredefinedProfileState:
     @pulumi.getter(name="openAccess")
     def open_access(self) -> Optional[pulumi.Input[builtins.bool]]:
         """
-        Whether this profile can be accessed by anyone
+        Whether this profile can be accessed by anyone.
         """
         return pulumi.get(self, "open_access")
 
@@ -319,7 +319,7 @@ class _DlpPredefinedProfileState:
     @pulumi.getter(name="updatedAt")
     def updated_at(self) -> Optional[pulumi.Input[builtins.str]]:
         """
-        When the profile was lasted updated
+        When the profile was lasted updated.
         """
         return pulumi.get(self, "updated_at")
 
@@ -331,6 +331,7 @@ class _DlpPredefinedProfileState:
 warnings.warn("""cloudflare.index/dlppredefinedprofile.DlpPredefinedProfile has been deprecated in favor of cloudflare.index/zerotrustdlppredefinedprofile.ZeroTrustDlpPredefinedProfile""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/dlpPredefinedProfile:DlpPredefinedProfile")
 class DlpPredefinedProfile(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/dlppredefinedprofile.DlpPredefinedProfile has been deprecated in favor of cloudflare.index/zerotrustdlppredefinedprofile.ZeroTrustDlpPredefinedProfile""", DeprecationWarning)
 
@@ -508,12 +509,12 @@ class DlpPredefinedProfile(pulumi.CustomResource):
         :param pulumi.Input[str] id: The unique provider ID of the resource to lookup.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[Union['DlpPredefinedProfileContextAwarenessArgs', 'DlpPredefinedProfileContextAwarenessArgsDict']] context_awareness: Scan the context of predefined entries to only return matches surrounded by keywords.
-        :param pulumi.Input[builtins.str] created_at: When the profile was created
-        :param pulumi.Input[builtins.str] description: The description of the profile
-        :param pulumi.Input[builtins.str] name: The name of the profile
-        :param pulumi.Input[builtins.bool] open_access: Whether this profile can be accessed by anyone
+        :param pulumi.Input[builtins.str] created_at: When the profile was created.
+        :param pulumi.Input[builtins.str] description: The description of the profile.
+        :param pulumi.Input[builtins.str] name: The name of the profile.
+        :param pulumi.Input[builtins.bool] open_access: Whether this profile can be accessed by anyone.
         :param pulumi.Input[builtins.str] type: Available values: "custom".
-        :param pulumi.Input[builtins.str] updated_at: When the profile was lasted updated
+        :param pulumi.Input[builtins.str] updated_at: When the profile was lasted updated.
         """
         opts = pulumi.ResourceOptions.merge(opts, pulumi.ResourceOptions(id=id))
 
@@ -557,7 +558,7 @@ class DlpPredefinedProfile(pulumi.CustomResource):
 
     @property
     @pulumi.getter(name="contextAwareness")
-    def context_awareness(self) -> pulumi.Output['outputs.DlpPredefinedProfileContextAwareness']:
+    def context_awareness(self) -> pulumi.Output[Optional['outputs.DlpPredefinedProfileContextAwareness']]:
         """
         Scan the context of predefined entries to only return matches surrounded by keywords.
         """
@@ -567,7 +568,7 @@ class DlpPredefinedProfile(pulumi.CustomResource):
     @pulumi.getter(name="createdAt")
     def created_at(self) -> pulumi.Output[builtins.str]:
         """
-        When the profile was created
+        When the profile was created.
         """
         return pulumi.get(self, "created_at")
 
@@ -575,7 +576,7 @@ class DlpPredefinedProfile(pulumi.CustomResource):
     @pulumi.getter
     def description(self) -> pulumi.Output[builtins.str]:
         """
-        The description of the profile
+        The description of the profile.
         """
         return pulumi.get(self, "description")
 
@@ -588,7 +589,7 @@ class DlpPredefinedProfile(pulumi.CustomResource):
     @pulumi.getter
     def name(self) -> pulumi.Output[builtins.str]:
         """
-        The name of the profile
+        The name of the profile.
         """
         return pulumi.get(self, "name")
 
@@ -601,7 +602,7 @@ class DlpPredefinedProfile(pulumi.CustomResource):
     @pulumi.getter(name="openAccess")
     def open_access(self) -> pulumi.Output[builtins.bool]:
         """
-        Whether this profile can be accessed by anyone
+        Whether this profile can be accessed by anyone.
         """
         return pulumi.get(self, "open_access")
 
@@ -622,7 +623,7 @@ class DlpPredefinedProfile(pulumi.CustomResource):
     @pulumi.getter(name="updatedAt")
     def updated_at(self) -> pulumi.Output[builtins.str]:
         """
-        When the profile was lasted updated
+        When the profile was lasted updated.
         """
         return pulumi.get(self, "updated_at")
 

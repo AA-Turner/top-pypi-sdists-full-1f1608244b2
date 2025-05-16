@@ -1,11 +1,11 @@
 use crate::encoder::EncoderExt;
 use crate::kernels::utils;
-use crate::MetalTensor;
-use crate::{LibraryName, MetalContext};
-use anyhow::{ensure, Result};
+use crate::{LibraryName, MetalStream};
+use anyhow::ensure;
 use metal::MTLSize;
 use std::fmt;
 use tract_core::internal::*;
+use tract_gpu::tensor::DeviceTensor;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct RotateHalf;
@@ -29,27 +29,27 @@ impl RotateHalf {
         )
     }
 
-    pub fn kernel_name(&self, dt: DatumType) -> Result<String> {
+    pub fn kernel_name(&self, dt: DatumType) -> TractResult<String> {
         ensure!(Self::is_supported_dt(dt), "Unsupport dt {:?} for metal rotate half  op", dt);
-        let tname = MetalTensor::tname(dt)?;
+        let tname = DeviceTensor::tname(dt)?;
         Ok(format!("array_ops::rotate_half_nd2_{tname}"))
     }
 
-    pub fn eval(&self, context: &MetalContext, input: &MetalTensor) -> Result<MetalTensor> {
-        let output = unsafe { MetalTensor::uninitialized_dt(input.datum_type(), input.shape())? };
-        self.dispatch_eval(context, input, &output)?;
-        context.wait_until_completed()?;
+    pub fn eval(&self, stream: &MetalStream, input: &DeviceTensor) -> TractResult<DeviceTensor> {
+        let output = unsafe { DeviceTensor::uninitialized_dt(input.datum_type(), input.shape())? };
+        self.dispatch_eval(stream, input, &output)?;
+        stream.wait_until_completed()?;
         Ok(output)
     }
 
     pub fn dispatch_eval(
         &self,
-        context: &MetalContext,
-        input: &MetalTensor,
-        output: &MetalTensor,
-    ) -> Result<()> {
-        input.retain_until_completion();
-        output.retain_until_completion();
+        stream: &MetalStream,
+        input: &DeviceTensor,
+        output: &DeviceTensor,
+    ) -> TractResult<()> {
+        stream.retain_tensor(input);
+        stream.retain_tensor(output);
 
         let shape_nd2 = utils::reshape_to_rank_2(input.shape(), input.rank() - 1);
         ensure!(
@@ -61,9 +61,8 @@ impl RotateHalf {
 
         let kernel_name = self.kernel_name(input.datum_type())?;
 
-        let pipeline =
-            context.shared_context().load_pipeline(LibraryName::ArrayOps, &kernel_name)?;
-        let command_buffer = context.command_buffer();
+        let pipeline = stream.load_pipeline(LibraryName::ArrayOps, &kernel_name)?;
+        let command_buffer = stream.command_buffer();
         command_buffer.encode(|encoder| {
             encoder.set_compute_pipeline_state(&pipeline);
             encoder.set_metal_tensor(0, input, metal::MTLResourceUsage::Read);
@@ -83,44 +82,42 @@ impl RotateHalf {
 
 #[cfg(test)]
 mod tests {
+    use crate::utils::with_borrowed_metal_stream;
+
     use super::*;
-    use crate::rewrite_rules::BasicRotateHalf;
-    use crate::IntoMetal;
     use num_traits::AsPrimitive;
     use tract_core::internal::Tensor;
+    use tract_gpu::tensor::IntoDevice;
+    use tract_transformers::ops::apply_rope;
 
-    fn run_test_case<F>(shape: &[usize]) -> Result<()>
+    fn run_test_case<F>(shape: &[usize]) -> TractResult<()>
     where
         F: Copy + 'static + Datum,
         usize: AsPrimitive<F>,
     {
-        objc::rc::autoreleasepool(|| {
-            crate::METAL_CONTEXT.with_borrow(|context| {
-                let len = shape.iter().product::<usize>();
+        with_borrowed_metal_stream(|stream| {
+            let len = shape.iter().product::<usize>();
 
-                let a = Tensor::from_shape(
-                    shape,
-                    &(0..len).map(|f| -> F { f.as_() }).collect::<Vec<_>>(),
-                )?;
+            let a =
+                Tensor::from_shape(shape, &(0..len).map(|f| -> F { f.as_() }).collect::<Vec<_>>())?;
 
-                let metal_a = a.clone().into_metal()?;
+            let metal_a = a.clone().into_device()?;
 
-                let cpu_output =
-                    BasicRotateHalf.eval(tvec![a.clone().into()])?[0].clone().into_tensor();
-                let metal_output = RotateHalf.eval(context, &metal_a)?;
+            let cpu_output =
+                apply_rope::RotateHalf.eval(tvec![a.clone().into()])?[0].clone().into_tensor();
+            let metal_output = RotateHalf.eval(stream, &metal_a)?;
 
-                cpu_output
-                    .close_enough(&metal_output.to_cpu()?.into_tensor(), Approximation::Exact)
-                    .with_context(|| {
-                        anyhow!(
-                            "Input: {:?} Cpu: {:?}, Metal: {:?}",
-                            a.dump(true),
-                            cpu_output.dump(true),
-                            metal_output.to_cpu().and_then(|it| it.dump(true))
-                        )
-                    })?;
-                Ok(())
-            })
+            cpu_output
+                .close_enough(&metal_output.to_host()?.into_tensor(), Approximation::Exact)
+                .with_context(|| {
+                format!(
+                    "Input: {:?} Cpu: {:?}, Metal: {:?}",
+                    a.dump(true),
+                    cpu_output.dump(true),
+                    metal_output.to_host().and_then(|it| it.dump(true))
+                )
+            })?;
+            Ok(())
         })
     }
 

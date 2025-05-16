@@ -1,7 +1,7 @@
 r'''
 # `data_aws_cognito_user_pool`
 
-Refer to the Terraform Registry for docs: [`data_aws_cognito_user_pool`](https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/cognito_user_pool).
+Refer to the Terraform Registry for docs: [`data_aws_cognito_user_pool`](https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/cognito_user_pool).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataAwsCognitoUserPool(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-aws.dataAwsCognitoUserPool.DataAwsCognitoUserPool",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/cognito_user_pool aws_cognito_user_pool}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/cognito_user_pool aws_cognito_user_pool}.'''
 
     def __init__(
         self,
@@ -60,11 +60,11 @@ class DataAwsCognitoUserPool(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/cognito_user_pool aws_cognito_user_pool} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/cognito_user_pool aws_cognito_user_pool} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param user_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/cognito_user_pool#user_pool_id DataAwsCognitoUserPool#user_pool_id}.
+        :param user_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/cognito_user_pool#user_pool_id DataAwsCognitoUserPool#user_pool_id}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -103,7 +103,7 @@ class DataAwsCognitoUserPool(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataAwsCognitoUserPool to import.
-        :param import_from_id: The id of the existing DataAwsCognitoUserPool that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/cognito_user_pool#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataAwsCognitoUserPool that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/cognito_user_pool#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataAwsCognitoUserPool to import is found.
         '''
         if __debug__:
@@ -240,6 +240,11 @@ class DataAwsCognitoUserPool(
     @jsii.member(jsii_name="usernameAttributes")
     def username_attributes(self) -> typing.List[builtins.str]:
         return typing.cast(typing.List[builtins.str], jsii.get(self, "usernameAttributes"))
+
+    @builtins.property
+    @jsii.member(jsii_name="userPoolAddOns")
+    def user_pool_add_ons(self) -> "DataAwsCognitoUserPoolUserPoolAddOnsList":
+        return typing.cast("DataAwsCognitoUserPoolUserPoolAddOnsList", jsii.get(self, "userPoolAddOns"))
 
     @builtins.property
     @jsii.member(jsii_name="userPoolTags")
@@ -912,7 +917,7 @@ class DataAwsCognitoUserPoolConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param user_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/cognito_user_pool#user_pool_id DataAwsCognitoUserPool#user_pool_id}.
+        :param user_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/cognito_user_pool#user_pool_id DataAwsCognitoUserPool#user_pool_id}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1010,7 +1015,7 @@ class DataAwsCognitoUserPoolConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def user_pool_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/cognito_user_pool#user_pool_id DataAwsCognitoUserPool#user_pool_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/cognito_user_pool#user_pool_id DataAwsCognitoUserPool#user_pool_id}.'''
         result = self._values.get("user_pool_id")
         assert result is not None, "Required property 'user_pool_id' is missing"
         return typing.cast(builtins.str, result)
@@ -2492,6 +2497,303 @@ class DataAwsCognitoUserPoolSchemaAttributesStringAttributeConstraintsOutputRefe
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-aws.dataAwsCognitoUserPool.DataAwsCognitoUserPoolUserPoolAddOns",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DataAwsCognitoUserPoolUserPoolAddOns:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DataAwsCognitoUserPoolUserPoolAddOns(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-aws.dataAwsCognitoUserPool.DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlows",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlows:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlows(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlowsList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-aws.dataAwsCognitoUserPool.DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlowsList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__b8fea864178f9c939369c2e54a3f0620a8017515225d63b193ad09843342ce81)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlowsOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__50c44bdd16eded37098111d4fe20948e4fc9d443334676a5004329d51384d36e)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlowsOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d6511d69655e06d6e1a712be4414975c4cfa8668c04f61876e3242c08b730c42)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d2ad7902d0f8b405d35fcb248887b3092bfbb9f7126a21a6fa8de189ce44bcf2)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__75faa8006f2d9e8ec427ea041676c9016e3652c180c6f6c74efe3d8c9be92f90)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlowsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-aws.dataAwsCognitoUserPool.DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlowsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c807245c71d1774b8894bd13962d8cca8f9080585a575e9b0eeae9647333de32)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="customAuthMode")
+    def custom_auth_mode(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "customAuthMode"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlows]:
+        return typing.cast(typing.Optional[DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlows], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlows],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ea336d53eb5571a6366573fc529f0d0d85ee51d16ee0a6c7a98429b7f745d8a9)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+class DataAwsCognitoUserPoolUserPoolAddOnsList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-aws.dataAwsCognitoUserPool.DataAwsCognitoUserPoolUserPoolAddOnsList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__76168c33eede0cc2def4de43e50a8abdebe17381f9e3c1ecc5986b9889af9650)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DataAwsCognitoUserPoolUserPoolAddOnsOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__dd8795f89215b879f484dae6e240b60e457cce9d29557a516b65b51d17fb1983)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DataAwsCognitoUserPoolUserPoolAddOnsOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ab7f15a4c53f8b02367b38bdde4b27c8046796030bb9325c163c6d8f53b506a8)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0106c49fdcd9700ef20f87914791e4d634055f53f02bf9a0b42ebc8b1a10970e)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ce15c1dd93798b9e37b31fb47739ccc9d0d8baae8282effe85c53dad55e5cb9a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DataAwsCognitoUserPoolUserPoolAddOnsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-aws.dataAwsCognitoUserPool.DataAwsCognitoUserPoolUserPoolAddOnsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__efb8c6abb54e73d898a3067f0fd5fdba96f6a6df29a905b7227628c66f985103)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="advancedSecurityAdditionalFlows")
+    def advanced_security_additional_flows(
+        self,
+    ) -> DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlowsList:
+        return typing.cast(DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlowsList, jsii.get(self, "advancedSecurityAdditionalFlows"))
+
+    @builtins.property
+    @jsii.member(jsii_name="advancedSecurityMode")
+    def advanced_security_mode(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "advancedSecurityMode"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(self) -> typing.Optional[DataAwsCognitoUserPoolUserPoolAddOns]:
+        return typing.cast(typing.Optional[DataAwsCognitoUserPoolUserPoolAddOns], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DataAwsCognitoUserPoolUserPoolAddOns],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9022b912e6a26c0f8e1883e33d97d284e5991c30e9b213a882756c6da6f9505d)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "DataAwsCognitoUserPool",
     "DataAwsCognitoUserPoolAccountRecoverySetting",
@@ -2534,6 +2836,12 @@ __all__ = [
     "DataAwsCognitoUserPoolSchemaAttributesStringAttributeConstraints",
     "DataAwsCognitoUserPoolSchemaAttributesStringAttributeConstraintsList",
     "DataAwsCognitoUserPoolSchemaAttributesStringAttributeConstraintsOutputReference",
+    "DataAwsCognitoUserPoolUserPoolAddOns",
+    "DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlows",
+    "DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlowsList",
+    "DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlowsOutputReference",
+    "DataAwsCognitoUserPoolUserPoolAddOnsList",
+    "DataAwsCognitoUserPoolUserPoolAddOnsOutputReference",
 ]
 
 publication.publish()
@@ -3190,6 +3498,100 @@ def _typecheckingstub__a5d02264919627bd0c5084258fbcda38c38dd936845ab0d594df4703b
 
 def _typecheckingstub__0a9a3cb7d4f007a60e2c1ec263288bb95d44445fd077f3dad9a7bf2e62f621fc(
     value: typing.Optional[DataAwsCognitoUserPoolSchemaAttributesStringAttributeConstraints],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__b8fea864178f9c939369c2e54a3f0620a8017515225d63b193ad09843342ce81(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__50c44bdd16eded37098111d4fe20948e4fc9d443334676a5004329d51384d36e(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d6511d69655e06d6e1a712be4414975c4cfa8668c04f61876e3242c08b730c42(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d2ad7902d0f8b405d35fcb248887b3092bfbb9f7126a21a6fa8de189ce44bcf2(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__75faa8006f2d9e8ec427ea041676c9016e3652c180c6f6c74efe3d8c9be92f90(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c807245c71d1774b8894bd13962d8cca8f9080585a575e9b0eeae9647333de32(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ea336d53eb5571a6366573fc529f0d0d85ee51d16ee0a6c7a98429b7f745d8a9(
+    value: typing.Optional[DataAwsCognitoUserPoolUserPoolAddOnsAdvancedSecurityAdditionalFlows],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__76168c33eede0cc2def4de43e50a8abdebe17381f9e3c1ecc5986b9889af9650(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__dd8795f89215b879f484dae6e240b60e457cce9d29557a516b65b51d17fb1983(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ab7f15a4c53f8b02367b38bdde4b27c8046796030bb9325c163c6d8f53b506a8(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0106c49fdcd9700ef20f87914791e4d634055f53f02bf9a0b42ebc8b1a10970e(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ce15c1dd93798b9e37b31fb47739ccc9d0d8baae8282effe85c53dad55e5cb9a(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__efb8c6abb54e73d898a3067f0fd5fdba96f6a6df29a905b7227628c66f985103(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9022b912e6a26c0f8e1883e33d97d284e5991c30e9b213a882756c6da6f9505d(
+    value: typing.Optional[DataAwsCognitoUserPoolUserPoolAddOns],
 ) -> None:
     """Type checking stubs"""
     pass

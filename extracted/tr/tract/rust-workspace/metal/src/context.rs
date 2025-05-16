@@ -1,16 +1,19 @@
-use crate::command_buffer::{MetalProfiler, TCommandBuffer};
+use crate::command_buffer::TCommandBuffer;
 use crate::func_constants::ConstantValues;
 use crate::kernels::{LibraryContent, LibraryName};
-use crate::tensor::MetalTensor;
+
 use metal::NSUInteger;
+use tract_gpu::device::{DeviceBuffer, DeviceContext};
+use tract_gpu::tensor::DeviceTensor;
+
 use std::cell::RefCell;
+use std::ffi::c_void;
+use std::ops::{Deref, DerefMut};
 use std::path::Path;
-use std::rc::Rc;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, OnceLock, RwLock};
-use std::time::Duration;
 
-use anyhow::{anyhow, Context, Result};
+use anyhow::{anyhow, Context};
 use metal::{
     Buffer, CommandQueue, CompileOptions, ComputePipelineState, Device, Function,
     FunctionConstantValues, Library, MTLResourceOptions,
@@ -19,18 +22,23 @@ use std::collections::HashMap;
 use tract_core::internal::*;
 
 thread_local! {
-    pub static METAL_CONTEXT: RefCell<MetalContext> = RefCell::new(MetalContext::new());
+    pub static METAL_STREAM: RefCell<MetalStream> = RefCell::new(MetalStream::new());
 }
 
-fn shared_metal_context() -> SharedMetalContext {
-    static INSTANCE: OnceLock<SharedMetalContext> = OnceLock::new();
+pub fn metal_context() -> MetalContext {
+    static INSTANCE: OnceLock<MetalContext> = OnceLock::new();
     INSTANCE
-        .get_or_init(|| SharedMetalContext::new().expect("Could not create shared metal context"))
+        .get_or_init(|| {
+            let ctxt = MetalContext::new().expect("Could not create Metal context");
+            tract_gpu::device::set_context(Box::new(ctxt.clone()))
+                .expect("Could not set Metal context");
+            ctxt
+        })
         .clone()
 }
 
 #[derive(Debug, Clone)]
-pub struct SharedMetalContext {
+pub struct MetalContext {
     device: Device,
     cache_libraries: Arc<RwLock<HashMap<LibraryName, Library>>>,
     #[allow(clippy::type_complexity)]
@@ -38,8 +46,8 @@ pub struct SharedMetalContext {
         Arc<RwLock<HashMap<(LibraryName, String, Option<ConstantValues>), ComputePipelineState>>>,
 }
 
-impl SharedMetalContext {
-    pub fn new() -> Result<Self> {
+impl MetalContext {
+    pub fn new() -> TractResult<Self> {
         let device = Device::system_default()
             .with_context(|| "Could not find system default Metal device")?;
 
@@ -52,7 +60,7 @@ impl SharedMetalContext {
         Ok(ctxt)
     }
 
-    pub fn preload_pipelines(&self) -> Result<()> {
+    pub fn preload_pipelines(&self) -> TractResult<()> {
         for ew_func in crate::kernels::ElementWiseOps::all_functions() {
             let _ = self.load_pipeline(LibraryName::ElementWiseOps, &ew_func);
         }
@@ -68,12 +76,7 @@ impl SharedMetalContext {
         Ok(())
     }
 
-    pub fn flush_pipeline_cache(&self) -> Result<()> {
-        self.cache_pipelines.write().map_err(|e| anyhow!("{:?}", e))?.clear();
-        Ok(())
-    }
-
-    pub fn load_library(&self, name: LibraryName) -> Result<Library> {
+    pub fn load_library(&self, name: LibraryName) -> TractResult<Library> {
         {
             let cache_libraries = self.cache_libraries.read().map_err(|e| anyhow!("{:?}", e))?;
             if let Some(library) = cache_libraries.get(&name) {
@@ -87,7 +90,7 @@ impl SharedMetalContext {
                 .new_library_with_data(lib_data)
                 .map_err(|e| anyhow!("{}", e))
                 .with_context(|| {
-                    anyhow!("Error while loading Metal library from data: {:?}", name)
+                    format!("Error while loading Metal library from data: {:?}", name)
                 })?,
             LibraryContent::Source(lib_source) => self
                 .device
@@ -106,7 +109,7 @@ impl SharedMetalContext {
         library_name: LibraryName,
         func_name: &str,
         constants: Option<FunctionConstantValues>,
-    ) -> Result<Function> {
+    ) -> TractResult<Function> {
         let func = self
             .load_library(library_name)?
             .get_function(func_name, constants)
@@ -125,7 +128,7 @@ impl SharedMetalContext {
         library_name: LibraryName,
         func_name: &str,
         constants: Option<ConstantValues>,
-    ) -> Result<ComputePipelineState> {
+    ) -> TractResult<ComputePipelineState> {
         let key = (library_name, func_name.to_string(), constants);
         {
             let cache_pipelines = self.cache_pipelines.read().map_err(|e| anyhow!("{:?}", e))?;
@@ -153,76 +156,83 @@ impl SharedMetalContext {
         &self,
         library_name: LibraryName,
         func_name: &str,
-    ) -> Result<ComputePipelineState> {
+    ) -> TractResult<ComputePipelineState> {
         self.load_pipeline_with_constants(library_name, func_name, None)
     }
 }
 
+impl DeviceContext for MetalContext {
+    fn buffer_from_slice(&self, data: &[u8]) -> Box<dyn tract_gpu::device::DeviceBuffer> {
+        static ZERO: [u8; 1] = [0];
+        // Handle empty data
+        let data = if data.is_empty() { &ZERO } else { data };
+
+        let size = core::mem::size_of_val(data) as NSUInteger;
+        Box::new(MetalBuffer {
+            inner: self.device.new_buffer_with_bytes_no_copy(
+                data.as_ptr() as *const core::ffi::c_void,
+                size,
+                MTLResourceOptions::StorageModeShared,
+                None,
+            ),
+        })
+    }
+
+    fn synchronize(&self) -> TractResult<()> {
+        METAL_STREAM.with_borrow(|stream| stream.wait_until_completed())
+    }
+}
+
 #[derive(Debug)]
-pub struct MetalContext {
-    shared: SharedMetalContext,
+pub struct MetalStream {
+    context: MetalContext,
     command_queue: CommandQueue,
     command_buffer: RefCell<Option<TCommandBuffer>>,
     command_buffer_id: AtomicUsize,
-    retained_tensors: RefCell<Vec<MetalTensor>>,
-    profiler: RefCell<Option<Rc<RefCell<MetalProfiler>>>>,
+    retained_tensors: RefCell<Vec<DeviceTensor>>,
 }
 
-impl Default for MetalContext {
+impl Default for MetalStream {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl MetalContext {
+impl MetalStream {
     pub fn new() -> Self {
-        let shared = shared_metal_context();
-        let command_queue = shared.device.new_command_queue();
+        let context = metal_context();
+        let command_queue = context.device.new_command_queue();
         Self {
+            context,
             command_queue,
             command_buffer: RefCell::new(None),
             command_buffer_id: AtomicUsize::new(0),
             retained_tensors: RefCell::new(vec![]),
-            shared,
-            profiler: RefCell::new(None),
         }
     }
 
-    pub fn device(&self) -> &Device {
-        &self.shared.device
+    pub fn load_library(&self, name: LibraryName) -> TractResult<Library> {
+        self.context.load_library(name)
     }
 
-    pub fn shared_context(&self) -> &SharedMetalContext {
-        &self.shared
+    pub fn load_pipeline(
+        &self,
+        library_name: LibraryName,
+        func_name: &str,
+    ) -> TractResult<ComputePipelineState> {
+        self.context.load_pipeline(library_name, func_name)
     }
 
-    pub fn buffer_from_slice<T>(&self, data: &[T]) -> Buffer {
-        let mut size = core::mem::size_of_val(data) as NSUInteger;
-        if size == 0 {
-            size += 1;
-        }
-        self.device().new_buffer_with_bytes_no_copy(
-            data.as_ptr() as *const core::ffi::c_void,
-            size,
-            MTLResourceOptions::StorageModeShared,
-            None,
-        )
+    pub(crate) fn load_pipeline_with_constants(
+        &self,
+        library_name: LibraryName,
+        func_name: &str,
+        constants: Option<ConstantValues>,
+    ) -> TractResult<ComputePipelineState> {
+        self.context.load_pipeline_with_constants(library_name, func_name, constants)
     }
 
-    pub fn buffer_from_slice_mut<T>(&self, data: &mut [T]) -> Buffer {
-        let mut size = core::mem::size_of_val(data) as NSUInteger;
-        if size == 0 {
-            size += 1;
-        }
-        self.device().new_buffer_with_bytes_no_copy(
-            data.as_ptr() as *const core::ffi::c_void,
-            size,
-            MTLResourceOptions::StorageModeShared,
-            None,
-        )
-    }
-
-    pub fn retain_tensor(&self, tensor: &MetalTensor) {
+    pub fn retain_tensor(&self, tensor: &DeviceTensor) {
         self.retained_tensors.borrow_mut().push(tensor.clone());
     }
 
@@ -231,18 +241,15 @@ impl MetalContext {
             .command_buffer
             .borrow_mut()
             .get_or_insert_with(|| {
-                let command_buffer = TCommandBuffer::new(
-                    self.command_queue.new_command_buffer().to_owned(),
-                    self.profiler.borrow().clone(),
-                );
-                command_buffer.enqueue();
+                let command_buffer =
+                    TCommandBuffer::new(self.command_queue.new_command_buffer().to_owned());
                 command_buffer
             })
             .to_owned();
         command_buffer
     }
 
-    pub fn wait_until_completed(&self) -> Result<()> {
+    pub fn wait_until_completed(&self) -> TractResult<()> {
         let Some(command_buffer) = self.command_buffer.borrow().to_owned() else { return Ok(()) };
 
         command_buffer.encoder().end_encoding();
@@ -268,10 +275,10 @@ impl MetalContext {
         Ok(())
     }
 
-    pub fn capture_trace<P, F>(&self, path: P, compute: F) -> Result<()>
+    pub fn capture_trace<P, F>(&self, path: P, compute: F) -> TractResult<()>
     where
         P: AsRef<Path>,
-        F: FnOnce(&Self) -> Result<()>,
+        F: FnOnce(&Self) -> TractResult<()>,
     {
         self.wait_until_completed()?;
 
@@ -280,7 +287,7 @@ impl MetalContext {
         let capture = metal::CaptureManager::shared();
         let descriptor = metal::CaptureDescriptor::new();
         descriptor.set_destination(metal::MTLCaptureDestination::GpuTraceDocument);
-        descriptor.set_capture_device(self.device());
+        descriptor.set_capture_device(&self.context.device);
         descriptor.set_output_url(path);
 
         capture.start_capture(&descriptor).map_err(|e| anyhow!("Error Metal Capture: {:?}", e))?;
@@ -291,43 +298,9 @@ impl MetalContext {
         capture.stop_capture();
         Ok(())
     }
-
-    pub fn profiler(&self) -> Option<Rc<RefCell<MetalProfiler>>> {
-        self.profiler.borrow().clone()
-    }
-
-    pub fn profile<EvalCallback>(
-        &self,
-        num_nodes: usize,
-        eval: EvalCallback,
-    ) -> TractResult<(TVec<TValue>, Duration, Vec<u64>)>
-    where
-        EvalCallback: FnOnce() -> TractResult<(TVec<TValue>, Duration)>,
-    {
-        objc::rc::autoreleasepool(|| {
-            self.wait_until_completed()?;
-
-            let device: &Device = &self.shared.device;
-            assert!(
-                device.supports_counter_sampling(metal::MTLCounterSamplingPoint::AtStageBoundary)
-            );
-
-            let profiler = Rc::new(RefCell::new(MetalProfiler::new(device.to_owned(), num_nodes)));
-
-            self.profiler.replace(Some(profiler.clone()));
-
-            let (output, eval_duration) = eval()?;
-            let profile_buffers = profiler.borrow_mut().get_profile_data();
-
-            self.profiler.replace(None);
-            self.wait_until_completed()?;
-
-            Ok((output, eval_duration, profile_buffers))
-        })
-    }
 }
 
-impl Drop for MetalContext {
+impl Drop for MetalStream {
     fn drop(&mut self) {
         let Some(command_buffer) = self.command_buffer.borrow_mut().to_owned() else { return };
 
@@ -339,7 +312,37 @@ impl Drop for MetalContext {
             }
             _ => {}
         }
+
+        command_buffer.encoder().end_encoding();
         command_buffer.commit();
         command_buffer.wait_until_completed();
+    }
+}
+
+#[derive(Clone)]
+pub struct MetalBuffer {
+    pub inner: Buffer,
+}
+
+impl Deref for MetalBuffer {
+    type Target = Buffer;
+
+    fn deref(&self) -> &Self::Target {
+        &self.inner
+    }
+}
+
+impl DerefMut for MetalBuffer {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.inner
+    }
+}
+impl DeviceBuffer for MetalBuffer {
+    fn info(&self) -> String {
+        format!("{:?}", self.inner)
+    }
+
+    fn ptr(&self) -> *const c_void {
+        self.inner.gpu_address() as *const c_void
     }
 }

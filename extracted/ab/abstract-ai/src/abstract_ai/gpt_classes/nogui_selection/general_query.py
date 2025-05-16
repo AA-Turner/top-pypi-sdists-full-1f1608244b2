@@ -19,7 +19,6 @@ async def async_make_general_query(prompt=None,
     model_mgr = ModelManager(input_model_name=model)
     inst_mgr = InstructionManager(instructions=instructions, instruction_bools=instruction_bools)
     prompt_mgr = PromptManager(request_data=prompt, prompt_data=data, completion_percentage=completion_percentage, instruction_mgr=inst_mgr, model_mgr=model_mgr)
-    input(prompt_mgr.create_prompt())
     response_mgr = ResponseManager(prompt_mgr=prompt_mgr, api_mgr=api_mgr)
     # Await the query directly
     return await get_query(response_mgr)

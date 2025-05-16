@@ -392,8 +392,8 @@ class RAGPattern:
                 "`chunker` param is required when `input_data_references` provided"
             )
 
-        self.indexing_function: RAGPatternFunction | None
-        self.inference_function: RAGPatternFunction | None
+        self._indexing_function: RAGPatternFunction | None
+        self._inference_function: RAGPatternFunction | None
         self.inference_service: RAGPatternService | None
 
         self.deployment_function: RAGPatternFunction | None = None
@@ -403,36 +403,49 @@ class RAGPattern:
             or self._input_data_references is not None
         )
 
-        indexing_function = indexing_function or (
+        indexing_function_tmp = indexing_function or (
             default_indexing_function if self.vector_store and self.chunker else None
         )
-        if indexing_function:
-            self.indexing_function = RAGPatternFunction(
-                api_client=self._client,
-                function=indexing_function,
-                default_params=self._default_indexing_function_params(),
-                store_params=self.store_params,
-                _allow_store=self._allow_store,
-            )
-            if auto_store:
-                self.indexing_function._store_component()
+        self._indexing_function_error = False
+        if indexing_function_tmp:
+            if isinstance(self.vector_store, VectorStore) or indexing_function:
+                self._indexing_function = RAGPatternFunction(
+                    api_client=self._client,
+                    function=indexing_function_tmp,
+                    default_params=self._default_indexing_function_params(),
+                    store_params=self.store_params,
+                    _allow_store=self._allow_store,
+                )
+                if auto_store:
+                    self._indexing_function._store_component()
+            else:
+                self._indexing_function_error = True
+                self._indexing_function = None
         else:
-            self.indexing_function = None
+            self._indexing_function = None
 
         inference_function = inference_function or default_inference_function
+        self._inference_function_error = False
         if inference_custom_asset is None or "function" in inference_custom_asset:
-            self.inference_function = RAGPatternFunction(
-                api_client=self._client,
-                function=inference_function,
-                default_params=self._default_inference_function_params(),
-                store_params=self.store_params,
-                cached=False,
-                _allow_store=self._allow_store,
-            )
-            if auto_store:
-                self.inference_function._store_component()
+            if isinstance(self.vector_store, VectorStore) or (
+                inference_custom_asset is not None
+                and "function" in inference_custom_asset
+            ):
+                self._inference_function = RAGPatternFunction(
+                    api_client=self._client,
+                    function=inference_function,
+                    default_params=self._default_inference_function_params(),
+                    store_params=self.store_params,
+                    cached=False,
+                    _allow_store=self._allow_store,
+                )
+                if auto_store:
+                    self._inference_function._store_component()
+            else:
+                self._inference_function_error = True
+                self._inference_function = None
         else:
-            self.inference_function = None
+            self._inference_function = None
 
         store_params_ai_service: dict | None
 
@@ -449,7 +462,7 @@ class RAGPattern:
                         MilvusVectorStore,
                     )
 
-                    if isinstance(vector_store, MilvusVectorStore):
+                    if isinstance(self.vector_store, MilvusVectorStore):
                         if self.model.model_id is not None:
                             inference_service = default_inference_service_milvus
                         else:
@@ -467,7 +480,7 @@ class RAGPattern:
                         ElasticsearchVectorStore,
                     )
 
-                    if isinstance(vector_store, ElasticsearchVectorStore):
+                    if isinstance(self.vector_store, ElasticsearchVectorStore):
                         if self.model.model_id is not None:
                             inference_service = default_inference_service_elastic
                         else:
@@ -554,6 +567,40 @@ class RAGPattern:
                 self.inference_service._store_component()
         else:
             self.inference_service = None
+
+    @property
+    def indexing_function(self) -> RAGPatternFunction | None:
+        """Indexing function object.
+
+        :raises WMLClientError: raise when vector_store is of type different than
+                                 ibm_watsonx_ai.foundation_models.extensions.rag.VectorStore
+
+        :return: indexing function instance
+        :rtype: RAGPatternFunction | None
+        """
+        if self._indexing_function_error:
+            raise WMLClientError(
+                "`indexing_function` not available for the type of provided Vector Store"
+            )
+        else:
+            return self._indexing_function
+
+    @property
+    def inference_function(self) -> RAGPatternFunction | None:
+        """Inference function object.
+
+        :raises WMLClientError: raise when vector_store is of type different than
+                                 ibm_watsonx_ai.foundation_models.extensions.rag.VectorStore
+
+        :return: inference function instance
+        :rtype: RAGPatternFunction | None
+        """
+        if self._inference_function_error:
+            raise WMLClientError(
+                "`inference_function` not available for the type of provided Vector Store"
+            )
+        else:
+            return self._inference_function
 
     def deploy(
         self,

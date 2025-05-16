@@ -130,6 +130,7 @@ class _AccessKeysConfigurationState:
 warnings.warn("""cloudflare.index/accesskeysconfiguration.AccessKeysConfiguration has been deprecated in favor of cloudflare.index/zerotrustaccesskeyconfiguration.ZeroTrustAccessKeyConfiguration""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/accessKeysConfiguration:AccessKeysConfiguration")
 class AccessKeysConfiguration(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/accesskeysconfiguration.AccessKeysConfiguration has been deprecated in favor of cloudflare.index/zerotrustaccesskeyconfiguration.ZeroTrustAccessKeyConfiguration""", DeprecationWarning)
 

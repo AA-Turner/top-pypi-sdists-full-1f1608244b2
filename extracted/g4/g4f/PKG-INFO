@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: g4f
-Version: 0.5.2.3
+Version: 0.5.2.4
 Summary: The official gpt4free repository | various collection of powerful language models
 Home-page: https://github.com/xtekky/gpt4free
 Author: Tekky
@@ -40,11 +40,10 @@ Requires-Dist: python-multipart; extra == "all"
 Requires-Dist: pywebview; extra == "all"
 Requires-Dist: plyer; extra == "all"
 Requires-Dist: setuptools; extra == "all"
-Requires-Dist: pypdf2; extra == "all"
-Requires-Dist: python-docx; extra == "all"
 Requires-Dist: odfpy; extra == "all"
 Requires-Dist: ebooklib; extra == "all"
 Requires-Dist: openpyxl; extra == "all"
+Requires-Dist: markitdown[all]; extra == "all"
 Provides-Extra: slim
 Requires-Dist: curl_cffi>=0.6.2; extra == "slim"
 Requires-Dist: certifi; extra == "slim"
@@ -58,8 +57,7 @@ Requires-Dist: flask; extra == "slim"
 Requires-Dist: fastapi; extra == "slim"
 Requires-Dist: uvicorn; extra == "slim"
 Requires-Dist: python-multipart; extra == "slim"
-Requires-Dist: pypdf2; extra == "slim"
-Requires-Dist: python-docx; extra == "slim"
+Requires-Dist: markitdown[docx,pdf,pptx]; extra == "slim"
 Provides-Extra: image
 Requires-Dist: pillow; extra == "image"
 Requires-Dist: cairosvg; extra == "image"
@@ -87,13 +85,11 @@ Requires-Dist: duckduckgo-search>=5.0; extra == "search"
 Provides-Extra: local
 Requires-Dist: gpt4all; extra == "local"
 Provides-Extra: files
-Requires-Dist: spacy; extra == "files"
 Requires-Dist: beautifulsoup4; extra == "files"
-Requires-Dist: pypdf2; extra == "files"
-Requires-Dist: python-docx; extra == "files"
 Requires-Dist: odfpy; extra == "files"
 Requires-Dist: ebooklib; extra == "files"
 Requires-Dist: openpyxl; extra == "files"
+Requires-Dist: markitdown[all]; extra == "files"
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier

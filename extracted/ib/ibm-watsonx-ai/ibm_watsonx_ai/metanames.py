@@ -5,7 +5,7 @@
 
 from __future__ import annotations
 
-from typing import Any, TYPE_CHECKING, cast
+from typing import Any, TYPE_CHECKING, cast, Literal
 
 from tabulate import tabulate
 import copy
@@ -232,12 +232,15 @@ Available MetaNames:
         meta_props: dict[str, Any],
         client: APIClient | None = None,
         with_validation: bool = False,
-        initial_metadata: dict[str, Any] = {},
+        initial_metadata: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         if with_validation:
             self._validate(meta_props)
 
-        metadata = copy.deepcopy(initial_metadata)
+        if initial_metadata is None:
+            metadata = {}
+        else:
+            metadata = copy.deepcopy(initial_metadata)
 
         def update_map(m: dict | list, path: list[int | str], el: Any) -> None:
             if type(m) is dict:
@@ -373,6 +376,7 @@ Available MetaNames:
             for m in meta_props
             if d.key == m and d.path.startswith("/metadata/")
         }
+
         entity_props = {
             m: meta_props[m]
             for d in self._meta_props_definitions
@@ -382,17 +386,23 @@ Available MetaNames:
 
         res = []
 
-        if len(metadata_props) > 0:
+        if metadata_props:
             res += _generate_patch_payload_simple(metadata_props, current_metadata)
 
-        if len(entity_props) > 0:
+        if entity_props:
+            meta = (
+                current_metadata["entity"]
+                if "entity" in current_metadata
+                else current_metadata
+            )
+
+            meta.update(
+                current_metadata["metadata"] if "metadata" in current_metadata else {}
+            )
+
             res += _generate_patch_payload_simple(
                 entity_props,
-                (
-                    current_metadata["entity"]
-                    if "entity" in current_metadata
-                    else current_metadata
-                ),
+                meta,
             )
 
         return res
@@ -1091,7 +1101,6 @@ class ModelMetaNames(MetaNamesBase):
             str,
             False,
             "my_description",
-            path="/description",
         ),
         MetaProp(
             "INPUT_DATA_SCHEMA",
@@ -2304,7 +2313,7 @@ class ConnectionMetaNames(MetaNamesBase):
     FLAGS = "flags"
 
     _meta_props_definitions = [
-        MetaProp("NAME", NAME, str, True, "my_space"),
+        MetaProp("NAME", NAME, str, True, "my_connection"),
         MetaProp("DESCRIPTION", DESCRIPTION, str, False, "my_description"),
         MetaProp(
             "DATASOURCE_TYPE",

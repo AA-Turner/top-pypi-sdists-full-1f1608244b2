@@ -10,19 +10,26 @@ import pandas as pd
 import torch
 
 from scvi import REGISTRY_KEYS
-from scvi.data._utils import get_anndata_attribute
+from scvi.data._utils import _validate_adata_dataloader_input, get_anndata_attribute
 from scvi.dataloaders import DataSplitter, SemiSupervisedDataSplitter
 from scvi.model._utils import get_max_epochs_heuristic, use_distributed_sampler
-from scvi.train import SemiSupervisedTrainingPlan, TrainingPlan, TrainRunner
+from scvi.train import (
+    SemiSupervisedAdversarialTrainingPlan,
+    SemiSupervisedTrainingPlan,
+    TrainingPlan,
+    TrainRunner,
+)
 from scvi.train._callbacks import SubSampleLabels
 from scvi.utils._docstrings import devices_dsp
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Iterator, Sequence
 
     from lightning import LightningDataModule
+    from torch import Tensor
 
     from scvi._types import AnnOrMuData
+
 
 logger = logging.getLogger(__name__)
 
@@ -63,8 +70,10 @@ class UnsupervisedTrainingMixin:
         %(param_accelerator)s
         %(param_devices)s
         train_size
-            Size of training set in the range ``[0.0, 1.0]``. Passed into
-            :class:`~scvi.dataloaders.DataSplitter`. Not used if ``datamodule`` is passed in.
+            Float, or None. Size of training set in the range ``[0.0, 1.0]``. default is None,
+            which is practicaly 0.9 and potentially adding small last batch to validation cells.
+            Passed into :class:`~scvi.dataloaders.DataSplitter`.
+            Not used if ``datamodule`` is passed in.
         validation_size
             Size of the test set. If ``None``, defaults to ``1 - train_size``. If
             ``train_size + validation_size < 1``, the remaining cells belong to a test set. Passed
@@ -100,15 +109,6 @@ class UnsupervisedTrainingMixin:
         **kwargs
            Additional keyword arguments passed into :class:`~scvi.train.Trainer`.
         """
-        if datamodule is not None and not self._module_init_on_train:
-            raise ValueError(
-                "Cannot pass in `datamodule` if the model was initialized with `adata`."
-            )
-        elif datamodule is None and self._module_init_on_train:
-            raise ValueError(
-                "If the model was not initialized with `adata`, a `datamodule` must be passed in."
-            )
-
         if max_epochs is None:
             if datamodule is None:
                 max_epochs = get_max_epochs_heuristic(self.adata.n_obs)
@@ -162,25 +162,35 @@ class UnsupervisedTrainingMixin:
 
 
 class SemisupervisedTrainingMixin:
-    _training_plan_cls = SemiSupervisedTrainingPlan
+    """General purpose semisupervised train, predict and interoperability methods."""
 
-    def _set_indices_and_labels(self):
+    _training_plan_cls = SemiSupervisedTrainingPlan
+    _data_splitter_cls = SemiSupervisedDataSplitter
+    _train_runner_cls = TrainRunner
+
+    def _set_indices_and_labels(self, datamodule=None):
         """Set indices for labeled and unlabeled cells."""
-        labels_state_registry = self.adata_manager.get_state_registry(REGISTRY_KEYS.LABELS_KEY)
+        labels_state_registry = self.get_state_registry(REGISTRY_KEYS.LABELS_KEY)
         self.original_label_key = labels_state_registry.original_key
         self.unlabeled_category_ = labels_state_registry.unlabeled_category
 
-        labels = get_anndata_attribute(
-            self.adata,
-            self.adata_manager.data_registry.labels.attr_name,
-            self.original_label_key,
-            mod_key=getattr(self.adata_manager.data_registry.labels, "mod_key", None),
-        ).ravel()
+        if datamodule is None:
+            self.labels_ = get_anndata_attribute(
+                self.adata,
+                self.adata_manager.data_registry.labels.attr_name,
+                self.original_label_key,
+                mod_key=getattr(self.adata_manager.data_registry.labels, "mod_key", None),
+            ).ravel()
+        else:
+            if datamodule.registry["setup_method_name"] == "setup_datamodule":
+                self.labels_ = datamodule.labels_.ravel()
+            else:
+                self.labels_ = datamodule.labels.ravel()
         self._label_mapping = labels_state_registry.categorical_mapping
 
         # set unlabeled and labeled indices
-        self._unlabeled_indices = np.argwhere(labels == self.unlabeled_category_).ravel()
-        self._labeled_indices = np.argwhere(labels != self.unlabeled_category_).ravel()
+        self._unlabeled_indices = np.argwhere(self.labels_ == self.unlabeled_category_).ravel()
+        self._labeled_indices = np.argwhere(self.labels_ != self.unlabeled_category_).ravel()
         self._code_to_label = dict(enumerate(self._label_mapping))
 
     def predict(
@@ -192,6 +202,7 @@ class SemisupervisedTrainingMixin:
         use_posterior_mean: bool = True,
         ig_interpretability: bool = False,
         ig_args: dict | None = None,
+        dataloader: Iterator[dict[str, Tensor | None]] | None = None,
     ) -> (np.ndarray | pd.DataFrame, None | np.ndarray):
         """Return cell label predictions.
 
@@ -216,11 +227,32 @@ class SemisupervisedTrainingMixin:
             sample prediction
         ig_args
             Keyword args for IntegratedGradients
+        dataloader
+            An iterator over minibatches of data on which to compute the metric. The minibatches
+            should be formatted as a dictionary of :class:`~torch.Tensor` with keys as expected by
+            the model. If ``None``, a dataloader is created from ``adata``.
         """
-        adata = self._validate_anndata(adata)
+        _validate_adata_dataloader_input(self, adata, dataloader)
 
-        if indices is None:
-            indices = np.arange(adata.n_obs)
+        if dataloader is None:
+            adata = self._validate_anndata(adata)
+
+            if indices is None:
+                indices = np.arange(adata.n_obs)
+
+            scdl = self._make_data_loader(
+                adata=adata,
+                indices=indices,
+                batch_size=batch_size,
+            )
+        else:
+            scdl = dataloader
+            for param in [indices, batch_size]:
+                if param is not None:
+                    Warning(
+                        f"Using {param} after custom Dataloader was initialize is redundant, "
+                        f"please re-initialize with selected {param}",
+                    )
 
         attributions = None
         if ig_interpretability:
@@ -237,18 +269,13 @@ class SemisupervisedTrainingMixin:
             attributions = []
 
         # in case of no indices to predict return empty values
-        if len(indices) == 0:
-            pred = []
-            if ig_interpretability:
-                return pred, attributions
-            else:
-                return pred
-
-        scdl = self._make_data_loader(
-            adata=adata,
-            indices=indices,
-            batch_size=batch_size,
-        )
+        if dataloader is None:
+            if len(indices) == 0:
+                pred = []
+                if ig_interpretability:
+                    return pred, attributions
+                else:
+                    return pred
 
         y_pred = []
         for _, tensors in enumerate(scdl):
@@ -256,7 +283,7 @@ class SemisupervisedTrainingMixin:
             data_inputs = {
                 key: inference_inputs[key]
                 for key in inference_inputs.keys()
-                if key not in ["batch_index", "cont_covs", "cat_covs"]
+                if key not in ["batch_index", "cont_covs", "cat_covs", "panel_index"]
             }
 
             batch = tensors[REGISTRY_KEYS.BATCH_KEY]
@@ -285,14 +312,17 @@ class SemisupervisedTrainingMixin:
                 hard_pred = pred.argmax(dim=1) if soft else pred
                 ig_args = ig_args or {}
                 attribution = ig.attribute(
-                    tuple(data_inputs.values()), target=hard_pred, **ig_args
+                    tuple(data_inputs.values()),
+                    target=hard_pred,
+                    additional_forward_args=(batch, cat_covs, cont_covs),
+                    **ig_args,
                 )
-                attributions.append(attribution[0])
+                attributions.append(torch.cat(attribution, dim=1))
 
         if ig_interpretability:
             if attributions is not None and len(attributions) > 0:
                 attributions = torch.cat(attributions, dim=0).detach().numpy()
-                attributions = self.get_ranked_genes(adata, attributions)
+                attributions = self.get_ranked_markers(adata, attributions)
 
         if len(y_pred) > 0:
             y_pred = torch.cat(y_pred).numpy()
@@ -326,8 +356,10 @@ class SemisupervisedTrainingMixin:
         batch_size: int = 128,
         accelerator: str = "auto",
         devices: int | list[int] | str = "auto",
+        adversarial_classifier: bool | None = None,
         datasplitter_kwargs: dict | None = None,
         plan_kwargs: dict | None = None,
+        datamodule: LightningDataModule | None = None,
         **trainer_kwargs,
     ):
         """Train the model.
@@ -356,6 +388,10 @@ class SemisupervisedTrainingMixin:
             Minibatch size to use during training.
         %(param_accelerator)s
         %(param_devices)s
+        adversarial_classifier
+            Whether to use adversarial classifier in the latent space. This helps mixing when
+            there are missing proteins in any of the batches. Defaults to `True` is missing
+            proteins are detected.
         datasplitter_kwargs
             Additional keyword arguments passed into
             :class:`~scvi.dataloaders.SemiSupervisedDataSplitter`.
@@ -363,9 +399,24 @@ class SemisupervisedTrainingMixin:
             Keyword args for :class:`~scvi.train.SemiSupervisedTrainingPlan`. Keyword
             arguments passed to `train()` will overwrite values present in `plan_kwargs`,
             when appropriate.
+        datamodule
+            ``EXPERIMENTAL`` A :class:`~lightning.pytorch.core.LightningDataModule` instance to use
+            for training in place of the default :class:`~scvi.dataloaders.DataSplitter`. Can only
+            be passed in if the model was not initialized with :class:`~anndata.AnnData`.
         **trainer_kwargs
             Other keyword args for :class:`~scvi.train.Trainer`.
         """
+        # A totalanvi patch
+        if type(self).__name__ == "TOTALANVI":
+            self._training_plan_cls = SemiSupervisedAdversarialTrainingPlan
+            if adversarial_classifier is None:
+                adversarial_classifier = self._use_adversarial_classifier  # from totalvi
+            update_dict = {"adversarial_classifier": adversarial_classifier}
+            if plan_kwargs is not None:
+                plan_kwargs.update(update_dict)
+            else:
+                plan_kwargs = update_dict
+
         if max_epochs is None:
             max_epochs = get_max_epochs_heuristic(self.adata.n_obs)
 
@@ -377,19 +428,26 @@ class SemisupervisedTrainingMixin:
         plan_kwargs = {} if plan_kwargs is None else plan_kwargs
         datasplitter_kwargs = datasplitter_kwargs or {}
 
-        # if we have labeled cells, we want to subsample labels each epoch
-        sampler_callback = [SubSampleLabels()] if len(self._labeled_indices) != 0 else []
+        if datamodule is None:
+            # if we have labeled cells, we want to subsample labels each epoch
+            sampler_callback = [SubSampleLabels()] if len(self._labeled_indices) != 0 else []
 
-        data_splitter = SemiSupervisedDataSplitter(
-            adata_manager=self.adata_manager,
-            train_size=train_size,
-            validation_size=validation_size,
-            shuffle_set_split=shuffle_set_split,
-            n_samples_per_label=n_samples_per_label,
-            distributed_sampler=use_distributed_sampler(trainer_kwargs.get("strategy", None)),
-            batch_size=batch_size,
-            **datasplitter_kwargs,
-        )
+            datasplitter_kwargs = datasplitter_kwargs or {}
+            datamodule = self._data_splitter_cls(
+                adata_manager=self.adata_manager,
+                datamodule=datamodule,
+                train_size=train_size,
+                validation_size=validation_size,
+                shuffle_set_split=shuffle_set_split,
+                n_samples_per_label=n_samples_per_label,
+                distributed_sampler=use_distributed_sampler(trainer_kwargs.get("strategy", None)),
+                batch_size=batch_size,
+                **datasplitter_kwargs,
+            )
+        else:
+            Warning("Warning: SCANVI sampler is not available with custom dataloader")
+            sampler_callback = []
+
         training_plan = self._training_plan_cls(self.module, self.n_labels, **plan_kwargs)
 
         if "callbacks" in trainer_kwargs.keys():
@@ -397,10 +455,10 @@ class SemisupervisedTrainingMixin:
         else:
             trainer_kwargs["callbacks"] = sampler_callback
 
-        runner = TrainRunner(
+        runner = self._train_runner_cls(
             self,
             training_plan=training_plan,
-            data_splitter=data_splitter,
+            data_splitter=datamodule,
             max_epochs=max_epochs,
             accelerator=accelerator,
             devices=devices,
@@ -409,14 +467,17 @@ class SemisupervisedTrainingMixin:
         )
         return runner()
 
-    def get_ranked_genes(
+    def get_ranked_markers(
         self, adata: AnnOrMuData | None = None, attrs: np.ndarray | None = None
     ) -> pd.DataFrame:
         """Get the ranked gene list based on highest attributions.
 
         Parameters
         ----------
-        attr: numpy.ndarray
+        adata
+            AnnData or MuData object that has been registered via corresponding setup
+            method in model class.
+        attrs: numpy.ndarray
             Attributions matrix.
 
         Returns
@@ -426,7 +487,7 @@ class SemisupervisedTrainingMixin:
 
         Examples
         --------
-        >>> attrs_df = interpreter.get_ranked_genes(attrs)
+        >>> attrs_df = model.get_ranked_markers(attrs)
         """
         if attrs is None:
             Warning("Missing Attributions matrix")
@@ -434,21 +495,83 @@ class SemisupervisedTrainingMixin:
 
         adata = self._validate_anndata(adata)
 
+        # IG results
         mean_attrs = attrs.mean(axis=0)
-        idx = mean_attrs.argsort()[::-1]
+        std_attrs = attrs.std(axis=0)
+        idx = mean_attrs.argsort()[::-1] - 1  # their rank
+
+        # check how to populate this markers table
+        # self.view_anndata_setup(adata)
+        # self._model_summary_string
+        # self._get_user_attributes()
+        # self.registry_['field_registries']
+        if type(adata).__name__ == "MuData":
+            # a multimodality in mudata format
+            mod_list = adata.mod_names
+            markes_list = np.array([])
+            modality = np.array([])
+            for mod in mod_list:
+                for layer in adata[mod].layers:
+                    tmp_mod = mod + "_" + layer
+                    markes_list = np.concatenate(
+                        (
+                            markes_list,
+                            self.registry_["field_registries"][tmp_mod]["state_registry"][
+                                "column_names"
+                            ],
+                        )
+                    )
+                    modality = np.concatenate(
+                        (
+                            modality,
+                            [tmp_mod]
+                            * len(
+                                self.registry_["field_registries"][tmp_mod]["state_registry"][
+                                    "column_names"
+                                ]
+                            ),
+                        )
+                    )
+            markes_list = markes_list[idx]
+            modality = modality[idx]
+        else:
+            # a single modality in adata format
+            modality = None
+            markes_list = np.array([])
+            if "X" in self.registry_["field_registries"].keys():
+                markes_list = np.concatenate(
+                    (
+                        markes_list,
+                        self.registry_["field_registries"]["X"]["state_registry"]["column_names"],
+                    )
+                )
+            if "proteins" in self.registry_["field_registries"].keys():
+                markes_list = np.concatenate(
+                    (
+                        markes_list,
+                        self.registry_["field_registries"]["proteins"]["state_registry"][
+                            "column_names"
+                        ],
+                    )
+                )
+            markes_list = markes_list[idx]
+
         df = {
-            "gene": np.array(adata.var_names)[idx],
-            "gene_idx": idx,
+            "marker": markes_list,
+            "marker_idx": idx,
+            "modality": modality,
             "attribution_mean": mean_attrs[idx],
-            "attribution_std": attrs.std(axis=0)[idx],
+            "attribution_std": std_attrs[idx],
             "cells": attrs.shape[0],
         }
-        return pd.DataFrame(df)
+        df = pd.DataFrame(df).sort_values("attribution_mean", ascending=False)
+        return df
 
     def shap_adata_predict(
         self,
         X,
-    ):
+    ) -> (np.ndarray | pd.DataFrame, None | np.ndarray):
+        """SHAP Operator (gives soft predictions gives data X)"""
         adata = self._validate_anndata()
 
         # we need to adjust adata to the shap random selection ..
@@ -466,7 +589,13 @@ class SemisupervisedTrainingMixin:
 
         return self.predict(adata_to_pred, soft=True)
 
-    def shap_predict(self, adata: AnnOrMuData | None = None, max_size: int = 100):
+    def shap_predict(
+        self,
+        adata: AnnOrMuData | None = None,
+        indices: Sequence[int] | None = None,
+        shap_args: dict | None = None,
+    ) -> (np.ndarray | pd.DataFrame, None | np.ndarray):
+        """Run SHAP interpreter for a trained model and gives back shap values"""
         missing_modules = []
         try:
             importlib.import_module("shap")
@@ -476,8 +605,13 @@ class SemisupervisedTrainingMixin:
             raise ModuleNotFoundError("Please install shap to use this functionality.")
         import shap
 
+        shap_args = shap_args or {}
+
         adata_orig = self._validate_anndata()
         adata = self._validate_anndata(adata)
+        if indices is not None:
+            adata = adata[indices]
+            adata = self._validate_anndata(adata)
 
         if type(adata_orig.X).__name__ == "csr_matrix":
             feature_matrix_background = pd.DataFrame.sparse.from_spmatrix(
@@ -491,8 +625,8 @@ class SemisupervisedTrainingMixin:
             )
         else:
             feature_matrix = pd.DataFrame(adata.X, columns=adata_orig.var_names)
-        feature_matrix_background = shap.sample(feature_matrix_background, max_size)
-        feature_matrix = shap.sample(feature_matrix, max_size)
-        explainer = shap.KernelExplainer(self.shap_adata_predict, feature_matrix_background)
-        shap_values = explainer.shap_values(feature_matrix)
+        explainer = shap.KernelExplainer(
+            self.shap_adata_predict, feature_matrix_background, **shap_args
+        )
+        shap_values = explainer.shap_values(feature_matrix, **shap_args)
         return shap_values

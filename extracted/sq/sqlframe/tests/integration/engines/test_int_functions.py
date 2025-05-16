@@ -172,7 +172,7 @@ def test_col(get_session_and_func, input, output):
         ([1, 2, 3], "array<bigint>"),
         (Row(a=1), "struct<a:bigint>"),
         (datetime.date(2022, 1, 1), "date"),
-        (datetime.datetime(2022, 1, 1, 0, 0, 0), "timestamptz"),
+        (datetime.datetime(2022, 1, 1, 0, 0, 0), "timestampntz"),
         (datetime.datetime(2022, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc), "timestamptz"),
         (True, "boolean"),
         (bytes("test", "utf-8"), "binary"),
@@ -188,9 +188,15 @@ def test_typeof(get_session_and_func, get_types, arg, expected):
         if isinstance(session, PySparkSession)
         else dialect_to_string(session.execution_dialect)
     )
-    if isinstance(session, (SparkSession, PySparkSession, DatabricksSession)):
+    if isinstance(session, (SparkSession, PySparkSession, DatabricksSession, BigQuerySession)):
         if expected == "timestamptz":
             expected = "timestamp"
+    if isinstance(session, PostgresSession):
+        if expected == "timestampntz":
+            expected = "timestamp"
+    if isinstance(session, BigQuerySession):
+        if expected == "timestampntz":
+            expected = "datetime"
     if isinstance(session, DuckDBSession):
         if expected == "binary":
             pytest.skip("DuckDB doesn't support binary")
@@ -218,6 +224,10 @@ def test_typeof(get_session_and_func, get_types, arg, expected):
             expected = "object"
         elif expected.startswith("array"):
             pytest.skip("Snowflake doesn't handle arrays properly in values clause")
+    # https://github.com/eakmanrq/sqlframe/issues/383#issuecomment-2870750972
+    if isinstance(session, PySparkSession):
+        if expected == "timestampntz":
+            expected = "timestamp"
     result = df.select(typeof("col").alias("test")).first()[0]
     assert exp.DataType.build(result, dialect=dialect) == exp.DataType.build(
         expected, dialect=dialect
@@ -3505,9 +3515,11 @@ def test_character_length(get_session_and_func, get_func):
 
 def test_contains(get_session_and_func, get_func):
     session, contains = get_session_and_func("contains")
-    to_binary = get_func("to_binary", session)
+    if isinstance(session, BigQuerySession):
+        pytest.skip("BigQuery just supports constaints for the contains function")
     df = session.createDataFrame([("Spark SQL", "Spark")], ["a", "b"])
     assert df.select(contains(df.a, df.b).alias("r")).collect() == [Row(r=True)]
+    to_binary = get_func("to_binary", session)
     df = session.createDataFrame(
         [
             (

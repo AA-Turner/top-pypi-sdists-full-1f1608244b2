@@ -1,6 +1,6 @@
 Metadata-Version: 2.2
 Name: static-frame
-Version: 2.18.1
+Version: 3.0.0
 Summary: Immutable and statically-typeable DataFrames with runtime type and data validation.
 Home-page: https://github.com/static-frame/static-frame
 Author: Christopher Ariza
@@ -15,32 +15,28 @@ Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: MacOS :: MacOS X
 Classifier: Operating System :: Microsoft :: Windows
 Classifier: Operating System :: POSIX
-Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Classifier: Typing :: Typed
-Requires-Python: >=3.9
+Requires-Python: >=3.10
+Description-Content-Type: text/x-rst
 License-File: LICENSE.txt
 Requires-Dist: numpy>=1.23.5
-Requires-Dist: arraymap==0.4.0
-Requires-Dist: arraykit==0.10.0
+Requires-Dist: arraykit==1.0.8
 Requires-Dist: typing-extensions>=4.12.0
 Provides-Extra: extras
 Requires-Dist: pandas>=1.1.5; extra == "extras"
-Requires-Dist: duckdb>=1.0.0; extra == "extras"
 Requires-Dist: xlsxwriter>=1.1.2; extra == "extras"
 Requires-Dist: openpyxl>=3.0.9; extra == "extras"
 Requires-Dist: xarray>=0.13.0; extra == "extras"
-Requires-Dist: tables>=3.9.1; extra == "extras"
 Requires-Dist: pyarrow>=3.0.0; extra == "extras"
-Requires-Dist: msgpack>=1.0.4; extra == "extras"
-Requires-Dist: msgpack-numpy>=0.4.8; extra == "extras"
 Requires-Dist: visidata>=2.4; extra == "extras"
 Dynamic: author
 Dynamic: classifier
 Dynamic: description
+Dynamic: description-content-type
 Dynamic: home-page
 Dynamic: keywords
 Dynamic: license
@@ -58,11 +54,11 @@ Among the many Python DataFrame libraries, StaticFrame is an alternative that pr
 * 🚦 Runtime Validation: Use type hints and specialized validators for runtime type and data checks.
 * 🧭 Consistent Interface: An easy-to-learn, hierarchical, and intuitive API that avoids the many inconsistencies of Pandas.
 * 🧬 Comprehensive ``dtype`` Support: Full compatibility with all NumPy dtypes and datetime64 units.
-* 🔗 Broad Interoperability: Translate between Pandas, DuckDB, Arrow, Parquet, CSV, TSV, JSON, MessagePack, Excel XLSX, SQLite, HDF5, and NumPy; output to xarray, VisiData, HTML, RST, Markdown, LaTeX, and Jupyter notebooks.
+* 🔗 Broad Interoperability: Translate between Pandas, Arrow, Parquet, CSV, TSV, JSON, Excel XLSX, SQLite, and NumPy; output to xarray, VisiData, HTML, RST, Markdown, LaTeX, and Jupyter notebooks.
 * 🚀 Optimized Serialization & Memory Mapping: Fast disk I/O with custom NPZ and NPY encodings.
 * 💼 Multi-Table Containers: The ``Bus`` and ``Yarn`` provide interfaces to collections of tables with lazy data loading, well-suited for large datasets.
 * ⏳ Deferred Processing: The ``Batch`` provides a common interface for deferred processing of groups, windows, or any iterator.
-* 🪶 Lean Dependencies: Core functionality relies only on NumPy and team-maintained C-extensions.
+* 🪶 Lean Dependencies: Core functionality relies only on NumPy and a team-maintained C-extension.
 * 📚 Comprehensive Documentation: All API endpoints documented with thousands of easily runnable examples.
 
 
@@ -110,20 +106,17 @@ Dependencies
 
 Core StaticFrame requires the following:
 
-- Python>=3.9
-- numpy>=1.23.5 (numpy>=2 is supported)
-- arraymap==0.4.0
-- arraykit==0.10.0
+- Python>=3.10
+- numpy>=1.24.3 (numpy>=2 is supported)
+- arraykit==1.0.8
 - typing-extensions>=4.12.0
 
 For extended input and output, the following packages are required:
 
 - pandas>=1.1.5
-- duckdb>=1.0.0
 - xlsxwriter>=1.1.2
 - openpyxl>=3.0.9
 - xarray>=0.13.0
-- tables>=3.9.1
 - pyarrow>=3.0.0
 - visidata>=2.4
 

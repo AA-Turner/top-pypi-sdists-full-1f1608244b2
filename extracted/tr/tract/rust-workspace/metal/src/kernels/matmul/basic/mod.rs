@@ -1,7 +1,6 @@
 use crate::kernels::matmul::{GemmDispatchParams, GemmKernel};
-use crate::{LibraryName, MetalContext};
+use crate::{LibraryName, MetalStream};
 use anyhow::bail;
-use anyhow::Result;
 use derive_new::new;
 use metal::{Buffer, MTLSize, NSUInteger};
 use std::fmt;
@@ -17,7 +16,7 @@ impl GemmKernel for BasicMatMul {
 
     fn dispatch_eval(
         &self,
-        context: &MetalContext,
+        stream: &MetalStream,
         params: GemmDispatchParams,
         a_buffer: &Buffer,
         b_buffer: &Buffer,
@@ -57,11 +56,11 @@ impl GemmKernel for BasicMatMul {
             let c_offset = c_offset + b_idx * m * n * dt.size_of();
             if n == 1 && !transpose_a && !transpose_b {
                 Self::metal_mat_vec(
-                    context, dt, m, k, a_buffer, a_offset, b_buffer, b_offset, c_buffer, c_offset,
+                    stream, dt, m, k, a_buffer, a_offset, b_buffer, b_offset, c_buffer, c_offset,
                 )?;
             } else {
                 Self::metal_mat_mul(
-                    context,
+                    stream,
                     dt,
                     m,
                     k,
@@ -88,7 +87,7 @@ impl fmt::Display for BasicMatMul {
 }
 
 impl BasicMatMul {
-    pub fn tname(dt: DatumType) -> Result<&'static str> {
+    pub fn tname(dt: DatumType) -> TractResult<&'static str> {
         let tname = match dt {
             DatumType::F32 => "f32",
             DatumType::F16 => "f16",
@@ -97,7 +96,7 @@ impl BasicMatMul {
         Ok(tname)
     }
 
-    pub fn kernel_name(dt: DatumType, mat_vec: bool) -> Result<String> {
+    pub fn kernel_name(dt: DatumType, mat_vec: bool) -> TractResult<String> {
         let tname = Self::tname(dt)?;
         if mat_vec {
             Ok(format!("matmul::basic_matvec_{tname}"))
@@ -108,7 +107,7 @@ impl BasicMatMul {
 
     #[allow(clippy::too_many_arguments)]
     pub fn metal_mat_vec(
-        context: &MetalContext,
+        stream: &MetalStream,
         dt: DatumType,
         m: usize,
         k: usize,
@@ -118,12 +117,11 @@ impl BasicMatMul {
         rhs_offset: usize,
         output: &Buffer,
         output_offset: usize,
-    ) -> Result<()> {
-        let pipeline = context
-            .shared_context()
-            .load_pipeline(LibraryName::BasicMatMul, &Self::kernel_name(dt, true)?)?;
+    ) -> TractResult<()> {
+        let pipeline =
+            stream.load_pipeline(LibraryName::BasicMatMul, &Self::kernel_name(dt, true)?)?;
 
-        let command_buffer = context.command_buffer();
+        let command_buffer = stream.command_buffer();
         command_buffer.encode(|encoder| {
             encoder.set_compute_pipeline_state(&pipeline);
             encoder.set_buffer(0, Some(lhs_buffer), lhs_offset as _);
@@ -146,7 +144,7 @@ impl BasicMatMul {
 
     #[allow(clippy::too_many_arguments)]
     pub fn metal_mat_mul(
-        context: &MetalContext,
+        stream: &MetalStream,
         dt: DatumType,
         m: usize,
         k: usize,
@@ -159,12 +157,11 @@ impl BasicMatMul {
         rhs_transpose: bool,
         output: &Buffer,
         output_offset: usize,
-    ) -> Result<()> {
-        let pipeline = context
-            .shared_context()
-            .load_pipeline(LibraryName::BasicMatMul, &Self::kernel_name(dt, false)?)?;
+    ) -> TractResult<()> {
+        let pipeline =
+            stream.load_pipeline(LibraryName::BasicMatMul, &Self::kernel_name(dt, false)?)?;
 
-        let command_buffer = context.command_buffer();
+        let command_buffer = stream.command_buffer();
         command_buffer.encode(|encoder| {
             encoder.set_compute_pipeline_state(&pipeline);
             encoder.set_buffer(0, Some(lhs_buffer), lhs_offset as _);

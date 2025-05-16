@@ -160,3 +160,23 @@ class CodeVariableValue(_message.Message):
         variable: _Optional[_Union[CodeVariable, _Mapping]] = ...,
         value: _Optional[_Union[SymbolicConst, _Mapping]] = ...,
     ) -> None: ...
+
+class GlobalVariablesInfo(_message.Message):
+    __slots__ = ("code_variables", "environment_variables")
+    class EnvironmentVariablesEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: str
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
+
+    CODE_VARIABLES_FIELD_NUMBER: _ClassVar[int]
+    ENVIRONMENT_VARIABLES_FIELD_NUMBER: _ClassVar[int]
+    code_variables: _containers.RepeatedCompositeFieldContainer[CodeVariableValue]
+    environment_variables: _containers.ScalarMap[str, str]
+    def __init__(
+        self,
+        code_variables: _Optional[_Iterable[_Union[CodeVariableValue, _Mapping]]] = ...,
+        environment_variables: _Optional[_Mapping[str, str]] = ...,
+    ) -> None: ...

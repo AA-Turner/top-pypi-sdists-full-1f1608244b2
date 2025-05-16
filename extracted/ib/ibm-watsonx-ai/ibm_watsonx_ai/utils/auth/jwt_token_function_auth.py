@@ -34,7 +34,7 @@ class JWTTokenFunctionAuth(RefreshableTokenAuth):
         on_token_refresh: Callable[[], None] | None = None,
     ) -> None:
         RefreshableTokenAuth.__init__(
-            self, api_client, on_token_creation, on_token_refresh, timedelta(minutes=50)
+            self, api_client, on_token_creation, on_token_refresh
         )
 
         if (

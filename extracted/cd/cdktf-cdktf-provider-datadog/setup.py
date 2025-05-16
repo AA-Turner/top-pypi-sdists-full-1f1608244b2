@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-datadog",
-    "version": "11.25.0",
+    "version": "11.26.0",
     "description": "Prebuilt datadog Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-datadog.git",
@@ -142,6 +142,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_datadog.security_monitoring_default_rule",
         "cdktf_cdktf_provider_datadog.security_monitoring_filter",
         "cdktf_cdktf_provider_datadog.security_monitoring_rule",
+        "cdktf_cdktf_provider_datadog.security_monitoring_rule_json",
         "cdktf_cdktf_provider_datadog.security_monitoring_suppression",
         "cdktf_cdktf_provider_datadog.security_notification_rule",
         "cdktf_cdktf_provider_datadog.sensitive_data_scanner_group",
@@ -170,7 +171,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_datadog._jsii": [
-            "provider-datadog@11.25.0.jsii.tgz"
+            "provider-datadog@11.26.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_datadog": [
             "py.typed"

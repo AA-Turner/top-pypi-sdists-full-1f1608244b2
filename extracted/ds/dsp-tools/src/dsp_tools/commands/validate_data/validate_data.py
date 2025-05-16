@@ -24,11 +24,13 @@ from dsp_tools.commands.validate_data.query_validation_result import reformat_va
 from dsp_tools.commands.validate_data.sparql.construct_shacl import construct_shapes_graphs
 from dsp_tools.commands.validate_data.utils import reformat_onto_iri
 from dsp_tools.commands.validate_data.validate_ontology import validate_ontology
+from dsp_tools.utils.ansi_colors import BACKGROUND_BOLD_CYAN
 from dsp_tools.utils.ansi_colors import BACKGROUND_BOLD_GREEN
 from dsp_tools.utils.ansi_colors import BACKGROUND_BOLD_RED
 from dsp_tools.utils.ansi_colors import BACKGROUND_BOLD_YELLOW
 from dsp_tools.utils.ansi_colors import BOLD_CYAN
 from dsp_tools.utils.ansi_colors import BOLD_RED
+from dsp_tools.utils.ansi_colors import BOLD_YELLOW
 from dsp_tools.utils.ansi_colors import RESET_TO_DEFAULT
 from dsp_tools.utils.rdflib_constants import KNORA_API_STR
 from dsp_tools.utils.xml_parsing.get_lookups import get_authorship_lookup
@@ -54,9 +56,24 @@ def validate_data(filepath: Path, api_url: str, save_graphs: bool) -> bool:
     Returns:
         true unless it crashed
     """
+    graphs, used_iris = _prepare_data_for_validation_from_file(api_url, filepath)
+    return _validate_data(graphs, used_iris, api_url, filepath, save_graphs)
 
-    graphs, used_iris = _get_parsed_graphs(api_url, filepath)
 
+def validate_parsed_resources(
+    parsed_resources: list[ParsedResource],
+    authorship_lookup: dict[str, list[str]],
+    api_url: str,
+    shortcode: str,
+    input_filepath: Path,
+) -> bool:
+    rdf_graphs, used_iris = _prepare_data_for_validation_from_parsed_resource(
+        parsed_resources, authorship_lookup, api_url, shortcode
+    )
+    return _validate_data(rdf_graphs, used_iris, api_url, input_filepath, False)
+
+
+def _validate_data(graphs: RDFGraphs, used_iris: set[str], api_url: str, filepath: Path, save_graphs: bool) -> bool:
     if unknown_classes := _check_for_unknown_resource_classes(graphs, used_iris):
         msg = _get_msg_str_unknown_classes_in_data(unknown_classes)
         logger.info(msg)
@@ -64,12 +81,10 @@ def validate_data(filepath: Path, api_url: str, save_graphs: bool) -> bool:
         print(msg)
         # if unknown classes are found, we cannot validate all the data in the file
         return False
-
     shacl_validator = ShaclValidator(api_url)
     save_path = None
     if save_graphs:
         save_path = _get_save_directory(filepath)
-
     onto_validation_result = validate_ontology(graphs.ontos, shacl_validator, save_path)
     if onto_validation_result:
         msg = _get_msg_str_ontology_validation_violation(onto_validation_result)
@@ -78,7 +93,6 @@ def validate_data(filepath: Path, api_url: str, save_graphs: bool) -> bool:
         print(msg)
         # if the ontology itself has errors, we will not validate the data
         return False
-
     report = _get_validation_result(graphs, shacl_validator, save_path)
     if report.conforms:
         logger.info("Validation passed.")
@@ -87,7 +101,45 @@ def validate_data(filepath: Path, api_url: str, save_graphs: bool) -> bool:
     reformatted = reformat_validation_graph(report)
     sorted_problems = sort_user_problems(reformatted)
     _print_shacl_validation_violation_message(sorted_problems, report, filepath, save_graphs)
-    return any([bool(sorted_problems.unique_violations), bool(sorted_problems.unexpected_shacl_validation_components)])
+    no_problems = not any(
+        [
+            bool(sorted_problems.unique_violations),
+            bool(sorted_problems.unexpected_shacl_validation_components),
+        ]
+    )
+    return no_problems
+
+
+def _prepare_data_for_validation_from_file(api_url: str, filepath: Path) -> tuple[RDFGraphs, set[str]]:
+    parsed_resources, shortcode, authorship_lookup = _get_info_from_xml(filepath, api_url)
+    return _prepare_data_for_validation_from_parsed_resource(parsed_resources, authorship_lookup, api_url, shortcode)
+
+
+def _get_info_from_xml(file: Path, api_url: str) -> tuple[list[ParsedResource], str, dict[str, list[str]]]:
+    root = parse_and_clean_xml_file(file)
+    shortcode = root.attrib["shortcode"]
+    authorship_lookup = get_authorship_lookup(root)
+    parsed_resources = get_parsed_resources(root, api_url)
+    return parsed_resources, shortcode, authorship_lookup
+
+
+def _prepare_data_for_validation_from_parsed_resource(
+    parsed_resources: list[ParsedResource], authorship_lookup: dict[str, list[str]], api_url: str, shortcode: str
+) -> tuple[RDFGraphs, set[str]]:
+    used_iris = {x.res_type for x in parsed_resources}
+    data_rdf = _make_data_graph_from_parsed_resources(parsed_resources, authorship_lookup)
+    onto_client = OntologyClient(api_url, shortcode)
+    list_client = ListClient(api_url, shortcode)
+    rdf_graphs = _create_graphs(onto_client, list_client, data_rdf)
+    return rdf_graphs, used_iris
+
+
+def _make_data_graph_from_parsed_resources(
+    parsed_resources: list[ParsedResource], authorship_lookup: dict[str, list[str]]
+) -> Graph:
+    rdf_like_data = get_rdf_like_data(parsed_resources, authorship_lookup)
+    rdf_data = make_data_graph(rdf_like_data)
+    return rdf_data
 
 
 def _get_msg_str_unknown_classes_in_data(unknown: UnknownClassesInData) -> str:
@@ -139,77 +191,52 @@ def _print_shacl_validation_violation_message(
 ) -> None:
     messages = get_user_message(sorted_problems, filepath)
     if messages.violations:
-        logger.info(messages.violations)
+        logger.error(messages.violations.message_header, messages.violations.message_body)
         print(VALIDATION_ERRORS_FOUND_MSG)
-        print(messages.violations)
+        print(BOLD_RED, messages.violations.message_header, RESET_TO_DEFAULT)
+        print(messages.violations.message_body)
     if messages.warnings:
-        logger.info(messages.warnings)
-        print(
-            BACKGROUND_BOLD_YELLOW
-            + "\n    Problems were found that do not impede a successful xmlupload but may do so in the future."
-            + RESET_TO_DEFAULT
-        )
-        print(messages.warnings)
+        logger.warning(messages.warnings.message_header, messages.warnings.message_body)
+        print(BACKGROUND_BOLD_YELLOW + "\n    Warning!    " + RESET_TO_DEFAULT)
+        print(BOLD_YELLOW, messages.warnings.message_header, RESET_TO_DEFAULT)
+        print(messages.warnings.message_body)
     if messages.infos:
-        logger.info(messages.infos)
-        print(BACKGROUND_BOLD_YELLOW + "\n    Potential Problems Found" + RESET_TO_DEFAULT)
-        print(messages.infos)
-    if sorted_problems.unexpected_shacl_validation_components:
+        logger.info(messages.infos.message_header, messages.infos.message_body)
+        print(BACKGROUND_BOLD_CYAN + "\n    Potential Problems Found    " + RESET_TO_DEFAULT)
+        print(BOLD_CYAN, messages.infos.message_header, RESET_TO_DEFAULT)
+        print(messages.infos.message_body)
+    if messages.unexpected_violations:
+        logger.error(messages.unexpected_violations.message_header, messages.unexpected_violations.message_body)
+        print(
+            BACKGROUND_BOLD_RED,
+            "\n    Unknown violations found!   ",
+            RESET_TO_DEFAULT,
+        )
         if save_graphs:
-            unexpected_violations_msg = "Unexpected violations were found! Consult the saved graphs for details."
-            logger.info(unexpected_violations_msg)
-            print(BACKGROUND_BOLD_YELLOW + unexpected_violations_msg + RESET_TO_DEFAULT)
-        else:
-            _save_unexpected_results_and_inform_user(
-                sorted_problems.unexpected_shacl_validation_components, report, filepath
+            print(
+                BOLD_RED,
+                messages.unexpected_violations.message_header,
+                "Consult the saved graphs for details.",
+                RESET_TO_DEFAULT,
             )
+            print(messages.unexpected_violations.message_body)
+        else:
+            _save_unexpected_results_and_inform_user(report, filepath)
 
 
-def _save_unexpected_results_and_inform_user(
-    components: list[str], report: ValidationReportGraphs, filepath: Path
-) -> None:
+def _save_unexpected_results_and_inform_user(report: ValidationReportGraphs, filepath: Path) -> None:
     timestamp = f"{datetime.now()!s}_"
-    components = sorted(components)
     save_path = filepath.parent / f"{timestamp}_validation_result.ttl"
     report.validation_graph.serialize(save_path)
     shacl_p = filepath.parent / f"{timestamp}_shacl.ttl"
     report.shacl_graph.serialize(shacl_p)
     data_p = filepath.parent / f"{timestamp}_data.ttl"
     report.data_graph.serialize(data_p)
-    logger.info(f"Unexpected components found: {', '.join(components)}")
     msg = (
-        f"Unexpected violations were found in the validation results:"
-        f"{LIST_SEPARATOR}{LIST_SEPARATOR.join(components)}\n"
-        f"Please contact the development team with the files starting with the timestamp '{timestamp}' "
+        f"\nPlease contact the development team with the files starting with the timestamp '{timestamp}' "
         f"in the directory '{filepath.parent}'."
     )
     print(BOLD_RED + msg + RESET_TO_DEFAULT)
-
-
-def _get_parsed_graphs(api_url: str, filepath: Path) -> tuple[RDFGraphs, set[str]]:
-    parsed_resources, shortcode, authorship_lookup = _get_info_from_xml(filepath, api_url)
-    used_iris = {x.res_type for x in parsed_resources}
-    data_rdf = _make_data_graph_from_parsed_resources(parsed_resources, authorship_lookup)
-    onto_client = OntologyClient(api_url, shortcode)
-    list_client = ListClient(api_url, shortcode)
-    rdf_graphs = _create_graphs(onto_client, list_client, data_rdf)
-    return rdf_graphs, used_iris
-
-
-def _get_info_from_xml(file: Path, api_url: str) -> tuple[list[ParsedResource], str, dict[str, list[str]]]:
-    root = parse_and_clean_xml_file(file)
-    shortcode = root.attrib["shortcode"]
-    authorship_lookup = get_authorship_lookup(root)
-    parsed_resources = get_parsed_resources(root, api_url)
-    return parsed_resources, shortcode, authorship_lookup
-
-
-def _make_data_graph_from_parsed_resources(
-    parsed_resources: list[ParsedResource], authorship_lookup: dict[str, list[str]]
-) -> Graph:
-    rdf_like_data = get_rdf_like_data(parsed_resources, authorship_lookup)
-    rdf_data = make_data_graph(rdf_like_data)
-    return rdf_data
 
 
 def _check_for_unknown_resource_classes(

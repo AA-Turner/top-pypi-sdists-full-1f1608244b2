@@ -1,8 +1,9 @@
 use crate::kernels::array::{Memcpy, PermuteAxes};
 use crate::ops::MetalEvalOp;
-use crate::{MetalContext, MetalTensorExt};
+use crate::MetalStream;
 use std::fmt::Debug;
 use tract_core::internal::*;
+use tract_gpu::tensor::DeviceTensorExt;
 use tract_itertools::Itertools;
 
 #[derive(Clone, Hash, PartialEq)]
@@ -15,7 +16,7 @@ impl MetalAxisOp {
         Self(op)
     }
 
-    fn simplify_axis_op(op: AxisOp, dims: &[TDim]) -> Self {
+    pub fn simplify_axis_op(op: AxisOp, dims: &[TDim]) -> Self {
         match op {
             AxisOp::Move(from, to) if from.abs_diff(to) == 1 => {
                 if [&dims[from], &dims[to]].contains(&&1usize.into()) {
@@ -35,6 +36,20 @@ impl MetalAxisOp {
                 } else {
                     Self(op)
                 }
+            }
+            AxisOp::Move(from, to) if dims[from] == TDim::Val(1) => {
+                let (start, end) = if from < to { (from, to) } else { (to, from) };
+                let mut out_dims = dims[start..=end].to_vec();
+
+                if from < to {
+                    let tmp = out_dims.remove(0);
+                    out_dims.push(tmp);
+                } else {
+                    let tmp = out_dims.pop().unwrap();
+                    out_dims.insert(0, tmp);
+                }
+
+                Self(AxisOp::Reshape(start, dims[start..=end].into(), out_dims.into()))
             }
             _ => Self(op),
         }
@@ -83,13 +98,13 @@ crate::impl_eval_op_for_metal_op!(MetalAxisOp);
 impl MetalEvalOp for MetalAxisOp {
     fn metal_eval(
         &self,
-        context: &MetalContext,
+        stream: &MetalStream,
         node_id: usize,
         session: &mut SessionState,
         inputs: TVec<TValue>,
     ) -> TractResult<TVec<TValue>> {
         let opaque = args_1!(inputs).into_tensor();
-        let input = opaque.to_metal_tensor()?;
+        let input = opaque.to_device_tensor()?;
         let shape = input.shape();
 
         // Try simplifying op once symbols are resolved
@@ -108,7 +123,7 @@ impl MetalEvalOp for MetalAxisOp {
                     input.datum_type(),
                     &PermuteAxes::output_shape(input.shape(), &permutation)?,
                 )?;
-                PermuteAxes.dispatch_eval(context, input, &permutation, &output)?;
+                PermuteAxes.dispatch_eval(stream, input, &permutation, &output)?;
                 return Ok(tvec!(output.into_opaque_tensor().into_tvalue()));
             }
             AxisOp::Reshape(skip, from, to) => {
@@ -130,7 +145,7 @@ impl MetalEvalOp for MetalAxisOp {
         let output =
             crate::ops::make_tensor_for_node(session, node_id, input.datum_type(), &new_shape)?;
 
-        Memcpy.dispatch_eval(context, input, 0, &output)?;
+        Memcpy.dispatch_eval(stream, input, 0, &output)?;
         Ok(tvec!(output.into_opaque_tensor().into_tvalue()))
     }
 }
@@ -139,8 +154,8 @@ impl TypedOp for MetalAxisOp {
     as_op!();
 
     fn output_facts(&self, inputs: &[&TypedFact]) -> TractResult<TVec<TypedFact>> {
-        crate::utils::metal_facts_from_gpu(inputs, |facts| self.0.output_facts(facts))
-            .with_context(|| anyhow::anyhow!("Error while computing facts for {:?}", self.name()))
+        tract_gpu::utils::facts_to_device_facts(inputs, |facts| self.0.output_facts(facts))
+            .with_context(|| format!("Error while computing facts for {:?}", self.name()))
     }
 
     fn axes_mapping(
@@ -148,8 +163,8 @@ impl TypedOp for MetalAxisOp {
         inputs: &[&TypedFact],
         outputs: &[&TypedFact],
     ) -> TractResult<AxesMapping> {
-        let ref_inputs = crate::utils::metal_facts(inputs, |facts| Ok(facts.to_vec()))?;
-        let ref_outputs = crate::utils::metal_facts(outputs, |facts| Ok(facts.to_vec()))?;
+        let ref_inputs = tract_gpu::utils::get_device_facts(inputs, |facts| Ok(facts.to_vec()))?;
+        let ref_outputs = tract_gpu::utils::get_device_facts(outputs, |facts| Ok(facts.to_vec()))?;
         self.0.axes_mapping(&ref_inputs, &ref_outputs)
     }
 

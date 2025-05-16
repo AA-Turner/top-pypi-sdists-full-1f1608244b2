@@ -160,6 +160,7 @@ class _ZeroTrustAccessShortLivedCertificateState:
         pulumi.set(self, "zone_id", value)
 
 
+@pulumi.type_token("cloudflare:index/zeroTrustAccessShortLivedCertificate:ZeroTrustAccessShortLivedCertificate")
 class ZeroTrustAccessShortLivedCertificate(pulumi.CustomResource):
     @overload
     def __init__(__self__,

@@ -998,6 +998,24 @@ class EvmAttributes(AttrUtil.Attributes):
         disables_build_cache=False
     )
 
+    STORAGE_EXTENSION_ANNOTATION = AttrUtil.AttributeDefinition(
+        arg_type=AttrUtil.AttrArgType.BOOLEAN,
+        argparse_args={
+            'action': AttrUtil.STORE_TRUE
+        },
+        affects_build_cache_key=True,
+        disables_build_cache=False
+    )
+
+    EXTRACT_STORAGE_EXTENSION_ANNOTATION = AttrUtil.AttributeDefinition(
+        arg_type=AttrUtil.AttrArgType.BOOLEAN,
+        argparse_args={
+            'action': AttrUtil.STORE_TRUE
+        },
+        affects_build_cache_key=False,
+        disables_build_cache=False
+    )
+
     OPTIMISTIC_HASHING = AttrUtil.AttributeDefinition(
         arg_type=AttrUtil.AttrArgType.BOOLEAN,
         help_msg="Bound the length of data (with potentially unbounded length) to the value given in "

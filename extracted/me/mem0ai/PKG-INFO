@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: mem0ai
-Version: 0.1.98
+Version: 0.1.99
 Summary: Long-term memory for AI Agents
 Author: Mem0
 Author-email: founders@mem0.ai
@@ -40,6 +40,8 @@ Description-Content-Type: text/markdown
   <a href="https://mem0.dev/DiG">Join Discord</a>
   ·
   <a href="https://mem0.dev/demo">Demo</a>
+  ·
+  <a href="https://mem0.dev/openmemory">OpenMemory</a>
 </p>
 
 <p align="center">

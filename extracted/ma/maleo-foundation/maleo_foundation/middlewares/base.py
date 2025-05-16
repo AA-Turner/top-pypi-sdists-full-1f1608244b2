@@ -13,9 +13,12 @@ from maleo_foundation.enums import BaseEnums
 from maleo_foundation.client.manager import MaleoFoundationClientManager
 from maleo_foundation.models.schemas import BaseGeneralSchemas
 from maleo_foundation.models.responses import BaseResponses
-from maleo_foundation.models.transfers.general.token import MaleoFoundationTokenGeneralTransfers
-from maleo_foundation.models.transfers.parameters.token import MaleoFoundationTokenParametersTransfers
-from maleo_foundation.models.transfers.parameters.signature import MaleoFoundationSignatureParametersTransfers
+from maleo_foundation.models.transfers.general.token \
+    import MaleoFoundationTokenGeneralTransfers
+from maleo_foundation.models.transfers.parameters.token \
+    import MaleoFoundationTokenParametersTransfers
+from maleo_foundation.models.transfers.parameters.signature \
+    import MaleoFoundationSignatureParametersTransfers
 from maleo_foundation.utils.extractor import BaseExtractors
 from maleo_foundation.utils.logging import MiddlewareLogger
 
@@ -89,14 +92,20 @@ class BaseMiddleware(BaseHTTPMiddleware):
                 self._last_cleanup = now
                 self._logger.debug(f"Cleaned up request cache. Removed {len(inactive_ips)} inactive IPs. Current tracked IPs: {len(self._requests)}")
 
-    def _check_rate_limit(self, client_ip:str) -> bool:
+    def _check_rate_limit(
+        self,
+        client_ip:str
+    ) -> bool:
         """Check if the client has exceeded their rate limit"""
         with self._lock:
             now = datetime.now() #* Define current timestamp
             self._last_seen[client_ip] = now #* Update last seen timestamp for this IP
 
             #* Filter requests within the window
-            self._requests[client_ip] = [timestamp for timestamp in self._requests[client_ip] if now - timestamp <= self._window]
+            self._requests[client_ip] = [
+                timestamp for timestamp in self._requests[client_ip]
+                if now - timestamp <= self._window
+            ]
 
             #* Check if the request count exceeds the limit
             if len(self._requests[client_ip]) >= self._limit:
@@ -106,7 +115,11 @@ class BaseMiddleware(BaseHTTPMiddleware):
             self._requests[client_ip].append(now)
             return False
 
-    def _append_cors_headers(self, request:Request, response:Response) -> Response:
+    def _append_cors_headers(
+        self,
+        request:Request,
+        response:Response
+    ) -> Response:
         origin = request.headers.get("Origin")
 
         if origin in self._allow_origins:
@@ -131,18 +144,29 @@ class BaseMiddleware(BaseHTTPMiddleware):
         response.headers["X-Response-Timestamp"] = response_timestamp.isoformat() #* Define and add response timestamp header
         #* Generate signature header
         message = f"{request.method}|{request.url.path}|{request_timestamp.isoformat()}|{response_timestamp.isoformat()}|{str(process_time)}"
-        sign_parameters = MaleoFoundationSignatureParametersTransfers.Sign(key=self._keys.private, password=self._keys.password, message=message)
+        sign_parameters = (
+            MaleoFoundationSignatureParametersTransfers
+            .Sign(key=self._keys.private, password=self._keys.password, message=message)
+        )
         sign_result = self._maleo_foundation.services.signature.sign(parameters=sign_parameters)
         if sign_result.success:
             response.headers["X-Signature"] = sign_result.data.signature
         response = self._append_cors_headers(request=request, response=response) #* Re-append CORS headers
-        if authentication.user.is_authenticated \
-            and authentication.credentials.token_type == BaseEnums.TokenType.REFRESH \
-            and authentication.credentials.payload is not None \
-            and (response.status_code >= 200 and response.status_code < 300):
+        if (authentication.user.is_authenticated
+            and authentication.credentials.token_type == BaseEnums.TokenType.REFRESH
+            and authentication.credentials.payload is not None
+            and (response.status_code >= 200 and response.status_code < 300)
+        ):
             #* Regenerate new authorization
-            payload = MaleoFoundationTokenGeneralTransfers.BaseEncodePayload.model_validate(authentication.credentials.payload.model_dump())
-            parameters = MaleoFoundationTokenParametersTransfers.Encode(key=self._keys.private, password=self._keys.password, payload=payload)
+            payload = (
+                MaleoFoundationTokenGeneralTransfers
+                .BaseEncodePayload
+                .model_validate(authentication.credentials.payload.model_dump())
+            )
+            parameters = (
+                MaleoFoundationTokenParametersTransfers
+                .Encode(key=self._keys.private, password=self._keys.password, payload=payload)
+            )
             result = self._maleo_foundation.services.token.encode(parameters=parameters)
             if result.success:
                 response.headers["X-New-Authorization"] = result.data.token
@@ -160,7 +184,14 @@ class BaseMiddleware(BaseHTTPMiddleware):
         log_level:str = "info",
         client_ip:str = "unknown"
     ) -> Response:
-        response = self._add_response_headers(request, authentication, response, request_timestamp, response_timestamp, process_time)
+        response = self._add_response_headers(
+            request,
+            authentication,
+            response,
+            request_timestamp,
+            response_timestamp,
+            process_time
+        )
         log_func = getattr(self._logger, log_level)
         log_func(
             f"Request {authentication_info} | IP: {client_ip} | Host: {request.client.host} | Port: {request.client.port} | Method: {request.method} | URL: {request.url.path} | "
@@ -199,7 +230,14 @@ class BaseMiddleware(BaseHTTPMiddleware):
             f"Headers: {dict(request.headers)} - Response | Status: 500 | Exception:\n{json.dumps(error_details, indent=4)}"
         )
 
-        return self._add_response_headers(request, authentication, response, request_timestamp, response_timestamp, process_time)
+        return self._add_response_headers(
+            request,
+            authentication,
+            response,
+            request_timestamp,
+            response_timestamp,
+            process_time
+        )
 
     async def _request_processor(self, request:Request) -> Optional[Response]:
         return None

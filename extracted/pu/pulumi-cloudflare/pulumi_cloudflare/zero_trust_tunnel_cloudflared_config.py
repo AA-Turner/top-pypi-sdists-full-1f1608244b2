@@ -193,6 +193,7 @@ class _ZeroTrustTunnelCloudflaredConfigState:
         pulumi.set(self, "version", value)
 
 
+@pulumi.type_token("cloudflare:index/zeroTrustTunnelCloudflaredConfig:ZeroTrustTunnelCloudflaredConfig")
 class ZeroTrustTunnelCloudflaredConfig(pulumi.CustomResource):
     @overload
     def __init__(__self__,

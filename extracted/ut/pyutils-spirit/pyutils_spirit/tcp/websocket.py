@@ -15,7 +15,7 @@ import inspect
 
 from abc import ABC
 
-from pyutils_spirit.style import draw_websocket_banner
+from pyutils_spirit.style.resources import draw_websocket_banner
 
 from logging import info, basicConfig, INFO, exception
 
@@ -33,7 +33,7 @@ class WebSocket(ABC):
 
     __buffer_size: int = None
 
-    __websocket_end_points: set[type] = None
+    websocket_end_points: set[type] = None
 
     __executor: ThreadExecutor = None
 
@@ -42,13 +42,11 @@ class WebSocket(ABC):
     __close_signature = None
 
     @classmethod
-    def __start_server(cls, host, port, other_cls):
+    def start_server(cls, host, port):
         cls.__socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         cls.__listener_count = 100000
         cls.__buffer_size = 4096
-        cls.__websocket_server_class = other_cls
         cls.__executor = ThreadExecutor(executor_count=cls.__listener_count + 1)
-        cls.container = SpiritApplicationContainer()
         cls.__socket_server.bind((host, port))
         cls.__socket_server.listen(cls.__listener_count)
         cls.__executor.execute(cls.__listener_connection)
@@ -254,7 +252,7 @@ class WebSocket(ABC):
                     params: dict[str, str | int] = {}
                     header_str = header_data.decode("utf-8")
                     lines = header_str.split("\r\n")
-                    for end_point_cls in cls.__websocket_end_points:
+                    for end_point_cls in cls.websocket_end_points:
                         signature = getattr(end_point_cls, "__decorator_signature__")
                         paths = lines[0].split(signature)
                         if len(paths) == 2 and paths[0][-1] == " " and paths[1][0] in (" ", "?"):
@@ -422,90 +420,88 @@ class WebSocket(ABC):
                     except Exception as e:
                         exception(e)
 
-    @classmethod
-    def websocket_server(cls, host: str, port: int) -> callable:
 
-        def decorator_handler(other_cls) -> type:
-            draw_websocket_banner()
-            cls.__start_server(host, port, other_cls)
-            other_cls.__decorator__ = "WebSocketServer"
-            other_cls.__decorator_params__ = {
-                "host": host,
-                "port": port
-            }
-            return other_cls
+class WebSocketServer:
+    def __init__(self, host: str, port: int) -> None:
+        if WebSocket.container is None:
+            WebSocket.container = SpiritApplicationContainer()
+        WebSocket.container.set_resource(signature="WebSocketServer", resource=self)
+        self.__host: str = host
+        self.__port: int = port
 
-        return decorator_handler
+    def __call__(self, ws_app_cls: type) -> type:
+        draw_websocket_banner()
+        WebSocket.start_server(host=self.__host, port=self.__port)
+        return ws_app_cls
 
-    @classmethod
-    def endpoint(cls, signature: str) -> callable:
+
+class EndPoint:
+    def __init__(self, signature: str) -> None:
         if not isinstance(signature, str):
             raise TypeError("the signature must be a string")
+        self.__signature: str = signature
 
-        def decorator_handler(other_cls) -> type:
-            other_cls.__decorator__ = "WebSocketServerEndPoint"
-            other_cls.__decorator_signature__ = signature
-            other_cls.partial_data = {}
-            other_cls.message_buffer = {}
-            ws_funcs: dict[str, callable] = {
-                "onopen": None,
-                "onmessage": None,
-                "onerror": None,
-                "onclose": None
-            }
-            for method_name, method in inspect.getmembers(other_cls):
+    def __call__(self, end_point_cls: type) -> type:
+        end_point_cls.__decorator__ = "WebSocketServerEndPoint"
+        end_point_cls.__decorator_signature__ = self.__signature
+        end_point_cls.partial_data = {}
+        end_point_cls.message_buffer = {}
+        ws_funcs: dict[str, callable] = {
+            "onopen": None,
+            "onmessage": None,
+            "onerror": None,
+            "onclose": None
+        }
+        for name, method in inspect.getmembers(end_point_cls):
+            if type(method) in [OnOpen, OnMessage, OnError, OnClose]:
                 decorator = getattr(method, "__decorator__", None)
-                if decorator in ["onopen", "onmessage", "onerror", "onclose"]:
+                if decorator in ["OnOpen", "OnMessage", "OnError", "OnClose"]:
                     ws_funcs[decorator] = method
-            other_cls.ws_funcs = ws_funcs
-            if cls.__websocket_end_points is None:
-                cls.__websocket_end_points = set()
-            cls.__websocket_end_points.add(other_cls)
-            return other_cls
-
-        return decorator_handler
-
-    @classmethod
-    def onopen(cls) -> callable:
-        def decorator_handler(func) -> None:
-            func.__decorator__ = "onopen"
-            cls.__onopen_func = func
-            return func
-
-        return decorator_handler
-
-    @classmethod
-    def onmessage(cls) -> callable:
-        def decorator_handler(func) -> None:
-            func.__decorator__ = "onmessage"
-            cls.__onmessage_func = func
-            return func
-
-        return decorator_handler
-
-    @classmethod
-    def onclose(cls) -> callable:
-        def decorator_handler(func) -> None:
-            func.__decorator__ = "onclose"
-            cls.__onclose_func = func
-            return func
-
-        return decorator_handler
-
-    @classmethod
-    def onerror(cls) -> callable:
-        def decorator_handler(func) -> None:
-            func.__decorator__ = "onerror"
-            cls.__onerror_func = func
-            return func
-
-        return decorator_handler
+        end_point_cls.ws_funcs = ws_funcs
+        if WebSocket.websocket_end_points is None:
+            WebSocket.websocket_end_points = set()
+        WebSocket.websocket_end_points.add(end_point_cls)
+        return end_point_cls
 
 
-websocket_server = WebSocket.websocket_server
-endpoint = WebSocket.endpoint
-Session = WebSocket.Session
-onopen = WebSocket.onopen
-onmessage = WebSocket.onmessage
-onclose = WebSocket.onclose
-onerror = WebSocket.onerror
+class OnOpen:
+    def __init__(self, func: callable) -> None:
+        self.__decorator__ = "OnOpen"
+        self.__func = func
+
+    def __call__(self, *args, **kwargs) -> object:
+        return self.__func(*args, **kwargs)
+
+
+class OnMessage:
+    def __init__(self, func: callable) -> None:
+        self.__decorator__ = "OnMessage"
+        self.__func = func
+
+    def __call__(self, *args, **kwargs):
+        return self.__func(*args, **kwargs)
+
+
+class OnError:
+    def __init__(self, func: callable) -> None:
+        self.__decorator__ = "OnError"
+        self.__func = func
+
+    def __call__(self, *args, **kwargs):
+        return self.__func(*args, **kwargs)
+
+
+class OnClose:
+    def __init__(self, func: callable) -> None:
+        self.__decorator__ = "OnClose"
+        self.__func = func
+
+    def __call__(self, *args, **kwargs):
+        return self.__func(*args, **kwargs)
+
+
+onopen: type = OnOpen
+onmessage: type = OnMessage
+onerror: type = OnError
+onclose: type = OnClose
+Session: type = WebSocket.Session

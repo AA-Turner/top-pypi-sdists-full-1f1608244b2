@@ -8,9 +8,9 @@ Copyright 2025 Vlad Emelianov
 Usage::
 
     ```python
-    from mypy_boto3_pcs.literals import ClusterStatusType
+    from mypy_boto3_pcs.literals import AccountingModeType
 
-    data: ClusterStatusType = "ACTIVE"
+    data: AccountingModeType = "NONE"
     ```
 """
 
@@ -23,6 +23,7 @@ else:
 
 
 __all__ = (
+    "AccountingModeType",
     "ClusterStatusType",
     "ComputeNodeGroupStatusType",
     "EndpointTypeType",
@@ -41,6 +42,7 @@ __all__ = (
 )
 
 
+AccountingModeType = Literal["NONE", "STANDARD"]
 ClusterStatusType = Literal[
     "ACTIVE", "CREATE_FAILED", "CREATING", "DELETE_FAILED", "DELETING", "UPDATE_FAILED", "UPDATING"
 ]
@@ -426,7 +428,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -434,6 +435,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

@@ -1,10 +1,11 @@
 use crate::encoder::EncoderExt;
+use crate::kernels::utils::compute_broadcast_strides;
 use crate::kernels::{utils, BroadcastKind};
-use crate::MetalTensor;
-use crate::{LibraryName, MetalContext};
-use anyhow::{ensure, Result};
+use crate::{LibraryName, MetalStream};
+use anyhow::ensure;
 use std::fmt;
 use tract_core::internal::*;
+use tract_gpu::tensor::DeviceTensor;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ApplyRope;
@@ -20,44 +21,50 @@ impl ApplyRope {
         matches!(dt, DatumType::F32 | DatumType::F16)
     }
 
-    pub fn kernel_name(&self, dt: DatumType, broadcast_kind: BroadcastKind) -> Result<String> {
+    pub fn kernel_name(&self, dt: DatumType, broadcast_kind: BroadcastKind) -> TractResult<String> {
         ensure!(Self::is_supported_dt(dt), "Unsupport dt {:?} for metal apply rope", dt);
-        let tname = MetalTensor::tname(dt)?;
-        let broadcast_name = broadcast_kind.to_func_part();
+        let tname = DeviceTensor::tname(dt)?;
+        let broadcast_name = broadcast_kind.name();
         Ok(format!("nn_ops::apply_rope_{broadcast_name}_{tname}"))
     }
 
     pub fn eval(
         &self,
-        context: &MetalContext,
-        input: &MetalTensor,
-        cos: &MetalTensor,
-        sin: &MetalTensor,
-    ) -> Result<MetalTensor> {
-        let output = unsafe { MetalTensor::uninitialized_dt(input.datum_type(), input.shape())? };
-        self.dispatch_eval(context, input, cos, sin, &output)?;
-        context.wait_until_completed()?;
+        stream: &MetalStream,
+        input: &DeviceTensor,
+        cos: &DeviceTensor,
+        sin: &DeviceTensor,
+    ) -> TractResult<DeviceTensor> {
+        let output = unsafe { DeviceTensor::uninitialized_dt(input.datum_type(), input.shape())? };
+        self.dispatch_eval(stream, input, cos, sin, &output)?;
+        stream.wait_until_completed()?;
         Ok(output)
     }
 
     pub fn dispatch_eval(
         &self,
-        context: &MetalContext,
-        input: &MetalTensor,
-        cos: &MetalTensor,
-        sin: &MetalTensor,
-        output: &MetalTensor,
-    ) -> Result<()> {
+        stream: &MetalStream,
+        input: &DeviceTensor,
+        cos: &DeviceTensor,
+        sin: &DeviceTensor,
+        output: &DeviceTensor,
+    ) -> TractResult<()> {
         ensure!(input.datum_type() == cos.datum_type());
         ensure!(input.datum_type() == sin.datum_type());
 
         ensure!(cos.shape() == sin.shape());
 
-        input.retain_until_completion();
-        output.retain_until_completion();
+        stream.retain_tensor(input);
+        stream.retain_tensor(cos);
+        stream.retain_tensor(sin);
+        stream.retain_tensor(output);
 
-        ensure!(input.rank() == cos.rank());
         ensure!(input.rank() >= 2 && input.rank() <= 4);
+        ensure!(cos.rank() <= input.rank());
+
+        let padded_shape = [&tvec![1; input.rank() - cos.rank()], cos.shape()].concat();
+        let (padded_cos, padded_sin) =
+            (cos.reshaped(padded_shape.clone())?, sin.reshaped(padded_shape)?);
 
         ensure!(
             input.shape()[input.rank() - 1] % 2 == 0,
@@ -66,20 +73,20 @@ impl ApplyRope {
         );
 
         let cos_sin_strides =
-            crate::utils::compute_broadcast_strides::<usize>(cos.shape(), cos.strides())?;
+            compute_broadcast_strides::<usize>(padded_cos.shape(), padded_sin.strides())?;
 
         let broadcast_kind = BroadcastKind::from_rank(input.rank())
-            .with_context(|| anyhow!("Unsupported rank for ApplyRope op: {:?}", input.shape(),))?;
+            .with_context(|| format!("Unsupported rank for ApplyRope op: {:?}", input.shape(),))?;
 
         let kernel_name = self.kernel_name(input.datum_type(), broadcast_kind)?;
 
-        let pipeline = context.shared_context().load_pipeline(LibraryName::NNOps, &kernel_name)?;
-        let command_buffer = context.command_buffer();
+        let pipeline = stream.load_pipeline(LibraryName::NNOps, &kernel_name)?;
+        let command_buffer = stream.command_buffer();
         command_buffer.encode(|encoder| {
             encoder.set_compute_pipeline_state(&pipeline);
             encoder.set_metal_tensor(0, input, metal::MTLResourceUsage::Read);
-            encoder.set_metal_tensor(1, cos, metal::MTLResourceUsage::Read);
-            encoder.set_metal_tensor(2, sin, metal::MTLResourceUsage::Read);
+            encoder.set_metal_tensor(1, &padded_cos, metal::MTLResourceUsage::Read);
+            encoder.set_metal_tensor(2, &padded_sin, metal::MTLResourceUsage::Read);
             encoder.set_metal_tensor(3, output, metal::MTLResourceUsage::Write);
             encoder.set_slice(4, input.shape());
             encoder.set_slice(5, input.strides());
@@ -99,55 +106,50 @@ impl ApplyRope {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::rewrite_rules::BasicApplyRope;
-    use crate::IntoMetal;
+    use crate::utils::with_borrowed_metal_stream;
     use tract_core::internal::Tensor;
+    use tract_gpu::tensor::IntoDevice;
+    use tract_transformers::ops::apply_rope;
 
-    fn run_test_case(shape: &[usize]) -> Result<()> {
-        objc::rc::autoreleasepool(|| {
-            crate::METAL_CONTEXT.with_borrow(|context| {
-                let len = shape.iter().product::<usize>();
+    fn run_test_case(shape: &[usize]) -> TractResult<()> {
+        with_borrowed_metal_stream(|stream| {
+            let len = shape.iter().product::<usize>();
 
-                let a = Tensor::from_shape(
-                    shape,
-                    &(0..len).map(|f| f as f32 / 1000.0).collect::<Vec<_>>(),
-                )?;
+            let a = Tensor::from_shape(
+                shape,
+                &(0..len).map(|f| f as f32 / 1000.0).collect::<Vec<_>>(),
+            )?;
 
-                let cos = Tensor::from_shape(
-                    shape,
-                    &(0..len).map(|f| (f as f32).cos()).collect::<Vec<_>>(),
-                )?;
+            let cos =
+                Tensor::from_shape(shape, &(0..len).map(|f| (f as f32).cos()).collect::<Vec<_>>())?;
 
-                let sin = Tensor::from_shape(
-                    shape,
-                    &(0..len).map(|f| (f as f32).sin()).collect::<Vec<_>>(),
-                )?;
+            let sin =
+                Tensor::from_shape(shape, &(0..len).map(|f| (f as f32).sin()).collect::<Vec<_>>())?;
 
-                let metal_a = a.clone().into_metal()?;
-                let metal_sin = sin.clone().into_metal()?;
-                let metal_cos = cos.clone().into_metal()?;
+            let metal_a = a.clone().into_device()?;
+            let metal_sin = sin.clone().into_device()?;
+            let metal_cos = cos.clone().into_device()?;
 
-                let cpu_output = BasicApplyRope.eval(tvec![
-                    a.clone().into(),
-                    cos.clone().into(),
-                    sin.clone().into(),
-                ])?[0]
-                    .clone()
-                    .into_tensor();
-                let metal_output = ApplyRope.eval(context, &metal_a, &metal_cos, &metal_sin)?;
+            let cpu_output = apply_rope::ApplyRope.eval(tvec![
+                a.clone().into(),
+                cos.clone().into(),
+                sin.clone().into(),
+            ])?[0]
+                .clone()
+                .into_tensor();
+            let metal_output = ApplyRope.eval(stream, &metal_a, &metal_cos, &metal_sin)?;
 
-                cpu_output
-                    .close_enough(&metal_output.to_cpu()?.into_tensor(), Approximation::Approximate)
-                    .with_context(|| {
-                        anyhow!(
-                            "Input: {:?} Cpu: {:?}, Metal: {:?}",
-                            a.dump(true),
-                            cpu_output.dump(true),
-                            metal_output.to_cpu().and_then(|it| it.dump(true))
-                        )
-                    })?;
-                Ok(())
-            })
+            cpu_output
+                .close_enough(&metal_output.to_host()?.into_tensor(), Approximation::Approximate)
+                .with_context(|| {
+                    format!(
+                        "Input: {:?} Cpu: {:?}, Metal: {:?}",
+                        a.dump(true),
+                        cpu_output.dump(true),
+                        metal_output.to_host().and_then(|it| it.dump(true))
+                    )
+                })?;
+            Ok(())
         })
     }
 

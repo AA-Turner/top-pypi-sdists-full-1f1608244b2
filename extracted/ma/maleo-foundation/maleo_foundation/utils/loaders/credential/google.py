@@ -15,7 +15,9 @@ class GoogleCredentialsLoader:
             if credentials_path is not None:
                 credentials_path = Path(credentials_path)
                 if credentials_path.exists() or credentials_path.is_file():
-                    credentials = Credentials.from_service_account_file(filename=str(credentials_path))
+                    credentials = Credentials.from_service_account_file(
+                        filename=str(credentials_path)
+                    )
             else:
                 credentials, _ = default()
             return credentials

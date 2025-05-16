@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: tract
-Version: 0.21.12
+Version: 0.21.13
 Summary: Python bindings for tract, a neural network inference engine
 Author: Mathieu Poumeyrol, Sonos, and tract contributors
 Author-email: mathieu@poumeyrol.fr

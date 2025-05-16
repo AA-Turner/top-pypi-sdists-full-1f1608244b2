@@ -3,18 +3,20 @@
 An Agent is an entity that can process tasks and maintain state across interactions.
 """
 
-import inspect
 import random
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Sequence, TypeVar
 
 import pydantic_ai
+from pydantic_ai.mcp import MCPServer
 from pydantic_ai.models import KnownModelName, Model, ModelSettings
 from pydantic_ai.result import ToolOutput
+from pydantic_ai.tools import Tool
 
 import marvin
+from marvin._internal.integrations.mcp import discover_mcp_tools
 from marvin.agents.actor import Actor
 from marvin.agents.names import AGENT_NAMES
 from marvin.memory.memory import Memory
@@ -63,16 +65,19 @@ class Agent(Actor):
         metadata={"description": "List of memory modules available to the agent"},
     )
 
+    mcp_servers: list["MCPServer"] = field(
+        default_factory=lambda: [],
+        metadata={"description": "List of MCP servers available to the agent"},
+        repr=False,
+    )
+
     model: KnownModelName | Model | None = field(
         default=None,
         metadata={
-            "description": inspect.cleandoc("""
-                The model to use for the agent. If not provided,
-                the default model will be used. A compatible string
-                can be passed to automatically retrieve the model.
-                """),
+            "description": "The language model configuration for the agent."
+            " Can be a known model name, a Pydantic AI Model instance,"
+            " or None to use the default."
         },
-        repr=False,
     )
 
     model_settings: ModelSettings = field(
@@ -100,6 +105,9 @@ class Agent(Actor):
     def get_memories(self) -> list[Memory]:
         return list(self.memories)
 
+    def get_mcp_servers(self) -> list["MCPServer"]:
+        return list(self.mcp_servers)
+
     def get_model_settings(self) -> ModelSettings:
         defaults: ModelSettings = {}
         if marvin.settings.agent_temperature is not None:
@@ -118,48 +126,91 @@ class Agent(Actor):
 
     async def get_agentlet(
         self,
-        tools: list[Callable[..., Any]],
-        end_turn_tools: list["EndTurn"],
+        tools: Sequence[Callable[..., Any]],
+        end_turn_tools: Sequence["EndTurn"],
+        active_mcp_servers: list[MCPServer] | None = None,
     ) -> pydantic_ai.Agent[Any, Any]:
+        import marvin.engine.orchestrator
         from marvin.engine.end_turn import EndTurn
 
-        tools = tools + self.get_tools()
-        end_turn_tools = end_turn_tools + self.get_end_turn_tools()
-
-        # if any tools are actually EndTurn classes, remove them from tools and
-        # add them to end turn tools
-        for t in tools:
-            if issubclass_safe(t, EndTurn):
-                tools.remove(t)
-                end_turn_tools.append(t)
-
-        if not end_turn_tools:
-            result_type = [EndTurn]
-
-        if len(end_turn_tools) == 1:
-            result_type = end_turn_tools[0]
-            result_tool_name = result_type.__name__
-        else:
-            result_type = Union[tuple(end_turn_tools)]
-            result_tool_name = "EndTurn"
-
-        tools = [wrap_tool_errors(tool) for tool in tools or []]
-
-        agentlet = pydantic_ai.Agent[Any, result_type](  # type: ignore
-            model=self.get_model(),
-            output_type=ToolOutput[result_type](
-                type_=result_type,
-                name=result_tool_name or "EndTurn",
-                description="This tool will end your turn. You may only use one turn-ending tool per turn.",
-            ),
-            tools=tools,
-            model_settings=self.get_model_settings(),
-            end_strategy="exhaustive",
-            retries=marvin.settings.agent_retries,
+        # --- Separate standard tools and EndTurn tools --- #
+        all_potential_items = (
+            list(tools)
+            + self.get_tools()
+            + list(end_turn_tools)
+            + self.get_end_turn_tools()
         )
-        # new fields
-        agentlet._marvin_tools = tools
-        agentlet._marvin_end_turn_tools = end_turn_tools
+        marvin_tool_callables: list[Callable[..., Any]] = []
+        final_end_turn_defs: list[type[EndTurn] | EndTurn] = []
+        processed_ids: set[int] = set()
+        for item in all_potential_items:
+            item_id = id(item)
+            if item_id in processed_ids:
+                continue
+            processed_ids.add(item_id)
+            if issubclass_safe(item, EndTurn):
+                final_end_turn_defs.append(item)
+            elif isinstance(item, EndTurn):
+                final_end_turn_defs.append(item)
+            elif callable(item):
+                marvin_tool_callables.append(item)
+            else:
+                logger.warning(f"Ignoring non-callable, non-EndTurn item: {item}")
+
+        unique_marvin_tools = [wrap_tool_errors(tool) for tool in marvin_tool_callables]
+
+        mcp_tool_instances: list[Tool] = []
+        if active_mcp_servers:
+            orchestrator = marvin.engine.orchestrator.get_current_orchestrator()
+            mcp_tool_instances = await discover_mcp_tools(
+                mcp_servers=active_mcp_servers,
+                orchestrator=orchestrator,
+            )
+
+        combined_tools: list[Any] = unique_marvin_tools + mcp_tool_instances
+
+        tool_output_name = "EndTurn"
+        tool_output_description = "Ends the current turn."
+        if len(final_end_turn_defs) == 1:
+            output_type_for_tool_output = final_end_turn_defs[0]
+            tool_output_name = getattr(
+                output_type_for_tool_output, "__name__", tool_output_name
+            )
+        else:
+            # Use None if zero or multiple EndTurn tools are present
+            # This avoids schema issues but might prevent multi-turn scenarios?
+            # TODO: Revisit handling of multiple EndTurn tools / Union[EndTurn]
+            output_type_for_tool_output = type(None)
+            if len(final_end_turn_defs) > 1:
+                logger.warning(
+                    "Multiple EndTurn tools detected, output validation might be limited."
+                )
+
+        final_tool_output = ToolOutput(
+            type_=output_type_for_tool_output,
+            name=tool_output_name,
+            description=tool_output_description,
+        )
+
+        agent_kwargs = {
+            "model": self.get_model(),
+            "model_settings": self.get_model_settings(),
+            "output_type": final_tool_output,  # Use the constructed ToolOutput
+            "name": self.name,
+        }
+
+        if combined_tools:
+            agent_kwargs["tools"] = combined_tools
+
+        if active_mcp_servers:
+            agent_kwargs["mcp_servers"] = active_mcp_servers
+
+        agentlet = pydantic_ai.Agent[Any, Any](**agent_kwargs)
+
+        # for internal use
+        agentlet._marvin_tools = combined_tools
+        agentlet._marvin_end_turn_tools = final_end_turn_defs  # Store original defs
+
         return agentlet
 
     def get_prompt(self) -> str:

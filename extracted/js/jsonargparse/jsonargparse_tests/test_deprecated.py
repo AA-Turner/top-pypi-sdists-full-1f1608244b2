@@ -17,7 +17,6 @@ from jsonargparse import (
     ActionJsonnet,
     ArgumentError,
     ArgumentParser,
-    LoggerProperty,
     Namespace,
     Path,
     get_config_read_mode,
@@ -31,8 +30,10 @@ from jsonargparse._deprecated import (
     ActionOperators,
     ActionPath,
     ActionPathList,
+    LoggerProperty,
     ParserError,
     deprecation_warning,
+    namespace_to_dict,
     shown_deprecation_warnings,
     usage_and_exit_error_handler,
 )
@@ -296,13 +297,27 @@ def test_multiple_functions_cli():
     assert isinstance(parser, ArgumentParser)
 
 
+class InheritsLoggerProperty(LoggerProperty):
+    pass
+
+
+def test_logger_property():
+    with catch_warnings(record=True) as w:
+        InheritsLoggerProperty()
+    assert_deprecation_warn(
+        w,
+        message="LoggerProperty was deprecated",
+        code="InheritsLoggerProperty()",
+    )
+
+
 def test_logger_property_none():
     with catch_warnings(record=True) as w:
-        LoggerProperty(logger=None)
+        ArgumentParser(logger=None)
     assert_deprecation_warn(
         w,
         message=" Setting the logger property to None was deprecated",
-        code="LoggerProperty(logger=None)",
+        code="ArgumentParser(logger=None)",
     )
 
 
@@ -694,3 +709,20 @@ def test_add_dataclass_arguments(parser, subtests):
         help_str = get_parser_help(parser)
         if docstring_parser_support:
             assert "CustomA title:" in help_str
+
+
+def test_namespace_to_dict():
+    ns = Namespace()
+    ns["w"] = 1
+    ns["x.y"] = 2
+    ns["x.z"] = 3
+    with catch_warnings(record=True) as w:
+        dic1 = namespace_to_dict(ns)
+    dic2 = ns.as_dict()
+    assert dic1 == dic2
+    assert dic1 is not dic2
+    assert_deprecation_warn(
+        w,
+        message="namespace_to_dict was deprecated",
+        code="dic1 = namespace_to_dict(ns)",
+    )

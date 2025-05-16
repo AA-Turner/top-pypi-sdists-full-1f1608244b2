@@ -38,7 +38,7 @@ class TextExtractionsV2(WMLResource):
     :type api_client: APIClient, optional
 
     :raises InvalidMultipleArguments: raised when neither `api_client` nor `credentials` alongside `space_id` or `project_id` are provided
-    :raises WMLClientError: raised if the CPD version is less than 5.0
+    :raises WMLClientError: raised if the CPD version is less than 5.1
 
     .. code-block:: python
 
@@ -88,9 +88,9 @@ class TextExtractionsV2(WMLResource):
 
             if self._client.CPD_version < 5.0:
                 cpd_version_error_message = "Operation is unsupported for this release."
-            elif self._client.CPD_version == 5.1:
+            elif self._client.CPD_version <= 5.1:
                 cpd_version_error_message = (
-                    "For watsonx.ai software 5.1 release, please use "
+                    f"For watsonx.ai software {self._client.CPD_version} release, please use "
                     "`ibm_watsonx_ai.foundation_models.extractions.TextExtractions` class."
                 )
 

@@ -1,5 +1,6 @@
 """Settings for Marvin."""
 
+import os
 from pathlib import Path
 from typing import Literal
 
@@ -42,7 +43,7 @@ class Settings(BaseSettings):
 
     database_url: str | None = Field(
         default=None,
-        description="Database URL. Must be provided with an async-compatible SQLAlchemy dialect. Defaults to `sqlite+aiosqlite:///{{home_path}}/marvin.db`",
+        description="Database URL. Must be provided with an async-compatible SQLAlchemy dialect. Defaults to `sqlite+aiosqlite:///{{home_path}}/marvin.db`. Loaded from MARVIN_DATABASE_URL environment variable or .env entry.",
     )
 
     auto_init_sqlite: bool = Field(
@@ -54,25 +55,41 @@ class Settings(BaseSettings):
         repeated.""",
     )
 
-    @field_validator("database_url")
+    @field_validator("database_url", mode="before")
     @classmethod
     def validate_database_url(cls, v: str | None, info: ValidationInfo) -> str:
-        """Set and validate the database URL."""
+        """Set and validate the database URL.
 
-        # Set default if not provided
-        if v is None:
-            home_path = info.data.get("home_path")
-            if not home_path:
-                raise ValueError("home_path must be set before database_url")
-            return f"sqlite+aiosqlite:///{home_path}/marvin.db"
+        Priority:
+        1. MARVIN_DATABASE_URL (from environment or .env file via os.getenv).
+        2. Default SQLite path if MARVIN_DATABASE_URL is not set.
+        This validator bypasses Pydantic's implicit fallback to an unprefixed DATABASE_URL from .env.
+        """
 
-        return v
+        if explicit_marvin_url := os.getenv("MARVIN_DATABASE_URL"):
+            return explicit_marvin_url
+
+        # If MARVIN_DATABASE_URL is not set, use the default SQLite path.
+        home_path_val = info.data.get("home_path")
+
+        if not home_path_val:
+            raise ValueError(
+                "home_path must be determined before database_url can be defaulted. "
+                "Ensure home_path is correctly configured or resolvable."
+            )
+
+        return f"sqlite+aiosqlite:///{home_path_val}/marvin.db"
 
     # ------------ Logging settings ------------
 
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = Field(
         default="INFO",
         description="Logging level",
+    )
+
+    log_file: Path | None = Field(
+        default=None,
+        description="Path to a file for logging. If None, logs to stdout.",
     )
 
     log_events: bool = Field(
@@ -89,9 +106,9 @@ class Settings(BaseSettings):
     @model_validator(mode="after")
     def setup_logging(self) -> Self:
         """Finalize the settings."""
-        import marvin.utilities.logging
+        from marvin.utilities.logging import setup_logging
 
-        marvin.utilities.logging.setup_logging(self.log_level)
+        setup_logging(settings=self)
 
         return self
 

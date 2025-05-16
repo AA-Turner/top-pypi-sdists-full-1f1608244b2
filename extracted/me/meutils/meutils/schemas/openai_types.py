@@ -426,15 +426,16 @@ class ImagesResponse(_ImagesResponse):
 
 
 class TTSRequest(BaseModel):
-    input: str
     model: Optional[Union[str, Literal["tts-1", "tts-1-hd"]]] = 'tts'
     voice: Optional[Union[str, Literal["alloy", "echo", "fable", "onyx", "nova", "shimmer"]]] = ""
+
+    input: str
+    instructions: Optional[str] = None
+    # emotion: Optional[Literal["happy", "angry", "surprise", "coldness", "disgust", "fear", "excited", "hate"]] = None
+
     speed: Optional[float] = None
 
     response_format: Literal["mp3", "opus", "aac", "flac", "wav", "pcm", "url"] = "mp3"
-
-    # 新增
-    emotion: Optional[Literal["happy", "angry", "surprise", "coldness", "disgust", "fear", "excited", "hate"]] = None
 
     class Config:
         json_schema_extra = {

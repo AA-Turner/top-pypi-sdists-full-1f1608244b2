@@ -25,7 +25,7 @@ class FilterArgs:
         """
         The set of arguments for constructing a Filter resource.
         :param pulumi.Input[builtins.str] expression: The filter expression. For more information, refer to [Expressions](https://developers.cloudflare.com/ruleset-engine/rules-language/expressions/).
-        :param pulumi.Input[builtins.str] zone_id: Identifier
+        :param pulumi.Input[builtins.str] zone_id: Defines an identifier.
         """
         pulumi.set(__self__, "expression", expression)
         pulumi.set(__self__, "zone_id", zone_id)
@@ -46,7 +46,7 @@ class FilterArgs:
     @pulumi.getter(name="zoneId")
     def zone_id(self) -> pulumi.Input[builtins.str]:
         """
-        Identifier
+        Defines an identifier.
         """
         return pulumi.get(self, "zone_id")
 
@@ -69,7 +69,7 @@ class _FilterState:
         :param pulumi.Input[builtins.str] expression: The filter expression. For more information, refer to [Expressions](https://developers.cloudflare.com/ruleset-engine/rules-language/expressions/).
         :param pulumi.Input[builtins.bool] paused: When true, indicates that the filter is currently paused.
         :param pulumi.Input[builtins.str] ref: A short reference tag. Allows you to select related filters.
-        :param pulumi.Input[builtins.str] zone_id: Identifier
+        :param pulumi.Input[builtins.str] zone_id: Defines an identifier.
         """
         if description is not None:
             pulumi.set(__self__, "description", description)
@@ -134,7 +134,7 @@ class _FilterState:
     @pulumi.getter(name="zoneId")
     def zone_id(self) -> Optional[pulumi.Input[builtins.str]]:
         """
-        Identifier
+        Defines an identifier.
         """
         return pulumi.get(self, "zone_id")
 
@@ -143,6 +143,7 @@ class _FilterState:
         pulumi.set(self, "zone_id", value)
 
 
+@pulumi.type_token("cloudflare:index/filter:Filter")
 class Filter(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -178,7 +179,7 @@ class Filter(pulumi.CustomResource):
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[builtins.str] expression: The filter expression. For more information, refer to [Expressions](https://developers.cloudflare.com/ruleset-engine/rules-language/expressions/).
-        :param pulumi.Input[builtins.str] zone_id: Identifier
+        :param pulumi.Input[builtins.str] zone_id: Defines an identifier.
         """
         ...
     @overload
@@ -271,7 +272,7 @@ class Filter(pulumi.CustomResource):
         :param pulumi.Input[builtins.str] expression: The filter expression. For more information, refer to [Expressions](https://developers.cloudflare.com/ruleset-engine/rules-language/expressions/).
         :param pulumi.Input[builtins.bool] paused: When true, indicates that the filter is currently paused.
         :param pulumi.Input[builtins.str] ref: A short reference tag. Allows you to select related filters.
-        :param pulumi.Input[builtins.str] zone_id: Identifier
+        :param pulumi.Input[builtins.str] zone_id: Defines an identifier.
         """
         opts = pulumi.ResourceOptions.merge(opts, pulumi.ResourceOptions(id=id))
 
@@ -320,7 +321,7 @@ class Filter(pulumi.CustomResource):
     @pulumi.getter(name="zoneId")
     def zone_id(self) -> pulumi.Output[builtins.str]:
         """
-        Identifier
+        Defines an identifier.
         """
         return pulumi.get(self, "zone_id")
 

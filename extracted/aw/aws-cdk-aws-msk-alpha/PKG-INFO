@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: aws-cdk.aws-msk-alpha
-Version: 2.195.0a0
+Version: 2.196.0a0
 Summary: The CDK Construct Library for AWS::MSK
 Home-page: https://github.com/aws/aws-cdk
 Author: Amazon Web Services
@@ -22,9 +22,9 @@ Requires-Python: ~=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
 License-File: NOTICE
-Requires-Dist: aws-cdk-lib<3.0.0,>=2.195.0
+Requires-Dist: aws-cdk-lib<3.0.0,>=2.196.0
 Requires-Dist: constructs<11.0.0,>=10.0.0
-Requires-Dist: jsii<2.0.0,>=1.110.0
+Requires-Dist: jsii<2.0.0,>=1.112.0
 Requires-Dist: publication>=0.0.3
 Requires-Dist: typeguard<4.3.0,>=2.13.3
 
@@ -53,7 +53,7 @@ The following example creates an MSK Cluster.
 
 cluster = msk.Cluster(self, "Cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_8_X,
+    kafka_version=msk.KafkaVersion.V3_9_X,
     vpc=vpc
 )
 ```
@@ -67,7 +67,7 @@ To control who can access the Cluster, use the `.connections` attribute. For a l
 
 cluster = msk.Cluster(self, "Cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_8_X,
+    kafka_version=msk.KafkaVersion.V3_9_X,
     vpc=vpc
 )
 
@@ -117,7 +117,7 @@ import aws_cdk.aws_acmpca as acmpca
 
 cluster = msk.Cluster(self, "Cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_8_X,
+    kafka_version=msk.KafkaVersion.V3_9_X,
     vpc=vpc,
     encryption_in_transit=msk.EncryptionInTransitConfig(
         client_broker=msk.ClientBrokerEncryption.TLS
@@ -139,7 +139,7 @@ Enable client authentication with [SASL/SCRAM](https://docs.aws.amazon.com/msk/l
 
 cluster = msk.Cluster(self, "cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_8_X,
+    kafka_version=msk.KafkaVersion.V3_9_X,
     vpc=vpc,
     encryption_in_transit=msk.EncryptionInTransitConfig(
         client_broker=msk.ClientBrokerEncryption.TLS
@@ -159,7 +159,7 @@ Enable client authentication with [IAM](https://docs.aws.amazon.com/msk/latest/d
 
 cluster = msk.Cluster(self, "cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_8_X,
+    kafka_version=msk.KafkaVersion.V3_9_X,
     vpc=vpc,
     encryption_in_transit=msk.EncryptionInTransitConfig(
         client_broker=msk.ClientBrokerEncryption.TLS
@@ -182,7 +182,7 @@ import aws_cdk.aws_acmpca as acmpca
 
 cluster = msk.Cluster(self, "Cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_8_X,
+    kafka_version=msk.KafkaVersion.V3_9_X,
     vpc=vpc,
     encryption_in_transit=msk.EncryptionInTransitConfig(
         client_broker=msk.ClientBrokerEncryption.TLS
@@ -209,7 +209,7 @@ To configure logs to be sent to an S3 bucket, provide a bucket in the `logging` 
 
 cluster = msk.Cluster(self, "cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_8_X,
+    kafka_version=msk.KafkaVersion.V3_9_X,
     vpc=vpc,
     logging=msk.BrokerLogging(
         s3=msk.S3LoggingConfiguration(
@@ -250,7 +250,7 @@ making it cost-effective to build streaming data applications.
 
 cluster = msk.Cluster(self, "cluster",
     cluster_name="myCluster",
-    kafka_version=msk.KafkaVersion.V3_6_0,
+    kafka_version=msk.KafkaVersion.V3_9_X,
     vpc=vpc,
     storage_mode=msk.StorageMode.TIERED
 )

@@ -1,15 +1,22 @@
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
-from maleo_foundation.expanded_types.key import MaleoFoundationKeyResultsTypes
+from maleo_foundation.expanded_types.key \
+    import MaleoFoundationKeyResultsTypes
 from maleo_foundation.managers.client.base import ClientService
-from maleo_foundation.models.transfers.general.key import MaleoFoundationKeyGeneralTransfers
-from maleo_foundation.models.transfers.parameters.key import MaleoFoundationKeyParametersTransfers
-from maleo_foundation.models.transfers.results.key import MaleoFoundationKeyResultsTransfers
+from maleo_foundation.models.transfers.general.key \
+    import MaleoFoundationKeyGeneralTransfers
+from maleo_foundation.models.transfers.parameters.key \
+    import MaleoFoundationKeyParametersTransfers
+from maleo_foundation.models.transfers.results.key \
+    import MaleoFoundationKeyResultsTransfers
 from maleo_foundation.utils.exceptions import BaseExceptions
 
 class MaleoFoundationKeyClientService(ClientService):
-    def create_private(self, parameters:MaleoFoundationKeyParametersTransfers.CreatePrivateOrPair) -> MaleoFoundationKeyResultsTypes.CreatePrivate:
+    def create_private(
+        self,
+        parameters:MaleoFoundationKeyParametersTransfers.CreatePrivateOrPair
+    ) -> MaleoFoundationKeyResultsTypes.CreatePrivate:
         """Create an RSA private key with X.509 encoding in .pem format."""
         @BaseExceptions.service_exception_handler(
             operation="creating private key",
@@ -27,7 +34,9 @@ class MaleoFoundationKeyClientService(ClientService):
             if parameters.password is None:
                 encryption_algorithm = serialization.NoEncryption()
             else:
-                encryption_algorithm = serialization.BestAvailableEncryption(parameters.password.encode())
+                encryption_algorithm = serialization.BestAvailableEncryption(
+                    parameters.password.encode()
+                )
 
             #* Serialize private key to PEM format
             private_key_bytes = private_key.private_bytes(
@@ -37,11 +46,16 @@ class MaleoFoundationKeyClientService(ClientService):
             )
 
             self._logger.info("Successfully created private key")
-            data = MaleoFoundationKeyGeneralTransfers.PrivateKey(value=private_key_bytes.decode())
+            data = MaleoFoundationKeyGeneralTransfers.PrivateKey(
+                value=private_key_bytes.decode()
+            )
             return MaleoFoundationKeyResultsTransfers.CreatePrivate(data=data)
         return _impl()
 
-    def create_public(self, parameters:MaleoFoundationKeyParametersTransfers.CreatePublic) -> MaleoFoundationKeyResultsTypes.CreatePublic:
+    def create_public(
+        self,
+        parameters:MaleoFoundationKeyParametersTransfers.CreatePublic
+    ) -> MaleoFoundationKeyResultsTypes.CreatePublic:
         """Create an RSA public key with X.509 encoding in .pem format."""
         @BaseExceptions.service_exception_handler(
             operation="creating public key",
@@ -66,7 +80,9 @@ class MaleoFoundationKeyClientService(ClientService):
             )
 
             self._logger.info("Successfully created public key")
-            data = MaleoFoundationKeyGeneralTransfers.PublicKey(value=public_key_bytes.decode())
+            data = MaleoFoundationKeyGeneralTransfers.PublicKey(
+                value=public_key_bytes.decode()
+            )
             return MaleoFoundationKeyResultsTransfers.CreatePublic(data=data)
         return _impl()
 
@@ -88,7 +104,9 @@ class MaleoFoundationKeyClientService(ClientService):
             if parameters.password is None:
                 encryption_algorithm = serialization.NoEncryption()
             else:
-                encryption_algorithm = serialization.BestAvailableEncryption(parameters.password.encode())
+                encryption_algorithm = serialization.BestAvailableEncryption(
+                    parameters.password.encode()
+                )
 
             #* Serialize private key to PEM format
             private_key_bytes = private_key.private_bytes(
@@ -96,7 +114,9 @@ class MaleoFoundationKeyClientService(ClientService):
                 format=serialization.PrivateFormat.PKCS8,
                 encryption_algorithm=encryption_algorithm
             )
-            private = MaleoFoundationKeyGeneralTransfers.PrivateKey(value=private_key_bytes.decode())
+            private = MaleoFoundationKeyGeneralTransfers.PrivateKey(
+                value=private_key_bytes.decode()
+            )
 
             public_key = private_key.public_key() #* Create public key
 
@@ -105,7 +125,9 @@ class MaleoFoundationKeyClientService(ClientService):
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PublicFormat.SubjectPublicKeyInfo
             )
-            public = MaleoFoundationKeyGeneralTransfers.PublicKey(value=public_key_bytes.decode())
+            public = MaleoFoundationKeyGeneralTransfers.PublicKey(
+                value=public_key_bytes.decode()
+            )
 
             self._logger.info("Successfully created key pair")
             data = MaleoFoundationKeyGeneralTransfers.KeyPair(private=private, public=public)

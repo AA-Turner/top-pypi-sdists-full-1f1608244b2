@@ -1,29 +1,20 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: types-python-jose
-Version: 3.4.0.20250224
+Version: 3.4.0.20250516
 Summary: Typing stubs for python-jose
-Home-page: https://github.com/python/typeshed
-License: Apache-2.0
+License-Expression: Apache-2.0
+Project-URL: Homepage, https://github.com/python/typeshed
 Project-URL: GitHub, https://github.com/python/typeshed
 Project-URL: Changes, https://github.com/typeshed-internal/stub_uploader/blob/main/data/changelogs/python-jose.md
 Project-URL: Issue tracker, https://github.com/python/typeshed/issues
 Project-URL: Chat, https://gitter.im/python/typing
-Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Programming Language :: Python :: 3
 Classifier: Typing :: Stubs Only
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: types-pyasn1
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: home-page
-Dynamic: license
-Dynamic: project-url
-Dynamic: requires-dist
-Dynamic: requires-python
-Dynamic: summary
+Dynamic: license-file
 
 ## Typing stubs for python-jose
 
@@ -47,7 +38,7 @@ directory.
 
 This package was tested with
 mypy 1.15.0,
-pyright 1.1.389,
+pyright 1.1.400,
 and pytype 2024.10.11.
 It was generated from typeshed commit
-[`c27e41c33b47edc624ca456e673c7d29a46c7e5c`](https://github.com/python/typeshed/commit/c27e41c33b47edc624ca456e673c7d29a46c7e5c).
+[`126768408a69b7a3a09b7d3992970b289f92937e`](https://github.com/python/typeshed/commit/126768408a69b7a3a09b7d3992970b289f92937e).

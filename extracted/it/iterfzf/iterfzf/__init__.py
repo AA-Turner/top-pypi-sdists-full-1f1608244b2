@@ -10,7 +10,7 @@ from typing import AnyStr, Iterable, Literal, Mapping, Optional, Union
 __all__ = '__fzf_version__', '__version__', 'BUNDLED_EXECUTABLE', 'iterfzf'
 
 __fzf_version__ = '0.62.0'
-__version__ = '1.7.' + __fzf_version__
+__version__ = '1.8.' + __fzf_version__
 
 POSIX_EXECUTABLE_NAME: Literal['fzf'] = 'fzf'
 WINDOWS_EXECUTABLE_NAME: Literal['fzf.exe'] = 'fzf.exe'
@@ -81,7 +81,7 @@ def iterfzf(
     if preview:
         cmd.append('--preview=' + preview)
     if tmux:
-        cmd.append('--tmux' if tmux is bool else f'--tmux={tmux}')
+        cmd.append('--tmux' if tmux is True else f'--tmux={tmux}')
     if header:
         cmd.append('--header=' + header)
     if ansi:

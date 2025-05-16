@@ -968,6 +968,15 @@ class GoFunction(
         '''
         return typing.cast(builtins.str, jsii.sget(cls, "GOOGLE_GOPROXY"))
 
+    @jsii.python.classproperty
+    @jsii.member(jsii_name="PROPERTY_INJECTION_ID")
+    def PROPERTY_INJECTION_ID(cls) -> builtins.str:
+        '''(experimental) Uniquely identifies this class.
+
+        :stability: experimental
+        '''
+        return typing.cast(builtins.str, jsii.sget(cls, "PROPERTY_INJECTION_ID"))
+
 
 @jsii.data_type(
     jsii_type="@aws-cdk/aws-lambda-go-alpha.GoFunctionProps",

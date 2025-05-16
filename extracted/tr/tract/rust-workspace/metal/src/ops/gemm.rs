@@ -1,10 +1,11 @@
 use crate::kernels::matmul::{GemmImpl, GemmKernel};
 use crate::ops::MetalEvalOp;
 
-use crate::utils::{as_q40_fact, as_q40_tensor};
-use crate::{MetalContext, MetalTensorExt};
+use crate::MetalStream;
 use anyhow::{bail, ensure};
 use tract_core::internal::*;
+use tract_gpu::tensor::DeviceTensorExt;
+use tract_gpu::utils::{as_q40_fact, as_q40_tensor};
 
 #[derive(Debug, Default, Clone)]
 pub struct MetalGemm<K: GemmKernel> {
@@ -73,18 +74,18 @@ impl<K: GemmKernel> MetalGemm<K> {
 impl<K: GemmKernel + 'static> MetalEvalOp for MetalGemm<K> {
     fn metal_eval(
         &self,
-        context: &MetalContext,
+        stream: &MetalStream,
         node_id: usize,
         session: &mut SessionState,
         inputs: TVec<TValue>,
     ) -> TractResult<TVec<TValue>> {
         let (a_opaque, b_opaque) = args_2!(inputs);
         let a = a_opaque
-            .to_metal_tensor()
-            .with_context(|| anyhow!("A tensor is not a metal tensor: {:?}", a_opaque))?;
+            .to_device_tensor()
+            .with_context(|| format!("A tensor is not a metal tensor: {:?}", a_opaque))?;
         let b = b_opaque
-            .to_metal_tensor()
-            .with_context(|| anyhow!("B tensor is not a metal tensor {:?}", b_opaque))?;
+            .to_device_tensor()
+            .with_context(|| format!("B tensor is not a metal tensor {:?}", b_opaque))?;
 
         let b_shape = as_q40_tensor(b.view().tensor)
             .map(|bqv| b.shape().iter().cloned().chain(bqv.fact.shape().iter().copied()).collect())
@@ -93,7 +94,7 @@ impl<K: GemmKernel + 'static> MetalEvalOp for MetalGemm<K> {
         let c_dt = self.kernel.matmul.output_dt(a.datum_type(), b.datum_type())?;
         let c_shape = self.kernel.output_shape(a.shape(), &b_shape);
         let c = crate::ops::make_tensor_for_node(session, node_id, c_dt, &c_shape)?;
-        self.kernel.dispatch_eval(context, a, b, &c)?;
+        self.kernel.dispatch_eval(stream, a, b, &c)?;
         Ok(tvec![c.into_opaque_tensor().into_tvalue()])
     }
 }
@@ -115,14 +116,14 @@ impl<K: GemmKernel + 'static> EvalOp for MetalGemm<K> {
 
 impl<K: GemmKernel + 'static> TypedOp for MetalGemm<K> {
     fn output_facts(&self, inputs: &[&TypedFact]) -> TractResult<TVec<TypedFact>> {
-        crate::utils::metal_facts_from_gpu(inputs, |input_facts| {
+        tract_gpu::utils::facts_to_device_facts(inputs, |input_facts| {
             self.resolve_output_facts(input_facts)
         })
-        .with_context(|| anyhow::anyhow!("Error while computing output facts for {}", self.name()))
+        .with_context(|| format!("Error while computing output facts for {}", self.name()))
     }
 
     fn cost(&self, inputs: &[&TypedFact]) -> TractResult<TVec<(Cost, TDim)>> {
-        crate::utils::metal_facts(inputs, |input_facts| {
+        tract_gpu::utils::get_device_facts(inputs, |input_facts| {
             let fma = self
                 .kernel
                 .output_shape(&input_facts[0].shape, &input_facts[1].shape)
@@ -135,7 +136,7 @@ impl<K: GemmKernel + 'static> TypedOp for MetalGemm<K> {
                 Ok(tvec!((Cost::FMA(f32::datum_type()), fma)))
             }
         })
-        .with_context(|| anyhow::anyhow!("Error while computing cost for {:?}", self.name()))
+        .with_context(|| format!("Error while computing cost for {:?}", self.name()))
     }
 
     as_op!();

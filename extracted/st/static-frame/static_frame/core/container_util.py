@@ -165,7 +165,7 @@ def get_col_dtype_factory(
         dtypes: TDtypesSpecifier,
         columns: tp.Optional[tp.Sequence[TLabel] | IndexBase | TNDArrayAny],
         index_depth: int = 0,
-        ) -> tp.Callable[[int], TDtypeSpecifier]:
+        ) -> tp.Callable[[int], TDtypeAny | None]:
     '''
     Return a function, or None, to get values from a TDtypeSpecifier by integer column positions.
 
@@ -193,7 +193,7 @@ def get_col_dtype_factory(
         if is_frozen_generator_input(dtypes):
             dtypes = FrozenGenerator(dtypes) #type: ignore
 
-    def get_col_dtype(col_idx: int) -> TDtypeSpecifier:
+    def get_col_dtype(col_idx: int) -> TDtypeAny | None:
         if is_map:
             col_idx = col_idx - index_depth
             if col_idx < 0:
@@ -373,6 +373,7 @@ def pandas_to_numpy(
     else:
         raise NotImplementedError(f'no handling for ndim {container.ndim}') #pragma: no cover
 
+    dtype: None | TDtypeAny
     if isinstance(dtype_src, np.dtype):
         dtype = dtype_src
         is_extension_dtype = False
@@ -420,7 +421,7 @@ def pandas_to_numpy(
         if hasna:
             # if hasna and extension dtype, should be an object array; replace pd.NA objects with fill_value (np.nan)
             assert array.dtype == DTYPE_OBJECT
-            array[isna] = fill_value
+            array[isna] = fill_value  # pyright: ignore
 
     else: # not an extension dtype
         if own_data:
@@ -1197,6 +1198,7 @@ def apply_binary_operator(*,
             # FutureWarning: elementwise comparison failed
             result = operator(values, other)
 
+    # NOTE: remove when min numpy is 1.25
     if result is False or result is True:
         if not other_is_array and (
                 isinstance(other, str) or not hasattr(other, '__len__')
@@ -1287,9 +1289,9 @@ def arrays_from_index_frame(
                 labels.append(d)
                 arrays.append(index.values_at_depth(d))
         else: # assume iterable
-            for d in depth_level:
+            for d in depth_level: # type: ignore
                 labels.append(d)
-                arrays.append(index.values_at_depth(d))
+                arrays.append(index.values_at_depth(d))  # pyright: ignore
 
     if columns is not None:
         column_key = container.columns._loc_to_iloc(columns)
@@ -1819,61 +1821,6 @@ def sort_index_for_order(
         # NOTE: if asc is not an element, then ascending Booleans have already been applied to values_for_lex
         order = order[::-1]
     return order
-
-#-------------------------------------------------------------------------------
-
-class MessagePackElement:
-    '''
-    Handle encoding/decoding of elements found in object arrays not well supported by msgpack. Many of these cases were found through Hypothesis testing.
-    '''
-
-    @staticmethod
-    def encode(
-            a: tp.Any,
-            packb: TCallableAny,
-            ) -> tp.Tuple[str, tp.Any]:
-
-        if isinstance(a, datetime.datetime): #msgpack-numpy has an issue with datetime
-            year = str(a.year).zfill(4) #datetime returns inconsistent year string for <4 digit years on some systems
-            d = year + ' ' + a.strftime('%a %b %d %H:%M:%S:%f')
-            return ('DT', d)
-        elif isinstance(a, datetime.date):
-            year = str(a.year).zfill(4) #datetime returns inconsistent year string for <4 digit years on some systems
-            d = year + ' ' + a.strftime('%a %b %d')
-            return ('D', d)
-        elif isinstance(a, datetime.time):
-            return ('T', a.strftime('%H:%M:%S:%f'))
-        elif isinstance(a, np.ndarray): #recursion not covered by msgpack-numpy
-            return ('A', packb(a)) #recurse packb
-        elif isinstance(a, Fraction): #msgpack-numpy has an issue with fractions
-            return ('F',  str(a))
-        elif isinstance(a, int) and len(str(a)) >=19:
-            #msgpack-python has an overflow issue with large ints
-            return ('I', str(a))
-        return ('', a)
-
-
-    @staticmethod
-    def decode(
-            pair: tp.Tuple[str, tp.Any],
-            unpackb: TCallableAny,
-            ) -> tp.Any:
-        dt = datetime.datetime
-
-        (typ, d) = pair
-        if typ == 'DT': #msgpack-numpy has an issue with datetime
-            return dt.strptime(d, '%Y %a %b %d %H:%M:%S:%f')
-        elif typ == 'D':
-            return dt.strptime(d, '%Y %a %b %d').date()
-        elif typ == 'T':
-            return dt.strptime(d, '%H:%M:%S:%f').time()
-        elif typ == 'F': #msgpack-numpy has an issue with fractions
-            return Fraction(d)
-        elif typ == 'I': #msgpack-python has an issue with very large int values
-            return int(d)
-        elif typ == 'A': #recursion not covered by msgpack-numpy
-            return unpackb(d) #recurse unpackb
-        return d
 
 #-------------------------------------------------------------------------------
 

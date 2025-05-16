@@ -1,7 +1,7 @@
 Metadata-Version: 2.4
 Name: TheSilent
-Version: 0.1.8
-Summary: TheSilent is an string parser!
+Version: 0.1.11
+Summary: TheSilent is a fast subdomain enumeration tool!
 Author: Invizabel
 Project-URL: Homepage, https://github.com/Invizabel/The-Silent
 Project-URL: Bug Tracker, https://github.com/Invizabel/The-Silent/issues
@@ -13,19 +13,6 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Dynamic: license-file
 
-﻿# TheSilent is a string parser!
-#
-# Documentation:
-# import TheSilent
-# ts = TheSilent.TheSilent("some text")
-# print(ts.all_text())
-# print(ts.api())
-# print(ts.classified())
-# print(ts.email())
-# print(ts.ipaddress())
-# print(ts.ipcamera())
-# print(ts.links())
-# print(ts.phone())
-# print(ts.ssn())
-# print(ts.subnet())
-# print(ts.webforms())
+﻿# TheSilent is a fast subdomain enumeration tool!
+# 
+# python3 -m TheSilent -host example.com

@@ -163,6 +163,7 @@ class _AccessCaCertificateState:
 warnings.warn("""cloudflare.index/accesscacertificate.AccessCaCertificate has been deprecated in favor of cloudflare.index/zerotrustaccessshortlivedcertificate.ZeroTrustAccessShortLivedCertificate""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/accessCaCertificate:AccessCaCertificate")
 class AccessCaCertificate(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/accesscacertificate.AccessCaCertificate has been deprecated in favor of cloudflare.index/zerotrustaccessshortlivedcertificate.ZeroTrustAccessShortLivedCertificate""", DeprecationWarning)
 

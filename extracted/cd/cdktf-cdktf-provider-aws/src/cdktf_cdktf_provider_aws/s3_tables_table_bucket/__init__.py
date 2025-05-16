@@ -1,7 +1,7 @@
 r'''
 # `aws_s3tables_table_bucket`
 
-Refer to the Terraform Registry for docs: [`aws_s3tables_table_bucket`](https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket).
+Refer to the Terraform Registry for docs: [`aws_s3tables_table_bucket`](https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class S3TablesTableBucket(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-aws.s3TablesTableBucket.S3TablesTableBucket",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket aws_s3tables_table_bucket}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket aws_s3tables_table_bucket}.'''
 
     def __init__(
         self,
@@ -52,6 +52,7 @@ class S3TablesTableBucket(
         id: builtins.str,
         *,
         name: builtins.str,
+        encryption_configuration: typing.Optional[typing.Union["S3TablesTableBucketEncryptionConfiguration", typing.Dict[builtins.str, typing.Any]]] = None,
         maintenance_configuration: typing.Optional[typing.Union["S3TablesTableBucketMaintenanceConfiguration", typing.Dict[builtins.str, typing.Any]]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -61,12 +62,13 @@ class S3TablesTableBucket(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket aws_s3tables_table_bucket} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket aws_s3tables_table_bucket} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#name S3TablesTableBucket#name}.
-        :param maintenance_configuration: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#maintenance_configuration S3TablesTableBucket#maintenance_configuration}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#name S3TablesTableBucket#name}.
+        :param encryption_configuration: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#encryption_configuration S3TablesTableBucket#encryption_configuration}.
+        :param maintenance_configuration: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#maintenance_configuration S3TablesTableBucket#maintenance_configuration}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -81,6 +83,7 @@ class S3TablesTableBucket(
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
         config = S3TablesTableBucketConfig(
             name=name,
+            encryption_configuration=encryption_configuration,
             maintenance_configuration=maintenance_configuration,
             connection=connection,
             count=count,
@@ -106,7 +109,7 @@ class S3TablesTableBucket(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the S3TablesTableBucket to import.
-        :param import_from_id: The id of the existing S3TablesTableBucket that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing S3TablesTableBucket that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the S3TablesTableBucket to import is found.
         '''
         if __debug__:
@@ -117,6 +120,23 @@ class S3TablesTableBucket(
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
 
+    @jsii.member(jsii_name="putEncryptionConfiguration")
+    def put_encryption_configuration(
+        self,
+        *,
+        kms_key_arn: typing.Optional[builtins.str] = None,
+        sse_algorithm: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param kms_key_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#kms_key_arn S3TablesTableBucket#kms_key_arn}.
+        :param sse_algorithm: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#sse_algorithm S3TablesTableBucket#sse_algorithm}.
+        '''
+        value = S3TablesTableBucketEncryptionConfiguration(
+            kms_key_arn=kms_key_arn, sse_algorithm=sse_algorithm
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putEncryptionConfiguration", [value]))
+
     @jsii.member(jsii_name="putMaintenanceConfiguration")
     def put_maintenance_configuration(
         self,
@@ -124,13 +144,17 @@ class S3TablesTableBucket(
         iceberg_unreferenced_file_removal: typing.Optional[typing.Union["S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemoval", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param iceberg_unreferenced_file_removal: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#iceberg_unreferenced_file_removal S3TablesTableBucket#iceberg_unreferenced_file_removal}.
+        :param iceberg_unreferenced_file_removal: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#iceberg_unreferenced_file_removal S3TablesTableBucket#iceberg_unreferenced_file_removal}.
         '''
         value = S3TablesTableBucketMaintenanceConfiguration(
             iceberg_unreferenced_file_removal=iceberg_unreferenced_file_removal
         )
 
         return typing.cast(None, jsii.invoke(self, "putMaintenanceConfiguration", [value]))
+
+    @jsii.member(jsii_name="resetEncryptionConfiguration")
+    def reset_encryption_configuration(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetEncryptionConfiguration", []))
 
     @jsii.member(jsii_name="resetMaintenanceConfiguration")
     def reset_maintenance_configuration(self) -> None:
@@ -160,6 +184,13 @@ class S3TablesTableBucket(
         return typing.cast(builtins.str, jsii.get(self, "createdAt"))
 
     @builtins.property
+    @jsii.member(jsii_name="encryptionConfiguration")
+    def encryption_configuration(
+        self,
+    ) -> "S3TablesTableBucketEncryptionConfigurationOutputReference":
+        return typing.cast("S3TablesTableBucketEncryptionConfigurationOutputReference", jsii.get(self, "encryptionConfiguration"))
+
+    @builtins.property
     @jsii.member(jsii_name="maintenanceConfiguration")
     def maintenance_configuration(
         self,
@@ -170,6 +201,13 @@ class S3TablesTableBucket(
     @jsii.member(jsii_name="ownerAccountId")
     def owner_account_id(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "ownerAccountId"))
+
+    @builtins.property
+    @jsii.member(jsii_name="encryptionConfigurationInput")
+    def encryption_configuration_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "S3TablesTableBucketEncryptionConfiguration"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "S3TablesTableBucketEncryptionConfiguration"]], jsii.get(self, "encryptionConfigurationInput"))
 
     @builtins.property
     @jsii.member(jsii_name="maintenanceConfigurationInput")
@@ -208,6 +246,7 @@ class S3TablesTableBucket(
         "provider": "provider",
         "provisioners": "provisioners",
         "name": "name",
+        "encryption_configuration": "encryptionConfiguration",
         "maintenance_configuration": "maintenanceConfiguration",
     },
 )
@@ -223,6 +262,7 @@ class S3TablesTableBucketConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
         name: builtins.str,
+        encryption_configuration: typing.Optional[typing.Union["S3TablesTableBucketEncryptionConfiguration", typing.Dict[builtins.str, typing.Any]]] = None,
         maintenance_configuration: typing.Optional[typing.Union["S3TablesTableBucketMaintenanceConfiguration", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
@@ -233,11 +273,14 @@ class S3TablesTableBucketConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#name S3TablesTableBucket#name}.
-        :param maintenance_configuration: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#maintenance_configuration S3TablesTableBucket#maintenance_configuration}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#name S3TablesTableBucket#name}.
+        :param encryption_configuration: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#encryption_configuration S3TablesTableBucket#encryption_configuration}.
+        :param maintenance_configuration: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#maintenance_configuration S3TablesTableBucket#maintenance_configuration}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(encryption_configuration, dict):
+            encryption_configuration = S3TablesTableBucketEncryptionConfiguration(**encryption_configuration)
         if isinstance(maintenance_configuration, dict):
             maintenance_configuration = S3TablesTableBucketMaintenanceConfiguration(**maintenance_configuration)
         if __debug__:
@@ -250,6 +293,7 @@ class S3TablesTableBucketConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
             check_type(argname="argument provisioners", value=provisioners, expected_type=type_hints["provisioners"])
             check_type(argname="argument name", value=name, expected_type=type_hints["name"])
+            check_type(argname="argument encryption_configuration", value=encryption_configuration, expected_type=type_hints["encryption_configuration"])
             check_type(argname="argument maintenance_configuration", value=maintenance_configuration, expected_type=type_hints["maintenance_configuration"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "name": name,
@@ -268,6 +312,8 @@ class S3TablesTableBucketConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["provider"] = provider
         if provisioners is not None:
             self._values["provisioners"] = provisioners
+        if encryption_configuration is not None:
+            self._values["encryption_configuration"] = encryption_configuration
         if maintenance_configuration is not None:
             self._values["maintenance_configuration"] = maintenance_configuration
 
@@ -337,16 +383,24 @@ class S3TablesTableBucketConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#name S3TablesTableBucket#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#name S3TablesTableBucket#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
+    def encryption_configuration(
+        self,
+    ) -> typing.Optional["S3TablesTableBucketEncryptionConfiguration"]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#encryption_configuration S3TablesTableBucket#encryption_configuration}.'''
+        result = self._values.get("encryption_configuration")
+        return typing.cast(typing.Optional["S3TablesTableBucketEncryptionConfiguration"], result)
+
+    @builtins.property
     def maintenance_configuration(
         self,
     ) -> typing.Optional["S3TablesTableBucketMaintenanceConfiguration"]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#maintenance_configuration S3TablesTableBucket#maintenance_configuration}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#maintenance_configuration S3TablesTableBucket#maintenance_configuration}.'''
         result = self._values.get("maintenance_configuration")
         return typing.cast(typing.Optional["S3TablesTableBucketMaintenanceConfiguration"], result)
 
@@ -363,6 +417,136 @@ class S3TablesTableBucketConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
 
 @jsii.data_type(
+    jsii_type="@cdktf/provider-aws.s3TablesTableBucket.S3TablesTableBucketEncryptionConfiguration",
+    jsii_struct_bases=[],
+    name_mapping={"kms_key_arn": "kmsKeyArn", "sse_algorithm": "sseAlgorithm"},
+)
+class S3TablesTableBucketEncryptionConfiguration:
+    def __init__(
+        self,
+        *,
+        kms_key_arn: typing.Optional[builtins.str] = None,
+        sse_algorithm: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param kms_key_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#kms_key_arn S3TablesTableBucket#kms_key_arn}.
+        :param sse_algorithm: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#sse_algorithm S3TablesTableBucket#sse_algorithm}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__be81a565cc2061dbe1063ade39d5164746b8abd8fb99b65fc0441abef6a468b0)
+            check_type(argname="argument kms_key_arn", value=kms_key_arn, expected_type=type_hints["kms_key_arn"])
+            check_type(argname="argument sse_algorithm", value=sse_algorithm, expected_type=type_hints["sse_algorithm"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if kms_key_arn is not None:
+            self._values["kms_key_arn"] = kms_key_arn
+        if sse_algorithm is not None:
+            self._values["sse_algorithm"] = sse_algorithm
+
+    @builtins.property
+    def kms_key_arn(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#kms_key_arn S3TablesTableBucket#kms_key_arn}.'''
+        result = self._values.get("kms_key_arn")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def sse_algorithm(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#sse_algorithm S3TablesTableBucket#sse_algorithm}.'''
+        result = self._values.get("sse_algorithm")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "S3TablesTableBucketEncryptionConfiguration(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class S3TablesTableBucketEncryptionConfigurationOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-aws.s3TablesTableBucket.S3TablesTableBucketEncryptionConfigurationOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__770b51521eb2e917c0895c04a749be99975e6ecd77911f93d9f096a3ae1e036b)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetKmsKeyArn")
+    def reset_kms_key_arn(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetKmsKeyArn", []))
+
+    @jsii.member(jsii_name="resetSseAlgorithm")
+    def reset_sse_algorithm(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetSseAlgorithm", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="kmsKeyArnInput")
+    def kms_key_arn_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "kmsKeyArnInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="sseAlgorithmInput")
+    def sse_algorithm_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "sseAlgorithmInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="kmsKeyArn")
+    def kms_key_arn(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "kmsKeyArn"))
+
+    @kms_key_arn.setter
+    def kms_key_arn(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9382ace65cf4f22d5ad0ca3149403fa11e8771a54aa3885b1a8d42ff1563aba6)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "kmsKeyArn", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="sseAlgorithm")
+    def sse_algorithm(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "sseAlgorithm"))
+
+    @sse_algorithm.setter
+    def sse_algorithm(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__820502fa0eed16025b137aa87a1cc2fdf5f025a12f3d1851764207c0d395891d)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "sseAlgorithm", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, S3TablesTableBucketEncryptionConfiguration]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, S3TablesTableBucketEncryptionConfiguration]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, S3TablesTableBucketEncryptionConfiguration]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__dad569f0e986e20922a9821c9715fc427227960983c7cd0d0337fb3ab970082c)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
     jsii_type="@cdktf/provider-aws.s3TablesTableBucket.S3TablesTableBucketMaintenanceConfiguration",
     jsii_struct_bases=[],
     name_mapping={
@@ -376,7 +560,7 @@ class S3TablesTableBucketMaintenanceConfiguration:
         iceberg_unreferenced_file_removal: typing.Optional[typing.Union["S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemoval", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param iceberg_unreferenced_file_removal: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#iceberg_unreferenced_file_removal S3TablesTableBucket#iceberg_unreferenced_file_removal}.
+        :param iceberg_unreferenced_file_removal: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#iceberg_unreferenced_file_removal S3TablesTableBucket#iceberg_unreferenced_file_removal}.
         '''
         if isinstance(iceberg_unreferenced_file_removal, dict):
             iceberg_unreferenced_file_removal = S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemoval(**iceberg_unreferenced_file_removal)
@@ -391,7 +575,7 @@ class S3TablesTableBucketMaintenanceConfiguration:
     def iceberg_unreferenced_file_removal(
         self,
     ) -> typing.Optional["S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemoval"]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#iceberg_unreferenced_file_removal S3TablesTableBucket#iceberg_unreferenced_file_removal}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#iceberg_unreferenced_file_removal S3TablesTableBucket#iceberg_unreferenced_file_removal}.'''
         result = self._values.get("iceberg_unreferenced_file_removal")
         return typing.cast(typing.Optional["S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemoval"], result)
 
@@ -420,8 +604,8 @@ class S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemoval:
         status: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param settings: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#settings S3TablesTableBucket#settings}.
-        :param status: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#status S3TablesTableBucket#status}.
+        :param settings: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#settings S3TablesTableBucket#settings}.
+        :param status: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#status S3TablesTableBucket#status}.
         '''
         if isinstance(settings, dict):
             settings = S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemovalSettings(**settings)
@@ -439,13 +623,13 @@ class S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemoval:
     def settings(
         self,
     ) -> typing.Optional["S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemovalSettings"]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#settings S3TablesTableBucket#settings}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#settings S3TablesTableBucket#settings}.'''
         result = self._values.get("settings")
         return typing.cast(typing.Optional["S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemovalSettings"], result)
 
     @builtins.property
     def status(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#status S3TablesTableBucket#status}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#status S3TablesTableBucket#status}.'''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -489,8 +673,8 @@ class S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemovalO
         unreferenced_days: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param non_current_days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#non_current_days S3TablesTableBucket#non_current_days}.
-        :param unreferenced_days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#unreferenced_days S3TablesTableBucket#unreferenced_days}.
+        :param non_current_days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#non_current_days S3TablesTableBucket#non_current_days}.
+        :param unreferenced_days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#unreferenced_days S3TablesTableBucket#unreferenced_days}.
         '''
         value = S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemovalSettings(
             non_current_days=non_current_days, unreferenced_days=unreferenced_days
@@ -571,8 +755,8 @@ class S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemovalS
         unreferenced_days: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param non_current_days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#non_current_days S3TablesTableBucket#non_current_days}.
-        :param unreferenced_days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#unreferenced_days S3TablesTableBucket#unreferenced_days}.
+        :param non_current_days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#non_current_days S3TablesTableBucket#non_current_days}.
+        :param unreferenced_days: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#unreferenced_days S3TablesTableBucket#unreferenced_days}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__5a7d4e07e40732a29c0c3a5e9cc01ac48f719a47198fd58b77240b9974993a1f)
@@ -586,13 +770,13 @@ class S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemovalS
 
     @builtins.property
     def non_current_days(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#non_current_days S3TablesTableBucket#non_current_days}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#non_current_days S3TablesTableBucket#non_current_days}.'''
         result = self._values.get("non_current_days")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def unreferenced_days(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#unreferenced_days S3TablesTableBucket#unreferenced_days}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#unreferenced_days S3TablesTableBucket#unreferenced_days}.'''
         result = self._values.get("unreferenced_days")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -716,8 +900,8 @@ class S3TablesTableBucketMaintenanceConfigurationOutputReference(
         status: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param settings: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#settings S3TablesTableBucket#settings}.
-        :param status: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/s3tables_table_bucket#status S3TablesTableBucket#status}.
+        :param settings: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#settings S3TablesTableBucket#settings}.
+        :param status: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/s3tables_table_bucket#status S3TablesTableBucket#status}.
         '''
         value = S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemoval(
             settings=settings, status=status
@@ -764,6 +948,8 @@ class S3TablesTableBucketMaintenanceConfigurationOutputReference(
 __all__ = [
     "S3TablesTableBucket",
     "S3TablesTableBucketConfig",
+    "S3TablesTableBucketEncryptionConfiguration",
+    "S3TablesTableBucketEncryptionConfigurationOutputReference",
     "S3TablesTableBucketMaintenanceConfiguration",
     "S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemoval",
     "S3TablesTableBucketMaintenanceConfigurationIcebergUnreferencedFileRemovalOutputReference",
@@ -779,6 +965,7 @@ def _typecheckingstub__5dc16fcd7764c185e65bffb307c349bd66356eae4e29f4f43cd334446
     id: builtins.str,
     *,
     name: builtins.str,
+    encryption_configuration: typing.Optional[typing.Union[S3TablesTableBucketEncryptionConfiguration, typing.Dict[builtins.str, typing.Any]]] = None,
     maintenance_configuration: typing.Optional[typing.Union[S3TablesTableBucketMaintenanceConfiguration, typing.Dict[builtins.str, typing.Any]]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -816,7 +1003,41 @@ def _typecheckingstub__8e5e861575a670f881e561e3c5368cba49abc2bba8db5ebe1c67205d9
     provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
     provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     name: builtins.str,
+    encryption_configuration: typing.Optional[typing.Union[S3TablesTableBucketEncryptionConfiguration, typing.Dict[builtins.str, typing.Any]]] = None,
     maintenance_configuration: typing.Optional[typing.Union[S3TablesTableBucketMaintenanceConfiguration, typing.Dict[builtins.str, typing.Any]]] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__be81a565cc2061dbe1063ade39d5164746b8abd8fb99b65fc0441abef6a468b0(
+    *,
+    kms_key_arn: typing.Optional[builtins.str] = None,
+    sse_algorithm: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__770b51521eb2e917c0895c04a749be99975e6ecd77911f93d9f096a3ae1e036b(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9382ace65cf4f22d5ad0ca3149403fa11e8771a54aa3885b1a8d42ff1563aba6(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__820502fa0eed16025b137aa87a1cc2fdf5f025a12f3d1851764207c0d395891d(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__dad569f0e986e20922a9821c9715fc427227960983c7cd0d0337fb3ab970082c(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, S3TablesTableBucketEncryptionConfiguration]],
 ) -> None:
     """Type checking stubs"""
     pass

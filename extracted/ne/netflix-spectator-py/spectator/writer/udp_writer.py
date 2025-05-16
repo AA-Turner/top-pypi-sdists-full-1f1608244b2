@@ -1,4 +1,5 @@
 import socket
+import threading
 from ipaddress import ip_address, IPv6Address
 from typing import Tuple
 
@@ -12,6 +13,8 @@ class UdpWriter(Writer):
         super().__init__()
         self._logger.debug("initialize UdpWriter to %s", location)
         self._address = address
+        self._lock = threading.Lock()
+        self._sock = None
 
         try:
             if type(ip_address(self._address[0])) is IPv6Address:
@@ -26,10 +29,18 @@ class UdpWriter(Writer):
         self._logger.debug("write line=%s", line)
 
         try:
-            with socket.socket(self._family, socket.SOCK_DGRAM) as s:
-                s.sendto(bytes(line, encoding="utf-8"), self._address)
+            # lazily instantiate the socket, in a thread-safe manner. this is necessary, because
+            # the legacy GlobalRegistry will configure a UdpWriter upon `import spectator`.
+            if self._sock is None:
+                with self._lock:
+                    if self._sock is None:
+                        self._sock = socket.socket(family=self._family, type=socket.SOCK_DGRAM)
+
+            self._sock.sendto(bytes(line, encoding="utf-8"), self._address)
         except IOError:
             self._logger.error("failed to write line=%s", line)
+        except Exception as e:
+            self._logger.error("exception during write: %s", e)
 
     def close(self) -> None:
-        pass
+        self._sock.close()

@@ -115,7 +115,11 @@ class ClientManager:
         self._logger.info("Initializing client manager")
 
     def _initialize_logger(self) -> None:
-        self._logger = ClientLogger(client_key=self._key, service_key=self._service_key, **self._log_config.model_dump())
+        self._logger = ClientLogger(
+            client_key=self._key,
+            service_key=self._service_key,
+            **self._log_config.model_dump()
+        )
 
     @property
     def key(self) -> str:

@@ -13,6 +13,7 @@ from collections import deque
 from datetime import datetime
 from functools import cached_property, lru_cache
 import logging
+import re
 import secrets
 import time
 from typing import TYPE_CHECKING, Any, cast
@@ -24,7 +25,13 @@ from chip.clusters.ClusterObjects import ALL_ATTRIBUTES, ALL_CLUSTERS, Cluster
 from chip.discovery import DiscoveryType
 from chip.exceptions import ChipStackError
 from chip.native import PyChipError
-from zeroconf import BadTypeInNameException, IPVersion, ServiceStateChange, Zeroconf
+from zeroconf import (
+    BadTypeInNameException,
+    DNSQuestionType,
+    IPVersion,
+    ServiceStateChange,
+    Zeroconf,
+)
 from zeroconf.asyncio import AsyncServiceBrowser, AsyncServiceInfo, AsyncZeroconf
 
 from matter_server.common.const import VERBOSE_LOG_LEVEL
@@ -122,6 +129,10 @@ ICD_ATTR_LIST_ATTRIBUTE_PATH = create_attribute_path_from_attribute(
     0, Clusters.IcdManagement.Attributes.AttributeList
 )
 
+RE_MDNS_SERVICE_NAME = re.compile(
+    rf"^([0-9A-Fa-f]{{16}})-([0-9A-Fa-f]{{16}})\.{re.escape(MDNS_TYPE_OPERATIONAL_NODE)}$"
+)
+
 
 # pylint: disable=too-many-lines,too-many-instance-attributes,too-many-public-methods
 
@@ -146,7 +157,6 @@ class MatterDeviceController:
         # we keep the last events in memory so we can include them in the diagnostics dump
         self.event_history: deque[Attribute.EventReadResult] = deque(maxlen=25)
         self._compressed_fabric_id: int | None = None
-        self._fabric_id_hex: str | None = None
         self._wifi_credentials_set: bool = False
         self._thread_credentials_set: bool = False
         self._setup_node_tasks = dict[int, asyncio.Task]()
@@ -173,7 +183,6 @@ class MatterDeviceController:
         self._compressed_fabric_id = (
             await self._chip_device_controller.get_compressed_fabric_id()
         )
-        self._fabric_id_hex = hex(self._compressed_fabric_id)[2:]
         await load_local_updates(self._ota_provider_dir)
 
     async def start(self) -> None:
@@ -220,6 +229,7 @@ class MatterDeviceController:
             self._aiozc.zeroconf,
             services,
             handlers=[self._on_mdns_service_state_change],
+            question_type=DNSQuestionType.QM,
         )
 
     async def stop(self) -> None:
@@ -238,8 +248,10 @@ class MatterDeviceController:
         LOGGER.debug("Stopped.")
 
     @property
-    def compressed_fabric_id(self) -> int | None:
+    def compressed_fabric_id(self) -> int:
         """Return the compressed fabric id."""
+        if self._compressed_fabric_id is None:
+            raise RuntimeError("Compressed Fabric ID not set")
         return self._compressed_fabric_id
 
     @property
@@ -1099,10 +1111,12 @@ class MatterDeviceController:
             raise UpdateCheckError("Update found, but no OTA URL provided.")
 
         node_logger.info(
-            "New software update found: %s on %s (current %s).",
+            "Software update found: %s (%s) from %s, current %s (%s)).",
             update["softwareVersionString"],
+            update["softwareVersion"],
             update_source,
             software_version_string,
+            software_version,
         )
         return update_source, update
 
@@ -1515,25 +1529,36 @@ class MatterDeviceController:
             )
             return
 
-        if service_type == MDNS_TYPE_OPERATIONAL_NODE:
-            if self._fabric_id_hex is None or self._fabric_id_hex not in name.lower():
-                # filter out messages that are not for our fabric
-                return
-        # process the event with a debounce timer
+        if service_type != MDNS_TYPE_OPERATIONAL_NODE:
+            return
+
+        if not (match := RE_MDNS_SERVICE_NAME.match(name)):
+            LOGGER.getChild("mdns").warning(
+                "Service name doesn't match expected operational node pattern: %s", name
+            )
+            return
+
+        fabric_id_hex, node_id_hex = match.groups()
+
+        # Filter messages of other fabrics
+        if int(fabric_id_hex, 16) != self.compressed_fabric_id:
+            return
+
+        # Process the event with a debounce timer
         self._mdns_event_timer[name] = self._loop.call_later(
-            0.5, self._on_mdns_operational_node_state, name, state_change
+            0.5,
+            self._on_mdns_operational_node_state,
+            name,
+            int(node_id_hex, 16),
+            state_change,
         )
 
     def _on_mdns_operational_node_state(
-        self, name: str, state_change: ServiceStateChange
+        self, name: str, node_id: int, state_change: ServiceStateChange
     ) -> None:
         """Handle a (operational) Matter node MDNS state change."""
         self._mdns_event_timer.pop(name, None)
-        logger = LOGGER.getChild("mdns")
-        # the mdns name is constructed as [fabricid]-[nodeid]._matter._tcp.local.
-        # extract the node id from the name
-        node_id = int(name.split("-")[1].split(".")[0], 16)
-        node_logger = self.get_node_logger(logger, node_id)
+        node_logger = self.get_node_logger(LOGGER.getChild("mdns"), node_id)
 
         if not (node := self._nodes.get(node_id)):
             return  # this should not happen, but guard just in case

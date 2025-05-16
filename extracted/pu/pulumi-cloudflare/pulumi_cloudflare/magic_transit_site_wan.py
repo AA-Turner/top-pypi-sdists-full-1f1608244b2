@@ -250,6 +250,7 @@ class _MagicTransitSiteWanState:
         pulumi.set(self, "vlan_tag", value)
 
 
+@pulumi.type_token("cloudflare:index/magicTransitSiteWan:MagicTransitSiteWan")
 class MagicTransitSiteWan(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -427,7 +428,7 @@ class MagicTransitSiteWan(pulumi.CustomResource):
 
     @property
     @pulumi.getter(name="staticAddressing")
-    def static_addressing(self) -> pulumi.Output['outputs.MagicTransitSiteWanStaticAddressing']:
+    def static_addressing(self) -> pulumi.Output[Optional['outputs.MagicTransitSiteWanStaticAddressing']]:
         """
         (optional) if omitted, use DHCP. Submit secondary*address when site is in high availability mode.
         """

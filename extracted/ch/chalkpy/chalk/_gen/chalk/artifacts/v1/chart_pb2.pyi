@@ -49,6 +49,8 @@ class MetricKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     METRIC_KIND_NETWORK_WRITE_BYTES: _ClassVar[MetricKind]
     METRIC_KIND_DISK_READ_BYTES: _ClassVar[MetricKind]
     METRIC_KIND_DISK_WRITE_BYTES: _ClassVar[MetricKind]
+    METRIC_KIND_STREAM_LAG: _ClassVar[MetricKind]
+    METRIC_KIND_USAGE: _ClassVar[MetricKind]
 
 class FilterKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -186,6 +188,8 @@ METRIC_KIND_NETWORK_READ_BYTES: MetricKind
 METRIC_KIND_NETWORK_WRITE_BYTES: MetricKind
 METRIC_KIND_DISK_READ_BYTES: MetricKind
 METRIC_KIND_DISK_WRITE_BYTES: MetricKind
+METRIC_KIND_STREAM_LAG: MetricKind
+METRIC_KIND_USAGE: MetricKind
 FILTER_KIND_UNSPECIFIED: FilterKind
 FILTER_KIND_FEATURE_STATUS: FilterKind
 FILTER_KIND_FEATURE_NAME: FilterKind

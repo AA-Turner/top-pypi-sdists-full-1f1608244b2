@@ -1,6 +1,6 @@
 use crate::kernels::matmul::{GemmDispatchParams, GemmKernel};
-use crate::{ConstantValues, LibraryName, MetalContext, Value};
-use anyhow::{ensure, Result};
+use crate::{ConstantValues, LibraryName, MetalStream, Value};
+use anyhow::ensure;
 use metal::{Buffer, MTLSize, NSUInteger};
 use std::ffi::c_void;
 use std::fmt;
@@ -22,7 +22,7 @@ impl GemmKernel for MfaGemm {
 
     fn dispatch_eval(
         &self,
-        context: &MetalContext,
+        stream: &MetalStream,
         params: GemmDispatchParams,
         a_buffer: &Buffer,
         b_buffer: &Buffer,
@@ -58,7 +58,7 @@ impl GemmKernel for MfaGemm {
         );
 
         dispatch_metal_mfa_gemm(
-            context,
+            stream,
             dts[0],
             (a_batch, m, n, k),
             unsafe { std::mem::transmute::<&[isize], &[usize]>(a_strides.as_slice()) },
@@ -80,7 +80,7 @@ impl GemmKernel for MfaGemm {
 // From https://github.com/huggingface/candle/blob/main/candle-metal-kernels/src/lib.rs
 #[allow(clippy::too_many_arguments)]
 pub fn dispatch_metal_mfa_gemm(
-    context: &MetalContext,
+    stream: &MetalStream,
     dt: DatumType,
     (b, m, n, k): (usize, usize, usize, usize),
     lhs_stride: &[usize],
@@ -93,7 +93,7 @@ pub fn dispatch_metal_mfa_gemm(
     rhs_transpose: bool,
     output: &Buffer,
     output_offset: usize,
-) -> Result<()> {
+) -> TractResult<()> {
     assert!(rhs_stride.len() >= 2);
     assert!(lhs_stride.len() >= 2);
     let rhs_m1 = rhs_stride[rhs_stride.len() - 1];
@@ -175,11 +175,7 @@ pub fn dispatch_metal_mfa_gemm(
         _ => bail!("MFA GEMM only support F32 or F16 tensors"),
     };
 
-    let pipeline = context.shared_context().load_pipeline_with_constants(
-        LibraryName::MfaLib,
-        name,
-        constants,
-    )?;
+    let pipeline = stream.load_pipeline_with_constants(LibraryName::MfaLib, name, constants)?;
     let m_group = m_simd * m_splits;
     let n_group = n_simd * n_splits;
 
@@ -201,7 +197,7 @@ pub fn dispatch_metal_mfa_gemm(
 
     let block_bytes = block_elements * dt.size_of() as u16;
 
-    let command_buffer = context.command_buffer();
+    let command_buffer = stream.command_buffer();
     command_buffer.encode(|encoder| {
         encoder.set_compute_pipeline_state(&pipeline);
         encoder.set_threadgroup_memory_length(0, block_bytes.into());
@@ -248,59 +244,57 @@ pub fn dispatch_metal_mfa_gemm(
 
 #[cfg(test)]
 mod tests {
+    use crate::utils::with_borrowed_metal_stream;
+
     use super::*;
     use crate::kernels::matmul::GemmImpl;
-    use crate::{IntoMetal, MetalTensor};
+    use tract_gpu::tensor::{DeviceTensor, IntoDevice};
 
     #[test]
-    fn test_mfa_gemm() -> Result<()> {
-        objc::rc::autoreleasepool(|| {
-            crate::METAL_CONTEXT.with_borrow(|context| {
-                let (b, m, n, k) = (1, 2, 4, 3);
-                let a = Tensor::from_shape(
-                    &[b, m, k],
-                    &(0..b * m * k).map(|f| f as f32).collect::<Vec<_>>(),
-                )?
-                .into_metal()?;
-                let b = Tensor::from_shape(
-                    &[b, k, n],
-                    &(0..b * n * k).map(|f| f as f32).collect::<Vec<_>>(),
-                )?
-                .into_metal()?;
+    fn test_mfa_gemm() -> TractResult<()> {
+        with_borrowed_metal_stream(|stream| {
+            let (b, m, n, k) = (1, 2, 4, 3);
+            let a = Tensor::from_shape(
+                &[b, m, k],
+                &(0..b * m * k).map(|f| f as f32).collect::<Vec<_>>(),
+            )?
+            .into_device()?;
+            let b = Tensor::from_shape(
+                &[b, k, n],
+                &(0..b * n * k).map(|f| f as f32).collect::<Vec<_>>(),
+            )?
+            .into_device()?;
 
-                let c = GemmImpl::<MfaGemm>::default().eval(context, &a, &b)?;
+            let c = GemmImpl::<MfaGemm>::default().eval(stream, &a, &b)?;
 
-                let expected_c = Tensor::from_shape(
-                    &[1, 2, 4],
-                    &[20.0, 23.0, 26.0, 29.0, 56.0, 68.0, 80.0, 92.0],
-                )?;
+            let expected_c =
+                Tensor::from_shape(&[1, 2, 4], &[20.0, 23.0, 26.0, 29.0, 56.0, 68.0, 80.0, 92.0])?;
 
-                let c = c.to_cpu()?;
-                assert!(c.close_enough(&expected_c, Approximation::Close).is_ok());
+            let c = c.to_host()?;
+            assert!(c.close_enough(&expected_c, Approximation::Close).is_ok());
 
-                let (b, m, n, k) = (2, 2, 4, 3);
-                let a = MetalTensor::from_shape(
-                    &[b, m, k],
-                    &(0..b * m * k).map(|f| f as f32).collect::<Vec<_>>(),
-                )?;
-                let b = MetalTensor::from_shape(
-                    &[b, k, n],
-                    &(0..b * n * k).map(|f| f as f32).collect::<Vec<_>>(),
-                )?;
+            let (b, m, n, k) = (2, 2, 4, 3);
+            let a = DeviceTensor::from_shape(
+                &[b, m, k],
+                &(0..b * m * k).map(|f| f as f32).collect::<Vec<_>>(),
+            )?;
+            let b = DeviceTensor::from_shape(
+                &[b, k, n],
+                &(0..b * n * k).map(|f| f as f32).collect::<Vec<_>>(),
+            )?;
 
-                let c = GemmImpl::<MfaGemm>::default().eval(context, &a, &b)?;
+            let c = GemmImpl::<MfaGemm>::default().eval(stream, &a, &b)?;
 
-                let expected_c = Tensor::from_shape(
-                    &[2, 2, 4],
-                    &[
-                        20.0, 23.0, 26.0, 29.0, 56.0, 68.0, 80.0, 92.0, 344.0, 365.0, 386.0, 407.0,
-                        488.0, 518.0, 548.0, 578.0,
-                    ],
-                )?;
+            let expected_c = Tensor::from_shape(
+                &[2, 2, 4],
+                &[
+                    20.0, 23.0, 26.0, 29.0, 56.0, 68.0, 80.0, 92.0, 344.0, 365.0, 386.0, 407.0,
+                    488.0, 518.0, 548.0, 578.0,
+                ],
+            )?;
 
-                assert!(c.to_cpu()?.close_enough(&expected_c, Approximation::Close).is_ok());
-                Ok(())
-            })
+            assert!(c.to_host()?.close_enough(&expected_c, Approximation::Close).is_ok());
+            Ok(())
         })
     }
 }

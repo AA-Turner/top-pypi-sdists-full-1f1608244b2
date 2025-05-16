@@ -1,10 +1,9 @@
 use crate::encoder::EncoderExt;
 use crate::kernels::{utils, BroadcastKind};
-use crate::MetalTensor;
-use crate::{LibraryName, MetalContext};
-use anyhow::Result;
+use crate::{LibraryName, MetalStream};
 use std::fmt;
 use tract_core::internal::*;
+use tract_gpu::tensor::DeviceTensor;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct PermuteAxes;
@@ -33,10 +32,10 @@ impl PermuteAxes {
         )
     }
 
-    pub fn kernel_name(&self, dt: DatumType, broadcast_kind: BroadcastKind) -> Result<String> {
+    pub fn kernel_name(&self, dt: DatumType, broadcast_kind: BroadcastKind) -> TractResult<String> {
         ensure!(Self::is_supported_dt(dt), "Unsupport dt {:?} for metal permute axes  op", dt);
-        let tname = MetalTensor::tname(dt)?;
-        let broadcast_name = broadcast_kind.to_func_part();
+        let tname = DeviceTensor::tname(dt)?;
+        let broadcast_name = broadcast_kind.name();
         Ok(format!("array_ops::copy_{broadcast_name}_{tname}"))
     }
 
@@ -52,30 +51,30 @@ impl PermuteAxes {
 
     pub fn eval(
         &self,
-        context: &MetalContext,
-        input: &MetalTensor,
+        stream: &MetalStream,
+        input: &DeviceTensor,
         axes: &[usize],
-    ) -> Result<MetalTensor> {
+    ) -> TractResult<DeviceTensor> {
         let output = unsafe {
-            MetalTensor::uninitialized_dt(
+            DeviceTensor::uninitialized_dt(
                 input.datum_type(),
                 &Self::output_shape(input.shape(), axes)?,
             )?
         };
-        self.dispatch_eval(context, input, axes, &output)?;
-        context.wait_until_completed()?;
+        self.dispatch_eval(stream, input, axes, &output)?;
+        stream.wait_until_completed()?;
         Ok(output)
     }
 
     pub fn dispatch_eval(
         &self,
-        context: &MetalContext,
-        input: &MetalTensor,
+        stream: &MetalStream,
+        input: &DeviceTensor,
         axes: &[usize],
-        output: &MetalTensor,
-    ) -> Result<()> {
-        input.retain_until_completion();
-        output.retained_until_completion();
+        output: &DeviceTensor,
+    ) -> TractResult<()> {
+        stream.retain_tensor(input);
+        stream.retain_tensor(output);
 
         // Validate give axes permutation
         let mut usage_counts = vec![0; input.rank()];
@@ -104,13 +103,13 @@ impl PermuteAxes {
         );
 
         let broadcast_kind = BroadcastKind::from_rank(input.rank())
-            .with_context(|| anyhow!("Unsupported rank {:?} for PermuteAxes", input.rank()))?;
+            .with_context(|| format!("Unsupported rank {:?} for PermuteAxes", input.rank()))?;
 
         let kernel_name = self.kernel_name(input.datum_type(), broadcast_kind)?;
 
-        let pipeline =
-            context.shared_context().load_pipeline(LibraryName::ArrayOps, &kernel_name)?;
-        let command_buffer = context.command_buffer();
+        let out_shape = output.shape();
+        let pipeline = stream.load_pipeline(LibraryName::ArrayOps, &kernel_name)?;
+        let command_buffer = stream.command_buffer();
         command_buffer.encode(|encoder| {
             encoder.set_compute_pipeline_state(&pipeline);
             encoder.set_metal_tensor(0, input, metal::MTLResourceUsage::Read);
@@ -119,8 +118,10 @@ impl PermuteAxes {
             encoder.set_slice(3, output.shape());
             encoder.set_slice(4, output.strides());
 
-            let grid_size = utils::build_metal_size_for_shape(output.shape());
-            let group_size = utils::build_metal_size_with_ones();
+            let (grid_size, group_size) = utils::build_metal_grid_and_groups_for_el_wise_op(
+                out_shape,
+                pipeline.max_total_threads_per_threadgroup() as _,
+            );
 
             encoder.dispatch_thread_groups(grid_size, group_size);
         });
@@ -130,31 +131,31 @@ impl PermuteAxes {
 
 #[cfg(test)]
 mod tests {
+    use crate::utils::with_borrowed_metal_stream;
+
     use super::*;
-    use crate::IntoMetal;
 
     use num_traits::Zero;
 
     use tract_core::internal::Tensor;
+    use tract_gpu::tensor::IntoDevice;
 
-    fn run_test_case<F: Datum + Zero + Copy>(shape: &[usize], axes: &[usize]) -> Result<()> {
-        objc::rc::autoreleasepool(|| {
-            crate::METAL_CONTEXT.with_borrow(|context| {
-                let a_len = shape.iter().product::<usize>();
-                let a_data = (0..a_len).map(|f| f as f32).collect::<Vec<_>>();
+    fn run_test_case<F: Datum + Zero + Copy>(shape: &[usize], axes: &[usize]) -> TractResult<()> {
+        with_borrowed_metal_stream(|stream| {
+            let a_len = shape.iter().product::<usize>();
+            let a_data = (0..a_len).map(|f| f as f32).collect::<Vec<_>>();
 
-                let a = Tensor::from_shape(shape, &a_data)?.into_metal()?;
+            let a = Tensor::from_shape(shape, &a_data)?.into_device()?;
 
-                let output = PermuteAxes.eval(context, &a, axes)?;
-                let ref_output = a.to_cpu()?.into_tensor().permute_axes(axes)?;
-                assert_eq!(ref_output, output.to_cpu()?.into_tensor());
-                Ok(())
-            })
+            let output = PermuteAxes.eval(stream, &a, axes)?;
+            let ref_output = a.to_host()?.into_tensor().permute_axes(axes)?;
+            assert_eq!(ref_output, output.to_host()?.into_tensor());
+            Ok(())
         })
     }
 
     #[test]
-    fn test_permute_axes() -> Result<()> {
+    fn test_permute_axes() -> TractResult<()> {
         run_test_case::<f32>(&[3, 4], &[1, 0])?;
         run_test_case::<f32>(&[1, 2, 3, 4, 5], &[4, 1, 2, 3, 0])?;
         run_test_case::<f32>(&[1, 1, 2, 2, 3, 2], &[0, 3, 1, 2, 4, 5])?;

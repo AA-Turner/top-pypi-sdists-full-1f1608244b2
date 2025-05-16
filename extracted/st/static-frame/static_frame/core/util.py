@@ -25,6 +25,7 @@ from os import PathLike
 
 import numpy as np
 import typing_extensions as tp
+from arraykit import FrozenAutoMap
 from arraykit import array_to_tuple_iter
 from arraykit import column_2d_filter
 from arraykit import first_true_1d
@@ -32,7 +33,6 @@ from arraykit import isna_element
 from arraykit import mloc
 from arraykit import nonzero_1d
 from arraykit import resolve_dtype
-from arraymap import FrozenAutoMap
 
 from static_frame.core.exception import ErrorNotTruthy
 from static_frame.core.exception import InvalidDatetime64Comparison
@@ -58,8 +58,15 @@ TNDArrayBool = np.ndarray[tp.Any, np.dtype[np.bool_]]
 TNDArrayObject = np.ndarray[tp.Any, np.dtype[np.object_]]
 TNDArrayIntDefault = np.ndarray[tp.Any, np.dtype[np.int64]]
 
+TNDArray1DIntDefault = np.ndarray[tuple[tp.Any], np.dtype[np.int64]]
+TNDArray1DFloat64 = np.ndarray[tuple[tp.Any], np.dtype[np.float64]]
+TNDArray1DBool = np.ndarray[tuple[tp.Any], np.dtype[np.bool_]]
+TNDArray2DBool = np.ndarray[tuple[tp.Any, tp.Any], np.dtype[np.bool_]]
+
+
 TDtypeAny = np.dtype[tp.Any]
-TDtypeObject = np.dtype[np.object_] #pragma: no cover
+TDtypeDT64 = np.dtype[np.datetime64]
+TDtypeObject = np.dtype[np.object_]
 TOptionalArrayList = tp.Optional[tp.List[TNDArrayAny]]
 
 # dtype.kind
@@ -141,14 +148,45 @@ DTYPE_OBJECTABLE_DT64_UNITS = frozenset((
         ))
 
 def is_objectable_dt64(array: TNDArrayAny) -> bool:
-    if np.datetime_data(array.dtype)[0] not in DTYPE_OBJECTABLE_DT64_UNITS:
+    '''This function assumes a dt64 array.
+    '''
+    unit = np.datetime_data(array.dtype)[0]
+    if unit not in DTYPE_OBJECTABLE_DT64_UNITS: # year, month, nanosecond, etc.
         return False
-    years = array.astype(DT64_YEAR).astype(DTYPE_INT_DEFAULT) + 1970
+    # for all dt64 units that can be converted to object, we need to determine if the can fit in the more narrow range of Python datetime types.
+    years = array[~np.isnat(array)].astype(DT64_YEAR).astype(DTYPE_INT_DEFAULT) + 1970
     if np.any(years < datetime.MINYEAR):
         return False
     if np.any(years > datetime.MAXYEAR):
         return False
     return True
+
+def is_objectable(array: TNDArrayAny) -> bool:
+    '''If an array is dt64 array, evaluate if it can go to Python object without resolution loss or other distortions (coercion to integer).
+    '''
+    if array.dtype.kind in DTYPE_NAT_KINDS:
+        return is_objectable_dt64(array)
+    return True
+
+
+def astype_array(array: TNDArrayAny, dtype: TDtypeAny | None) -> TNDArrayAny:
+    '''This function handles NumPy types that cannot be converted to Python objects without loss of representation, namely some dt64 units. NOTE: this does not set the returned array to be immutable.
+    '''
+    dt = np.dtype(None) if dtype is None else dtype
+    dt_equal = array.dtype == dt
+
+    if dt == DTYPE_OBJECT and not dt_equal and array.dtype.kind in DTYPE_NAT_KINDS:
+        if not is_objectable_dt64(array):
+            # NOTE: this can be faster implemented in C
+            post = np.empty(array.shape, dtype=dt)
+            for iloc, v in np.ndenumerate(array):
+                post[iloc] = v
+            return post
+    if dt_equal and array.flags.writeable is False:
+        # if dtypes match and array is immutable can return same instance
+        return array
+    return array.astype(dt)
+
 
 # all numeric types, plus bool
 DTYPE_NUMERICABLE_KINDS = frozenset((
@@ -206,7 +244,7 @@ UNIT_ARRAY_INT.flags.writeable = False
 EMPTY_ARRAY_OBJECT = np.array((), dtype=DTYPE_OBJECT)
 EMPTY_ARRAY_OBJECT.flags.writeable = False
 
-EMPTY_FROZEN_AUTOMAP = FrozenAutoMap()
+EMPTY_FROZEN_AUTOMAP = FrozenAutoMap() # type: ignore
 
 NAT = np.datetime64('nat')
 NAT_STR = 'NaT'
@@ -261,14 +299,15 @@ TILocSelectorMany = tp.Union[TNDArrayAny, tp.List[int], slice, None]
 TILocSelector = tp.Union[TILocSelectorOne, TILocSelectorMany]
 TILocSelectorCompound = tp.Union[TILocSelector, tp.Tuple[TILocSelector, TILocSelector]]
 
+TInt = tp.Union[int, np.integer[tp.Any]]
+
 # NOTE: slice is not hashable
 # NOTE: this is TLocSelectorOne
 TLabel = tp.Union[
         tp.Hashable,
-        int,
+        TInt,
         bool,
         np.bool_,
-        np.integer[tp.Any],
         float,
         complex,
         np.inexact[tp.Any],
@@ -351,7 +390,7 @@ TPathSpecifierOrTextIOOrIterator = tp.Union[str, PathLike[tp.Any], tp.TextIO, tp
 TDtypeSpecifier = tp.Union[str, TDtypeAny, type, None]
 TDtypeOrDT64 = tp.Union[TDtypeAny, tp.Type[np.datetime64]]
 
-def validate_dtype_specifier(value: tp.Any) -> TDtypeSpecifier:
+def validate_dtype_specifier(value: tp.Any) -> None | TDtypeAny:
     if value is None or isinstance(value, np.dtype):
         return value
 
@@ -359,7 +398,7 @@ def validate_dtype_specifier(value: tp.Any) -> TDtypeSpecifier:
     if dt == DTYPE_OBJECT and value is not object and value not in ('object', '|O'):
         # fail on implicit conversion to object dtype
         raise TypeError(f'Implicit NumPy conversion of a type {value!r} to an object dtype; use `object` instead.')
-    return dt
+    return dt # type: ignore
 
 
 DTYPE_SPECIFIER_TYPES = (str, np.dtype, type)
@@ -582,8 +621,6 @@ class WarningsSilent:
             traceback: TracebackType,
             ) -> None:
         warnings.filters = self.previous_warnings
-
-
 
 #-------------------------------------------------------------------------------
 
@@ -1264,16 +1301,29 @@ def blocks_to_array_2d(
         return column_2d_filter(blocks_post[0])
 
     # NOTE: this is an axis 1 np.concatenate with known shape, dtype
-    array: TNDArrayAny = np.empty(shape, dtype=dtype) # type: ignore
+    array: TNDArrayAny = np.empty(shape, dtype=dtype)
     pos = 0
-    for b in blocks_post: #type: ignore
-        if b.ndim == 1:
-            array[NULL_SLICE, pos] = b
-            pos += 1
-        else:
-            end = pos + b.shape[1]
-            array[NULL_SLICE, pos: end] = b
-            pos = end
+    if dtype == DTYPE_OBJECT:
+        for b in blocks_post: #type: ignore
+            if not is_objectable(b):
+                # NOTE: this wastes a copy, but saves element-wise assignment
+                b = astype_array(b, DTYPE_OBJECT)
+            if b.ndim == 1:
+                array[NULL_SLICE, pos] = b
+                pos += 1
+            else:
+                end = pos + b.shape[1]
+                array[NULL_SLICE, pos: end] = b
+                pos = end
+    else:
+        for b in blocks_post: #type: ignore
+            if b.ndim == 1:
+                array[NULL_SLICE, pos] = b
+                pos += 1
+            else:
+                end = pos + b.shape[1]
+                array[NULL_SLICE, pos: end] = b
+                pos = end
 
     array.flags.writeable = False
     return array
@@ -1303,7 +1353,6 @@ def full_for_fill(
 
     # for tuples and other objects, better to create and fill
     array: TNDArrayAny = np.empty(shape, dtype=DTYPE_OBJECT)
-
     if fill_value is None:
         return array # None is already set for empty object arrays
 
@@ -1922,11 +1971,10 @@ def iterable_to_array_1d(
             return EMPTY_ARRAY, True # no dtype given, so return empty float array
     else: # dtype is provided
         is_gen, copy_values = is_gen_copy_values(values)
-
         if is_gen and count and dtype.kind not in DTYPE_STR_KINDS:
             if dtype.kind != DTYPE_OBJECT_KIND:
                 # if dtype is int this might raise OverflowError
-                array = np.fromiter(values,
+                array = np.fromiter(values, # type: ignore
                         count=count,
                         dtype=dtype,
                         )
@@ -1945,9 +1993,9 @@ def iterable_to_array_1d(
 
         if len(values_for_construct) == 0:
             # dtype was given, return an empty array with that dtype
-            v = np.empty(0, dtype=dtype)
-            v.flags.writeable = False
-            return v, True
+            ve = np.empty(0, dtype=dtype)
+            ve.flags.writeable = False
+            return ve, True
         #as we have not iterated iterable, assume that there might be tuples if the dtype is object
         has_tuple = dtype == DTYPE_OBJECT
 
@@ -2152,6 +2200,7 @@ def to_datetime64(
     Args:
         dtype: Provide the expected dtype of the returned value.
     '''
+    dt: np.datetime64
     if not isinstance(value, np.datetime64):
         if value == '':
             raise ValueError('Implicit NaT creation not supported.')
@@ -2189,7 +2238,8 @@ def to_timedelta64(value: datetime.timedelta) -> np.timedelta64:
     Convert a datetime.timedelta into a NumPy timedelta64. This approach is better than using np.timedelta64(value), as that reduces all values to microseconds.
     '''
     return reduce(operator.add,
-        (np.timedelta64(getattr(value, attr), code) for attr, code in TIME_DELTA_ATTR_MAP if getattr(value, attr) > 0))
+        (np.timedelta64(getattr(value, attr), code) for attr, code # type: ignore
+        in TIME_DELTA_ATTR_MAP if getattr(value, attr) > 0))
 
 def datetime64_not_aligned(array: TNDArrayAny, other: TNDArrayAny) -> bool:
     '''Return True if both arrays are dt64 and they are not aligned by unit. Used in property tests that must skip this condition.
@@ -2387,6 +2437,7 @@ def arrays_equal(array: TNDArrayAny,
         # FutureWarning: elementwise comparison failed; returning scalar instead...
         eq = array == other
 
+    # NOTE: remove when min numpy is 1.25
     # NOTE: will only be False, or an array
     if eq is False:
         return eq
@@ -3193,6 +3244,8 @@ def isin_array(*,
     if len(other) == 1:
         # this alternative was implmented due to strange behavior in NumPy when using np.isin with "other" that is one element and an unsigned int
         result = array == other
+
+        # NOTE: remove when min numpy is 1.25
         if result.__class__ is not np.ndarray:
             result = np.full(array.shape, result, dtype=DTYPE_BOOL)
     else:

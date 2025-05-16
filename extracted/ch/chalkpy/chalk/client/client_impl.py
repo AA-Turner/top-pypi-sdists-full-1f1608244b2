@@ -136,7 +136,15 @@ from chalk.client.response import Dataset, FeatureReference, OnlineQueryResult
 from chalk.client.serialization.query_serialization import MULTI_QUERY_MAGIC_STR, write_query_to_buffer
 from chalk.config.auth_config import load_token
 from chalk.config.project_config import load_project_config
-from chalk.features import DataFrame, Feature, FeatureNotFoundException, FeatureWrapper, ensure_feature, unwrap_feature
+from chalk.features import (
+    DataFrame,
+    Feature,
+    FeatureNotFoundException,
+    FeatureWrapper,
+    ensure_feature,
+    live_updates,
+    unwrap_feature,
+)
 from chalk.features._encoding.inputs import recursive_encode_inputs, validate_iterable_values_in_mapping
 from chalk.features._encoding.json import FeatureEncodingOptions
 from chalk.features._encoding.outputs import encode_named_underscore, encode_outputs
@@ -146,6 +154,7 @@ from chalk.features.resolver import Resolver
 from chalk.features.tag import BranchId, DeploymentId, EnvironmentId
 from chalk.features.underscore_features import NamedUnderscoreExpr
 from chalk.importer import CHALK_IMPORT_FLAG
+from chalk.parsed._proto.utils import encode_proto_to_b64
 from chalk.parsed.branch_state import BranchGraphSummary
 from chalk.prompts import Prompt
 from chalk.queries.query_context import ContextJsonDict, JsonValue
@@ -873,6 +882,14 @@ class OnlineQueryResponseImpl(OnlineQueryResult):
         if prefix:
             return {f.field: f.value for f in self.data}
         return {f.field.split(".", maxsplit=2)[-1]: f.value for f in self.data}
+
+
+def _get_overlay_graph_b64() -> str | None:
+    overlay_graph = live_updates.build_overlay_graph()
+    overlay_graph_b64: str | None = None
+    if overlay_graph is not None:
+        overlay_graph_b64 = encode_proto_to_b64(overlay_graph, deterministic=True)
+    return overlay_graph_b64
 
 
 class ChalkAPIClientImpl(ChalkClient):
@@ -1761,6 +1778,7 @@ https://docs.chalk.ai/cli/apply
             planner_options=planner_options,
             value_metrics_tag_by_features=tuple(encoded_value_metrics_tag_by_features),
             query_context=_validate_context_dict(query_context),
+            overlay_graph=_get_overlay_graph_b64(),
         )
 
         extra_headers = {}
@@ -1829,6 +1847,7 @@ https://docs.chalk.ai/cli/apply
                 meta=meta,
                 query_context=_validate_context_dict(query_context),
                 value_metrics_tag_by_features=tuple(encoded_value_metrics_tag_by_features),
+                overlay_graph=_get_overlay_graph_b64(),
             )
 
             write_query_to_buffer(buffer, request, compression=compression)
@@ -1960,6 +1979,7 @@ https://docs.chalk.ai/cli/apply
             store_plan_stages=store_plan_stages,
             explain=explain,
             value_metrics_tag_by_features=tuple(encoded_value_metrics_tag_by_features),
+            overlay_graph=_get_overlay_graph_b64(),
         )
 
         buffer = BytesIO()
@@ -3301,6 +3321,7 @@ https://docs.chalk.ai/cli/apply
             completion_deadline=timedelta_to_duration(completion_deadline) if completion_deadline is not None else None,
             max_retries=max_retries,
             use_job_queue=use_job_queue,
+            overlay_graph=_get_overlay_graph_b64(),
         )
 
         response = self._create_dataset_request(

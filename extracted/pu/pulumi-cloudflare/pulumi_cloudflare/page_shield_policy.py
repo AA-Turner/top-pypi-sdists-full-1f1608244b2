@@ -223,6 +223,7 @@ class _PageShieldPolicyState:
         pulumi.set(self, "zone_id", value)
 
 
+@pulumi.type_token("cloudflare:index/pageShieldPolicy:PageShieldPolicy")
 class PageShieldPolicy(pulumi.CustomResource):
     @overload
     def __init__(__self__,

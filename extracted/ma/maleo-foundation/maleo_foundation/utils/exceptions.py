@@ -6,24 +6,39 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from sqlalchemy.exc import SQLAlchemyError
 from typing import Optional
 from maleo_foundation.models.responses import BaseResponses
-from maleo_foundation.models.transfers.results.service.general import BaseServiceGeneralResultsTransfers
-from maleo_foundation.models.transfers.results.service.query import BaseServiceQueryResultsTransfers
+from maleo_foundation.models.transfers.results.service.general \
+    import BaseServiceGeneralResultsTransfers
+from maleo_foundation.models.transfers.results.service.query \
+    import BaseServiceQueryResultsTransfers
 from maleo_foundation.utils.logging import BaseLogger
 
 class BaseExceptions:
     @staticmethod
     def authentication_error_handler(request:Request, exc:Exception):
-        return JSONResponse(content=BaseResponses.Unauthorized(other=str(exc)).model_dump(mode="json"), status_code=status.HTTP_401_UNAUTHORIZED)
+        return JSONResponse(
+            content=BaseResponses.Unauthorized(other=str(exc)).model_dump(mode="json"),
+            status_code=status.HTTP_401_UNAUTHORIZED
+        )
 
     @staticmethod
     async def validation_exception_handler(request:Request, exc:RequestValidationError):
-        return JSONResponse(content=BaseResponses.ValidationError(other=exc.errors()).model_dump(mode="json"), status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        return JSONResponse(
+            content=BaseResponses.ValidationError(other=exc.errors()).model_dump(mode="json"),
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+        )
 
     @staticmethod
     async def http_exception_handler(request:Request, exc:StarletteHTTPException):
         if exc.status_code in BaseResponses.other_responses:
-            return JSONResponse(content=BaseResponses.other_responses[exc.status_code]["model"]().model_dump(mode="json"), status_code=exc.status_code)
-        return JSONResponse(content=BaseResponses.ServerError().model_dump(mode="json"), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JSONResponse(
+                content=BaseResponses.other_responses[exc.status_code]["model"]().model_dump(mode="json"),
+                status_code=exc.status_code
+            )
+
+        return JSONResponse(
+            content=BaseResponses.ServerError().model_dump(mode="json"),
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
     @staticmethod
     def database_exception_handler(

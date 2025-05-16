@@ -12,6 +12,7 @@ class MockedResponse:
     request_json_body: dict[
         str, t.Any
     ] | None = None  # for cases where we want to match the request body
+    request_path: str | None = None  # for cases match the request body and request path
 
 
 ResponseBodyMap: t.TypeAlias = (

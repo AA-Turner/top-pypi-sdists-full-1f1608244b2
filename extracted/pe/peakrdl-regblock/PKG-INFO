@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: peakrdl-regblock
-Version: 1.0.0
+Version: 1.1.0
 Summary: Compile SystemRDL into a SystemVerilog control/status register (CSR) block
 Author: Alex Mykyta
 License: GPLv3
@@ -9,7 +9,7 @@ Project-URL: Tracker, https://github.com/SystemRDL/PeakRDL-regblock/issues
 Project-URL: Changelog, https://github.com/SystemRDL/PeakRDL-regblock/releases
 Project-URL: Documentation, https://peakrdl-regblock.readthedocs.io/
 Keywords: SystemRDL,PeakRDL,CSR,compiler,tool,registers,generator,Verilog,SystemVerilog,register abstraction layer,FPGA,ASIC
-Classifier: Development Status :: 4 - Beta
+Classifier: Development Status :: 5 - Production/Stable
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3 :: Only
@@ -37,4 +37,4 @@ Compile SystemRDL into a SystemVerilog control/status register (CSR) block.
 For the command line tool, see the [PeakRDL project](https://peakrdl.readthedocs.io).
 
 ## Documentation
-See the [PeakRDL-regblock Documentation](http://peakrdl-regblock.readthedocs.io) for more details
+See the [PeakRDL-regblock Documentation](https://peakrdl-regblock.readthedocs.io) for more details

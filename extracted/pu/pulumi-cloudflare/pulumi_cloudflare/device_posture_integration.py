@@ -189,6 +189,7 @@ class _DevicePostureIntegrationState:
 warnings.warn("""cloudflare.index/devicepostureintegration.DevicePostureIntegration has been deprecated in favor of cloudflare.index/zerotrustdevicepostureintegration.ZeroTrustDevicePostureIntegration""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/devicePostureIntegration:DevicePostureIntegration")
 class DevicePostureIntegration(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/devicepostureintegration.DevicePostureIntegration has been deprecated in favor of cloudflare.index/zerotrustdevicepostureintegration.ZeroTrustDevicePostureIntegration""", DeprecationWarning)
 

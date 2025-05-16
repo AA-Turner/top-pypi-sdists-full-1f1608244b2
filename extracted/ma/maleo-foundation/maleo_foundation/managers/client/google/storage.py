@@ -64,5 +64,9 @@ class GoogleCloudStorage(GoogleClientManager):
         if not blob.exists():
             raise ValueError(f"File '{location}' did not exists.")
 
-        url = blob.generate_signed_url(version="v4", expiration=timedelta(minutes=15), method="GET")
+        url = blob.generate_signed_url(
+            version="v4",
+            expiration=timedelta(minutes=15),
+            method="GET"
+        )
         return url

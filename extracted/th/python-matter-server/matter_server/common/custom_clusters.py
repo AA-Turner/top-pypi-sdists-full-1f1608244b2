@@ -369,6 +369,108 @@ class EveCluster(Cluster, CustomClusterMixin):
 
 
 @dataclass
+class InovelliCluster(Cluster, CustomClusterMixin):
+    """Custom (vendor-specific) cluster for Inovelli - Vendor ID 4961 (0x1361)."""
+
+    id: ClassVar[int] = 0x122FFC31
+
+    @ChipUtility.classproperty
+    def descriptor(cls) -> ClusterObjectDescriptor:
+        """Return descriptor for this cluster."""
+        return ClusterObjectDescriptor(
+            Fields=[
+                ClusterObjectFieldDescriptor(
+                    Label="ledIndicatorIntensityOn", Tag=0x122F0061, Type=uint
+                ),
+                ClusterObjectFieldDescriptor(
+                    Label="ledIndicatorIntensityOff", Tag=0x122F0062, Type=uint
+                ),
+                ClusterObjectFieldDescriptor(
+                    Label="clearNotificationWithConfigDoubleTap",
+                    Tag=0x122F0106,
+                    Type=bool,
+                ),
+            ]
+        )
+
+    ledIndicatorIntenstyOn: uint | None = None
+    ledIndicatorIntensityOff: uint | None = None
+    clearNotificationWithConfigDoubleTap: bool | None = None
+
+    class Attributes:
+        """Attributes for the Inovelli Cluster."""
+
+        @dataclass
+        class LEDIndicatorIntensityOn(
+            ClusterAttributeDescriptor, CustomClusterAttributeMixin
+        ):
+            """LEDIndicatorIntensityOn Attribute within the Inovelli Cluster."""
+
+            @ChipUtility.classproperty
+            def cluster_id(cls) -> int:
+                """Return cluster id."""
+                return 0x122FFC31
+
+            @ChipUtility.classproperty
+            def attribute_id(cls) -> int:
+                """Return attribute id."""
+                return 0x122F0061
+
+            @ChipUtility.classproperty
+            def attribute_type(cls) -> ClusterObjectFieldDescriptor:
+                """Return attribute type."""
+                return ClusterObjectFieldDescriptor(Type=uint)
+
+            value: uint = 0
+
+        @dataclass
+        class LEDIndicatorIntensityOff(
+            ClusterAttributeDescriptor, CustomClusterAttributeMixin
+        ):
+            """LEDIndicatorIntensityOff Attribute within the Inovelli Cluster."""
+
+            @ChipUtility.classproperty
+            def cluster_id(cls) -> int:
+                """Return cluster id."""
+                return 0x122FFC31
+
+            @ChipUtility.classproperty
+            def attribute_id(cls) -> int:
+                """Return attribute id."""
+                return 0x122F0062
+
+            @ChipUtility.classproperty
+            def attribute_type(cls) -> ClusterObjectFieldDescriptor:
+                """Return attribute type."""
+                return ClusterObjectFieldDescriptor(Type=uint)
+
+            value: uint = 0
+
+        @dataclass
+        class ClearNotificationWithConfigDoubleTap(
+            ClusterAttributeDescriptor, CustomClusterAttributeMixin
+        ):
+            """ClearNotificationWithConfigDoubleTap Attribute within the Inovelli Cluster."""
+
+            @ChipUtility.classproperty
+            def cluster_id(cls) -> int:
+                """Return cluster id."""
+                return 0x122FFC31
+
+            @ChipUtility.classproperty
+            def attribute_id(cls) -> int:
+                """Return attribute id."""
+                return 0x122F0106
+
+            @ChipUtility.classproperty
+            def attribute_type(cls) -> ClusterObjectFieldDescriptor:
+                """Return attribute type."""
+                return ClusterObjectFieldDescriptor(Type=bool)
+
+            value: bool = False
+
+
+@dataclass
 class NeoCluster(Cluster, CustomClusterMixin):
     """Custom (vendor-specific) cluster for Neo - Vendor ID 4991 (0x137F)."""
 

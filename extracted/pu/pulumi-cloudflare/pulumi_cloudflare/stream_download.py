@@ -95,6 +95,7 @@ class _StreamDownloadState:
         pulumi.set(self, "identifier", value)
 
 
+@pulumi.type_token("cloudflare:index/streamDownload:StreamDownload")
 class StreamDownload(pulumi.CustomResource):
     @overload
     def __init__(__self__,

@@ -115,15 +115,19 @@ def _validate_no_feature_times_as_input(
 ):
     for i, inp in enumerate(resolver.inputs or []):
         if inp.underlying.fqn not in fqn_to_feature:
+            message = (
+                f"Resolver '{resolver.fqn}' requires an unrecognized feature '{inp.underlying.fqn}'. "
+                + f"This may have happened since the import of feature class '{inp.underlying.namespace}' may have failed"
+            )
             lsp_builder.add_diagnostic(
-                message=f"Resolver '{resolver.fqn}' requires an unrecognized feature '{inp.underlying.fqn}'",
+                message=message,
                 code="135",
                 range=lsp_builder.function_arg_annotation_by_index(i),
                 label="invalid resolver input",
             )
             builder.add_error(
-                header=f"Resolver '{resolver.fqn}' requires an unknown feature '{inp.underlying.fqn}'",
-                subheader="Please check the inputs to this resolver, and make sure they are all features.",
+                header=message,
+                subheader="Please check the feature inputs to this resolver were imported correctly.",
             )
         elif fqn_to_feature[inp.underlying.fqn].featureTimeKind is not None and resolver.kind != "offline":
             lsp_builder.add_diagnostic(

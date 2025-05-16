@@ -55,6 +55,7 @@ from .literals import (
     ModificationStateEnumType,
     OperatingSystemNameType,
     OperatingSystemTypeType,
+    PoolsRunningModeType,
     ProtocolType,
     ReconnectEnumType,
     RunningModeType,
@@ -1147,6 +1148,7 @@ class CreateWorkspacesPoolRequestTypeDef(TypedDict):
     Tags: NotRequired[Sequence[TagTypeDef]]
     ApplicationSettings: NotRequired[ApplicationSettingsRequestTypeDef]
     TimeoutSettings: NotRequired[TimeoutSettingsTypeDef]
+    RunningMode: NotRequired[PoolsRunningModeType]
 
 class UpdateWorkspacesPoolRequestTypeDef(TypedDict):
     PoolId: str
@@ -1156,6 +1158,7 @@ class UpdateWorkspacesPoolRequestTypeDef(TypedDict):
     Capacity: NotRequired[CapacityTypeDef]
     ApplicationSettings: NotRequired[ApplicationSettingsRequestTypeDef]
     TimeoutSettings: NotRequired[TimeoutSettingsTypeDef]
+    RunningMode: NotRequired[PoolsRunningModeType]
 
 class DescribeAccountModificationsRequestPaginateTypeDef(TypedDict):
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
@@ -1385,6 +1388,7 @@ class WorkspacesPoolTypeDef(TypedDict):
     CreatedAt: datetime
     BundleId: str
     DirectoryId: str
+    RunningMode: PoolsRunningModeType
     Description: NotRequired[str]
     Errors: NotRequired[List[WorkspacesPoolErrorTypeDef]]
     ApplicationSettings: NotRequired[ApplicationSettingsResponseTypeDef]

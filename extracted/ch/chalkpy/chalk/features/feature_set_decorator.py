@@ -3,25 +3,25 @@
 from __future__ import annotations
 
 import ast
+import builtins
 import collections
 import copy
 import inspect
 import re
+import sys
 import textwrap
 import types
 import typing
 from datetime import datetime, timedelta
 from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Tuple, Type, TypeVar, Union, cast, overload
 
-import builtins
 import pyarrow as pa
-import sys
 
 from chalk._lsp.error_builder import FeatureClassErrorBuilder, LSPErrorBuilder
 from chalk.features._class_property import classproperty, classproperty_support
 from chalk.features._encoding.pyarrow import pyarrow_to_primitive
 from chalk.features.dataframe._impl import DataFrameMeta
-from chalk.features.feature_field import Feature, VersionInfo, CacheStrategy
+from chalk.features.feature_field import CacheStrategy, Feature, VersionInfo
 from chalk.features.feature_set import ClassSource, Features, FeatureSetBase
 from chalk.features.feature_time import feature_time
 from chalk.features.feature_wrapper import FeatureWrapper, unwrap_feature
@@ -31,7 +31,7 @@ from chalk.features.underscore import Underscore
 from chalk.features.underscore_features import NamedUnderscoreExpr
 from chalk.serialization.parsed_annotation import ParsedAnnotation
 from chalk.streams import Windowed
-from chalk.streams._windows import GroupByWindowed
+from chalk.streams._windows import GroupByWindowed, get_name_with_duration
 from chalk.utils import notebook
 from chalk.utils.collections import ensure_tuple
 from chalk.utils.duration import Duration, parse_chalk_duration, parse_chalk_duration_s
@@ -183,6 +183,7 @@ def features(
                 )
 
         previous_features_class = FeatureSetBase.registry.get(namespace, None)
+
         if (
             previous_features_class is not None
             and not notebook.is_notebook()
@@ -203,6 +204,13 @@ def features(
                 label="duplicate class",
                 range=error_builder.decorator_kwarg_value_range("name") or error_builder.class_definition_range(),
                 raise_error=ValueError,
+            )
+
+        if notebook.is_notebook() and previous_features_class is not None and not notebook.is_defined_in_module(previous_features_class):
+            # Not generating an LSP here because we're in a notebook anyway
+            # TODO: See if we can pretty-print lsp errors in notebooks, at which point we can generate one that points to the old feature class
+            raise ValueError(
+                f"Cannot re-define feature class '{previous_features_class.__name__}' in a notebook: it was previously defined in '{previous_features_class.__module__}'."
             )
 
         updated_class = _process_class(
@@ -361,10 +369,6 @@ def _parse_tags(ts: str) -> List[str]:
     return [xx.strip() for xx in ts.split(" ")]
 
 
-def _get_windowed_pseudofeature_name(name: str, bucket: Union[str, int]) -> str:
-    return f"{name}__{bucket}__"
-
-
 def _get_field(
     cls: Type,
     error_builder: FeatureClassErrorBuilder,
@@ -422,7 +426,17 @@ def _get_field(
     elif isinstance(default, Windowed):
         # The feature was set like x: Windowed[int] = windowed()
         # Convert it to a Feature
-        f = default._to_feature(bucket=None)
+        try:
+            f = default._to_feature(bucket=None)
+        except Exception as e:
+            error_builder.add_diagnostic(
+                message=f"Invalid window found for feature '{namespace}.{annotation_name}'. {e}",
+                label="invalid duration",
+                code="18",
+                range=error_builder.property_value_range(annotation_name),
+                raise_error=ValueError,
+            )
+            f = default
         if f.version is not None:
             f.version.base_name = f.name if f.is_name_set() else annotation_name
             f.name = f.version.name_for_version(f.version.default)
@@ -627,7 +641,7 @@ def _parse_annotation_comments(source_info: ClassSource, cls_annotations: Dict[s
     for annotation, feature_type in cls_annotations.items():
         if annotation in comments_for_annotations and isinstance(feature_type, Windowed):
             for bucket_size in feature_type.buckets_seconds:
-                pseudofeature_name = _get_windowed_pseudofeature_name(annotation, bucket_size)
+                pseudofeature_name = get_name_with_duration(annotation, bucket_size)
                 comments_for_annotations[pseudofeature_name] = comments_for_annotations[annotation]
 
     return comments_for_annotations
@@ -927,9 +941,9 @@ def _process_class(
                     alias = f"{name}_{bucket}"
                     additional_inits.append(alias)
                     alias_from_to[
-                        _get_windowed_pseudofeature_name(
-                            name=name,
-                            bucket="all" if bucket == "infinity" or bucket == "all" else str(bucket_seconds),
+                        get_name_with_duration(
+                            name_or_fqn=name,
+                            duration="all" if bucket == "infinity" or bucket == "all" else bucket_seconds,
                         )
                     ] = alias
 

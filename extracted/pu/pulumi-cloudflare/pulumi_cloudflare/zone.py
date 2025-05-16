@@ -385,6 +385,7 @@ class _ZoneState:
         pulumi.set(self, "verification_key", value)
 
 
+@pulumi.type_token("cloudflare:index/zone:Zone")
 class Zone(pulumi.CustomResource):
     @overload
     def __init__(__self__,

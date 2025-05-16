@@ -99,6 +99,7 @@ class _ArgoSmartRoutingState:
         pulumi.set(self, "zone_id", value)
 
 
+@pulumi.type_token("cloudflare:index/argoSmartRouting:ArgoSmartRouting")
 class ArgoSmartRouting(pulumi.CustomResource):
     @overload
     def __init__(__self__,

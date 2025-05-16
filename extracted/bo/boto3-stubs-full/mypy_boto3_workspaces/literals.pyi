@@ -70,6 +70,7 @@ __all__ = (
     "OperatingSystemNameType",
     "OperatingSystemTypeType",
     "PaginatorName",
+    "PoolsRunningModeType",
     "ProtocolType",
     "ReconnectEnumType",
     "RegionName",
@@ -214,6 +215,7 @@ OperatingSystemNameType = Literal[
     "WINDOWS_SERVER_2022",
 ]
 OperatingSystemTypeType = Literal["LINUX", "WINDOWS"]
+PoolsRunningModeType = Literal["ALWAYS_ON", "AUTO_STOP"]
 ProtocolType = Literal["PCOIP", "WSP"]
 ReconnectEnumType = Literal["DISABLED", "ENABLED"]
 RunningModeType = Literal["ALWAYS_ON", "AUTO_STOP", "MANUAL"]
@@ -266,6 +268,7 @@ WorkspaceImageErrorDetailCodeType = Literal[
     "InsufficientDiskSpace",
     "InsufficientRearmCount",
     "InvalidIp",
+    "MemoryIntegrityIncompatibility",
     "MultipleBootPartition",
     "MultipleUserProfiles",
     "OSNotSupported",
@@ -273,10 +276,12 @@ WorkspaceImageErrorDetailCodeType = Literal[
     "OutdatedPowershellVersion",
     "PCoIPAgentInstalled",
     "PendingReboot",
+    "ProtocolOSIncompatibility",
     "RealTimeUniversalDisabled",
     "RemoteDesktopServicesDisabled",
     "Requires64BitOS",
     "ReservedStorageInUse",
+    "RestrictedDriveLetterInUse",
     "StagedAppxPackage",
     "SysPrepFileMissing",
     "UEFINotSupported",

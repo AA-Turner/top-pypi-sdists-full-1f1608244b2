@@ -60,6 +60,59 @@ import os
 from typing import Union
 from .path_utils import get_all_item_paths,get_files
 from .list_utils import make_list
+MIME_TYPES_JS = media_types = {
+        'image': {
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.png': 'image/png',
+            '.gif': 'image/gif',
+            '.bmp': 'image/bmp',
+            '.tiff': 'image/tiff',
+            '.webp': 'image/webp',
+            '.svg': 'image/svg+xml'
+        },
+        'video': {
+            '.mp4': 'video/mp4',
+            '.avi': 'video/x-msvideo',
+            '.mov': 'video/quicktime',
+            '.wmv': 'video/x-ms-wmv',
+            '.flv': 'video/x-flv',
+            '.mkv': 'video/x-matroska',
+            '.webm': 'video/webm'
+        },
+        'audio': {
+            '.mp3': 'audio/mpeg',
+            '.wav': 'audio/wav',
+            '.ogg': 'audio/ogg',
+            '.flac': 'audio/flac',
+            '.aac': 'audio/x-aac',
+            '.m4a': 'audio/mp4'
+        },
+        'document': {
+            '.pdf': 'application/pdf',
+            '.doc': 'application/msword',
+            '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            '.txt': 'text/plain',
+            '.rtf': 'application/rtf'
+        },
+        'presentation': {
+            '.ppt': 'application/vnd.ms-powerpoint',
+            '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+        },
+        'spreadsheet': {
+            '.xls': 'application/vnd.ms-excel',
+            '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            '.csv': 'text/csv'
+        }
+    }
+MEDIA_TYPES = {
+            'image': {'.svg', '.bmp', '.tiff', '.jpg', '.png', '.webp', '.gif', '.jpeg'},
+            'video': {'.mp4', '.webm', '.avi', '.wmv', '.flv', '.mov', '.mkv'},
+            'audio': {'.flac', '.ogg', '.wav', '.m4a', '.aac', '.mp3'},
+            'document': {'.rtf', '.txt', '.doc', '.pdf', '.docx'},
+            'presentation': {'.pptx', '.ppt'},
+            'spreadsheet': {'.xls', '.xlsx', '.csv'}
+        }
 def get_all_key_values(keys=None,dict_obj=None):
     keys = keys or []
     dict_obj = dict_obj or {}
@@ -69,37 +122,50 @@ def get_all_key_values(keys=None,dict_obj=None):
         if values:
             new_dict_obj[key]=values
     return new_dict_obj
+def get_all_key_values(keys=None,dict_obj=None):
+    keys = keys or []
+    dict_obj = dict_obj or {}
+    new_dict_obj = {}
+    for key in keys:
+        values = dict_obj.get(key)
+        if values:
+            new_dict_obj[key]=values
+    return new_dict_obj
+
 def get_media_types(types=None):
-    types = make_list(types) or []
-    media_types = {
-        'image': {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp', '.svg'},
-        'video': {'.mp4', '.avi', '.mov', '.wmv', '.flv', '.mkv', '.webm'},
-        'audio': {'.mp3', '.wav', '.ogg', '.flac', '.aac', '.m4a'},
-        'document': {'.pdf', '.doc', '.docx', '.txt', '.rtf'},
-        'presentation': {'.ppt', '.pptx'},
-        'spreadsheet': {'.xls', '.xlsx', '.csv'}
-    }
+    types = make_list(types or [])
+    media_types = MEDIA_TYPES
     if types:
-        return get_all_key_values(keys=types,dict_obj=media_types)
+        media_types = get_all_key_values(keys=types,dict_obj=MEDIA_TYPES)
     return media_types
-def confirm_type(file_path,media_types=None):
-    media_types = media_types or get_media_types()
-    dirname = os.path.dirname(file_path)
-    basename = os.path.basename(file_path)
-    filename,ext = os.path.splitext(basename)
+def get_media_exts(types=None):
+    all_exts = []
+    types = make_list(types or [])
+    for typ in types:
+        exts = MEDIA_TYPES.get(str(typ)) or []
+        if ext:
+            all_exts+=list(exts)
+    return all_exts
+def confirm_type(file_path=None,media_types=None,ext=None):
+    media_types = media_types or get_media_types('video')
+    ext = ext or os.path.splitext(file_path)[-1]
     for typ,exts in media_types.items():
-         if ext in exts:
+        if ext in exts:
              return typ
-def is_media_type(file_path,media_types=None):
+def is_media_type(file_path,media_types=None,ext=None):
     media_types = make_list(media_types or [])
-    basename = os.path.basename(file_path)
-    filename,ext=os.path.splitext(basename)
+    ext = ext or os.path.splitext(file_path)[-1]
     media_types_js = get_media_types()
     for media_type in media_types:
         exts = media_types_js.get(media_type)
         if exts and ext in exts:
             return True
     return False
+def get_mime_type(file_path):
+    ext = os.path.splitext(file_path)[-1]
+    media = confirm_type(file_path=file_path,ext=ext)
+    mime_type = MIME_TYPES_JS.get(media,{}).get(ext) or 'application/octet-stream'
+    return mime_type
 def get_all_types(types=None,directory=None):
     if not directory or not os.path.isdir(directory):
         return []

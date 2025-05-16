@@ -288,6 +288,7 @@ class _MagicTransitSiteLanState:
         pulumi.set(self, "vlan_tag", value)
 
 
+@pulumi.type_token("cloudflare:index/magicTransitSiteLan:MagicTransitSiteLan")
 class MagicTransitSiteLan(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -453,7 +454,7 @@ class MagicTransitSiteLan(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def nat(self) -> pulumi.Output['outputs.MagicTransitSiteLanNat']:
+    def nat(self) -> pulumi.Output[Optional['outputs.MagicTransitSiteLanNat']]:
         return pulumi.get(self, "nat")
 
     @property
@@ -463,7 +464,7 @@ class MagicTransitSiteLan(pulumi.CustomResource):
 
     @property
     @pulumi.getter(name="routedSubnets")
-    def routed_subnets(self) -> pulumi.Output[Sequence['outputs.MagicTransitSiteLanRoutedSubnet']]:
+    def routed_subnets(self) -> pulumi.Output[Optional[Sequence['outputs.MagicTransitSiteLanRoutedSubnet']]]:
         return pulumi.get(self, "routed_subnets")
 
     @property
@@ -476,7 +477,7 @@ class MagicTransitSiteLan(pulumi.CustomResource):
 
     @property
     @pulumi.getter(name="staticAddressing")
-    def static_addressing(self) -> pulumi.Output['outputs.MagicTransitSiteLanStaticAddressing']:
+    def static_addressing(self) -> pulumi.Output[Optional['outputs.MagicTransitSiteLanStaticAddressing']]:
         """
         If the site is not configured in high availability mode, this configuration is optional (if omitted, use DHCP). However, if in high availability mode, static*address is required along with secondary and virtual address.
         """

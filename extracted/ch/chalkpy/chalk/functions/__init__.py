@@ -3430,7 +3430,7 @@ def sklearn_decision_tree_regressor(
     ...    c: float
     ...    d: float
     ...    e: float
-    ...    prediction: bool = F.decision_tree_regressor(
+    ...    prediction: bool = F.sklearn_decision_tree_regressor(
     ...       _.a, _.b, _.c, _.d, _.e,
     ...       model_path=os.path.join(os.environ.get("TARGET_ROOT", "."), "models", "./dt_regressor.joblib")
     ...    )
@@ -3478,7 +3478,7 @@ def sklearn_decision_tree_classifier(
     ...    c: float
     ...    d: float
     ...    e: float
-    ...    prediction: bool = F.decision_tree_classifier(
+    ...    prediction: bool = F.sklearn_decision_tree_classifier(
     ...       _.a, _.b, _.c, _.d, _.e,
     ...       model_path=os.path.join(os.environ.get("TARGET_ROOT", "."), "models", "./dt_classifier.joblib")
     ...       probabiliy=True, threshold=0.7,
@@ -3521,7 +3521,7 @@ def sklearn_random_forest_regressor(
     ...    c: float
     ...    d: float
     ...    e: float
-    ...    prediction: float = F.random_forest_regressor(
+    ...    prediction: float = F.sklearn_random_forest_regressor(
     ...       _.a, _.b, _.c, _.d, _.e,
     ...       model_path=os.path.join(os.environ.get("TARGET_ROOT", "."), "models", "./rf_regressor.joblib")
     ...    )
@@ -3569,7 +3569,7 @@ def sklearn_random_forest_classifier(
     ...    c: float
     ...    d: float
     ...    e: float
-    ...    prediction: float = F.random_forest_classifier(
+    ...    prediction: float = F.sklearn_random_forest_classifier(
     ...       _.a, _.b, _.c, _.d, _.e,
     ...       model_path=os.path.join(os.environ.get("TARGET_ROOT", "."), "models", "./rf_classifier.joblib"),
     ...       probabiliy=True, threshold=0.7,
@@ -3612,7 +3612,7 @@ def sklearn_gradient_boosting_regressor(
     ...    c: float
     ...    d: float
     ...    e: float
-    ...    prediction: float = F.gradient_boosting_regressor(
+    ...    prediction: float = F.sklearn_gradient_boosting_regressor(
     ...       _.a, _.b, _.c, _.d, _.e,
     ...       model_path=os.path.join(os.environ.get("TARGET_ROOT", "."), "models", "./gb_regressor.joblib"),
     ...    )
@@ -3660,7 +3660,7 @@ def sklearn_logistic_regression(
     ...    c: float
     ...    d: float
     ...    e: float
-    ...    prediction: float = F.logistic_regression(
+    ...    prediction: float = F.sklearn_logistic_regression(
     ...       _.a, _.b, _.c, _.d, _.e,
     ...       model_path=os.path.join(os.environ.get("TARGET_ROOT", "."), "models", "./logistic.joblib"),
     ...       probabiliy=True, threshold=0.7,
@@ -3778,6 +3778,12 @@ __all__ = (
     "sha512",
     "sigmoid",
     "sin",
+    "sklearn_decision_tree_classifier",
+    "sklearn_decision_tree_regressor",
+    "sklearn_gradient_boosting_regressor",
+    "sklearn_logistic_regression",
+    "sklearn_random_forest_classifier",
+    "sklearn_random_forest_regressor",
     "slice",
     "split",
     "split_part",

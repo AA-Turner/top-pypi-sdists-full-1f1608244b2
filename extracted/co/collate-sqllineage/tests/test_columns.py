@@ -650,9 +650,13 @@ FROM tab2 a
         sql,
         [
             (
-                TestColumnQualifierTuple("col1", None),
+                TestColumnQualifierTuple("col1", "tab2"),
                 TestColumnQualifierTuple("col1", "tab1"),
-            )
+            ),
+            (
+                TestColumnQualifierTuple("col1", "tab3"),
+                TestColumnQualifierTuple("col1", "tab1"),
+            ),
         ],
     )
 
@@ -1385,6 +1389,35 @@ def test_alias_with_casing():
             (
                 TestColumnQualifierTuple("PICK_DPTR_RPTD_DTT", "src_tbl_2"),
                 TestColumnQualifierTuple("Actual_Pickup_Departure", "trg_tbl"),
+            ),
+        ],
+        test_sqlparse=False,
+    )
+
+
+def test_ctes_with_join():
+    sql = """create table random_table as
+
+        WITH
+        CTE1 as (
+            select x from zyx
+        ),
+        CTE2 as (
+            select x from abc
+        )
+
+        select x from CTE1 left join CTE2 on CTE1.x = CTE2.x
+    """
+    assert_column_lineage_equal(
+        sql,
+        [
+            (
+                TestColumnQualifierTuple("x", "zyx"),
+                TestColumnQualifierTuple("x", "random_table"),
+            ),
+            (
+                TestColumnQualifierTuple("x", "abc"),
+                TestColumnQualifierTuple("x", "random_table"),
             ),
         ],
         test_sqlparse=False,

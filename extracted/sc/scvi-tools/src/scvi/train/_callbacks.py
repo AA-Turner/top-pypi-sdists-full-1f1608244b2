@@ -348,14 +348,24 @@ class LoudEarlyStopping(EarlyStopping):
     """
 
     def __init__(self, **kwargs) -> None:
+        warmup_epochs = kwargs.pop("warmup_epochs")  # a local parameter we added
         super().__init__(**kwargs)
         self.early_stopping_reason = None
+        self.warmup_epochs = warmup_epochs
+        self._current_step = 0  # internal counter of steps to check
 
     def _evaluate_stopping_criteria(self, current: torch.Tensor) -> tuple[bool, str]:
-        should_stop, reason = super()._evaluate_stopping_criteria(current)
-        if should_stop:
-            self.early_stopping_reason = reason
-        return should_stop, reason
+        self._current_step += 1
+        if self._current_step <= self.warmup_epochs:
+            # If we're in the warm-up phase, don't apply early stopping
+            return False, "Early Stop not applied during first " + str(
+                self.warmup_epochs
+            ) + " steps"
+        else:
+            should_stop, reason = super()._evaluate_stopping_criteria(current)
+            if should_stop:
+                self.early_stopping_reason = reason
+            return should_stop, reason
 
     def teardown(
         self,
@@ -387,6 +397,8 @@ class JaxModuleInit(Callback):
 
 
 class ScibCallback(Callback):
+    """A callback to initialize the Scib-Metrics autotune module."""
+
     def __init__(
         self,
     ):
@@ -394,6 +406,7 @@ class ScibCallback(Callback):
         self.pl_module = None
 
     def _get_report_dict(self, trainer: pl.Trainer, pl_module: pl.LightningModule):
+        """Exposing the pl_module to the scib-metrics autotune"""
         self.pl_module = pl_module
 
     def on_train_end(self, trainer: pl.Trainer, pl_module: pl.LightningModule):

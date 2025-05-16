@@ -1874,6 +1874,15 @@ class Logging(
             check_type(argname="argument log_id", value=log_id, expected_type=type_hints["log_id"])
         return typing.cast(ILogging, jsii.sinvoke(cls, "fromLogId", [scope, id, log_id]))
 
+    @jsii.python.classproperty
+    @jsii.member(jsii_name="PROPERTY_INJECTION_ID")
+    def PROPERTY_INJECTION_ID(cls) -> builtins.str:
+        '''(experimental) Uniquely identifies this class.
+
+        :stability: experimental
+        '''
+        return typing.cast(builtins.str, jsii.sget(cls, "PROPERTY_INJECTION_ID"))
+
     @builtins.property
     @jsii.member(jsii_name="logId")
     def log_id(self) -> builtins.str:
@@ -2069,6 +2078,15 @@ class ScheduledAudit(
         )
 
         return typing.cast(IScheduledAudit, jsii.sinvoke(cls, "fromScheduledAuditAttributes", [scope, id, attrs]))
+
+    @jsii.python.classproperty
+    @jsii.member(jsii_name="PROPERTY_INJECTION_ID")
+    def PROPERTY_INJECTION_ID(cls) -> builtins.str:
+        '''(experimental) Uniquely identifies this class.
+
+        :stability: experimental
+        '''
+        return typing.cast(builtins.str, jsii.sget(cls, "PROPERTY_INJECTION_ID"))
 
     @builtins.property
     @jsii.member(jsii_name="scheduledAuditArn")
@@ -2436,6 +2454,15 @@ class TopicRule(
             check_type(argname="argument action", value=action, expected_type=type_hints["action"])
         return typing.cast(None, jsii.invoke(self, "addAction", [action]))
 
+    @jsii.python.classproperty
+    @jsii.member(jsii_name="PROPERTY_INJECTION_ID")
+    def PROPERTY_INJECTION_ID(cls) -> builtins.str:
+        '''(experimental) Uniquely identifies this class.
+
+        :stability: experimental
+        '''
+        return typing.cast(builtins.str, jsii.sget(cls, "PROPERTY_INJECTION_ID"))
+
     @builtins.property
     @jsii.member(jsii_name="topicRuleArn")
     def topic_rule_arn(self) -> builtins.str:
@@ -2682,6 +2709,15 @@ class AccountAuditConfiguration(
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
             check_type(argname="argument account_id", value=account_id, expected_type=type_hints["account_id"])
         return typing.cast(IAccountAuditConfiguration, jsii.sinvoke(cls, "fromAccountId", [scope, id, account_id]))
+
+    @jsii.python.classproperty
+    @jsii.member(jsii_name="PROPERTY_INJECTION_ID")
+    def PROPERTY_INJECTION_ID(cls) -> builtins.str:
+        '''(experimental) Uniquely identifies this class.
+
+        :stability: experimental
+        '''
+        return typing.cast(builtins.str, jsii.sget(cls, "PROPERTY_INJECTION_ID"))
 
     @builtins.property
     @jsii.member(jsii_name="accountId")

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: eodc-faas-openeo
-Version: 2025.4.1
+Version: 2025.5.1
 Summary: Bindings for the OpenEO processor exposed at EODC
 Author: Lukas Weidenholzer
 Author-email: lukas.weidenholzer@eodc.eu

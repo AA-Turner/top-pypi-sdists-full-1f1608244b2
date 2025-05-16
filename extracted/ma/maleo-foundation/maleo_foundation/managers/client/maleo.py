@@ -1,9 +1,20 @@
-from pydantic import BaseModel, Field
-from maleo_foundation.managers.client.base import ClientManager, ClientHTTPControllerManager, ClientControllerManagers, ClientHTTPController, ClientServiceControllers, ClientControllers
+from pydantic import Field
+from maleo_foundation.managers.client.base import (
+    ClientManager,
+    ClientHTTPControllerManager,
+    ClientControllerManagers,
+    ClientHTTPController,
+    ClientServiceControllers,
+    ClientControllers
+)
 from maleo_foundation.managers.service import ServiceManager
 
 class MaleoClientHTTPController(ClientHTTPController):
-    def __init__(self, service_manager:ServiceManager, manager:ClientHTTPControllerManager):
+    def __init__(
+        self,
+        service_manager:ServiceManager,
+        manager:ClientHTTPControllerManager
+    ):
         self._service_manager = service_manager
         super().__init__(manager)
 
@@ -27,7 +38,12 @@ class MaleoClientManager(ClientManager):
     ):
         self._url = url
         self._service_manager = service_manager
-        super().__init__(key, name, service_manager.log_config, service_manager.configs.service.key)
+        super().__init__(
+            key,
+            name,
+            service_manager.log_config,
+            service_manager.configs.service.key
+        )
 
     @property
     def service_manager(self) -> ServiceManager:

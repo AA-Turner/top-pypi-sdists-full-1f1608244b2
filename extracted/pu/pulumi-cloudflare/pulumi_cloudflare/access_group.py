@@ -284,6 +284,7 @@ class _AccessGroupState:
 warnings.warn("""cloudflare.index/accessgroup.AccessGroup has been deprecated in favor of cloudflare.index/zerotrustaccessgroup.ZeroTrustAccessGroup""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/accessGroup:AccessGroup")
 class AccessGroup(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/accessgroup.AccessGroup has been deprecated in favor of cloudflare.index/zerotrustaccessgroup.ZeroTrustAccessGroup""", DeprecationWarning)
 
@@ -494,7 +495,7 @@ class AccessGroup(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def excludes(self) -> pulumi.Output[Sequence['outputs.AccessGroupExclude']]:
+    def excludes(self) -> pulumi.Output[Optional[Sequence['outputs.AccessGroupExclude']]]:
         """
         Rules evaluated with a NOT logical operator. To match a policy, a user cannot meet any of the Exclude rules.
         """
@@ -526,7 +527,7 @@ class AccessGroup(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def requires(self) -> pulumi.Output[Sequence['outputs.AccessGroupRequire']]:
+    def requires(self) -> pulumi.Output[Optional[Sequence['outputs.AccessGroupRequire']]]:
         """
         Rules evaluated with an AND logical operator. To match a policy, a user must meet all of the Require rules.
         """

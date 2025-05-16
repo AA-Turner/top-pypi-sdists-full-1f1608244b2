@@ -158,6 +158,7 @@ class _WorkersScriptSubdomainState:
         pulumi.set(self, "script_name", value)
 
 
+@pulumi.type_token("cloudflare:index/workersScriptSubdomain:WorkersScriptSubdomain")
 class WorkersScriptSubdomain(pulumi.CustomResource):
     @overload
     def __init__(__self__,

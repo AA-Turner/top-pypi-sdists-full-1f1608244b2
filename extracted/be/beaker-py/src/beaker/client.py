@@ -22,6 +22,7 @@ from ._image import ImageClient
 from ._job import JobClient
 from ._node import NodeClient
 from ._organization import OrganizationClient
+from ._queue import QueueClient
 from ._secret import SecretClient
 from ._user import UserClient
 from ._workload import WorkloadClient
@@ -275,6 +276,13 @@ class Beaker:
         Manage groups.
         """
         return GroupClient(self)
+
+    @cached_property
+    def queue(self) -> QueueClient:
+        """
+        Manage queues.
+        """
+        return QueueClient(self)
 
     @contextmanager
     def http_session(self) -> Generator[requests.Session, None, None]:

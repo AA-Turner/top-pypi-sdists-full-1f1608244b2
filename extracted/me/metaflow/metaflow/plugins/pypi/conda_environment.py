@@ -13,6 +13,7 @@ from hashlib import sha256
 from io import BufferedIOBase, BytesIO
 from urllib.parse import unquote, urlparse
 
+from metaflow.debug import debug
 from metaflow.exception import MetaflowException
 from metaflow.metaflow_config import get_pinned_conda_libs
 from metaflow.metaflow_environment import MetaflowEnvironment
@@ -117,6 +118,11 @@ class CondaEnvironment(MetaflowEnvironment):
             )
 
         def cache(storage, results, type_):
+            debug.conda_exec(
+                "Caching packages for %s environments %s"
+                % (type_, [result[0] for result in results])
+            )
+
             def _path(url, local_path):
                 # Special handling for VCS packages
                 if url.startswith("git+"):
@@ -169,13 +175,24 @@ class CondaEnvironment(MetaflowEnvironment):
                 )
                 for url, package in local_packages.items()
             ]
+            debug.conda_exec(
+                "Caching %s new packages to the datastore for %s environment %s"
+                % (
+                    len(list_of_path_and_filehandle),
+                    type_,
+                    [result[0] for result in results],
+                )
+            )
             storage.save_bytes(
                 list_of_path_and_filehandle,
                 len_hint=len(list_of_path_and_filehandle),
+                # overwrite=True,
             )
             for id_, packages, _, platform in results:
                 if id_ in dirty:
                     self.write_to_environment_manifest([id_, platform, type_], packages)
+
+            debug.conda_exec("Finished caching packages.")
 
         storage = None
         if self.datastore_type not in ["local"]:
@@ -192,44 +209,85 @@ class CondaEnvironment(MetaflowEnvironment):
         #  6. Create and cache PyPI environments in parallel
         with ThreadPoolExecutor() as executor:
             # Start all conda solves in parallel
-            conda_futures = [
+            debug.conda_exec("Solving packages for Conda environments..")
+            conda_solve_futures = [
                 executor.submit(lambda x: solve(*x, "conda"), env)
                 for env in environments("conda")
             ]
+            conda_create_futures = []
 
             pypi_envs = {env[0]: env for env in environments("pypi")}
-            pypi_futures = []
+            pypi_solve_futures = []
+            pypi_create_futures = []
 
+            cache_futures = []
             # Process conda results sequentially for downloads
-            for future in as_completed(conda_futures):
+            for future in as_completed(conda_solve_futures):
                 result = future.result()
                 # Sequential conda download
+                debug.conda_exec(
+                    "Downloading packages for Conda environment %s" % result[0]
+                )
                 self.solvers["conda"].download(*result)
                 # Parallel conda create and cache
-                create_future = executor.submit(self.solvers["conda"].create, *result)
+                conda_create_future = executor.submit(
+                    self.solvers["conda"].create, *result
+                )
                 if storage:
-                    executor.submit(cache, storage, [result], "conda")
+                    cache_futures.append(
+                        executor.submit(cache, storage, [result], "conda")
+                    )
 
                 # Queue PyPI solve to start after conda create
                 if result[0] in pypi_envs:
+                    debug.conda_exec(
+                        "Solving packages for PyPI environment %s" % result[0]
+                    )
                     # solve pypi envs uniquely
                     pypi_env = pypi_envs.pop(result[0])
 
                     def pypi_solve(env):
-                        create_future.result()  # Wait for conda create
+                        conda_create_future.result()  # Wait for conda create
                         return solve(*env, "pypi")
 
-                    pypi_futures.append(executor.submit(pypi_solve, pypi_env))
+                    pypi_solve_futures.append(executor.submit(pypi_solve, pypi_env))
+                else:
+                    # add conda create future to the generic list
+                    conda_create_futures.append(conda_create_future)
 
             # Process PyPI results sequentially for downloads
-            for solve_future in pypi_futures:
+            for solve_future in as_completed(pypi_solve_futures):
                 result = solve_future.result()
                 # Sequential PyPI download
+                debug.conda_exec(
+                    "Downloading packages for PyPI environment %s" % result[0]
+                )
                 self.solvers["pypi"].download(*result)
                 # Parallel PyPI create and cache
-                executor.submit(self.solvers["pypi"].create, *result)
+                pypi_create_futures.append(
+                    executor.submit(self.solvers["pypi"].create, *result)
+                )
                 if storage:
-                    executor.submit(cache, storage, [result], "pypi")
+                    cache_futures.append(
+                        executor.submit(cache, storage, [result], "pypi")
+                    )
+
+            # Raise exceptions for conda create
+            debug.conda_exec("Checking results for Conda create..")
+            for future in as_completed(conda_create_futures):
+                future.result()
+
+            # Raise exceptions for pypi create
+            debug.conda_exec("Checking results for PyPI create..")
+            for future in as_completed(pypi_create_futures):
+                future.result()
+
+            # Raise exceptions for caching
+            debug.conda_exec("Checking results for caching..")
+            for future in as_completed(cache_futures):
+                # check for result in order to raise any exceptions.
+                future.result()
+
         self.logger("Virtual environment(s) bootstrapped!")
 
     def executable(self, step_name, default=None):
