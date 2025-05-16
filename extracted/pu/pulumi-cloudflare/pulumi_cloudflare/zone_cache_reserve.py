@@ -132,6 +132,7 @@ class _ZoneCacheReserveState:
         pulumi.set(self, "zone_id", value)
 
 
+@pulumi.type_token("cloudflare:index/zoneCacheReserve:ZoneCacheReserve")
 class ZoneCacheReserve(pulumi.CustomResource):
     @overload
     def __init__(__self__,

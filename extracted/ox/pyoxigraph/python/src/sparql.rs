@@ -235,6 +235,7 @@ pub struct PyQuerySolutions {
     inner: PyQuerySolutionsVariant,
 }
 
+#[allow(clippy::large_enum_variant)]
 enum PyQuerySolutionsVariant {
     Query(UngilQuerySolutionIter),
     Reader {
@@ -455,6 +456,7 @@ impl PyQueryTriples {
     ///
     /// It currently supports the following formats:
     ///
+    /// * `JSON-LD 1.0 <https://www.w3.org/TR/json-ld/>`_ (:py:attr:`RdfFormat.JSON_LD`)
     /// * `canonical <https://www.w3.org/TR/n-triples/#canonical-ntriples>`_ `N-Triples <https://www.w3.org/TR/n-triples/>`_ (:py:attr:`RdfFormat.N_TRIPLES`)
     /// * `N-Quads <https://www.w3.org/TR/n-quads/>`_ (:py:attr:`RdfFormat.N_QUADS`)
     /// * `Turtle <https://www.w3.org/TR/turtle/>`_ (:py:attr:`RdfFormat.TURTLE`)
@@ -768,7 +770,7 @@ pub fn map_query_results_parse_error(
             if python_version() >= (3, 10) {
                 let params = if let Some(location) = error.location() {
                     (
-                        file_path,
+                        file_path.map(PathBuf::into_os_string),
                         Some(location.start.line + 1),
                         Some(location.start.column + 1),
                         None::<Vec<u8>>,
@@ -782,7 +784,7 @@ pub fn map_query_results_parse_error(
             } else {
                 let params = if let Some(location) = error.location() {
                     (
-                        file_path,
+                        file_path.map(PathBuf::into_os_string),
                         Some(location.start.line + 1),
                         Some(location.start.column + 1),
                         None::<Vec<u8>>,

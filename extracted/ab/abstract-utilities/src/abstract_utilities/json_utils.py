@@ -552,15 +552,15 @@ def get_all_key_values(keys=None,dict_obj=None):
             new_dict_obj[key]=values
     return new_dict_obj
 
-def get_all_key_values(keys=None,dict_obj=None):
+def get_all_values(keys=None,dict_obj=None):
     keys = keys or []
     dict_obj = dict_obj or {}
-    new_dict_obj = {}
+    values=[]
     for key in keys:
-        values = dict_obj.get(key)
-        if values:
-            new_dict_obj[key]=values
-    return new_dict_obj
+        value = dict_obj.get(key)
+        if value:
+            values.append(value)
+    return values
 
 def safe_update_json_datas(
     json_data: dict,

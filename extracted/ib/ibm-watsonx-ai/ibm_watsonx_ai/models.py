@@ -2117,7 +2117,7 @@ class Models(WMLResource):
 
             # with validation should be somewhere else, on the begining, but when patch will be possible
             patch_payload = self.ConfigurationMetaNames._generate_patch_payload(
-                details["entity"], meta_props, with_validation=True
+                details, meta_props, with_validation=True
             )
             response_patch = requests.patch(
                 url,

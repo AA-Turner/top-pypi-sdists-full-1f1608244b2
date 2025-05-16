@@ -29,8 +29,6 @@ from static_frame.core.series import Series
 from static_frame.core.store_client_mixin import StoreClientMixin
 from static_frame.core.store_config import StoreConfigMap
 from static_frame.core.store_config import StoreConfigMapInitializer
-from static_frame.core.store_duckdb import StoreDuckDB
-from static_frame.core.store_hdf5 import StoreHDF5
 from static_frame.core.store_sqlite import StoreSQLite
 from static_frame.core.store_xlsx import StoreXLSX
 from static_frame.core.store_zip import StoreZipCSV
@@ -133,6 +131,7 @@ class Batch(ContainerOperand, StoreClientMixin):
     @classmethod
     def from_frames(cls,
             frames: tp.Iterable[TFrameAny],
+            /,
             *,
             name: TName = None,
             config: StoreConfigMapInitializer = None,
@@ -158,6 +157,7 @@ class Batch(ContainerOperand, StoreClientMixin):
     @classmethod
     def _from_store(cls,
             store: Store,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             max_workers: tp.Optional[int] = None,
@@ -182,6 +182,7 @@ class Batch(ContainerOperand, StoreClientMixin):
     @doc_inject(selector='batch_constructor')
     def from_zip_tsv(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             max_workers: tp.Optional[int] = None,
@@ -207,6 +208,7 @@ class Batch(ContainerOperand, StoreClientMixin):
     @doc_inject(selector='batch_constructor')
     def from_zip_csv(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             max_workers: tp.Optional[int] = None,
@@ -232,6 +234,7 @@ class Batch(ContainerOperand, StoreClientMixin):
     @doc_inject(selector='batch_constructor')
     def from_zip_pickle(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             max_workers: tp.Optional[int] = None,
@@ -257,6 +260,7 @@ class Batch(ContainerOperand, StoreClientMixin):
     @doc_inject(selector='batch_constructor')
     def from_zip_npz(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             max_workers: tp.Optional[int] = None,
@@ -282,6 +286,7 @@ class Batch(ContainerOperand, StoreClientMixin):
     @doc_inject(selector='batch_constructor')
     def from_zip_npy(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             max_workers: tp.Optional[int] = None,
@@ -307,6 +312,7 @@ class Batch(ContainerOperand, StoreClientMixin):
     @doc_inject(selector='batch_constructor')
     def from_zip_parquet(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             max_workers: tp.Optional[int] = None,
@@ -333,6 +339,7 @@ class Batch(ContainerOperand, StoreClientMixin):
     @doc_inject(selector='batch_constructor')
     def from_xlsx(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             max_workers: tp.Optional[int] = None,
@@ -360,6 +367,7 @@ class Batch(ContainerOperand, StoreClientMixin):
     @doc_inject(selector='batch_constructor')
     def from_sqlite(cls,
             fp: TPathSpecifier,
+            /,
             *,
             config: StoreConfigMapInitializer = None,
             max_workers: tp.Optional[int] = None,
@@ -381,59 +389,10 @@ class Batch(ContainerOperand, StoreClientMixin):
                 mp_context=mp_context,
                 )
 
-    @classmethod
-    @doc_inject(selector='batch_constructor')
-    def from_duckdb(cls,
-            fp: TPathSpecifier,
-            *,
-            config: StoreConfigMapInitializer = None,
-            max_workers: tp.Optional[int] = None,
-            chunksize: int = 1,
-            use_threads: bool = False,
-            mp_context: tp.Optional[str] = None,
-            ) -> 'Batch':
-        '''
-        Given a file path to an DuckDB :obj:`Batch` store, return a :obj:`Batch` instance.
-
-        {args}
-        '''
-        store = StoreDuckDB(fp)
-        return cls._from_store(store,
-                config=config,
-                max_workers=max_workers,
-                chunksize=chunksize,
-                use_threads=use_threads,
-                mp_context=mp_context,
-                )
-
-    @classmethod
-    @doc_inject(selector='batch_constructor')
-    def from_hdf5(cls,
-            fp: TPathSpecifier,
-            *,
-            config: StoreConfigMapInitializer = None,
-            max_workers: tp.Optional[int] = None,
-            chunksize: int = 1,
-            use_threads: bool = False,
-            mp_context: tp.Optional[str] = None,
-            ) -> 'Batch':
-        '''
-        Given a file path to a HDF5 :obj:`Batch` store, return a :obj:`Batch` instance.
-
-        {args}
-        '''
-        store = StoreHDF5(fp)
-        return cls._from_store(store,
-                config=config,
-                max_workers=max_workers,
-                chunksize=chunksize,
-                use_threads=use_threads,
-                mp_context=mp_context,
-                )
-
     #---------------------------------------------------------------------------
     def __init__(self,
             items: TIteratorFrameItems,
+            /,
             *,
             name: TName = None,
             config: StoreConfigMapInitializer = None,
@@ -505,6 +464,7 @@ class Batch(ContainerOperand, StoreClientMixin):
 
     def display(self,
             config: tp.Optional[DisplayConfig] = None,
+            /,
             *,
             style_config: tp.Optional[StyleConfig] = None,
             ) -> Display:
@@ -617,7 +577,7 @@ class Batch(ContainerOperand, StoreClientMixin):
 
         return self._apply_pool(labels, arg_gen(), call_attr)
 
-    def apply(self, func: TCallableAny) -> 'Batch':
+    def apply(self, func: TCallableAny, /,) -> 'Batch':
         '''
         Apply a function to each :obj:`Frame` contained in this :obj:`Frame`, where a function is given the :obj:`Frame` as an argument.
         '''
@@ -638,6 +598,7 @@ class Batch(ContainerOperand, StoreClientMixin):
     def apply_except(self,
             func: TCallableAny,
             exception: tp.Type[Exception],
+            /,
             ) -> 'Batch':
         '''
         Apply a function to each :obj:`Frame` contained in this :obj:`Frame`, where a function is given the :obj:`Frame` as an argument. Exceptions raised that matching the `except` argument will be silenced.
@@ -663,7 +624,7 @@ class Batch(ContainerOperand, StoreClientMixin):
                 exception,
                 )
 
-    def apply_items(self, func: TCallableAny) -> 'Batch':
+    def apply_items(self, func: TCallableAny, /,) -> 'Batch':
         '''
         Apply a function to each :obj:`Frame` contained in this :obj:`Frame`, where a function is given the pair of label, :obj:`Frame` as an argument.
         '''
@@ -683,6 +644,8 @@ class Batch(ContainerOperand, StoreClientMixin):
 
     def apply_items_except(self,
             func: TCallableAny,
+            /,
+            *,
             exception: tp.Type[Exception],
             ) -> 'Batch':
         '''
@@ -918,6 +881,7 @@ class Batch(ContainerOperand, StoreClientMixin):
 
     def via_fill_value(self,
             fill_value: object = np.nan,
+            /,
             ) -> InterfaceBatchFillValue:
         '''
         Interface for using binary operators and methods with a pre-defined fill value.
@@ -929,6 +893,7 @@ class Batch(ContainerOperand, StoreClientMixin):
     def via_re(self,
             pattern: str,
             flags: int = 0,
+            /,
             ) -> InterfaceBatchRe:
         '''
         Interface for applying regular expressions to elements in this container.
@@ -950,6 +915,7 @@ class Batch(ContainerOperand, StoreClientMixin):
 
     def rename(self,
             name: TName = NAME_DEFAULT,
+            /,
             *,
             index: TName = NAME_DEFAULT,
             columns: TName = NAME_DEFAULT,
@@ -958,8 +924,8 @@ class Batch(ContainerOperand, StoreClientMixin):
         Return a new Batch with an updated name attribute.
         '''
         return self._apply_attr(
+                name,
                 attr='rename',
-                name=name,
                 index=index,
                 columns=columns,
                 )
@@ -994,6 +960,7 @@ class Batch(ContainerOperand, StoreClientMixin):
 
     def sort_values(self,
             label: TKeyOrKeys,
+            /,
             *,
             ascending: bool = True,
             axis: int = 1,
@@ -1005,20 +972,20 @@ class Batch(ContainerOperand, StoreClientMixin):
             label: a label or iterable of keys.
         '''
         return self._apply_attr(
+                label,
                 attr='sort_values',
-                label=label,
                 ascending=ascending,
                 axis=axis,
                 kind=kind,
                 )
 
-    def isin(self, other: tp.Any) -> 'Batch':
+    def isin(self, other: tp.Any, /,) -> 'Batch':
         '''
         Return a new :obj:`Batch` with contained :obj:`Frame` as a same-sized Boolean :obj:`Frame` that shows if the same-positioned element is in the passed iterable.
         '''
         return self._apply_attr(
+                other,
                 attr='isin',
-                other=other,
                 )
 
     @doc_inject(class_name='Batch')
@@ -1100,7 +1067,7 @@ class Batch(ContainerOperand, StoreClientMixin):
     # def set_index_hierarchy(self,
     # def unset_index(self, *,
 
-    def __round__(self, decimals: int = 0) -> 'Batch':
+    def __round__(self, decimals: int = 0, /,) -> 'Batch':
         '''
         Return a :obj:`Batch` with contained :obj:`Frame` rounded to the given decimals. Negative decimals round to the left of the decimal point.
 
@@ -1108,8 +1075,8 @@ class Batch(ContainerOperand, StoreClientMixin):
             decimals: number of decimals to round to.
         '''
         return self._apply_attr(
+                decimals,
                 attr='__round__',
-                decimals=decimals,
                 )
 
     def roll(self,
@@ -1164,6 +1131,7 @@ class Batch(ContainerOperand, StoreClientMixin):
 
     def dropna(
             self,
+            *,
             axis: int = 0, condition: tp.Callable[[TNDArrayAny], bool] = np.all,
             ) -> 'Batch':
         '''
@@ -1194,6 +1162,7 @@ class Batch(ContainerOperand, StoreClientMixin):
         return self._apply_attr(attr='notfalsy')
 
     def dropfalsy(self,
+            *,
             axis: int = 0, condition: tp.Callable[[TNDArrayAny], bool] = np.all,
             ) -> 'Batch':
         '''
@@ -1214,18 +1183,20 @@ class Batch(ContainerOperand, StoreClientMixin):
     # na filling
 
     def fillna(self,
-            value: tp.Any
+            value: tp.Any,
+            /,
             ) -> 'Batch':
         '''
         Return a new :obj:`Batch` with contained :obj:`Frame` after filling null (NaN or None) with the provided ``value``.
         '''
         return self._apply_attr(
+                value,
                 attr='fillna',
-                value=value,
                 )
 
     def fillna_leading(self,
             value: tp.Any,
+            /,
             *,
             axis: int = 0
             ) -> 'Batch':
@@ -1238,13 +1209,14 @@ class Batch(ContainerOperand, StoreClientMixin):
         '''
 
         return self._apply_attr(
+                value,
                 attr='fillna_leading',
-                value=value,
                 axis=axis
                 )
 
     def fillna_trailing(self,
             value: tp.Any,
+            /,
             *,
             axis: int = 0,
             ) -> 'Batch':
@@ -1256,13 +1228,14 @@ class Batch(ContainerOperand, StoreClientMixin):
             {axis}
         '''
         return self._apply_attr(
+            value,
             attr='fillna_trailing',
-            value=value,
             axis=axis
             )
 
     def fillna_forward(self,
             limit: int = 0,
+            /,
             *,
             axis: int = 0,
             ) -> 'Batch':
@@ -1274,13 +1247,14 @@ class Batch(ContainerOperand, StoreClientMixin):
             {axis}
         '''
         return self._apply_attr(
+            limit,
             attr='fillna_forward',
-            limit=limit,
             axis=axis,
             )
 
     def fillna_backward(self,
             limit: int = 0,
+            /,
             *,
             axis: int = 0,
             ) -> 'Batch':
@@ -1292,8 +1266,8 @@ class Batch(ContainerOperand, StoreClientMixin):
             {axis}
         '''
         return self._apply_attr(
+            limit,
             attr='fillna_backward',
-            limit=limit,
             axis=axis,
             )
 
@@ -1301,18 +1275,20 @@ class Batch(ContainerOperand, StoreClientMixin):
     # falsy filling
 
     def fillfalsy(self,
-            value: tp.Any
+            value: tp.Any,
+            /,
             ) -> 'Batch':
         '''
         Return a new :obj:`Batch` with contained :obj:`Frame` after filling falsy values with the provided ``value``.
         '''
         return self._apply_attr(
+                value,
                 attr='fillfalsy',
-                value=value,
                 )
 
     def fillfalsy_leading(self,
             value: tp.Any,
+            /,
             *,
             axis: int = 0,
             ) -> 'Batch':
@@ -1324,13 +1300,14 @@ class Batch(ContainerOperand, StoreClientMixin):
             {axis}
         '''
         return self._apply_attr(
+            value,
             attr='fillfalsy_leading',
-            value=value,
             axis=axis,
             )
 
     def fillfalsy_trailing(self,
             value: tp.Any,
+            /,
             *,
             axis: int = 0,
             ) -> 'Batch':
@@ -1342,13 +1319,15 @@ class Batch(ContainerOperand, StoreClientMixin):
             {axis}
         '''
         return self._apply_attr(
+            value,
             attr='fillfalsy_trailing',
-            value=value,
             axis=axis,
             )
 
     def fillfalsy_forward(self,
             limit: int = 0,
+            /,
+            *,
             axis: int = 0,
             ) -> 'Batch':
         '''
@@ -1359,13 +1338,14 @@ class Batch(ContainerOperand, StoreClientMixin):
             {axis}
         '''
         return self._apply_attr(
+            limit,
             attr='fillfalsy_forward',
-            limit=limit,
             axis=axis,
             )
 
     def fillfalsy_backward(self,
             limit: int = 0,
+            /,
             *,
             axis: int = 0
             ) -> 'Batch':
@@ -1377,8 +1357,8 @@ class Batch(ContainerOperand, StoreClientMixin):
             {axis}
         '''
         return self._apply_attr(
+            limit,
             attr='fillfalsy_backward',
-            limit=limit,
             axis=axis,
             )
 
@@ -1475,13 +1455,14 @@ class Batch(ContainerOperand, StoreClientMixin):
 
     def relabel_shift_in(self,
             key: TLocSelector,
+            /,
             *,
             axis: int = 0,
             ) -> 'Batch':
 
         return self._apply_attr(
+            key,
             attr='relabel_shift_in',
-            key=key,
             axis=axis
             )
 
@@ -1619,27 +1600,27 @@ class Batch(ContainerOperand, StoreClientMixin):
                 )
 
     @doc_inject(selector='head', class_name='Batch')
-    def head(self, count: int = 5) -> 'Batch':
+    def head(self, count: int = 5, /,) -> 'Batch':
         '''{doc}
 
         Args:
             {count}
         '''
         return self._apply_attr(
+                count,
                 attr='head',
-                count=count,
                 )
 
     @doc_inject(selector='tail', class_name='Batch')
-    def tail(self, count: int = 5) -> 'Batch':
+    def tail(self, count: int = 5, /,) -> 'Batch':
         '''{doc}
 
         Args:
             {count}
         '''
         return self._apply_attr(
+                count,
                 attr='tail',
-                count=count,
                 )
 
     @doc_inject(selector='argminmax')

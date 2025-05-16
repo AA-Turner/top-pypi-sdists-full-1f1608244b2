@@ -51,6 +51,8 @@ from static_frame.core.index_auto import TIndexInitOrAuto
 from static_frame.core.index_auto import TRelabelInput
 from static_frame.core.index_base import IndexBase
 from static_frame.core.index_correspondence import IndexCorrespondence
+from static_frame.core.index_correspondence import assign_via_ic
+# from static_frame.core.index_correspondence import assign_via_mask
 from static_frame.core.index_hierarchy import IndexHierarchy
 from static_frame.core.node_dt import InterfaceDatetime
 from static_frame.core.node_fill_value import InterfaceFillValue
@@ -112,6 +114,7 @@ from static_frame.core.util import array_to_duplicated
 from static_frame.core.util import array_to_groups_and_locations
 from static_frame.core.util import array_ufunc_axis_skipna
 from static_frame.core.util import arrays_equal
+from static_frame.core.util import astype_array
 from static_frame.core.util import binary_transition
 from static_frame.core.util import concat_resolved
 from static_frame.core.util import dtype_from_element
@@ -166,6 +169,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @classmethod
     def from_element(cls,
             element: tp.Any,
+            /,
             *,
             index: tp.Union[TIndexInitializer, IndexAutoFactory],
             dtype: TDtypeSpecifier = None,
@@ -205,6 +209,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @classmethod
     def from_items(cls,
             pairs: tp.Iterable[tp.Tuple[TLabel, tp.Any]],
+            /,
             *,
             dtype: TDtypeSpecifier = None,
             name: TName = None,
@@ -239,6 +244,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @classmethod
     def from_delimited(cls,
             delimited: str,
+            /,
             *,
             delimiter: str,
             index: tp.Optional[TIndexInitOrAuto] = None,
@@ -290,6 +296,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @classmethod
     def from_dict(cls,
             mapping: tp.Mapping[tp.Any, tp.Any],
+            /,
             *,
             dtype: TDtypeSpecifier = None,
             name: TName = None,
@@ -312,6 +319,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @classmethod
     def from_concat(cls,
             containers: tp.Iterable[tp.Union[TSeriesAny, TBusAny]],
+            /,
             *,
             index: tp.Optional[TIndexInitOrAuto] = None,
             index_constructor: tp.Optional[TIndexCtorSpecifier] = None,
@@ -379,6 +387,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @classmethod
     def from_concat_items(cls,
             items: tp.Iterable[tp.Tuple[TLabel, TSeriesAny]],
+            /,
             *,
             name: TName = None,
             index_constructor: tp.Optional[TIndexCtorSpecifier] = None
@@ -427,6 +436,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @classmethod
     def from_overlay(cls,
             containers: tp.Iterable[tp.Self],
+            /,
             *,
             index: tp.Optional[TIndexInitializer] = None,
             union: bool = True,
@@ -478,6 +488,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @doc_inject()
     def from_pandas(cls,
             value: 'pandas.Series',
+            /,
             *,
             index: TIndexInitOrAuto = None,
             index_constructor: TIndexCtorSpecifier = None,
@@ -525,6 +536,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     #---------------------------------------------------------------------------
     def __init__(self,
             values: TSeriesInitializer,
+            /,
             *,
             index: tp.Union[TIndexInitializer, IndexAutoFactory, TIndexAutoFactory, None] = None,
             name: TName = NAME_DEFAULT,
@@ -683,6 +695,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
 
     def rename(self,
             name: TName = NAME_DEFAULT,
+            /,
             *,
             index: TName = NAME_DEFAULT,
             ) -> tp.Self:
@@ -808,6 +821,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
 
     def via_fill_value(self,
             fill_value: object = np.nan,
+            /,
             ) -> InterfaceFillValue[TSeriesAny]:
         '''
         Interface for using binary operators and methods with a pre-defined fill value.
@@ -820,6 +834,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     def via_re(self,
             pattern: str,
             flags: int = 0,
+            /,
             ) -> InterfaceRe[TSeriesAny]:
         '''
         Interface for applying regular expressions to elements in this container.
@@ -1152,16 +1167,15 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
                     own_index=True,
                     name=self._name)
 
+        values_src = self.values
         if is_fill_value_factory_initializer(fill_value):
-            fv = get_col_fill_value_factory(fill_value, None)(0, self.values.dtype)
+            fv = get_col_fill_value_factory(fill_value, None)(0, values_src.dtype)
         else:
             fv = fill_value
 
-        values = full_for_fill(self.values.dtype, len(index_owned), fv)
-        # if some intersection of values
-        if ic.has_common:
-            values[ic.iloc_dst] = self.values[ic.iloc_src]
-        values.flags.writeable = False
+        values = full_for_fill(values_src.dtype, len(index_owned), fv)
+        assign_via_ic(ic, values_src, values)
+        assert not values.flags.writeable
 
         return self.__class__(values,
                 index=index_owned,
@@ -1218,6 +1232,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @doc_inject(selector='relabel_level_add', class_name='Series')
     def relabel_level_add(self,
             level: TLabel,
+            /,
             *,
             index_constructor: TIndexCtorSpecifier = None,
             ) -> tp.Self:
@@ -1234,7 +1249,8 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
 
     @doc_inject(selector='relabel_level_drop', class_name='Series')
     def relabel_level_drop(self,
-            count: int = 1
+            count: int = 1,
+            /,
             ) -> tp.Self:
         '''
         {doc}
@@ -1252,6 +1268,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
 
     def rehierarch(self,
             depth_map: tp.Sequence[int],
+            /,
             *,
             index_constructors: TIndexCtorSpecifiers = None,
             ) -> tp.Self:
@@ -1410,12 +1427,13 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
 
         assignable_dtype = resolve_dtype(value_dtype, values.dtype)
 
+        # assigned = assign_via_mask(values, assignable_dtype, sel, value)
         if values.dtype == assignable_dtype:
             assigned = values.copy()
+            assigned[sel] = value
         else:
-            assigned = values.astype(assignable_dtype)
-
-        assigned[sel] = value
+            assigned = astype_array(values, assignable_dtype)
+            assigned[sel] = value
         assigned.flags.writeable = False
 
         return self.__class__(assigned,
@@ -1426,7 +1444,8 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
 
     @doc_inject(selector='fillna')
     def fillna(self,
-            value: tp.Any # an element or a Series
+            value: tp.Any, # an element or a Series
+            /,
             ) -> tp.Self:
         '''Return a new :obj:`Series` after replacing NA (NaN or None) with the supplied value. The ``value`` can be an element or :obj:`Series`.
 
@@ -1437,7 +1456,8 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
 
     @doc_inject(selector='fillna')
     def fillfalsy(self,
-            value: tp.Any # an element or a Series
+            value: tp.Any, # an element or a Series
+            /,
             ) -> tp.Self:
         '''Return a new :obj:`Series` after replacing falsy values with the supplied value. The ``value`` can be an element or :obj:`Series`.
 
@@ -1489,7 +1509,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
         return assigned
 
     @doc_inject(selector='fillna')
-    def fillna_forward(self, limit: int = 0) -> tp.Self:
+    def fillna_forward(self, limit: int = 0, /,) -> tp.Self:
         '''Return a new :obj:`Series` after feeding forward the last non-null (NaN or None) observation across contiguous nulls.
 
         Args:
@@ -1504,7 +1524,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
                 name=self._name)
 
     @doc_inject(selector='fillna')
-    def fillna_backward(self, limit: int = 0) -> tp.Self:
+    def fillna_backward(self, limit: int = 0, /,) -> tp.Self:
         '''Return a new :obj:`Series` after feeding backward the last non-null (NaN or None) observation across contiguous nulls.
 
         Args:
@@ -1520,7 +1540,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
 
 
     @doc_inject(selector='fillna')
-    def fillfalsy_forward(self, limit: int = 0) -> tp.Self:
+    def fillfalsy_forward(self, limit: int = 0, /,) -> tp.Self:
         '''Return a new :obj:`Series` after feeding forward the last non-falsy observation across contiguous falsy values.
 
         Args:
@@ -1535,7 +1555,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
                 name=self._name)
 
     @doc_inject(selector='fillna')
-    def fillfalsy_backward(self, limit: int = 0) -> tp.Self:
+    def fillfalsy_backward(self, limit: int = 0, /,) -> tp.Self:
         '''Return a new :obj:`Series` after feeding backward the last non-falsy observation across contiguous falsy values.
 
         Args:
@@ -1582,7 +1602,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
         if array.dtype == assignable_dtype:
             assigned = array.copy()
         else:
-            assigned = array.astype(assignable_dtype)
+            assigned = astype_array(array, assignable_dtype)
 
         ft = first_true_1d(~sel, forward=sided_leading)
         if ft != -1:
@@ -1598,7 +1618,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
         return assigned
 
     @doc_inject(selector='fillna')
-    def fillna_leading(self, value: tp.Any) -> tp.Self:
+    def fillna_leading(self, value: tp.Any, /,) -> tp.Self:
         '''Return a new :obj:`Series` after filling leading (and only leading) null (NaN or None) with the supplied value.
 
         Args:
@@ -1613,7 +1633,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
                 name=self._name)
 
     @doc_inject(selector='fillna')
-    def fillna_trailing(self, value: tp.Any) -> tp.Self:
+    def fillna_trailing(self, value: tp.Any, /,) -> tp.Self:
         '''Return a new :obj:`Series` after filling trailing (and only trailing) null (NaN or None) with the supplied value.
 
         Args:
@@ -1629,7 +1649,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
 
 
     @doc_inject(selector='fillna')
-    def fillfalsy_leading(self, value: tp.Any) -> tp.Self:
+    def fillfalsy_leading(self, value: tp.Any, /,) -> tp.Self:
         '''Return a new :obj:`Series` after filling leading (and only leading) falsy values with the supplied value.
 
         Args:
@@ -1644,7 +1664,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
                 name=self._name)
 
     @doc_inject(selector='fillna')
-    def fillfalsy_trailing(self, value: tp.Any) -> tp.Self:
+    def fillfalsy_trailing(self, value: tp.Any, /,) -> tp.Self:
         '''Return a new :obj:`Series` after filling trailing (and only trailing) falsy values with the supplied value.
 
         Args:
@@ -1793,7 +1813,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
         Private display interface to be shared by Bus and Series.
         '''
         index_depth = self._index.depth if config.include_index else 0
-        display_index = self._index.display(config=config)
+        display_index = self._index.display(config)
 
         # When showing type we need 2: one for the Series type, the other for the index type.
         header_depth = 2 * config.type_show
@@ -1826,6 +1846,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @doc_inject()
     def display(self,
             config: tp.Optional[DisplayConfig] = None,
+            /,
             *,
             style_config: tp.Optional[StyleConfig] = None,
             ) -> Display:
@@ -1917,11 +1938,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     def _extract_iloc(self, key: TILocSelectorOne) -> tp.Any: ...
 
     def _extract_iloc(self, key: TILocSelector) -> tp.Any:
-        try:
-            values = self.values[key]
-        except IndexError as e:
-            raise KeyError(key) from e
-
+        values = self.values[key] # let `IndexError` propagate
         if isinstance(key, INT_TYPES): # if we have a single element
             return values
 
@@ -1942,7 +1959,10 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
             Pandas supports taking in iterables of keys, where some keys are not found in the index; a Series is returned as if a reindex operation was performed. This is undesirable. Better instead is to use reindex()
         '''
         iloc_key = self._index._loc_to_iloc(key)
-        return self._extract_iloc(iloc_key)
+        try:
+            return self._extract_iloc(iloc_key)
+        except IndexError:
+            raise KeyError(key) from None
 
     @tp.overload
     def __getitem__(self, key: TLocSelectorMany) -> tp.Self: ...
@@ -2218,7 +2238,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
         '''
         return self._index.__iter__()
 
-    def __contains__(self, value: TLabel) -> bool:
+    def __contains__(self, value: TLabel, /,) -> bool:
         '''
         Inclusion of value in index labels.
 
@@ -2328,7 +2348,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
                 own_index=True
                 )
 
-    def isin(self, other: tp.Iterable[tp.Any]) -> tp.Self:
+    def isin(self, other: tp.Iterable[tp.Any], /,) -> tp.Self:
         '''
         Return a same-sized Boolean Series that shows if the same-positioned element is in the iterable passed to the function.
 
@@ -2433,7 +2453,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
                 )
 
     @doc_inject(select='astype')
-    def astype(self, dtype: TDtypeSpecifier) -> tp.Self:
+    def astype(self, dtype: TDtypeSpecifier, /,) -> tp.Self:
         '''
         Return a Series with type determined by `dtype` argument. Note that for Series, this is a simple function, whereas for ``Frame``, this is an interface exposing both a callable and a getitem interface.
 
@@ -2444,7 +2464,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
             :obj:`Series`
         '''
         dtype = validate_dtype_specifier(dtype)
-        array = self.values.astype(dtype)
+        array = astype_array(self.values, dtype)
         array.flags.writeable = False
         return self.__class__(
                 array,
@@ -2452,7 +2472,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
                 name=self._name
                 )
 
-    def __round__(self, decimals: int = 0) -> tp.Self:
+    def __round__(self, decimals: int = 0, /,) -> tp.Self:
         '''
         Return a Series rounded to the given decimals. Negative decimals round to the left of the decimal point.
 
@@ -2470,6 +2490,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
 
     def roll(self,
             shift: int,
+            /,
             *,
             include_index: bool = False,
             ) -> tp.Self:
@@ -2506,6 +2527,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
 
     def shift(self,
             shift: int,
+            /,
             *,
             fill_value: tp.Any = np.nan,
             ) -> tp.Self:
@@ -2719,7 +2741,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     # transformations resulting in changed dimensionality
 
     @doc_inject(selector='head', class_name='Series')
-    def head(self, count: int = 5) -> TSeriesAny:
+    def head(self, count: int = 5, /,) -> TSeriesAny:
         '''{doc}
 
         Args:
@@ -2731,7 +2753,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
         return self.iloc[:count]
 
     @doc_inject(selector='tail', class_name='Series')
-    def tail(self, count: int = 5) -> TSeriesAny:
+    def tail(self, count: int = 5, /,) -> TSeriesAny:
         '''{doc}s
 
         Args:
@@ -2782,6 +2804,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @doc_inject(selector='sample')
     def sample(self,
             count: int = 1,
+            /,
             *,
             seed: tp.Optional[int] = None,
             ) -> tp.Self:
@@ -3061,6 +3084,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     #---------------------------------------------------------------------------
     def cov(self,
             other: tp.Union[TSeriesAny, TNDArrayAny],
+            /,
             *,
             ddof: int = 1,
             ) -> float:
@@ -3077,6 +3101,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
 
     def corr(self,
             other: tp.Union[TSeriesAny, TNDArrayAny],
+            /,
             ) -> float:
         '''
         Return the index-aligned correlation to the supplied :obj:`Series`.
@@ -3094,6 +3119,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @doc_inject(selector='searchsorted', label_type='iloc (integer)')
     def iloc_searchsorted(self,
             values: tp.Any,
+            /,
             *,
             side_left: bool = True,
             ) -> TNDArrayAny: # might be 0 dim scalar
@@ -3116,6 +3142,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @doc_inject(selector='searchsorted', label_type='loc (label)')
     def loc_searchsorted(self,
             values: tp.Any,
+            /,
             *,
             side_left: bool = True,
             fill_value: tp.Any = np.nan,
@@ -3205,6 +3232,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     def insert_before(self,
             key: TLabel,
             container: TSeriesAny,
+            /,
             ) -> tp.Self:
         '''
         Create a new :obj:`Series` by inserting a :obj:`Series` at the position before the label specified by ``key``.
@@ -3225,6 +3253,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     def insert_after(self,
             key: TLabel, # iloc positions
             container: TSeriesAny,
+            /,
             ) -> tp.Self:
         '''
         Create a new :obj:`Series` by inserting a :obj:`Series` at the position after the label specified by ``key``.
@@ -3270,6 +3299,7 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @doc_inject()
     def equals(self,
             other: tp.Any,
+            /,
             *,
             compare_name: bool = False,
             compare_dtype: bool = False,
@@ -3409,8 +3439,8 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
                 )
 
     def to_frame(self,
-            axis: int = 1,
             *,
+            axis: int = 1,
             index: TIndexInitOrAuto = None,
             index_constructor: TIndexCtorSpecifier = None,
             columns: TIndexInitOrAuto = None,
@@ -3441,8 +3471,8 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
                 )
 
     def to_frame_go(self,
-            axis: int = 1,
             *,
+            axis: int = 1,
             index: TIndexInitOrAuto = None,
             index_constructor: TIndexCtorSpecifier = None,
             columns: TIndexInitOrAuto = None,
@@ -3471,8 +3501,8 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
                 )
 
     def to_frame_he(self,
-            axis: int = 1,
             *,
+            axis: int = 1,
             index: TIndexInitOrAuto = None,
             index_constructor: TIndexCtorSpecifier = None,
             columns: TIndexInitOrAuto = None,
@@ -3549,6 +3579,8 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @doc_inject(class_name='Series')
     def to_html(self,
             config: tp.Optional[DisplayConfig] = None,
+            /,
+            *,
             style_config: tp.Optional[StyleConfig] = STYLE_CONFIG_DEFAULT,
             ) -> str:
         '''
@@ -3564,6 +3596,8 @@ class Series(ContainerOperand, tp.Generic[TVIndex, TVDtype]):
     @doc_inject(class_name='Series')
     def to_html_datatables(self,
             fp: tp.Optional[TPathSpecifierOrTextIO] = None,
+            /,
+            *,
             show: bool = True,
             config: tp.Optional[DisplayConfig] = None
             ) -> tp.Optional[str]:
@@ -3647,7 +3681,7 @@ class SeriesAssign(Assign):
         if dtype == self.container.dtype:
             array = self.container.values.copy()
         else:
-            array = self.container.values.astype(dtype)
+            array = astype_array(self.container.values, dtype)
 
         array[self.key] = value
         array.flags.writeable = False
@@ -3731,7 +3765,7 @@ class SeriesHE(Series[TVIndex, TVDtype]):
                 skipna=True,
                 )
 
-    def __ne__(self, other: tp.Any) -> bool:
+    def __ne__(self, other: tp.Any, /,) -> bool:
         '''
         Return False if other is a ``Series`` with the same labels, values, and name. Container class and underlying dtypes are not independently compared.
         '''

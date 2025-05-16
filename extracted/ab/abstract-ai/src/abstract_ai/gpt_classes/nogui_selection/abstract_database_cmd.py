@@ -34,7 +34,7 @@ def get_db_engine(dbUrl=None, dbPath=None):
 
 def get_user_input(text,default='y'):
     choices = '(y/n)' if default in ['y','n'] else ''
-    response = input(f"{text} {choices}:({default}) ") or default
+ or default
     if choices:
         response = response.lower() == 'y'
     return response
@@ -436,7 +436,7 @@ class DatabaseBrowser:
             rows = result.fetchall()
             
             if rows:
-                input(rows)
+
                 df = pd.DataFrame(rows)
                 df.columns = result.keys()
                 

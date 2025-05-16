@@ -4,7 +4,7 @@ requires = ["setuptools>=77.0.3"]
 
 [project]
 name = "types-peewee"
-version = "3.18.1.20250512"
+version = "3.18.1.20250516"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 description = "Typing stubs for peewee"
@@ -38,7 +38,7 @@ mypy 1.15.0,
 pyright 1.1.400,
 and pytype 2024.10.11.
 It was generated from typeshed commit
-[`30b7b679f5949957e253f157366e221e982e5c0e`](https://github.com/python/typeshed/commit/30b7b679f5949957e253f157366e221e982e5c0e).
+[`126768408a69b7a3a09b7d3992970b289f92937e`](https://github.com/python/typeshed/commit/126768408a69b7a3a09b7d3992970b289f92937e).
 """, content-type = "text/markdown" }
 classifiers = [
   "Programming Language :: Python :: 3",
@@ -55,5 +55,5 @@ dependencies = []
 "Chat" = "https://gitter.im/python/typing"
 
 [tool.setuptools]
-packages = ['peewee-stubs', 'playhouse-stubs']
+packages = ['playhouse-stubs', 'peewee-stubs']
 include-package-data = false

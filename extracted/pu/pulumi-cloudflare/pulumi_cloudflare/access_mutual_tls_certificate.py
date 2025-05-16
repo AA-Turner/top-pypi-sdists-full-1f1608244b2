@@ -246,6 +246,7 @@ class _AccessMutualTlsCertificateState:
 warnings.warn("""cloudflare.index/accessmutualtlscertificate.AccessMutualTlsCertificate has been deprecated in favor of cloudflare.index/zerotrustaccessmtlscertificate.ZeroTrustAccessMtlsCertificate""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/accessMutualTlsCertificate:AccessMutualTlsCertificate")
 class AccessMutualTlsCertificate(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/accessmutualtlscertificate.AccessMutualTlsCertificate has been deprecated in favor of cloudflare.index/zerotrustaccessmtlscertificate.ZeroTrustAccessMtlsCertificate""", DeprecationWarning)
 

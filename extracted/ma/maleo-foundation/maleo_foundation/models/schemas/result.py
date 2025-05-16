@@ -1,7 +1,17 @@
 from pydantic import BaseModel, Field
-from typing import Any
+from typing import Dict, Optional, Union, Any
 from maleo_foundation.models.schemas.general import BaseGeneralSchemas
 from maleo_foundation.types import BaseTypes
+
+class FieldExpansionMetadata(BaseModel):
+    success:bool = Field(..., description="Field expansion's success status")
+    code:BaseTypes.OptionalString = Field(None, description="Optional result code")
+    message:BaseTypes.OptionalString = Field(None, description="Optional message")
+    description:BaseTypes.OptionalString = Field(None, description="Optional description")
+    other:BaseTypes.OptionalAny = Field(None, description="Optional other information")
+
+class ResultMetadata(BaseModel):
+    field_expansion:Optional[Union[str, Dict[str, FieldExpansionMetadata]]] = Field(None, description="Field expansion metadata")
 
 class BaseResultSchemas:
     class BaseRow(BaseModel):
@@ -14,6 +24,7 @@ class BaseResultSchemas:
         message:BaseTypes.OptionalString = Field(None, description="Optional message")
         description:BaseTypes.OptionalString = Field(None, description="Optional description")
         data:Any = Field(..., description="Data")
+        metadata:Optional[ResultMetadata] = Field(None, description="Optional metadata")
         other:BaseTypes.OptionalAny = Field(None, description="Optional other information")
 
     #* ----- ----- ----- Intermediary ----- ----- ----- *#

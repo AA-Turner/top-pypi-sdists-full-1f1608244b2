@@ -1,7 +1,7 @@
 r'''
 # `aws_iot_domain_configuration`
 
-Refer to the Terraform Registry for docs: [`aws_iot_domain_configuration`](https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration).
+Refer to the Terraform Registry for docs: [`aws_iot_domain_configuration`](https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class IotDomainConfiguration(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-aws.iotDomainConfiguration.IotDomainConfiguration",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration aws_iot_domain_configuration}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration aws_iot_domain_configuration}.'''
 
     def __init__(
         self,
@@ -52,6 +52,8 @@ class IotDomainConfiguration(
         id_: builtins.str,
         *,
         name: builtins.str,
+        application_protocol: typing.Optional[builtins.str] = None,
+        authentication_type: typing.Optional[builtins.str] = None,
         authorizer_config: typing.Optional[typing.Union["IotDomainConfigurationAuthorizerConfig", typing.Dict[builtins.str, typing.Any]]] = None,
         domain_name: typing.Optional[builtins.str] = None,
         id: typing.Optional[builtins.str] = None,
@@ -70,21 +72,23 @@ class IotDomainConfiguration(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration aws_iot_domain_configuration} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration aws_iot_domain_configuration} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#name IotDomainConfiguration#name}.
-        :param authorizer_config: authorizer_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#authorizer_config IotDomainConfiguration#authorizer_config}
-        :param domain_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#domain_name IotDomainConfiguration#domain_name}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#id IotDomainConfiguration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param server_certificate_arns: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#server_certificate_arns IotDomainConfiguration#server_certificate_arns}.
-        :param service_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#service_type IotDomainConfiguration#service_type}.
-        :param status: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#status IotDomainConfiguration#status}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#tags IotDomainConfiguration#tags}.
-        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#tags_all IotDomainConfiguration#tags_all}.
-        :param tls_config: tls_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#tls_config IotDomainConfiguration#tls_config}
-        :param validation_certificate_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#validation_certificate_arn IotDomainConfiguration#validation_certificate_arn}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#name IotDomainConfiguration#name}.
+        :param application_protocol: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#application_protocol IotDomainConfiguration#application_protocol}.
+        :param authentication_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#authentication_type IotDomainConfiguration#authentication_type}.
+        :param authorizer_config: authorizer_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#authorizer_config IotDomainConfiguration#authorizer_config}
+        :param domain_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#domain_name IotDomainConfiguration#domain_name}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#id IotDomainConfiguration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param server_certificate_arns: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#server_certificate_arns IotDomainConfiguration#server_certificate_arns}.
+        :param service_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#service_type IotDomainConfiguration#service_type}.
+        :param status: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#status IotDomainConfiguration#status}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#tags IotDomainConfiguration#tags}.
+        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#tags_all IotDomainConfiguration#tags_all}.
+        :param tls_config: tls_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#tls_config IotDomainConfiguration#tls_config}
+        :param validation_certificate_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#validation_certificate_arn IotDomainConfiguration#validation_certificate_arn}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -99,6 +103,8 @@ class IotDomainConfiguration(
             check_type(argname="argument id_", value=id_, expected_type=type_hints["id_"])
         config = IotDomainConfigurationConfig(
             name=name,
+            application_protocol=application_protocol,
+            authentication_type=authentication_type,
             authorizer_config=authorizer_config,
             domain_name=domain_name,
             id=id,
@@ -133,7 +139,7 @@ class IotDomainConfiguration(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the IotDomainConfiguration to import.
-        :param import_from_id: The id of the existing IotDomainConfiguration that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing IotDomainConfiguration that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the IotDomainConfiguration to import is found.
         '''
         if __debug__:
@@ -152,8 +158,8 @@ class IotDomainConfiguration(
         default_authorizer_name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param allow_authorizer_override: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#allow_authorizer_override IotDomainConfiguration#allow_authorizer_override}.
-        :param default_authorizer_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#default_authorizer_name IotDomainConfiguration#default_authorizer_name}.
+        :param allow_authorizer_override: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#allow_authorizer_override IotDomainConfiguration#allow_authorizer_override}.
+        :param default_authorizer_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#default_authorizer_name IotDomainConfiguration#default_authorizer_name}.
         '''
         value = IotDomainConfigurationAuthorizerConfig(
             allow_authorizer_override=allow_authorizer_override,
@@ -169,11 +175,19 @@ class IotDomainConfiguration(
         security_policy: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param security_policy: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#security_policy IotDomainConfiguration#security_policy}.
+        :param security_policy: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#security_policy IotDomainConfiguration#security_policy}.
         '''
         value = IotDomainConfigurationTlsConfig(security_policy=security_policy)
 
         return typing.cast(None, jsii.invoke(self, "putTlsConfig", [value]))
+
+    @jsii.member(jsii_name="resetApplicationProtocol")
+    def reset_application_protocol(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetApplicationProtocol", []))
+
+    @jsii.member(jsii_name="resetAuthenticationType")
+    def reset_authentication_type(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetAuthenticationType", []))
 
     @jsii.member(jsii_name="resetAuthorizerConfig")
     def reset_authorizer_config(self) -> None:
@@ -251,6 +265,16 @@ class IotDomainConfiguration(
         return typing.cast("IotDomainConfigurationTlsConfigOutputReference", jsii.get(self, "tlsConfig"))
 
     @builtins.property
+    @jsii.member(jsii_name="applicationProtocolInput")
+    def application_protocol_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "applicationProtocolInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="authenticationTypeInput")
+    def authentication_type_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "authenticationTypeInput"))
+
+    @builtins.property
     @jsii.member(jsii_name="authorizerConfigInput")
     def authorizer_config_input(
         self,
@@ -310,6 +334,30 @@ class IotDomainConfiguration(
     @jsii.member(jsii_name="validationCertificateArnInput")
     def validation_certificate_arn_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "validationCertificateArnInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="applicationProtocol")
+    def application_protocol(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "applicationProtocol"))
+
+    @application_protocol.setter
+    def application_protocol(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__9830da66f8db4b1e0ed06bccaebfe74c34d95326c08cb0acee451e62da8ba114)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "applicationProtocol", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="authenticationType")
+    def authentication_type(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "authenticationType"))
+
+    @authentication_type.setter
+    def authentication_type(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ce85697e18aecba26eb1b1794a0b5ff935f80a1b28e51529731843cc10d31ce6)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "authenticationType", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
     @jsii.member(jsii_name="domainName")
@@ -436,8 +484,8 @@ class IotDomainConfigurationAuthorizerConfig:
         default_authorizer_name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param allow_authorizer_override: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#allow_authorizer_override IotDomainConfiguration#allow_authorizer_override}.
-        :param default_authorizer_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#default_authorizer_name IotDomainConfiguration#default_authorizer_name}.
+        :param allow_authorizer_override: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#allow_authorizer_override IotDomainConfiguration#allow_authorizer_override}.
+        :param default_authorizer_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#default_authorizer_name IotDomainConfiguration#default_authorizer_name}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__59f266d6eaaf8f0a1c73049acff5fdb2d8988f3fde61a0866ef27b2982a49f4a)
@@ -453,13 +501,13 @@ class IotDomainConfigurationAuthorizerConfig:
     def allow_authorizer_override(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#allow_authorizer_override IotDomainConfiguration#allow_authorizer_override}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#allow_authorizer_override IotDomainConfiguration#allow_authorizer_override}.'''
         result = self._values.get("allow_authorizer_override")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def default_authorizer_name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#default_authorizer_name IotDomainConfiguration#default_authorizer_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#default_authorizer_name IotDomainConfiguration#default_authorizer_name}.'''
         result = self._values.get("default_authorizer_name")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -572,6 +620,8 @@ class IotDomainConfigurationAuthorizerConfigOutputReference(
         "provider": "provider",
         "provisioners": "provisioners",
         "name": "name",
+        "application_protocol": "applicationProtocol",
+        "authentication_type": "authenticationType",
         "authorizer_config": "authorizerConfig",
         "domain_name": "domainName",
         "id": "id",
@@ -596,6 +646,8 @@ class IotDomainConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
         name: builtins.str,
+        application_protocol: typing.Optional[builtins.str] = None,
+        authentication_type: typing.Optional[builtins.str] = None,
         authorizer_config: typing.Optional[typing.Union[IotDomainConfigurationAuthorizerConfig, typing.Dict[builtins.str, typing.Any]]] = None,
         domain_name: typing.Optional[builtins.str] = None,
         id: typing.Optional[builtins.str] = None,
@@ -615,17 +667,19 @@ class IotDomainConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#name IotDomainConfiguration#name}.
-        :param authorizer_config: authorizer_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#authorizer_config IotDomainConfiguration#authorizer_config}
-        :param domain_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#domain_name IotDomainConfiguration#domain_name}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#id IotDomainConfiguration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param server_certificate_arns: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#server_certificate_arns IotDomainConfiguration#server_certificate_arns}.
-        :param service_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#service_type IotDomainConfiguration#service_type}.
-        :param status: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#status IotDomainConfiguration#status}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#tags IotDomainConfiguration#tags}.
-        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#tags_all IotDomainConfiguration#tags_all}.
-        :param tls_config: tls_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#tls_config IotDomainConfiguration#tls_config}
-        :param validation_certificate_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#validation_certificate_arn IotDomainConfiguration#validation_certificate_arn}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#name IotDomainConfiguration#name}.
+        :param application_protocol: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#application_protocol IotDomainConfiguration#application_protocol}.
+        :param authentication_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#authentication_type IotDomainConfiguration#authentication_type}.
+        :param authorizer_config: authorizer_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#authorizer_config IotDomainConfiguration#authorizer_config}
+        :param domain_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#domain_name IotDomainConfiguration#domain_name}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#id IotDomainConfiguration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param server_certificate_arns: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#server_certificate_arns IotDomainConfiguration#server_certificate_arns}.
+        :param service_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#service_type IotDomainConfiguration#service_type}.
+        :param status: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#status IotDomainConfiguration#status}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#tags IotDomainConfiguration#tags}.
+        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#tags_all IotDomainConfiguration#tags_all}.
+        :param tls_config: tls_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#tls_config IotDomainConfiguration#tls_config}
+        :param validation_certificate_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#validation_certificate_arn IotDomainConfiguration#validation_certificate_arn}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -643,6 +697,8 @@ class IotDomainConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
             check_type(argname="argument provisioners", value=provisioners, expected_type=type_hints["provisioners"])
             check_type(argname="argument name", value=name, expected_type=type_hints["name"])
+            check_type(argname="argument application_protocol", value=application_protocol, expected_type=type_hints["application_protocol"])
+            check_type(argname="argument authentication_type", value=authentication_type, expected_type=type_hints["authentication_type"])
             check_type(argname="argument authorizer_config", value=authorizer_config, expected_type=type_hints["authorizer_config"])
             check_type(argname="argument domain_name", value=domain_name, expected_type=type_hints["domain_name"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
@@ -670,6 +726,10 @@ class IotDomainConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["provider"] = provider
         if provisioners is not None:
             self._values["provisioners"] = provisioners
+        if application_protocol is not None:
+            self._values["application_protocol"] = application_protocol
+        if authentication_type is not None:
+            self._values["authentication_type"] = authentication_type
         if authorizer_config is not None:
             self._values["authorizer_config"] = authorizer_config
         if domain_name is not None:
@@ -757,10 +817,22 @@ class IotDomainConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#name IotDomainConfiguration#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#name IotDomainConfiguration#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
+
+    @builtins.property
+    def application_protocol(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#application_protocol IotDomainConfiguration#application_protocol}.'''
+        result = self._values.get("application_protocol")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def authentication_type(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#authentication_type IotDomainConfiguration#authentication_type}.'''
+        result = self._values.get("authentication_type")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def authorizer_config(
@@ -768,20 +840,20 @@ class IotDomainConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[IotDomainConfigurationAuthorizerConfig]:
         '''authorizer_config block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#authorizer_config IotDomainConfiguration#authorizer_config}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#authorizer_config IotDomainConfiguration#authorizer_config}
         '''
         result = self._values.get("authorizer_config")
         return typing.cast(typing.Optional[IotDomainConfigurationAuthorizerConfig], result)
 
     @builtins.property
     def domain_name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#domain_name IotDomainConfiguration#domain_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#domain_name IotDomainConfiguration#domain_name}.'''
         result = self._values.get("domain_name")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#id IotDomainConfiguration#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#id IotDomainConfiguration#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -791,31 +863,31 @@ class IotDomainConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def server_certificate_arns(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#server_certificate_arns IotDomainConfiguration#server_certificate_arns}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#server_certificate_arns IotDomainConfiguration#server_certificate_arns}.'''
         result = self._values.get("server_certificate_arns")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def service_type(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#service_type IotDomainConfiguration#service_type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#service_type IotDomainConfiguration#service_type}.'''
         result = self._values.get("service_type")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def status(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#status IotDomainConfiguration#status}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#status IotDomainConfiguration#status}.'''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def tags(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#tags IotDomainConfiguration#tags}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#tags IotDomainConfiguration#tags}.'''
         result = self._values.get("tags")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def tags_all(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#tags_all IotDomainConfiguration#tags_all}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#tags_all IotDomainConfiguration#tags_all}.'''
         result = self._values.get("tags_all")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -823,14 +895,14 @@ class IotDomainConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def tls_config(self) -> typing.Optional["IotDomainConfigurationTlsConfig"]:
         '''tls_config block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#tls_config IotDomainConfiguration#tls_config}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#tls_config IotDomainConfiguration#tls_config}
         '''
         result = self._values.get("tls_config")
         return typing.cast(typing.Optional["IotDomainConfigurationTlsConfig"], result)
 
     @builtins.property
     def validation_certificate_arn(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#validation_certificate_arn IotDomainConfiguration#validation_certificate_arn}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#validation_certificate_arn IotDomainConfiguration#validation_certificate_arn}.'''
         result = self._values.get("validation_certificate_arn")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -858,7 +930,7 @@ class IotDomainConfigurationTlsConfig:
         security_policy: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param security_policy: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#security_policy IotDomainConfiguration#security_policy}.
+        :param security_policy: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#security_policy IotDomainConfiguration#security_policy}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__78271908f4f3b7cca3f8db181360996c7649ec1ee70ca220eec09f6d5c0c9f60)
@@ -869,7 +941,7 @@ class IotDomainConfigurationTlsConfig:
 
     @builtins.property
     def security_policy(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/iot_domain_configuration#security_policy IotDomainConfiguration#security_policy}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/iot_domain_configuration#security_policy IotDomainConfiguration#security_policy}.'''
         result = self._values.get("security_policy")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -958,6 +1030,8 @@ def _typecheckingstub__5edf5f7f7e9193ef16cd330b77a3b85fd6575a4e893c77188b109b3d1
     id_: builtins.str,
     *,
     name: builtins.str,
+    application_protocol: typing.Optional[builtins.str] = None,
+    authentication_type: typing.Optional[builtins.str] = None,
     authorizer_config: typing.Optional[typing.Union[IotDomainConfigurationAuthorizerConfig, typing.Dict[builtins.str, typing.Any]]] = None,
     domain_name: typing.Optional[builtins.str] = None,
     id: typing.Optional[builtins.str] = None,
@@ -984,6 +1058,18 @@ def _typecheckingstub__2cad75738bd982d3c75931c6b7607a659125688fc479fc227ba9f0ff0
     import_to_id: builtins.str,
     import_from_id: builtins.str,
     provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__9830da66f8db4b1e0ed06bccaebfe74c34d95326c08cb0acee451e62da8ba114(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ce85697e18aecba26eb1b1794a0b5ff935f80a1b28e51529731843cc10d31ce6(
+    value: builtins.str,
 ) -> None:
     """Type checking stubs"""
     pass
@@ -1085,6 +1171,8 @@ def _typecheckingstub__f1e428e300a52292930e84420511511448bdb62658be48dd7b9f58c3d
     provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
     provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     name: builtins.str,
+    application_protocol: typing.Optional[builtins.str] = None,
+    authentication_type: typing.Optional[builtins.str] = None,
     authorizer_config: typing.Optional[typing.Union[IotDomainConfigurationAuthorizerConfig, typing.Dict[builtins.str, typing.Any]]] = None,
     domain_name: typing.Optional[builtins.str] = None,
     id: typing.Optional[builtins.str] = None,

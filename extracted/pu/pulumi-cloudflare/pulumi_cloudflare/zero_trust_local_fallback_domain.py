@@ -155,6 +155,7 @@ class _ZeroTrustLocalFallbackDomainState:
 warnings.warn("""cloudflare.index/zerotrustlocalfallbackdomain.ZeroTrustLocalFallbackDomain has been deprecated in favor of cloudflare.index/zerotrustdevicecustomprofilelocaldomainfallback.ZeroTrustDeviceCustomProfileLocalDomainFallback""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/zeroTrustLocalFallbackDomain:ZeroTrustLocalFallbackDomain")
 class ZeroTrustLocalFallbackDomain(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/zerotrustlocalfallbackdomain.ZeroTrustLocalFallbackDomain has been deprecated in favor of cloudflare.index/zerotrustdevicecustomprofilelocaldomainfallback.ZeroTrustDeviceCustomProfileLocalDomainFallback""", DeprecationWarning)
 

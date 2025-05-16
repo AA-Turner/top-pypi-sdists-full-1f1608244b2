@@ -34,6 +34,7 @@ def invoke_as_task(
     query: Callable | dict[str, Any] | None,
     extra_query: dict[str, Any] | None,
     llm_kwargs: dict[str, Any] | None,
+    result_parser: Callable | None,
 ):
     try:
         if callable(query):
@@ -43,14 +44,14 @@ def invoke_as_task(
         if extra_query:
             query.update(extra_query)
 
-        result = run_llm(
+        output_result, ai_msg = run_llm(
             prompt, output_model, chat_model, chat_model_name, max_tokens, query=query, extra_tools=tools, **llm_kwargs
-        )[0]
-        if model_field is not None:
-            setattr(instance, model_field, result)
-
-        if isinstance(result, BaseModel):
-            for field, value in result.model_dump().items():
+        )
+        # if a result parser is provided, we use this to parse the results into the instance
+        if result_parser:
+            instance = result_parser(instance, output_result, ai_msg)
+        elif output_result and isinstance(output_result, BaseModel):
+            for field, value in output_result.model_dump().items():
                 setattr(instance, field, value)
     except BadRequestErrors as e:  # we silent bad request error because there is nothing we can do about it
         logger.warning(str(e))
@@ -81,6 +82,7 @@ class LLMConfig(Generic[T]):
         tools: Callable | list[dict[str, str]] | None = None,
         query: Callable | dict[str, Any] | None = None,
         llm_kwargs_callback: Callable | None = None,
+        result_parser: Callable | None = None,
         **llm_kwargs,
     ):
         self.key = key
@@ -95,6 +97,7 @@ class LLMConfig(Generic[T]):
         self.query = query
         self.llm_kwargs_callback = llm_kwargs_callback
         self.llm_kwargs = llm_kwargs
+        self.result_parser = result_parser
 
     def check_condition(self, instance: T) -> bool:
         if self.on_condition is None:
@@ -151,6 +154,7 @@ class LLMConfig(Generic[T]):
                 self.query,
                 extra_query,
                 llm_kwargs,
+                self.result_parser,
             ]
         )
         return invoke_as_task.s(*args)

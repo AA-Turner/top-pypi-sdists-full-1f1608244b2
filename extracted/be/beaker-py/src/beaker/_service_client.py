@@ -15,6 +15,7 @@ from . import beaker_pb2 as pb2
 from . import beaker_pb2_grpc
 from .config import Config
 from .exceptions import *
+from .exceptions import BeakerQueueNotFound
 
 if TYPE_CHECKING:
     from .client import Beaker
@@ -438,6 +439,20 @@ class ServiceClient:
         if "/" in group:
             raise ValueError("invalid group ID")
         return group
+
+    def resolve_queue_id(self, queue: str | pb2.Queue) -> str:
+        if isinstance(queue, pb2.Queue):
+            return queue.id
+
+        if "/" not in queue:
+            return queue
+
+        author_name, queue_name = queue.split("/", 1)
+        return self.rpc_request(
+            RpcMethod[pb2.ResolveQueueNameResponse](self.service.ResolveQueueName),
+            pb2.ResolveQueueNameRequest(author_name=author_name, queue_name=queue_name),
+            exceptions_for_status={grpc.StatusCode.NOT_FOUND: BeakerQueueNotFound(queue)},
+        ).queue_id
 
     @cached_property
     def _default_workspace_id(self) -> str | None:

@@ -11,6 +11,7 @@ import time
 import win32gui
 from typing import List, Tuple, Dict
 from screeninfo import get_monitors
+import pyautogui
 
 
 class Rectangle:
@@ -240,15 +241,27 @@ class GUICapture:
 
         # Get monitor dimensions from visibility_checker
         monitor = self.visibility_checker.monitor
-        # Capture screenshot of the specific monitor
-        # screenshot = auto.GetRootControl().ToBitmap(monitor.left, monitor.top, 
-        #                                            monitor.right - monitor.left, 
-        #                                            monitor.bottom - monitor.top)
-        bbox=(monitor.left, monitor.top, 
-                monitor.right, monitor.bottom)
-        screenshot = ImageGrab.grab(bbox=bbox, all_screens=True)
         
-        screenshot = screenshot.convert('RGB')
+        # Define the bounding box for pyautogui
+        # bbox for ImageGrab is (left, top, right, bottom)
+        # region for pyautogui is (left, top, width, height)
+        pyautogui_region = (
+            monitor.left,
+            monitor.top,
+            monitor.right - monitor.left,
+            monitor.bottom - monitor.top
+        )
+
+        # Capture screenshot of the specific monitor region using pyautogui
+        try:
+            screenshot = pyautogui.screenshot(region=pyautogui_region)
+        except Exception as e:
+            # Add logging or raise a more specific exception if needed
+            print(f"Error during pyautogui.screenshot: {e}")
+            # Fallback or re-raise, depending on desired error handling
+            # For now, let's re-raise to make it clear an error occurred.
+            raise
+
         screenshot.save(screenshot_path)
         return screenshot_path
     

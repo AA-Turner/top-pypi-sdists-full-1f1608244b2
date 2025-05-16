@@ -1,6 +1,7 @@
 """
 Adds thread-local context to a Python logger. Taken from neocrym/log-with-context
 """
+
 from __future__ import annotations
 
 import collections.abc
@@ -17,6 +18,7 @@ from enum import Enum
 from typing import Any, Dict, Mapping, Optional
 from weakref import WeakKeyDictionary
 
+from chalk.utils._ddtrace_version import can_use_ddtrace
 from chalk.utils.missing_dependency import missing_dependency_exception
 
 _LOGGING_CONTEXT: contextvars.ContextVar[Mapping[str, Any]] = contextvars.ContextVar("_LOGGING_CONTEXT", default={})
@@ -159,9 +161,9 @@ def get_json_logging_formatter() -> logging.Formatter:
     except ImportError:
         raise missing_dependency_exception("chalkpy[runtime]")
 
-    try:
+    if can_use_ddtrace:
         import ddtrace
-    except ImportError:
+    else:
         ddtrace = None
 
     class ChalkJsonFormatter(jsonlogger.JsonFormatter):

@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: causalml
-Version: 0.15.3
+Version: 0.15.4
 Summary: Python Package for Uplift Modeling and Causal Inference with Machine Learning Algorithms
 Author: Huigang Chen, Totte Harinen, Jeong-Yoon Lee, Jing Pan, Mike Yung, Zhenyu Zhao
 Maintainer: Jeong-Yoon Lee
@@ -38,6 +38,7 @@ Requires-Dist: tensorflow>=2.4.0; extra == "tf"
 Provides-Extra: torch
 Requires-Dist: torch; extra == "torch"
 Requires-Dist: pyro-ppl; extra == "torch"
+Dynamic: license-file
 
 <div align="center">
   <a href="https://github.com/uber/causalml"><img width="380px" height="140px" src="https://raw.githubusercontent.com/uber/causalml/master/docs/_static/img/logo/causalml_logo.png"></a>
@@ -117,6 +118,7 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](https:
 * [Causal ML API documentation](https://causalml.readthedocs.io/en/latest/about.html)
 
 ## Workshops, Talks, and Publications
+* (Workshop) [3rd Workshop on Causal Inference and Machine Learning in Practice](https://causal-machine-learning.github.io/kdd2025-workshop/) at KDD 2025
 * (Workshop) [2nd Workshop on Causal Inference and Machine Learning in Practice](https://causal-machine-learning.github.io/kdd2024-workshop/) at KDD 2024
 * (Workshop) [Causal Inference and Machine Learning in Practice: Use cases for Product, Brand, Policy and Beyond](https://causal-machine-learning.github.io/kdd2023-workshop/) at KDD 2023
 * (Talk) Introduction to CausalML at [Causal Data Science Meeting 2021](https://www.causalscience.org/meeting/program/day-2/)

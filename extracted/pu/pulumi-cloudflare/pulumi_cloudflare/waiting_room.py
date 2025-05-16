@@ -1154,6 +1154,7 @@ class _WaitingRoomState:
         pulumi.set(self, "zone_id", value)
 
 
+@pulumi.type_token("cloudflare:index/waitingRoom:WaitingRoom")
 class WaitingRoom(pulumi.CustomResource):
     @overload
     def __init__(__self__,

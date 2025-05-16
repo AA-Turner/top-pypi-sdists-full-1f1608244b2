@@ -249,6 +249,7 @@ class _MagicTransitSiteState:
         pulumi.set(self, "secondary_connector_id", value)
 
 
+@pulumi.type_token("cloudflare:index/magicTransitSite:MagicTransitSite")
 class MagicTransitSite(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -446,7 +447,7 @@ class MagicTransitSite(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def location(self) -> pulumi.Output['outputs.MagicTransitSiteLocation']:
+    def location(self) -> pulumi.Output[Optional['outputs.MagicTransitSiteLocation']]:
         """
         Location of site in latitude and longitude.
         """

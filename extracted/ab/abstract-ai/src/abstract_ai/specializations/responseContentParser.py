@@ -197,8 +197,8 @@ def get_cronological_file_list(directory=None,files_list=None):
     for file_path in content_data_list:
         curr_created = int(get_created(file_path=file_path))
         if curr_created<prev_created:
-            input('out of o order')
-        prev_created = curr_created
+
+            prev_created = curr_created
     return content_data_list
 def get_ordered_data(directory=None,files_list=None):
     chron_files_list = get_cronological_file_list(directory=directory,files_list=files_list)

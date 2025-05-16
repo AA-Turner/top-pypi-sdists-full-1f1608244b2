@@ -21,8 +21,8 @@ import numpy as np
 import openvino
 import torch
 from huggingface_hub.constants import HUGGINGFACE_HUB_CACHE
+from openvino import Core, Tensor, Type
 from openvino.preprocess import PrePostProcessor
-from openvino.runtime import Core, Tensor, Type
 from transformers import AutoModelForCausalLM, PretrainedConfig
 from transformers.file_utils import add_start_docstrings, add_start_docstrings_to_model_forward
 from transformers.generation import GenerationMixin
@@ -103,7 +103,7 @@ TEXT_GENERATION_EXAMPLE = r"""
 class OVBaseDecoderModel(OVModel):
     def __init__(
         self,
-        model: openvino.runtime.Model,
+        model: openvino.Model,
         config: PretrainedConfig = None,
         device: str = "CPU",
         dynamic_shapes: bool = True,
@@ -147,7 +147,6 @@ class OVBaseDecoderModel(OVModel):
         self.key_value_input_names = [key for key in self.input_names if "key_values" in key]
         self.key_value_output_names = [key for key in self.output_names if "present" in key]
         # Keeping the original model for serialization
-        self._original_model = self.model.clone() if not compile_only else None
         self._pkv_precision = Type.f32
         self.next_beam_idx = None
         self._past_length = 0
@@ -197,6 +196,17 @@ class OVBaseDecoderModel(OVModel):
         if not self._compile_only and enable_compilation:
             self.compile()
 
+    @staticmethod
+    def _get_model_with_updated_pkv_precision(model: openvino.Model, pkv_precision: Type) -> openvino.Model:
+        ppp = PrePostProcessor(model)
+        for key in model.inputs:
+            if "past_key_values" in key.get_any_name() and pkv_precision != key.get_element_type():
+                ppp.input(key.get_any_name()).tensor().set_element_type(pkv_precision)
+        for key in model.outputs:
+            if "present" in key.get_any_name() and pkv_precision != key.get_element_type():
+                ppp.output(key.get_any_name()).tensor().set_element_type(pkv_precision)
+        return ppp.build()
+
     def update_pkv_precision(self, force_fp32=False):
         if not self.use_cache or self.stateful or self._compile_only:
             return
@@ -216,20 +226,13 @@ class OVBaseDecoderModel(OVModel):
                 if inference_precision_hint in STR_TO_OV_TYPE:
                     pkv_precision = STR_TO_OV_TYPE[inference_precision_hint]
 
-            ppp = PrePostProcessor(self.model)
-            for key in self.model.inputs:
-                if "past_key_values" in key.get_any_name() and pkv_precision != key.get_element_type():
-                    ppp.input(key.get_any_name()).tensor().set_element_type(pkv_precision)
-            for key in self.model.outputs:
-                if "present" in key.get_any_name() and pkv_precision != key.get_element_type():
-                    ppp.output(key.get_any_name()).tensor().set_element_type(pkv_precision)
-
-            self.model = ppp.build()
+            self.model = self._get_model_with_updated_pkv_precision(self.model, pkv_precision)
             self._pkv_precision = pkv_precision
+            self.request = None
         else:
             if hasattr(self, "_pkv_precision") and self._pkv_precision != Type.f32:
+                self.model = self._get_model_with_updated_pkv_precision(self.model, Type.f32)
                 self._pkv_precision = Type.f32
-                self.model = self._original_model.clone()
                 if self.is_dynamic:
                     self.model = self._reshape(self.model, -1, -1)
                 self.request = None
@@ -246,9 +249,13 @@ class OVBaseDecoderModel(OVModel):
 
         if self._compile_only:
             raise ValueError(
-                "`save_pretrained()` is not supported with `compile_only` mode, please intialize model without this option"
+                "`save_pretrained()` is not supported with `compile_only` mode, please initialize model without this option"
             )
-        model_to_save = self.model if self._pkv_precision == Type.f32 else self._original_model
+        model_to_save = (
+            self.model
+            if self._pkv_precision == Type.f32
+            else self._get_model_with_updated_pkv_precision(self.model.clone(), Type.f32)
+        )
         dst_path = os.path.join(save_directory, OV_XML_FILE_NAME)
         openvino.save_model(model_to_save, dst_path, compress_to_fp16=False)
 
@@ -353,7 +360,7 @@ class OVBaseDecoderModel(OVModel):
 
     def _reshape(
         self,
-        model: openvino.runtime.Model,
+        model: openvino.Model,
         batch_size: int,
         sequence_length: int,
         height: int = None,
@@ -361,7 +368,7 @@ class OVBaseDecoderModel(OVModel):
     ):
         if self._compile_only:
             raise ValueError(
-                "`reshape()` is not supported with `compile_only` mode, please intialize model without this option"
+                "`reshape()` is not supported with `compile_only` mode, please initialize model without this option"
             )
 
         if height is not None:
@@ -492,11 +499,11 @@ class OVModelForCausalLM(OVBaseDecoderModel, GenerationMixin):
                 self.next_beam_idx = np.arange(batch_size, dtype=int)
                 self._past_length = 0
         past_len = self._get_past_length(past_key_values)
-        inputs["input_ids"] = np.array(input_ids)
+        inputs["input_ids"] = input_ids.cpu().numpy()
         # Add the attention_mask inputs when needed
         if "attention_mask" in self.input_names or "position_ids" in self.input_names:
             if attention_mask is not None:
-                attention_mask = np.array(attention_mask)
+                attention_mask = attention_mask.cpu().numpy()
             else:
                 attention_mask = np.ones(
                     (input_ids.shape[0], input_ids.shape[1] + past_len), dtype=inputs["input_ids"].dtype
@@ -507,7 +514,7 @@ class OVModelForCausalLM(OVBaseDecoderModel, GenerationMixin):
 
         if "position_ids" in self.input_names:
             if position_ids is not None:
-                position_ids = np.array(position_ids)
+                position_ids = position_ids.cpu().numpy()
             else:
                 position_ids = np.cumsum(attention_mask, axis=1) - 1
                 position_ids[attention_mask == 0] = 1
@@ -546,10 +553,11 @@ class OVModelForCausalLM(OVBaseDecoderModel, GenerationMixin):
 
         if self._first_iter_beam_search:
             inputs, duplication_indices = self._deduplicate_inputs(inputs)
+
         # Run inference
         self.request.start_async(inputs, share_inputs=True)
         self.request.wait()
-        logits = torch.from_numpy(self.request.get_tensor("logits").data).to(self.device)
+        logits = torch.from_numpy(self.request.get_tensor("logits").data).clone().to(self.device)
         if self.stateful:
             # Need a marker to differentiate the first generate iteration from the others in
             # the first condition at the function beginning above.
@@ -560,7 +568,9 @@ class OVModelForCausalLM(OVBaseDecoderModel, GenerationMixin):
         if not self.stateful:
             if self.use_cache:
                 # Tuple of length equal to : number of layer * number of past_key_value per decoder layer (2 corresponds to the self-attention layer)
-                past_key_values = tuple(self.request.get_tensor(key).data for key in self.key_value_output_names)
+                past_key_values = tuple(
+                    np.copy(self.request.get_tensor(key).data) for key in self.key_value_output_names
+                )
                 if self.config.model_type not in MULTI_QUERY_ATTN_MODELS or (
                     self.config.model_type == "falcon" and self.config.new_decoder_architecture
                 ):
@@ -847,7 +857,7 @@ class OVModelForCausalLM(OVBaseDecoderModel, GenerationMixin):
             if quantization_config.get("dataset", None) is not None:
                 quantization_config["trust_remote_code"] = kwargs.get("trust_remote_code", False)
 
-        quantization_config = cls._prepare_weight_quantization_config(quantization_config, load_in_8bit)
+        quantization_config = cls._prepare_quantization_config(quantization_config, load_in_8bit)
 
         enable_compilation = kwargs.pop("compile", True) and not quantization_config
 
@@ -888,7 +898,7 @@ class OVModelForCausalLM(OVBaseDecoderModel, GenerationMixin):
 
             if compile_only:
                 raise ValueError(
-                    "quantization is not supported with `compile_only` mode, please intialize model without this option"
+                    "quantization is not supported with `compile_only` mode, please initialize model without this option"
                 )
 
             from optimum.intel.openvino.quantization import OVQuantizer

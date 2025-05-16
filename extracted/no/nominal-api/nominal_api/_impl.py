@@ -7320,12 +7320,13 @@ class ingest_api_ContainerizedExtractor(ConjureBeanType):
             'labels': ConjureFieldDefinition('labels', List[api_Label]),
             'created_at': ConjureFieldDefinition('createdAt', str),
             'is_archived': ConjureFieldDefinition('isArchived', bool),
-            'timestamp_metadata': ConjureFieldDefinition('timestampMetadata', ingest_api_TimestampMetadata)
+            'timestamp_metadata': ConjureFieldDefinition('timestampMetadata', ingest_api_TimestampMetadata),
+            'output_file_format': ConjureFieldDefinition('outputFileFormat', ingest_api_FileOutputFormat)
         }
 
-    __slots__: List[str] = ['_rid', '_name', '_description', '_image', '_inputs', '_properties', '_labels', '_created_at', '_is_archived', '_timestamp_metadata']
+    __slots__: List[str] = ['_rid', '_name', '_description', '_image', '_inputs', '_properties', '_labels', '_created_at', '_is_archived', '_timestamp_metadata', '_output_file_format']
 
-    def __init__(self, created_at: str, image: "ingest_api_DockerImageSource", inputs: List["ingest_api_FileExtractionInput"], is_archived: bool, labels: List[str], name: str, properties: Dict[str, str], rid: str, timestamp_metadata: "ingest_api_TimestampMetadata", description: Optional[str] = None) -> None:
+    def __init__(self, created_at: str, image: "ingest_api_DockerImageSource", inputs: List["ingest_api_FileExtractionInput"], is_archived: bool, labels: List[str], name: str, output_file_format: "ingest_api_FileOutputFormat", properties: Dict[str, str], rid: str, timestamp_metadata: "ingest_api_TimestampMetadata", description: Optional[str] = None) -> None:
         self._rid = rid
         self._name = name
         self._description = description
@@ -7336,6 +7337,7 @@ class ingest_api_ContainerizedExtractor(ConjureBeanType):
         self._created_at = created_at
         self._is_archived = is_archived
         self._timestamp_metadata = timestamp_metadata
+        self._output_file_format = output_file_format
 
     @builtins.property
     def rid(self) -> str:
@@ -7406,6 +7408,13 @@ class ingest_api_ContainerizedExtractor(ConjureBeanType):
         Metadata about the intermediate parquet this extractor will produce
         """
         return self._timestamp_metadata
+
+    @builtins.property
+    def output_file_format(self) -> "ingest_api_FileOutputFormat":
+        """
+        The format of the output file. Currently only "parquet", "csv", "parquet.tar" are supported
+        """
+        return self._output_file_format
 
 
 ingest_api_ContainerizedExtractor.__name__ = "ContainerizedExtractor"
@@ -8336,6 +8345,26 @@ class ingest_api_FileFilterVisitor:
 ingest_api_FileFilterVisitor.__name__ = "FileFilterVisitor"
 ingest_api_FileFilterVisitor.__qualname__ = "FileFilterVisitor"
 ingest_api_FileFilterVisitor.__module__ = "nominal_api.ingest_api"
+
+
+class ingest_api_FileOutputFormat(ConjureEnumType):
+
+    PARQUET = 'PARQUET'
+    '''PARQUET'''
+    CSV = 'CSV'
+    '''CSV'''
+    PARQUET_TAR = 'PARQUET_TAR'
+    '''PARQUET_TAR'''
+    UNKNOWN = 'UNKNOWN'
+    '''UNKNOWN'''
+
+    def __reduce_ex__(self, proto):
+        return self.__class__, (self.name,)
+
+
+ingest_api_FileOutputFormat.__name__ = "FileOutputFormat"
+ingest_api_FileOutputFormat.__qualname__ = "FileOutputFormat"
+ingest_api_FileOutputFormat.__module__ = "nominal_api.ingest_api"
 
 
 class ingest_api_GcsIngestSource(ConjureBeanType):
@@ -10864,12 +10893,13 @@ class ingest_api_RegisterContainerizedExtractorRequest(ConjureBeanType):
             'properties': ConjureFieldDefinition('properties', Dict[api_PropertyName, api_PropertyValue]),
             'labels': ConjureFieldDefinition('labels', List[api_Label]),
             'workspace': ConjureFieldDefinition('workspace', api_rids_WorkspaceRid),
-            'timestamp_metadata': ConjureFieldDefinition('timestampMetadata', ingest_api_TimestampMetadata)
+            'timestamp_metadata': ConjureFieldDefinition('timestampMetadata', ingest_api_TimestampMetadata),
+            'output_file_format': ConjureFieldDefinition('outputFileFormat', OptionalTypeWrapper[ingest_api_FileOutputFormat])
         }
 
-    __slots__: List[str] = ['_name', '_description', '_image', '_inputs', '_properties', '_labels', '_workspace', '_timestamp_metadata']
+    __slots__: List[str] = ['_name', '_description', '_image', '_inputs', '_properties', '_labels', '_workspace', '_timestamp_metadata', '_output_file_format']
 
-    def __init__(self, image: "ingest_api_DockerImageSource", inputs: List["ingest_api_FileExtractionInput"], labels: List[str], name: str, properties: Dict[str, str], timestamp_metadata: "ingest_api_TimestampMetadata", workspace: str, description: Optional[str] = None) -> None:
+    def __init__(self, image: "ingest_api_DockerImageSource", inputs: List["ingest_api_FileExtractionInput"], labels: List[str], name: str, properties: Dict[str, str], timestamp_metadata: "ingest_api_TimestampMetadata", workspace: str, description: Optional[str] = None, output_file_format: Optional["ingest_api_FileOutputFormat"] = None) -> None:
         self._name = name
         self._description = description
         self._image = image
@@ -10878,6 +10908,7 @@ class ingest_api_RegisterContainerizedExtractorRequest(ConjureBeanType):
         self._labels = labels
         self._workspace = workspace
         self._timestamp_metadata = timestamp_metadata
+        self._output_file_format = output_file_format
 
     @builtins.property
     def name(self) -> str:
@@ -10919,6 +10950,13 @@ class ingest_api_RegisterContainerizedExtractorRequest(ConjureBeanType):
         Metadata about the intermediate parquet this extractor will produce
         """
         return self._timestamp_metadata
+
+    @builtins.property
+    def output_file_format(self) -> Optional["ingest_api_FileOutputFormat"]:
+        """
+        The format of the output file. Currently only "parquet", "csv", "parquet.tar" are supported
+        """
+        return self._output_file_format
 
 
 ingest_api_RegisterContainerizedExtractorRequest.__name__ = "RegisterContainerizedExtractorRequest"
@@ -13153,6 +13191,8 @@ when accounting for out-of-order points."""
     _range_value: Optional[Optional["scout_compute_api_Range"]] = None
     _numeric: Optional["scout_compute_api_NumericPlot"] = None
     _enum: Optional["scout_compute_api_EnumPlot"] = None
+    _bucketed_numeric: Optional["scout_compute_api_BucketedNumericPlot"] = None
+    _bucketed_enum: Optional["scout_compute_api_BucketedEnumPlot"] = None
 
     @builtins.classmethod
     def _options(cls) -> Dict[str, ConjureFieldDefinition]:
@@ -13163,7 +13203,9 @@ when accounting for out-of-order points."""
             'log_point': ConjureFieldDefinition('logPoint', OptionalTypeWrapper[scout_compute_api_LogPoint]),
             'range_value': ConjureFieldDefinition('rangeValue', OptionalTypeWrapper[scout_compute_api_Range]),
             'numeric': ConjureFieldDefinition('numeric', scout_compute_api_NumericPlot),
-            'enum': ConjureFieldDefinition('enum', scout_compute_api_EnumPlot)
+            'enum': ConjureFieldDefinition('enum', scout_compute_api_EnumPlot),
+            'bucketed_numeric': ConjureFieldDefinition('bucketedNumeric', scout_compute_api_BucketedNumericPlot),
+            'bucketed_enum': ConjureFieldDefinition('bucketedEnum', scout_compute_api_BucketedEnumPlot)
         }
 
     def __init__(
@@ -13175,10 +13217,12 @@ when accounting for out-of-order points."""
             range_value: Optional[Optional["scout_compute_api_Range"]] = None,
             numeric: Optional["scout_compute_api_NumericPlot"] = None,
             enum: Optional["scout_compute_api_EnumPlot"] = None,
+            bucketed_numeric: Optional["scout_compute_api_BucketedNumericPlot"] = None,
+            bucketed_enum: Optional["scout_compute_api_BucketedEnumPlot"] = None,
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (range is not None) + (enum_point is not None) + (numeric_point is not None) + (log_point is not None) + (range_value is not None) + (numeric is not None) + (enum is not None) != 1:
+            if (range is not None) + (enum_point is not None) + (numeric_point is not None) + (log_point is not None) + (range_value is not None) + (numeric is not None) + (enum is not None) + (bucketed_numeric is not None) + (bucketed_enum is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if range is not None:
@@ -13202,6 +13246,12 @@ when accounting for out-of-order points."""
             if enum is not None:
                 self._enum = enum
                 self._type = 'enum'
+            if bucketed_numeric is not None:
+                self._bucketed_numeric = bucketed_numeric
+                self._type = 'bucketedNumeric'
+            if bucketed_enum is not None:
+                self._bucketed_enum = bucketed_enum
+                self._type = 'bucketedEnum'
 
         elif type_of_union == 'range':
             if range is None:
@@ -13238,6 +13288,16 @@ when accounting for out-of-order points."""
                 raise ValueError('a union value must not be None')
             self._enum = enum
             self._type = 'enum'
+        elif type_of_union == 'bucketedNumeric':
+            if bucketed_numeric is None:
+                raise ValueError('a union value must not be None')
+            self._bucketed_numeric = bucketed_numeric
+            self._type = 'bucketedNumeric'
+        elif type_of_union == 'bucketedEnum':
+            if bucketed_enum is None:
+                raise ValueError('a union value must not be None')
+            self._bucketed_enum = bucketed_enum
+            self._type = 'bucketedEnum'
 
     @builtins.property
     def range(self) -> Optional[List["scout_compute_api_Range"]]:
@@ -13290,6 +13350,24 @@ merging ranges if they are overlap or are adjacent
         """
         return self._enum
 
+    @builtins.property
+    def bucketed_numeric(self) -> Optional["scout_compute_api_BucketedNumericPlot"]:
+        """
+        Merging can be done by dropping any old buckets and adding the new ones. Overlapping buckets are
+guaranteed to align (same bucket end timestamp) and the older version of the bucket can be replaced
+with the newer ones.
+        """
+        return self._bucketed_numeric
+
+    @builtins.property
+    def bucketed_enum(self) -> Optional["scout_compute_api_BucketedEnumPlot"]:
+        """
+        Merging can be done by dropping any old buckets and adding the new ones. Overlapping buckets are
+guaranteed to align (same bucket end timestamp) and the older version of the bucket can be replaced
+with the newer ones.
+        """
+        return self._bucketed_enum
+
     def accept(self, visitor) -> Any:
         if not isinstance(visitor, persistent_compute_api_ComputeNodeAppendResponseVisitor):
             raise ValueError('{} is not an instance of persistent_compute_api_ComputeNodeAppendResponseVisitor'.format(visitor.__class__.__name__))
@@ -13307,6 +13385,10 @@ merging ranges if they are overlap or are adjacent
             return visitor._numeric(self.numeric)
         if self._type == 'enum' and self.enum is not None:
             return visitor._enum(self.enum)
+        if self._type == 'bucketedNumeric' and self.bucketed_numeric is not None:
+            return visitor._bucketed_numeric(self.bucketed_numeric)
+        if self._type == 'bucketedEnum' and self.bucketed_enum is not None:
+            return visitor._bucketed_enum(self.bucketed_enum)
 
 
 persistent_compute_api_ComputeNodeAppendResponse.__name__ = "ComputeNodeAppendResponse"
@@ -13342,6 +13424,14 @@ class persistent_compute_api_ComputeNodeAppendResponseVisitor:
 
     @abstractmethod
     def _enum(self, enum: "scout_compute_api_EnumPlot") -> Any:
+        pass
+
+    @abstractmethod
+    def _bucketed_numeric(self, bucketed_numeric: "scout_compute_api_BucketedNumericPlot") -> Any:
+        pass
+
+    @abstractmethod
+    def _bucketed_enum(self, bucketed_enum: "scout_compute_api_BucketedEnumPlot") -> Any:
         pass
 
 
@@ -68606,6 +68696,8 @@ scout_run_api_SearchRunsWithDataReviewSummaryResponse.__module__ = "nominal_api.
 
 class scout_run_api_SortField(ConjureEnumType):
 
+    NAME = 'NAME'
+    '''NAME'''
     CREATED_AT = 'CREATED_AT'
     '''CREATED_AT'''
     START_TIME = 'START_TIME'

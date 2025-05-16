@@ -9,9 +9,9 @@ from abstract_utilities.parse_utils import (
     chunk_source_code,
     chunk_any_to_tokens,
 )
-from abstract_ai.gpt_classes.model_selection.ModelBuilder import ModelManager
-from abstract_ai.gpt_classes.instruction_selection import InstructionManager
-from abstract_ai.gpt_classes.api_selection.ApiBuilder import ApiManager
+from ..model_selection.ModelBuilder import ModelManager
+from ..instruction_selection import InstructionManager
+from ..api_selection.ApiBuilder import ApiManager
 class PromptManager:
     """
     Manages the generation and management of prompts. This includes creating prompts based on user input or predefined conditions, formatting prompts, and handling errors or special cases.

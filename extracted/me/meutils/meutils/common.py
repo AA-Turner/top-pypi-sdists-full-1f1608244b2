@@ -570,7 +570,8 @@ def storage_to_cookie(storage: Union[str, Path, dict]):
     elif isinstance(storage, str):
         storage = json.loads(storage)
 
-    storage = storage['cookies']
+    if isinstance(storage, dict):
+        storage = storage['cookies']
 
     import jsonpath
     cookies = [f"{n}={v}" for n, v in

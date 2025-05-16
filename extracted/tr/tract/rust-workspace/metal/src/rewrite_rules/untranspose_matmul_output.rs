@@ -1,6 +1,7 @@
-use crate::{rule_ensure, MetalTransform};
+use crate::MetalTransform;
 use tract_core::internal::*;
-use tract_core::ops::einsum::BasicMatMul;
+use tract_core::ops::einsum::prefix_matmul::PrefixMatMul;
+use tract_gpu::rule_ensure;
 
 /// Rewrite BasicMatMul { .. transpose_c: true } to BasicMatMul { .. transpose_c: false}
 pub fn untranspose_matmul_output(
@@ -8,11 +9,11 @@ pub fn untranspose_matmul_output(
     model: &TypedModel,
     node: &TypedNode,
     _node_name: &str,
-    op: &BasicMatMul,
+    op: &PrefixMatMul,
 ) -> TractResult<Option<TypedModelPatch>> {
     rule_ensure!(op.transpose_c);
 
-    let new_matmul = BasicMatMul {
+    let new_matmul = PrefixMatMul {
         transpose_a: !op.transpose_b,
         transpose_b: !op.transpose_a,
         transpose_c: false,

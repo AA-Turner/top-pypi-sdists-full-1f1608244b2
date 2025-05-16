@@ -13,6 +13,7 @@
 # limitations under the License.
 """Defines the command line for the export with OpenVINO."""
 
+import json
 import logging
 import sys
 from pathlib import Path
@@ -21,7 +22,7 @@ from typing import TYPE_CHECKING, Optional
 from huggingface_hub.constants import HUGGINGFACE_HUB_CACHE
 
 from ...exporters import TasksManager
-from ...intel.utils.import_utils import DIFFUSERS_IMPORT_ERROR, is_diffusers_available
+from ...intel.utils.import_utils import DIFFUSERS_IMPORT_ERROR, is_diffusers_available, is_nncf_available
 from ...intel.utils.modeling_utils import _infer_library_from_model_name_or_path
 from ...utils.save_utils import maybe_load_preprocessors
 from ..base import BaseOptimumCLICommand, CommandInfo
@@ -78,7 +79,7 @@ def parse_args_openvino(parser: "ArgumentParser"):
     optional_group.add_argument(
         "--quant-mode",
         type=str,
-        choices=["int8", "f8e4m3", "f8e5m2"],
+        choices=["int8", "f8e4m3", "f8e5m2", "nf4_f8e4m3", "nf4_f8e5m2", "int4_f8e4m3", "int4_f8e5m2"],
         default=None,
         help=(
             "Quantization precision mode. This is used for applying full model quantization including activations. "
@@ -125,7 +126,17 @@ def parse_args_openvino(parser: "ArgumentParser"):
         "--sym",
         action="store_true",
         default=None,
-        help=("Whether to apply symmetric quantization"),
+        help=(
+            "Whether to apply symmetric quantization. This argument is related to integer-typed --weight-format and --quant-mode options. "
+            "In case of full or mixed quantization (--quant-mode) symmetric quantization will be applied to weights in any case, so only activation quantization "
+            "will be affected by --sym argument. For weight-only quantization (--weight-format) --sym argument does not affect backup precision. "
+            "Examples: (1) --weight-format int8 --sym => int8 symmetric quantization of weights; "
+            "(2) --weight-format int4 => int4 asymmetric quantization of weights; "
+            "(3) --weight-format int4 --sym --backup-precision int8_asym => int4 symmetric quantization of weights with int8 asymmetric backup precision; "
+            "(4) --quant-mode int8 --sym => weights and activations are quantized to int8 symmetric data type; "
+            "(5) --quant-mode int8 => activations are quantized to int8 asymmetric data type, weights -- to int8 symmetric data type; "
+            "(6) --quant-mode int4_f8e5m2 --sym => activations are quantized to f8e5m2 data type, weights -- to int4 symmetric data type."
+        ),
     )
     optional_group.add_argument(
         "--group-size",
@@ -252,6 +263,11 @@ def parse_args_openvino(parser: "ArgumentParser"):
             "reduces quantization error. Valid only when activations quantization is enabled."
         ),
     )
+    optional_group.add_argument(
+        "--model-kwargs",
+        type=json.loads,
+        help=("Any kwargs passed to the model forward, or used to customize the export for a given model."),
+    )
 
 
 def no_compression_parameter_provided(args):
@@ -343,53 +359,64 @@ class OVExportCommand(BaseOptimumCLICommand):
                 )
         elif self.args.weight_format in {"fp16", "fp32"}:
             ov_config = OVConfig(dtype=self.args.weight_format)
-        elif self.args.weight_format is not None:
-            # For int4 quantization if no parameter is provided, then use the default config if exists
-            if no_compression_parameter_provided(self.args) and self.args.weight_format == "int4":
-                quantization_config = get_default_int4_config(self.args.model)
-            else:
-                is_int8 = self.args.weight_format == "int8"
-                quantization_config = {
-                    "bits": 8 if is_int8 else 4,
-                    "ratio": 1.0 if is_int8 else (self.args.ratio or _DEFAULT_4BIT_CONFIG["ratio"]),
-                    "sym": self.args.sym or False,
-                    "group_size": -1 if is_int8 else self.args.group_size,
-                    "all_layers": None if is_int8 else self.args.all_layers,
-                    "dataset": self.args.dataset,
-                    "num_samples": self.args.num_samples,
-                    "quant_method": "awq" if self.args.awq else "default",
-                    "sensitivity_metric": self.args.sensitivity_metric,
-                    "scale_estimation": self.args.scale_estimation,
-                    "gptq": self.args.gptq,
-                    "lora_correction": self.args.lora_correction,
-                    "weight_format": self.args.weight_format,
-                    "backup_precision": self.args.backup_precision,
-                }
-
-            if quantization_config.get("dataset", None) is not None:
-                quantization_config["trust_remote_code"] = self.args.trust_remote_code
-            ov_config = OVConfig(quantization_config=quantization_config)
         else:
-            if self.args.dataset is None:
-                raise ValueError(
-                    "Dataset is required for full quantization. Please provide it with --dataset argument."
-                )
+            if not is_nncf_available():
+                raise ImportError("Applying quantization requires nncf, please install it with `pip install nncf`")
 
-            quantization_config = {
-                "weight_format": self.args.quant_mode,
-                "activation_format": self.args.quant_mode,
-                "bits": 8,
-                "sym": self.args.sym or False,
-                "dataset": self.args.dataset,
-                "num_samples": self.args.num_samples,
-                "smooth_quant_alpha": self.args.smooth_quant_alpha,
-                "trust_remote_code": self.args.trust_remote_code,
-            }
-            ov_config = OVConfig(quantization_config=quantization_config)
+            if self.args.weight_format is not None:
+                # For int4 quantization if no parameter is provided, then use the default config if exists
+                if no_compression_parameter_provided(self.args) and self.args.weight_format == "int4":
+                    quantization_config = get_default_int4_config(self.args.model)
+                else:
+                    quantization_config = prepare_wc_config(self.args, _DEFAULT_4BIT_CONFIG)
+
+                if quantization_config.get("dataset", None) is not None:
+                    quantization_config["trust_remote_code"] = self.args.trust_remote_code
+                ov_config = OVConfig(quantization_config=quantization_config)
+            else:
+                if self.args.dataset is None:
+                    raise ValueError(
+                        "Dataset is required for full quantization. Please provide it with --dataset argument."
+                    )
+
+                if self.args.quant_mode in ["nf4_f8e4m3", "nf4_f8e5m2", "int4_f8e4m3", "int4_f8e5m2"]:
+                    if library_name == "diffusers":
+                        raise NotImplementedError("Mixed precision quantization isn't supported for diffusers.")
+
+                    wc_config = prepare_wc_config(self.args, _DEFAULT_4BIT_CONFIG)
+                    wc_dtype, q_dtype = self.args.quant_mode.split("_")
+                    wc_config["dtype"] = wc_dtype
+
+                    q_config = prepare_q_config(self.args)
+                    q_config["dtype"] = q_dtype
+
+                    quantization_config = {
+                        "weight_quantization_config": wc_config,
+                        "full_quantization_config": q_config,
+                        "num_samples": self.args.num_samples,
+                        "dataset": self.args.dataset,
+                        "trust_remote_code": self.args.trust_remote_code,
+                    }
+                else:
+                    quantization_config = prepare_q_config(self.args)
+                ov_config = OVConfig(quantization_config=quantization_config)
 
         quantization_config = ov_config.quantization_config if ov_config else None
         quantize_with_dataset = quantization_config and getattr(quantization_config, "dataset", None) is not None
         task = infer_task(self.args.task, self.args.model, library_name=library_name)
+        # in some cases automatic task detection for multimodal models gives incorrect results
+        if self.args.task == "auto" and library_name == "transformers":
+            from transformers import AutoConfig
+
+            from ...exporters.openvino.utils import MULTI_MODAL_TEXT_GENERATION_MODELS
+
+            config = AutoConfig.from_pretrained(
+                self.args.model,
+                cache_dir=self.args.cache_dir,
+                trust_remote_code=self.args.trust_remote_code,
+            )
+            if getattr(config, "model_type", "").replace("_", "-") in MULTI_MODAL_TEXT_GENERATION_MODELS:
+                task = "image-text-to-text"
 
         if library_name == "diffusers" and quantize_with_dataset:
             if not is_diffusers_available():
@@ -425,8 +452,13 @@ class OVExportCommand(BaseOptimumCLICommand):
                 from optimum.intel import OVSanaPipeline
 
                 model_cls = OVSanaPipeline
+            elif class_name == "SaneSprintPipeline":
+                from optimum.intel import OVSanaSprintPipeline
+
+                model_cls = OVSanaSprintPipeline
+
             else:
-                raise NotImplementedError(f"Quantization in hybrid mode isn't supported for class {class_name}.")
+                raise NotImplementedError(f"Quantization isn't supported for class {class_name}.")
 
             model = model_cls.from_pretrained(self.args.model, export=True, quantization_config=quantization_config)
             model.save_pretrained(self.args.output)
@@ -434,7 +466,12 @@ class OVExportCommand(BaseOptimumCLICommand):
                 maybe_convert_tokenizers(library_name, self.args.output, model, task=task)
         elif (
             quantize_with_dataset
-            and (task.startswith("text-generation") or task == "automatic-speech-recognition")
+            and (
+                task in ["fill-mask", "zero-shot-image-classification"]
+                or task.startswith("text-generation")
+                or task.startswith("automatic-speech-recognition")
+                or task.startswith("feature-extraction")
+            )
             or (task == "image-text-to-text" and quantization_config is not None)
         ):
             if task.startswith("text-generation"):
@@ -445,10 +482,30 @@ class OVExportCommand(BaseOptimumCLICommand):
                 from optimum.intel import OVModelForVisualCausalLM
 
                 model_cls = OVModelForVisualCausalLM
-            else:
+            elif "automatic-speech-recognition" in task:
                 from optimum.intel import OVModelForSpeechSeq2Seq
 
                 model_cls = OVModelForSpeechSeq2Seq
+            elif task.startswith("feature-extraction") and library_name == "transformers":
+                from ...intel import OVModelForFeatureExtraction
+
+                model_cls = OVModelForFeatureExtraction
+            elif task.startswith("feature-extraction") and library_name == "sentence_transformers":
+                from ...intel import OVSentenceTransformer
+
+                model_cls = OVSentenceTransformer
+            elif task == "fill-mask":
+                from ...intel import OVModelForMaskedLM
+
+                model_cls = OVModelForMaskedLM
+            elif task == "zero-shot-image-classification":
+                from ...intel import OVModelForZeroShotImageClassification
+
+                model_cls = OVModelForZeroShotImageClassification
+            else:
+                raise NotImplementedError(
+                    f"Unable to find a matching model class for the task={task} and library_name={library_name}."
+                )
 
             # In this case, to apply quantization an instance of a model class is required
             model = model_cls.from_pretrained(
@@ -481,5 +538,38 @@ class OVExportCommand(BaseOptimumCLICommand):
                 convert_tokenizer=not self.args.disable_convert_tokenizer,
                 library_name=library_name,
                 variant=self.args.variant,
+                model_kwargs=self.args.model_kwargs,
                 # **input_shapes,
             )
+
+
+def prepare_wc_config(args, default_configs):
+    is_int8 = args.weight_format == "int8"
+    return {
+        "bits": 8 if is_int8 else 4,
+        "ratio": 1.0 if is_int8 else (args.ratio or default_configs["ratio"]),
+        "sym": args.sym or False,
+        "group_size": -1 if is_int8 else args.group_size,
+        "all_layers": None if is_int8 else args.all_layers,
+        "dataset": args.dataset,
+        "num_samples": args.num_samples,
+        "quant_method": "awq" if args.awq else "default",
+        "sensitivity_metric": args.sensitivity_metric,
+        "scale_estimation": args.scale_estimation,
+        "gptq": args.gptq,
+        "lora_correction": args.lora_correction,
+        "dtype": args.weight_format,
+        "backup_precision": args.backup_precision,
+    }
+
+
+def prepare_q_config(args):
+    return {
+        "dtype": args.quant_mode,
+        "bits": 8,
+        "sym": args.sym or False,
+        "dataset": args.dataset,
+        "num_samples": args.num_samples,
+        "smooth_quant_alpha": args.smooth_quant_alpha,
+        "trust_remote_code": args.trust_remote_code,
+    }

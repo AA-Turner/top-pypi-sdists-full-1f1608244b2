@@ -30,12 +30,14 @@ from static_frame.core.util import TD64_DAY
 from static_frame.core.util import TD64_MONTH
 from static_frame.core.util import TD64_YEAR
 from static_frame.core.util import TDateInitializer
+from static_frame.core.util import TDtypeDT64
 from static_frame.core.util import TILocSelector
 from static_frame.core.util import TIndexInitializer
 from static_frame.core.util import TKeyTransform
 from static_frame.core.util import TLabel
 from static_frame.core.util import TLocSelector
 from static_frame.core.util import TName
+from static_frame.core.util import TNDArrayAny
 from static_frame.core.util import TYearInitializer
 from static_frame.core.util import TYearMonthInitializer
 from static_frame.core.util import WarningsSilent
@@ -45,10 +47,7 @@ from static_frame.core.util import to_timedelta64
 
 if tp.TYPE_CHECKING:
     import pandas  # pragma: no cover
-    from arraymap import AutoMap  # pragma: no cover
-    TNDArrayAny = np.ndarray[tp.Any, tp.Any] #pragma: no cover
-    TDtypeDT64 = np.dtype[np.datetime64] #pragma: no cover
-
+    from arraykit import AutoMap  # pragma: no cover
 
 key_to_datetime_key_year = partial(key_to_datetime_key, dtype=DT64_YEAR)
 
@@ -68,6 +67,7 @@ class IndexDatetime(Index[np.datetime64]):
 
     def __init__(self,
             labels: TIndexInitializer,
+            /,
             *,
             loc_is_iloc: bool = False,
             name: TName = NAME_DEFAULT,
@@ -79,7 +79,7 @@ class IndexDatetime(Index[np.datetime64]):
         assert not loc_is_iloc
         # __init__ here leaves out the dtype argument, reducing the signature to arguments relevant for these derived classes
         Index.__init__(self,
-                labels=labels,
+                labels,
                 name=name,
                 loc_is_iloc=loc_is_iloc,
                 )
@@ -87,7 +87,7 @@ class IndexDatetime(Index[np.datetime64]):
     #---------------------------------------------------------------------------
     # dict like interface
 
-    def __contains__(self, value: tp.Any) -> bool:
+    def __contains__(self, value: tp.Any, /,) -> bool:
         '''Return True if value in the labels. Will only return True for an exact match to the type of dates stored within.
         '''
         try:
@@ -133,6 +133,7 @@ class IndexDatetime(Index[np.datetime64]):
             with WarningsSilent():
                 result = operator(self._labels, other)
 
+        # NOTE: remove when min numpy is 1.25
         # NOTE: similar branching as in container_util.apply_binary_operator
         # NOTE: all string will have been converted to dt64, or raise ValueError; comparison to same sized iterables (list, tuple) will result in an array when they are the same size
         if result is False: # will never be True
@@ -177,6 +178,7 @@ class IndexDatetime(Index[np.datetime64]):
     @doc_inject(selector='searchsorted', label_type='iloc (integer)')
     def iloc_searchsorted(self,
             values: tp.Any,
+            /,
             *,
             side_left: bool = True,
             ) -> TNDArrayAny:
@@ -205,7 +207,7 @@ class _IndexDatetimeGOMixin(_IndexGOMixin):
     _map: tp.Optional[AutoMap]
     __slots__ = () # define in derived class
 
-    def append(self, value: TLabel) -> None:
+    def append(self, value: TLabel, /,) -> None:
         '''Specialize for fixed-typed indices: convert `value` argument; do not need to resolve_dtype with each addition; self._map is never None
         '''
         try:
@@ -215,7 +217,7 @@ class _IndexDatetimeGOMixin(_IndexGOMixin):
 
         if self._map is not None: # if starting from an empty index
             try:
-                self._map.add(value)
+                self._map.add(value) # type: ignore
             except ValueError as e:
                 raise KeyError(f'duplicate key append attempted: {value}') from e
         self._labels_mutable.append(value)
@@ -291,7 +293,7 @@ class IndexYear(IndexDatetime):
     #---------------------------------------------------------------------------
     # specializations to permit integers as years
 
-    def __contains__(self, value: tp.Any) -> bool:
+    def __contains__(self, value: tp.Any, /,) -> bool:
         '''Return True if value in the labels. Will only return True for an exact match to the type of dates stored within.
         '''
         try:

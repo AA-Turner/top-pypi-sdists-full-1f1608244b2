@@ -377,7 +377,11 @@ class RAGEngine(WMLResource):
             "chunking": ["method", "chunk_size", "chunk_overlap"],
             "embeddings": ["model_id"],
             "vector_store": ["distance_metric"],
-            "retrieval": ["method", "number_of_chunks"],
+            "retrieval": [
+                "method",
+                "number_of_chunks",
+                "hybrid_ranker",
+            ],
             "generation": ["model_id"],
         }
         data_sorted_by_value.update(
@@ -407,15 +411,21 @@ class RAGEngine(WMLResource):
                     "deployment_id"
                 )
 
+            def get_nested_value(data_dict: dict, dict_key: str) -> dict | str:
+                keys = dict_key.split(".")
+                for key in keys:
+                    if isinstance(data_dict, dict) and key in data_dict:
+                        data_dict = data_dict[key]
+                    else:
+                        return ""
+                return data_dict
+
             for key, sub_keys in setting_keys.items():
                 if key in settings:
                     for sub_key in sub_keys:
-                        if sub_key in settings[key]:
-                            add_to_data(
-                                data_sorted_by_value,
-                                f"{key}.{sub_key}",
-                                settings[key][sub_key],
-                            )
+                        full_key = f"{key}.{sub_key}"
+                        value = get_nested_value(settings[key], sub_key)
+                        add_to_data(data_sorted_by_value, full_key, value)
 
         data_sorted_by_optimization_metrics: dict = {"Pattern_Name": rag_pattern_names}
 
@@ -467,28 +477,190 @@ class RAGEngine(WMLResource):
         vector_store_settings = pattern_details["context"]["rag_pattern"]["settings"][
             "vector_store"
         ]
-        datasource_type = None
         connection_id = None
 
         if vector_store_references := details["entity"].get("vector_store_references"):
             connection_id = vector_store_references[0]["connection"]["id"]
-        else:
-            datasource_type = vector_store_settings["datasource_type"]
-
-        from ibm_watsonx_ai.foundation_models.extensions.rag import VectorStore
-
-        vector_store = VectorStore(
-            connection_id=connection_id,
-            datasource_type=datasource_type,
-            index_name=vector_store_settings.get("index_name"),
-            distance_metric=vector_store_settings.get("distance_metric"),
-            embeddings=embeddings,
-            api_client=self._client,
-        )
+        datasource_type = vector_store_settings["datasource_type"]
 
         retrieval_settings = pattern_details["context"]["rag_pattern"]["settings"][
             "retrieval"
         ]
+
+        if hybrid_ranker := retrieval_settings.get("hybrid_ranker"):
+            strategy: str = hybrid_ranker["strategy"]
+            model_id: str | None = hybrid_ranker.get("sparse_vectors", {}).get(
+                "model_id"
+            )
+            alpha: float | None = hybrid_ranker.get("alpha")
+            k: int | None = hybrid_ranker.get("k")
+
+        ranker_config: dict[str, Any] | None = None
+
+        schema_fields: list[dict[str, str]] = deepcopy(
+            vector_store_settings["schema"]["fields"]
+        )
+
+        if datasource_type == "elasticsearch":
+            from ibm_watsonx_ai.foundation_models.extensions.rag.vector_stores import (
+                ElasticsearchVectorStore,
+                VectorStore,
+            )
+
+            distance_metric = vector_store_settings.get("distance_metric")
+            if distance_metric == "euclidean":
+                distance_metric = "EUCLIDEAN_DISTANCE"
+            else:
+                distance_metric = "COSINE"
+
+            if hybrid_ranker:
+                from ibm_watsonx_ai.foundation_models.extensions.rag.vector_stores import (
+                    HybridStrategyElasticsearch,
+                )
+
+                sparse_vector_embeddings = None
+                vector_embeddings = None
+
+                for field in schema_fields:
+                    if field.get("role") == "sparse_vector_embeddings":
+                        sparse_vector_embeddings = field.get("name")
+                    elif field.get("role") == "vector_embeddings":
+                        vector_embeddings = field.get("name")
+
+                retrieval_strategies: dict[str, Any] = {
+                    "dense": {"vector_field": vector_embeddings},
+                }
+
+                if strategy == "weighted":
+                    if not isinstance(alpha, (float, int)):
+                        raise WMLClientError(
+                            "Parameter `alpha` was not provided as a proper value and 'weighted' retrieval strategy couldn't be define."
+                        )
+                    retrieval_strategies["dense"]["boost"] = alpha
+
+                    if model_id == "bm25":
+                        retrieval_strategies["bm25"] = {
+                            "boost": (1 - alpha),
+                        }
+
+                    else:
+                        retrieval_strategies["sparse"] = {
+                            "model_id": model_id,
+                            "boost": (1 - alpha),
+                            "vector_field": sparse_vector_embeddings,
+                        }
+                    use_rrf = False
+                    rrf_params = None
+                else:
+
+                    if model_id == "bm25":
+                        retrieval_strategies["bm25"] = {}
+
+                    else:
+                        retrieval_strategies["sparse"] = {
+                            "model_id": model_id,
+                            "vector_field": sparse_vector_embeddings,
+                        }
+                    use_rrf = True
+                    rrf_params = {"k": k}
+
+                hybrid_strategy = HybridStrategyElasticsearch(
+                    retrieval_strategies=retrieval_strategies,
+                    use_rrf=use_rrf,
+                    rrf_params=rrf_params,
+                )
+                vector_store = ElasticsearchVectorStore(
+                    connection_id=connection_id,
+                    index_name=vector_store_settings.get("index_name"),
+                    strategy=hybrid_strategy,
+                    distance_strategy=distance_metric,
+                    embedding=embeddings,
+                    api_client=self._client,
+                )
+            else:
+                vector_store = VectorStore(
+                    connection_id=connection_id,
+                    datasource_type=datasource_type,
+                    index_name=vector_store_settings.get("index_name"),
+                    distance_metric=vector_store_settings.get("distance_metric"),
+                    embeddings=embeddings,
+                    api_client=self._client,
+                )
+        elif datasource_type in ("milvus", "milvuswxd"):
+            from ibm_watsonx_ai.foundation_models.extensions.rag.vector_stores import (
+                MilvusVectorStore,
+                VectorStore,
+            )
+
+            bm25_builtin_func = None
+            if hybrid_ranker:
+
+                if model_id == "bm25":
+                    from ibm_watsonx_ai.foundation_models.extensions.rag.vector_stores import (
+                        MilvusBM25BuiltinFunction,
+                    )
+
+                    sparse_vector_field = next(
+                        filter(
+                            lambda field: field.get("role")
+                            == "sparse_vector_embeddings",
+                            schema_fields,
+                        ),
+                        None,
+                    )
+
+                    bm25_builtin_func = MilvusBM25BuiltinFunction(
+                        output_field_names=(
+                            sparse_vector_field or {"name": "sparse"}
+                        ).get("name")
+                    )
+
+                if strategy == "weighted":
+                    if not isinstance(alpha, (float, int)):
+                        raise WMLClientError(
+                            "Parameter `alpha` was not provided as a proper value and 'weighted' retrieval strategy couldn't be define."
+                        )
+                    ranker_config = {"weighted": {"weights": [alpha, (1 - alpha)]}}
+                else:
+                    ranker_config = {"rrf": {"k": k}}
+
+                vector_field = []
+                for field in schema_fields:
+                    if field["role"] in (
+                        "vector_embeddings",
+                        "sparse_vector_embeddings",
+                    ):
+                        vector_field.append(field["name"])
+
+                vector_store = MilvusVectorStore(
+                    api_client=self._client,
+                    connection_id=connection_id,
+                    collection_name=vector_store_settings.get("index_name"),
+                    embedding_function=embeddings,
+                    vector_field=vector_field,
+                    builtin_function=bm25_builtin_func,
+                )
+            else:
+                vector_store = VectorStore(
+                    connection_id=connection_id,
+                    datasource_type=datasource_type,
+                    index_name=vector_store_settings.get("index_name"),
+                    distance_metric=vector_store_settings.get("distance_metric"),
+                    embeddings=embeddings,
+                    api_client=self._client,
+                )
+
+        else:
+            from ibm_watsonx_ai.foundation_models.extensions.rag import VectorStore
+
+            vector_store = VectorStore(
+                connection_id=connection_id,
+                datasource_type=datasource_type,
+                index_name=vector_store_settings.get("index_name"),
+                distance_metric=vector_store_settings.get("distance_metric"),
+                embeddings=embeddings,
+                api_client=self._client,
+            )
 
         from ibm_watsonx_ai.foundation_models.extensions.rag import Retriever
 
@@ -502,6 +674,9 @@ class RAGEngine(WMLResource):
         generation_settings = pattern_details["context"]["rag_pattern"]["settings"][
             "generation"
         ]
+        default_max_sequence_length = generation_settings["parameters"].pop(
+            "max_sequence_length", None
+        )
         if model_id := generation_settings.get("model_id"):
             model = ModelInference(
                 model_id=model_id,
@@ -517,6 +692,7 @@ class RAGEngine(WMLResource):
                 project_id=details["metadata"].get("project_id"),
                 space_id=details["metadata"].get("space_id"),
                 api_client=self._client,
+                validate=False,
             )
 
         from ibm_watsonx_ai.foundation_models.extensions.rag.chunker.langchain_chunker import (
@@ -549,6 +725,8 @@ class RAGEngine(WMLResource):
             api_client=self._client,
             chunker=chunker,
             input_data_references=data_connections,
+            ranker_config=ranker_config,
+            default_max_sequence_length=default_max_sequence_length,
         )
 
         return pattern

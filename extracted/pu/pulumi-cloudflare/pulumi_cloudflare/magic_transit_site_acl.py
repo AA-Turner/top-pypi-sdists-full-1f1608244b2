@@ -294,6 +294,7 @@ class _MagicTransitSiteAclState:
         pulumi.set(self, "unidirectional", value)
 
 
+@pulumi.type_token("cloudflare:index/magicTransitSiteAcl:MagicTransitSiteAcl")
 class MagicTransitSiteAcl(pulumi.CustomResource):
     @overload
     def __init__(__self__,

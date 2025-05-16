@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: bowtie-json-schema
-Version: 2025.3.4
+Version: 2025.5.1
 Summary: A meta-validator for the JSON Schema specification.
 Project-URL: Documentation, https://docs.bowtie.report/
 Project-URL: Homepage, https://bowtie.report/

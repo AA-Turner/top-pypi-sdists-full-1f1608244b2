@@ -149,6 +149,7 @@ class _DnsZoneTransfersTsigState:
         pulumi.set(self, "secret", value)
 
 
+@pulumi.type_token("cloudflare:index/dnsZoneTransfersTsig:DnsZoneTransfersTsig")
 class DnsZoneTransfersTsig(pulumi.CustomResource):
     @overload
     def __init__(__self__,

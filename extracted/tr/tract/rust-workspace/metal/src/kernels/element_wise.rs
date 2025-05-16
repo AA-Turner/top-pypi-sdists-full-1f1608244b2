@@ -1,11 +1,10 @@
 use crate::encoder::EncoderExt;
-use crate::MetalTensor;
-use crate::{LibraryName, MetalContext};
+use crate::{LibraryName, MetalStream};
 use anyhow::bail;
-use anyhow::Result;
 use metal::{MTLSize, NSUInteger};
 use std::fmt;
 use tract_core::internal::*;
+use tract_gpu::tensor::DeviceTensor;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]
 pub enum ElementWiseOps {
@@ -80,7 +79,7 @@ impl ElementWiseOps {
     pub fn all_functions() -> Vec<String> {
         Self::ALL
             .into_iter()
-            .flat_map(|op| MetalTensor::SUPPORTED_DT.into_iter().map(move |dt| (op, dt)))
+            .flat_map(|op| DeviceTensor::SUPPORTED_DT.into_iter().map(move |dt| (op, dt)))
             .flat_map(|(op, dt)| op.kernel_name(dt, false).into_iter())
             .collect()
     }
@@ -132,14 +131,14 @@ impl ElementWiseOps {
         )
     }
 
-    pub fn kernel_name(&self, dt: DatumType, in_place: bool) -> Result<String> {
+    pub fn kernel_name(&self, dt: DatumType, in_place: bool) -> TractResult<String> {
         if self.float_only() && !matches!(dt, DatumType::F32 | DatumType::F16) {
             bail!("Unsupport dt for metal element wise ops: {:?}", self);
         }
 
         ensure!(Self::is_supported_dt(dt), "Unsupport dt {:?} for metal element wise ops", dt);
 
-        let tname = MetalTensor::tname(dt)?;
+        let tname = DeviceTensor::tname(dt)?;
 
         let kname = match self {
             Self::Abs => "abs",
@@ -179,20 +178,19 @@ impl ElementWiseOps {
 
     pub fn dispatch_eval(
         &self,
-        context: &MetalContext,
-        input: &MetalTensor,
-        output: &MetalTensor,
-    ) -> Result<()> {
-        input.retain_until_completion();
-        output.retained_until_completion();
+        stream: &MetalStream,
+        input: &DeviceTensor,
+        output: &DeviceTensor,
+    ) -> TractResult<()> {
+        stream.retain_tensor(input);
+        stream.retain_tensor(output);
 
         ensure!(output.shape() == input.shape() && output.datum_type() == input.datum_type());
 
         let kernel_name = self.kernel_name(input.datum_type(), false)?;
 
-        let pipeline =
-            context.shared_context().load_pipeline(LibraryName::ElementWiseOps, &kernel_name)?;
-        let command_buffer = context.command_buffer();
+        let pipeline = stream.load_pipeline(LibraryName::ElementWiseOps, &kernel_name)?;
+        let command_buffer = stream.command_buffer();
         command_buffer.encode(|encoder| {
             encoder.set_compute_pipeline_state(&pipeline);
             encoder.set_metal_tensor(0, input, metal::MTLResourceUsage::Read);
@@ -205,22 +203,24 @@ impl ElementWiseOps {
         Ok(())
     }
 
-    pub fn eval(&self, context: &MetalContext, a: &MetalTensor) -> Result<MetalTensor> {
-        let output = unsafe { MetalTensor::uninitialized_dt(a.datum_type(), a.shape())? };
-        self.dispatch_eval(context, a, &output)?;
-        context.wait_until_completed()?;
+    pub fn eval(&self, stream: &MetalStream, a: &DeviceTensor) -> TractResult<DeviceTensor> {
+        let output = unsafe { DeviceTensor::uninitialized_dt(a.datum_type(), a.shape())? };
+        self.dispatch_eval(stream, a, &output)?;
+        stream.wait_until_completed()?;
         Ok(output)
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::utils::with_borrowed_metal_stream;
+
     use super::*;
-    use crate::IntoMetal;
     use num_traits::Zero;
     use rand::Rng;
+    use tract_gpu::tensor::IntoDevice;
 
-    fn reference<F: Datum>(a: &Tensor, ca: impl Fn(&mut F, &F)) -> Result<Tensor> {
+    fn reference<F: Datum>(a: &Tensor, ca: impl Fn(&mut F, &F)) -> TractResult<Tensor> {
         let mut out = unsafe { Tensor::uninitialized_dt(a.datum_type(), a.shape())? };
         let a_view = a.to_array_view::<F>()?;
         let mut c = out.to_array_view_mut::<F>()?;
@@ -233,36 +233,34 @@ mod tests {
         a_shape: &[usize],
         neg: bool,
         ca: impl Fn(&mut F, &F),
-    ) -> Result<()> {
-        objc::rc::autoreleasepool(|| {
-            crate::METAL_CONTEXT.with_borrow(|context| {
-                let a_len = a_shape.iter().product::<usize>();
-                let mut rng = rand::thread_rng();
-                let a = Tensor::from_shape(
-                    a_shape,
-                    &(0..a_len)
-                        .map(|_f| {
-                            if neg {
-                                rng.gen_range(-10.0f32..10.0)
-                            } else {
-                                rng.gen_range(0.0f32..10.0)
-                            }
-                        })
-                        .collect::<Vec<_>>(),
-                )?
-                .into_metal()?;
-                let output = op.eval(context, &a)?;
-                let ref_output = reference::<F>(&a.to_cpu()?.into_tensor(), ca)?;
-                assert!(ref_output
-                    .close_enough(&output.to_cpu()?.into_tensor(), Approximation::Close)
-                    .is_ok());
-                Ok(())
-            })
+    ) -> TractResult<()> {
+        with_borrowed_metal_stream(|stream| {
+            let a_len = a_shape.iter().product::<usize>();
+            let mut rng = rand::thread_rng();
+            let a = Tensor::from_shape(
+                a_shape,
+                &(0..a_len)
+                    .map(|_f| {
+                        if neg {
+                            rng.gen_range(-10.0f32..10.0)
+                        } else {
+                            rng.gen_range(0.0f32..10.0)
+                        }
+                    })
+                    .collect::<Vec<_>>(),
+            )?
+            .into_device()?;
+            let output = op.eval(stream, &a)?;
+            let ref_output = reference::<F>(&a.to_host()?.into_tensor(), ca)?;
+            assert!(ref_output
+                .close_enough(&output.to_host()?.into_tensor(), Approximation::Close)
+                .is_ok());
+            Ok(())
         })
     }
 
     #[test]
-    fn test_element_wise() -> Result<()> {
+    fn test_element_wise() -> TractResult<()> {
         run_test_case::<f32>(ElementWiseOps::Abs, &[4, 4], true, |c, a| *c = a.abs())?;
         run_test_case::<f32>(ElementWiseOps::Ln, &[4, 4], false, |c, a| *c = a.ln())?;
 

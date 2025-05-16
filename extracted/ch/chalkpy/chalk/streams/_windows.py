@@ -23,7 +23,6 @@ from typing_extensions import TypedDict
 from chalk._validation.feature_validation import FeatureValidation
 from chalk._validation.validation import Validation
 from chalk.features._encoding.primitive import TPrimitive
-from chalk.features.feature_field import WindowConfigResolved
 from chalk.features.underscore import Underscore
 from chalk.utils.collections import ensure_tuple
 from chalk.utils.duration import CHALK_MAX_TIMEDELTA, CronTab, Duration, parse_chalk_duration_s
@@ -35,6 +34,7 @@ if TYPE_CHECKING:
     import pyarrow as pa
 
     from chalk.features._encoding.converter import TDecoder, TEncoder
+    from chalk.features.feature_field import WindowConfigResolved
 
 
 class WindowedInstance(Generic[TRich]):

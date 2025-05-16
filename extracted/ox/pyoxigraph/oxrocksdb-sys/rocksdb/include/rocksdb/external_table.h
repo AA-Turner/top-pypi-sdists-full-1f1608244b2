@@ -5,9 +5,11 @@
 
 #pragma once
 
+#include "rocksdb/advanced_iterator.h"
 #include "rocksdb/customizable.h"
 #include "rocksdb/file_checksum.h"
-#include "rocksdb/iterator.h"
+#include "rocksdb/file_system.h"
+#include "rocksdb/iterator_base.h"
 #include "rocksdb/options.h"
 #include "rocksdb/status.h"
 
@@ -58,6 +60,47 @@ class ExternalTableFactory;
 // the external table implementation.
 // TODO: Specify which options are relevant
 
+class ExternalTableIterator : public IteratorBase {
+ public:
+  virtual ~ExternalTableIterator() {}
+
+  // This can optionally be called to prepare the iterator for a series
+  // of scans. The scan_opts parameter specifies the order of scans to
+  // follow, as well as the limits for those scans. After calling this,
+  // the caller will Seek() the iterator to successive start keys in scan_opts.
+  //
+  // If Prepare() is called again with a different scan_opts pointer, it
+  // means the iterator will be reused for a new multi scan. If scan_opts
+  // is null, then the previous Prepare() can be discarded.
+  //
+  // The caller guarantees the lifetime of scan_opts until its either cleared
+  // or replaced by another Prepare().
+  // TODO: Update the contract to trim the scan_opts range to only include
+  // scans that potentially intersect the file key range.
+  //
+  // If the sequence of Seeks is interrupted by seeking to some other target
+  // key, then the iterator is free to discard anything done during Prepare.
+  virtual void Prepare(const ScanOptions scan_opts[], size_t num_opts) = 0;
+
+  // Similar to Next(), except it also fills the result and returns whether
+  // the iterator is on a valid key or not
+  virtual bool NextAndGetResult(IterateResult* result) = 0;
+
+  // Prepares the value if its lazily materialized. The implementation can
+  // request that this be called by setting value_prepared to false in
+  // IterateResult. Next() should always implicitly materialize the
+  // value.
+  bool PrepareValue() override = 0;
+
+  // Return the current key's value
+  virtual Slice value() const = 0;
+
+  // Return the current position bounds check result - kInbound if the
+  // position is a valid key, kOutOfBound if the key is out of bound (i.e
+  // scan has terminated), or kUnknown if end of file.
+  virtual IterBoundCheck UpperBoundCheckResult() = 0;
+};
+
 class ExternalTableReader {
  public:
   virtual ~ExternalTableReader() {}
@@ -65,8 +108,9 @@ class ExternalTableReader {
   // Return an Iterator that can be used to scan the table file.
   // The read_options can optionally contain the upper bound
   // key (exclusive) of the scan in iterate_upper_bound.
-  virtual Iterator* NewIterator(const ReadOptions& read_options,
-                                const SliceTransform* prefix_extractor) = 0;
+  virtual ExternalTableIterator* NewIterator(
+      const ReadOptions& read_options,
+      const SliceTransform* prefix_extractor) = 0;
 
   // Point lookup the given key and return its value
   virtual Status Get(const ReadOptions& read_options, const Slice& key,
@@ -153,11 +197,17 @@ class ExternalTableBuilder {
 struct ExternalTableOptions {
   const std::shared_ptr<const SliceTransform>& prefix_extractor;
   const Comparator* comparator;
+  const std::shared_ptr<FileSystem>& fs;
+  const FileOptions& file_options;
 
   ExternalTableOptions(
       const std::shared_ptr<const SliceTransform>& _prefix_extractor,
-      const Comparator* _comparator)
-      : prefix_extractor(_prefix_extractor), comparator(_comparator) {}
+      const Comparator* _comparator, const std::shared_ptr<FileSystem>& _fs,
+      const FileOptions& _file_options)
+      : prefix_extractor(_prefix_extractor),
+        comparator(_comparator),
+        fs(_fs),
+        file_options(_file_options) {}
 };
 
 struct ExternalTableBuilderOptions {
@@ -194,9 +244,11 @@ class ExternalTableFactory : public Customizable {
       const ExternalTableOptions& table_options,
       std::unique_ptr<ExternalTableReader>* table_reader) const = 0;
 
+  // The table builder should use the file pointer to append to the file.
+  // Do not sync or close the file after finishing. RocksDB will do that.
   virtual ExternalTableBuilder* NewTableBuilder(
       const ExternalTableBuilderOptions& builder_options,
-      const std::string& file_path) const = 0;
+      const std::string& file_path, FSWritableFile* file) const = 0;
 };
 
 // Allocate a TableFactory that wraps around an ExternalTableFactory. Use this

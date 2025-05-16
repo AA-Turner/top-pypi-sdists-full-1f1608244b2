@@ -1,5 +1,6 @@
 from chalk._gen.chalk.artifacts.v1 import chart_pb2 as _chart_pb2
 from chalk._gen.chalk.auth.v1 import permissions_pb2 as _permissions_pb2
+from chalk._gen.chalk.chart.v1 import densetimeserieschart_pb2 as _densetimeserieschart_pb2
 from google.protobuf import duration_pb2 as _duration_pb2
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from google.protobuf.internal import containers as _containers
@@ -90,3 +91,33 @@ class ListChartsResponse(_message.Message):
     CHARTS_FIELD_NUMBER: _ClassVar[int]
     charts: _containers.RepeatedCompositeFieldContainer[_chart_pb2.MetricConfig]
     def __init__(self, charts: _Optional[_Iterable[_Union[_chart_pb2.MetricConfig, _Mapping]]] = ...) -> None: ...
+
+class GetChartSnapshotRequest(_message.Message):
+    __slots__ = ("metric_config", "start_time", "end_time")
+    METRIC_CONFIG_FIELD_NUMBER: _ClassVar[int]
+    START_TIME_FIELD_NUMBER: _ClassVar[int]
+    END_TIME_FIELD_NUMBER: _ClassVar[int]
+    metric_config: _chart_pb2.MetricConfig
+    start_time: _timestamp_pb2.Timestamp
+    end_time: _timestamp_pb2.Timestamp
+    def __init__(
+        self,
+        metric_config: _Optional[_Union[_chart_pb2.MetricConfig, _Mapping]] = ...,
+        start_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...,
+        end_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...,
+    ) -> None: ...
+
+class GetChartSnapshotResponse(_message.Message):
+    __slots__ = ("charts", "x_series", "window_period")
+    CHARTS_FIELD_NUMBER: _ClassVar[int]
+    X_SERIES_FIELD_NUMBER: _ClassVar[int]
+    WINDOW_PERIOD_FIELD_NUMBER: _ClassVar[int]
+    charts: _containers.RepeatedCompositeFieldContainer[_densetimeserieschart_pb2.DenseTimeSeriesChart]
+    x_series: _containers.RepeatedCompositeFieldContainer[_timestamp_pb2.Timestamp]
+    window_period: _duration_pb2.Duration
+    def __init__(
+        self,
+        charts: _Optional[_Iterable[_Union[_densetimeserieschart_pb2.DenseTimeSeriesChart, _Mapping]]] = ...,
+        x_series: _Optional[_Iterable[_Union[_timestamp_pb2.Timestamp, _Mapping]]] = ...,
+        window_period: _Optional[_Union[_duration_pb2.Duration, _Mapping]] = ...,
+    ) -> None: ...

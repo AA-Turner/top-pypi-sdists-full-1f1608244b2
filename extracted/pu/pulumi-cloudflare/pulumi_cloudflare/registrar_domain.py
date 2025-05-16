@@ -191,6 +191,7 @@ class _RegistrarDomainState:
         pulumi.set(self, "privacy", value)
 
 
+@pulumi.type_token("cloudflare:index/registrarDomain:RegistrarDomain")
 class RegistrarDomain(pulumi.CustomResource):
     @overload
     def __init__(__self__,

@@ -11,7 +11,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ibm_watsonx_ai"
 dynamic = ["version"]
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.10,<3.14"
 authors = [
   {name = "IBM"}
 ]
@@ -69,7 +69,7 @@ dependencies = [
     "langchain-community>=0.3,<0.4",
     "langchain-elasticsearch==0.3.0",
     "langchain-ibm>=0.3,<0.4",
-    "langchain-chroma==0.1.4",
+    "langchain-chroma==0.1.4; python_version<='3.12'", # chroma-hnswlib cannot be installed on MacOS and Win with py313
     "pymilvus<2.5.7", # issue: 49386  pymilvus 2.5.7 is not compatible with lanchain-milvus 0.1.8
     "langchain-milvus==0.1.8",
     "grpcio>=1.54.3",
@@ -127,7 +127,7 @@ dependencies = [
     "websockets==10.1",
     "requests==2.32.3",
     "scipy==1.11.4",
-    "environs==9.5.0",
+    "environs==14.1.1",
     "pathlib2==2.3.6",
     "diffprivlib==0.5.1",
     "numcompress==0.1.2",
@@ -149,7 +149,7 @@ dependencies = [
 ]
 "fl-crypto" = ["pyhelayers==1.5.0.3"]
 "fl-crypto-rt24.1" = [
-    "pyhelayers==1.5.5.0"
+    "pyhelayers==1.5.5.1"
 ]
 
 

@@ -196,6 +196,7 @@ class _TunnelConfigState:
 warnings.warn("""cloudflare.index/tunnelconfig.TunnelConfig has been deprecated in favor of cloudflare.index/zerotrusttunnelcloudflaredconfig.ZeroTrustTunnelCloudflaredConfig""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/tunnelConfig:TunnelConfig")
 class TunnelConfig(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/tunnelconfig.TunnelConfig has been deprecated in favor of cloudflare.index/zerotrusttunnelcloudflaredconfig.ZeroTrustTunnelCloudflaredConfig""", DeprecationWarning)
 

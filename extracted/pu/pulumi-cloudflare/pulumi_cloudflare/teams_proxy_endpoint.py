@@ -161,6 +161,7 @@ class _TeamsProxyEndpointState:
 warnings.warn("""cloudflare.index/teamsproxyendpoint.TeamsProxyEndpoint has been deprecated in favor of cloudflare.index/zerotrustgatewayproxyendpoint.ZeroTrustGatewayProxyEndpoint""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/teamsProxyEndpoint:TeamsProxyEndpoint")
 class TeamsProxyEndpoint(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/teamsproxyendpoint.TeamsProxyEndpoint has been deprecated in favor of cloudflare.index/zerotrustgatewayproxyendpoint.ZeroTrustGatewayProxyEndpoint""", DeprecationWarning)
 

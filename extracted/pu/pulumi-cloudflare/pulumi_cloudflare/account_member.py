@@ -209,6 +209,7 @@ class _AccountMemberState:
         pulumi.set(self, "user", value)
 
 
+@pulumi.type_token("cloudflare:index/accountMember:AccountMember")
 class AccountMember(pulumi.CustomResource):
     @overload
     def __init__(__self__,

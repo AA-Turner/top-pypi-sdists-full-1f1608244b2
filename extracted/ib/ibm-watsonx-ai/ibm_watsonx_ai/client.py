@@ -285,6 +285,9 @@ class APIClient:
             # YS1Prod
             "https://us-south.ml.test.cloud.ibm.com": "https://api.dataplatform.dev.cloud.ibm.com",
             "https://private.us-south.ml.test.cloud.ibm.com": "https://private.api.dataplatform.dev.cloud.ibm.com",
+            # AWV DEV
+            "https://dev.aws.wxai.ibm.com": "https://api.dev.aws.data.ibm.com",
+            "https://private.dev.aws.wxai.ibm.com": "https://private.api.dev.aws.data.ibm.com",  # TODO ensure private platform url is correct
         }
 
         requests.packages.urllib3.disable_warnings()  # type: ignore[attr-defined]

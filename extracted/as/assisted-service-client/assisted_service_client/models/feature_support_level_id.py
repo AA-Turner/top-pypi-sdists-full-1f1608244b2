@@ -27,6 +27,7 @@ class FeatureSupportLevelId(object):
     allowed enum values
     """
     SNO = "SNO"
+    TNA = "TNA"
     VIP_AUTO_ALLOC = "VIP_AUTO_ALLOC"
     CUSTOM_MANIFEST = "CUSTOM_MANIFEST"
     SINGLE_NODE_EXPANSION = "SINGLE_NODE_EXPANSION"

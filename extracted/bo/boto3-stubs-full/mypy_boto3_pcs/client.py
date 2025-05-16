@@ -246,7 +246,7 @@ class ParallelComputingServiceClient(BaseClient):
         self, **kwargs: Unpack[RegisterComputeNodeGroupInstanceRequestTypeDef]
     ) -> RegisterComputeNodeGroupInstanceResponseTypeDef:
         """
-        This API action isn't intended for you to use.
+        <important> <p>This API action isn't intended for you to use.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/pcs/client/register_compute_node_group_instance.html)
         [Show boto3-stubs-full documentation](https://youtype.github.io/boto3_stubs_docs/mypy_boto3_pcs/client/#register_compute_node_group_instance)

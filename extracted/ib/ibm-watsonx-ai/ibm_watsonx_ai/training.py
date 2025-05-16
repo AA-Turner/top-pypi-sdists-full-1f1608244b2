@@ -23,7 +23,7 @@ from ibm_watsonx_ai.utils import (
     TRAINING_RUN_DETAILS_TYPE,
     StatusLogger,
 )
-from ibm_watsonx_ai.utils.utils import _get_id_from_deprecated_uid
+from ibm_watsonx_ai.utils.utils import _get_id_from_deprecated_uid, _handle_fl_removal
 from ibm_watsonx_ai.wml_client_error import WMLClientError, ApiRequestFailure
 from ibm_watsonx_ai.wml_resource import WMLResource
 
@@ -448,8 +448,7 @@ class Training(WMLResource):
                 )
 
         if self.ConfigurationMetaNames.FEDERATED_LEARNING in meta_props:
-            fl_deprecated_warning = "Federated Learning is deprecated and will be removed in IBM Cloud Pak for Data 5.2."
-            warn(fl_deprecated_warning, category=DeprecationWarning)
+            _handle_fl_removal(self._client)
 
             training_configuration_metadata["federated_learning"] = meta_props[
                 self.ConfigurationMetaNames.FEDERATED_LEARNING

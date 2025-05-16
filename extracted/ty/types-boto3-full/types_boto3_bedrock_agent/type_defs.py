@@ -29,6 +29,7 @@ from .literals import (
     AgentCollaborationType,
     AgentStatusType,
     ChunkingStrategyType,
+    ConcurrencyTypeType,
     ConfluenceAuthTypeType,
     ContentDataSourceTypeType,
     ConversationRoleType,
@@ -40,12 +41,14 @@ from .literals import (
     DocumentStatusType,
     EmbeddingDataTypeType,
     FlowConnectionTypeType,
+    FlowNodeInputCategoryType,
     FlowNodeIODataTypeType,
     FlowNodeTypeType,
     FlowStatusType,
     FlowValidationSeverityType,
     FlowValidationTypeType,
     IncludeExcludeType,
+    IncompatibleLoopNodeTypeType,
     IngestionJobSortByAttributeType,
     IngestionJobStatusType,
     InlineContentTypeType,
@@ -57,6 +60,7 @@ from .literals import (
     MetadataValueTypeType,
     OrchestrationTypeType,
     ParsingStrategyType,
+    PerformanceConfigLatencyType,
     PromptStateType,
     PromptTemplateTypeType,
     PromptTypeType,
@@ -66,6 +70,7 @@ from .literals import (
     RedshiftServerlessAuthTypeType,
     RelayConversationHistoryType,
     RequireConfirmationType,
+    RerankingMetadataSelectionModeType,
     SharePointAuthTypeType,
     SortOrderType,
     TypeType,
@@ -193,7 +198,9 @@ __all__ = (
     "DuplicateConnectionsFlowValidationDetailsTypeDef",
     "EmbeddingModelConfigurationTypeDef",
     "EnrichmentStrategyConfigurationTypeDef",
+    "FieldForRerankingTypeDef",
     "FixedSizeChunkingConfigurationTypeDef",
+    "FlowAliasConcurrencyConfigurationTypeDef",
     "FlowAliasRoutingConfigurationListItemTypeDef",
     "FlowAliasSummaryTypeDef",
     "FlowConditionTypeDef",
@@ -264,13 +271,18 @@ __all__ = (
     "InlineCodeFlowNodeConfigurationTypeDef",
     "InlineContentTypeDef",
     "IntermediateStorageTypeDef",
+    "InvalidLoopBoundaryFlowValidationDetailsTypeDef",
     "KendraKnowledgeBaseConfigurationTypeDef",
     "KnowledgeBaseConfigurationOutputTypeDef",
     "KnowledgeBaseConfigurationTypeDef",
     "KnowledgeBaseConfigurationUnionTypeDef",
     "KnowledgeBaseDocumentDetailTypeDef",
     "KnowledgeBaseDocumentTypeDef",
+    "KnowledgeBaseFlowNodeConfigurationOutputTypeDef",
     "KnowledgeBaseFlowNodeConfigurationTypeDef",
+    "KnowledgeBaseOrchestrationConfigurationOutputTypeDef",
+    "KnowledgeBaseOrchestrationConfigurationTypeDef",
+    "KnowledgeBasePromptTemplateTypeDef",
     "KnowledgeBaseSummaryTypeDef",
     "KnowledgeBaseTypeDef",
     "LambdaFunctionFlowNodeConfigurationTypeDef",
@@ -319,6 +331,10 @@ __all__ = (
     "ListPromptsResponseTypeDef",
     "ListTagsForResourceRequestTypeDef",
     "ListTagsForResourceResponseTypeDef",
+    "LoopControllerFlowNodeConfigurationTypeDef",
+    "LoopFlowNodeConfigurationOutputTypeDef",
+    "LoopFlowNodeConfigurationTypeDef",
+    "LoopIncompatibleNodeTypeFlowValidationDetailsTypeDef",
     "MalformedConditionExpressionFlowValidationDetailsTypeDef",
     "MalformedNodeInputExpressionFlowValidationDetailsTypeDef",
     "MemoryConfigurationOutputTypeDef",
@@ -329,15 +345,21 @@ __all__ = (
     "MessageUnionTypeDef",
     "MetadataAttributeTypeDef",
     "MetadataAttributeValueTypeDef",
+    "MetadataConfigurationForRerankingOutputTypeDef",
+    "MetadataConfigurationForRerankingTypeDef",
     "MismatchedNodeInputTypeFlowValidationDetailsTypeDef",
     "MismatchedNodeOutputTypeFlowValidationDetailsTypeDef",
     "MissingConnectionConfigurationFlowValidationDetailsTypeDef",
     "MissingDefaultConditionFlowValidationDetailsTypeDef",
+    "MissingLoopControllerNodeFlowValidationDetailsTypeDef",
+    "MissingLoopInputNodeFlowValidationDetailsTypeDef",
     "MissingNodeConfigurationFlowValidationDetailsTypeDef",
     "MissingNodeInputFlowValidationDetailsTypeDef",
     "MissingNodeOutputFlowValidationDetailsTypeDef",
     "MongoDbAtlasConfigurationTypeDef",
     "MongoDbAtlasFieldMappingTypeDef",
+    "MultipleLoopControllerNodesFlowValidationDetailsTypeDef",
+    "MultipleLoopInputNodesFlowValidationDetailsTypeDef",
     "MultipleNodeInputConnectionsFlowValidationDetailsTypeDef",
     "NeptuneAnalyticsConfigurationTypeDef",
     "NeptuneAnalyticsFieldMappingTypeDef",
@@ -354,6 +376,7 @@ __all__ = (
     "PatternObjectFilterConfigurationTypeDef",
     "PatternObjectFilterOutputTypeDef",
     "PatternObjectFilterTypeDef",
+    "PerformanceConfigurationTypeDef",
     "PineconeConfigurationTypeDef",
     "PineconeFieldMappingTypeDef",
     "PrepareAgentRequestTypeDef",
@@ -412,6 +435,8 @@ __all__ = (
     "RedshiftQueryEngineStorageConfigurationTypeDef",
     "RedshiftServerlessAuthConfigurationTypeDef",
     "RedshiftServerlessConfigurationTypeDef",
+    "RerankingMetadataSelectiveModeConfigurationOutputTypeDef",
+    "RerankingMetadataSelectiveModeConfigurationTypeDef",
     "ResponseMetadataTypeDef",
     "RetrievalFlowNodeConfigurationTypeDef",
     "RetrievalFlowNodeS3ConfigurationTypeDef",
@@ -514,6 +539,12 @@ __all__ = (
     "VectorIngestionConfigurationUnionTypeDef",
     "VectorKnowledgeBaseConfigurationOutputTypeDef",
     "VectorKnowledgeBaseConfigurationTypeDef",
+    "VectorSearchBedrockRerankingConfigurationOutputTypeDef",
+    "VectorSearchBedrockRerankingConfigurationTypeDef",
+    "VectorSearchBedrockRerankingModelConfigurationOutputTypeDef",
+    "VectorSearchBedrockRerankingModelConfigurationTypeDef",
+    "VectorSearchRerankingConfigurationOutputTypeDef",
+    "VectorSearchRerankingConfigurationTypeDef",
     "WebCrawlerConfigurationOutputTypeDef",
     "WebCrawlerConfigurationTypeDef",
     "WebCrawlerLimitsTypeDef",
@@ -652,6 +683,15 @@ class ConfluenceSourceConfigurationTypeDef(TypedDict):
 
 class ServerSideEncryptionConfigurationTypeDef(TypedDict):
     kmsKeyArn: NotRequired[str]
+
+
+FlowAliasConcurrencyConfigurationTypeDef = TypedDict(
+    "FlowAliasConcurrencyConfigurationTypeDef",
+    {
+        "type": ConcurrencyTypeType,
+        "maxConcurrency": NotRequired[int],
+    },
+)
 
 
 class FlowAliasRoutingConfigurationListItemTypeDef(TypedDict):
@@ -801,6 +841,10 @@ class DuplicateConnectionsFlowValidationDetailsTypeDef(TypedDict):
     target: str
 
 
+class FieldForRerankingTypeDef(TypedDict):
+    fieldName: str
+
+
 class FlowConditionalConnectionConfigurationTypeDef(TypedDict):
     condition: str
 
@@ -824,12 +868,21 @@ class LexFlowNodeConfigurationTypeDef(TypedDict):
     localeId: str
 
 
+class LoopFlowNodeConfigurationOutputTypeDef(TypedDict):
+    definition: Dict[str, Any]
+
+
+class LoopFlowNodeConfigurationTypeDef(TypedDict):
+    definition: Mapping[str, Any]
+
+
 FlowNodeInputTypeDef = TypedDict(
     "FlowNodeInputTypeDef",
     {
         "expression": str,
         "name": str,
         "type": FlowNodeIODataTypeType,
+        "category": NotRequired[FlowNodeInputCategoryType],
     },
 )
 FlowNodeOutputTypeDef = TypedDict(
@@ -856,6 +909,18 @@ FlowSummaryTypeDef = TypedDict(
 
 class IncompatibleConnectionDataTypeFlowValidationDetailsTypeDef(TypedDict):
     connection: str
+
+
+class InvalidLoopBoundaryFlowValidationDetailsTypeDef(TypedDict):
+    connection: str
+    source: str
+    target: str
+
+
+class LoopIncompatibleNodeTypeFlowValidationDetailsTypeDef(TypedDict):
+    incompatibleNodeName: str
+    incompatibleNodeType: IncompatibleLoopNodeTypeType
+    node: str
 
 
 class MalformedConditionExpressionFlowValidationDetailsTypeDef(TypedDict):
@@ -896,6 +961,14 @@ class MissingDefaultConditionFlowValidationDetailsTypeDef(TypedDict):
     node: str
 
 
+class MissingLoopControllerNodeFlowValidationDetailsTypeDef(TypedDict):
+    loopNode: str
+
+
+class MissingLoopInputNodeFlowValidationDetailsTypeDef(TypedDict):
+    loopNode: str
+
+
 class MissingNodeConfigurationFlowValidationDetailsTypeDef(TypedDict):
     node: str
 
@@ -912,6 +985,14 @@ MissingNodeInputFlowValidationDetailsTypeDef = TypedDict(
 class MissingNodeOutputFlowValidationDetailsTypeDef(TypedDict):
     node: str
     output: str
+
+
+class MultipleLoopControllerNodesFlowValidationDetailsTypeDef(TypedDict):
+    loopNode: str
+
+
+class MultipleLoopInputNodesFlowValidationDetailsTypeDef(TypedDict):
+    loopNode: str
 
 
 MultipleNodeInputConnectionsFlowValidationDetailsTypeDef = TypedDict(
@@ -1109,6 +1190,14 @@ class TextContentDocTypeDef(TypedDict):
 
 class KendraKnowledgeBaseConfigurationTypeDef(TypedDict):
     kendraIndexArn: str
+
+
+class KnowledgeBasePromptTemplateTypeDef(TypedDict):
+    textPromptTemplate: NotRequired[str]
+
+
+class PerformanceConfigurationTypeDef(TypedDict):
+    latency: NotRequired[PerformanceConfigLatencyType]
 
 
 class KnowledgeBaseSummaryTypeDef(TypedDict):
@@ -1447,6 +1536,16 @@ class UpdateAgentKnowledgeBaseRequestTypeDef(TypedDict):
     knowledgeBaseState: NotRequired[KnowledgeBaseStateType]
 
 
+class VectorSearchBedrockRerankingModelConfigurationOutputTypeDef(TypedDict):
+    modelArn: str
+    additionalModelRequestFields: NotRequired[Dict[str, Dict[str, Any]]]
+
+
+class VectorSearchBedrockRerankingModelConfigurationTypeDef(TypedDict):
+    modelArn: str
+    additionalModelRequestFields: NotRequired[Mapping[str, Mapping[str, Any]]]
+
+
 class WebCrawlerLimitsTypeDef(TypedDict):
     maxPages: NotRequired[int]
     rateLimit: NotRequired[int]
@@ -1553,12 +1652,6 @@ class AgentVersionSummaryTypeDef(TypedDict):
     updatedAt: datetime
     description: NotRequired[str]
     guardrailConfiguration: NotRequired[GuardrailConfigurationTypeDef]
-
-
-class KnowledgeBaseFlowNodeConfigurationTypeDef(TypedDict):
-    knowledgeBaseId: str
-    guardrailConfiguration: NotRequired[GuardrailConfigurationTypeDef]
-    modelId: NotRequired[str]
 
 
 class AssociateAgentKnowledgeBaseResponseTypeDef(TypedDict):
@@ -1729,11 +1822,17 @@ class ConditionFlowNodeConfigurationTypeDef(TypedDict):
     conditions: Sequence[FlowConditionTypeDef]
 
 
+class LoopControllerFlowNodeConfigurationTypeDef(TypedDict):
+    continueCondition: FlowConditionTypeDef
+    maxIterations: NotRequired[int]
+
+
 class CreateFlowAliasRequestTypeDef(TypedDict):
     flowIdentifier: str
     name: str
     routingConfiguration: Sequence[FlowAliasRoutingConfigurationListItemTypeDef]
     clientToken: NotRequired[str]
+    concurrencyConfiguration: NotRequired[FlowAliasConcurrencyConfigurationTypeDef]
     description: NotRequired[str]
     tags: NotRequired[Mapping[str, str]]
 
@@ -1742,6 +1841,7 @@ CreateFlowAliasResponseTypeDef = TypedDict(
     "CreateFlowAliasResponseTypeDef",
     {
         "arn": str,
+        "concurrencyConfiguration": FlowAliasConcurrencyConfigurationTypeDef,
         "createdAt": datetime,
         "description": str,
         "flowId": str,
@@ -1762,6 +1862,7 @@ FlowAliasSummaryTypeDef = TypedDict(
         "name": str,
         "routingConfiguration": List[FlowAliasRoutingConfigurationListItemTypeDef],
         "updatedAt": datetime,
+        "concurrencyConfiguration": NotRequired[FlowAliasConcurrencyConfigurationTypeDef],
         "description": NotRequired[str],
     },
 )
@@ -1769,6 +1870,7 @@ GetFlowAliasResponseTypeDef = TypedDict(
     "GetFlowAliasResponseTypeDef",
     {
         "arn": str,
+        "concurrencyConfiguration": FlowAliasConcurrencyConfigurationTypeDef,
         "createdAt": datetime,
         "description": str,
         "flowId": str,
@@ -1786,6 +1888,7 @@ class UpdateFlowAliasRequestTypeDef(TypedDict):
     flowIdentifier: str
     name: str
     routingConfiguration: Sequence[FlowAliasRoutingConfigurationListItemTypeDef]
+    concurrencyConfiguration: NotRequired[FlowAliasConcurrencyConfigurationTypeDef]
     description: NotRequired[str]
 
 
@@ -1793,6 +1896,7 @@ UpdateFlowAliasResponseTypeDef = TypedDict(
     "UpdateFlowAliasResponseTypeDef",
     {
         "arn": str,
+        "concurrencyConfiguration": FlowAliasConcurrencyConfigurationTypeDef,
         "createdAt": datetime,
         "description": str,
         "flowId": str,
@@ -1838,6 +1942,16 @@ SupplementalDataStorageLocationTypeDef = TypedDict(
 )
 
 
+class RerankingMetadataSelectiveModeConfigurationOutputTypeDef(TypedDict):
+    fieldsToExclude: NotRequired[List[FieldForRerankingTypeDef]]
+    fieldsToInclude: NotRequired[List[FieldForRerankingTypeDef]]
+
+
+class RerankingMetadataSelectiveModeConfigurationTypeDef(TypedDict):
+    fieldsToExclude: NotRequired[Sequence[FieldForRerankingTypeDef]]
+    fieldsToInclude: NotRequired[Sequence[FieldForRerankingTypeDef]]
+
+
 class FlowConnectionConfigurationTypeDef(TypedDict):
     conditional: NotRequired[FlowConditionalConnectionConfigurationTypeDef]
     data: NotRequired[FlowDataConnectionConfigurationTypeDef]
@@ -1858,6 +1972,8 @@ class FlowValidationDetailsTypeDef(TypedDict):
     incompatibleConnectionDataType: NotRequired[
         IncompatibleConnectionDataTypeFlowValidationDetailsTypeDef
     ]
+    invalidLoopBoundary: NotRequired[InvalidLoopBoundaryFlowValidationDetailsTypeDef]
+    loopIncompatibleNodeType: NotRequired[LoopIncompatibleNodeTypeFlowValidationDetailsTypeDef]
     malformedConditionExpression: NotRequired[
         MalformedConditionExpressionFlowValidationDetailsTypeDef
     ]
@@ -1871,10 +1987,16 @@ class FlowValidationDetailsTypeDef(TypedDict):
     ]
     missingDefaultCondition: NotRequired[MissingDefaultConditionFlowValidationDetailsTypeDef]
     missingEndingNodes: NotRequired[Dict[str, Any]]
+    missingLoopControllerNode: NotRequired[MissingLoopControllerNodeFlowValidationDetailsTypeDef]
+    missingLoopInputNode: NotRequired[MissingLoopInputNodeFlowValidationDetailsTypeDef]
     missingNodeConfiguration: NotRequired[MissingNodeConfigurationFlowValidationDetailsTypeDef]
     missingNodeInput: NotRequired[MissingNodeInputFlowValidationDetailsTypeDef]
     missingNodeOutput: NotRequired[MissingNodeOutputFlowValidationDetailsTypeDef]
     missingStartingNodes: NotRequired[Dict[str, Any]]
+    multipleLoopControllerNodes: NotRequired[
+        MultipleLoopControllerNodesFlowValidationDetailsTypeDef
+    ]
+    multipleLoopInputNodes: NotRequired[MultipleLoopInputNodesFlowValidationDetailsTypeDef]
     multipleNodeInputConnections: NotRequired[
         MultipleNodeInputConnectionsFlowValidationDetailsTypeDef
     ]
@@ -2401,6 +2523,18 @@ class SupplementalDataStorageConfigurationTypeDef(TypedDict):
     storageLocations: Sequence[SupplementalDataStorageLocationTypeDef]
 
 
+class MetadataConfigurationForRerankingOutputTypeDef(TypedDict):
+    selectionMode: RerankingMetadataSelectionModeType
+    selectiveModeConfiguration: NotRequired[
+        RerankingMetadataSelectiveModeConfigurationOutputTypeDef
+    ]
+
+
+class MetadataConfigurationForRerankingTypeDef(TypedDict):
+    selectionMode: RerankingMetadataSelectionModeType
+    selectiveModeConfiguration: NotRequired[RerankingMetadataSelectiveModeConfigurationTypeDef]
+
+
 FlowConnectionTypeDef = TypedDict(
     "FlowConnectionTypeDef",
     {
@@ -2500,6 +2634,13 @@ CrawlFilterConfigurationTypeDef = TypedDict(
         "patternObjectFilter": NotRequired[PatternObjectFilterConfigurationTypeDef],
     },
 )
+
+
+class KnowledgeBaseOrchestrationConfigurationOutputTypeDef(TypedDict):
+    additionalModelRequestFields: NotRequired[Dict[str, Dict[str, Any]]]
+    inferenceConfig: NotRequired[PromptInferenceConfigurationOutputTypeDef]
+    performanceConfig: NotRequired[PerformanceConfigurationTypeDef]
+    promptTemplate: NotRequired[KnowledgeBasePromptTemplateTypeDef]
 
 
 class PromptInferenceConfigurationTypeDef(TypedDict):
@@ -2636,6 +2777,18 @@ class VectorKnowledgeBaseConfigurationTypeDef(TypedDict):
     supplementalDataStorageConfiguration: NotRequired[SupplementalDataStorageConfigurationTypeDef]
 
 
+class VectorSearchBedrockRerankingConfigurationOutputTypeDef(TypedDict):
+    modelConfiguration: VectorSearchBedrockRerankingModelConfigurationOutputTypeDef
+    metadataConfiguration: NotRequired[MetadataConfigurationForRerankingOutputTypeDef]
+    numberOfRerankedResults: NotRequired[int]
+
+
+class VectorSearchBedrockRerankingConfigurationTypeDef(TypedDict):
+    modelConfiguration: VectorSearchBedrockRerankingModelConfigurationTypeDef
+    metadataConfiguration: NotRequired[MetadataConfigurationForRerankingTypeDef]
+    numberOfRerankedResults: NotRequired[int]
+
+
 class ValidateFlowDefinitionResponseTypeDef(TypedDict):
     validations: List[FlowValidationTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
@@ -2738,6 +2891,13 @@ class SharePointCrawlerConfigurationTypeDef(TypedDict):
     filterConfiguration: NotRequired[CrawlFilterConfigurationTypeDef]
 
 
+class KnowledgeBaseOrchestrationConfigurationTypeDef(TypedDict):
+    additionalModelRequestFields: NotRequired[Mapping[str, Mapping[str, Any]]]
+    inferenceConfig: NotRequired[PromptInferenceConfigurationTypeDef]
+    performanceConfig: NotRequired[PerformanceConfigurationTypeDef]
+    promptTemplate: NotRequired[KnowledgeBasePromptTemplateTypeDef]
+
+
 PromptInferenceConfigurationUnionTypeDef = Union[
     PromptInferenceConfigurationTypeDef, PromptInferenceConfigurationOutputTypeDef
 ]
@@ -2785,6 +2945,26 @@ class DocumentContentTypeDef(TypedDict):
     dataSourceType: ContentDataSourceTypeType
     custom: NotRequired[CustomContentTypeDef]
     s3: NotRequired[S3ContentTypeDef]
+
+
+VectorSearchRerankingConfigurationOutputTypeDef = TypedDict(
+    "VectorSearchRerankingConfigurationOutputTypeDef",
+    {
+        "type": Literal["BEDROCK_RERANKING_MODEL"],
+        "bedrockRerankingConfiguration": NotRequired[
+            VectorSearchBedrockRerankingConfigurationOutputTypeDef
+        ],
+    },
+)
+VectorSearchRerankingConfigurationTypeDef = TypedDict(
+    "VectorSearchRerankingConfigurationTypeDef",
+    {
+        "type": Literal["BEDROCK_RERANKING_MODEL"],
+        "bedrockRerankingConfiguration": NotRequired[
+            VectorSearchBedrockRerankingConfigurationTypeDef
+        ],
+    },
+)
 
 
 class CreateAgentActionGroupResponseTypeDef(TypedDict):
@@ -2956,6 +3136,28 @@ class VectorIngestionConfigurationTypeDef(TypedDict):
 class KnowledgeBaseDocumentTypeDef(TypedDict):
     content: DocumentContentTypeDef
     metadata: NotRequired[DocumentMetadataTypeDef]
+
+
+class KnowledgeBaseFlowNodeConfigurationOutputTypeDef(TypedDict):
+    knowledgeBaseId: str
+    guardrailConfiguration: NotRequired[GuardrailConfigurationTypeDef]
+    inferenceConfiguration: NotRequired[PromptInferenceConfigurationOutputTypeDef]
+    modelId: NotRequired[str]
+    numberOfResults: NotRequired[int]
+    orchestrationConfiguration: NotRequired[KnowledgeBaseOrchestrationConfigurationOutputTypeDef]
+    promptTemplate: NotRequired[KnowledgeBasePromptTemplateTypeDef]
+    rerankingConfiguration: NotRequired[VectorSearchRerankingConfigurationOutputTypeDef]
+
+
+class KnowledgeBaseFlowNodeConfigurationTypeDef(TypedDict):
+    knowledgeBaseId: str
+    guardrailConfiguration: NotRequired[GuardrailConfigurationTypeDef]
+    inferenceConfiguration: NotRequired[PromptInferenceConfigurationTypeDef]
+    modelId: NotRequired[str]
+    numberOfResults: NotRequired[int]
+    orchestrationConfiguration: NotRequired[KnowledgeBaseOrchestrationConfigurationTypeDef]
+    promptTemplate: NotRequired[KnowledgeBasePromptTemplateTypeDef]
+    rerankingConfiguration: NotRequired[VectorSearchRerankingConfigurationTypeDef]
 
 
 DataSourceConfigurationOutputTypeDef = TypedDict(
@@ -3261,9 +3463,12 @@ FlowNodeConfigurationOutputTypeDef = TypedDict(
         "inlineCode": NotRequired[InlineCodeFlowNodeConfigurationTypeDef],
         "input": NotRequired[Dict[str, Any]],
         "iterator": NotRequired[Dict[str, Any]],
-        "knowledgeBase": NotRequired[KnowledgeBaseFlowNodeConfigurationTypeDef],
+        "knowledgeBase": NotRequired[KnowledgeBaseFlowNodeConfigurationOutputTypeDef],
         "lambdaFunction": NotRequired[LambdaFunctionFlowNodeConfigurationTypeDef],
         "lex": NotRequired[LexFlowNodeConfigurationTypeDef],
+        "loop": NotRequired[LoopFlowNodeConfigurationOutputTypeDef],
+        "loopController": NotRequired[LoopControllerFlowNodeConfigurationTypeDef],
+        "loopInput": NotRequired[Dict[str, Any]],
         "output": NotRequired[Dict[str, Any]],
         "prompt": NotRequired[PromptFlowNodeConfigurationOutputTypeDef],
         "retrieval": NotRequired[RetrievalFlowNodeConfigurationTypeDef],
@@ -3426,6 +3631,9 @@ FlowNodeConfigurationTypeDef = TypedDict(
         "knowledgeBase": NotRequired[KnowledgeBaseFlowNodeConfigurationTypeDef],
         "lambdaFunction": NotRequired[LambdaFunctionFlowNodeConfigurationTypeDef],
         "lex": NotRequired[LexFlowNodeConfigurationTypeDef],
+        "loop": NotRequired[LoopFlowNodeConfigurationTypeDef],
+        "loopController": NotRequired[LoopControllerFlowNodeConfigurationTypeDef],
+        "loopInput": NotRequired[Mapping[str, Any]],
         "output": NotRequired[Mapping[str, Any]],
         "prompt": NotRequired[PromptFlowNodeConfigurationTypeDef],
         "retrieval": NotRequired[RetrievalFlowNodeConfigurationTypeDef],

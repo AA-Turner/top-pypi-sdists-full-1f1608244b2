@@ -158,6 +158,7 @@ class _ZeroTrustGatewayProxyEndpointState:
         pulumi.set(self, "updated_at", value)
 
 
+@pulumi.type_token("cloudflare:index/zeroTrustGatewayProxyEndpoint:ZeroTrustGatewayProxyEndpoint")
 class ZeroTrustGatewayProxyEndpoint(pulumi.CustomResource):
     @overload
     def __init__(__self__,

@@ -407,10 +407,11 @@ class Connections(WMLResource):
         datasource_details = []
 
         def get_res(url):
-            response = requests.get(
-                url,
-                headers=self._client._get_headers(),
-            )
+            with self.requests_retry_session() as sess:
+                response = sess.get(
+                    url,
+                    headers=self._client._get_headers(),
+                )
 
             res = self._handle_response(
                 200, "list datasource types", response, _silent_response_logging=True
@@ -597,13 +598,14 @@ class Connections(WMLResource):
         header_param = self._client._get_headers()
         params = {"connection_properties": connection_properties}
 
-        response = requests.get(
-            self._client.service_instance._href_definitions.get_connection_data_type_by_id_href(
-                datasource_type_id
-            ),
-            params=params,
-            headers=header_param,
-        )
+        with self.requests_retry_session() as sess:
+            response = sess.get(
+                self._client.service_instance._href_definitions.get_connection_data_type_by_id_href(
+                    datasource_type_id
+                ),
+                params=params,
+                headers=header_param,
+            )
 
         return self._handle_response(
             200, "get datasource details", response, _silent_response_logging=True
@@ -868,7 +870,7 @@ class Connections(WMLResource):
     def requests_retry_session(
         retries: int = 3,
         backoff_factor: float = 0.3,
-        status_forcelist: Iterable[int] = (500, 502, 503, 504, 521, 524),
+        status_forcelist: Iterable[int] = (500, 502, 503, 504, 520, 521, 524),
         session: requests.Session | None = None,
     ) -> requests.Session:
         from requests.adapters import HTTPAdapter

@@ -171,7 +171,7 @@ class SmartDataframe:
 
     @property
     def last_code_generated(self):
-        return self._agent.last_code_generated
+        return self._agent.last_code_executed
 
     @property
     def last_code_executed(self):

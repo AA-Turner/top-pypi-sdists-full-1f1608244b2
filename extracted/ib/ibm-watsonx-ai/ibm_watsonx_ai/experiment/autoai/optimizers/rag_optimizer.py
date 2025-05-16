@@ -25,6 +25,7 @@ if TYPE_CHECKING:
     from ibm_watsonx_ai.foundation_models.schema import (
         AutoAIRAGModelConfig,
         AutoAIRAGCustomModelConfig,
+        AutoAIRAGRetrievalConfig,
     )
 
 __all__ = ["RAGOptimizer"]
@@ -61,7 +62,7 @@ class RAGOptimizer:
     :type generation: dict[str, Any], optional
 
     :param retrieval: Retrieval settings to be used.
-    :type retrieval: list[dict[str, Any]], optional
+    :type retrieval: list[dict[str, Any] | AutoAIRAGRetrievalConfig], optional
 
     """
 
@@ -80,7 +81,7 @@ class RAGOptimizer:
         optimization_metrics: list[str] | None = None,
         chunking: list[dict] | None = None,
         generation: dict[str, Any] | None = None,
-        retrieval: list[dict[str, Any]] | None = None,
+        retrieval: list[dict[str, Any] | AutoAIRAGRetrievalConfig] | None = None,
         **kwargs: dict[str, Any],
     ):
         self._engine = engine
@@ -92,6 +93,7 @@ class RAGOptimizer:
         WMLResource._validate_type(
             foundation_models, "foundation_models", list, mandatory=False
         )
+        WMLResource._validate_type(retrieval, "retrieval", list, mandatory=False)
 
         self._params: dict[str, Any] = {}
 
@@ -120,6 +122,23 @@ class RAGOptimizer:
                     generation["foundation_models"] = foundation_models_conv
                 else:
                     generation = {"foundation_models": foundation_models_conv}
+
+        if retrieval is not None:
+            if self._engine._client.CPD_version <= 5.1:
+                if any(not isinstance(r, dict) for r in retrieval):
+                    raise WMLClientError(
+                        "Parameter `retrieval` must be a list of 'dict' for CPD 5.1 or below."
+                    )
+            else:
+                for i in range(len(retrieval)):
+                    if isinstance(retrieval[i], BaseSchema):
+                        retrieval[i] = retrieval[i].to_dict()  # type: ignore[union-attr]
+                    elif isinstance(retrieval[i], dict):
+                        pass
+                    else:
+                        raise WMLClientError(
+                            f"Invalid item type '{type(retrieval[i])}' provided in `retrieval` list."
+                        )
 
         self._params.update(
             {

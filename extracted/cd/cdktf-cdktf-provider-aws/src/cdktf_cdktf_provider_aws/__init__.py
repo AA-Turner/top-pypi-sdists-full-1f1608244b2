@@ -1,7 +1,7 @@
 r'''
-# CDKTF prebuilt bindings for hashicorp/aws provider version 5.97.0
+# CDKTF prebuilt bindings for hashicorp/aws provider version 5.98.0
 
-This repo builds and publishes the [Terraform aws provider](https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform aws provider](https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -63,7 +63,7 @@ This project is explicitly not tracking the Terraform aws provider version 1:1. 
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform aws provider](https://registry.terraform.io/providers/hashicorp/aws/5.97.0)
+* [Terraform aws provider](https://registry.terraform.io/providers/hashicorp/aws/5.98.0)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.
@@ -300,6 +300,7 @@ __all__ = [
     "bedrockagent_agent_knowledge_base_association",
     "bedrockagent_data_source",
     "bedrockagent_knowledge_base",
+    "bedrockagent_prompt",
     "budgets_budget",
     "budgets_budget_action",
     "ce_anomaly_monitor",
@@ -348,6 +349,7 @@ __all__ = [
     "cloudfront_response_headers_policy",
     "cloudfront_vpc_origin",
     "cloudfrontkeyvaluestore_key",
+    "cloudfrontkeyvaluestore_keys_exclusive",
     "cloudhsm_v2_cluster",
     "cloudhsm_v2_hsm",
     "cloudsearch_domain",
@@ -471,6 +473,7 @@ __all__ = [
     "customer_gateway",
     "customerprofiles_domain",
     "customerprofiles_profile",
+    "data_aws_account_primary_contact",
     "data_aws_acm_certificate",
     "data_aws_acmpca_certificate",
     "data_aws_acmpca_certificate_authority",
@@ -627,6 +630,7 @@ __all__ = [
     "data_aws_dx_router_configuration",
     "data_aws_dynamodb_table",
     "data_aws_dynamodb_table_item",
+    "data_aws_dynamodb_tables",
     "data_aws_ebs_default_kms_key",
     "data_aws_ebs_encryption_by_default",
     "data_aws_ebs_snapshot",
@@ -1080,6 +1084,7 @@ __all__ = [
     "dataexchange_data_set",
     "dataexchange_event_action",
     "dataexchange_revision",
+    "dataexchange_revision_assets",
     "datapipeline_pipeline",
     "datapipeline_pipeline_definition",
     "datasync_agent",
@@ -1453,6 +1458,7 @@ __all__ = [
     "imagebuilder_workflow",
     "inspector2_delegated_admin_account",
     "inspector2_enabler",
+    "inspector2_filter",
     "inspector2_member_association",
     "inspector2_organization_configuration",
     "inspector_assessment_target",
@@ -2217,6 +2223,7 @@ __all__ = [
     "wafregional_web_acl",
     "wafregional_web_acl_association",
     "wafregional_xss_match_set",
+    "wafv2_api_key",
     "wafv2_ip_set",
     "wafv2_regex_pattern_set",
     "wafv2_rule_group",
@@ -2412,6 +2419,7 @@ from . import bedrockagent_agent_collaborator
 from . import bedrockagent_agent_knowledge_base_association
 from . import bedrockagent_data_source
 from . import bedrockagent_knowledge_base
+from . import bedrockagent_prompt
 from . import budgets_budget
 from . import budgets_budget_action
 from . import ce_anomaly_monitor
@@ -2460,6 +2468,7 @@ from . import cloudfront_realtime_log_config
 from . import cloudfront_response_headers_policy
 from . import cloudfront_vpc_origin
 from . import cloudfrontkeyvaluestore_key
+from . import cloudfrontkeyvaluestore_keys_exclusive
 from . import cloudhsm_v2_cluster
 from . import cloudhsm_v2_hsm
 from . import cloudsearch_domain
@@ -2583,6 +2592,7 @@ from . import cur_report_definition
 from . import customer_gateway
 from . import customerprofiles_domain
 from . import customerprofiles_profile
+from . import data_aws_account_primary_contact
 from . import data_aws_acm_certificate
 from . import data_aws_acmpca_certificate
 from . import data_aws_acmpca_certificate_authority
@@ -2739,6 +2749,7 @@ from . import data_aws_dx_locations
 from . import data_aws_dx_router_configuration
 from . import data_aws_dynamodb_table
 from . import data_aws_dynamodb_table_item
+from . import data_aws_dynamodb_tables
 from . import data_aws_ebs_default_kms_key
 from . import data_aws_ebs_encryption_by_default
 from . import data_aws_ebs_snapshot
@@ -3192,6 +3203,7 @@ from . import data_aws_workspaces_workspace
 from . import dataexchange_data_set
 from . import dataexchange_event_action
 from . import dataexchange_revision
+from . import dataexchange_revision_assets
 from . import datapipeline_pipeline
 from . import datapipeline_pipeline_definition
 from . import datasync_agent
@@ -3568,6 +3580,7 @@ from . import inspector_assessment_template
 from . import inspector_resource_group
 from . import inspector2_delegated_admin_account
 from . import inspector2_enabler
+from . import inspector2_filter
 from . import inspector2_member_association
 from . import inspector2_organization_configuration
 from . import instance
@@ -4329,6 +4342,7 @@ from . import wafregional_sql_injection_match_set
 from . import wafregional_web_acl
 from . import wafregional_web_acl_association
 from . import wafregional_xss_match_set
+from . import wafv2_api_key
 from . import wafv2_ip_set
 from . import wafv2_regex_pattern_set
 from . import wafv2_rule_group

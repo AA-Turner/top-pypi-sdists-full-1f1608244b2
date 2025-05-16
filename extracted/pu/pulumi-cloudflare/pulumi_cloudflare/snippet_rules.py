@@ -150,6 +150,7 @@ class _SnippetRulesState:
         pulumi.set(self, "zone_id", value)
 
 
+@pulumi.type_token("cloudflare:index/snippetRules:SnippetRules")
 class SnippetRules(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -265,7 +266,7 @@ class SnippetRules(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def rules(self) -> pulumi.Output[Sequence['outputs.SnippetRulesRule']]:
+    def rules(self) -> pulumi.Output[Optional[Sequence['outputs.SnippetRulesRule']]]:
         """
         List of snippet rules
         """

@@ -185,6 +185,7 @@ class _SnippetsState:
         pulumi.set(self, "zone_id", value)
 
 
+@pulumi.type_token("cloudflare:index/snippets:Snippets")
 class Snippets(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -310,7 +311,7 @@ class Snippets(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def metadata(self) -> pulumi.Output['outputs.SnippetsMetadata']:
+    def metadata(self) -> pulumi.Output[Optional['outputs.SnippetsMetadata']]:
         return pulumi.get(self, "metadata")
 
     @property

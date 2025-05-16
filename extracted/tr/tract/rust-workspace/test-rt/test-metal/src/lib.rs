@@ -24,7 +24,7 @@ struct MetalTestTransformState {
 impl State for MetalTestTransformState {
     fn run(&mut self, inputs: TVec<TValue>) -> TractResult<TVec<TValue>> {
         let mut state = if self.use_arena {
-            let session_handler = tract_metal::MetalSessionHandler::from_plan(
+            let session_handler = tract_gpu::session_handler::DeviceSessionHandler::from_plan(
                 self.state.plan(),
                 &self.state.session_state.resolved_symbols,
             )?;
@@ -137,7 +137,7 @@ impl Runtime for MetalTestRuntime {
             }
         }
 
-        tract_metal::transform::MetalTransform { gemm_impl: self.gemm_impl }
+        tract_metal::MetalTransform { gemm_impl: self.gemm_impl }
             .transform_up_to_phase(&mut model, self.phase)?;
         if self.optimize {
             model = model.into_optimized()?;

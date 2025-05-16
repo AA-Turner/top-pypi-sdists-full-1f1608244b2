@@ -42,4 +42,4 @@ def erc7201(x: bytes) -> int:
     Returns:
         int: The final hash value as an integer.
     """
-    return calculate_keccak_hash((calculate_keccak_hash(x) - 1).to_bytes(32)) & (~0xff)
+    return calculate_keccak_hash((calculate_keccak_hash(x) - 1).to_bytes(32, byteorder='big')) & (~0xff)

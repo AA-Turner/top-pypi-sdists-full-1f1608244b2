@@ -62,7 +62,7 @@ class RefreshableTokenAuth(BaseAuth, ABC):
     :type on_token_refresh: function which takes no params and returns nothing
 
     :param expiration_timedelta: minimal time to token expiration, when the token refresh should be triggered
-    :type expiration_timedelta: timedelta
+    :type expiration_timedelta: timedelta, optional
     """
 
     _hardcoded_expiration_datetime: datetime | None = None
@@ -72,7 +72,7 @@ class RefreshableTokenAuth(BaseAuth, ABC):
         api_client: APIClient,
         on_token_creation: Callable[[], None] | None,
         on_token_refresh: Callable[[], None] | None,
-        expiration_timedelta: timedelta,
+        expiration_timedelta: timedelta | None = None,
     ) -> None:
         self._session = api_client._session
         self._credentials = api_client.credentials
@@ -86,6 +86,17 @@ class RefreshableTokenAuth(BaseAuth, ABC):
         self._on_token_refresh = on_token_refresh
         self._expiration_timedelta = expiration_timedelta
 
+    def _get_expiration_timedelta(
+        self, generation_datetime: datetime, expiration_datetime: datetime
+    ) -> timedelta:
+        delta = expiration_datetime - generation_datetime
+        if not self._expiration_timedelta or delta < self._expiration_timedelta:
+            return (
+                delta - timedelta(minutes=1) if delta > timedelta(minutes=1) else delta
+            )
+        else:
+            return self._expiration_timedelta
+
     def get_token(self) -> str:
         """Returns the token. If the token will be under minimal expiration timedelta, it will be refreshed.
 
@@ -94,6 +105,10 @@ class RefreshableTokenAuth(BaseAuth, ABC):
         """
         if self._token is None:
             self._save_token_data(self._generate_token())
+            if not self._expiration_timedelta:
+                self._expiration_timedelta = self._get_expiration_timedelta(
+                    datetime.now(), self._get_expiration_datetime()
+                )
             if self._on_token_creation:
                 self._on_token_creation()
             return self._token
@@ -243,30 +258,37 @@ def get_auth_method(
         # - there is token passed by user (and may be password or apikey)
         # - there is token from env and no additional password or api_key in the credentials
         return TokenAuth(creds.token, on_token_set=on_token_set)
-    else:
-        if getattr(creds, "token_function", False):
-            from ibm_watsonx_ai.utils.auth.jwt_token_function_auth import (
-                JWTTokenFunctionAuth,
-            )
+    elif getattr(creds, "token_function", False):  # token function passed
+        from ibm_watsonx_ai.utils.auth.jwt_token_function_auth import (
+            JWTTokenFunctionAuth,
+        )
 
-            return JWTTokenFunctionAuth(
-                api_client,
-                on_token_creation=on_token_creation,
-                on_token_refresh=on_token_refresh,
-            )
-        elif api_client.CLOUD_PLATFORM_SPACES:
-            from ibm_watsonx_ai.utils.auth.iam_auth import IAMTokenAuth
+        return JWTTokenFunctionAuth(
+            api_client,
+            on_token_creation=on_token_creation,
+            on_token_refresh=on_token_refresh,
+        )
+    elif api_client.ICP_PLATFORM_SPACES:  # CPD
+        from ibm_watsonx_ai.utils.auth.icp_auth import ICPAuth
 
-            return IAMTokenAuth(
-                api_client,
-                on_token_creation=on_token_creation,
-                on_token_refresh=on_token_refresh,
-            )
-        else:
-            from ibm_watsonx_ai.utils.auth.icp_auth import ICPAuth
+        return ICPAuth(
+            api_client,
+            on_token_creation=on_token_creation,
+            on_token_refresh=on_token_refresh,
+        )
+    elif "aws" in api_client.credentials.url:  # Cloud AWS
+        from ibm_watsonx_ai.utils.auth.aws_auth import AWSTokenAuth
 
-            return ICPAuth(
-                api_client,
-                on_token_creation=on_token_creation,
-                on_token_refresh=on_token_refresh,
-            )
+        return AWSTokenAuth(
+            api_client,
+            on_token_creation=on_token_creation,
+            on_token_refresh=on_token_refresh,
+        )
+    else:  # Cloud
+        from ibm_watsonx_ai.utils.auth.iam_auth import IAMTokenAuth
+
+        return IAMTokenAuth(
+            api_client,
+            on_token_creation=on_token_creation,
+            on_token_refresh=on_token_refresh,
+        )

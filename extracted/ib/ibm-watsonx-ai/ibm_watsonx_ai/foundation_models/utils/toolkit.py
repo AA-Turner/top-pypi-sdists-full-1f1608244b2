@@ -65,7 +65,7 @@ class Tool(WMLResource):
         self.config_schema = config_schema
         self.config = config
 
-        if not self._client.CLOUD_PLATFORM_SPACES:
+        if not self._client.CLOUD_PLATFORM_SPACES and self._client.CPD_version < 5.2:
             raise WMLClientError(error_msg="Operation is unsupported for this release.")
 
         WMLResource.__init__(self, __name__, self._client)
@@ -195,7 +195,7 @@ class Toolkit(WMLResource):
         self._client = api_client
         self.params = params
         self._tools: list[Tool] | None = None
-        if not self._client.CLOUD_PLATFORM_SPACES:
+        if not self._client.CLOUD_PLATFORM_SPACES and self._client.CPD_version < 5.2:
             raise WMLClientError(error_msg="Operation is unsupported for this release.")
 
         WMLResource.__init__(self, __name__, self._client)

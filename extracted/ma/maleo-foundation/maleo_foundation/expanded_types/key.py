@@ -1,5 +1,6 @@
 from typing import Union
-from maleo_foundation.models.transfers.results.key import MaleoFoundationKeyResultsTransfers
+from maleo_foundation.models.transfers.results.key \
+    import MaleoFoundationKeyResultsTransfers
 
 class MaleoFoundationKeyResultsTypes:
     CreatePrivate = Union[

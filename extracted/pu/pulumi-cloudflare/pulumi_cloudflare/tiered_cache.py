@@ -131,6 +131,7 @@ class _TieredCacheState:
         pulumi.set(self, "zone_id", value)
 
 
+@pulumi.type_token("cloudflare:index/tieredCache:TieredCache")
 class TieredCache(pulumi.CustomResource):
     @overload
     def __init__(__self__,

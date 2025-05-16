@@ -582,6 +582,7 @@ class _StreamState:
         pulumi.set(self, "watermark", value)
 
 
+@pulumi.type_token("cloudflare:index/stream:Stream")
 class Stream(pulumi.CustomResource):
     @overload
     def __init__(__self__,

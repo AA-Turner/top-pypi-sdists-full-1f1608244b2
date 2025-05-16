@@ -243,6 +243,7 @@ class _AccessServiceTokenState:
 warnings.warn("""cloudflare.index/accessservicetoken.AccessServiceToken has been deprecated in favor of cloudflare.index/zerotrustaccessservicetoken.ZeroTrustAccessServiceToken""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/accessServiceToken:AccessServiceToken")
 class AccessServiceToken(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/accessservicetoken.AccessServiceToken has been deprecated in favor of cloudflare.index/zerotrustaccessservicetoken.ZeroTrustAccessServiceToken""", DeprecationWarning)
 

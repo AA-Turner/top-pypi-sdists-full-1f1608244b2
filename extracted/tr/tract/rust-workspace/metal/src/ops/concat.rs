@@ -1,9 +1,10 @@
 use crate::kernels::array::Concat;
 use crate::ops::MetalEvalOp;
-use crate::{MetalContext, MetalTensorExt};
+use crate::MetalStream;
 use derive_new::new;
 use tract_core::internal::*;
 use tract_core::ops::array::TypedConcat;
+use tract_gpu::tensor::DeviceTensorExt;
 
 #[derive(new, Debug, Clone, Hash)]
 pub struct MetalConcat {
@@ -47,14 +48,14 @@ crate::impl_eval_op_for_metal_op!(MetalConcat);
 impl MetalEvalOp for MetalConcat {
     fn metal_eval(
         &self,
-        context: &MetalContext,
+        stream: &MetalStream,
         node_id: usize,
         session: &mut SessionState,
         opaque_inputs: TVec<TValue>,
     ) -> TractResult<TVec<TValue>> {
         let inputs = opaque_inputs
             .iter()
-            .map(|it| it.to_metal_tensor())
+            .map(|it| it.to_device_tensor())
             .collect::<TractResult<TVec<_>>>()?;
 
         let mut output_shape = inputs[0].shape().to_vec();
@@ -65,7 +66,7 @@ impl MetalEvalOp for MetalConcat {
             inputs[0].datum_type(),
             &output_shape,
         )?;
-        self.kernel.dispatch_eval(context, &inputs, &output)?;
+        self.kernel.dispatch_eval(stream, &inputs, &output)?;
 
         Ok(tvec!(output.into_opaque_tensor().into_tvalue()))
     }
@@ -75,7 +76,7 @@ impl TypedOp for MetalConcat {
     as_op!();
 
     fn output_facts(&self, inputs: &[&TypedFact]) -> TractResult<TVec<TypedFact>> {
-        crate::utils::metal_facts_from_gpu(inputs, |facts| {
+        tract_gpu::utils::facts_to_device_facts(inputs, |facts| {
             let mut fact = facts[0].without_value();
             for input in facts {
                 if input.rank() != fact.rank()
@@ -93,6 +94,6 @@ impl TypedOp for MetalConcat {
             fact.shape.set(self.axis(), self.offsets(facts)?.pop().unwrap());
             Ok(tvec!(fact))
         })
-        .with_context(|| anyhow::anyhow!("Error while computing facts for {:?}", self.name()))
+        .with_context(|| format!("Error while computing facts for {:?}", self.name()))
     }
 }

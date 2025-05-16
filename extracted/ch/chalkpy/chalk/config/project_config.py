@@ -2,7 +2,7 @@ import itertools
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, List, Literal, Mapping, Optional, Union, cast
+from typing import Any, List, Literal, Mapping, Optional, cast
 
 import yaml
 
@@ -12,7 +12,7 @@ from chalk.config._validator import Validator
 
 @dataclass
 class EnvironmentSettings:
-    runtime: Optional[Union[Literal["python310"], Literal["python311"], Literal["python312"]]]
+    runtime: Optional[Literal["python310", "python311", "python312"]]
     requirements: Optional[str]
     dockerfile: Optional[str]
     platform_version: Optional[str]
@@ -23,8 +23,8 @@ class EnvironmentSettings:
         value = Validator.dict_with_str_keys(value, name=prefix)
         return EnvironmentSettings(
             runtime=cast(
-                Optional[Union[Literal["python310"], Literal["python311"], Literal["python312"]]],
-                Validator.string(
+                Optional[Literal["python310", "python311", "python312"]],
+                Validator.optional_string(
                     value.get("runtime"),
                     f"{prefix}.runtime",
                     one_of=("python310", "python311", "python312"),

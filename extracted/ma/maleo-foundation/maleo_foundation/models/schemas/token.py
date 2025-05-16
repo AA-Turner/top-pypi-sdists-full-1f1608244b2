@@ -13,4 +13,4 @@ class MaleoFoundationTokenSchemas:
         token:str = Field(..., description="Token")
 
     class ExpIn(BaseModel):
-        exp_in:int = Field(5, ge=5, description="Expires in (integer, minutes)")
+        exp_in:int = Field(15, ge=1, description="Expires in (integer, minutes)")

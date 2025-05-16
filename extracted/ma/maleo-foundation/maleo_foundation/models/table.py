@@ -18,12 +18,29 @@ class BaseTable:
     uuid = Column(UUID, default=uuid4, unique=True, nullable=False)
 
     #* Timestamps
-    created_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
-    updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    created_at = Column(
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        nullable=False
+    )
+    updated_at = Column(
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False
+    )
     deleted_at = Column(TIMESTAMP(timezone=True))
     restored_at = Column(TIMESTAMP(timezone=True))
     deactivated_at = Column(TIMESTAMP(timezone=True))
-    activated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
+    activated_at = Column(
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        nullable=False
+    )
 
     #* Statuses
-    status = Column(Enum(BaseEnums.StatusType, name="statustype"), default=BaseEnums.StatusType.ACTIVE, nullable=False)
+    status = Column(
+        Enum(BaseEnums.StatusType, name="statustype"),
+        default=BaseEnums.StatusType.ACTIVE,
+        nullable=False
+    )

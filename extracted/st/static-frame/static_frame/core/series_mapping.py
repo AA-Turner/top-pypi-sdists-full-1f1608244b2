@@ -34,7 +34,7 @@ class SeriesMappingValuesView(ValuesView[TVValues]):
         self._values = series.values
         ValuesView.__init__(self, series.values) # type: ignore [arg-type]
 
-    def __contains__(self, key: object) -> bool:
+    def __contains__(self, key: object, /,) -> bool:
         # linear time unavoidable
         return self._values.__contains__(key)
 
@@ -66,11 +66,7 @@ class SeriesMapping(Mapping[TVKeys, TVValues]):
         #enforce that key must be an element
         if key.__class__ is slice or not is_element(key): # type: ignore [comparison-overlap]
             raise KeyError(str(key))
-        try:
-            return self._series._extract_loc(key) # type: ignore [no-any-return]
-        except RuntimeError as e:
-            # raise for mis-matched IH
-            raise KeyError(str(e)) from None
+        return self._series._extract_loc(key) # type: ignore [no-any-return]
 
     def __iter__(self) -> Iterator[TVKeys]:
         # for IndexHierarchy, these will be tuples
@@ -79,7 +75,7 @@ class SeriesMapping(Mapping[TVKeys, TVValues]):
     def __len__(self) -> int:
         return len(self._series)
 
-    def __contains__(self, key: object) -> bool:
+    def __contains__(self, key: object, /,) -> bool:
         return key in self._series.index
 
     def __repr__(self) -> str:

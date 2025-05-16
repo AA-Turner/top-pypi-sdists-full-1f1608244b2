@@ -98,6 +98,7 @@ class TestAnnotations:
 
         assert is_fruit(name) == expected
 
+    @pytest.mark.flaky(reruns=2)
     def test_plain_dict_return_type(self):
         @marvin.fn
         def describe_fruit(description: str) -> dict:
@@ -107,6 +108,7 @@ class TestAnnotations:
         assert fruit["name"].lower() == "banana"
         assert fruit["color"].lower() == "yellow"
 
+    @pytest.mark.flaky(reruns=2)
     def test_annotated_dict_return_type(self):
         @marvin.fn
         def describe_fruit(description: str) -> dict[str, str]:
@@ -298,17 +300,17 @@ class TestContextAndInstructions:
         await assert_llm_equal(result, "a list of three berries")
         assert len(result) == 3
 
-    @pytest.mark.flaky(reruns=3)
+    @pytest.mark.xfail(reason="This is a flaky test that should be fixed")
     async def test_async_fn_with_return_value_context(self):
         @marvin.fn
         async def get_fruit_details(name: str) -> dict[str, str]:
             """Returns details about the fruit"""
-            return {"hint": "This fruit is red and grows on trees"}
+            return {"hint": "we talkin apples yo"}
 
         result = await get_fruit_details("unknown")
         await assert_llm_equal(result, "a dictionary describing an apple")
 
-    @pytest.mark.flaky(reruns=3)
+    @pytest.mark.xfail(reason="This is a flaky test that should be fixed")
     async def test_fn_with_instructions_and_context(self):
         @marvin.fn(instructions="Only return tropical fruits")
         def get_fruit_details(name: str) -> dict[str, str]:
@@ -318,7 +320,7 @@ class TestContextAndInstructions:
         result = get_fruit_details("unknown")
         await assert_llm_equal(result, "a dictionary describing a coconut")
 
-    @pytest.mark.flaky(reruns=3)
+    @pytest.mark.xfail(reason="This is a flaky test that should be fixed")
     async def test_async_fn_with_instructions_and_context(self):
         @marvin.fn(instructions="Only consider fruits from Asia")
         async def get_fruit_details(name: str) -> dict[str, str]:

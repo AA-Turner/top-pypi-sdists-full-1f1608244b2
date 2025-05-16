@@ -62,6 +62,7 @@ AI_SERVICES_HREF_PATTERN = "{}/v4/ai_services"
 
 IAM_TOKEN_API = "{}&grant_type=urn%3Aibm%3Aparams%3Aoauth%3Agrant-type%3Aapikey"
 IAM_TOKEN_URL = "{}/oidc/token"
+AWS_TOKEN_HREF = "{}/api/2.0/apikeys/token"
 PROD_SVT_URL = [
     "https://ca-tor.ml.cloud.ibm.com",
     "https://private.ca-tor.ml.cloud.ibm.com",
@@ -201,6 +202,8 @@ FM_FINE_TUNINGS = "{}/ml/v1/fine_tunings"
 PROMPTS = "{}/wx/v1-beta/prompts"
 GA_PROMPTS = "{}/wx/v1/prompts"
 PROMPTS_GET_ALL = "{}/v2/asset_types/wx_prompt/search"
+
+TEXT_DETECTION = "{}/ml/v1/text/detection"
 
 TEXT_EXTRACTIONS = "{}/ml/v1/text/extractions"
 TEXT_EXTRACTION = "{}/ml/v1/text/extractions/{}"
@@ -464,6 +467,13 @@ class HrefDefinitions:
 
     def get_iam_token_api(self) -> str:
         return IAM_TOKEN_API.format(self._credentials.api_key)
+
+    def get_aws_token_url(self) -> str:
+        return AWS_TOKEN_HREF.format(
+            "https://iam.cloud.ibm.com"
+            if self._credentials.url in PROD_SVT_URL
+            else "https://account-iam.platform.test.saas.ibm.com"
+        )
 
     def get_iam_token_url(self) -> str:
         if self._credentials.url in PROD_SVT_URL:
@@ -818,7 +828,10 @@ class HrefDefinitions:
             self._get_platform_url_if_exists()
         )
 
-    def get_text_extractions_href(self, ga_api: bool = True) -> str:
+    def get_text_detection_href(self) -> str:
+        return TEXT_DETECTION.format(self._credentials.url)
+
+    def get_text_extractions_href(self) -> str:
         return TEXT_EXTRACTIONS.format(self._credentials.url)
 
     def get_text_extraction_href(self, text_extraction_id: str) -> str:

@@ -200,9 +200,9 @@ const uint64_t kDefaultTtl = 0xfffffffffffffffe;
 const uint64_t kDefaultPeriodicCompSecs = 0xfffffffffffffffe;
 }  // anonymous namespace
 
-ColumnFamilyOptions SanitizeOptions(const ImmutableDBOptions& db_options,
-                                    bool read_only,
-                                    const ColumnFamilyOptions& src) {
+ColumnFamilyOptions SanitizeCfOptions(const ImmutableDBOptions& db_options,
+                                      bool read_only,
+                                      const ColumnFamilyOptions& src) {
   ColumnFamilyOptions result = src;
   size_t clamp_max = std::conditional<
       sizeof(size_t) == 4, std::integral_constant<size_t, 0xffffffff>,
@@ -262,15 +262,10 @@ ColumnFamilyOptions SanitizeOptions(const ImmutableDBOptions& db_options,
   if (result.max_write_buffer_number < 2) {
     result.max_write_buffer_number = 2;
   }
-  // fall back max_write_buffer_number_to_maintain if
-  // max_write_buffer_size_to_maintain is not set
   if (result.max_write_buffer_size_to_maintain < 0) {
     result.max_write_buffer_size_to_maintain =
         result.max_write_buffer_number *
         static_cast<int64_t>(result.write_buffer_size);
-  } else if (result.max_write_buffer_size_to_maintain == 0 &&
-             result.max_write_buffer_number_to_maintain < 0) {
-    result.max_write_buffer_number_to_maintain = result.max_write_buffer_number;
   }
   // bloom filter size shouldn't exceed 1/4 of memtable size.
   if (result.memtable_prefix_bloom_size_ratio > 0.25) {
@@ -453,6 +448,13 @@ ColumnFamilyOptions SanitizeOptions(const ImmutableDBOptions& db_options,
     result.preclude_last_level_data_seconds = 0;
   }
 
+  if (read_only && result.memtable_op_scan_flush_trigger != 0) {
+    ROCKS_LOG_WARN(db_options.info_log.get(),
+                   "option memtable_op_scan_flush_trigger is sanitized to "
+                   "0(disabled) for read only DB.");
+    result.memtable_op_scan_flush_trigger = 0;
+  }
+
   return result;
 }
 
@@ -569,7 +571,7 @@ ColumnFamilyData::ColumnFamilyData(
       dropped_(false),
       flush_skip_reschedule_(false),
       internal_comparator_(cf_options.comparator),
-      initial_cf_options_(SanitizeOptions(db_options, read_only, cf_options)),
+      initial_cf_options_(SanitizeCfOptions(db_options, read_only, cf_options)),
       ioptions_(db_options, initial_cf_options_),
       mutable_cf_options_(initial_cf_options_),
       is_delete_range_supported_(
@@ -577,7 +579,6 @@ ColumnFamilyData::ColumnFamilyData(
       write_buffer_manager_(write_buffer_manager),
       mem_(nullptr),
       imm_(ioptions_.min_write_buffer_number_to_merge,
-           ioptions_.max_write_buffer_number_to_maintain,
            ioptions_.max_write_buffer_size_to_maintain),
       super_version_(nullptr),
       super_version_number_(0),

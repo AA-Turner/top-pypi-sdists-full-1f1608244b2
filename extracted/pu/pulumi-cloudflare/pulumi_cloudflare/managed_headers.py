@@ -131,6 +131,7 @@ class _ManagedHeadersState:
 warnings.warn("""cloudflare.index/managedheaders.ManagedHeaders has been deprecated in favor of cloudflare.index/managedtransforms.ManagedTransforms""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/managedHeaders:ManagedHeaders")
 class ManagedHeaders(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/managedheaders.ManagedHeaders has been deprecated in favor of cloudflare.index/managedtransforms.ManagedTransforms""", DeprecationWarning)
 

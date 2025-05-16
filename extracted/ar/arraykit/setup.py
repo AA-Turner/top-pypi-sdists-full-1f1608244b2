@@ -1,18 +1,28 @@
 import site
 import os
+from os import path
 import typing as tp
 from setuptools import Extension  # type: ignore
 from setuptools import setup
 
-AK_VERSION = '1.0.7'
+AK_VERSION = '1.0.8'
+
+ROOT_DIR_FP = path.abspath(path.dirname(__file__))
 
 def get_long_description() -> str:
-    return '''The ArrayKit library provides utilities for creating and transforming NumPy arrays, implementing performance-critical StaticFrame operations as Python C extensions.
+    with open(path.join(ROOT_DIR_FP, 'README.rst'), encoding='utf-8') as f:
+        msg = []
+        collect = False
+        start = -1
+        for i, line in enumerate(f):
+            if line.startswith('arraykit'):
+                start = i + 2 # skip this line and the next
+            if i == start:
+                collect = True
+            if collect:
+                msg.append(line)
+    return ''.join(msg).strip()
 
-Code: https://github.com/static-frame/arraykit
-
-Packages: https://pypi.org/project/arraykit
-'''
 
 # NOTE: we do this to avoid importing numpy: https://stackoverflow.com/questions/54117786/add-numpy-get-include-argument-to-setuptools-without-preinstalled-numpy
 # we used to import the following to get directories:
@@ -52,7 +62,7 @@ setup(
     version=AK_VERSION,
     description='Array utilities for StaticFrame',
     long_description=get_long_description(),
-    long_description_content_type='text/plain', # use text/x-rst
+    long_description_content_type='text/x-rst', # use text/x-rst
     python_requires='>=3.10',
     install_requires=['numpy>=1.24.3'],
     url='https://github.com/static-frame/arraykit',

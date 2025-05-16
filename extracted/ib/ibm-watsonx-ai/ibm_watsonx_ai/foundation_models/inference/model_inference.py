@@ -287,22 +287,48 @@ class ModelInference(BaseModelInference):
         :return: scoring result containing generated chat content.
         :rtype: dict
 
-        **Example:**
+        **Examples:**
 
-        .. code-block:: python
+        .. tab-set::
 
-            messages = [
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": "Who won the world series in 2020?"}
-            ]
-            generated_response = model.chat(messages=messages)
+            .. tab-item:: Simple conversation
 
-            # Print all response
-            print(generated_response)
+                .. code-block:: python
 
-            # Print only content
-            print(generated_response['choices'][0]['message']['content'])
+                    messages = [
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": "Who won the world series in 2020?"}
+                    ]
+                    generated_response = model.chat(messages=messages)
 
+                    # Print full response
+                    print(generated_response)
+
+                    # Print only content
+                    print(generated_response["choices"][0]["message"]["content"])
+
+            .. tab-item:: Control messages
+
+                .. note::
+
+                    Control messages enable inclusion of enhanced reasoning to chat response content.
+                    They are available only for IBM Granite reasoning models 3.2 and above.
+                    For more information, visit: https://www.ibm.com/granite/docs/models/granite/
+
+                .. code-block:: python
+
+                    messages = [
+                        {"role": "control", "content": "thinking"},
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": "Who won the world series in 2020?"}
+                    ]
+                    generated_response = model.chat(messages=messages)
+
+                    # Print full response
+                    print(generated_response)
+
+                    # Print only content
+                    print(generated_response["choices"][0]["message"]["content"])
         """
         self._validate_type(messages, "messages", list, True)
         self._validate_type(params, "params", [dict, TextChatParameters], False, True)

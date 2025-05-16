@@ -10,7 +10,12 @@ from maleo_foundation.extended_types import ExtendedTypes
 
 class BaseQueryUtils:
     @staticmethod
-    def filter_column(query:Query, table:Type[DeclarativeMeta], column:str, value:BaseTypes.OptionalAny) -> Query:
+    def filter_column(
+        query:Query,
+        table:Type[DeclarativeMeta],
+        column:str,
+        value:BaseTypes.OptionalAny
+    ) -> Query:
         if not value:
             return query
         column_attr = getattr(table, column, None)
@@ -24,7 +29,12 @@ class BaseQueryUtils:
         return query
 
     @staticmethod
-    def filter_ids(query:Query, table:Type[DeclarativeMeta], column:str, ids:BaseTypes.OptionalListOfIntegers) -> Query:
+    def filter_ids(
+        query:Query,
+        table:Type[DeclarativeMeta],
+        column:str,
+        ids:BaseTypes.OptionalListOfIntegers
+    ) -> Query:
         if ids is not None:
             column_attr = getattr(table, column, None)
             if column_attr:
@@ -33,7 +43,11 @@ class BaseQueryUtils:
         return query
     
     @staticmethod
-    def filter_timestamps(query:Query, table:Type[DeclarativeMeta], date_filters:ExtendedTypes.ListOfDateFilters) -> Query:
+    def filter_timestamps(
+        query:Query,
+        table:Type[DeclarativeMeta],
+        date_filters:ExtendedTypes.ListOfDateFilters
+    ) -> Query:
         if date_filters and len(date_filters) > 0:
             for date_filter in date_filters:
                 try:
@@ -42,7 +56,12 @@ class BaseQueryUtils:
                     column_attr:InstrumentedAttribute = getattr(table, date_filter.name)
                     if isinstance(column.type, (TIMESTAMP, DATE)):
                         if date_filter.from_date and date_filter.to_date:
-                            query = query.filter(column_attr.between(date_filter.from_date, date_filter.to_date))
+                            query = query.filter(
+                                column_attr.between(
+                                    date_filter.from_date,
+                                    date_filter.to_date
+                                )
+                            )
                         elif date_filter.from_date:
                             query = query.filter(column_attr >= date_filter.from_date)
                         elif date_filter.to_date:
@@ -52,14 +71,22 @@ class BaseQueryUtils:
         return query
     
     @staticmethod
-    def filter_statuses(query:Query, table:Type[DeclarativeMeta], statuses:BaseTypes.OptionalListOfStatuses) -> Query:
+    def filter_statuses(
+        query:Query,
+        table:Type[DeclarativeMeta],
+        statuses:BaseTypes.OptionalListOfStatuses
+    ) -> Query:
         if statuses is not None:
             status_filters = [table.status == status for status in statuses]
             query = query.filter(or_(*status_filters))
         return query
     
     @staticmethod
-    def filter_search(query:Query, table:Type[DeclarativeMeta], search:BaseTypes.OptionalString) -> Query:
+    def filter_search(
+        query:Query,
+        table:Type[DeclarativeMeta],
+        search:BaseTypes.OptionalString
+    ) -> Query:
         if search:
             search_term = f"%{search}%" #* Use wildcard for partial matching
             search_filters = []
@@ -78,7 +105,11 @@ class BaseQueryUtils:
         return query
     
     @staticmethod
-    def sort(query:Query, table:Type[DeclarativeMeta], sort_columns:ExtendedTypes.ListOfSortColumns) -> Query:
+    def sort(
+        query:Query,
+        table:Type[DeclarativeMeta],
+        sort_columns:ExtendedTypes.ListOfSortColumns
+    ) -> Query:
         for sort_column in sort_columns:
             try:
                 sort_col = getattr(table, sort_column.name)

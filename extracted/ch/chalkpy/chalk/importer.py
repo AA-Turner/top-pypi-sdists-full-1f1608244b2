@@ -1147,7 +1147,7 @@ def import_all_python_files_from_dir(
     try:
         venv = os.environ.get("VIRTUAL_ENV")
         if file_allowlist is not None:
-            repo_files = file_allowlist
+            repo_files = sorted(file_allowlist)
         else:
             venv_path = None if venv is None else Path(venv)
             ignore_config = get_default_combined_ignore_config(resolved_root) if check_ignores else None

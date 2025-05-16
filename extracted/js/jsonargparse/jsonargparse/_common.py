@@ -34,8 +34,6 @@ from ._optionals import (
 from ._type_checking import ActionsContainer, ArgumentParser, docstring_parser
 
 __all__ = [
-    "LoggerProperty",
-    "null_logger",
     "set_parsing_settings",
 ]
 
@@ -159,13 +157,13 @@ def get_parsing_setting(name: str):
 
 
 def validate_default(container: ActionsContainer, action: argparse.Action):
-    if not isinstance(action, Action) or not get_parsing_setting("validate_defaults") or action.default is None:
+    if action.default is None or not get_parsing_setting("validate_defaults") or not hasattr(action, "_check_type"):
         return
     try:
         with parser_context(parent_parser=container):
             default = action.default
             action.default = None
-            action.default = action._check_type_(default)
+            action.default = action._check_type_(default)  # type: ignore[attr-defined]
     except Exception as ex:
         raise ValueError(f"Default value is not valid: {ex}") from ex
 
@@ -363,7 +361,7 @@ class LoggerProperty:
         if logger is None:
             from ._deprecated import deprecation_warning, logger_property_none_message
 
-            deprecation_warning((LoggerProperty.logger, None), logger_property_none_message, stacklevel=2)
+            deprecation_warning((LoggerProperty.logger, None), logger_property_none_message, stacklevel=6)
             logger = False
         if not logger and debug_mode_active():
             logger = {"level": "DEBUG"}

@@ -17,7 +17,8 @@ from meutils.schemas.jimeng_types import BASE_URL
 
 VOICE_MAPPING = {
     # 带情绪
-    "柔美女友": "7382552865023201819",  # "happy", "angry", "fear", "surprise", "coldness", "disgust", "excited", "hate"
+    "柔美女友": "7382552865023201819",
+    # "happy", "angry", "fear", "surprised", "coldness", "disgust", "excited", "hate"
     "妩媚女生": "7459778019725414962",  # "happy", "angry", "fear", "surprise"
     "京腔小爷": "7382048889659986458",  # "joy", "angry", "surprise", "disgust"
 
@@ -117,7 +118,7 @@ async def create_tts(request: TTSRequest):  # audio.speech.create
         "audio_config": {
             "format": "mp3",
             "sample_rate": 24000,
-            "speech_rate": 0,
+            "speech_rate": request.speed or 0,
             "pitch_rate": 0,
             "enable_timestamp": True,
 
@@ -127,15 +128,18 @@ async def create_tts(request: TTSRequest):  # audio.speech.create
             "item_platform": 1
         }
     }
-    if request.emotion:
-        if request.voice == "京腔小爷" and request.emotion == "happy":
+    if request.instructions and request.voice in {"柔美女友", "妩媚女生", "京腔小爷", }:
+        if request.voice == "京腔小爷" and request.instructions == "happy":
             request.emotion = "joy"
+
+        if request.voice == "柔美女友" and request.instructions == "surprise":
+            request.emotion = "surprised"
 
         payload["audio_config"].update(
             {
                 # 情绪
                 "emotion_scale": 5,
-                "emotion": request.emotion,
+                "emotion": request.instructions,
             }
         )
 
@@ -162,22 +166,26 @@ async def create_tts(request: TTSRequest):  # audio.speech.create
 
 
 if __name__ == '__main__':
-    text = """
-我们不能迟到早退刷脸打卡 中午休息一个小时 进出都得打卡
+    text = """Chatfire tts-pro支持多种音色：
+柔美女友 妩媚女生 京腔小爷 猴哥 熊二 如来佛祖 咆哮哥 四郎 懒小羊 TVB女声 动漫小新 紫薇 黛玉 顾姐 动漫海绵 云龙哥 容嬷嬷 华妃 河南小哥 湾区大叔 广西老表 山东小哥 长沙妹坨 樱花小哥 上海阿姨 京腔 港普男声 天津小哥 西安掌柜 台湾女生 东北老铁 粤语男声 重庆小伙 魅力姐姐 高冷御姐 魅力女友 耿直女声 活泼女声 随性女声 知性女声 温柔淑女 悲伤女声 开朗学长 阳光青年 广告男声 悠悠君子 强势青年 阳光男生 沉稳男声 悲伤青年 病娇少女 撒娇学妹 冷静少女 元气少女 活泼女孩 阳光少年 活泼少年 小男孩 小女孩 萌娃 沉稳老者 老婆婆 儒雅大叔 温柔阿姨 刚正大叔
+
     """
     request = TTSRequest(
         model="tts-1",
         # input="军杰 快来我的五指山下" * 1,
         input=text,
-        voice="柔美女友",
+        # voice="柔美女友",
+        voice="猴哥",
+
         # voice="妩媚女生",
         # voice="如来佛祖",
         # voice="京腔小爷",
 
-        # response_format="url",
+        response_format="url",
 
         # emotion="happy",
-        emotion="fear"
+        # emotion="fear"
+        emotion="surprise"
 
     )
 

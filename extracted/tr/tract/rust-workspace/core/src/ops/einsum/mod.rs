@@ -2,20 +2,20 @@ use std::borrow::Borrow;
 use std::fmt::Debug;
 
 use crate::internal::*;
+use crate::ops::array::MultiBroadcastTo;
 use crate::tract_data::itertools::Itertools;
 
 mod eval;
 
 #[cfg(feature = "blas")]
 pub mod as_blas;
-mod as_matmul;
+pub mod einsum_matmul;
 pub mod kernel_selection;
-pub mod optimize;
+pub mod prefix_matmul;
 
 #[cfg(test)]
 mod proptest;
 
-pub use as_matmul::{rewrite_einsums_as_matmul, BasicMatMul};
 use num_traits::One;
 use tract_linalg::block_quant::{BlockQuantFact, PackedBlockQuantFact};
 use tract_linalg::mmm::PackedOpaqueFact;
@@ -31,8 +31,10 @@ pub fn block_quant_aware_input_shape(fact: &TypedFact) -> TractResult<Cow<[TDim]
         Ok(Cow::Owned(
             fact.shape.iter().cloned().chain(bqf.shape().iter().map(|d| d.to_dim())).collect_vec(),
         ))
-    // } else if let Some(pbqf) = opaque_fact.downcast_ref::<PackedBlockQuantFact>() {
-    //     &pbqf.shape
+    } else if let Some(pof) = opaque_fact.downcast_ref::<PackedBlockQuantFact>() {
+        Ok(Cow::Owned(
+            fact.shape.iter().cloned().chain(pof.shape.iter().map(|i| i.to_dim())).collect_vec(),
+        ))
     } else if let Some(pof) = opaque_fact.downcast_ref::<PackedOpaqueFact>() {
         Ok(Cow::Owned(
             fact.shape.iter().cloned().chain([pof.mn.clone(), pof.k.to_dim()]).collect_vec(),
@@ -42,7 +44,7 @@ pub fn block_quant_aware_input_shape(fact: &TypedFact) -> TractResult<Cow<[TDim]
     }
 }
 
-#[derive(Clone, Hash)]
+#[derive(Clone, Hash, PartialEq)]
 pub struct EinSum {
     pub axes: AxesMapping,
     pub operating_dt: DatumType,
@@ -306,100 +308,117 @@ impl TypedOp for EinSum {
         }))
     }
 
-    //     fn declutter_with_session(
-    //         &self,
-    //         session: &mut crate::optim::OptimizerSession,
-    //         model: &TypedModel,
-    //         node: &TypedNode,
-    //     ) -> TractResult<Option<TypedModelPatch>> {
-    //         // if let Some(patch) = declutter_reshape_folding_input_axis(self, session, model, node)? {
-    //         //     return Ok(Some(patch));
-    //         // }
-    //         return Ok(None);
-    //     }
+    fn declutter_with_session(
+        &self,
+        session: &mut crate::optim::OptimizerSession,
+        model: &TypedModel,
+        node: &TypedNode,
+    ) -> TractResult<Option<TypedModelPatch>> {
+        if let Some(patch) = declutter_reshape_folding_input_axis(self, session, model, node)? {
+            return Ok(Some(patch));
+        }
+        if let Some(patch) = declutter_broadcast(self, session, model, node)? {
+            return Ok(Some(patch));
+        }
+        Ok(None)
+    }
 
     fn codegen(
         &self,
         model: &TypedModel,
         node: &TypedNode,
     ) -> TractResult<Option<TypedModelPatch>> {
-        optimize::optimize(self, model, node).with_context(|| {
-            format!(
-                "axes: {} — inputs: {}",
-                self.axes,
-                model
-                    .node_input_facts(node.id)
-                    .unwrap()
-                    .iter()
-                    .map(|f| format!("{f:?}"))
-                    .join(" • ")
-            )
-        })
+        if (self.q_params.is_none() && node.inputs.len() != 2)
+            || (self.q_params.is_some() && node.inputs.len() != 9)
+        {
+            return Ok(None);
+        }
+        einsum_matmul::detect_rule(&(), model, node, &node.name, self)
     }
 
     as_op!();
 }
 
-// fn declutter_reshape_folding_input_axis(
-//     op: &EinSum,
-//     _session: &mut crate::optim::OptimizerSession,
-//     model: &TypedModel,
-//     node: &TypedNode,
-// ) -> TractResult<Option<TypedModelPatch>> {
-//     for (slot, prec) in node.inputs.iter().map(|n| model.node(n.node)).enumerate() {
-//         let Some(AxisOp::Reshape(at, ref from, ref to)) = prec.op_as() else { continue };
-//         if to.len() > 1 {
-//             continue;
-//         }
-//         let mut axes = op.axes.clone();
-//         let extra_labels = axes.available_labels().take(from.len() - 1).collect_vec();
-//         // add a temporary input to axes to hold the extra axes
-//         let extra_input = node.inputs.len();
-//         axes = axes.with_extra_input(extra_input)?;
-//         for label in &extra_labels {
-//             axes = axes.with_extra_axis(*label, InOut::In(extra_input), 0)?;
-//         }
-//         let folded_axis = op.axes.axis((InOut::In(slot), *at))?;
-//         if folded_axis.outputs[0].len() > 1 {
-//             return Ok(None);
-//         };
-//         let mut patch = TypedModelPatch::default();
-//         let mut taps = patch.taps(model, &node.inputs)?;
-//         for (input, tap) in taps.iter_mut().enumerate() {
-//             if folded_axis.inputs[input].len() == 0 {
-//                 continue;
-//             };
-//             if folded_axis.inputs[input].len() > 1 {
-//                 return Ok(None);
-//             };
-//             let pos = folded_axis.inputs[input][0];
-//             for label in &extra_labels {
-//                 axes = axes.with_extra_axis_occurency(*label, InOut::In(input), pos)?;
-//             }
-//             *tap = patch.wire_node(
-//                 format!("{}.reshape_folded_input_{}", node.name, input),
-//                 AxisOp::Reshape(pos, to.clone(), from.clone()),
-//                 &[*tap],
-//             )?[0];
-//         }
-//         if folded_axis.outputs[0].len() == 1 {
-//             let pos = folded_axis.outputs[0][0];
-//             for label in &extra_labels {
-//                 axes = axes.with_extra_axis_occurency(*label, InOut::Out(0), pos)?;
-//             }
-//         }
-//         axes = axes.remove_slot(InOut::In(extra_input))?;
-//         let mut wire = patch.wire_node(&node.name, EinSum { axes, ..op.clone() }, &taps)?;
-//         if folded_axis.outputs[0].len() == 1 {
-//             let pos = folded_axis.outputs[0][0];
-//             wire = patch.wire_node(
-//                 format!("{}.reshape_folded_output", node.name),
-//                 AxisOp::Reshape(pos, from.clone(), to.clone()),
-//                 &wire,
-//             )?;
-//         }
-//         patch.shunt_outside(model, node.id.into(), wire[0])?;
-//         return Ok(Some(patch));
-//     }
-//     return Ok(None);
-// }
+fn declutter_reshape_folding_input_axis(
+    op: &EinSum,
+    _session: &mut crate::optim::OptimizerSession,
+    model: &TypedModel,
+    node: &TypedNode,
+) -> TractResult<Option<TypedModelPatch>> {
+    for (slot, prec) in node.inputs.iter().map(|n| model.node(n.node)).enumerate() {
+        let Some(AxisOp::Reshape(at, ref from, ref to)) = prec.op_as() else { continue };
+        if to.len() > 1 {
+            continue;
+        }
+        let mut axes = op.axes.clone();
+        let extra_labels = axes.available_labels().take(from.len() - 1).collect_vec();
+        // add a temporary input to axes to hold the extra axes
+        let extra_input = node.inputs.len();
+        axes = axes.with_extra_input(extra_input)?;
+        for label in &extra_labels {
+            axes = axes.with_extra_axis(*label, InOut::In(extra_input), 0)?;
+        }
+        let folded_axis = op.axes.axis((InOut::In(slot), *at))?;
+        if folded_axis.outputs[0].len() > 1 {
+            return Ok(None);
+        };
+        let mut patch = TypedModelPatch::default();
+        let mut taps = patch.taps(model, &node.inputs)?;
+        for (input, tap) in taps.iter_mut().enumerate() {
+            if folded_axis.inputs[input].len() == 0 {
+                continue;
+            };
+            if folded_axis.inputs[input].len() > 1 {
+                return Ok(None);
+            };
+            let pos = folded_axis.inputs[input][0];
+            for label in &extra_labels {
+                axes = axes.with_extra_axis_occurency(*label, InOut::In(input), pos)?;
+            }
+            *tap = patch.wire_node(
+                format!("{}.reshape_folded_input_{}", node.name, input),
+                AxisOp::Reshape(pos, to.clone(), from.clone()),
+                &[*tap],
+            )?[0];
+        }
+        if folded_axis.outputs[0].len() == 1 {
+            let pos = folded_axis.outputs[0][0];
+            for label in &extra_labels {
+                axes = axes.with_extra_axis_occurency(*label, InOut::Out(0), pos)?;
+            }
+        }
+        axes = axes.remove_slot(InOut::In(extra_input))?;
+        let mut wire = patch.wire_node(&node.name, EinSum { axes, ..op.clone() }, &taps)?;
+        if folded_axis.outputs[0].len() == 1 {
+            let pos = folded_axis.outputs[0][0];
+            wire = patch.wire_node(
+                format!("{}.reshape_folded_output", node.name),
+                AxisOp::Reshape(pos, from.clone(), to.clone()),
+                &wire,
+            )?;
+        }
+        patch.shunt_outside(model, node.id.into(), wire[0])?;
+        return Ok(Some(patch));
+    }
+    Ok(None)
+}
+
+fn declutter_broadcast(
+    op: &EinSum,
+    _session: &mut crate::optim::OptimizerSession,
+    model: &TypedModel,
+    node: &TypedNode,
+) -> TractResult<Option<TypedModelPatch>> {
+    for (ix, outlet) in node.inputs.iter().enumerate() {
+        let prec = model.node(outlet.node);
+        if prec.op_is::<MultiBroadcastTo>() && prec.outputs[0].successors.len() == 1 {
+            let mut patch = TypedModelPatch::default();
+            let mut wires = patch.taps(model, &node.inputs)?;
+            wires[ix] = patch.tap_model(model, prec.inputs[0])?;
+            let wire = patch.wire_node(&node.name, op.clone(), &wires)?[0];
+            patch.shunt_outside(model, node.id.into(), wire)?;
+            return Ok(Some(patch));
+        }
+    }
+    Ok(None)
+}

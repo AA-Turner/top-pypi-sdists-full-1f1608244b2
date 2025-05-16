@@ -46,6 +46,7 @@ from chalk.parsed.duplicate_input_gql import (
     PositionGQL,
     RangeGQL,
 )
+from chalk.utils.collections import OrderedSet
 from chalk.utils.source_parsing import should_skip_source_code_parsing
 from chalk.utils.string import oxford_comma_list
 
@@ -200,6 +201,7 @@ class FeatureClassErrorBuilder:
         self.diagnostics: List[DiagnosticGQL] = []
         self.namespace = namespace
         self.node = node
+        self.error_cache: OrderedSet[tuple[str, RangeGQL | ast.AST, str]] = OrderedSet()
 
     def property_range(self, feature_name: str) -> ast.AST | None:
         if self.node is None:
@@ -386,8 +388,10 @@ class FeatureClassErrorBuilder:
 
         error = None if raise_error is None else raise_error(message)
         if error is None:
-            self.diagnostics.append(builder.diagnostic)
-            LSPErrorBuilder.all_errors[uri].append(builder.diagnostic)
+            if (message, range, uri) not in self.error_cache:
+                self.diagnostics.append(builder.diagnostic)
+                LSPErrorBuilder.all_errors[uri].append(builder.diagnostic)
+                self.error_cache.add((message, range, uri))
         else:
             LSPErrorBuilder.save_exception(error, uri, builder.diagnostic)
             raise error

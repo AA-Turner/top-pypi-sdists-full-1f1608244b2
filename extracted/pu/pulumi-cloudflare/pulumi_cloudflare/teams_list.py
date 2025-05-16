@@ -231,6 +231,7 @@ class _TeamsListState:
 warnings.warn("""cloudflare.index/teamslist.TeamsList has been deprecated in favor of cloudflare.index/zerotrustlist.ZeroTrustList""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/teamsList:TeamsList")
 class TeamsList(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/teamslist.TeamsList has been deprecated in favor of cloudflare.index/zerotrustlist.ZeroTrustList""", DeprecationWarning)
 

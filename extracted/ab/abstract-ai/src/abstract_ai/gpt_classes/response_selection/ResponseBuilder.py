@@ -64,6 +64,12 @@ class ResponseManager:
         self.current_usage = get_any_value(self.response,"usage")
         self.current_total_tokens = get_any_value(self.current_usage,"total_tokens")
         self.current_content = get_any_value(self.response,"content")
+        if not isinstance(self.current_content,dict):
+            try:
+                self.current_content = safe_json_loads(self.current_content)
+                self.current_response['choices'][0]['message']['content'] = self.current_content
+            except:
+                pass
 
         self.total_tokens_list.append({"time":self.current_created,"tokens":self.current_usage})
         self.get_all_instruction(self.current_content)

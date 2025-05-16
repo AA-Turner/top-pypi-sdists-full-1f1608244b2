@@ -211,6 +211,7 @@ class _WorkersForPlatformsNamespaceState:
 warnings.warn("""cloudflare.index/workersforplatformsnamespace.WorkersForPlatformsNamespace has been deprecated in favor of cloudflare.index/workersforplatformsdispatchnamespace.WorkersForPlatformsDispatchNamespace""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/workersForPlatformsNamespace:WorkersForPlatformsNamespace")
 class WorkersForPlatformsNamespace(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/workersforplatformsnamespace.WorkersForPlatformsNamespace has been deprecated in favor of cloudflare.index/workersforplatformsdispatchnamespace.WorkersForPlatformsDispatchNamespace""", DeprecationWarning)
 

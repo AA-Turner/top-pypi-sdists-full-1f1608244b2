@@ -6,8 +6,8 @@ pub mod change_axes;
 pub mod concat;
 pub mod element_wise;
 pub mod fused_axis_op;
+pub mod gelu_approximate;
 pub mod gemm;
-pub mod new_gelu;
 pub mod reduce;
 pub mod rms_norm;
 pub mod rotate_half;
@@ -15,7 +15,6 @@ pub mod scaled_masked_softmax;
 pub mod silu;
 pub mod slice;
 pub mod softmax;
-pub mod sync;
 
 pub use apply_rope::MetalApplyRope;
 pub use binary::MetalBinOp;
@@ -25,8 +24,8 @@ pub use change_axes::MetalAxisOp;
 pub use concat::MetalConcat;
 pub use element_wise::MetalElementWiseOp;
 pub use fused_axis_op::MetalFusedAxisOp;
+pub use gelu_approximate::MetalGeluApproximate;
 pub use gemm::MetalGemm;
-pub use new_gelu::MetalNewGelu;
 pub use reduce::MetalReduce;
 pub use rms_norm::MetalRmsNorm;
 pub use rotate_half::MetalRotateHalf;
@@ -34,17 +33,18 @@ pub use scaled_masked_softmax::MetalScaledMaskedSoftmax;
 pub use silu::MetalSilu;
 pub use slice::MetalSlice;
 pub use softmax::MetalSoftmax;
-pub use sync::{MetalSync, MetalSyncKind};
 
-use crate::{MetalContext, MetalTensor};
+use crate::utils::with_borrowed_metal_stream;
+use crate::MetalStream;
 use derive_new::new;
 use tract_core::internal::*;
 use tract_core::ops::OpStateFreeze;
+use tract_gpu::tensor::DeviceTensor;
 
 pub trait MetalEvalOp: EvalOp + Op + Clone {
     fn metal_eval(
         &self,
-        context: &MetalContext,
+        stream: &MetalStream,
         node_id: usize,
         session: &mut SessionState,
         inputs: TVec<TValue>,
@@ -76,13 +76,8 @@ impl<O: MetalEvalOp> OpState for MetalOpState<O> {
         _op: &dyn Op,
         inputs: TVec<TValue>,
     ) -> TractResult<TVec<TValue>> {
-        objc::rc::autoreleasepool(|| {
-            crate::METAL_CONTEXT.with_borrow(|context| {
-                if let Some(profiler) = context.profiler() {
-                    profiler.borrow_mut().add_node_entry(self.node_id);
-                };
-                self.op.metal_eval(context, self.node_id, session, inputs)
-            })
+        with_borrowed_metal_stream(|stream| {
+            self.op.metal_eval(stream, self.node_id, session, inputs)
         })
     }
 }
@@ -92,8 +87,8 @@ pub fn make_tensor_for_node(
     node_id: usize,
     dt: DatumType,
     shape: &[usize],
-) -> TractResult<MetalTensor> {
-    crate::session_handler::get_metal_mem_pool(session)
+) -> TractResult<DeviceTensor> {
+    tract_gpu::session_handler::get_device_mem_pool(session)
         .map(|mem| mem.tensor_for_node(node_id, dt, shape))
-        .unwrap_or_else(|| unsafe { MetalTensor::uninitialized_dt(dt, shape) })
+        .unwrap_or_else(|| unsafe { DeviceTensor::uninitialized_dt(dt, shape) })
 }

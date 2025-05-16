@@ -1,5 +1,6 @@
 from typing import Union
-from maleo_foundation.models.transfers.results.hash import MaleoFoundationHashResultsTransfers
+from maleo_foundation.models.transfers.results.hash \
+    import MaleoFoundationHashResultsTransfers
 
 class MaleoFoundationHashResultsTypes:
     Hash = Union[

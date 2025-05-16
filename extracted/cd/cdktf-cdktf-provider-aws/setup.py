@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-aws",
-    "version": "19.63.0",
+    "version": "19.64.0",
     "description": "Prebuilt aws Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-aws.git",
@@ -197,6 +197,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.bedrockagent_agent_knowledge_base_association",
         "cdktf_cdktf_provider_aws.bedrockagent_data_source",
         "cdktf_cdktf_provider_aws.bedrockagent_knowledge_base",
+        "cdktf_cdktf_provider_aws.bedrockagent_prompt",
         "cdktf_cdktf_provider_aws.budgets_budget",
         "cdktf_cdktf_provider_aws.budgets_budget_action",
         "cdktf_cdktf_provider_aws.ce_anomaly_monitor",
@@ -245,6 +246,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.cloudfront_response_headers_policy",
         "cdktf_cdktf_provider_aws.cloudfront_vpc_origin",
         "cdktf_cdktf_provider_aws.cloudfrontkeyvaluestore_key",
+        "cdktf_cdktf_provider_aws.cloudfrontkeyvaluestore_keys_exclusive",
         "cdktf_cdktf_provider_aws.cloudhsm_v2_cluster",
         "cdktf_cdktf_provider_aws.cloudhsm_v2_hsm",
         "cdktf_cdktf_provider_aws.cloudsearch_domain",
@@ -368,6 +370,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.customer_gateway",
         "cdktf_cdktf_provider_aws.customerprofiles_domain",
         "cdktf_cdktf_provider_aws.customerprofiles_profile",
+        "cdktf_cdktf_provider_aws.data_aws_account_primary_contact",
         "cdktf_cdktf_provider_aws.data_aws_acm_certificate",
         "cdktf_cdktf_provider_aws.data_aws_acmpca_certificate",
         "cdktf_cdktf_provider_aws.data_aws_acmpca_certificate_authority",
@@ -524,6 +527,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.data_aws_dx_router_configuration",
         "cdktf_cdktf_provider_aws.data_aws_dynamodb_table",
         "cdktf_cdktf_provider_aws.data_aws_dynamodb_table_item",
+        "cdktf_cdktf_provider_aws.data_aws_dynamodb_tables",
         "cdktf_cdktf_provider_aws.data_aws_ebs_default_kms_key",
         "cdktf_cdktf_provider_aws.data_aws_ebs_encryption_by_default",
         "cdktf_cdktf_provider_aws.data_aws_ebs_snapshot",
@@ -977,6 +981,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.dataexchange_data_set",
         "cdktf_cdktf_provider_aws.dataexchange_event_action",
         "cdktf_cdktf_provider_aws.dataexchange_revision",
+        "cdktf_cdktf_provider_aws.dataexchange_revision_assets",
         "cdktf_cdktf_provider_aws.datapipeline_pipeline",
         "cdktf_cdktf_provider_aws.datapipeline_pipeline_definition",
         "cdktf_cdktf_provider_aws.datasync_agent",
@@ -1353,6 +1358,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.inspector_resource_group",
         "cdktf_cdktf_provider_aws.inspector2_delegated_admin_account",
         "cdktf_cdktf_provider_aws.inspector2_enabler",
+        "cdktf_cdktf_provider_aws.inspector2_filter",
         "cdktf_cdktf_provider_aws.inspector2_member_association",
         "cdktf_cdktf_provider_aws.inspector2_organization_configuration",
         "cdktf_cdktf_provider_aws.instance",
@@ -2114,6 +2120,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_aws.wafregional_web_acl",
         "cdktf_cdktf_provider_aws.wafregional_web_acl_association",
         "cdktf_cdktf_provider_aws.wafregional_xss_match_set",
+        "cdktf_cdktf_provider_aws.wafv2_api_key",
         "cdktf_cdktf_provider_aws.wafv2_ip_set",
         "cdktf_cdktf_provider_aws.wafv2_regex_pattern_set",
         "cdktf_cdktf_provider_aws.wafv2_rule_group",
@@ -2133,7 +2140,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_aws._jsii": [
-            "provider-aws@19.63.0.jsii.tgz"
+            "provider-aws@19.64.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_aws": [
             "py.typed"

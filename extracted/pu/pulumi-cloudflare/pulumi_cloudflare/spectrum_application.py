@@ -472,6 +472,7 @@ class _SpectrumApplicationState:
         pulumi.set(self, "zone_id", value)
 
 
+@pulumi.type_token("cloudflare:index/spectrumApplication:SpectrumApplication")
 class SpectrumApplication(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -781,7 +782,7 @@ class SpectrumApplication(pulumi.CustomResource):
 
     @property
     @pulumi.getter(name="originDns")
-    def origin_dns(self) -> pulumi.Output['outputs.SpectrumApplicationOriginDns']:
+    def origin_dns(self) -> pulumi.Output[Optional['outputs.SpectrumApplicationOriginDns']]:
         """
         The name and type of DNS record for the Spectrum application.
         """

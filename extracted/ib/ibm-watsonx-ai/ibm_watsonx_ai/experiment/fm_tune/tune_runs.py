@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from warnings import warn, catch_warnings, simplefilter
 
 from pandas import DataFrame
 
@@ -188,6 +189,14 @@ class TuneRuns:
 
         match tuning_type:
             case "prompt_tuning":
+                if (
+                    not self.client.CLOUD_PLATFORM_SPACES
+                    and self.client.CPD_version >= 5.2
+                ):
+                    with catch_warnings():
+                        simplefilter("default", category=DeprecationWarning)
+                        prompt_tuning_warn = "Prompt Tuning is deprecated and will be removed in a future release."
+                        warn(prompt_tuning_warn, category=DeprecationWarning)
                 tuning_params = entity["prompt_tuning"]
                 tuner = PromptTuner(
                     name=entity.get("name"),

@@ -595,7 +595,7 @@ class FeatureClassGQL:
 
 
 @dataclasses_json.dataclass_json
-@dataclass
+@dataclass(frozen=True)
 class PositionGQL:
     """Mirrors an LSP Position
 
@@ -610,7 +610,7 @@ class PositionGQL:
 
 
 @dataclasses_json.dataclass_json
-@dataclass
+@dataclass(frozen=True)
 class RangeGQL:
     """Mirrors an LSP Range
 

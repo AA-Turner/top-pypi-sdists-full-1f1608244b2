@@ -2546,7 +2546,6 @@ class CertoraBuildGenerator:
             Util.print_progress_message(f"Compiling {orig_file_name}...")
             sdc_pre_finders = self.collect_for_file(build_arg_contract_file, i, compiler_lang, Path(os.getcwd()),
                                                     path_for_compiler_collector_file, original_sdc=None)
-
             # Build sources tree
             build_logger.debug("Building source tree")
             sources_from_pre_finder_SDCs = set()
@@ -2679,7 +2678,8 @@ class CertoraBuildGenerator:
         self.handle_links()
         self.handle_struct_links()
         self.handle_contract_extensions()
-        self.handle_erc7201_annotations()
+        if self.context.storage_extension_annotation:
+            self.handle_erc7201_annotations()
         self.handle_storage_extension_harnesses()
 
     def extract_slayout(self, original_file: str, ns_storage: Set[NameSpacedStorage]) -> NewStorageInfo:
@@ -2702,14 +2702,30 @@ class CertoraBuildGenerator:
         harness_name = storageExtension.generate_harness_name(original_file)
 
         with tempfile.NamedTemporaryFile(mode="w+t", suffix=".sol", dir=file_dir, delete=True) as tmp_file:
-            # Copy the original file content
-            with open(original_file, 'r', encoding='utf-8') as orig_file:
-                tmp_file.write(orig_file.read())
-                tmp_file.write("\n")
+            # Import the original file.
+            # Note we import and don't inline the file's contents since that's how the
+            # original file is accessed also in the actual code, and compiling it
+            # directly can cause issues.
+            tmp_file.write(f"import \"{original_file}\";\n\n")
 
             # Write the harness contract with dummy fields for each namespaced storage
             var_to_slot = storageExtension.write_harness_contract(tmp_file, harness_name, ns_storage)
             tmp_file.flush()
+
+            if self.context.extract_storage_extension_annotation:
+                # If the flag is set, save the storage extension contract
+                build_dir = Util.get_build_dir()
+                shutil.copyfile(
+                    Path(tmp_file.name),
+                    build_dir / f"{Path(original_file).stem}_storage_extension.sol"
+                )
+
+            # Add harness to compiler map
+            storageExtension.add_harness_to_compiler_map(
+                original_file,
+                tmp_file,
+                self.context
+            )
 
             # normalize the path exactly the way collect_for_file expects it:
             abs_path = Util.abs_posix_path(tmp_file.name)
@@ -2755,6 +2771,9 @@ class CertoraBuildGenerator:
         # Scan all of the contracts (including dependencies of targets) for namespaced storage
         # layout information
         for target_file in self.context.file_paths:
+            if target_file not in self.asts:
+                # No AST for this file, so we can't do anything
+                continue
             for (imported_file, imported_file_ast) in self.asts[target_file].items():
                 for def_node in imported_file_ast.values():
                     if def_node.get("nodeType") != "ContractDefinition":
@@ -2776,6 +2795,10 @@ class CertoraBuildGenerator:
 
                     # Now that we have all the storage layout information, extract it once
                     slayouts[(imported_file, def_node.get("name"))] = self.extract_slayout(imported_file, ns_storage)
+
+        if not slayouts:
+            # No contracts with namespaced storage found
+            return
 
         # Finally, extend each target contract with the storage layout info from
         # all of its base contracts

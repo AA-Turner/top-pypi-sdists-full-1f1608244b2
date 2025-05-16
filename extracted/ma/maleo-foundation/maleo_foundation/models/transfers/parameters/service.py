@@ -1,19 +1,17 @@
 from __future__ import annotations
 from datetime import datetime
-from pydantic import BaseModel, Field, model_validator
-from typing import Optional, Self
+from pydantic import model_validator
+from typing import Self
 from maleo_foundation.enums import BaseEnums
 from maleo_foundation.models.schemas.general import BaseGeneralSchemas
 from maleo_foundation.models.schemas.parameter import BaseParameterSchemas
-from maleo_foundation.types import BaseTypes
 
 class BaseServiceParametersTransfers:
     class GetUnpaginatedMultipleQuery(
         BaseParameterSchemas.Sorts,
         BaseGeneralSchemas.Search,
         BaseGeneralSchemas.Statuses,
-        BaseParameterSchemas.Filters,
-        BaseGeneralSchemas.Ids
+        BaseParameterSchemas.Filters
     ): pass
 
     class GetUnpaginatedMultiple(
@@ -29,7 +27,13 @@ class BaseServiceParametersTransfers:
                 parts = item.split('.')
                 if len(parts) == 2 and parts[1].lower() in ["asc", "desc"]:
                     try:
-                        sort_columns.append(BaseGeneralSchemas.SortColumn(name=parts[0], order=BaseEnums.SortOrder(parts[1].lower())))
+                        sort_columns.append(
+                            BaseGeneralSchemas
+                            .SortColumn(
+                                name=parts[0],
+                                order=BaseEnums.SortOrder(parts[1].lower())
+                            )
+                        )
                     except ValueError:
                         continue
 
@@ -66,7 +70,14 @@ class BaseServiceParametersTransfers:
 
                     #* Only add filter if at least one date is specified
                     if from_date or to_date:
-                        date_filters.append(BaseGeneralSchemas.DateFilter(name=name, from_date=from_date, to_date=to_date))
+                        date_filters.append(
+                            BaseGeneralSchemas
+                            .DateFilter(
+                                name=name,
+                                from_date=from_date,
+                                to_date=to_date
+                            )
+                        )
 
             #* Update date_filters
             self.date_filters = date_filters
@@ -90,7 +101,13 @@ class BaseServiceParametersTransfers:
                 parts = item.split('.')
                 if len(parts) == 2 and parts[1].lower() in ["asc", "desc"]:
                     try:
-                        sort_columns.append(BaseGeneralSchemas.SortColumn(name=parts[0], order=BaseEnums.SortOrder(parts[1].lower())))
+                        sort_columns.append(
+                            BaseGeneralSchemas
+                            .SortColumn(
+                                name=parts[0],
+                                order=BaseEnums.SortOrder(parts[1].lower())
+                            )
+                        )
                     except ValueError:
                         continue
 
@@ -127,34 +144,15 @@ class BaseServiceParametersTransfers:
 
                     #* Only add filter if at least one date is specified
                     if from_date or to_date:
-                        date_filters.append(BaseGeneralSchemas.DateFilter(name=name, from_date=from_date, to_date=to_date))
+                        date_filters.append(
+                            BaseGeneralSchemas
+                            .DateFilter(
+                                name=name,
+                                from_date=from_date,
+                                to_date=to_date
+                            )
+                        )
 
             #* Update date_filters
             self.date_filters = date_filters
             return self
-
-    class UniqueFieldCheck(BaseModel):
-        operation:BaseEnums.OperationType = Field(..., description="Operation to be conducted")
-        field:BaseEnums.IdentifierTypes = Field(..., description="Field to be checked")
-        new_value:BaseTypes.OptionalAny = Field(..., description="New field's value")
-        old_value:BaseTypes.OptionalAny = Field(None, description="Old field's value")
-        nullable:bool = Field(False, description="Whether to allow null field's value")
-        suggestion:BaseTypes.OptionalString = Field(None, description="Suggestion on discrepancy")
-
-    UniqueFieldChecks = list[UniqueFieldCheck]
-
-    status_update_criterias:dict[
-        BaseEnums.StatusUpdateAction,
-        Optional[list[BaseEnums.StatusType]]
-    ] = {
-        BaseEnums.StatusUpdateAction.DELETE: None,
-        BaseEnums.StatusUpdateAction.RESTORE: None,
-        BaseEnums.StatusUpdateAction.DEACTIVATE: [
-            BaseEnums.StatusType.INACTIVE,
-            BaseEnums.StatusType.ACTIVE,
-        ],
-        BaseEnums.StatusUpdateAction.ACTIVATE: [
-            BaseEnums.StatusType.INACTIVE,
-            BaseEnums.StatusType.ACTIVE,
-        ]
-    }

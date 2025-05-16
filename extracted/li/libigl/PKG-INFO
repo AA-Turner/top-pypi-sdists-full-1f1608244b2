@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: libigl
-Version: 2.6.0
+Version: 2.6.1
 Summary: libigl: A simple C++ geometry processing library
 Author-Email: Alec Jacobson <alecjacobson@gmail.com>
 Classifier: License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)

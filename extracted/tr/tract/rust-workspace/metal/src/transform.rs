@@ -1,19 +1,11 @@
-use crate::fact::MetalTypedFactExt;
-use crate::kernels::array::RotateHalf;
+use crate::context::metal_context;
 use crate::kernels::matmul::{GemmKernel, GgmlGemm, MetalGemmImplKind, MfaGemm, MlxGemm};
-use crate::kernels::nn::{
-    ApplyRope, NewGelu, Reducer, RmsNorm, ScaledMaskedSoftmax, Silu, Softmax,
-};
-use crate::ops::{self, MetalSync, MetalSyncKind};
+use crate::{kernels, ops};
+use tract_gpu::fact::DeviceTypedFactExt;
+use tract_gpu::rewrite_rules::rewire_syncs::rewire_syncs;
+use tract_gpu::sync::{DeviceSync, DeviceSyncKind};
 
 use crate::rewrite_rules;
-use crate::rewrite_rules::{
-    BasicApplyRope, BasicNewGelu, BasicRmsNorm, BasicRotateHalf, BasicScaledMaskedSoftmax,
-    BasicSilu,
-};
-use crate::tensor::MetalTensorExt;
-use crate::utils::as_q40_fact;
-use crate::{IntoMetal, MetalFact, MetalTensor};
 use std::borrow::Cow;
 use std::fmt::Debug;
 use std::str::FromStr;
@@ -23,13 +15,22 @@ use tract_core::internal::*;
 use tract_core::ops::array::{MultiBroadcastTo, Slice, TypedConcat};
 use tract_core::ops::binary::{BinMiniOp, TypedBinOp};
 use tract_core::ops::cast::Cast;
-use tract_core::ops::einsum::{rewrite_einsums_as_matmul, BasicMatMul};
+use tract_core::ops::einsum::prefix_matmul::{rewrite_einsum_to_prefix_matmul, PrefixMatMul};
 use tract_core::ops::element_wise::ElementWiseOp;
 use tract_core::ops::konst::Const;
 use tract_core::ops::logic::Comp;
 use tract_core::ops::nn::{Reduce, Softmax as CoreSoftmax};
 use tract_core::transform::ModelTransform;
+use tract_gpu::fact::DeviceFact;
+use tract_gpu::tensor::DeviceTensor;
+use tract_gpu::tensor::{DeviceTensorExt, IntoDevice};
+use tract_gpu::utils::as_q40_fact;
 use tract_itertools::Itertools;
+use tract_transformers::ops::apply_rope::{ApplyRope, RotateHalf};
+use tract_transformers::ops::gelu_approximate::GeluApproximate;
+use tract_transformers::ops::rms_norm::RmsNorm;
+use tract_transformers::ops::scaled_masked_softmax::ScaledMaskedSoftmax;
+use tract_transformers::ops::silu::Silu;
 
 impl MetalGemmImplKind {
     pub fn variants() -> Vec<MetalGemmImplKind> {
@@ -84,24 +85,17 @@ impl MetalTransform {
         model: &mut TypedModel,
         stop_at_phase: usize,
     ) -> TractResult<()> {
-        rewrite_einsums_as_matmul(model)?;
+        // Init Metal Context if not done previously
+        metal_context();
+
+        rewrite_einsum_to_prefix_matmul(model)?;
         if stop_at_phase == 0 {
             return Ok(());
         }
 
         Rewriter::<MetalTransform>::default()
-            .with_rule_for("as-rms-norm", rewrite_rules::as_rms_norm_rule)
-            .with_rule_for("remove_rms_norm_cast", rewrite_rules::remove_rms_norm_cast)
-            .with_rule_for("as-silu", rewrite_rules::as_silu_rule)
-            .with_rule_for("as-new-gelu", rewrite_rules::as_new_gelu_rule)
-            .with_rule_for("as-rotate-half", rewrite_rules::as_rotate_half_rule)
-            .with_rule_for("as-apply-rope", rewrite_rules::as_apply_rope_rule)
-            .with_rule_for("as-scaled-masked-softmax", rewrite_rules::as_scaled_masked_softmax_rule)
             .with_rule_for("untranspose-matmul-output", rewrite_rules::untranspose_matmul_output)
-            .with_rule_for(
-                "remove-ggml-broadcast-pre-matmul",
-                rewrite_rules::remove_ggml_broadcast_pre_matmul,
-            )
+            .with_rule_for("add-broadcast-pre-matmul", rewrite_rules::add_broadcast_pre_matmul)
             .rewrite(self, model)?;
 
         if stop_at_phase == 1 {
@@ -118,13 +112,10 @@ impl MetalTransform {
             .with_rule_for("fuse_move_axis", rewrite_rules::fuse_move_axis)
             .rewrite(&(), model)?;
         Rewriter::default()
-            .with_rule_for("rewire-metal-sync", rewrite_rules::rewire_metal_sync)
-            .with_rule_for(
-                "rewire-metal-sync-after-const",
-                rewrite_rules::rewire_metal_sync_after_const,
-            )
             .with_rule_for("fuse_axis_op", rewrite_rules::fuse_axis_op)
             .rewrite(&(), model)?;
+
+        rewire_syncs(model)?;
         Ok(())
     }
 
@@ -133,27 +124,27 @@ impl MetalTransform {
         model: &mut TypedModel,
         node: &TypedNode,
         mapping: &HashMap<OutletId, OutletId>,
-        sync_kind: MetalSyncKind,
+        sync_kind: DeviceSyncKind,
     ) -> TractResult<TVec<OutletId>> {
         let mut mapped_inputs = tvec![];
         for (i_idx, i) in node.inputs.iter().enumerate() {
             let in_fact = model.outlet_fact_mut(mapping[i])?;
             match sync_kind {
-                MetalSyncKind::ToCpu if in_fact.as_metal_fact().is_some() => {
+                DeviceSyncKind::ToHost if in_fact.as_device_fact().is_some() => {
                     mapped_inputs.push(
                         model.wire_node(
                             format!("{}.to-cpu-{i_idx}", node.name),
-                            MetalSync::new(sync_kind),
+                            DeviceSync::new(sync_kind),
                             &[mapping[i]],
                         )?[0],
                     );
                 }
-                MetalSyncKind::ToGpu if in_fact.as_metal_fact().is_none() => {
+                DeviceSyncKind::ToDevice if in_fact.as_device_fact().is_none() => {
                     if let Some(ref konst) = in_fact.konst {
-                        if konst.as_metal_tensor().is_none() {
+                        if konst.as_device_tensor().is_none() {
                             let konst_metal =
-                                konst.as_ref().clone().into_metal()?.into_opaque_tensor();
-                            let metal_fact = MetalFact::from_cpu(in_fact.clone())?;
+                                konst.as_ref().clone().into_device()?.into_opaque_tensor();
+                            let metal_fact = DeviceFact::from_host(in_fact.clone())?;
 
                             *in_fact = TypedFact::dt_scalar(DatumType::Opaque)
                                 .with_opaque_fact(metal_fact);
@@ -165,14 +156,14 @@ impl MetalTransform {
                     }
                     ensure!(
                         in_fact.datum_type.is_copy(),
-                        "Only copy DatumType can be sync to GPU: {:?}",
+                        "Only copy DatumType can be sync to Device: {:?}",
                         in_fact.datum_type
                     );
 
                     mapped_inputs.push(
                         model.wire_node(
-                            format!("{}.to-gpu-{i_idx}", node.name),
-                            MetalSync::new(sync_kind),
+                            format!("{}.to-device-{i_idx}", node.name),
+                            DeviceSync::new(sync_kind),
                             &[mapping[i]],
                         )?[0],
                     );
@@ -192,12 +183,12 @@ impl MetalTransform {
     ) -> TractResult<TVec<OutletId>> {
         let mut outputs = tvec![];
         for (o_idx, o) in target_node_outlet_ids.into_iter().enumerate() {
-            // Add MetalSync op for model output
+            // Add DeviceSync op for model output
             let is_src_output = src.outputs.contains(&OutletId::new(node.id, o_idx));
-            if target.outlet_fact(o)?.as_metal_fact().is_some() && is_src_output {
+            if target.outlet_fact(o)?.as_device_fact().is_some() && is_src_output {
                 let sync_output = target.wire_node(
-                    format!("{}.to-cpu-{o_idx}-out", node.name),
-                    MetalSync::new(MetalSyncKind::ToCpu),
+                    format!("{}.to-host-{o_idx}-out", node.name),
+                    DeviceSync::new(DeviceSyncKind::ToHost),
                     &[o],
                 )?[0];
                 outputs.push(sync_output);
@@ -213,11 +204,11 @@ fn can_translate_to_metal_op(source: &TypedModel, node: &TypedNode) -> TractResu
     let input_facts = source.node_input_facts(node.id)?.iter().map(|f| (*f).clone()).collect_vec();
     let input_dts = input_facts
         .iter()
-        .map(|f| f.as_metal_fact().map(|f| f.datum_type).unwrap_or(f.datum_type))
+        .map(|f| f.as_device_fact().map(|f| f.datum_type).unwrap_or(f.datum_type))
         .collect_vec();
 
     let in_dts_metal_compatible =
-        input_facts.iter().all(|fact| MetalTensor::is_supported_dt(fact.datum_type));
+        input_facts.iter().all(|fact| DeviceTensor::is_supported_dt(fact.datum_type));
 
     Ok(in_dts_metal_compatible
         && (node
@@ -226,12 +217,12 @@ fn can_translate_to_metal_op(source: &TypedModel, node: &TypedNode) -> TractResu
             || node.op_as::<TypedBinOp>().is_some_and(|op| map_bin_ops_to_metal(&op.0).is_some())
             || node.op_is::<Comp>()
             || node.op_is::<MultiBroadcastTo>()
-            || node.op_as::<BasicMatMul>().is_some_and(|op| {
+            || node.op_as::<PrefixMatMul>().is_some_and(|op| {
                 !op.transpose_c && op.quantize_output.is_none() && check_matmul_in_dts(&input_facts)
             })
             || node
                 .op_as::<Const>()
-                .is_some_and(|op| MetalTensor::is_supported_dt(op.val().datum_type()))
+                .is_some_and(|op| DeviceTensor::is_supported_dt(op.val().datum_type()))
             || node.op_as::<Cast>().is_some_and(|op| {
                 ops::MetalCast::is_supported_dt(input_dts[0])
                     && ops::MetalCast::new(op.to).is_some()
@@ -240,29 +231,31 @@ fn can_translate_to_metal_op(source: &TypedModel, node: &TypedNode) -> TractResu
             || node.op_is::<Slice>()
             || node.op_is::<TypedConcat>()
             || node.op_as::<Reduce>().is_some_and(|op| {
-                Reducer::is_supported_dt(input_dts[0])
+                kernels::nn::Reducer::is_supported_dt(input_dts[0])
                     && ops::MetalReduce::from_tract_core(op).is_ok()
             })
             || node.op_as::<CoreSoftmax>().is_some_and(|op| {
-                Softmax::is_supported_dt(input_dts[0])
+                kernels::nn::Softmax::is_supported_dt(input_dts[0])
                     && ops::MetalSoftmax::from_tract_core(op).is_ok()
             })
             || node
-                .op_as::<BasicScaledMaskedSoftmax>()
-                .is_some_and(|_| ScaledMaskedSoftmax::is_supported_dt(input_dts[0]))
+                .op_as::<ScaledMaskedSoftmax>()
+                .is_some_and(|_| kernels::nn::ScaledMaskedSoftmax::is_supported_dt(input_dts[0]))
             || node
-                .op_as::<BasicRmsNorm>()
-                .is_some_and(|_| RmsNorm::is_supported_dt(input_dts[0]))
+                .op_as::<RmsNorm>()
+                .is_some_and(|_| kernels::nn::RmsNorm::is_supported_dt(input_dts[0]))
             || node
-                .op_as::<BasicRotateHalf>()
-                .is_some_and(|_| RotateHalf::is_supported_dt(input_dts[0]))
+                .op_as::<RotateHalf>()
+                .is_some_and(|_| kernels::array::RotateHalf::is_supported_dt(input_dts[0]))
             || node
-                .op_as::<BasicApplyRope>()
-                .is_some_and(|_| ApplyRope::is_supported_dt(input_dts[0]))
-            || node.op_as::<BasicSilu>().is_some_and(|_| Silu::is_supported_dt(input_dts[0]))
+                .op_as::<ApplyRope>()
+                .is_some_and(|_| kernels::nn::ApplyRope::is_supported_dt(input_dts[0]))
             || node
-                .op_as::<BasicNewGelu>()
-                .is_some_and(|_| NewGelu::is_supported_dt(input_dts[0]))))
+                .op_as::<Silu>()
+                .is_some_and(|_| kernels::nn::Silu::is_supported_dt(input_dts[0]))
+            || node
+                .op_as::<GeluApproximate>()
+                .is_some_and(|_| kernels::nn::GeluApproximate::is_supported_dt(input_dts[0]))))
 }
 
 impl Translate<TypedFact, Box<dyn TypedOp>, TypedFact, Box<dyn TypedOp>> for MetalTransform {
@@ -276,11 +269,18 @@ impl Translate<TypedFact, Box<dyn TypedOp>, TypedFact, Box<dyn TypedOp>> for Met
         let translatable = can_translate_to_metal_op(source, node)?;
 
         if translatable {
-            let mut gpu_inputs =
-                self.sync_inputs_if_required(target, node, mapping, MetalSyncKind::ToGpu)?;
+            let mut device_inputs =
+                self.sync_inputs_if_required(target, node, mapping, DeviceSyncKind::ToDevice)?;
 
-            let outlet_ids: TVec<OutletId> = if let Some(op) = node.op_as::<BasicMatMul>() {
-                convert_matmul_to_metal(source, node, target, &mut gpu_inputs, op, self.gemm_impl)?
+            let outlet_ids: TVec<OutletId> = if let Some(op) = node.op_as::<PrefixMatMul>() {
+                convert_matmul_to_metal(
+                    source,
+                    node,
+                    target,
+                    &mut device_inputs,
+                    op,
+                    self.gemm_impl,
+                )?
             } else {
                 let op: Box<dyn TypedOp> = if let Some(op) = node.op_as::<ElementWiseOp>() {
                     Box::new(map_element_wise_ops_to_metal(op).unwrap())
@@ -305,27 +305,27 @@ impl Translate<TypedFact, Box<dyn TypedOp>, TypedFact, Box<dyn TypedOp>> for Met
                     Box::new(ops::MetalReduce::from_tract_core(op).unwrap())
                 } else if let Some(op) = node.op_as::<CoreSoftmax>() {
                     Box::new(ops::MetalSoftmax::from_tract_core(op).unwrap())
-                } else if let Some(op) = node.op_as::<BasicScaledMaskedSoftmax>() {
+                } else if let Some(op) = node.op_as::<ScaledMaskedSoftmax>() {
                     Box::new(ops::MetalScaledMaskedSoftmax { scale: op.scale.clone() })
-                } else if let Some(op) = node.op_as::<BasicRmsNorm>() {
+                } else if let Some(op) = node.op_as::<RmsNorm>() {
                     Box::new(ops::MetalRmsNorm::new(op.axis, op.eps.clone()))
-                } else if let Some(_op) = node.op_as::<BasicRotateHalf>() {
+                } else if let Some(_op) = node.op_as::<RotateHalf>() {
                     Box::new(ops::MetalRotateHalf)
-                } else if let Some(_op) = node.op_as::<BasicApplyRope>() {
+                } else if let Some(_op) = node.op_as::<ApplyRope>() {
                     Box::new(ops::MetalApplyRope)
-                } else if let Some(_op) = node.op_as::<BasicSilu>() {
+                } else if let Some(_op) = node.op_as::<Silu>() {
                     Box::new(ops::MetalSilu)
-                } else if let Some(_op) = node.op_as::<BasicNewGelu>() {
-                    Box::new(ops::MetalNewGelu)
+                } else if let Some(op) = node.op_as::<GeluApproximate>() {
+                    Box::new(ops::MetalGeluApproximate { fast_impl: op.fast_impl })
                 } else {
                     bail!("Failed to translate a supported Metal Op")
                 };
-                target.wire_node(node.name.clone(), op, &gpu_inputs)?
+                target.wire_node(node.name.clone(), op, &device_inputs)?
             };
             self.sync_model_outputs_if_required(source, node, target, outlet_ids)
         } else {
             let cpu_inputs =
-                self.sync_inputs_if_required(target, node, mapping, MetalSyncKind::ToCpu)?;
+                self.sync_inputs_if_required(target, node, mapping, DeviceSyncKind::ToHost)?;
             target.wire_node(&node.name, node.op.clone(), &cpu_inputs)
         }
     }
@@ -361,6 +361,7 @@ fn check_matmul_in_dts(in_facts: &[TypedFact]) -> bool {
 }
 
 fn is_input_broadcast(facts: TVec<&TypedFact>) -> bool {
+    // Assume weights are in second postion
     let b_batch_dims: Vec<TDim> = if as_q40_fact(facts[1]).is_some() {
         facts[1].shape.dims().to_vec()
     } else {
@@ -401,7 +402,7 @@ fn convert_matmul_to_metal(
     node: &TypedNode,
     target: &mut TypedModel,
     inputs: &mut [OutletId],
-    op: &BasicMatMul,
+    op: &PrefixMatMul,
     gemm_impl: Option<MetalGemmImplKind>,
 ) -> TractResult<TVec<OutletId>> {
     let mut input_facts = model.node_input_facts(node.id)?;
@@ -482,7 +483,7 @@ fn convert_matmul_to_metal(
     };
 
     let out_fact = target.outlet_fact(matmul_output[0])?;
-    let out_dt = out_fact.to_metal_fact().map(|f| f.datum_type).unwrap_or(out_fact.datum_type);
+    let out_dt = out_fact.to_device_fact().map(|f| f.datum_type).unwrap_or(out_fact.datum_type);
 
     let expected_dt = model.node_output_facts(node.id)?[0].datum_type;
 
@@ -525,12 +526,12 @@ fn convert_logic_ops_to_metal(op: &Comp) -> ops::MetalBinOp {
 fn convert_const(op: &Const) -> TractResult<Const> {
     let typed_fact: TypedFact = Arc::clone(op.val()).into();
     let metal_fact = if let Some(of) = op.opaque_fact() {
-        MetalFact::from_cpu(typed_fact.with_opaque_fact(clone_box(of)))?
+        DeviceFact::from_host(typed_fact.with_opaque_fact(clone_box(of)))?
     } else {
-        MetalFact::from_cpu(typed_fact)?
+        DeviceFact::from_host(typed_fact)?
     };
 
-    let metal_const = op.val().clone().into_metal()?.into_opaque_tensor().into_arc_tensor();
+    let metal_const = op.val().clone().into_device()?.into_opaque_tensor().into_arc_tensor();
     Const::new_with_opaque_fact(metal_const, Box::new(metal_fact))
 }
 

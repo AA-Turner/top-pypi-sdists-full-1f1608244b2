@@ -287,6 +287,7 @@ class _DevicePostureRuleState:
 warnings.warn("""cloudflare.index/deviceposturerule.DevicePostureRule has been deprecated in favor of cloudflare.index/zerotrustdeviceposturerule.ZeroTrustDevicePostureRule""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/devicePostureRule:DevicePostureRule")
 class DevicePostureRule(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/deviceposturerule.DevicePostureRule has been deprecated in favor of cloudflare.index/zerotrustdeviceposturerule.ZeroTrustDevicePostureRule""", DeprecationWarning)
 
@@ -458,7 +459,7 @@ class DevicePostureRule(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def input(self) -> pulumi.Output['outputs.DevicePostureRuleInput']:
+    def input(self) -> pulumi.Output[Optional['outputs.DevicePostureRuleInput']]:
         """
         The value to be checked against.
         """
@@ -466,7 +467,7 @@ class DevicePostureRule(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def matches(self) -> pulumi.Output[Sequence['outputs.DevicePostureRuleMatch']]:
+    def matches(self) -> pulumi.Output[Optional[Sequence['outputs.DevicePostureRuleMatch']]]:
         """
         The conditions that the client must match to run the rule.
         """

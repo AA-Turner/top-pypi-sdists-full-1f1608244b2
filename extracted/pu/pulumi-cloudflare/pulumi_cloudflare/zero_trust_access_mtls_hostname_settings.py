@@ -170,6 +170,7 @@ class _ZeroTrustAccessMtlsHostnameSettingsState:
         pulumi.set(self, "zone_id", value)
 
 
+@pulumi.type_token("cloudflare:index/zeroTrustAccessMtlsHostnameSettings:ZeroTrustAccessMtlsHostnameSettings")
 class ZeroTrustAccessMtlsHostnameSettings(pulumi.CustomResource):
     @overload
     def __init__(__self__,

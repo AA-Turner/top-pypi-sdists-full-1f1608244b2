@@ -1,18 +1,19 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: types-antlr4-python3-runtime
-Version: 4.13.0.20240519
+Version: 4.13.0.20250516
 Summary: Typing stubs for antlr4-python3-runtime
-Home-page: https://github.com/python/typeshed
-License: Apache-2.0 license
+License-Expression: Apache-2.0
+Project-URL: Homepage, https://github.com/python/typeshed
 Project-URL: GitHub, https://github.com/python/typeshed
 Project-URL: Changes, https://github.com/typeshed-internal/stub_uploader/blob/main/data/changelogs/antlr4-python3-runtime.md
 Project-URL: Issue tracker, https://github.com/python/typeshed/issues
 Project-URL: Chat, https://gitter.im/python/typing
-Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Programming Language :: Python :: 3
 Classifier: Typing :: Stubs Only
-Requires-Python: >=3.8
+Requires-Python: >=3.9
 Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: license-file
 
 ## Typing stubs for antlr4-python3-runtime
 
@@ -22,16 +23,21 @@ It can be used by type-checking tools like
 [mypy](https://github.com/python/mypy/),
 [pyright](https://github.com/microsoft/pyright),
 [pytype](https://github.com/google/pytype/),
-PyCharm, etc. to check code that uses
-`antlr4-python3-runtime`.
+[Pyre](https://pyre-check.org/),
+PyCharm, etc. to check code that uses `antlr4-python3-runtime`. This version of
+`types-antlr4-python3-runtime` aims to provide accurate annotations for
+`antlr4-python3-runtime==4.13.*`.
 
-This version of `types-antlr4-python3-runtime` aims to provide accurate annotations
-for `antlr4-python3-runtime==4.13.*`.
-The source for this package can be found at
-https://github.com/python/typeshed/tree/main/stubs/antlr4-python3-runtime. All fixes for
-types and metadata should be contributed there.
+This package is part of the [typeshed project](https://github.com/python/typeshed).
+All fixes for types and metadata should be contributed there.
+See [the README](https://github.com/python/typeshed/blob/main/README.md)
+for more details. The source for this package can be found in the
+[`stubs/antlr4-python3-runtime`](https://github.com/python/typeshed/tree/main/stubs/antlr4-python3-runtime)
+directory.
 
-See https://github.com/python/typeshed/blob/main/README.md for more details.
-This package was generated from typeshed commit `5445a4a243f5e41c9b4ab8b4ffa93da0820218bb` and was tested
-with mypy 1.10.0, pyright 1.1.363, and
-pytype 2024.4.11.
+This package was tested with
+mypy 1.15.0,
+pyright 1.1.400,
+and pytype 2024.10.11.
+It was generated from typeshed commit
+[`126768408a69b7a3a09b7d3992970b289f92937e`](https://github.com/python/typeshed/commit/126768408a69b7a3a09b7d3992970b289f92937e).

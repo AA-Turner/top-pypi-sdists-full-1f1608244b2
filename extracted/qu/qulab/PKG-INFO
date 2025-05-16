@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: QuLab
-Version: 2.10.10
+Version: 2.11.1
 Summary: contral instruments and manage data
 Author-email: feihoo87 <feihoo87@gmail.com>
 Maintainer-email: feihoo87 <feihoo87@gmail.com>
@@ -40,6 +40,7 @@ Requires-Dist: pyperclip>=1.8.2
 Requires-Dist: pyzmq>=25.1.0
 Requires-Dist: qlisp>=1.1.4
 Requires-Dist: qlispc>=1.1.8
+Requires-Dist: qlispreg>=0.0.1
 Requires-Dist: scipy>=1.0.0
 Requires-Dist: scikit-optimize>=0.9.0
 Requires-Dist: SQLAlchemy>=2.0.19

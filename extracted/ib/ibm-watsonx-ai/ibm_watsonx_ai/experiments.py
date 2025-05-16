@@ -150,7 +150,7 @@ class Experiments(WMLResource):
         details = self._client.repository.get_details(experiment_id)
 
         patch_payload = self.ConfigurationMetaNames._generate_patch_payload(
-            details["entity"], changes, with_validation=True
+            details, changes, with_validation=True
         )
 
         url = self._client.service_instance._href_definitions.get_experiment_href(

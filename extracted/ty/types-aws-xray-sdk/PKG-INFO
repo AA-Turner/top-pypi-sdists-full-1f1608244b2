@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: types-aws-xray-sdk
-Version: 2.14.0.20250428
+Version: 2.14.0.20250516
 Summary: Typing stubs for aws-xray-sdk
 License-Expression: Apache-2.0
 Project-URL: Homepage, https://github.com/python/typeshed
@@ -44,4 +44,4 @@ mypy 1.15.0,
 pyright 1.1.400,
 and pytype 2024.10.11.
 It was generated from typeshed commit
-[`0dedc39f22a63fa01609a7d9fb3396e3087ce9b3`](https://github.com/python/typeshed/commit/0dedc39f22a63fa01609a7d9fb3396e3087ce9b3).
+[`126768408a69b7a3a09b7d3992970b289f92937e`](https://github.com/python/typeshed/commit/126768408a69b7a3a09b7d3992970b289f92937e).

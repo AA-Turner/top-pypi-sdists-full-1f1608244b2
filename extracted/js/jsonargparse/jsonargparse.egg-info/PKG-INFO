@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: jsonargparse
-Version: 4.39.0
+Version: 4.40.0
 Summary: Implement minimal boilerplate CLIs derived from type hints and parse from command line, config files and environment variables.
 Author-email: Mauricio Villegas <mauricio@omnius.com>
 License: The MIT License (MIT)
@@ -66,13 +66,11 @@ Requires-Dist: jsonargparse[reconplogger]; extra == "all"
 Provides-Extra: signatures
 Requires-Dist: jsonargparse[typing-extensions]; extra == "signatures"
 Requires-Dist: docstring-parser>=0.15; extra == "signatures"
-Requires-Dist: typeshed-client>=2.1.0; extra == "signatures"
+Requires-Dist: typeshed-client>=2.3.0; extra == "signatures"
 Provides-Extra: jsonschema
 Requires-Dist: jsonschema>=3.2.0; extra == "jsonschema"
 Provides-Extra: jsonnet
-Requires-Dist: jsonnet>=0.13.0; (os_name == "posix" and python_version < "3.13") and extra == "jsonnet"
-Requires-Dist: jsonnet-binary>=0.17.0; (os_name != "posix" and python_version < "3.13") and extra == "jsonnet"
-Requires-Dist: jsonnet-sdist==2024.6.23; python_version == "3.13" and extra == "jsonnet"
+Requires-Dist: jsonnet>=0.21.0; extra == "jsonnet"
 Provides-Extra: toml
 Requires-Dist: toml>=0.10.2; extra == "toml"
 Provides-Extra: urls
@@ -114,7 +112,7 @@ Requires-Dist: pre-commit>=2.19.0; extra == "dev"
 Requires-Dist: tox>=3.25.0; extra == "dev"
 Requires-Dist: build>=0.10.0; extra == "dev"
 Provides-Extra: doc
-Requires-Dist: Sphinx<8.0.0,>=1.7.9; extra == "doc"
+Requires-Dist: Sphinx>=1.7.9; extra == "doc"
 Requires-Dist: sphinx-rtd-theme>=1.2.2; extra == "doc"
 Requires-Dist: autodocsumm>=0.1.10; extra == "doc"
 Requires-Dist: sphinx-autodoc-typehints>=1.19.5; extra == "doc"
@@ -151,6 +149,47 @@ a `substantial user base
 <https://github.com/omni-us/jsonargparse/network/dependents>`__. Most notably,
 it serves as the framework behind pytorch-lightning's `LightningCLI
 <https://lightning.ai/docs/pytorch/stable/cli/lightning_cli.html>`__.
+
+Teaser examples
+---------------
+
+CLI with minimal boilerplate:
+
+.. code-block:: python
+
+    from jsonargparse import auto_cli
+
+    def main_function(...):  # your main parameters and logic here
+        ...
+
+    if __name__ == "__main__":
+        auto_cli(main_function)  # parses arguments and runs main_function
+
+Minimal boilerplate but manually parsing:
+
+.. code-block:: python
+
+    from jsonargparse import auto_parser
+
+    parser = auto_parser(main_function)
+    cfg = parser.parse_args()
+    ...
+
+Powerful argparse-like low level parsers:
+
+.. code-block:: python
+
+    from jsonargparse import ArgumentParser
+
+    parser = ArgumentParser()
+    parser.add_argument("--config", action="config")  # support config files
+    parser.add_argument("--opt", type=Union[int, Literal["off"]])  # complex arguments via type hints
+    parser.add_function_arguments(main_function, "function")  # add function parameters
+    parser.add_class_arguments(SomeClass, "class")  # add class parameters
+    ...
+    cfg = parser.parse_args()
+    init = parser.instantiate_classes(cfg)
+    ...
 
 
 Features

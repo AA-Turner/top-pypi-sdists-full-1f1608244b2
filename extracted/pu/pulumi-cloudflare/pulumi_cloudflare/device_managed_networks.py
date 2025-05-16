@@ -174,6 +174,7 @@ class _DeviceManagedNetworksState:
 warnings.warn("""cloudflare.index/devicemanagednetworks.DeviceManagedNetworks has been deprecated in favor of cloudflare.index/zerotrustdevicemanagednetworks.ZeroTrustDeviceManagedNetworks""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/deviceManagedNetworks:DeviceManagedNetworks")
 class DeviceManagedNetworks(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/devicemanagednetworks.DeviceManagedNetworks has been deprecated in favor of cloudflare.index/zerotrustdevicemanagednetworks.ZeroTrustDeviceManagedNetworks""", DeprecationWarning)
 

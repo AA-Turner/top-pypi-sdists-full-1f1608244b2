@@ -1,7 +1,7 @@
 r'''
 # `data_aws_workspaces_directory`
 
-Refer to the Terraform Registry for docs: [`data_aws_workspaces_directory`](https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/workspaces_directory).
+Refer to the Terraform Registry for docs: [`data_aws_workspaces_directory`](https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/workspaces_directory).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataAwsWorkspacesDirectory(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-aws.dataAwsWorkspacesDirectory.DataAwsWorkspacesDirectory",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/workspaces_directory aws_workspaces_directory}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/workspaces_directory aws_workspaces_directory}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class DataAwsWorkspacesDirectory(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/workspaces_directory aws_workspaces_directory} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/workspaces_directory aws_workspaces_directory} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param directory_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/workspaces_directory#directory_id DataAwsWorkspacesDirectory#directory_id}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/workspaces_directory#id DataAwsWorkspacesDirectory#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/workspaces_directory#tags DataAwsWorkspacesDirectory#tags}.
+        :param directory_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/workspaces_directory#directory_id DataAwsWorkspacesDirectory#directory_id}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/workspaces_directory#id DataAwsWorkspacesDirectory#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/workspaces_directory#tags DataAwsWorkspacesDirectory#tags}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class DataAwsWorkspacesDirectory(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataAwsWorkspacesDirectory to import.
-        :param import_from_id: The id of the existing DataAwsWorkspacesDirectory that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/workspaces_directory#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataAwsWorkspacesDirectory that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/workspaces_directory#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataAwsWorkspacesDirectory to import is found.
         '''
         if __debug__:
@@ -140,6 +140,13 @@ class DataAwsWorkspacesDirectory(
     @jsii.member(jsii_name="tfResourceType")
     def TF_RESOURCE_TYPE(cls) -> builtins.str:
         return typing.cast(builtins.str, jsii.sget(cls, "tfResourceType"))
+
+    @builtins.property
+    @jsii.member(jsii_name="activeDirectoryConfig")
+    def active_directory_config(
+        self,
+    ) -> "DataAwsWorkspacesDirectoryActiveDirectoryConfigList":
+        return typing.cast("DataAwsWorkspacesDirectoryActiveDirectoryConfigList", jsii.get(self, "activeDirectoryConfig"))
 
     @builtins.property
     @jsii.member(jsii_name="alias")
@@ -206,6 +213,11 @@ class DataAwsWorkspacesDirectory(
         return typing.cast(typing.List[builtins.str], jsii.get(self, "subnetIds"))
 
     @builtins.property
+    @jsii.member(jsii_name="userIdentityType")
+    def user_identity_type(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "userIdentityType"))
+
+    @builtins.property
     @jsii.member(jsii_name="workspaceAccessProperties")
     def workspace_access_properties(
         self,
@@ -220,9 +232,24 @@ class DataAwsWorkspacesDirectory(
         return typing.cast("DataAwsWorkspacesDirectoryWorkspaceCreationPropertiesList", jsii.get(self, "workspaceCreationProperties"))
 
     @builtins.property
+    @jsii.member(jsii_name="workspaceDirectoryDescription")
+    def workspace_directory_description(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "workspaceDirectoryDescription"))
+
+    @builtins.property
+    @jsii.member(jsii_name="workspaceDirectoryName")
+    def workspace_directory_name(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "workspaceDirectoryName"))
+
+    @builtins.property
     @jsii.member(jsii_name="workspaceSecurityGroupId")
     def workspace_security_group_id(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "workspaceSecurityGroupId"))
+
+    @builtins.property
+    @jsii.member(jsii_name="workspaceType")
+    def workspace_type(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "workspaceType"))
 
     @builtins.property
     @jsii.member(jsii_name="directoryIdInput")
@@ -274,6 +301,157 @@ class DataAwsWorkspacesDirectory(
             type_hints = typing.get_type_hints(_typecheckingstub__b05e989c0cfc6bc604219ae39fd9d335bd3a46e5685e67714cfddb4ef74b608d)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         jsii.set(self, "tags", value) # pyright: ignore[reportArgumentType]
+
+
+@jsii.data_type(
+    jsii_type="@cdktf/provider-aws.dataAwsWorkspacesDirectory.DataAwsWorkspacesDirectoryActiveDirectoryConfig",
+    jsii_struct_bases=[],
+    name_mapping={},
+)
+class DataAwsWorkspacesDirectoryActiveDirectoryConfig:
+    def __init__(self) -> None:
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "DataAwsWorkspacesDirectoryActiveDirectoryConfig(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class DataAwsWorkspacesDirectoryActiveDirectoryConfigList(
+    _cdktf_9a9027ec.ComplexList,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-aws.dataAwsWorkspacesDirectory.DataAwsWorkspacesDirectoryActiveDirectoryConfigList",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        wraps_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param wraps_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__191874be3bf867bbef0a2d2e94803d309ca1df2194a4b3576755a5068f5564b7)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument wraps_set", value=wraps_set, expected_type=type_hints["wraps_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, wraps_set])
+
+    @jsii.member(jsii_name="get")
+    def get(
+        self,
+        index: jsii.Number,
+    ) -> "DataAwsWorkspacesDirectoryActiveDirectoryConfigOutputReference":
+        '''
+        :param index: the index of the item to return.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__87925c5ac02e8bbadd23305340da27148a26ec14c14f23df8c9209515ddfdc70)
+            check_type(argname="argument index", value=index, expected_type=type_hints["index"])
+        return typing.cast("DataAwsWorkspacesDirectoryActiveDirectoryConfigOutputReference", jsii.invoke(self, "get", [index]))
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformAttribute")
+    def _terraform_attribute(self) -> builtins.str:
+        '''The attribute on the parent resource this class is referencing.'''
+        return typing.cast(builtins.str, jsii.get(self, "terraformAttribute"))
+
+    @_terraform_attribute.setter
+    def _terraform_attribute(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f71473a382e9fd27cb13a06daae9989141c15e24c44d7e5213ed292aa5ff7b89)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformAttribute", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="terraformResource")
+    def _terraform_resource(self) -> _cdktf_9a9027ec.IInterpolatingParent:
+        '''The parent resource.'''
+        return typing.cast(_cdktf_9a9027ec.IInterpolatingParent, jsii.get(self, "terraformResource"))
+
+    @_terraform_resource.setter
+    def _terraform_resource(self, value: _cdktf_9a9027ec.IInterpolatingParent) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1eb33b7425bc52031536f4a88db3f38ab0e70701fe96ee422b6243defd59c147)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "terraformResource", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="wrapsSet")
+    def _wraps_set(self) -> builtins.bool:
+        '''whether the list is wrapping a set (will add tolist() to be able to access an item via an index).'''
+        return typing.cast(builtins.bool, jsii.get(self, "wrapsSet"))
+
+    @_wraps_set.setter
+    def _wraps_set(self, value: builtins.bool) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__e96e0b21ae2335998212787fc8da930642ef4fffb4c26f2556ee87ec894bef7d)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "wrapsSet", value) # pyright: ignore[reportArgumentType]
+
+
+class DataAwsWorkspacesDirectoryActiveDirectoryConfigOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-aws.dataAwsWorkspacesDirectory.DataAwsWorkspacesDirectoryActiveDirectoryConfigOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+        complex_object_index: jsii.Number,
+        complex_object_is_from_set: builtins.bool,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        :param complex_object_index: the index of this item in the list.
+        :param complex_object_is_from_set: whether the list is wrapping a set (will add tolist() to be able to access an item via an index).
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__827b9d6dbe4b8a04fd5b5a7d4055593bb062d22a1a4410c2a51ed7d3cd527ffa)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+            check_type(argname="argument complex_object_index", value=complex_object_index, expected_type=type_hints["complex_object_index"])
+            check_type(argname="argument complex_object_is_from_set", value=complex_object_is_from_set, expected_type=type_hints["complex_object_is_from_set"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute, complex_object_index, complex_object_is_from_set])
+
+    @builtins.property
+    @jsii.member(jsii_name="domainName")
+    def domain_name(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "domainName"))
+
+    @builtins.property
+    @jsii.member(jsii_name="serviceAccountSecretArn")
+    def service_account_secret_arn(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "serviceAccountSecretArn"))
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[DataAwsWorkspacesDirectoryActiveDirectoryConfig]:
+        return typing.cast(typing.Optional[DataAwsWorkspacesDirectoryActiveDirectoryConfig], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[DataAwsWorkspacesDirectoryActiveDirectoryConfig],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__145e4ee6d9d4604b441fb1324c5a48cc6ac8e11dc40515c2f4c339e97cd18717)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
 
 @jsii.data_type(
@@ -466,9 +644,9 @@ class DataAwsWorkspacesDirectoryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param directory_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/workspaces_directory#directory_id DataAwsWorkspacesDirectory#directory_id}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/workspaces_directory#id DataAwsWorkspacesDirectory#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/workspaces_directory#tags DataAwsWorkspacesDirectory#tags}.
+        :param directory_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/workspaces_directory#directory_id DataAwsWorkspacesDirectory#directory_id}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/workspaces_directory#id DataAwsWorkspacesDirectory#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/workspaces_directory#tags DataAwsWorkspacesDirectory#tags}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -572,14 +750,14 @@ class DataAwsWorkspacesDirectoryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def directory_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/workspaces_directory#directory_id DataAwsWorkspacesDirectory#directory_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/workspaces_directory#directory_id DataAwsWorkspacesDirectory#directory_id}.'''
         result = self._values.get("directory_id")
         assert result is not None, "Required property 'directory_id' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/workspaces_directory#id DataAwsWorkspacesDirectory#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/workspaces_directory#id DataAwsWorkspacesDirectory#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -589,7 +767,7 @@ class DataAwsWorkspacesDirectoryConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def tags(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/data-sources/workspaces_directory#tags DataAwsWorkspacesDirectory#tags}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/data-sources/workspaces_directory#tags DataAwsWorkspacesDirectory#tags}.'''
         result = self._values.get("tags")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1276,6 +1454,9 @@ class DataAwsWorkspacesDirectoryWorkspaceCreationPropertiesOutputReference(
 
 __all__ = [
     "DataAwsWorkspacesDirectory",
+    "DataAwsWorkspacesDirectoryActiveDirectoryConfig",
+    "DataAwsWorkspacesDirectoryActiveDirectoryConfigList",
+    "DataAwsWorkspacesDirectoryActiveDirectoryConfigOutputReference",
     "DataAwsWorkspacesDirectoryCertificateBasedAuthProperties",
     "DataAwsWorkspacesDirectoryCertificateBasedAuthPropertiesList",
     "DataAwsWorkspacesDirectoryCertificateBasedAuthPropertiesOutputReference",
@@ -1337,6 +1518,53 @@ def _typecheckingstub__e76a7fd8269be56295d1649b8df7c78dbbd0e38d24c91fec01fe54e98
 
 def _typecheckingstub__b05e989c0cfc6bc604219ae39fd9d335bd3a46e5685e67714cfddb4ef74b608d(
     value: typing.Mapping[builtins.str, builtins.str],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__191874be3bf867bbef0a2d2e94803d309ca1df2194a4b3576755a5068f5564b7(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    wraps_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__87925c5ac02e8bbadd23305340da27148a26ec14c14f23df8c9209515ddfdc70(
+    index: jsii.Number,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__f71473a382e9fd27cb13a06daae9989141c15e24c44d7e5213ed292aa5ff7b89(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1eb33b7425bc52031536f4a88db3f38ab0e70701fe96ee422b6243defd59c147(
+    value: _cdktf_9a9027ec.IInterpolatingParent,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__e96e0b21ae2335998212787fc8da930642ef4fffb4c26f2556ee87ec894bef7d(
+    value: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__827b9d6dbe4b8a04fd5b5a7d4055593bb062d22a1a4410c2a51ed7d3cd527ffa(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+    complex_object_index: jsii.Number,
+    complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__145e4ee6d9d4604b441fb1324c5a48cc6ac8e11dc40515c2f4c339e97cd18717(
+    value: typing.Optional[DataAwsWorkspacesDirectoryActiveDirectoryConfig],
 ) -> None:
     """Type checking stubs"""
     pass

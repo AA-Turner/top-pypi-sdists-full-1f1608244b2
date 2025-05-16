@@ -293,6 +293,7 @@ class _ByoIpPrefixState:
         pulumi.set(self, "on_demand_locked", value)
 
 
+@pulumi.type_token("cloudflare:index/byoIpPrefix:ByoIpPrefix")
 class ByoIpPrefix(pulumi.CustomResource):
     @overload
     def __init__(__self__,

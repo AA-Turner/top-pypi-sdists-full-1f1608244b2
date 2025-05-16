@@ -204,6 +204,7 @@ class _WorkersCustomDomainState:
         pulumi.set(self, "zone_name", value)
 
 
+@pulumi.type_token("cloudflare:index/workersCustomDomain:WorkersCustomDomain")
 class WorkersCustomDomain(pulumi.CustomResource):
     @overload
     def __init__(__self__,

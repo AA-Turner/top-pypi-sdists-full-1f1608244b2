@@ -15,6 +15,15 @@ class BaseGeneralSchemas:
     class Ids(BaseModel):
         ids:BaseTypes.OptionalListOfIntegers = Field(None, description="Specific Ids")
 
+    class Uuids(BaseModel):
+        uuids:BaseTypes.OptionalListOfUUIDs = Field(None, description="Specific Uuids")
+
+    class Keys(BaseModel):
+        keys:BaseTypes.OptionalListOfStrings = Field(None, description="Specific Keys")
+
+    class Names(BaseModel):
+        names:BaseTypes.OptionalListOfStrings = Field(None, description="Specific Names")
+
     class Search(BaseModel):
         search:BaseTypes.OptionalString = Field(None, description="Search parameter string.")
 

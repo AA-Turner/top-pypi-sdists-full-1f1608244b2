@@ -47,7 +47,7 @@ def get_db_query(prompt,dbName,dbType,tableName,prompt_data=[],instructions=[],i
                        additional_instructions=instructions,
                        instruction_bools=instruction_bools,
                        prompt_data=prompt_data)
-    input()
+
     #database_query = setup_mgr.response.get('database_query')
     file_path = os.path.join("/home/joben/Videos/excels","output.xlsx")
     return  asyncio.run(async_get_xlsx_file_path_from_response_vars(data=setup_mgr.prompt_mgr.create_prompt(),file_path=file_path,db_mgr=db_mgr,env_path=env_path,dbType=dbType,dbName=dbName,conn_mgr=db_mgr.conn_mgr))

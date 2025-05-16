@@ -598,7 +598,7 @@ fn array_to_point2d(
         .map(|val| val.as_point2d().unwrap())
 }
 
-trait GeometryTrait: Clone {
+pub trait GeometryTrait: Clone {
     type Set: Into<Vec<Self>> + Clone;
     fn id(&self) -> Uuid;
     fn original_id(&self) -> Uuid;
@@ -608,6 +608,7 @@ trait GeometryTrait: Clone {
         source_ranges: Vec<SourceRange>,
         exec_state: &mut ExecState,
     ) -> Result<[TyF64; 3], KclError>;
+    #[allow(async_fn_in_trait)]
     async fn flush_batch(args: &Args, exec_state: &mut ExecState, set: &Self::Set) -> Result<(), KclError>;
 }
 
@@ -641,6 +642,8 @@ impl GeometryTrait for Solid {
     type Set = Vec<Solid>;
     fn set_id(&mut self, id: Uuid) {
         self.id = id;
+        // We need this for in extrude.rs when you sketch on face.
+        self.sketch.id = id;
     }
 
     fn id(&self) -> Uuid {
@@ -671,7 +674,7 @@ mod tests {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_array_to_point3d() {
-        let mut exec_state = ExecState::new(&ExecutorContext::new_mock().await);
+        let mut exec_state = ExecState::new(&ExecutorContext::new_mock(None).await);
         let input = KclValue::HomArray {
             value: vec![
                 KclValue::Number {
@@ -703,7 +706,7 @@ mod tests {
 
     #[tokio::test(flavor = "multi_thread")]
     async fn test_tuple_to_point3d() {
-        let mut exec_state = ExecState::new(&ExecutorContext::new_mock().await);
+        let mut exec_state = ExecState::new(&ExecutorContext::new_mock(None).await);
         let input = KclValue::Tuple {
             value: vec![
                 KclValue::Number {

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: django-pglock
-Version: 1.7.1
+Version: 1.7.2
 Summary: Postgres locking routines and lock table access.
 Home-page: https://github.com/AmbitionEng/django-pglock
 License: BSD-3-Clause

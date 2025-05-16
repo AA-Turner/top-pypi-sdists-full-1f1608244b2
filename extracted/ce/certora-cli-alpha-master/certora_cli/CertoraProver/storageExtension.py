@@ -32,6 +32,8 @@ from CertoraProver.certoraBuildDataClasses import ContractInSDC
 from CertoraProver import erc7201
 from Shared import certoraUtils as Util
 from CertoraProver.certoraBuildDataClasses import SDC
+from CertoraProver.Compiler.CompilerCollectorFactory import get_relevant_compiler
+from CertoraProver.certoraContextClass import CertoraContext
 
 NameSpacedStorage: TypeAlias = Tuple[str, str]
 NewStorageFields = List[Dict[str, Any]]
@@ -156,8 +158,8 @@ def write_harness_contract(tmp_file: Any,
     # Add dummy fields for each namespaced storage
     for type_name, namespace in ns_storage:
         # Create a variable name by replacing dots with underscores and appending the hash
-        # This is to ensure the variable name is unique and valid in Solidity
-        var_name = namespace.replace('.', '_')
+        # Add a prefix to ensure the variable name is valid in Solidity (e.g., no leading digits)
+        var_name = f"ext_{namespace.replace('.', '_')}"
 
         # Calculate the slot using ERC-7201 formula
         # UTF-8 is the standard encoding for Ethereum and Solidity
@@ -264,10 +266,16 @@ def apply_extensions(target_contract: ContractInSDC,
     if "storage" not in storage_layout:
         storage_extension_logger.warning(f"Target contract {target_contract.name} storage layout does not contain 'storage' key")
         storage_layout["storage"] = []
+    elif not isinstance(storage_layout["storage"], list):
+        storage_extension_logger.warning(f"Target contract {target_contract.name} 'storage' is not a list but {type(storage_layout['storage']).__name__}: {storage_layout['storage']}")
+        storage_layout["storage"] = []
 
     # Check if the target contract has a storage layout with 'types' key
     if "types" not in storage_layout:
         storage_extension_logger.warning(f"Target contract {target_contract.name} storage layout does not contain 'types' key")
+        storage_layout["types"] = {}
+    elif not isinstance(storage_layout["types"], dict):
+        storage_extension_logger.warning(f"Target contract {target_contract.name} 'types' is not a dict but {type(storage_layout['types']).__name__}: {storage_layout['types']}")
         storage_layout["types"] = {}
 
     target_slots = {storage["slot"] for storage in storage_layout["storage"]}
@@ -343,3 +351,36 @@ def validate_new_fields(
         raise Util.CertoraUserInputError(f"Slot {slot} added to {target_contract.name} by {ext} is already mapped by {target_contract.name}")
     if var in target_vars:
         raise Util.CertoraUserInputError(f"Var '{var}' added to {target_contract.name} by {ext} is already declared by {target_contract.name}")
+
+
+def add_harness_to_compiler_map(original_file: str, harness_file: Any, context: CertoraContext) -> None:
+    """
+    Associates the generated harness file with the same compiler version as the original file.
+
+    This ensures the harness contract is compiled with the same Solidity compiler version
+    as the contract it's extending, maintaining compatibility.
+
+    Args:
+        original_file (str): Path to the original source file
+        harness_file (Any): File-like object representing the generated harness file
+        context (CertoraContext): The context object containing compiler mapping information
+
+    Returns:
+        None
+    """
+    # Validate prerequisites before updating compiler map
+    if context.compiler_map is None:
+        storage_extension_logger.debug("Cannot add compiler for harness: compiler_map is None (not a dict). Using the default compiler")
+        return
+
+    # Get the compiler version used for the original file
+    compiler_version = get_relevant_compiler(Path(original_file), context)
+
+    # Extract just the filename from the harness file path
+    harness_filename = Path(harness_file.name).name
+
+    # Add the compiler version to the context using glob pattern for the harness file
+    map_key = f"*{harness_filename}"
+    context.compiler_map[map_key] = compiler_version
+
+    storage_extension_logger.debug(f"Added compiler mapping: {map_key} -> {compiler_version}")

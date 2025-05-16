@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import ast
+import re
 import sys
 import types
 import typing
@@ -12,7 +14,11 @@ from chalk._lsp.error_builder import LSPErrorBuilder
 from chalk.features._encoding.http import HttpResponse
 from chalk.utils.cached_type_hints import cached_get_type_hints
 from chalk.utils.collections import is_optional
-from chalk.utils.import_utils import import_only_type_checking_imports
+from chalk.utils.import_utils import (
+    gather_all_imports_and_local_classes,
+    get_detailed_type_hint_errors,
+    import_only_type_checking_imports,
+)
 from chalk.utils.json import JSON
 from chalk.utils.log_with_context import get_logger
 
@@ -161,8 +167,9 @@ class ParsedAnnotation:
                 except:
                     # If there was an issue with THAT, we'll try to import files specified by
                     # TYPE_CHECKING only imports, and augment the globals again
+                    tree: ast.Module | None = None
                     if self._features_cls.__chalk_source_info__.filename is not None:
-                        import_only_type_checking_imports(self._features_cls.__chalk_source_info__.filename)
+                        tree = import_only_type_checking_imports(self._features_cls.__chalk_source_info__.filename)
                     existing_globalns.update(self._get_globals_for_forward_references())
                     try:
                         hints = cached_get_type_hints(
@@ -195,6 +202,37 @@ class ParsedAnnotation:
                                 globalns=existing_globalns if len(existing_globalns) > 0 else None,
                             )
                         except Exception as e:
+                            # At this point, we've failed. Let's try to get a better error message at the very least.
+                            name_error_pattern = re.compile(r"name '([^']*)' is not defined")
+                            attribute_errors = get_detailed_type_hint_errors(
+                                self._features_cls, True, existing_globalns if len(existing_globalns) > 0 else None
+                            )
+                            if isinstance(e, NameError) and tree is not None:
+                                feature_namespace = self._features_cls.namespace
+                                for attribute_name, error in attribute_errors.items():
+                                    match = name_error_pattern.search(str(error))
+                                    if match is not None:
+                                        missing_import_string = match.group(1)
+                                        (
+                                            regular_from_imports,
+                                            type_checking_imports,
+                                            local_classes,
+                                        ) = gather_all_imports_and_local_classes(tree)
+                                        if missing_import_string not in regular_from_imports + type_checking_imports:
+                                            if missing_import_string in local_classes:
+                                                # Feature class is defined somewhere else in the same file, so let's skip
+                                                continue
+                                            builder = self._features_cls and self._features_cls.__chalk_error_builder__
+                                            assert builder is not None
+                                            builder.add_diagnostic(
+                                                message=(
+                                                    f"Feature class '{feature_namespace}.{attribute_name}' has type annotation referencing '{missing_import_string}', "
+                                                    + f"which is undefined. Please import this using IS_TYPE_CHECKING. "
+                                                ),
+                                                label="invalid annotation",
+                                                code="79",
+                                                range=builder.annotation_range(attribute_name),
+                                            )
                             raise TypeError(
                                 f"Could not get type hints of feature class '{self._features_cls}' from filename {self._features_cls.__chalk_source_info__.filename}: {str(e)}"
                             ) from e

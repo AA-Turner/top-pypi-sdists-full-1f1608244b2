@@ -1,7 +1,10 @@
 from typing import Awaitable, Callable, Union
-from maleo_foundation.models.transfers.parameters.general import BaseGeneralParametersTransfers
-from maleo_foundation.models.transfers.parameters.client import BaseClientParametersTransfers
-from maleo_foundation.models.transfers.results.client.service import BaseClientServiceResultsTransfers
+from maleo_foundation.models.transfers.parameters.general \
+    import BaseGeneralParametersTransfers
+from maleo_foundation.models.transfers.parameters.client \
+    import BaseClientParametersTransfers
+from maleo_foundation.models.transfers.results.client.service \
+    import BaseClientServiceResultsTransfers
 
 class ExpandedClientTypes:
     #* Unpaginated multiple data

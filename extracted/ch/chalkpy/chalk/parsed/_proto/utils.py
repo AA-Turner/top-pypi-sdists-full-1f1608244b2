@@ -1,10 +1,11 @@
+import base64
 import collections.abc
 import traceback
 from datetime import datetime, timedelta
-from typing import Any, Optional, Union, cast
+from typing import Any, Optional, Type, TypeVar, Union, cast
 
 import google.protobuf.duration_pb2 as duration_pb
-from google.protobuf import duration_pb2, struct_pb2, timestamp_pb2
+from google.protobuf import duration_pb2, message, struct_pb2, timestamp_pb2
 
 import chalk._gen.chalk.artifacts.v1.export_pb2 as export_pb
 import chalk._gen.chalk.graph.v1.graph_pb2 as graph_pb
@@ -18,6 +19,20 @@ RESOLVER_ENUM_TO_KIND = {
     graph_pb.RESOLVER_KIND_ONLINE: "online",
     graph_pb.RESOLVER_KIND_OFFLINE: "offline",
 }
+
+
+def encode_proto_to_b64(obj: message.Message, deterministic: bool) -> str:
+    b = obj.SerializeToString(deterministic=deterministic)
+    return base64.b64encode(b).decode("utf-8")
+
+
+T = TypeVar("T", bound=message.Message)
+
+
+def decode_proto_from_b64(b64: str, proto_cls: Type[T]) -> T:
+    proto_obj = proto_cls()
+    proto_obj.ParseFromString(base64.b64decode(b64))
+    return proto_obj
 
 
 def build_failed_import(error: Union[Exception, str], description: str) -> export_pb.FailedImport:

@@ -17,6 +17,7 @@ from typing import (
     Callable,
     ClassVar,
     Generic,
+    Optional,
     Protocol,
     TypeVar,
     Union,
@@ -237,35 +238,41 @@ class CanCreateTimestamp:
 TAggregate = TypeVar("TAggregate", bound="BaseAggregate[Any]")
 
 
-class HasOriginatorIDVersion(Generic[TAggregateID_co]):
+class HasOriginatorIDVersion(Generic[TAggregateID]):
     """Declares ``originator_id`` and ``originator_version`` attributes."""
 
-    originator_id: TAggregateID_co
+    originator_id: TAggregateID
     """UUID identifying an aggregate to which the event belongs."""
     originator_version: int
     """Integer identifying the version of the aggregate when the event occurred."""
 
-    type_originator_id: ClassVar[type[Union[UUID, str]]]  # noqa: UP007
+    originator_id_type: ClassVar[Optional[type[Union[UUID, str]]]] = None  # noqa: UP007
 
     def __init_subclass__(cls) -> None:
         cls.find_originator_id_type(HasOriginatorIDVersion)
+        super().__init_subclass__()
 
     @classmethod
     def find_originator_id_type(cls: type, generic_cls: type) -> None:
-        """Store the type argument of TAggregateID_co on the subclass."""
-        for orig_base in cls.__orig_bases__:  # type: ignore[attr-defined]
-            type_originator_id = orig_base.__dict__.get("type_originator_id", "")
-            if type_originator_id in (UUID, str):
-                cls.type_originator_id = type_originator_id  # type: ignore[attr-defined]
-                break
-            if get_origin(orig_base) is generic_cls:
-                type_originator_id = get_args(orig_base)[0]
-                if type_originator_id in (UUID, str):
-                    cls.type_originator_id = type_originator_id  # type: ignore[attr-defined]
-                    break
+        """Store the type argument of TAggregateID on the subclass."""
+        if "originator_id_type" not in cls.__dict__:
+            for orig_base in cls.__orig_bases__:  # type: ignore[attr-defined]
+                if "originator_id_type" in orig_base.__dict__:
+                    cls.originator_id_type = orig_base.__dict__["originator_id_type"]  # type: ignore[attr-defined]
+                elif get_origin(orig_base) is generic_cls:
+                    originator_id_type = get_args(orig_base)[0]
+                    if originator_id_type in (UUID, str):
+                        cls.originator_id_type = originator_id_type  # type: ignore[attr-defined]
+                        break
+                    if originator_id_type is Any:
+                        continue
+                    if isinstance(originator_id_type, TypeVar):
+                        continue
+                    msg = f"Aggregate ID type arg cannot be {originator_id_type}"
+                    raise TypeError(msg)
 
 
-class CanMutateAggregate(HasOriginatorIDVersion[TAggregateID_co], CanCreateTimestamp):
+class CanMutateAggregate(HasOriginatorIDVersion[TAggregateID], CanCreateTimestamp):
     """Implements a :py:func:`~eventsourcing.domain.CanMutateAggregate.mutate`
     method that evolves the state of an aggregate.
     """
@@ -276,6 +283,7 @@ class CanMutateAggregate(HasOriginatorIDVersion[TAggregateID_co], CanCreateTimes
 
     def __init_subclass__(cls) -> None:
         cls.find_originator_id_type(CanMutateAggregate)
+        super().__init_subclass__()
 
     def mutate(self, aggregate: TAggregate | None) -> TAggregate | None:
         """Validates and adjusts the attributes of the given ``aggregate``
@@ -333,7 +341,7 @@ class CanMutateAggregate(HasOriginatorIDVersion[TAggregateID_co], CanCreateTimes
         return self.__dict__
 
 
-class CanInitAggregate(CanMutateAggregate[TAggregateID_co]):
+class CanInitAggregate(CanMutateAggregate[TAggregateID]):
     """Implements a :func:`~eventsourcing.domain.CanMutateAggregate.mutate`
     method that constructs the initial state of an aggregate.
     """
@@ -343,6 +351,7 @@ class CanInitAggregate(CanMutateAggregate[TAggregateID_co]):
 
     def __init_subclass__(cls) -> None:
         cls.find_originator_id_type(CanInitAggregate)
+        super().__init_subclass__()
 
     def mutate(self, aggregate: TAggregate | None) -> TAggregate | None:
         """Constructs an aggregate instance according to the attributes of an event.
@@ -1075,7 +1084,7 @@ class BaseAggregate(Generic[TAggregateID], metaclass=MetaAggregate):
         cls: type[Self],
         event_class: type[CanInitAggregate[TAggregateID]],
         *,
-        id: UUID | str | None = None,  # noqa: A002
+        id: TAggregateID | None = None,  # noqa: A002
         **kwargs: Any,
     ) -> Self:
         """Constructs a new aggregate object instance."""
@@ -1253,7 +1262,10 @@ class BaseAggregate(Generic[TAggregateID], metaclass=MetaAggregate):
             cls.__name__ in _module.__dict__
             and ENVVAR_DISABLE_REDEFINITION_CHECK not in os.environ
         ):
-            msg = f"Name '{cls.__name__}' already defined in '{cls.__module__}' module"
+            msg = (
+                f"Name '{cls.__name__}' of {cls} already defined in "
+                f"'{cls.__module__}' module: {_module.__dict__[cls.__name__]}"
+            )
             raise ProgrammingError(msg)
 
         # Get the class annotations.
@@ -1343,9 +1355,14 @@ class BaseAggregate(Generic[TAggregateID], metaclass=MetaAggregate):
             if name.lower() == name:
                 continue
 
-            # Only consider "event" classes (implement "CanMutateAggregate" protocol).
+            # Don't subclass if not "CanMutateAggregate".
             if not isinstance(value, type) or not issubclass(value, CanMutateAggregate):
                 continue
+
+            # # Don't subclass generic classes (we don't have a type argument).
+            # # TODO: Maybe also prohibit triggering such things?
+            # if value.__dict__.get("__parameters__", ()):
+            #     continue
 
             # Check we have a base event class.
             if base_event_cls is None:
@@ -1353,14 +1370,26 @@ class BaseAggregate(Generic[TAggregateID], metaclass=MetaAggregate):
 
             # Redefine events that aren't already subclass of the base event class.
             if not issubclass(value, base_event_cls):
+                # Identify base classes that were redefined, to preserve hierarchy.
+                redefined_bases = []
+                for base in value.__bases__:
+                    if base in redefined_event_classes:
+                        redefined_bases.append(redefined_event_classes[base])
+                    elif "__pydantic_generic_metadata__" in base.__dict__:
+                        pydantic_metadata = base.__dict__[
+                            "__pydantic_generic_metadata__"
+                        ]
+                        for i, key in enumerate(pydantic_metadata):
+                            if key == "origin":
+                                origin = base.__bases__[i]
+                                if origin in redefined_event_classes:
+                                    redefined_bases.append(
+                                        redefined_event_classes[origin]
+                                    )
+
                 # Decide base classes of redefined event class: it must be
                 # a subclass of the original class, all redefined classes that
                 # were in its bases, and the aggregate's base event class.
-                redefined_bases = [
-                    redefined_event_classes[b]
-                    for b in value.__bases__
-                    if b in redefined_event_classes
-                ]
                 event_class_bases = (
                     value,
                     *redefined_bases,
@@ -1735,17 +1764,13 @@ class SnapshotProtocol(DomainEventProtocol[TAggregateID_co], Protocol):
         """Snapshots have a 'take()' class method."""
 
 
-TCanSnapshotAggregate = TypeVar(
-    "TCanSnapshotAggregate", bound="CanSnapshotAggregate[Any]"
-)
-
-
-class CanSnapshotAggregate(HasOriginatorIDVersion[TAggregateID_co], CanCreateTimestamp):
+class CanSnapshotAggregate(HasOriginatorIDVersion[TAggregateID], CanCreateTimestamp):
     topic: str
     state: Any
 
     def __init_subclass__(cls) -> None:
         cls.find_originator_id_type(CanSnapshotAggregate)
+        super().__init_subclass__()
 
     # def __init__(
     #     self,
@@ -1760,7 +1785,7 @@ class CanSnapshotAggregate(HasOriginatorIDVersion[TAggregateID_co], CanCreateTim
     @classmethod
     def take(
         cls,
-        aggregate: MutableOrImmutableAggregate[TAggregateID_co],
+        aggregate: MutableOrImmutableAggregate[TAggregateID],
     ) -> Self:
         """Creates a snapshot of the given :class:`Aggregate` object."""
         aggregate_state = dict(aggregate.__dict__)
@@ -1779,9 +1804,9 @@ class CanSnapshotAggregate(HasOriginatorIDVersion[TAggregateID_co], CanCreateTim
             state=aggregate_state,  # pyright: ignore[reportCallIssue]
         )
 
-    def mutate(self, _: None) -> BaseAggregate[TAggregateID_co]:
+    def mutate(self, _: None) -> BaseAggregate[TAggregateID]:
         """Reconstructs the snapshotted :class:`Aggregate` object."""
-        cls = cast(type[BaseAggregate[TAggregateID_co]], resolve_topic(self.topic))
+        cls = cast(type[BaseAggregate[TAggregateID]], resolve_topic(self.topic))
         aggregate_state = dict(self.state)
         from_version = aggregate_state.pop("class_version", 1)
         class_version = getattr(cls, "class_version", 1)

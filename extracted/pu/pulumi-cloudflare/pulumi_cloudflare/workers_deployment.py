@@ -223,6 +223,7 @@ class _WorkersDeploymentState:
         pulumi.set(self, "versions", value)
 
 
+@pulumi.type_token("cloudflare:index/workersDeployment:WorkersDeployment")
 class WorkersDeployment(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -365,7 +366,7 @@ class WorkersDeployment(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def annotations(self) -> pulumi.Output['outputs.WorkersDeploymentAnnotations']:
+    def annotations(self) -> pulumi.Output[Optional['outputs.WorkersDeploymentAnnotations']]:
         return pulumi.get(self, "annotations")
 
     @property

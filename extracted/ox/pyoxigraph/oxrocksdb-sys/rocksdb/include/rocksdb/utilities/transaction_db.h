@@ -24,9 +24,16 @@ class SecondaryIndex;
 class TransactionDBMutexFactory;
 
 enum TxnDBWritePolicy {
-  WRITE_COMMITTED = 0,  // write only the committed data
-  WRITE_PREPARED,       // write data after the prepare phase of 2pc
-  WRITE_UNPREPARED      // write data before the prepare phase of 2pc
+  // Write data at transaction commit time
+  WRITE_COMMITTED = 0,
+
+  // EXPERIMENTAL: The remaining write policies are not as mature, well
+  // validated, nor as compatible with other features as WRITE_COMMITTED.
+
+  // Write data after the prepare phase of 2pc
+  WRITE_PREPARED,
+  // Write data before the prepare phase of 2pc
+  WRITE_UNPREPARED
 };
 
 constexpr uint32_t kInitialMaxDeadlocks = 5;
@@ -361,6 +368,8 @@ struct TransactionOptions {
   // Only supports write-committed policy. If set to true, the transaction will
   // skip memtable write and ingest into the DB directly during Commit(). This
   // makes Commit() much faster for transactions with many operations.
+  // Transaction neeeds to call Prepare() before Commit() for this option to
+  // take effect.
   // Transactions with Merge() or PutEntity() is not supported yet.
   //
   // Note that the transaction will be ingested as an immutable memtable for

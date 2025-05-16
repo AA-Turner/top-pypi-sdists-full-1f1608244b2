@@ -374,7 +374,9 @@ async def generate(request: ImageRequest):
     for i in range(1, 10):
         await asyncio.sleep(max(10 / i, 1))
         if urls := await get_task(task_response.task_id, task_response.system_fingerprint):
-            return ImagesResponse(data=dict(zip(["url"] * len(urls), urls)))
+            logger.debug(urls)
+
+            return ImagesResponse(data=[{"url": url} for url in urls])
 
 
 if __name__ == '__main__':  # 304752356930580482
@@ -414,15 +416,17 @@ if __name__ == '__main__':  # 304752356930580482
     request = ImageRequest(
         model="hailuo-image-01",
 
-        # prompt="a cat",  # 307145017365086216
-        prompt="https://oss.ffire.cc/files/kling_watermark.png 哭起来",
+        prompt="a cat",  # 307145017365086216
+        # prompt="https://oss.ffire.cc/files/kling_watermark.png 哭起来",
         # first_frame_image="https://oss.ffire.cc/files/kling_watermark.png"  # 307173162217783304
     )
 
-    r = arun(create_task(request, token=token))
+    # r = arun(create_task(request, token=token))
     # arun(get_task(task_id=r.task_id, token=r.system_fingerprint))
 
     # arun(get_access_token(token))
+
+    arun(generate(request))
     #
     #
     # data = {

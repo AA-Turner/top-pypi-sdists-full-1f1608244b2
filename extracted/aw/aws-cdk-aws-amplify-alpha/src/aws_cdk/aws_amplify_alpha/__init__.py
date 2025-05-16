@@ -2101,6 +2101,15 @@ class Domain(
             check_type(argname="argument prefix", value=prefix, expected_type=type_hints["prefix"])
         return typing.cast("Domain", jsii.invoke(self, "mapSubDomain", [branch, prefix]))
 
+    @jsii.python.classproperty
+    @jsii.member(jsii_name="PROPERTY_INJECTION_ID")
+    def PROPERTY_INJECTION_ID(cls) -> builtins.str:
+        '''(experimental) Uniquely identifies this class.
+
+        :stability: experimental
+        '''
+        return typing.cast(builtins.str, jsii.sget(cls, "PROPERTY_INJECTION_ID"))
+
     @builtins.property
     @jsii.member(jsii_name="arn")
     def arn(self) -> builtins.str:
@@ -3333,6 +3342,15 @@ class App(
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         return typing.cast("App", jsii.invoke(self, "addEnvironment", [name, value]))
 
+    @jsii.python.classproperty
+    @jsii.member(jsii_name="PROPERTY_INJECTION_ID")
+    def PROPERTY_INJECTION_ID(cls) -> builtins.str:
+        '''(experimental) Uniquely identifies this class.
+
+        :stability: experimental
+        '''
+        return typing.cast(builtins.str, jsii.sget(cls, "PROPERTY_INJECTION_ID"))
+
     @builtins.property
     @jsii.member(jsii_name="appId")
     def app_id(self) -> builtins.str:
@@ -3502,6 +3520,15 @@ class Branch(
             check_type(argname="argument name", value=name, expected_type=type_hints["name"])
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         return typing.cast("Branch", jsii.invoke(self, "addEnvironment", [name, value]))
+
+    @jsii.python.classproperty
+    @jsii.member(jsii_name="PROPERTY_INJECTION_ID")
+    def PROPERTY_INJECTION_ID(cls) -> builtins.str:
+        '''(experimental) Uniquely identifies this class.
+
+        :stability: experimental
+        '''
+        return typing.cast(builtins.str, jsii.sget(cls, "PROPERTY_INJECTION_ID"))
 
     @builtins.property
     @jsii.member(jsii_name="arn")

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: python-octaviaclient
-Version: 3.10.0
+Version: 3.11.0
 Summary: Octavia client for OpenStack Load Balancing
 Home-page: https://docs.openstack.org/python-octaviaclient/latest/
 Author: OpenStack

@@ -284,6 +284,7 @@ class _ZeroTrustDevicePostureRuleState:
         pulumi.set(self, "type", value)
 
 
+@pulumi.type_token("cloudflare:index/zeroTrustDevicePostureRule:ZeroTrustDevicePostureRule")
 class ZeroTrustDevicePostureRule(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -452,7 +453,7 @@ class ZeroTrustDevicePostureRule(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def input(self) -> pulumi.Output['outputs.ZeroTrustDevicePostureRuleInput']:
+    def input(self) -> pulumi.Output[Optional['outputs.ZeroTrustDevicePostureRuleInput']]:
         """
         The value to be checked against.
         """
@@ -460,7 +461,7 @@ class ZeroTrustDevicePostureRule(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def matches(self) -> pulumi.Output[Sequence['outputs.ZeroTrustDevicePostureRuleMatch']]:
+    def matches(self) -> pulumi.Output[Optional[Sequence['outputs.ZeroTrustDevicePostureRuleMatch']]]:
         """
         The conditions that the client must match to run the rule.
         """

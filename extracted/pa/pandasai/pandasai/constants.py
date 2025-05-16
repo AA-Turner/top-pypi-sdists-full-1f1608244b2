@@ -85,35 +85,21 @@ WHITELISTED_BUILTINS = [
 
 # List of Python packages that are whitelisted for import in generated code
 WHITELISTED_LIBRARIES = [
+    "sklearn",
+    "statsmodels",
     "seaborn",
+    "plotly",
+    "ggplot",
     "matplotlib",
     "numpy",
     "datetime",
     "json",
-    "base64",
-    "pandas",
-]
-
-# List of restricted libs
-RESTRICTED_LIBS = [
-    "os",  # OS-level operations (file handling, environment variables)
-    "sys",  # System-level access
-    "subprocess",  # Run system commands
-    "shutil",  # File operations, including delete
-    "multiprocessing",  # Spawn new processes
-    "threading",  # Thread-level operations
-    "socket",  # Network connections
-    "http",  # HTTP requests
-    "ftplib",  # FTP connections
-    "paramiko",  # SSH operations
-    "tempfile",  # Create temporary files
-    "pathlib",  # Filesystem path handling
-    "resource",  # Access resource usage limits (system-related)
-    "ssl",  # SSL socket connections
-    "pickle",  # Unsafe object serialization
-    "ctypes",  # C-level interaction with memory
-    "psutil",  # System and process utilities
     "io",
+    "base64",
+    "scipy",
+    "streamlit",
+    "modin",
+    "scikit-learn",
 ]
 
 PANDASBI_SETUP_MESSAGE = (

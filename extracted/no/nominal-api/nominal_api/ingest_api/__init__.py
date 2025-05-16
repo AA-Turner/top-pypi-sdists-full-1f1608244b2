@@ -32,6 +32,7 @@ from .._impl import (
     ingest_api_FileExtractionInput as FileExtractionInput,
     ingest_api_FileFilter as FileFilter,
     ingest_api_FileFilterVisitor as FileFilterVisitor,
+    ingest_api_FileOutputFormat as FileOutputFormat,
     ingest_api_FileSuffix as FileSuffix,
     ingest_api_GcsIngestSource as GcsIngestSource,
     ingest_api_GetContainerizedExtractorsRequest as GetContainerizedExtractorsRequest,

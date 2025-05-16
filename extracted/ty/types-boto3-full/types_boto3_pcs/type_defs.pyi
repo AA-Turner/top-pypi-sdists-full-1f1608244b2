@@ -8,9 +8,9 @@ Copyright 2025 Vlad Emelianov
 Usage::
 
     ```python
-    from types_boto3_pcs.type_defs import SlurmCustomSettingTypeDef
+    from types_boto3_pcs.type_defs import AccountingRequestTypeDef
 
-    data: SlurmCustomSettingTypeDef = ...
+    data: AccountingRequestTypeDef = ...
     ```
 """
 
@@ -20,6 +20,7 @@ import sys
 from datetime import datetime
 
 from .literals import (
+    AccountingModeType,
     ClusterStatusType,
     ComputeNodeGroupStatusType,
     EndpointTypeType,
@@ -41,6 +42,8 @@ else:
     from typing_extensions import Literal, NotRequired, TypedDict
 
 __all__ = (
+    "AccountingRequestTypeDef",
+    "AccountingTypeDef",
     "ClusterSlurmConfigurationRequestTypeDef",
     "ClusterSlurmConfigurationTypeDef",
     "ClusterSummaryTypeDef",
@@ -104,6 +107,14 @@ __all__ = (
     "UpdateQueueRequestTypeDef",
     "UpdateQueueResponseTypeDef",
 )
+
+class AccountingRequestTypeDef(TypedDict):
+    mode: AccountingModeType
+    defaultPurgeTimeInDays: NotRequired[int]
+
+class AccountingTypeDef(TypedDict):
+    mode: AccountingModeType
+    defaultPurgeTimeInDays: NotRequired[int]
 
 class SlurmCustomSettingTypeDef(TypedDict):
     parameterName: str
@@ -281,6 +292,7 @@ class UntagResourceRequestTypeDef(TypedDict):
 class ClusterSlurmConfigurationRequestTypeDef(TypedDict):
     scaleDownIdleTimeInSeconds: NotRequired[int]
     slurmCustomSettings: NotRequired[Sequence[SlurmCustomSettingTypeDef]]
+    accounting: NotRequired[AccountingRequestTypeDef]
 
 class ComputeNodeGroupSlurmConfigurationRequestTypeDef(TypedDict):
     slurmCustomSettings: NotRequired[Sequence[SlurmCustomSettingTypeDef]]
@@ -295,6 +307,7 @@ class ClusterSlurmConfigurationTypeDef(TypedDict):
     scaleDownIdleTimeInSeconds: NotRequired[int]
     slurmCustomSettings: NotRequired[List[SlurmCustomSettingTypeDef]]
     authKey: NotRequired[SlurmAuthKeyTypeDef]
+    accounting: NotRequired[AccountingTypeDef]
 
 class CreateQueueRequestTypeDef(TypedDict):
     clusterIdentifier: str

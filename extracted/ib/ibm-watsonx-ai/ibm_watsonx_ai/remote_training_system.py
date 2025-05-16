@@ -12,14 +12,13 @@ from ibm_watsonx_ai._wrappers import requests
 
 from ibm_watsonx_ai.metanames import RemoteTrainingSystemMetaNames
 from ibm_watsonx_ai.party_wrapper import Party
+from ibm_watsonx_ai.utils.utils import _handle_fl_removal
 from ibm_watsonx_ai.wml_client_error import WMLClientError
 from ibm_watsonx_ai.wml_resource import WMLResource
 
 if TYPE_CHECKING:
     from ibm_watsonx_ai import APIClient
     from pandas import DataFrame
-
-FL_DEPRECATED_WARNING = "Federated Learning is deprecated and will be removed in IBM Cloud Pak for Data 5.2."
 
 
 class RemoteTrainingSystem(WMLResource):
@@ -57,7 +56,7 @@ class RemoteTrainingSystem(WMLResource):
             client.set.default_space('3fc54cf1-252f-424b-b52d-5cdd9814987f')
             details = client.remote_training_systems.store(meta_props=metadata)
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         self._client._check_if_either_is_set()
 
@@ -127,7 +126,7 @@ class RemoteTrainingSystem(WMLResource):
 
             client.remote_training_systems.delete(remote_training_systems_id='6213cf1-252f-424b-b52d-5cdd9814956c')
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         self._client._check_if_either_is_set()
         RemoteTrainingSystem._validate_type(
@@ -192,7 +191,7 @@ class RemoteTrainingSystem(WMLResource):
                 details.extend(entry)
 
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         self._client._check_if_either_is_set()
 
@@ -234,7 +233,7 @@ class RemoteTrainingSystem(WMLResource):
 
             client.remote_training_systems.list()
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         self._client._check_if_either_is_set()
 
@@ -266,7 +265,6 @@ class RemoteTrainingSystem(WMLResource):
             details = client.remote_training_systems.get_details(remote_training_system_id)
             id = client.remote_training_systems.get_id(details)
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
 
         RemoteTrainingSystem._validate_type(
             remote_training_system_details,
@@ -302,7 +300,7 @@ class RemoteTrainingSystem(WMLResource):
             details = client.remote_training_systems.update(remote_training_system_id, changes=metadata)
 
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         self._client._check_if_either_is_set()
 
@@ -351,7 +349,7 @@ class RemoteTrainingSystem(WMLResource):
 
             client.remote_training_systems.create_revision(remote_training_system_id)
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         RemoteTrainingSystem._validate_type(
             remote_training_system_id, "remote_training_system_id", str, False
@@ -382,7 +380,7 @@ class RemoteTrainingSystem(WMLResource):
 
             details = client.remote_training_systems.get_details(remote_training_system_id, rev_id)
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         self._client._check_if_either_is_set()
 
@@ -425,7 +423,7 @@ class RemoteTrainingSystem(WMLResource):
 
             client.remote_training_systems.list_revisions(remote_training_system_id)
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         self._client._check_if_either_is_set()
 
@@ -513,7 +511,7 @@ class RemoteTrainingSystem(WMLResource):
             party = client.remote_training_systems.create_party(remote_training_system_id, party_metadata)
 
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         RemoteTrainingSystem._validate_type(
             remote_training_system_id, "remote_training_system_id", str, True

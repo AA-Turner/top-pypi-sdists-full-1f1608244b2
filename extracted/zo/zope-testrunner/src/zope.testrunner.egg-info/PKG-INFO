@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: zope.testrunner
-Version: 7.2
+Version: 7.3
 Summary: Zope testrunner script.
 Home-page: https://github.com/zopefoundation/zope.testrunner
 Author: Zope Foundation and Contributors
@@ -217,6 +217,12 @@ test execution order, and run multiple tests in parallel.
 ===========================
  zope.testrunner Changelog
 ===========================
+
+7.3 (2025-05-15)
+================
+
+- Improve ``@unittest.expectedFailure`` support, especially regarding
+  post-mortem debugger. (`#196 <https://github.com/zopefoundation/zope.testrunner/pull/196>`_)
 
 7.2 (2025-03-06)
 ================

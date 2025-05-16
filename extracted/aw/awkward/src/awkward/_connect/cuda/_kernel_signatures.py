@@ -1,4 +1,4 @@
-# AUTO GENERATED ON 2025-03-19 AT 21:19:36
+# AUTO GENERATED ON 2025-05-15 AT 21:20:36
 # DO NOT EDIT BY HAND!
 #
 # To regenerate file, run
@@ -830,24 +830,21 @@ def by_signature(cuda_kernel_templates):
         (tocarry, toindex, fromindex, n, replacement, starts, stops, length, invocation_index, err_code) = args
         scan_in_array_offsets = cupy.zeros(length + 1, dtype=cupy.int64)
         cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_a", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))(grid, block, (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, invocation_index, err_code))
-        scan_in_array_offsets = cupy.cumsum(scan_in_array_offsets)
-        scan_in_array_parents = cupy.zeros(int(scan_in_array_offsets[length]), dtype=cupy.int64)
-        scan_in_array_local_indices = cupy.zeros(int(scan_in_array_offsets[length]), dtype=cupy.int64)
-        for i in range(1, length + 1):
-            scan_in_array_parents[scan_in_array_offsets[i - 1]:scan_in_array_offsets[i]] = i - 1
-        if int(scan_in_array_offsets[length]) < 1024:
-            block_size = int(scan_in_array_offsets[length])
-        else:
-            block_size = 1024
-        if block_size > 0:
-            grid_size = math.floor((int(scan_in_array_offsets[length]) + block_size - 1) / block_size)
-        else:
-            grid_size = 1
-        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_b", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))((grid_size,), (block_size,), (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, scan_in_array_parents, scan_in_array_local_indices, invocation_index, err_code))
+        cupy.cumsum(scan_in_array_offsets, out = scan_in_array_offsets)
+        totallen=int(scan_in_array_offsets[length])
+        if totallen == 0:
+            return  # Nothing to do if no combinations, skip the rest
+        block_size = min(1024, totallen)
+        grid_size = (totallen + block_size - 1)//block_size
+        scan_in_array_parents = cupy.zeros(totallen, dtype=cupy.int64)
+        scan_in_array_local_indices = cupy.zeros(totallen, dtype=cupy.int64)
+        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_b", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))((grid_size,), (block_size,), (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, scan_in_array_parents, invocation_index, err_code))
         cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_c", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))((grid_size,), (block_size,), (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, scan_in_array_parents, scan_in_array_local_indices, invocation_index, err_code))
+        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_d", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))((grid_size,), (block_size,), (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, scan_in_array_parents, scan_in_array_local_indices, invocation_index, err_code))
     out["awkward_ListArray_combinations_a", int64, int64, int64, int32, int32] = None
     out["awkward_ListArray_combinations_b", int64, int64, int64, int32, int32] = None
     out["awkward_ListArray_combinations_c", int64, int64, int64, int32, int32] = None
+    out["awkward_ListArray_combinations_d", int64, int64, int64, int32, int32] = None
     f.dir = ['out', 'out', 'in', 'in', 'in', 'in', 'in', 'in']
     f.is_ptr = [True, True, True, False, False, True, True, False]
     out['awkward_ListArray_combinations', int64, int64, int64, int32, int32] = f
@@ -856,24 +853,21 @@ def by_signature(cuda_kernel_templates):
         (tocarry, toindex, fromindex, n, replacement, starts, stops, length, invocation_index, err_code) = args
         scan_in_array_offsets = cupy.zeros(length + 1, dtype=cupy.int64)
         cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_a", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))(grid, block, (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, invocation_index, err_code))
-        scan_in_array_offsets = cupy.cumsum(scan_in_array_offsets)
-        scan_in_array_parents = cupy.zeros(int(scan_in_array_offsets[length]), dtype=cupy.int64)
-        scan_in_array_local_indices = cupy.zeros(int(scan_in_array_offsets[length]), dtype=cupy.int64)
-        for i in range(1, length + 1):
-            scan_in_array_parents[scan_in_array_offsets[i - 1]:scan_in_array_offsets[i]] = i - 1
-        if int(scan_in_array_offsets[length]) < 1024:
-            block_size = int(scan_in_array_offsets[length])
-        else:
-            block_size = 1024
-        if block_size > 0:
-            grid_size = math.floor((int(scan_in_array_offsets[length]) + block_size - 1) / block_size)
-        else:
-            grid_size = 1
-        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_b", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))((grid_size,), (block_size,), (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, scan_in_array_parents, scan_in_array_local_indices, invocation_index, err_code))
+        cupy.cumsum(scan_in_array_offsets, out = scan_in_array_offsets)
+        totallen=int(scan_in_array_offsets[length])
+        if totallen == 0:
+            return  # Nothing to do if no combinations, skip the rest
+        block_size = min(1024, totallen)
+        grid_size = (totallen + block_size - 1)//block_size
+        scan_in_array_parents = cupy.zeros(totallen, dtype=cupy.int64)
+        scan_in_array_local_indices = cupy.zeros(totallen, dtype=cupy.int64)
+        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_b", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))((grid_size,), (block_size,), (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, scan_in_array_parents, invocation_index, err_code))
         cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_c", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))((grid_size,), (block_size,), (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, scan_in_array_parents, scan_in_array_local_indices, invocation_index, err_code))
+        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_d", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))((grid_size,), (block_size,), (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, scan_in_array_parents, scan_in_array_local_indices, invocation_index, err_code))
     out["awkward_ListArray_combinations_a", int64, int64, int64, int64, int64] = None
     out["awkward_ListArray_combinations_b", int64, int64, int64, int64, int64] = None
     out["awkward_ListArray_combinations_c", int64, int64, int64, int64, int64] = None
+    out["awkward_ListArray_combinations_d", int64, int64, int64, int64, int64] = None
     f.dir = ['out', 'out', 'in', 'in', 'in', 'in', 'in', 'in']
     f.is_ptr = [True, True, True, False, False, True, True, False]
     out['awkward_ListArray_combinations', int64, int64, int64, int64, int64] = f
@@ -882,36 +876,31 @@ def by_signature(cuda_kernel_templates):
         (tocarry, toindex, fromindex, n, replacement, starts, stops, length, invocation_index, err_code) = args
         scan_in_array_offsets = cupy.zeros(length + 1, dtype=cupy.int64)
         cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_a", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))(grid, block, (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, invocation_index, err_code))
-        scan_in_array_offsets = cupy.cumsum(scan_in_array_offsets)
-        scan_in_array_parents = cupy.zeros(int(scan_in_array_offsets[length]), dtype=cupy.int64)
-        scan_in_array_local_indices = cupy.zeros(int(scan_in_array_offsets[length]), dtype=cupy.int64)
-        for i in range(1, length + 1):
-            scan_in_array_parents[scan_in_array_offsets[i - 1]:scan_in_array_offsets[i]] = i - 1
-        if int(scan_in_array_offsets[length]) < 1024:
-            block_size = int(scan_in_array_offsets[length])
-        else:
-            block_size = 1024
-        if block_size > 0:
-            grid_size = math.floor((int(scan_in_array_offsets[length]) + block_size - 1) / block_size)
-        else:
-            grid_size = 1
-        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_b", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))((grid_size,), (block_size,), (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, scan_in_array_parents, scan_in_array_local_indices, invocation_index, err_code))
+        cupy.cumsum(scan_in_array_offsets, out = scan_in_array_offsets)
+        totallen=int(scan_in_array_offsets[length])
+        if totallen == 0:
+            return  # Nothing to do if no combinations, skip the rest
+        block_size = min(1024, totallen)
+        grid_size = (totallen + block_size - 1)//block_size
+        scan_in_array_parents = cupy.zeros(totallen, dtype=cupy.int64)
+        scan_in_array_local_indices = cupy.zeros(totallen, dtype=cupy.int64)
+        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_b", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))((grid_size,), (block_size,), (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, scan_in_array_parents, invocation_index, err_code))
         cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_c", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))((grid_size,), (block_size,), (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, scan_in_array_parents, scan_in_array_local_indices, invocation_index, err_code))
+        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_d", tocarry[0].dtype, toindex.dtype, fromindex.dtype, starts.dtype, stops.dtype]))((grid_size,), (block_size,), (tocarry, toindex, fromindex, n, replacement, starts, stops, length, scan_in_array_offsets, scan_in_array_parents, scan_in_array_local_indices, invocation_index, err_code))
     out["awkward_ListArray_combinations_a", int64, int64, int64, uint32, uint32] = None
     out["awkward_ListArray_combinations_b", int64, int64, int64, uint32, uint32] = None
     out["awkward_ListArray_combinations_c", int64, int64, int64, uint32, uint32] = None
+    out["awkward_ListArray_combinations_d", int64, int64, int64, uint32, uint32] = None
     f.dir = ['out', 'out', 'in', 'in', 'in', 'in', 'in', 'in']
     f.is_ptr = [True, True, True, False, False, True, True, False]
     out['awkward_ListArray_combinations', int64, int64, int64, uint32, uint32] = f
 
     def f(grid, block, args):
         (totallen, tooffsets, n, replacement, starts, stops, length, invocation_index, err_code) = args
-        scan_in_array_totallen = cupy.zeros(length, dtype=cupy.int64)
-        scan_in_array_tooffsets = cupy.zeros(length, dtype=cupy.int64)
-        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_length_a", totallen.dtype, tooffsets.dtype, starts.dtype, stops.dtype]))(grid, block, (totallen, tooffsets, n, replacement, starts, stops, length, scan_in_array_totallen, scan_in_array_tooffsets, invocation_index, err_code))
-        scan_in_array_totallen = cupy.cumsum(scan_in_array_totallen)
-        scan_in_array_tooffsets = cupy.cumsum(scan_in_array_tooffsets)
-        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_length_b", totallen.dtype, tooffsets.dtype, starts.dtype, stops.dtype]))(grid, block, (totallen, tooffsets, n, replacement, starts, stops, length, scan_in_array_totallen, scan_in_array_tooffsets,  invocation_index, err_code))
+        scan_out = cupy.zeros(length, dtype=cupy.int64)
+        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_length_a", totallen.dtype, tooffsets.dtype, starts.dtype, stops.dtype]))(grid, block, (totallen, tooffsets, n, replacement, starts, stops, length, scan_out, invocation_index, err_code))
+        cupy.cumsum(scan_out, out=scan_out)
+        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_length_b", totallen.dtype, tooffsets.dtype, starts.dtype, stops.dtype]))(grid, block, (totallen, tooffsets, n, replacement, starts, stops, length, scan_out, invocation_index, err_code))
     out["awkward_ListArray_combinations_length_a", int64, int64, int32, int32] = None
     out["awkward_ListArray_combinations_length_b", int64, int64, int32, int32] = None
     f.dir = ['out', 'out', 'in', 'in', 'in', 'in', 'in']
@@ -920,12 +909,10 @@ def by_signature(cuda_kernel_templates):
 
     def f(grid, block, args):
         (totallen, tooffsets, n, replacement, starts, stops, length, invocation_index, err_code) = args
-        scan_in_array_totallen = cupy.zeros(length, dtype=cupy.int64)
-        scan_in_array_tooffsets = cupy.zeros(length, dtype=cupy.int64)
-        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_length_a", totallen.dtype, tooffsets.dtype, starts.dtype, stops.dtype]))(grid, block, (totallen, tooffsets, n, replacement, starts, stops, length, scan_in_array_totallen, scan_in_array_tooffsets, invocation_index, err_code))
-        scan_in_array_totallen = cupy.cumsum(scan_in_array_totallen)
-        scan_in_array_tooffsets = cupy.cumsum(scan_in_array_tooffsets)
-        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_length_b", totallen.dtype, tooffsets.dtype, starts.dtype, stops.dtype]))(grid, block, (totallen, tooffsets, n, replacement, starts, stops, length, scan_in_array_totallen, scan_in_array_tooffsets,  invocation_index, err_code))
+        scan_out = cupy.zeros(length, dtype=cupy.int64)
+        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_length_a", totallen.dtype, tooffsets.dtype, starts.dtype, stops.dtype]))(grid, block, (totallen, tooffsets, n, replacement, starts, stops, length, scan_out, invocation_index, err_code))
+        cupy.cumsum(scan_out, out=scan_out)
+        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_length_b", totallen.dtype, tooffsets.dtype, starts.dtype, stops.dtype]))(grid, block, (totallen, tooffsets, n, replacement, starts, stops, length, scan_out, invocation_index, err_code))
     out["awkward_ListArray_combinations_length_a", int64, int64, int64, int64] = None
     out["awkward_ListArray_combinations_length_b", int64, int64, int64, int64] = None
     f.dir = ['out', 'out', 'in', 'in', 'in', 'in', 'in']
@@ -934,12 +921,10 @@ def by_signature(cuda_kernel_templates):
 
     def f(grid, block, args):
         (totallen, tooffsets, n, replacement, starts, stops, length, invocation_index, err_code) = args
-        scan_in_array_totallen = cupy.zeros(length, dtype=cupy.int64)
-        scan_in_array_tooffsets = cupy.zeros(length, dtype=cupy.int64)
-        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_length_a", totallen.dtype, tooffsets.dtype, starts.dtype, stops.dtype]))(grid, block, (totallen, tooffsets, n, replacement, starts, stops, length, scan_in_array_totallen, scan_in_array_tooffsets, invocation_index, err_code))
-        scan_in_array_totallen = cupy.cumsum(scan_in_array_totallen)
-        scan_in_array_tooffsets = cupy.cumsum(scan_in_array_tooffsets)
-        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_length_b", totallen.dtype, tooffsets.dtype, starts.dtype, stops.dtype]))(grid, block, (totallen, tooffsets, n, replacement, starts, stops, length, scan_in_array_totallen, scan_in_array_tooffsets,  invocation_index, err_code))
+        scan_out = cupy.zeros(length, dtype=cupy.int64)
+        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_length_a", totallen.dtype, tooffsets.dtype, starts.dtype, stops.dtype]))(grid, block, (totallen, tooffsets, n, replacement, starts, stops, length, scan_out, invocation_index, err_code))
+        cupy.cumsum(scan_out, out=scan_out)
+        cuda_kernel_templates.get_function(fetch_specialization(["awkward_ListArray_combinations_length_b", totallen.dtype, tooffsets.dtype, starts.dtype, stops.dtype]))(grid, block, (totallen, tooffsets, n, replacement, starts, stops, length, scan_out, invocation_index, err_code))
     out["awkward_ListArray_combinations_length_a", int64, int64, uint32, uint32] = None
     out["awkward_ListArray_combinations_length_b", int64, int64, uint32, uint32] = None
     f.dir = ['out', 'out', 'in', 'in', 'in', 'in', 'in']

@@ -21,11 +21,9 @@ from typing_extensions import TypeGuard
 
 from chalk._lsp._class_finder import get_class_ast
 from chalk.features.feature_wrapper import FeatureWrapper, unwrap_feature
-from chalk.features.live_updates import register_live_updates_if_in_notebook
 from chalk.utils import notebook
 from chalk.utils.collections import ensure_tuple, get_unique_item
 from chalk.utils.source_parsing import should_skip_source_code_parsing
-
 
 if TYPE_CHECKING:
     from chalk.features.feature_field import Feature
@@ -238,9 +236,6 @@ class FeatureSetBase:
     def __init__(self) -> None:
         super().__init__()
         raise RuntimeError("FeatureSetBase should never be instantiated")
-
-
-register_live_updates_if_in_notebook(FeatureSetBase)
 
 
 def is_features_cls(maybe_features: Any) -> TypeGuard[Type[Features]]:

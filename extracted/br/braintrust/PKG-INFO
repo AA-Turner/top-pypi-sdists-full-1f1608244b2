@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: braintrust
-Version: 0.0.203
+Version: 0.1.0
 Summary: SDK for integrating Braintrust
 Home-page: https://www.braintrust.dev
 Author: Braintrust
@@ -14,7 +14,6 @@ Description-Content-Type: text/markdown
 Requires-Dist: GitPython
 Requires-Dist: requests
 Requires-Dist: chevron
-Requires-Dist: braintrust_core==0.0.59
 Requires-Dist: tqdm
 Requires-Dist: exceptiongroup>=1.2.0
 Requires-Dist: python-dotenv

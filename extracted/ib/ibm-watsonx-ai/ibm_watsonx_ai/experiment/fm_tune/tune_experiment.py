@@ -5,8 +5,7 @@
 from __future__ import annotations
 from enum import Enum, EnumMeta
 from typing import TYPE_CHECKING, TypeAlias
-from warnings import catch_warnings, simplefilter
-
+from warnings import catch_warnings, simplefilter, warn
 
 from ibm_watsonx_ai.foundation_models.prompt_tuner import PromptTuner
 from ibm_watsonx_ai.foundation_models.fine_tuner import FineTuner
@@ -130,6 +129,9 @@ class TuneExperiment(BaseExperiment):
     ) -> PromptTuner:
         """Initialize a PromptTuner module.
 
+        .. note::
+            Prompt Tuning is deprecated for IBM Cloud Pak® for Data since 5.2 version and will be removed in a future release.
+
         :param name: name for the PromptTuner
         :type name: str
 
@@ -225,6 +227,11 @@ class TuneExperiment(BaseExperiment):
                 verbalizer="Extract the satisfaction from the comment. Return simple '1' for satisfied customer or '0' for unsatisfied. Input: {{input}} Output: ",
                 auto_update_model=True)
         """
+        if not self.client.CLOUD_PLATFORM_SPACES and self.client.CPD_version >= 5.2:
+            with catch_warnings():
+                simplefilter("default", category=DeprecationWarning)
+                prompt_tuning_warn = "Prompt Tuning is deprecated and will be removed in a future release."
+                warn(prompt_tuning_warn, category=DeprecationWarning)
 
         if isinstance(task_id, Enum):
             task_id = task_id.value

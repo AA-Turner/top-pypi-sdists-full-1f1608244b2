@@ -3,7 +3,7 @@ from typing import Any, Mapping, Optional, Tuple
 
 class Validator:
     @staticmethod
-    def string(value: Any, name: str, one_of: Optional[Tuple[str, ...]] = None) -> str:
+    def string(value: Any, name: str, *, one_of: Optional[Tuple[str, ...]] = None) -> str:
         if value is None:
             raise ValueError(f"Expected a string, but found nothing for '{name}'")
         if not isinstance(value, str):
@@ -13,12 +13,8 @@ class Validator:
         return value
 
     @staticmethod
-    def optional_string(value: Any, name: str) -> Optional[str]:
-        if value is None:
-            return None
-        if not isinstance(value, str):
-            raise ValueError(f"Expected a string for '{name}', got '{value}'")
-        return value
+    def optional_string(value: Any, name: str, *, one_of: Optional[Tuple[str, ...]] = None) -> Optional[str]:
+        return None if value is None else Validator.string(value=value, name=name, one_of=one_of)
 
     @staticmethod
     def dict_with_str_keys(value: Any, name: str) -> Mapping[str, Any]:
@@ -31,6 +27,4 @@ class Validator:
 
     @staticmethod
     def dict_with_str_keys_or_none(value: Any, name: str) -> Optional[Mapping[str, Any]]:
-        if value is None:
-            return None
-        return Validator.dict_with_str_keys(value, name)
+        return None if value is None else Validator.dict_with_str_keys(value, name)

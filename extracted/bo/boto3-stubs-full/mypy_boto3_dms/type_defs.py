@@ -44,11 +44,13 @@ from .literals import (
     LongVarcharMappingTypeType,
     MessageFormatValueType,
     MigrationTypeValueType,
+    MySQLAuthenticationMethodType,
     NestingLevelValueType,
     OracleAuthenticationMethodType,
     OriginTypeValueType,
     ParquetVersionValueType,
     PluginNameValueType,
+    PostgreSQLAuthenticationMethodType,
     RedisAuthTypeValueType,
     RefreshSchemasStatusTypeValueType,
     ReleaseStatusValuesType,
@@ -709,6 +711,8 @@ class MySQLSettingsTypeDef(TypedDict):
     SecretsManagerAccessRoleArn: NotRequired[str]
     SecretsManagerSecretId: NotRequired[str]
     ExecuteTimeout: NotRequired[int]
+    ServiceAccessRoleArn: NotRequired[str]
+    AuthenticationMethod: NotRequired[MySQLAuthenticationMethodType]
 
 
 class NeptuneSettingsTypeDef(TypedDict):
@@ -747,6 +751,8 @@ class PostgreSQLSettingsTypeDef(TypedDict):
     DatabaseMode: NotRequired[DatabaseModeType]
     BabelfishDatabaseName: NotRequired[str]
     DisableUnicodeSourceFilter: NotRequired[bool]
+    ServiceAccessRoleArn: NotRequired[str]
+    AuthenticationMethod: NotRequired[PostgreSQLAuthenticationMethodType]
 
 
 class RedisSettingsTypeDef(TypedDict):
@@ -1297,6 +1303,11 @@ class TableStatisticsTypeDef(TypedDict):
     ValidationSuspendedRecords: NotRequired[int]
     ValidationState: NotRequired[str]
     ValidationStateDetails: NotRequired[str]
+    ResyncState: NotRequired[str]
+    ResyncRowsAttempted: NotRequired[int]
+    ResyncRowsSucceeded: NotRequired[int]
+    ResyncRowsFailed: NotRequired[int]
+    ResyncProgress: NotRequired[float]
 
 
 class DescribeReplicationTaskAssessmentResultsMessageTypeDef(TypedDict):

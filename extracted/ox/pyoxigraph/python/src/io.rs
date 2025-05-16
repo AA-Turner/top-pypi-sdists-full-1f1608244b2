@@ -1,5 +1,8 @@
 use crate::model::{PyQuad, PyTriple};
-use oxigraph::io::{RdfFormat, RdfParseError, RdfParser, RdfSerializer, ReaderQuadParser};
+use oxigraph::io::{
+    JsonLdProfile, JsonLdProfileSet, RdfFormat, RdfParseError, RdfParser, RdfSerializer,
+    ReaderQuadParser,
+};
 use oxigraph::model::QuadRef;
 use pyo3::exceptions::{PyDeprecationWarning, PySyntaxError, PyValueError};
 use pyo3::intern;
@@ -17,6 +20,7 @@ use std::sync::OnceLock;
 ///
 /// It currently supports the following formats:
 ///
+/// * `JSON-LD 1.0 <https://www.w3.org/TR/json-ld/>`_ (:py:attr:`RdfFormat.JSON_LD`)
 /// * `N-Triples <https://www.w3.org/TR/n-triples/>`_ (:py:attr:`RdfFormat.N_TRIPLES`)
 /// * `N-Quads <https://www.w3.org/TR/n-quads/>`_ (:py:attr:`RdfFormat.N_QUADS`)
 /// * `Turtle <https://www.w3.org/TR/turtle/>`_ (:py:attr:`RdfFormat.TURTLE`)
@@ -83,6 +87,7 @@ pub fn parse(
 ///
 /// It currently supports the following formats:
 ///
+/// * `JSON-LD 1.0 <https://www.w3.org/TR/json-ld/>`_ (:py:attr:`RdfFormat.JSON_LD`)
 /// * `canonical <https://www.w3.org/TR/n-triples/#canonical-ntriples>`_ `N-Triples <https://www.w3.org/TR/n-triples/>`_ (:py:attr:`RdfFormat.N_TRIPLES`)
 /// * `N-Quads <https://www.w3.org/TR/n-quads/>`_ (:py:attr:`RdfFormat.N_QUADS`)
 /// * `Turtle <https://www.w3.org/TR/turtle/>`_ (:py:attr:`RdfFormat.TURTLE`)
@@ -243,6 +248,7 @@ impl PyQuadParser {
 ///
 /// The following formats are supported:
 ///
+/// * `JSON-LD 1.0 <https://www.w3.org/TR/json-ld/>`_ (:py:attr:`RdfFormat.JSON_LD`)
 /// * `N-Triples <https://www.w3.org/TR/n-triples/>`_ (:py:attr:`RdfFormat.N_TRIPLES`)
 /// * `N-Quads <https://www.w3.org/TR/n-quads/>`_ (:py:attr:`RdfFormat.N_QUADS`)
 /// * `Turtle <https://www.w3.org/TR/turtle/>`_ (:py:attr:`RdfFormat.TURTLE`)
@@ -260,6 +266,20 @@ pub struct PyRdfFormat {
 
 #[pymethods]
 impl PyRdfFormat {
+    /// `JSON-LD <https://www.w3.org/TR/json-ld/>`_
+    #[classattr]
+    const JSON_LD: Self = Self {
+        inner: RdfFormat::JsonLd {
+            profile: JsonLdProfileSet::empty(),
+        },
+    };
+    /// `Streaming JSON-LD <https://www.w3.org/TR/json-ld11-streaming/>`_
+    #[classattr]
+    const STREAMING_JSON_LD: Self = Self {
+        inner: RdfFormat::JsonLd {
+            profile: JsonLdProfileSet::from_profile(JsonLdProfile::Streaming),
+        },
+    };
     /// `N3 <https://w3c.github.io/N3/spec/>`_
     #[classattr]
     const N3: Self = Self {
@@ -622,7 +642,7 @@ pub fn map_parse_error(error: RdfParseError, file_path: Option<PathBuf>) -> PyEr
             if python_version() >= (3, 10) {
                 let params = if let Some(location) = error.location() {
                     (
-                        file_path,
+                        file_path.map(PathBuf::into_os_string),
                         Some(location.start.line + 1),
                         Some(location.start.column + 1),
                         None::<Vec<u8>>,
@@ -636,7 +656,7 @@ pub fn map_parse_error(error: RdfParseError, file_path: Option<PathBuf>) -> PyEr
             } else {
                 let params = if let Some(location) = error.location() {
                     (
-                        file_path,
+                        file_path.map(PathBuf::into_os_string),
                         Some(location.start.line + 1),
                         Some(location.start.column + 1),
                         None::<Vec<u8>>,

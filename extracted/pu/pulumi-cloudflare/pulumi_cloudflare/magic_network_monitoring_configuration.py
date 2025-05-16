@@ -169,6 +169,7 @@ class _MagicNetworkMonitoringConfigurationState:
         pulumi.set(self, "warp_devices", value)
 
 
+@pulumi.type_token("cloudflare:index/magicNetworkMonitoringConfiguration:MagicNetworkMonitoringConfiguration")
 class MagicNetworkMonitoringConfiguration(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -299,6 +300,6 @@ class MagicNetworkMonitoringConfiguration(pulumi.CustomResource):
 
     @property
     @pulumi.getter(name="warpDevices")
-    def warp_devices(self) -> pulumi.Output[Sequence['outputs.MagicNetworkMonitoringConfigurationWarpDevice']]:
+    def warp_devices(self) -> pulumi.Output[Optional[Sequence['outputs.MagicNetworkMonitoringConfigurationWarpDevice']]]:
         return pulumi.get(self, "warp_devices")
 

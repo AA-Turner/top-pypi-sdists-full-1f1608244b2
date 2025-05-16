@@ -15,28 +15,6 @@
 from .import_utils import DummyObject, requires_backends
 
 
-class OVTrainingArguments(metaclass=DummyObject):
-    _backends = ["openvino", "nncf"]
-
-    def __init__(self, *args, **kwargs):
-        requires_backends(self, ["openvino", "nncf"])
-
-    @classmethod
-    def from_pretrained(cls, *args, **kwargs):
-        requires_backends(cls, ["openvino", "nncf"])
-
-
-class OVTrainer(metaclass=DummyObject):
-    _backends = ["openvino", "nncf", "accelerate"]
-
-    def __init__(self, *args, **kwargs):
-        requires_backends(self, ["openvino", "nncf", "accelerate"])
-
-    @classmethod
-    def from_pretrained(cls, *args, **kwargs):
-        requires_backends(cls, ["openvino", "nncf", "accelerate"])
-
-
 class OVQuantizer(metaclass=DummyObject):
     _backends = ["openvino", "nncf"]
 
@@ -46,6 +24,13 @@ class OVQuantizer(metaclass=DummyObject):
     @classmethod
     def from_pretrained(cls, *args, **kwargs):
         requires_backends(cls, ["openvino", "nncf"])
+
+
+class OVCalibrationDataset(metaclass=DummyObject):
+    _backends = ["openvino", "nncf"]
+
+    def __init__(self, *args, **kwargs):
+        requires_backends(self, ["openvino", "nncf"])
 
 
 class OVWeightQuantizationConfig(metaclass=DummyObject):
@@ -60,6 +45,17 @@ class OVWeightQuantizationConfig(metaclass=DummyObject):
 
 
 class OVQuantizationConfig(metaclass=DummyObject):
+    _backends = ["openvino", "nncf"]
+
+    def __init__(self, *args, **kwargs):
+        requires_backends(self, ["openvino", "nncf"])
+
+    @classmethod
+    def from_pretrained(cls, *args, **kwargs):
+        requires_backends(cls, ["openvino", "nncf"])
+
+
+class OVMixedQuantizationConfig(metaclass=DummyObject):
     _backends = ["openvino", "nncf"]
 
     def __init__(self, *args, **kwargs):

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "chalkpy"
 description = "Python SDK for Chalk"
-requires-python = ">3.8,<3.13"
+requires-python = ">=3.9,<3.13"
 authors = [
     { name = "Chalk AI, Inc." }
 ]
@@ -34,8 +34,6 @@ dependencies = [
     "cattrs>=22.1.0,<25",
     "cloudpickle==2.2.1",
     "dataclasses_json>=0.5.7",
-    "datadog",
-    "ddtrace>=2.6.4,<3",
     "executing>=1.2.0,<3",
     "grpcio>=1.59.2,<2",
     "ipywidgets>=8.0.6",

@@ -206,6 +206,7 @@ class _WaitingRoomRulesState:
         pulumi.set(self, "zone_id", value)
 
 
+@pulumi.type_token("cloudflare:index/waitingRoomRules:WaitingRoomRules")
 class WaitingRoomRules(pulumi.CustomResource):
     @overload
     def __init__(__self__,

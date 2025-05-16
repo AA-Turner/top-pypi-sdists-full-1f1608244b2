@@ -26,48 +26,61 @@ import asyncio
 
 # --- App Logging Setup ---
 try:
-    # Log to user's AppData directory for better accessibility
-    log_dir_base = os.environ.get('APPDATA', os.path.expanduser('~'))
-    log_dir = os.path.join(log_dir_base, 'OOTBAppLogs')
-    os.makedirs(log_dir, exist_ok=True)
+    # NEW: Log to a subdirectory under ProgramData/OOTBGuardService, specific to the current user
+    program_data_dir = os.environ.get('PROGRAMDATA', 'C:/ProgramData') # Use C:/ProgramData as a fallback
+    guard_service_log_base_dir = os.path.join(program_data_dir, 'OOTBGuardService')
+    
+    current_username = os.getenv('USERNAME', 'unknown_user_app') # Get current username, fallback
+    app_logs_subfolder = "UserSessionLogs" # Subfolder for these app logs
+    
+    log_dir = os.path.join(guard_service_log_base_dir, app_logs_subfolder, current_username)
+    
+    os.makedirs(log_dir, exist_ok=True) # Create user-specific log directory
     log_file = os.path.join(log_dir, 'ootb_app.log')
 
     log_format = '%(asctime)s - %(levelname)s - %(process)d - %(threadName)s - %(message)s'
     log_level = logging.INFO # Or logging.DEBUG for more detail
 
-    # Use rotating file handler
-    handler = RotatingFileHandler(log_file, maxBytes=5*1024*1024, backupCount=2, encoding='utf-8')
-    handler.setFormatter(logging.Formatter(log_format))
+    # Setup the rotating file handler
+    rotating_file_handler = RotatingFileHandler(log_file, maxBytes=5*1024*1024, backupCount=2, encoding='utf-8')
+    rotating_file_handler.setFormatter(logging.Formatter(log_format))
 
-    # Configure root logger
-    logging.basicConfig(level=log_level, handlers=[handler])
+    # Setup the console handler
+    console_handler_for_basic_config = logging.StreamHandler(sys.stdout)
+    console_handler_for_basic_config.setFormatter(logging.Formatter(log_format))
 
-    # Add stream handler to see logs if running interactively (optional)
-    # logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
-
+    # Configure root logger with both file and console handlers
+    # This replaces the old basicConfig and the subsequent addHandler calls for file and console
+    logging.basicConfig(level=log_level, handlers=[rotating_file_handler, console_handler_for_basic_config])
+    
     logging.info("="*20 + " OOTB App Starting " + "="*20)
+    logging.info(f"Logging to file: {log_file}") # Explicitly log the path
     logging.info(f"Running with args: {sys.argv}")
     logging.info(f"Python Executable: {sys.executable}")
     logging.info(f"Working Directory: {os.getcwd()}")
-    logging.info(f"User: {os.getenv('USERNAME')}")
+    logging.info(f"User: {current_username}") # Log the username being used for the path
 
 except Exception as log_setup_e:
     print(f"FATAL: Failed to set up logging: {log_setup_e}")
-    # Fallback logging might be needed here if file logging fails
+    traceback.print_exc() # Print traceback for debugging log setup failure
 
 # --- Get the root logger ---
+# The root logger is now fully configured by basicConfig above.
+# The following sections for re-adding file handler and console handler are no longer needed.
 root_logger = logging.getLogger()
-root_logger.setLevel(log_level) # Ensure root logger level is set
+# root_logger.setLevel(log_level) # This was redundant as basicConfig sets the level.
 
 # --- File Handler (as before) ---
-file_handler = RotatingFileHandler(log_file, maxBytes=5*1024*1024, backupCount=2, encoding='utf-8')
-file_handler.setFormatter(logging.Formatter(log_format))
-root_logger.addHandler(file_handler)
+# REMOVED - This was redundant as rotating_file_handler is now passed to basicConfig.
+# file_handler = RotatingFileHandler(log_file, maxBytes=5*1024*1024, backupCount=2, encoding='utf-8')
+# file_handler.setFormatter(logging.Formatter(log_format))
+# root_logger.addHandler(file_handler)
 
 # --- Console Handler (New) ---
-console_handler = logging.StreamHandler(sys.stdout) # Log to standard output
-console_handler.setFormatter(logging.Formatter(log_format)) 
-root_logger.addHandler(console_handler)
+# REMOVED - This was redundant as console_handler_for_basic_config is now passed to basicConfig.
+# console_handler = logging.StreamHandler(sys.stdout) # Log to standard output
+# console_handler.setFormatter(logging.Formatter(log_format)) 
+# root_logger.addHandler(console_handler)
 
 # --- End App Logging Setup ---
 

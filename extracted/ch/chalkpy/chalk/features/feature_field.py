@@ -742,7 +742,8 @@ class Feature(Generic[_TPrim, _TRich]):
                         # Going to recurse, so validate that the feature is something that we can recurse on.
                         if not x.is_has_one and not x.is_has_many:
                             raise FeatureNotFoundException(root_fqn)
-                        assert x.joined_class is not None
+                        if x.joined_class is None:
+                            raise FeatureNotFoundException(root_fqn)
                         features_cls = x.joined_class
                     break
             if not found_feature:

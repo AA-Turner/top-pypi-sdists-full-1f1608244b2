@@ -1,5 +1,6 @@
 from typing import Union
-from maleo_foundation.models.transfers.results.token import MaleoFoundationTokenResultsTransfers
+from maleo_foundation.models.transfers.results.token \
+    import MaleoFoundationTokenResultsTransfers
 
 class MaleoFoundationTokenResultsTypes:
     Encode = Union[

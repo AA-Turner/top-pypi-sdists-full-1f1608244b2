@@ -1,11 +1,11 @@
 use crate::encoder::EncoderExt;
-use crate::MetalTensor;
-use crate::{LibraryName, MetalContext};
-use anyhow::Result;
+
+use crate::{LibraryName, MetalStream};
 use derive_new::new;
 use metal::{MTLSize, NSUInteger};
 use std::fmt;
 use tract_core::internal::*;
+use tract_gpu::tensor::DeviceTensor;
 
 #[derive(Debug, Clone, new, PartialEq, Eq, Hash)]
 pub struct Cast;
@@ -34,38 +34,38 @@ impl Cast {
         )
     }
 
-    pub fn kernel_name(&self, from_dt: DatumType, to_dt: DatumType) -> Result<String> {
+    pub fn kernel_name(&self, from_dt: DatumType, to_dt: DatumType) -> TractResult<String> {
         ensure!(
             Self::is_supported_dt(from_dt),
             "Unsupported from_dt {:?} for metal cast  op",
             from_dt
         );
         ensure!(Self::is_supported_dt(to_dt), "Unsupported to_dt {:?} for metal cast  op", to_dt);
-        let from_tname = MetalTensor::tname(from_dt)?;
-        let to_tname = MetalTensor::tname(to_dt)?;
+        let from_tname = DeviceTensor::tname(from_dt)?;
+        let to_tname = DeviceTensor::tname(to_dt)?;
         Ok(format!("array_ops::cast_{from_tname}_{to_tname}"))
     }
 
     pub fn eval(
         &self,
-        context: &MetalContext,
-        input: &MetalTensor,
+        stream: &MetalStream,
+        input: &DeviceTensor,
         to_dt: DatumType,
-    ) -> Result<MetalTensor> {
-        let output = unsafe { MetalTensor::uninitialized_dt(to_dt, input.shape())? };
-        self.dispatch_eval(context, input, &output)?;
-        context.wait_until_completed()?;
+    ) -> TractResult<DeviceTensor> {
+        let output = unsafe { DeviceTensor::uninitialized_dt(to_dt, input.shape())? };
+        self.dispatch_eval(stream, input, &output)?;
+        stream.wait_until_completed()?;
         Ok(output)
     }
 
     pub fn dispatch_eval(
         &self,
-        context: &MetalContext,
-        input: &MetalTensor,
-        output: &MetalTensor,
-    ) -> Result<()> {
-        input.retain_until_completion();
-        output.retain_until_completion();
+        stream: &MetalStream,
+        input: &DeviceTensor,
+        output: &DeviceTensor,
+    ) -> TractResult<()> {
+        stream.retain_tensor(input);
+        stream.retain_tensor(output);
         ensure!(
             input.shape() == output.shape(),
             "Cast I/O don't have the same shape in: {:?}, out: {:?}",
@@ -75,9 +75,8 @@ impl Cast {
 
         let kernel_name = self.kernel_name(input.datum_type(), output.datum_type())?;
 
-        let pipeline =
-            context.shared_context().load_pipeline(LibraryName::ArrayOps, &kernel_name)?;
-        let command_buffer = context.command_buffer();
+        let pipeline = stream.load_pipeline(LibraryName::ArrayOps, &kernel_name)?;
+        let command_buffer = stream.command_buffer();
         command_buffer.encode(|encoder| {
             encoder.set_compute_pipeline_state(&pipeline);
             encoder.set_metal_tensor(0, input, metal::MTLResourceUsage::Read);

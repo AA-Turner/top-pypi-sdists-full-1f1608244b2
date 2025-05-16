@@ -181,6 +181,7 @@ class _AccountState:
         pulumi.set(self, "unit", value)
 
 
+@pulumi.type_token("cloudflare:index/account:Account")
 class Account(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -359,7 +360,7 @@ class Account(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def unit(self) -> pulumi.Output['outputs.AccountUnit']:
+    def unit(self) -> pulumi.Output[Optional['outputs.AccountUnit']]:
         """
         information related to the tenant unit, and optionally, an id of the unit to create the account on. see https://developers.cloudflare.com/tenant/how-to/manage-accounts/
         """

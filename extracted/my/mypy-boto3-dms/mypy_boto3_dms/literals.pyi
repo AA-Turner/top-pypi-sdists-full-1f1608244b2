@@ -59,12 +59,14 @@ __all__ = (
     "LongVarcharMappingTypeType",
     "MessageFormatValueType",
     "MigrationTypeValueType",
+    "MySQLAuthenticationMethodType",
     "NestingLevelValueType",
     "OracleAuthenticationMethodType",
     "OriginTypeValueType",
     "PaginatorName",
     "ParquetVersionValueType",
     "PluginNameValueType",
+    "PostgreSQLAuthenticationMethodType",
     "RedisAuthTypeValueType",
     "RefreshSchemasStatusTypeValueType",
     "RegionName",
@@ -142,11 +144,13 @@ KafkaSslEndpointIdentificationAlgorithmType = Literal["https", "none"]
 LongVarcharMappingTypeType = Literal["clob", "nclob", "wstring"]
 MessageFormatValueType = Literal["json", "json-unformatted"]
 MigrationTypeValueType = Literal["cdc", "full-load", "full-load-and-cdc"]
+MySQLAuthenticationMethodType = Literal["iam", "password"]
 NestingLevelValueType = Literal["none", "one"]
 OracleAuthenticationMethodType = Literal["kerberos", "password"]
 OriginTypeValueType = Literal["SOURCE", "TARGET"]
 ParquetVersionValueType = Literal["parquet-1-0", "parquet-2-0"]
 PluginNameValueType = Literal["no-preference", "pglogical", "test-decoding"]
+PostgreSQLAuthenticationMethodType = Literal["iam", "password"]
 RedisAuthTypeValueType = Literal["auth-role", "auth-token", "none"]
 RefreshSchemasStatusTypeValueType = Literal["failed", "refreshing", "successful"]
 ReleaseStatusValuesType = Literal["beta", "prod"]
@@ -536,7 +540,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -544,6 +547,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

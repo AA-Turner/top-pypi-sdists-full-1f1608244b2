@@ -9,6 +9,7 @@ from autocoder.linters.base_linter import BaseLinter
 from autocoder.linters.reactjs_linter import ReactJSLinter
 from autocoder.linters.vue_linter import VueLinter
 from autocoder.linters.python_linter import PythonLinter
+from loguru import logger
 
 class LinterFactory:
     """
@@ -115,9 +116,11 @@ class LinterFactory:
         Returns:
             Dict[str, Any]: Lint results.
         """
+        logger.info(f"根据文件路径{file_path}自动查找 linter")
         linter = cls.create_linter(file_path=file_path, verbose=verbose)
+        logger.info(f"Linting file: {file_path} with linter: {linter.__class__.__name__}")
         if linter is None:
-            return None
+            return None        
         return linter.lint_file(file_path, fix=fix)
     
     @classmethod

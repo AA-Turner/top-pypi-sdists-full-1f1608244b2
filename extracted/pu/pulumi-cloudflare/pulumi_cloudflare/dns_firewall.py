@@ -404,6 +404,7 @@ class _DnsFirewallState:
         pulumi.set(self, "upstream_ips", value)
 
 
+@pulumi.type_token("cloudflare:index/dnsFirewall:DnsFirewall")
 class DnsFirewall(pulumi.CustomResource):
     @overload
     def __init__(__self__,

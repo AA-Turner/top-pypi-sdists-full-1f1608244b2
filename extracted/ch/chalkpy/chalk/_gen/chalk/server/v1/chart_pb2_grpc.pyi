@@ -8,6 +8,8 @@ from abc import (
     abstractmethod,
 )
 from chalk._gen.chalk.server.v1.chart_pb2 import (
+    GetChartSnapshotRequest,
+    GetChartSnapshotResponse,
     ListChartsRequest,
     ListChartsResponse,
 )
@@ -24,6 +26,10 @@ class ChartsServiceStub:
         ListChartsRequest,
         ListChartsResponse,
     ]
+    GetChartSnapshot: UnaryUnaryMultiCallable[
+        GetChartSnapshotRequest,
+        GetChartSnapshotResponse,
+    ]
 
 class ChartsServiceServicer(metaclass=ABCMeta):
     @abstractmethod
@@ -32,5 +38,11 @@ class ChartsServiceServicer(metaclass=ABCMeta):
         request: ListChartsRequest,
         context: ServicerContext,
     ) -> ListChartsResponse: ...
+    @abstractmethod
+    def GetChartSnapshot(
+        self,
+        request: GetChartSnapshotRequest,
+        context: ServicerContext,
+    ) -> GetChartSnapshotResponse: ...
 
 def add_ChartsServiceServicer_to_server(servicer: ChartsServiceServicer, server: Server) -> None: ...

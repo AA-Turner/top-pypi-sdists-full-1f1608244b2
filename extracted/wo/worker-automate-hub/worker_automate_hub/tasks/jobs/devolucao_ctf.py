@@ -1741,7 +1741,7 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                         totais_panel = panel_TNotebook.child_window(title="Totais")
                         totais_panel.set_focus()
 
-                        total_pre_venda_field = totais_panel.child_window(class_name="TDBIEditNumber", found_index=0)
+                        total_pre_venda_field = totais_panel.child_window(class_name="TDBIEditNumber", found_index=3)
                         valor_total_value = total_pre_venda_field.window_text()
 
                         console.print(f'Valor capturado: {valor_total_value}')

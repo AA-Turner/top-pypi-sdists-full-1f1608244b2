@@ -11,7 +11,8 @@ from pathlib import Path
 from types import ModuleType
 from typing import Any, Callable, Dict, Optional, Set
 
-from ._common import Action
+from ._common import Action, null_logger
+from ._common import LoggerProperty as InternalLoggerProperty
 from ._namespace import Namespace
 from ._type_checking import ArgumentParser
 
@@ -21,8 +22,11 @@ __all__ = [
     "ActionOperators",
     "ActionPath",
     "ActionPathList",
+    "LoggerProperty",
     "ParserError",
     "get_config_read_mode",
+    "namespace_to_dict",
+    "null_logger",
     "set_docstring_parse_options",
     "set_config_read_mode",
     "set_url_support",
@@ -675,3 +679,25 @@ class ActionJsonnetExtVars:
         action = ActionTypeHint(typehint=dict)(**kwargs)
         action.jsonnet_ext_vars = True
         return action
+
+
+@deprecated(
+    """
+    LoggerProperty was deprecated in v4.40.0 and will be removed from the public
+    API in v5.0.0. There is no replacement since jsonargparse is not a logging
+    library. A similar class can be found in reconplogger package.
+"""
+)
+class LoggerProperty(InternalLoggerProperty):
+    """Adds a logger property, intended for internal use."""
+
+
+@deprecated(
+    """
+    namespace_to_dict was deprecated in v4.40.0 and will be removed in v5.0.0.
+    Instead you can use ``.clone().as_dict()`` or ``.as_dict()``.
+"""
+)
+def namespace_to_dict(namespace: Namespace) -> Dict[str, Any]:
+    """Returns a copy of a nested namespace converted into a nested dictionary."""
+    return namespace.clone().as_dict()

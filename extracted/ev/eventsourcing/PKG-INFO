@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: eventsourcing
-Version: 9.4.5
+Version: 9.4.6
 Summary: Event sourcing in Python
 License: BSD-3-Clause
 Keywords: event sourcing,event store,domain driven design,domain-driven design,ddd,cqrs,cqs

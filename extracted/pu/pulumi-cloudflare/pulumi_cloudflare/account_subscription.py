@@ -248,6 +248,7 @@ class _AccountSubscriptionState:
         pulumi.set(self, "subscription_identifier", value)
 
 
+@pulumi.type_token("cloudflare:index/accountSubscription:AccountSubscription")
 class AccountSubscription(pulumi.CustomResource):
     @overload
     def __init__(__self__,
@@ -421,7 +422,7 @@ class AccountSubscription(pulumi.CustomResource):
 
     @property
     @pulumi.getter(name="ratePlan")
-    def rate_plan(self) -> pulumi.Output['outputs.AccountSubscriptionRatePlan']:
+    def rate_plan(self) -> pulumi.Output[Optional['outputs.AccountSubscriptionRatePlan']]:
         """
         The rate plan applied to the subscription.
         """

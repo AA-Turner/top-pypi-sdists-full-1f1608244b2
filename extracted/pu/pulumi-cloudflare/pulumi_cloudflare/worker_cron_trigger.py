@@ -123,6 +123,7 @@ class _WorkerCronTriggerState:
 warnings.warn("""cloudflare.index/workercrontrigger.WorkerCronTrigger has been deprecated in favor of cloudflare.index/workerscrontrigger.WorkersCronTrigger""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/workerCronTrigger:WorkerCronTrigger")
 class WorkerCronTrigger(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/workercrontrigger.WorkerCronTrigger has been deprecated in favor of cloudflare.index/workerscrontrigger.WorkersCronTrigger""", DeprecationWarning)
 

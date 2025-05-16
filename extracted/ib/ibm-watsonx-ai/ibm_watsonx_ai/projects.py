@@ -26,7 +26,12 @@ if TYPE_CHECKING:
 
 
 class Projects(WMLResource):
-    """Store and manage projects."""
+    """Store and manage projects.
+
+    .. note::
+        Projects module is available since Python SDK version 1.3.5.
+
+    """
 
     ConfigurationMetaNames = ProjectsMetaNames()
     """MetaNames for projects creation."""
@@ -359,7 +364,7 @@ class Projects(WMLResource):
         return table
 
     def update(self, project_id: str, changes: dict) -> dict:
-        """Update existing project metadata. 'STORAGE' cannot be updated. #TODO
+        """Update existing project metadata. 'STORAGE' cannot be updated.
 
         :param project_id: ID of the project with the definition to be updated
         :type project_id: str

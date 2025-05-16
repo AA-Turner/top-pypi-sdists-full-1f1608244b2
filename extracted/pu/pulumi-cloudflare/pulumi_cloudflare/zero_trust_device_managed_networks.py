@@ -171,6 +171,7 @@ class _ZeroTrustDeviceManagedNetworksState:
         pulumi.set(self, "type", value)
 
 
+@pulumi.type_token("cloudflare:index/zeroTrustDeviceManagedNetworks:ZeroTrustDeviceManagedNetworks")
 class ZeroTrustDeviceManagedNetworks(pulumi.CustomResource):
     @overload
     def __init__(__self__,

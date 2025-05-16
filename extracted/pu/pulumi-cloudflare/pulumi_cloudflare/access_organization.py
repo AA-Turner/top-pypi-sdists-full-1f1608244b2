@@ -454,6 +454,7 @@ class _AccessOrganizationState:
 warnings.warn("""cloudflare.index/accessorganization.AccessOrganization has been deprecated in favor of cloudflare.index/zerotrustorganization.ZeroTrustOrganization""", DeprecationWarning)
 
 
+@pulumi.type_token("cloudflare:index/accessOrganization:AccessOrganization")
 class AccessOrganization(pulumi.CustomResource):
     warnings.warn("""cloudflare.index/accessorganization.AccessOrganization has been deprecated in favor of cloudflare.index/zerotrustorganization.ZeroTrustOrganization""", DeprecationWarning)
 
@@ -658,7 +659,7 @@ class AccessOrganization(pulumi.CustomResource):
 
     @property
     @pulumi.getter(name="customPages")
-    def custom_pages(self) -> pulumi.Output['outputs.AccessOrganizationCustomPages']:
+    def custom_pages(self) -> pulumi.Output[Optional['outputs.AccessOrganizationCustomPages']]:
         return pulumi.get(self, "custom_pages")
 
     @property
@@ -668,7 +669,7 @@ class AccessOrganization(pulumi.CustomResource):
 
     @property
     @pulumi.getter(name="loginDesign")
-    def login_design(self) -> pulumi.Output['outputs.AccessOrganizationLoginDesign']:
+    def login_design(self) -> pulumi.Output[Optional['outputs.AccessOrganizationLoginDesign']]:
         return pulumi.get(self, "login_design")
 
     @property

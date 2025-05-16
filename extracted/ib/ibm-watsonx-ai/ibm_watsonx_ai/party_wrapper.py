@@ -18,7 +18,7 @@ from warnings import warn
 
 import ibm_watsonx_ai._wrappers.requests as requests
 import requests as req
-from ibm_watsonx_ai.utils.utils import get_module_version
+from ibm_watsonx_ai.utils.utils import get_module_version, _handle_fl_removal
 from ibm_watsonx_ai.wml_client_error import ApiRequestFailure
 from ibm_watsonx_ai.wml_resource import WMLResource
 
@@ -29,8 +29,6 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 CRYPTO_LIBRARY = "pyhelayers"
-
-FL_DEPRECATED_WARNING = "Federated Learning is deprecated and will be removed in IBM Cloud Pak for Data 5.2."
 
 
 def is_crypto_supported() -> bool:
@@ -262,7 +260,7 @@ class Party(WMLResource):
         self.log_level = kwargs.get("log_level", "ERROR")
 
     def start(self) -> None:
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         self.Party.start()  # type: ignore
 
@@ -308,7 +306,7 @@ class Party(WMLResource):
             party.run( experiment_id = "2466fa06-1110-4169-a166-01959adec995", asynchronous = False )
 
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         import time
         from datetime import datetime
@@ -532,7 +530,7 @@ class Party(WMLResource):
             party.monitor_logs()
 
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         self.log_level = log_level
 
@@ -558,7 +556,7 @@ class Party(WMLResource):
             party.monitor_metrics()
 
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         self.metrics_output = metrics_file
 
@@ -575,7 +573,7 @@ class Party(WMLResource):
             party.is_running()
 
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         return not self.connection.stopped  # type: ignore[attr-defined]
 
@@ -592,7 +590,7 @@ class Party(WMLResource):
             party.get_round()
 
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         return self.Party.proto_handler.metrics_recorder.get_round_no()  # type: ignore
 
@@ -606,6 +604,6 @@ class Party(WMLResource):
             party.cancel()
 
         """
-        warn(FL_DEPRECATED_WARNING, category=DeprecationWarning)
+        _handle_fl_removal(self._client)
 
         self.Party.stop_connection()  # type: ignore

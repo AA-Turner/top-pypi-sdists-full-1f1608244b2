@@ -44,6 +44,10 @@ impl EvalOp for OptMatMulPack {
 
 impl TypedOp for OptMatMulPack {
     fn output_facts(&self, inputs: &[&TypedFact]) -> TractResult<TVec<TypedFact>> {
+        match self.mode_picker {
+            ModePicker::Single => ensure!(self.packers.len() == 1),
+            ModePicker::VecVsMat => ensure!(self.packers.len() == 2),
+        }
         let k = inputs[0].shape[self.k_axis].clone();
         let mn = inputs[0].shape[self.mn_axis].clone();
         let opaque_fact = DynPackedOpaqueFact { k, mn, packers: self.packers.clone() };
@@ -152,6 +156,7 @@ impl Op for OptSimpleMatMulPack {
         "OptSimpleMatMulPack".into()
     }
     op_as_typed_op!();
+    impl_op_same_as!();
 }
 
 impl EvalOp for OptSimpleMatMulPack {

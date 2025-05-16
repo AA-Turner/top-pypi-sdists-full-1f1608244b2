@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: transformer-lens
-Version: 2.15.0
+Version: 2.15.4
 Summary: An implementation of transformers tailored for mechanistic interpretability.
 License: MIT
 Author: Neel Nanda

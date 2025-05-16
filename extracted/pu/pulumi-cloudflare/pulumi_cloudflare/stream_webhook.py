@@ -95,6 +95,7 @@ class _StreamWebhookState:
         pulumi.set(self, "notification_url", value)
 
 
+@pulumi.type_token("cloudflare:index/streamWebhook:StreamWebhook")
 class StreamWebhook(pulumi.CustomResource):
     @overload
     def __init__(__self__,

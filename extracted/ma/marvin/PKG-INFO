@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: marvin
-Version: 3.0.6
+Version: 3.1.0
 Summary: a simple and powerful tool to get things done with AI
 License:                                  Apache License
                                    Version 2.0, January 2004
@@ -240,7 +240,7 @@ Marvin provides a structured, developer-focused framework for defining workflows
 
 > [!WARNING]
 > 
-> 🚧🚨 Marvin 3.0 is under very active development, reflected on the `main` branch of this repo. The API may undergo breaking changes, and documentation is still being updated. Please use it with caution. You may prefer the stable version of [Marvin 2.0](https://askmarvin.ai) or [ControlFlow](https://controlflow.ai) for now.
+> 🚧🚨 Marvin 3.x is under active development, reflected on the `main` branch of this repo. The API may undergo breaking changes, and documentation is still being updated (can be found at [marvin.mintlify.app](https://marvin.mintlify.app)).
 
 ## Installation
 

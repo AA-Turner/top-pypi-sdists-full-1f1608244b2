@@ -1,7 +1,7 @@
 r'''
 # `aws_rum_app_monitor`
 
-Refer to the Terraform Registry for docs: [`aws_rum_app_monitor`](https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor).
+Refer to the Terraform Registry for docs: [`aws_rum_app_monitor`](https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,18 +44,19 @@ class RumAppMonitor(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-aws.rumAppMonitor.RumAppMonitor",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor aws_rum_app_monitor}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor aws_rum_app_monitor}.'''
 
     def __init__(
         self,
         scope: _constructs_77d1e7e8.Construct,
         id_: builtins.str,
         *,
-        domain: builtins.str,
         name: builtins.str,
         app_monitor_configuration: typing.Optional[typing.Union["RumAppMonitorAppMonitorConfiguration", typing.Dict[builtins.str, typing.Any]]] = None,
         custom_events: typing.Optional[typing.Union["RumAppMonitorCustomEvents", typing.Dict[builtins.str, typing.Any]]] = None,
         cw_log_enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        domain: typing.Optional[builtins.str] = None,
+        domain_list: typing.Optional[typing.Sequence[builtins.str]] = None,
         id: typing.Optional[builtins.str] = None,
         tags: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
         tags_all: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
@@ -67,18 +68,19 @@ class RumAppMonitor(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor aws_rum_app_monitor} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor aws_rum_app_monitor} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param domain: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#domain RumAppMonitor#domain}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#name RumAppMonitor#name}.
-        :param app_monitor_configuration: app_monitor_configuration block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#app_monitor_configuration RumAppMonitor#app_monitor_configuration}
-        :param custom_events: custom_events block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#custom_events RumAppMonitor#custom_events}
-        :param cw_log_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#cw_log_enabled RumAppMonitor#cw_log_enabled}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#id RumAppMonitor#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#tags RumAppMonitor#tags}.
-        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#tags_all RumAppMonitor#tags_all}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#name RumAppMonitor#name}.
+        :param app_monitor_configuration: app_monitor_configuration block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#app_monitor_configuration RumAppMonitor#app_monitor_configuration}
+        :param custom_events: custom_events block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#custom_events RumAppMonitor#custom_events}
+        :param cw_log_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#cw_log_enabled RumAppMonitor#cw_log_enabled}.
+        :param domain: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#domain RumAppMonitor#domain}.
+        :param domain_list: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#domain_list RumAppMonitor#domain_list}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#id RumAppMonitor#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#tags RumAppMonitor#tags}.
+        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#tags_all RumAppMonitor#tags_all}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -92,11 +94,12 @@ class RumAppMonitor(
             check_type(argname="argument scope", value=scope, expected_type=type_hints["scope"])
             check_type(argname="argument id_", value=id_, expected_type=type_hints["id_"])
         config = RumAppMonitorConfig(
-            domain=domain,
             name=name,
             app_monitor_configuration=app_monitor_configuration,
             custom_events=custom_events,
             cw_log_enabled=cw_log_enabled,
+            domain=domain,
+            domain_list=domain_list,
             id=id,
             tags=tags,
             tags_all=tags_all,
@@ -124,7 +127,7 @@ class RumAppMonitor(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the RumAppMonitor to import.
-        :param import_from_id: The id of the existing RumAppMonitor that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing RumAppMonitor that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the RumAppMonitor to import is found.
         '''
         if __debug__:
@@ -150,15 +153,15 @@ class RumAppMonitor(
         telemetries: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param allow_cookies: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#allow_cookies RumAppMonitor#allow_cookies}.
-        :param enable_xray: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#enable_xray RumAppMonitor#enable_xray}.
-        :param excluded_pages: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#excluded_pages RumAppMonitor#excluded_pages}.
-        :param favorite_pages: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#favorite_pages RumAppMonitor#favorite_pages}.
-        :param guest_role_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#guest_role_arn RumAppMonitor#guest_role_arn}.
-        :param identity_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#identity_pool_id RumAppMonitor#identity_pool_id}.
-        :param included_pages: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#included_pages RumAppMonitor#included_pages}.
-        :param session_sample_rate: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#session_sample_rate RumAppMonitor#session_sample_rate}.
-        :param telemetries: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#telemetries RumAppMonitor#telemetries}.
+        :param allow_cookies: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#allow_cookies RumAppMonitor#allow_cookies}.
+        :param enable_xray: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#enable_xray RumAppMonitor#enable_xray}.
+        :param excluded_pages: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#excluded_pages RumAppMonitor#excluded_pages}.
+        :param favorite_pages: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#favorite_pages RumAppMonitor#favorite_pages}.
+        :param guest_role_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#guest_role_arn RumAppMonitor#guest_role_arn}.
+        :param identity_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#identity_pool_id RumAppMonitor#identity_pool_id}.
+        :param included_pages: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#included_pages RumAppMonitor#included_pages}.
+        :param session_sample_rate: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#session_sample_rate RumAppMonitor#session_sample_rate}.
+        :param telemetries: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#telemetries RumAppMonitor#telemetries}.
         '''
         value = RumAppMonitorAppMonitorConfiguration(
             allow_cookies=allow_cookies,
@@ -181,7 +184,7 @@ class RumAppMonitor(
         status: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param status: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#status RumAppMonitor#status}.
+        :param status: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#status RumAppMonitor#status}.
         '''
         value = RumAppMonitorCustomEvents(status=status)
 
@@ -198,6 +201,14 @@ class RumAppMonitor(
     @jsii.member(jsii_name="resetCwLogEnabled")
     def reset_cw_log_enabled(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetCwLogEnabled", []))
+
+    @jsii.member(jsii_name="resetDomain")
+    def reset_domain(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDomain", []))
+
+    @jsii.member(jsii_name="resetDomainList")
+    def reset_domain_list(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDomainList", []))
 
     @jsii.member(jsii_name="resetId")
     def reset_id(self) -> None:
@@ -276,6 +287,11 @@ class RumAppMonitor(
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "domainInput"))
 
     @builtins.property
+    @jsii.member(jsii_name="domainListInput")
+    def domain_list_input(self) -> typing.Optional[typing.List[builtins.str]]:
+        return typing.cast(typing.Optional[typing.List[builtins.str]], jsii.get(self, "domainListInput"))
+
+    @builtins.property
     @jsii.member(jsii_name="idInput")
     def id_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "idInput"))
@@ -325,6 +341,18 @@ class RumAppMonitor(
             type_hints = typing.get_type_hints(_typecheckingstub__92a60fad111a2479f59ee764a8e96593f6d39ea1b187c6a931e31475fada0bac)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         jsii.set(self, "domain", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="domainList")
+    def domain_list(self) -> typing.List[builtins.str]:
+        return typing.cast(typing.List[builtins.str], jsii.get(self, "domainList"))
+
+    @domain_list.setter
+    def domain_list(self, value: typing.List[builtins.str]) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c5e649df263437f12593b982303e97a4eee4e31037e3fd59b2ca421253cdd8fa)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "domainList", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
     @jsii.member(jsii_name="id")
@@ -405,15 +433,15 @@ class RumAppMonitorAppMonitorConfiguration:
         telemetries: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param allow_cookies: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#allow_cookies RumAppMonitor#allow_cookies}.
-        :param enable_xray: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#enable_xray RumAppMonitor#enable_xray}.
-        :param excluded_pages: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#excluded_pages RumAppMonitor#excluded_pages}.
-        :param favorite_pages: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#favorite_pages RumAppMonitor#favorite_pages}.
-        :param guest_role_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#guest_role_arn RumAppMonitor#guest_role_arn}.
-        :param identity_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#identity_pool_id RumAppMonitor#identity_pool_id}.
-        :param included_pages: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#included_pages RumAppMonitor#included_pages}.
-        :param session_sample_rate: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#session_sample_rate RumAppMonitor#session_sample_rate}.
-        :param telemetries: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#telemetries RumAppMonitor#telemetries}.
+        :param allow_cookies: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#allow_cookies RumAppMonitor#allow_cookies}.
+        :param enable_xray: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#enable_xray RumAppMonitor#enable_xray}.
+        :param excluded_pages: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#excluded_pages RumAppMonitor#excluded_pages}.
+        :param favorite_pages: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#favorite_pages RumAppMonitor#favorite_pages}.
+        :param guest_role_arn: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#guest_role_arn RumAppMonitor#guest_role_arn}.
+        :param identity_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#identity_pool_id RumAppMonitor#identity_pool_id}.
+        :param included_pages: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#included_pages RumAppMonitor#included_pages}.
+        :param session_sample_rate: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#session_sample_rate RumAppMonitor#session_sample_rate}.
+        :param telemetries: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#telemetries RumAppMonitor#telemetries}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__e27f690b60cdc243637713cadde49b3a99799b34e3dd870142d2c19f36cf7101)
@@ -450,7 +478,7 @@ class RumAppMonitorAppMonitorConfiguration:
     def allow_cookies(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#allow_cookies RumAppMonitor#allow_cookies}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#allow_cookies RumAppMonitor#allow_cookies}.'''
         result = self._values.get("allow_cookies")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -458,49 +486,49 @@ class RumAppMonitorAppMonitorConfiguration:
     def enable_xray(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#enable_xray RumAppMonitor#enable_xray}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#enable_xray RumAppMonitor#enable_xray}.'''
         result = self._values.get("enable_xray")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def excluded_pages(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#excluded_pages RumAppMonitor#excluded_pages}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#excluded_pages RumAppMonitor#excluded_pages}.'''
         result = self._values.get("excluded_pages")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def favorite_pages(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#favorite_pages RumAppMonitor#favorite_pages}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#favorite_pages RumAppMonitor#favorite_pages}.'''
         result = self._values.get("favorite_pages")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def guest_role_arn(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#guest_role_arn RumAppMonitor#guest_role_arn}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#guest_role_arn RumAppMonitor#guest_role_arn}.'''
         result = self._values.get("guest_role_arn")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def identity_pool_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#identity_pool_id RumAppMonitor#identity_pool_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#identity_pool_id RumAppMonitor#identity_pool_id}.'''
         result = self._values.get("identity_pool_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def included_pages(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#included_pages RumAppMonitor#included_pages}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#included_pages RumAppMonitor#included_pages}.'''
         result = self._values.get("included_pages")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def session_sample_rate(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#session_sample_rate RumAppMonitor#session_sample_rate}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#session_sample_rate RumAppMonitor#session_sample_rate}.'''
         result = self._values.get("session_sample_rate")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def telemetries(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#telemetries RumAppMonitor#telemetries}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#telemetries RumAppMonitor#telemetries}.'''
         result = self._values.get("telemetries")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
@@ -762,11 +790,12 @@ class RumAppMonitorAppMonitorConfigurationOutputReference(
         "lifecycle": "lifecycle",
         "provider": "provider",
         "provisioners": "provisioners",
-        "domain": "domain",
         "name": "name",
         "app_monitor_configuration": "appMonitorConfiguration",
         "custom_events": "customEvents",
         "cw_log_enabled": "cwLogEnabled",
+        "domain": "domain",
+        "domain_list": "domainList",
         "id": "id",
         "tags": "tags",
         "tags_all": "tagsAll",
@@ -783,11 +812,12 @@ class RumAppMonitorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         lifecycle: typing.Optional[typing.Union[_cdktf_9a9027ec.TerraformResourceLifecycle, typing.Dict[builtins.str, typing.Any]]] = None,
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
-        domain: builtins.str,
         name: builtins.str,
         app_monitor_configuration: typing.Optional[typing.Union[RumAppMonitorAppMonitorConfiguration, typing.Dict[builtins.str, typing.Any]]] = None,
         custom_events: typing.Optional[typing.Union["RumAppMonitorCustomEvents", typing.Dict[builtins.str, typing.Any]]] = None,
         cw_log_enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        domain: typing.Optional[builtins.str] = None,
+        domain_list: typing.Optional[typing.Sequence[builtins.str]] = None,
         id: typing.Optional[builtins.str] = None,
         tags: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
         tags_all: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
@@ -800,14 +830,15 @@ class RumAppMonitorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param domain: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#domain RumAppMonitor#domain}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#name RumAppMonitor#name}.
-        :param app_monitor_configuration: app_monitor_configuration block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#app_monitor_configuration RumAppMonitor#app_monitor_configuration}
-        :param custom_events: custom_events block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#custom_events RumAppMonitor#custom_events}
-        :param cw_log_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#cw_log_enabled RumAppMonitor#cw_log_enabled}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#id RumAppMonitor#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#tags RumAppMonitor#tags}.
-        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#tags_all RumAppMonitor#tags_all}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#name RumAppMonitor#name}.
+        :param app_monitor_configuration: app_monitor_configuration block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#app_monitor_configuration RumAppMonitor#app_monitor_configuration}
+        :param custom_events: custom_events block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#custom_events RumAppMonitor#custom_events}
+        :param cw_log_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#cw_log_enabled RumAppMonitor#cw_log_enabled}.
+        :param domain: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#domain RumAppMonitor#domain}.
+        :param domain_list: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#domain_list RumAppMonitor#domain_list}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#id RumAppMonitor#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#tags RumAppMonitor#tags}.
+        :param tags_all: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#tags_all RumAppMonitor#tags_all}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -824,16 +855,16 @@ class RumAppMonitorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument lifecycle", value=lifecycle, expected_type=type_hints["lifecycle"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
             check_type(argname="argument provisioners", value=provisioners, expected_type=type_hints["provisioners"])
-            check_type(argname="argument domain", value=domain, expected_type=type_hints["domain"])
             check_type(argname="argument name", value=name, expected_type=type_hints["name"])
             check_type(argname="argument app_monitor_configuration", value=app_monitor_configuration, expected_type=type_hints["app_monitor_configuration"])
             check_type(argname="argument custom_events", value=custom_events, expected_type=type_hints["custom_events"])
             check_type(argname="argument cw_log_enabled", value=cw_log_enabled, expected_type=type_hints["cw_log_enabled"])
+            check_type(argname="argument domain", value=domain, expected_type=type_hints["domain"])
+            check_type(argname="argument domain_list", value=domain_list, expected_type=type_hints["domain_list"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
             check_type(argname="argument tags", value=tags, expected_type=type_hints["tags"])
             check_type(argname="argument tags_all", value=tags_all, expected_type=type_hints["tags_all"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
-            "domain": domain,
             "name": name,
         }
         if connection is not None:
@@ -856,6 +887,10 @@ class RumAppMonitorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["custom_events"] = custom_events
         if cw_log_enabled is not None:
             self._values["cw_log_enabled"] = cw_log_enabled
+        if domain is not None:
+            self._values["domain"] = domain
+        if domain_list is not None:
+            self._values["domain_list"] = domain_list
         if id is not None:
             self._values["id"] = id
         if tags is not None:
@@ -928,15 +963,8 @@ class RumAppMonitorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         return typing.cast(typing.Optional[typing.List[typing.Union[_cdktf_9a9027ec.FileProvisioner, _cdktf_9a9027ec.LocalExecProvisioner, _cdktf_9a9027ec.RemoteExecProvisioner]]], result)
 
     @builtins.property
-    def domain(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#domain RumAppMonitor#domain}.'''
-        result = self._values.get("domain")
-        assert result is not None, "Required property 'domain' is missing"
-        return typing.cast(builtins.str, result)
-
-    @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#name RumAppMonitor#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#name RumAppMonitor#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
@@ -947,7 +975,7 @@ class RumAppMonitorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[RumAppMonitorAppMonitorConfiguration]:
         '''app_monitor_configuration block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#app_monitor_configuration RumAppMonitor#app_monitor_configuration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#app_monitor_configuration RumAppMonitor#app_monitor_configuration}
         '''
         result = self._values.get("app_monitor_configuration")
         return typing.cast(typing.Optional[RumAppMonitorAppMonitorConfiguration], result)
@@ -956,7 +984,7 @@ class RumAppMonitorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def custom_events(self) -> typing.Optional["RumAppMonitorCustomEvents"]:
         '''custom_events block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#custom_events RumAppMonitor#custom_events}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#custom_events RumAppMonitor#custom_events}
         '''
         result = self._values.get("custom_events")
         return typing.cast(typing.Optional["RumAppMonitorCustomEvents"], result)
@@ -965,13 +993,25 @@ class RumAppMonitorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def cw_log_enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#cw_log_enabled RumAppMonitor#cw_log_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#cw_log_enabled RumAppMonitor#cw_log_enabled}.'''
         result = self._values.get("cw_log_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
+    def domain(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#domain RumAppMonitor#domain}.'''
+        result = self._values.get("domain")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def domain_list(self) -> typing.Optional[typing.List[builtins.str]]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#domain_list RumAppMonitor#domain_list}.'''
+        result = self._values.get("domain_list")
+        return typing.cast(typing.Optional[typing.List[builtins.str]], result)
+
+    @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#id RumAppMonitor#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#id RumAppMonitor#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -981,13 +1021,13 @@ class RumAppMonitorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def tags(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#tags RumAppMonitor#tags}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#tags RumAppMonitor#tags}.'''
         result = self._values.get("tags")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def tags_all(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#tags_all RumAppMonitor#tags_all}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#tags_all RumAppMonitor#tags_all}.'''
         result = self._values.get("tags_all")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1011,7 +1051,7 @@ class RumAppMonitorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 class RumAppMonitorCustomEvents:
     def __init__(self, *, status: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param status: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#status RumAppMonitor#status}.
+        :param status: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#status RumAppMonitor#status}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__c1e68cf65233c06ed8b734422ee703c9f939d05dad2b412ae4dbbf6c1cda7514)
@@ -1022,7 +1062,7 @@ class RumAppMonitorCustomEvents:
 
     @builtins.property
     def status(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.97.0/docs/resources/rum_app_monitor#status RumAppMonitor#status}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.98.0/docs/resources/rum_app_monitor#status RumAppMonitor#status}.'''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1107,11 +1147,12 @@ def _typecheckingstub__d59c2e452c215acfbbe069715a91006795dcc379d9af92f837b51874c
     scope: _constructs_77d1e7e8.Construct,
     id_: builtins.str,
     *,
-    domain: builtins.str,
     name: builtins.str,
     app_monitor_configuration: typing.Optional[typing.Union[RumAppMonitorAppMonitorConfiguration, typing.Dict[builtins.str, typing.Any]]] = None,
     custom_events: typing.Optional[typing.Union[RumAppMonitorCustomEvents, typing.Dict[builtins.str, typing.Any]]] = None,
     cw_log_enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    domain: typing.Optional[builtins.str] = None,
+    domain_list: typing.Optional[typing.Sequence[builtins.str]] = None,
     id: typing.Optional[builtins.str] = None,
     tags: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
     tags_all: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
@@ -1143,6 +1184,12 @@ def _typecheckingstub__ec51281684b3716485266e414d737f410d52bdfaae4c8199977ff9da4
 
 def _typecheckingstub__92a60fad111a2479f59ee764a8e96593f6d39ea1b187c6a931e31475fada0bac(
     value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c5e649df263437f12593b982303e97a4eee4e31037e3fd59b2ca421253cdd8fa(
+    value: typing.List[builtins.str],
 ) -> None:
     """Type checking stubs"""
     pass
@@ -1262,11 +1309,12 @@ def _typecheckingstub__291d869b291c352aa78ad785d26ab344df75e4dc66c4e32c29411d4ad
     lifecycle: typing.Optional[typing.Union[_cdktf_9a9027ec.TerraformResourceLifecycle, typing.Dict[builtins.str, typing.Any]]] = None,
     provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
     provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
-    domain: builtins.str,
     name: builtins.str,
     app_monitor_configuration: typing.Optional[typing.Union[RumAppMonitorAppMonitorConfiguration, typing.Dict[builtins.str, typing.Any]]] = None,
     custom_events: typing.Optional[typing.Union[RumAppMonitorCustomEvents, typing.Dict[builtins.str, typing.Any]]] = None,
     cw_log_enabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    domain: typing.Optional[builtins.str] = None,
+    domain_list: typing.Optional[typing.Sequence[builtins.str]] = None,
     id: typing.Optional[builtins.str] = None,
     tags: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
     tags_all: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,

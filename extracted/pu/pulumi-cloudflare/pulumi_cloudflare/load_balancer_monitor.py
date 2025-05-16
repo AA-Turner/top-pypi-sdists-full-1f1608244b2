@@ -604,6 +604,7 @@ class _LoadBalancerMonitorState:
         pulumi.set(self, "type", value)
 
 
+@pulumi.type_token("cloudflare:index/loadBalancerMonitor:LoadBalancerMonitor")
 class LoadBalancerMonitor(pulumi.CustomResource):
     @overload
     def __init__(__self__,

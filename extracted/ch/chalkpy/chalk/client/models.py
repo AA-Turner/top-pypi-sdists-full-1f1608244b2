@@ -480,6 +480,7 @@ class OnlineQueryRequest(BaseModel):
     planner_options: Optional[Mapping[str, Any]] = None
     query_context: Optional[ContextJsonDict] = None
     value_metrics_tag_by_features: Tuple[str, ...] = ()
+    overlay_graph: Optional[str] = None  # base64-encoded chalk.graph.v1.OverlayGraph proto
 
 
 @dataclasses.dataclass
@@ -515,6 +516,7 @@ class OnlineQueryManyRequest(BaseModel):
     query_context: Optional[ContextJsonDict] = None
     encoding_options: FeatureEncodingOptions = FeatureEncodingOptions()
     value_metrics_tag_by_features: Tuple[str, ...] = ()
+    overlay_graph: Optional[str] = None
 
 
 class MultiUploadFeaturesRequest(ByteBaseModel):
@@ -897,6 +899,8 @@ class CreateOfflineQueryJobRequest(BaseModel):
     max_retries: Optional[int] = None
 
     use_job_queue: bool = False
+
+    overlay_graph: Optional[str] = None
 
     @root_validator
     def _validate_multiple_computers(cls, values: Dict[str, Any]):

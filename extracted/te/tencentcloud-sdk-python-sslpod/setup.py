@@ -8,7 +8,7 @@ ROOT = os.path.dirname(__file__)
 
 setup(
     name='tencentcloud-sdk-python-sslpod',
-    install_requires=["tencentcloud-sdk-python-common==3.0.1379"],
+    install_requires=["tencentcloud-sdk-python-common==3.0.1380"],
     version=tencentcloud.__version__,
     description='Tencent Cloud Sslpod SDK for Python',
     long_description=open('README.rst').read(),
