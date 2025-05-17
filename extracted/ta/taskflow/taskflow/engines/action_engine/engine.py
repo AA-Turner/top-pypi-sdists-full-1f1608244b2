@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #    Copyright (C) 2012 Yahoo! Inc. All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -39,11 +37,6 @@ from taskflow import states
 from taskflow import storage
 from taskflow.types import failure
 from taskflow.utils import misc
-
-try:
-    from taskflow.engines.action_engine import process_executor
-except ImportError:
-    process_executor = None
 
 LOG = logging.getLogger(__name__)
 
@@ -170,7 +163,7 @@ class ActionEngine(base.Engine):
     """
 
     def __init__(self, flow, flow_detail, backend, options):
-        super(ActionEngine, self).__init__(flow, flow_detail, backend, options)
+        super().__init__(flow, flow_detail, backend, options)
         self._runtime = None
         self._compiled = False
         self._compilation = None
@@ -479,8 +472,7 @@ class SerialActionEngine(ActionEngine):
     """Engine that runs tasks in serial manner."""
 
     def __init__(self, flow, flow_detail, backend, options):
-        super(SerialActionEngine, self).__init__(flow, flow_detail,
-                                                 backend, options)
+        super().__init__(flow, flow_detail, backend, options)
         self._task_executor = executor.SerialTaskExecutor()
 
 
@@ -548,7 +540,6 @@ String (case insensitive)    Executor used
       polling while a higher number will involve less polling but a slower time
       for an engine to notice a task has completed.
 
-    .. |pe|  replace:: process_executor
     .. |cfp| replace:: concurrent.futures.process
     .. |cft| replace:: concurrent.futures.thread
     .. |cf| replace:: concurrent.futures
@@ -563,16 +554,9 @@ String (case insensitive)    Executor used
     _executor_cls_matchers = [
         _ExecutorTypeMatch((futures.ThreadPoolExecutor,),
                            executor.ParallelThreadTaskExecutor),
-    ]
-    if process_executor is not None:
-        _executor_cls_matchers.append(
-            _ExecutorTypeMatch((futures.ProcessPoolExecutor,),
-                               process_executor.ParallelProcessTaskExecutor)
-        )
-    _executor_cls_matchers.append(
         _ExecutorTypeMatch((futures.Executor,),
                            executor.ParallelThreadTaskExecutor),
-    )
+    ]
 
     # One of these should match when a string/text is provided for the
     # 'executor' option (a mixed case equivalent is allowed since the match
@@ -584,18 +568,12 @@ String (case insensitive)    Executor used
                                       'greenthreaded']),
                            executor.ParallelGreenThreadTaskExecutor),
     ]
-    if process_executor is not None:
-        _executor_str_matchers.append(
-            _ExecutorTextMatch(frozenset(['processes', 'process']),
-                               process_executor.ParallelProcessTaskExecutor)
-        )
 
     # Used when no executor is provided (either a string or object)...
     _default_executor_cls = executor.ParallelThreadTaskExecutor
 
     def __init__(self, flow, flow_detail, backend, options):
-        super(ParallelActionEngine, self).__init__(flow, flow_detail,
-                                                   backend, options)
+        super().__init__(flow, flow_detail, backend, options)
         # This ensures that any provided executor will be validated before
         # we get to far in the compilation/execution pipeline...
         self._task_executor = self._fetch_task_executor(self._options)

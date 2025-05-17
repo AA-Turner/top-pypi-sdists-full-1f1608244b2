@@ -39,7 +39,7 @@ def verify_prerequisites() -> None:
         raise pip_dependency_error("inspect_ai.analysis", required_packages)
 
     # enforce version constraints
-    verify_required_version("inspect_ai.analysis", "pandas", "2.0.0")
+    verify_required_version("inspect_ai.analysis", "pandas", "2.1.0")
     verify_required_version("inspect_ai.analysis", "pyarrow", "10.0.1")
 
 
@@ -141,20 +141,22 @@ def add_unreferenced_columns(
 def records_to_pandas(records: list[dict[str, ColumnType]]) -> "pd.DataFrame":
     import pyarrow as pa
 
+    # create arrow table
     records = normalize_records(records)
-    table = pa.Table.from_pylist(records).to_pandas(types_mapper=arrow_types_mapper)
-    return table
+    table = pa.Table.from_pylist(records)
+
+    # convert arrow to pandas
+    df = table.to_pandas(types_mapper=arrow_types_mapper)
+
+    # swap numpy-backed nullable columns for arrow-backed equivalents
+    # df = df.convert_dtypes(dtype_backend="pyarrow")
+    return df
 
 
-def arrow_types_mapper(
-    arrow_type: "pa.DataType",
-) -> "pd.api.extensions.ExtensionDtype" | None:
+def arrow_types_mapper(arrow_type: pa.DataType) -> pd.ArrowDtype:
     import pandas as pd
     import pyarrow as pa
 
-    # convert str => str
-    if pa.types.is_string(arrow_type):
-        return pd.StringDtype()
-    # default conversion for other types
-    else:
-        return None
+    if pa.types.is_null(arrow_type):
+        arrow_type = pa.string()
+    return pd.ArrowDtype(arrow_type)

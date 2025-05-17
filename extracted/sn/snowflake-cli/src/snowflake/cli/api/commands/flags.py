@@ -284,6 +284,99 @@ EnableDiagOption = typer.Option(
     rich_help_panel=_CONNECTION_SECTION,
 )
 
+OauthClientIdOption = typer.Option(
+    None,
+    "--oauth-client-id",
+    help="Value of client id provided by the Identity Provider for Snowflake integration.",
+    callback=_connection_callback("oauth_client_id"),
+    show_default=False,
+    rich_help_panel=_CONNECTION_SECTION,
+)
+
+OauthClientSecretOption = typer.Option(
+    None,
+    help="Value of the client secret provided by the Identity Provider for Snowflake integration.",
+    callback=_connection_callback("oauth_client_secret"),
+    show_default=False,
+    rich_help_panel=_CONNECTION_SECTION,
+)
+
+OauthAuthorizationUrlOption = typer.Option(
+    None,
+    "--oauth-authorization-url",
+    help="Identity Provider endpoint supplying the authorization code to the driver.",
+    callback=_connection_callback("oauth_authorization_url"),
+    show_default=False,
+    rich_help_panel=_CONNECTION_SECTION,
+)
+
+OauthTokenRequestUrlOption = typer.Option(
+    None,
+    "--oauth-token-request-url",
+    help="Identity Provider endpoint supplying the access tokens to the driver.",
+    callback=_connection_callback("oauth_token_request_url"),
+    show_default=False,
+    rich_help_panel=_CONNECTION_SECTION,
+)
+
+OauthRedirectUriOption = typer.Option(
+    None,
+    "--oauth-redirect-uri",
+    help="URI to use for authorization code redirection.",
+    callback=_connection_callback("oauth_redirect_uri"),
+    show_default=False,
+    rich_help_panel=_CONNECTION_SECTION,
+)
+
+OauthScopeOption = typer.Option(
+    None,
+    "--oauth-scope",
+    help="Scope requested in the Identity Provider authorization request.",
+    callback=_connection_callback("oauth_scope"),
+    show_default=False,
+    rich_help_panel=_CONNECTION_SECTION,
+)
+
+OauthDisablePkceOption = typer.Option(
+    None,
+    "--oauth-disable-pkce",
+    help="Disables Proof Key for Code Exchange (PKCE). Default: `False`.",
+    callback=_connection_callback("oauth_disable_pkce"),
+    show_default=False,
+    is_flag=True,
+    rich_help_panel=_CONNECTION_SECTION,
+)
+
+OauthEnableRefreshTokensOption = typer.Option(
+    None,
+    "--oauth-enable-refresh-tokens",
+    help="Enables a silent re-authentication when the actual access token becomes outdated. Default: `False`.",
+    callback=_connection_callback("oauth_enable_refresh_tokens"),
+    show_default=False,
+    is_flag=True,
+    rich_help_panel=_CONNECTION_SECTION,
+)
+
+OauthEnableSingleUseRefreshTokensOption = typer.Option(
+    None,
+    "--oauth-enable-single-use-refresh-tokens",
+    help="Whether to opt-in to single-use refresh token semantics. Default: `False`.",
+    callback=_connection_callback("oauth_enable_single_use_refresh_tokens"),
+    show_default=False,
+    is_flag=True,
+    rich_help_panel=_CONNECTION_SECTION,
+)
+
+ClientStoreTemporaryCredentialOption = typer.Option(
+    None,
+    "--client-store-temporary-credential",
+    help="Store the temporary credential.",
+    callback=_connection_callback("client_store_temporary_credential"),
+    is_flag=True,
+    show_default=False,
+    rich_help_panel=_CONNECTION_SECTION,
+)
+
 # Set default via callback to avoid including tempdir path in generated docs (snow --docs).
 # Use constant instead of None, as None is removed from telemetry data.
 _DIAG_LOG_DEFAULT_VALUE = "<system_temporary_directory>"
@@ -382,7 +475,6 @@ EnhancedExitCodesOption = typer.Option(
     envvar="SNOWFLAKE_ENHANCED_EXIT_CODES",
 )
 
-
 # If IfExistsOption, IfNotExistsOption, or ReplaceOption are used with names other than those in CREATE_MODE_OPTION_NAMES,
 # you must also override mutually_exclusive if you want to retain the validation that at most one of these flags is
 # passed.
@@ -425,9 +517,9 @@ NoInteractiveOption = typer.Option(False, "--no-interactive", help="Disable prom
 
 PruneOption = OverrideableOption(
     False,
-    "--prune",
+    "--prune/--no-prune",
     help=f"Delete files that exist in the stage, but not in the local filesystem.",
-    show_default=False,
+    show_default=True,
 )
 
 

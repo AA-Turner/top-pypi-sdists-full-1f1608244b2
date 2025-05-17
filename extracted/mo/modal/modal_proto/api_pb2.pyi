@@ -2193,14 +2193,11 @@ class ClassGetRequest(google.protobuf.message.Message):
     OBJECT_TAG_FIELD_NUMBER: builtins.int
     NAMESPACE_FIELD_NUMBER: builtins.int
     ENVIRONMENT_NAME_FIELD_NUMBER: builtins.int
-    LOOKUP_PUBLISHED_FIELD_NUMBER: builtins.int
     ONLY_CLASS_FUNCTION_FIELD_NUMBER: builtins.int
     app_name: builtins.str
     object_tag: builtins.str
     namespace: global___DeploymentNamespace.ValueType
     environment_name: builtins.str
-    lookup_published: builtins.bool
-    """Lookup class on app published by another workspace"""
     only_class_function: builtins.bool
     """True starting with 0.67.x clients, which don't create method placeholder functions"""
     def __init__(
@@ -2210,10 +2207,9 @@ class ClassGetRequest(google.protobuf.message.Message):
         object_tag: builtins.str = ...,
         namespace: global___DeploymentNamespace.ValueType = ...,
         environment_name: builtins.str = ...,
-        lookup_published: builtins.bool = ...,
         only_class_function: builtins.bool = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["app_name", b"app_name", "environment_name", b"environment_name", "lookup_published", b"lookup_published", "namespace", b"namespace", "object_tag", b"object_tag", "only_class_function", b"only_class_function"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["app_name", b"app_name", "environment_name", b"environment_name", "namespace", b"namespace", "object_tag", b"object_tag", "only_class_function", b"only_class_function"]) -> None: ...
 
 global___ClassGetRequest = ClassGetRequest
 
@@ -4177,6 +4173,7 @@ class Function(google.protobuf.message.Message):
     AUTOSCALER_SETTINGS_FIELD_NUMBER: builtins.int
     FUNCTION_SCHEMA_FIELD_NUMBER: builtins.int
     EXPERIMENTAL_OPTIONS_FIELD_NUMBER: builtins.int
+    MOUNT_CLIENT_DEPENDENCIES_FIELD_NUMBER: builtins.int
     module_name: builtins.str
     function_name: builtins.str
     @property
@@ -4305,6 +4302,10 @@ class Function(google.protobuf.message.Message):
         Note the value type as string. Internally we'll coerce all values to string with str().
         On the server, it's necessary to convert back to the most natural type (e.g. int) when relevant.
         """
+    mount_client_dependencies: builtins.bool
+    """If set, client deps will be mounted into the container, and are
+    no longer expected to exist in the image itself.
+    """
     def __init__(
         self,
         *,
@@ -4376,9 +4377,10 @@ class Function(google.protobuf.message.Message):
         autoscaler_settings: global___AutoscalerSettings | None = ...,
         function_schema: global___FunctionSchema | None = ...,
         experimental_options: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
+        mount_client_dependencies: builtins.bool = ...,
     ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["X_experimental_proxy_ip", b"X_experimental_proxy_ip", "_cloud_provider", b"_cloud_provider", "_experimental_proxy_ip", b"_experimental_proxy_ip", "_proxy_id", b"_proxy_id", "_scheduler_placement", b"_scheduler_placement", "autoscaler_settings", b"autoscaler_settings", "checkpoint", b"checkpoint", "class_parameter_info", b"class_parameter_info", "cloud_provider", b"cloud_provider", "function_schema", b"function_schema", "proxy_id", b"proxy_id", "pty_info", b"pty_info", "rate_limit", b"rate_limit", "resources", b"resources", "retry_policy", b"retry_policy", "schedule", b"schedule", "scheduler_placement", b"scheduler_placement", "web_url_info", b"web_url_info", "webhook_config", b"webhook_config"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["X_experimental_proxy_ip", b"X_experimental_proxy_ip", "_cloud_provider", b"_cloud_provider", "_experimental_buffer_containers", b"_experimental_buffer_containers", "_experimental_concurrent_cancellations", b"_experimental_concurrent_cancellations", "_experimental_custom_scaling", b"_experimental_custom_scaling", "_experimental_enable_gpu_snapshot", b"_experimental_enable_gpu_snapshot", "_experimental_group_size", b"_experimental_group_size", "_experimental_proxy_ip", b"_experimental_proxy_ip", "_experimental_task_templates", b"_experimental_task_templates", "_experimental_task_templates_enabled", b"_experimental_task_templates_enabled", "_proxy_id", b"_proxy_id", "_scheduler_placement", b"_scheduler_placement", "app_name", b"app_name", "autoscaler_settings", b"autoscaler_settings", "batch_linger_ms", b"batch_linger_ms", "batch_max_size", b"batch_max_size", "block_network", b"block_network", "checkpoint", b"checkpoint", "checkpointing_enabled", b"checkpointing_enabled", "class_parameter_info", b"class_parameter_info", "class_serialized", b"class_serialized", "cloud_bucket_mounts", b"cloud_bucket_mounts", "cloud_provider", b"cloud_provider", "cloud_provider_str", b"cloud_provider_str", "concurrency_limit", b"concurrency_limit", "custom_domain_info", b"custom_domain_info", "definition_type", b"definition_type", "experimental_options", b"experimental_options", "function_name", b"function_name", "function_schema", b"function_schema", "function_serialized", b"function_serialized", "function_type", b"function_type", "i6pn_enabled", b"i6pn_enabled", "image_id", b"image_id", "is_auto_snapshot", b"is_auto_snapshot", "is_builder_function", b"is_builder_function", "is_checkpointing_function", b"is_checkpointing_function", "is_class", b"is_class", "is_method", b"is_method", "max_concurrent_inputs", b"max_concurrent_inputs", "max_inputs", b"max_inputs", "method_definitions", b"method_definitions", "method_definitions_set", b"method_definitions_set", "module_name", b"module_name", "mount_ids", b"mount_ids", "object_dependencies", b"object_dependencies", "proxy_id", b"proxy_id", "pty_info", b"pty_info", "rate_limit", b"rate_limit", "resources", b"resources", "retry_policy", b"retry_policy", "runtime", b"runtime", "runtime_debug", b"runtime_debug", "runtime_perf_record", b"runtime_perf_record", "s3_mounts", b"s3_mounts", "schedule", b"schedule", "scheduler_placement", b"scheduler_placement", "secret_ids", b"secret_ids", "shared_volume_mounts", b"shared_volume_mounts", "snapshot_debug", b"snapshot_debug", "target_concurrent_inputs", b"target_concurrent_inputs", "task_idle_timeout_secs", b"task_idle_timeout_secs", "timeout_secs", b"timeout_secs", "untrusted", b"untrusted", "use_function_id", b"use_function_id", "use_method_name", b"use_method_name", "volume_mounts", b"volume_mounts", "warm_pool_size", b"warm_pool_size", "web_url", b"web_url", "web_url_info", b"web_url_info", "webhook_config", b"webhook_config", "worker_id", b"worker_id"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["X_experimental_proxy_ip", b"X_experimental_proxy_ip", "_cloud_provider", b"_cloud_provider", "_experimental_buffer_containers", b"_experimental_buffer_containers", "_experimental_concurrent_cancellations", b"_experimental_concurrent_cancellations", "_experimental_custom_scaling", b"_experimental_custom_scaling", "_experimental_enable_gpu_snapshot", b"_experimental_enable_gpu_snapshot", "_experimental_group_size", b"_experimental_group_size", "_experimental_proxy_ip", b"_experimental_proxy_ip", "_experimental_task_templates", b"_experimental_task_templates", "_experimental_task_templates_enabled", b"_experimental_task_templates_enabled", "_proxy_id", b"_proxy_id", "_scheduler_placement", b"_scheduler_placement", "app_name", b"app_name", "autoscaler_settings", b"autoscaler_settings", "batch_linger_ms", b"batch_linger_ms", "batch_max_size", b"batch_max_size", "block_network", b"block_network", "checkpoint", b"checkpoint", "checkpointing_enabled", b"checkpointing_enabled", "class_parameter_info", b"class_parameter_info", "class_serialized", b"class_serialized", "cloud_bucket_mounts", b"cloud_bucket_mounts", "cloud_provider", b"cloud_provider", "cloud_provider_str", b"cloud_provider_str", "concurrency_limit", b"concurrency_limit", "custom_domain_info", b"custom_domain_info", "definition_type", b"definition_type", "experimental_options", b"experimental_options", "function_name", b"function_name", "function_schema", b"function_schema", "function_serialized", b"function_serialized", "function_type", b"function_type", "i6pn_enabled", b"i6pn_enabled", "image_id", b"image_id", "is_auto_snapshot", b"is_auto_snapshot", "is_builder_function", b"is_builder_function", "is_checkpointing_function", b"is_checkpointing_function", "is_class", b"is_class", "is_method", b"is_method", "max_concurrent_inputs", b"max_concurrent_inputs", "max_inputs", b"max_inputs", "method_definitions", b"method_definitions", "method_definitions_set", b"method_definitions_set", "module_name", b"module_name", "mount_client_dependencies", b"mount_client_dependencies", "mount_ids", b"mount_ids", "object_dependencies", b"object_dependencies", "proxy_id", b"proxy_id", "pty_info", b"pty_info", "rate_limit", b"rate_limit", "resources", b"resources", "retry_policy", b"retry_policy", "runtime", b"runtime", "runtime_debug", b"runtime_debug", "runtime_perf_record", b"runtime_perf_record", "s3_mounts", b"s3_mounts", "schedule", b"schedule", "scheduler_placement", b"scheduler_placement", "secret_ids", b"secret_ids", "shared_volume_mounts", b"shared_volume_mounts", "snapshot_debug", b"snapshot_debug", "target_concurrent_inputs", b"target_concurrent_inputs", "task_idle_timeout_secs", b"task_idle_timeout_secs", "timeout_secs", b"timeout_secs", "untrusted", b"untrusted", "use_function_id", b"use_function_id", "use_method_name", b"use_method_name", "volume_mounts", b"volume_mounts", "warm_pool_size", b"warm_pool_size", "web_url", b"web_url", "web_url_info", b"web_url_info", "webhook_config", b"webhook_config", "worker_id", b"worker_id"]) -> None: ...
     @typing.overload
     def WhichOneof(self, oneof_group: typing_extensions.Literal["X_experimental_proxy_ip", b"X_experimental_proxy_ip"]) -> typing_extensions.Literal["_experimental_proxy_ip"] | None: ...
     @typing.overload
@@ -6280,6 +6282,8 @@ class ImageMetadata(google.protobuf.message.Message):
     PYTHON_VERSION_INFO_FIELD_NUMBER: builtins.int
     PYTHON_PACKAGES_FIELD_NUMBER: builtins.int
     WORKDIR_FIELD_NUMBER: builtins.int
+    LIBC_VERSION_INFO_FIELD_NUMBER: builtins.int
+    IMAGE_BUILDER_VERSION_FIELD_NUMBER: builtins.int
     python_version_info: builtins.str
     """The output of `python -VV. Not set if missing"""
     @property
@@ -6289,15 +6293,25 @@ class ImageMetadata(google.protobuf.message.Message):
         """
     workdir: builtins.str
     """The work directory of the image, defaulting to "/". Not set if missing"""
+    libc_version_info: builtins.str
+    """The image's libc version"""
+    image_builder_version: builtins.str
+    """The builder version for/with which the image was created."""
     def __init__(
         self,
         *,
         python_version_info: builtins.str | None = ...,
         python_packages: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
         workdir: builtins.str | None = ...,
+        libc_version_info: builtins.str | None = ...,
+        image_builder_version: builtins.str | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["_python_version_info", b"_python_version_info", "_workdir", b"_workdir", "python_version_info", b"python_version_info", "workdir", b"workdir"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["_python_version_info", b"_python_version_info", "_workdir", b"_workdir", "python_packages", b"python_packages", "python_version_info", b"python_version_info", "workdir", b"workdir"]) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["_image_builder_version", b"_image_builder_version", "_libc_version_info", b"_libc_version_info", "_python_version_info", b"_python_version_info", "_workdir", b"_workdir", "image_builder_version", b"image_builder_version", "libc_version_info", b"libc_version_info", "python_version_info", b"python_version_info", "workdir", b"workdir"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["_image_builder_version", b"_image_builder_version", "_libc_version_info", b"_libc_version_info", "_python_version_info", b"_python_version_info", "_workdir", b"_workdir", "image_builder_version", b"image_builder_version", "libc_version_info", b"libc_version_info", "python_packages", b"python_packages", "python_version_info", b"python_version_info", "workdir", b"workdir"]) -> None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_image_builder_version", b"_image_builder_version"]) -> typing_extensions.Literal["image_builder_version"] | None: ...
+    @typing.overload
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_libc_version_info", b"_libc_version_info"]) -> typing_extensions.Literal["libc_version_info"] | None: ...
     @typing.overload
     def WhichOneof(self, oneof_group: typing_extensions.Literal["_python_version_info", b"_python_version_info"]) -> typing_extensions.Literal["python_version_info"] | None: ...
     @typing.overload
@@ -9067,6 +9081,7 @@ class TaskLogs(google.protobuf.message.Message):
     TASK_PROGRESS_FIELD_NUMBER: builtins.int
     FUNCTION_CALL_ID_FIELD_NUMBER: builtins.int
     INPUT_ID_FIELD_NUMBER: builtins.int
+    TIMESTAMP_NS_FIELD_NUMBER: builtins.int
     data: builtins.str
     task_state: global___TaskState.ValueType
     timestamp: builtins.float
@@ -9075,6 +9090,7 @@ class TaskLogs(google.protobuf.message.Message):
     def task_progress(self) -> global___TaskProgress: ...
     function_call_id: builtins.str
     input_id: builtins.str
+    timestamp_ns: builtins.int
     def __init__(
         self,
         *,
@@ -9085,9 +9101,10 @@ class TaskLogs(google.protobuf.message.Message):
         task_progress: global___TaskProgress | None = ...,
         function_call_id: builtins.str = ...,
         input_id: builtins.str = ...,
+        timestamp_ns: builtins.int = ...,
     ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["task_progress", b"task_progress"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["data", b"data", "file_descriptor", b"file_descriptor", "function_call_id", b"function_call_id", "input_id", b"input_id", "task_progress", b"task_progress", "task_state", b"task_state", "timestamp", b"timestamp"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["data", b"data", "file_descriptor", b"file_descriptor", "function_call_id", b"function_call_id", "input_id", b"input_id", "task_progress", b"task_progress", "task_state", b"task_state", "timestamp", b"timestamp", "timestamp_ns", b"timestamp_ns"]) -> None: ...
 
 global___TaskLogs = TaskLogs
 
@@ -9687,6 +9704,46 @@ class VolumeHeartbeatRequest(google.protobuf.message.Message):
 
 global___VolumeHeartbeatRequest = VolumeHeartbeatRequest
 
+class VolumeListFiles2Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    VOLUME_ID_FIELD_NUMBER: builtins.int
+    PATH_FIELD_NUMBER: builtins.int
+    RECURSIVE_FIELD_NUMBER: builtins.int
+    MAX_ENTRIES_FIELD_NUMBER: builtins.int
+    volume_id: builtins.str
+    path: builtins.str
+    recursive: builtins.bool
+    max_entries: builtins.int
+    def __init__(
+        self,
+        *,
+        volume_id: builtins.str = ...,
+        path: builtins.str = ...,
+        recursive: builtins.bool = ...,
+        max_entries: builtins.int | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["_max_entries", b"_max_entries", "max_entries", b"max_entries"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["_max_entries", b"_max_entries", "max_entries", b"max_entries", "path", b"path", "recursive", b"recursive", "volume_id", b"volume_id"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["_max_entries", b"_max_entries"]) -> typing_extensions.Literal["max_entries"] | None: ...
+
+global___VolumeListFiles2Request = VolumeListFiles2Request
+
+class VolumeListFiles2Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    ENTRIES_FIELD_NUMBER: builtins.int
+    @property
+    def entries(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___FileEntry]: ...
+    def __init__(
+        self,
+        *,
+        entries: collections.abc.Iterable[global___FileEntry] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["entries", b"entries"]) -> None: ...
+
+global___VolumeListFiles2Response = VolumeListFiles2Response
+
 class VolumeListFilesRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -9990,6 +10047,26 @@ class VolumeReloadRequest(google.protobuf.message.Message):
     def ClearField(self, field_name: typing_extensions.Literal["volume_id", b"volume_id"]) -> None: ...
 
 global___VolumeReloadRequest = VolumeReloadRequest
+
+class VolumeRemoveFile2Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    VOLUME_ID_FIELD_NUMBER: builtins.int
+    PATH_FIELD_NUMBER: builtins.int
+    RECURSIVE_FIELD_NUMBER: builtins.int
+    volume_id: builtins.str
+    path: builtins.str
+    recursive: builtins.bool
+    def __init__(
+        self,
+        *,
+        volume_id: builtins.str = ...,
+        path: builtins.str = ...,
+        recursive: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["path", b"path", "recursive", b"recursive", "volume_id", b"volume_id"]) -> None: ...
+
+global___VolumeRemoveFile2Request = VolumeRemoveFile2Request
 
 class VolumeRemoveFileRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor

@@ -1,6 +1,6 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: pyDOE3
-Version: 1.0.4
+Version: 1.0.5
 Summary: Design of experiments for Python
 Project-URL: source, https://github.com/relf/pyDOE3
 Author-email: Rémi Lafage <remi.lafage@onera.fr>

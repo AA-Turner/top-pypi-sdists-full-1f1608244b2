@@ -29,6 +29,12 @@ from ._alifestd_assign_contiguous_ids_polars import (
 from ._alifestd_assign_root_ancestor_token import (
     alifestd_assign_root_ancestor_token,
 )
+from ._alifestd_calc_clade_lookback_n_asexual import (
+    alifestd_calc_clade_lookback_n_asexual,
+)
+from ._alifestd_calc_clade_lookback_origin_time_delta_asexual import (
+    alifestd_calc_clade_lookback_origin_time_delta_asexual,
+)
 from ._alifestd_calc_clade_trait_count_asexual import (
     alifestd_calc_clade_trait_count_asexual,
 )
@@ -66,6 +72,9 @@ from ._alifestd_count_inner_nodes import alifestd_count_inner_nodes
 from ._alifestd_count_leaf_nodes import alifestd_count_leaf_nodes
 from ._alifestd_count_polytomies import alifestd_count_polytomies
 from ._alifestd_count_root_nodes import alifestd_count_root_nodes
+from ._alifestd_count_unifurcating_roots_asexual import (
+    alifestd_count_unifurcating_roots_asexual,
+)
 from ._alifestd_count_unifurcations import alifestd_count_unifurcations
 from ._alifestd_delete_trunk_asexual import alifestd_delete_trunk_asexual
 from ._alifestd_delete_trunk_asexual_polars import (
@@ -115,6 +124,9 @@ from ._alifestd_mark_clade_duration_asexual import (
 )
 from ._alifestd_mark_clade_duration_ratio_sister_asexual import (
     alifestd_mark_clade_duration_ratio_sister_asexual,
+)
+from ._alifestd_mark_clade_faithpd_asexual import (
+    alifestd_mark_clade_faithpd_asexual,
 )
 from ._alifestd_mark_clade_fblr_growth_children_asexual import (
     alifestd_mark_clade_fblr_growth_children_asexual,
@@ -369,6 +381,8 @@ __all__ = [
     "alifestd_assign_contiguous_ids",
     "alifestd_assign_contiguous_ids_polars",
     "alifestd_assign_root_ancestor_token",
+    "alifestd_calc_clade_lookback_n_asexual",
+    "alifestd_calc_clade_lookback_origin_time_delta_asexual",
     "alifestd_calc_clade_trait_count_asexual",
     "alifestd_calc_clade_trait_frequency_asexual",
     "alifestd_categorize_triplet_asexual",
@@ -387,6 +401,7 @@ __all__ = [
     "alifestd_count_leaf_nodes",
     "alifestd_count_root_nodes",
     "alifestd_count_polytomies",
+    "alifestd_count_unifurcating_roots_asexual",
     "alifestd_count_unifurcations",
     "alifestd_delete_trunk_asexual",
     "alifestd_delete_trunk_asexual_polars",
@@ -415,6 +430,7 @@ __all__ = [
     "alifestd_mark_ancestor_origin_time_asexual",
     "alifestd_mark_clade_duration_asexual",
     "alifestd_mark_clade_duration_ratio_sister_asexual",
+    "alifestd_mark_clade_faithpd_asexual",
     "alifestd_mark_clade_fblr_growth_children_asexual",
     "alifestd_mark_clade_fblr_growth_sister_asexual",
     "alifestd_mark_clade_leafcount_ratio_sister_asexual",

@@ -276,13 +276,25 @@ class AnthropicAPI(ModelAPI):
         params = dict(model=self.service_model_name(), max_tokens=max_tokens)
         headers: dict[str, str] = {}
         betas: list[str] = []
-        # some params not compatible with thinking models
-        if not self.is_using_thinking(config):
-            if config.temperature is not None:
+
+        # temperature not compatible with extended thinking
+        THINKING_WARNING = "anthropic models do not support the '{parameter}' parameter when using extended thinking."
+        if config.temperature is not None:
+            if self.is_using_thinking(config):
+                warn_once(logger, THINKING_WARNING.format(parameter="temperature"))
+            else:
                 params["temperature"] = config.temperature
-            if config.top_p is not None:
+        # top_p not compatible with extended thinking
+        if config.top_p is not None:
+            if self.is_using_thinking(config):
+                warn_once(logger, THINKING_WARNING.format(parameter="top_p"))
+            else:
                 params["top_p"] = config.top_p
-            if config.top_k is not None:
+        # top_k not compatible with extended thinking
+        if config.top_k is not None:
+            if self.is_using_thinking(config):
+                warn_once(logger, THINKING_WARNING.format(parameter="top_k"))
+            else:
                 params["top_k"] = config.top_k
 
         # some thinking-only stuff
@@ -346,6 +358,7 @@ class AnthropicAPI(ModelAPI):
             # for "overloaded_error" so we check for it explicitly
             if (
                 isinstance(ex.body, dict)
+                and isinstance(ex.body.get("error", {}), dict)
                 and ex.body.get("error", {}).get("type", "") == "overloaded_error"
             ):
                 return True

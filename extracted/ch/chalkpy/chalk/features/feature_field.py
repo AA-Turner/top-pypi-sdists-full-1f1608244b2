@@ -239,12 +239,14 @@ class Feature(Generic[_TPrim, _TRich]):
         "window_durations",
         "window_materialization",
         "window_materialization_parsed",
+        "unversioned_attribute_name",
     )
 
     def __init__(
         self,
         name: str | None = None,
         attribute_name: str | None = None,
+        unversioned_attribute_name: str | None = None,
         namespace: str | None = None,
         features_cls: Type[Features] | None = None,
         typ: ParsedAnnotation | Type[_TRich] | None = None,
@@ -303,6 +305,7 @@ class Feature(Generic[_TPrim, _TRich]):
         # the attribute name for the feature in the @features class (in case if the name is specified differently)
         if attribute_name is not None:
             self.attribute_name = attribute_name
+        self.unversioned_attribute_name: str | None = unversioned_attribute_name or attribute_name or name
         if namespace is not None:
             self.namespace = namespace
         self._path: tuple[HasOnePathObj, ...] = ()

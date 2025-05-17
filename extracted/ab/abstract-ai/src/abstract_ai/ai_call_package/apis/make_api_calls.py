@@ -58,8 +58,8 @@ def get_ai_payload(ai=None,model=None,role=None,content=None,stream=None,tempera
     ai = get_correct_ai_key(ai)
     if ai in ['gemini','GEMINI']:
         payload = get_gemini_payload(prompt = content)
-    if ai in ['grok','GROK']:
-        payload = get_grok_payload(model=model,role=role,content=content,stream=stream,temperature=temperature)
+    #if ai in ['grok','GROK']:
+    #    payload = get_grok_payload(model=model,role=role,content=content,stream=stream,temperature=temperature)
     return payload
 def make_ai_api_call(ai=None,
                      typ=None,
@@ -80,7 +80,8 @@ def make_ai_api_call(ai=None,
                      **kwargs):
     ai = get_correct_ai_key(ai)
    
-    if ai in ['openai','OPENAI']:
+    if ai in ['grok','GROK','openai','OPENAI']:
+        api_key = api_key or get_ai_api_key(ai=ai,typ=typ)
         completion_percentage= completion_percentage or 50
         response = make_general_query(prompt=prompt,
                            api_key=api_key,

@@ -130,11 +130,12 @@ def test_serialize_workflow():
                         "type": "JSON",
                         "value": [
                             {
+                                "type": "CODE_EXECUTION",
                                 "definition": {
                                     "state": None,
                                     "cache_config": None,
                                     "name": "get_current_weather",
-                                    "description": None,
+                                    "description": "\n    Get the current weather in a given location.\n    ",
                                     "parameters": {
                                         "type": "object",
                                         "properties": {"location": {"type": "string"}, "unit": {"type": "string"}},

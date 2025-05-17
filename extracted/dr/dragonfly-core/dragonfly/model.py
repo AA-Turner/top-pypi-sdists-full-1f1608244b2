@@ -1001,6 +1001,7 @@ class Model(_BaseGeometry):
         msgs.append(self.check_plenum_depths(tol, False, detailed))
         msgs.append(self.check_window_parameters_valid(tol, False, detailed))
         msgs.append(self.check_no_room2d_overlaps(tol, False, detailed))
+        msgs.append(self.check_collisions_between_stories(tol, False, detailed))
         msgs.append(self.check_roofs_above_rooms(tol, False, detailed))
         msgs.append(self.check_room2d_floor_heights_valid(False, detailed))
         msgs.append(self.check_missing_adjacencies(False, detailed))
@@ -1319,11 +1320,45 @@ class Model(_BaseGeometry):
             return msg
         return ''
 
+    def check_collisions_between_stories(
+            self, tolerance=None, raise_exception=True, detailed=False):
+        """Check that Room2Ds of each Story do not collide with others in each Building.
+
+        Args:
+            tolerance: The minimum distance that two Room2Ds geometries can collide
+                with one another and still be considered valid. If None, the Model
+                tolerance will be used. (Default: None).
+            raise_exception: Boolean to note whether a ValueError should be raised
+                if colliding geometries are found. (Default: True).
+            detailed: Boolean for whether the returned object is a detailed list of
+                dicts with error info or a string with a message. (Default: False).
+
+        Returns:
+            A string with the message or a list with a dictionary if detailed is True.
+        """
+        tolerance = self.tolerance if tolerance is None else tolerance
+        bldg_msgs = []
+        for bldg in self._buildings:
+            ov_msg = bldg.check_collisions_between_stories(tolerance, False, detailed)
+            if ov_msg:
+                bldg_msgs.extend(ov_msg)
+        if detailed:
+            return bldg_msgs
+        if bldg_msgs != []:
+            msg = '\n'.join(bldg_msgs)
+            if raise_exception:
+                raise ValueError(msg)
+            return msg
+        return ''
+
     def check_roofs_above_rooms(
             self, tolerance=None, raise_exception=True, detailed=False):
-        """Check that geometries of RoofSpecifications do not overlap with one another.
+        """Check that all roof geometries lie above the Room2Ds of the model.
 
-        Overlaps make the Roof geometry unusable for translation to Honeybee.
+        Roofs that lie below or intersect the Room2D floor plates (or the plenum floors)
+        will cause an invalid calculation of the Room volume when translated
+        to Honeybee. Roofs touching the edges of floor plates within the tolerance
+        are permitted and can be translated to closed Honeybee Room volumes.
 
         Args:
             tolerance: The minimum distance that two Roof geometries can overlap
@@ -1361,8 +1396,9 @@ class Model(_BaseGeometry):
             self, tolerance=None, raise_exception=True, detailed=False):
         """Check that geometries of RoofSpecifications do not overlap with one another.
 
-        This is not a requirement for the Model to be valid but it is sometimes
-        useful to check.
+        This is NOT a requirement for the Model to be valid but it is sometimes
+        useful to check when trying to make the simplest and cleanest
+        representation of the roofs.
 
         Args:
             tolerance: The minimum distance that two Roof geometries can overlap

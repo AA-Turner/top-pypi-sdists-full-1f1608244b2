@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: oslo.versionedobjects
-Version: 3.6.0
+Version: 3.7.0
 Summary: Oslo Versioned Objects library
 Home-page: https://docs.openstack.org/oslo.versionedobjects/latest/
 Author: OpenStack
@@ -26,7 +26,6 @@ Requires-Dist: oslo.context>=2.19.2
 Requires-Dist: oslo.messaging>=5.29.0
 Requires-Dist: oslo.serialization>=2.18.0
 Requires-Dist: oslo.utils>=7.4.0
-Requires-Dist: iso8601>=0.1.11
 Requires-Dist: oslo.log>=3.36.0
 Requires-Dist: oslo.i18n>=3.15.3
 Requires-Dist: WebOb>=1.7.1

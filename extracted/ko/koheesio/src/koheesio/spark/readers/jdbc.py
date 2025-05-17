@@ -77,7 +77,10 @@ class JdbcReader(Reader, ExtraParamsMixin):
     user: str = Field(default=..., description="User to authenticate to the server")
     password: SecretStr = Field(default=..., description="Password belonging to the username")
     dbtable: Optional[str] = Field(
-        default=None, description="Database table name, also include schema name", alias="table"
+        default=None,
+        description="Database table name, also include schema name",
+        alias="table",
+        serialization_alias="dbtable",
     )
     query: Optional[str] = Field(default=None, description="Query")
     params: Dict[str, Any] = Field(
@@ -90,21 +93,14 @@ class JdbcReader(Reader, ExtraParamsMixin):
 
         Note: override this method if driver requires custom names, e.g. Snowflake: `sfUrl`, `sfUser`, etc.
         """
-        _options = {
-            "driver": self.driver,
-            "url": self.url,
-            "user": self.user,
-            "password": self.password,
-            **self.params,
-        }
+        _options = {"driver": self.driver, "url": self.url, "user": self.user, "password": self.password, **self.params}
+
         if query := self.query:
             _options["query"] = query
-
-        # Check that only one of them is filled in
-        if query and self.dbtable:
-            self.log.warning("Query is filled in, dbtable will be ignored!")
-        else:
-            _options["dbtable"] = self.dbtable
+            self.log.info(f"Using query: {query}")
+        elif dbtable := self.dbtable:
+            _options["dbtable"] = dbtable
+            self.log.info(f"Using DBTable: {dbtable}")
 
         return _options
 
@@ -114,6 +110,9 @@ class JdbcReader(Reader, ExtraParamsMixin):
         # Check that dbtable or query is filled in
         if not self.dbtable and not self.query:
             raise ValueError("Please do not leave dbtable and query both empty!")
+
+        if self.query and self.dbtable:
+            self.log.warning("Query is filled in, dbtable will be ignored!")
 
         return self
 
@@ -128,8 +127,5 @@ class JdbcReader(Reader, ExtraParamsMixin):
 
         if pw := self.password:
             options["password"] = pw.get_secret_value()
-
-        if query := self.query:
-            self.log.info(f"Executing query: {query}")
 
         self.output.df = self.spark.read.format(self.format).options(**options).load()

@@ -1,6 +1,5 @@
 import collections.abc
 import modal._functions
-import modal._object
 import modal._partial_function
 import modal._utils.function_utils
 import modal.client
@@ -9,9 +8,7 @@ import modal.cls
 import modal.functions
 import modal.gpu
 import modal.image
-import modal.mount
 import modal.network_file_system
-import modal.object
 import modal.partial_function
 import modal.proxy
 import modal.retries
@@ -20,7 +17,6 @@ import modal.schedule
 import modal.scheduler_placement
 import modal.secret
 import modal.volume
-import modal_proto.api_pb2
 import pathlib
 import synchronicity.combined_types
 import typing
@@ -36,8 +32,6 @@ class _LocalEntrypoint:
     def info(self) -> modal._utils.function_utils.FunctionInfo: ...
     @property
     def app(self) -> _App: ...
-    @property
-    def stub(self) -> _App: ...
 
 class LocalEntrypoint:
     _info: modal._utils.function_utils.FunctionInfo
@@ -49,8 +43,6 @@ class LocalEntrypoint:
     def info(self) -> modal._utils.function_utils.FunctionInfo: ...
     @property
     def app(self) -> App: ...
-    @property
-    def stub(self) -> App: ...
 
 def check_sequence(items: typing.Sequence[typing.Any], item_type: type[typing.Any], error_msg: str) -> None: ...
 
@@ -84,7 +76,6 @@ class _App:
     _functions: dict[str, modal._functions._Function]
     _classes: dict[str, modal.cls._Cls]
     _image: typing.Optional[modal.image._Image]
-    _mounts: collections.abc.Sequence[modal.mount._Mount]
     _secrets: collections.abc.Sequence[modal.secret._Secret]
     _volumes: dict[typing.Union[str, pathlib.PurePosixPath], modal.volume._Volume]
     _web_endpoints: list[str]
@@ -99,7 +90,6 @@ class _App:
         name: typing.Optional[str] = None,
         *,
         image: typing.Optional[modal.image._Image] = None,
-        mounts: collections.abc.Sequence[modal.mount._Mount] = [],
         secrets: collections.abc.Sequence[modal.secret._Secret] = [],
         volumes: dict[typing.Union[str, pathlib.PurePosixPath], modal.volume._Volume] = {},
         include_source: typing.Optional[bool] = None,
@@ -134,7 +124,6 @@ class _App:
         self,
         *,
         client: typing.Optional[modal.client._Client] = None,
-        show_progress: typing.Optional[bool] = None,
         detach: bool = False,
         interactive: bool = False,
         environment_name: typing.Optional[str] = None,
@@ -159,8 +148,6 @@ class _App:
     @property
     def registered_entrypoints(self) -> dict[str, _LocalEntrypoint]: ...
     @property
-    def indexed_objects(self) -> dict[str, modal._object._Object]: ...
-    @property
     def registered_web_endpoints(self) -> list[str]: ...
     def local_entrypoint(
         self, _warn_parentheses_missing: typing.Any = None, *, name: typing.Optional[str] = None
@@ -174,7 +161,6 @@ class _App:
         secrets: collections.abc.Sequence[modal.secret._Secret] = (),
         gpu: typing.Union[None, str, modal.gpu._GPUConfig, list[typing.Union[None, str, modal.gpu._GPUConfig]]] = None,
         serialized: bool = False,
-        mounts: collections.abc.Sequence[modal.mount._Mount] = (),
         network_file_systems: dict[
             typing.Union[str, pathlib.PurePosixPath], modal.network_file_system._NetworkFileSystem
         ] = {},
@@ -226,7 +212,6 @@ class _App:
         secrets: collections.abc.Sequence[modal.secret._Secret] = (),
         gpu: typing.Union[None, str, modal.gpu._GPUConfig, list[typing.Union[None, str, modal.gpu._GPUConfig]]] = None,
         serialized: bool = False,
-        mounts: collections.abc.Sequence[modal.mount._Mount] = (),
         network_file_systems: dict[
             typing.Union[str, pathlib.PurePosixPath], modal.network_file_system._NetworkFileSystem
         ] = {},
@@ -263,30 +248,6 @@ class _App:
         _experimental_buffer_containers: typing.Optional[int] = None,
         allow_cross_region_volumes: typing.Optional[bool] = None,
     ) -> collections.abc.Callable[[typing.Union[CLS_T, modal._partial_function._PartialFunction]], CLS_T]: ...
-    async def spawn_sandbox(
-        self,
-        *entrypoint_args: str,
-        image: typing.Optional[modal.image._Image] = None,
-        mounts: collections.abc.Sequence[modal.mount._Mount] = (),
-        secrets: collections.abc.Sequence[modal.secret._Secret] = (),
-        network_file_systems: dict[
-            typing.Union[str, pathlib.PurePosixPath], modal.network_file_system._NetworkFileSystem
-        ] = {},
-        timeout: typing.Optional[int] = None,
-        workdir: typing.Optional[str] = None,
-        gpu: typing.Union[None, str, modal.gpu._GPUConfig] = None,
-        cloud: typing.Optional[str] = None,
-        region: typing.Union[str, collections.abc.Sequence[str], None] = None,
-        cpu: typing.Union[float, tuple[float, float], None] = None,
-        memory: typing.Union[int, tuple[int, int], None] = None,
-        block_network: bool = False,
-        volumes: dict[
-            typing.Union[str, pathlib.PurePosixPath],
-            typing.Union[modal.volume._Volume, modal.cloud_bucket_mount._CloudBucketMount],
-        ] = {},
-        pty_info: typing.Optional[modal_proto.api_pb2.PTYInfo] = None,
-        _experimental_scheduler_placement: typing.Optional[modal.scheduler_placement.SchedulerPlacement] = None,
-    ) -> None: ...
     def include(self, /, other_app: _App) -> typing_extensions.Self: ...
     def _logs(
         self, client: typing.Optional[modal.client._Client] = None
@@ -306,7 +267,6 @@ class App:
     _functions: dict[str, modal.functions.Function]
     _classes: dict[str, modal.cls.Cls]
     _image: typing.Optional[modal.image.Image]
-    _mounts: collections.abc.Sequence[modal.mount.Mount]
     _secrets: collections.abc.Sequence[modal.secret.Secret]
     _volumes: dict[typing.Union[str, pathlib.PurePosixPath], modal.volume.Volume]
     _web_endpoints: list[str]
@@ -321,7 +281,6 @@ class App:
         name: typing.Optional[str] = None,
         *,
         image: typing.Optional[modal.image.Image] = None,
-        mounts: collections.abc.Sequence[modal.mount.Mount] = [],
         secrets: collections.abc.Sequence[modal.secret.Secret] = [],
         volumes: dict[typing.Union[str, pathlib.PurePosixPath], modal.volume.Volume] = {},
         include_source: typing.Optional[bool] = None,
@@ -381,7 +340,6 @@ class App:
             /,
             *,
             client: typing.Optional[modal.client.Client] = None,
-            show_progress: typing.Optional[bool] = None,
             detach: bool = False,
             interactive: bool = False,
             environment_name: typing.Optional[str] = None,
@@ -391,7 +349,6 @@ class App:
             /,
             *,
             client: typing.Optional[modal.client.Client] = None,
-            show_progress: typing.Optional[bool] = None,
             detach: bool = False,
             interactive: bool = False,
             environment_name: typing.Optional[str] = None,
@@ -433,8 +390,6 @@ class App:
     @property
     def registered_entrypoints(self) -> dict[str, LocalEntrypoint]: ...
     @property
-    def indexed_objects(self) -> dict[str, modal.object.Object]: ...
-    @property
     def registered_web_endpoints(self) -> list[str]: ...
     def local_entrypoint(
         self, _warn_parentheses_missing: typing.Any = None, *, name: typing.Optional[str] = None
@@ -448,7 +403,6 @@ class App:
         secrets: collections.abc.Sequence[modal.secret.Secret] = (),
         gpu: typing.Union[None, str, modal.gpu._GPUConfig, list[typing.Union[None, str, modal.gpu._GPUConfig]]] = None,
         serialized: bool = False,
-        mounts: collections.abc.Sequence[modal.mount.Mount] = (),
         network_file_systems: dict[
             typing.Union[str, pathlib.PurePosixPath], modal.network_file_system.NetworkFileSystem
         ] = {},
@@ -500,7 +454,6 @@ class App:
         secrets: collections.abc.Sequence[modal.secret.Secret] = (),
         gpu: typing.Union[None, str, modal.gpu._GPUConfig, list[typing.Union[None, str, modal.gpu._GPUConfig]]] = None,
         serialized: bool = False,
-        mounts: collections.abc.Sequence[modal.mount.Mount] = (),
         network_file_systems: dict[
             typing.Union[str, pathlib.PurePosixPath], modal.network_file_system.NetworkFileSystem
         ] = {},
@@ -537,61 +490,6 @@ class App:
         _experimental_buffer_containers: typing.Optional[int] = None,
         allow_cross_region_volumes: typing.Optional[bool] = None,
     ) -> collections.abc.Callable[[typing.Union[CLS_T, modal.partial_function.PartialFunction]], CLS_T]: ...
-
-    class __spawn_sandbox_spec(typing_extensions.Protocol[SUPERSELF]):
-        def __call__(
-            self,
-            /,
-            *entrypoint_args: str,
-            image: typing.Optional[modal.image.Image] = None,
-            mounts: collections.abc.Sequence[modal.mount.Mount] = (),
-            secrets: collections.abc.Sequence[modal.secret.Secret] = (),
-            network_file_systems: dict[
-                typing.Union[str, pathlib.PurePosixPath], modal.network_file_system.NetworkFileSystem
-            ] = {},
-            timeout: typing.Optional[int] = None,
-            workdir: typing.Optional[str] = None,
-            gpu: typing.Union[None, str, modal.gpu._GPUConfig] = None,
-            cloud: typing.Optional[str] = None,
-            region: typing.Union[str, collections.abc.Sequence[str], None] = None,
-            cpu: typing.Union[float, tuple[float, float], None] = None,
-            memory: typing.Union[int, tuple[int, int], None] = None,
-            block_network: bool = False,
-            volumes: dict[
-                typing.Union[str, pathlib.PurePosixPath],
-                typing.Union[modal.volume.Volume, modal.cloud_bucket_mount.CloudBucketMount],
-            ] = {},
-            pty_info: typing.Optional[modal_proto.api_pb2.PTYInfo] = None,
-            _experimental_scheduler_placement: typing.Optional[modal.scheduler_placement.SchedulerPlacement] = None,
-        ) -> None: ...
-        async def aio(
-            self,
-            /,
-            *entrypoint_args: str,
-            image: typing.Optional[modal.image.Image] = None,
-            mounts: collections.abc.Sequence[modal.mount.Mount] = (),
-            secrets: collections.abc.Sequence[modal.secret.Secret] = (),
-            network_file_systems: dict[
-                typing.Union[str, pathlib.PurePosixPath], modal.network_file_system.NetworkFileSystem
-            ] = {},
-            timeout: typing.Optional[int] = None,
-            workdir: typing.Optional[str] = None,
-            gpu: typing.Union[None, str, modal.gpu._GPUConfig] = None,
-            cloud: typing.Optional[str] = None,
-            region: typing.Union[str, collections.abc.Sequence[str], None] = None,
-            cpu: typing.Union[float, tuple[float, float], None] = None,
-            memory: typing.Union[int, tuple[int, int], None] = None,
-            block_network: bool = False,
-            volumes: dict[
-                typing.Union[str, pathlib.PurePosixPath],
-                typing.Union[modal.volume.Volume, modal.cloud_bucket_mount.CloudBucketMount],
-            ] = {},
-            pty_info: typing.Optional[modal_proto.api_pb2.PTYInfo] = None,
-            _experimental_scheduler_placement: typing.Optional[modal.scheduler_placement.SchedulerPlacement] = None,
-        ) -> None: ...
-
-    spawn_sandbox: __spawn_sandbox_spec[typing_extensions.Self]
-
     def include(self, /, other_app: App) -> typing_extensions.Self: ...
 
     class ___logs_spec(typing_extensions.Protocol[SUPERSELF]):
@@ -608,30 +506,5 @@ class App:
     def _get_container_app(cls) -> typing.Optional[App]: ...
     @classmethod
     def _reset_container_app(cls): ...
-
-class _Stub(_App):
-    @staticmethod
-    def __new__(
-        cls,
-        name: typing.Optional[str] = None,
-        *,
-        image: typing.Optional[modal.image._Image] = None,
-        mounts: collections.abc.Sequence[modal.mount._Mount] = [],
-        secrets: collections.abc.Sequence[modal.secret._Secret] = [],
-        volumes: dict[typing.Union[str, pathlib.PurePosixPath], modal.volume._Volume] = {},
-        include_source: typing.Optional[bool] = None,
-    ): ...
-
-class Stub(App):
-    def __init__(
-        self,
-        name: typing.Optional[str] = None,
-        *,
-        image: typing.Optional[modal.image.Image] = None,
-        mounts: collections.abc.Sequence[modal.mount.Mount] = [],
-        secrets: collections.abc.Sequence[modal.secret.Secret] = [],
-        volumes: dict[typing.Union[str, pathlib.PurePosixPath], modal.volume.Volume] = {},
-        include_source: typing.Optional[bool] = None,
-    ) -> None: ...
 
 _default_image: modal.image._Image

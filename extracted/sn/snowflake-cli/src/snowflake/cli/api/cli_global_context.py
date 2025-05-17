@@ -31,6 +31,7 @@ from snowflake.connector import SnowflakeConnection
 if TYPE_CHECKING:
     from snowflake.cli.api.project.definition_manager import DefinitionManager
     from snowflake.cli.api.project.schemas.project_definition import ProjectDefinition
+    from snowflake.core import Root
 
 _CONNECTION_CACHE = OpenConnectionCache()
 
@@ -47,6 +48,7 @@ class _CliGlobalContextManager:
     verbose: bool = False
     experimental: bool = False
     enable_tracebacks: bool = True
+    is_repl: bool = False
 
     metrics: CLIMetrics = field(default_factory=CLIMetrics)
 
@@ -200,9 +202,7 @@ class _CliGlobalContextAccess:
     @property
     def snow_api_root(
         self,
-    ) -> Optional[
-        object
-    ]:  # Should be Optional[Root], but we need local import for performance reasons
+    ) -> Optional[Root]:
         from snowflake.core import Root
 
         if self.connection:
@@ -213,6 +213,10 @@ class _CliGlobalContextAccess:
     @property
     def enhanced_exit_codes(self) -> bool:
         return self._manager.enhanced_exit_codes
+
+    @property
+    def is_repl(self) -> bool:
+        return self._manager.is_repl
 
 
 _CLI_CONTEXT_MANAGER: ContextVar[_CliGlobalContextManager | None] = ContextVar(

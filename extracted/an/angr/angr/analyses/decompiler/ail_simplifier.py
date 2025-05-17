@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, TYPE_CHECKING
 from collections.abc import Iterable
 from collections import defaultdict
+from enum import Enum
 import logging
 
 import networkx
@@ -22,12 +23,18 @@ from ailment.expression import (
     Const,
     BinaryOp,
     VirtualVariable,
+    UnaryOp,
 )
 
 from angr.analyses.s_propagator import SPropagatorAnalysis
 from angr.analyses.s_reaching_definitions import SRDAModel
 from angr.utils.ail import is_phi_assignment, HasExprWalker
-from angr.utils.ssa import has_call_in_between_stmts, has_store_stmt_in_between_stmts, has_load_expr_in_between_stmts
+from angr.utils.ssa import (
+    has_call_in_between_stmts,
+    has_store_stmt_in_between_stmts,
+    has_load_expr_in_between_stmts,
+    is_vvar_eliminatable,
+)
 from angr.code_location import CodeLocation, ExternalCodeLocation
 from angr.sim_variable import SimStackVariable, SimMemoryVariable, SimVariable
 from angr.knowledge_plugins.propagations.states import Equivalence
@@ -62,6 +69,12 @@ class HasVVarNotification(Exception):
     """
 
 
+class HasRefVVarNotification(Exception):
+    """
+    Notifies the existence of a reference to a VirtualVariable.
+    """
+
+
 class AILBlockTempCollector(AILBlockWalker):
     """
     Collects any temporaries used in a block.
@@ -76,6 +89,17 @@ class AILBlockTempCollector(AILBlockWalker):
     def _handle_Tmp(self, expr_idx: int, expr: Expression, stmt_idx: int, stmt: Statement, block) -> None:
         if isinstance(expr, Tmp):
             self.temps.add(expr)
+
+
+class DefEqRelation(Enum):
+    """
+    Describes the location relationship between a virtual variable definition and the equivalence statement.
+    """
+
+    UNKNOWN = 0
+    DEF_IS_FUNCARG = 1
+    DEF_EQ_SAME_BLOCK = 2
+    DEF_IN_EQ_PRED_BLOCK = 3
 
 
 class AILSimplifier(Analysis):
@@ -739,14 +763,21 @@ class AILSimplifier(Analysis):
                     continue
 
             elif isinstance(eq.atom0, VirtualVariable) and eq.atom0.was_reg:
-                if isinstance(eq.atom1, VirtualVariable) and (eq.atom1.was_reg or eq.atom1.was_parameter):
-                    # register == register
-                    if self.project.arch.is_artificial_register(eq.atom0.reg_offset, eq.atom0.size):
+                if isinstance(eq.atom1, VirtualVariable):
+                    if eq.atom1.was_reg or eq.atom1.was_parameter:
+                        # register == register
+                        if self.project.arch.is_artificial_register(eq.atom0.reg_offset, eq.atom0.size):
+                            to_replace = eq.atom0
+                            to_replace_is_def = True
+                        else:
+                            to_replace = eq.atom1
+                            to_replace_is_def = False
+                    elif eq.atom1.was_stack:
+                        # register == stack (but we try to replace the register vvar with the stack vvar)
                         to_replace = eq.atom0
                         to_replace_is_def = True
                     else:
-                        to_replace = eq.atom1
-                        to_replace_is_def = False
+                        continue
                 else:
                     continue
 
@@ -788,6 +819,7 @@ class AILSimplifier(Analysis):
                 # the definition is in a callee function
                 continue
 
+            def_eq_rel: DefEqRelation = DefEqRelation.UNKNOWN
             if isinstance(the_def.codeloc, ExternalCodeLocation) or (
                 isinstance(eq.atom1, VirtualVariable) and eq.atom1.was_parameter
             ):
@@ -800,6 +832,7 @@ class AILSimplifier(Analysis):
                 all_uses_with_def = None
                 replace_with = None
                 remove_initial_assignment = None
+                def_eq_rel = DefEqRelation.DEF_IS_FUNCARG
 
                 if defs and len(defs) == 1:
                     arg_copy_def = defs[0]
@@ -861,6 +894,7 @@ class AILSimplifier(Analysis):
                     # the eq location.
                     if eq.codeloc.stmt_idx < the_def.codeloc.stmt_idx:
                         continue
+                    def_eq_rel = DefEqRelation.DEF_EQ_SAME_BLOCK
                 else:
                     # the definition is in the predecessor block of the eq
                     eq_block = next(
@@ -876,6 +910,7 @@ class AILSimplifier(Analysis):
                         for pred in eq_block_preds
                     ):
                         continue
+                    def_eq_rel = DefEqRelation.DEF_IN_EQ_PRED_BLOCK
 
                 if isinstance(eq.atom0, VirtualVariable) and eq.atom0.was_stack:
                     # create the replacement expression
@@ -912,11 +947,16 @@ class AILSimplifier(Analysis):
                         **eq.atom1.tags,
                     )
                 elif isinstance(eq.atom0, VirtualVariable) and eq.atom0.was_reg:
-                    if isinstance(eq.atom1, VirtualVariable) and eq.atom1.was_reg:
-                        if self.project.arch.is_artificial_register(eq.atom0.reg_offset, eq.atom0.size):
+                    if isinstance(eq.atom1, VirtualVariable):
+                        if eq.atom1.was_reg:
+                            if self.project.arch.is_artificial_register(eq.atom0.reg_offset, eq.atom0.size):
+                                replace_with = eq.atom1
+                            else:
+                                replace_with = eq.atom0
+                        elif eq.atom1.was_stack:
                             replace_with = eq.atom1
                         else:
-                            replace_with = eq.atom0
+                            raise AngrRuntimeError(f"Unsupported atom1 vvar type {eq.atom1.category}.")
                     else:
                         raise AngrRuntimeError(f"Unsupported atom1 type {type(eq.atom1)}.")
                 else:
@@ -979,6 +1019,19 @@ class AILSimplifier(Analysis):
 
             assert replace_with is not None
 
+            to_replace_used_in_refs = False
+            if isinstance(to_replace, VirtualVariable) and to_replace.was_stack:
+                # if the variable being replaced has ever been accessed as a reference, we cannot replace it safely
+                for _, (_, use_loc) in all_uses_with_def:
+                    assert use_loc.block_addr is not None and use_loc.stmt_idx is not None
+                    block = addr_and_idx_to_block[(use_loc.block_addr, use_loc.block_idx)]
+                    stmt = block.statements[use_loc.stmt_idx]
+                    if self._statement_uses_ref_vvar(stmt, to_replace.varid):
+                        to_replace_used_in_refs = True
+                        break
+            if to_replace_used_in_refs:
+                continue
+
             if any(not isinstance(expr_and_use[0], VirtualVariable) for _, expr_and_use in all_uses_with_def):
                 # if any of the uses are phi assignments, we skip
                 used_in_phi_assignment = False
@@ -1004,6 +1057,11 @@ class AILSimplifier(Analysis):
                     and u.stmt_idx < eq.codeloc.stmt_idx
                 ):
                     # this use happens before the assignment - ignore it
+                    continue
+                if def_eq_rel == DefEqRelation.DEF_IN_EQ_PRED_BLOCK and u.block_addr == def_.codeloc.block_addr:
+                    # the definition is in a predecessor block of the eq location, so all uses must be in the same
+                    # block as the eq location. (technically it can also be in a successor block to the eq location, but
+                    # we don't support it yet).
                     continue
                 filtered_all_uses_with_def.append((def_, expr_and_use))
             all_uses_with_def = filtered_all_uses_with_def
@@ -1420,7 +1478,17 @@ class AILSimplifier(Analysis):
 
                 if uses is None:
                     vvar = rd.varid_to_vvar[vvar_id]
-                    if vvar.was_stack:
+                    def_codeloc = rd.all_vvar_definitions[vvar_id]
+                    if isinstance(def_codeloc, ExternalCodeLocation):
+                        def_stmt = None
+                    else:
+                        assert def_codeloc.block_addr is not None and def_codeloc.stmt_idx is not None
+                        def_stmt = blocks[(def_codeloc.block_addr, def_codeloc.block_idx)].statements[
+                            def_codeloc.stmt_idx
+                        ]
+                    if is_vvar_eliminatable(vvar, def_stmt):
+                        uses = rd.all_vvar_uses[vvar_id]
+                    elif vvar.was_stack:
                         if not self._remove_dead_memdefs:
                             if rd.is_phi_vvar_id(vvar_id):
                                 # we always remove unused phi variables
@@ -1435,9 +1503,6 @@ class AILSimplifier(Analysis):
                                     continue
                             else:
                                 continue
-                        uses = rd.all_vvar_uses[vvar_id]
-
-                    elif vvar.was_tmp or vvar.was_reg or vvar.was_parameter:
                         uses = rd.all_vvar_uses[vvar_id]
 
                     else:
@@ -1740,6 +1805,10 @@ class AILSimplifier(Analysis):
 
         return updated
 
+    #
+    # Util functions
+    #
+
     @staticmethod
     def _statement_has_call_exprs(stmt: Statement) -> bool:
         def _handle_callexpr(expr_idx, expr, stmt_idx, stmt, block):  # pylint:disable=unused-argument
@@ -1782,6 +1851,21 @@ class AILSimplifier(Analysis):
                 walker.walk_expression(expr)
             except HasVVarNotification:
                 return True
+        return False
+
+    @staticmethod
+    def _statement_uses_ref_vvar(stmt: Statement, vvar_id: int) -> bool:
+        def _handle_UnaryOp(expr_idx, expr, stmt_idx, stmt, block):  # pylint:disable=unused-argument
+            if expr.op == "Reference" and isinstance(expr.operand, VirtualVariable) and expr.operand.varid == vvar_id:
+                raise HasRefVVarNotification
+
+        walker = AILBlockWalker()
+        walker.expr_handlers[UnaryOp] = _handle_UnaryOp
+        try:
+            walker.walk_statement(stmt)
+        except HasRefVVarNotification:
+            return True
+
         return False
 
 

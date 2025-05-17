@@ -401,3 +401,61 @@ def rule_nl_kvk_3_3_1_2 (
             msg=_('The xml:lang attribute of each footnote matches the language of at least one textual fact.'),
             modelObject = noMatchLangFootnotes
         )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_3_3_1_3 (
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.3.1.3: At least one footnote in the footnote relationship is in the language of the report.
+    """
+    factLangFootnotes = pluginData.getFactLangFootnotes(val.modelXbrl)
+    reportXmlLang = pluginData.getReportXmlLang(val.modelXbrl)
+    nonDefLangFtFacts = set(f for f,langs in factLangFootnotes.items() if reportXmlLang not in langs)
+    if len(nonDefLangFtFacts) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.3.3.1.3.footnoteOnlyInLanguagesOtherThanLanguageOfAReport',
+            msg=_('At least one footnote must have the same language as the report\'s language.'),
+            modelObject=nonDefLangFtFacts
+        )
+
+
+@validation(
+    hook=ValidationHook.XBRL_FINALLY,
+    disclosureSystems=[
+        DISCLOSURE_SYSTEM_NL_INLINE_2024
+    ],
+)
+def rule_nl_kvk_3_5_2_2(
+        pluginData: PluginValidationDataExtension,
+        val: ValidateXbrl,
+        *args: Any,
+        **kwargs: Any,
+) -> Iterable[Validation]:
+    """
+    NL-KVK.3.5.2.2: All tagged text facts MUST be provided in at least the language of the report.
+    """
+    reportXmlLang = pluginData.getReportXmlLang(val.modelXbrl)
+    factsWithWrongLang = set()
+    for fact in val.modelXbrl.facts:
+        if (fact is not None and
+                fact.concept is not None and
+                fact.concept.type is not None and
+                fact.concept.type.isOimTextFactType and
+                fact.xmlLang != reportXmlLang):
+            factsWithWrongLang.add(fact)
+    if len(factsWithWrongLang) > 0:
+        yield Validation.error(
+            codes='NL.NL-KVK.3.5.2.2.taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport',
+            msg=_('Tagged text facts MUST be provided in the language of the report.'),
+            modelObject=factsWithWrongLang
+        )

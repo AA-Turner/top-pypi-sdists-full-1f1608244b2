@@ -15,6 +15,7 @@ from google.adk.sessions.base_session_service import (
 )
 from google.adk.sessions.session import Session
 from google.adk.sessions.state import State
+from mtmai.db.db import with_db_retry
 from sqlalchemy import Boolean, Dialect, ForeignKeyConstraint, Text, delete, func
 from sqlalchemy.dialects import mysql, postgresql
 from sqlalchemy.engine import Engine, create_engine
@@ -233,7 +234,13 @@ class GomtmDatabaseSessionService(BaseSessionService):
         # 3. Initialize all properties
 
         try:
-            db_engine = create_engine(db_url)
+            db_engine = create_engine(
+                db_url,
+                pool_pre_ping=True,  # 启用连接池预检
+                pool_recycle=3600,  # 一小时后回收连接
+                pool_size=5,  # 连接池大小
+                max_overflow=10,  # 最大溢出连接数
+            )
         except Exception as e:
             if isinstance(e, ArgumentError):
                 raise ValueError(
@@ -265,6 +272,7 @@ class GomtmDatabaseSessionService(BaseSessionService):
         Base.metadata.create_all(self.db_engine)
 
     @override
+    @with_db_retry()
     def create_session(
         self,
         *,
@@ -338,6 +346,7 @@ class GomtmDatabaseSessionService(BaseSessionService):
             return session
 
     @override
+    @with_db_retry()
     def get_session(
         self,
         *,
@@ -410,6 +419,7 @@ class GomtmDatabaseSessionService(BaseSessionService):
         return session
 
     @override
+    @with_db_retry()
     def list_sessions(self, *, app_name: str, user_id: str) -> ListSessionsResponse:
         with self.DatabaseSessionFactory() as sessionFactory:
             results = (
@@ -431,6 +441,7 @@ class GomtmDatabaseSessionService(BaseSessionService):
             return ListSessionsResponse(sessions=sessions)
 
     @override
+    @with_db_retry()
     def delete_session(self, app_name: str, user_id: str, session_id: str) -> None:
         with self.DatabaseSessionFactory() as sessionFactory:
             stmt = delete(StorageSession).where(
@@ -442,6 +453,7 @@ class GomtmDatabaseSessionService(BaseSessionService):
             sessionFactory.commit()
 
     @override
+    @with_db_retry()
     def append_event(self, session: Session, event: Event) -> Event:
         logger.info(f"Append event: {event} to session {session.id}")
 
@@ -528,6 +540,7 @@ class GomtmDatabaseSessionService(BaseSessionService):
         return event
 
     @override
+    @with_db_retry()
     def list_events(
         self,
         *,

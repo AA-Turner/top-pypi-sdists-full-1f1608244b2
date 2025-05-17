@@ -32,9 +32,7 @@ def test_evals_df_columns():
 def test_evals_df_strict():
     df, errors = evals_df(LOGS_DIR, strict=False)
     assert len(df) == 3
-    assert len(errors) == 3
-    for error_list in errors.values():
-        assert len(error_list) == 0
+    assert len(errors) == 0
 
 
 def test_evals_df_filter():
@@ -78,7 +76,7 @@ def test_messages_df_columns():
 
 
 def test_messages_df_filter():
-    df = messages_df(LOGS_DIR, filter=["assistant"])
+    df = messages_df(LOGS_DIR, filter=lambda m: m.role == "assistant")
     assert len(df) == 14
 
 
@@ -98,5 +96,5 @@ def test_events_df_columns():
 
 
 def test_events_df_filter():
-    df = events_df(LOGS_DIR, filter=["tool"])
+    df = events_df(LOGS_DIR, filter=lambda e: e.event == "tool")
     assert len(df) == 4

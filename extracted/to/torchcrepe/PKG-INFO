@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: torchcrepe
-Version: 0.0.23
+Version: 0.0.24
 Summary: Pytorch implementation of CREPE pitch tracker
 Home-page: https://github.com/maxrmorrison/torchcrepe
 Author: Max Morrison
@@ -16,6 +16,17 @@ Requires-Dist: scipy
 Requires-Dist: torch
 Requires-Dist: torchaudio
 Requires-Dist: tqdm
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: summary
 
 <h1 align="center">torchcrepe</h1>
 <div align="center">

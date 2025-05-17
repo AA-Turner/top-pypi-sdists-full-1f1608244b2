@@ -5,7 +5,7 @@ import re
 import shutil
 import warnings
 from datetime import datetime, timedelta
-
+from decimal import ROUND_HALF_UP, Decimal
 
 import pyperclip
 import pyautogui
@@ -191,14 +191,13 @@ async def remessa_cobranca_cnab240(task: RpaProcessoEntradaDTO) -> RpaRetornoPro
         field_total_emsys = main_window_arquivo_cobranca.child_window(class_name="TDBIEditNumber", found_index=3).window_text()
         #Pegando total do banco
         total_db = await get_valor_remessa_cobranca(data_atual.strftime("%Y-%m-%d"))
-        console.print("Total DB: " + str(total_db))
-        console.print("Total EMSYS: " + str(field_total_emsys))
-        if total_db == float(field_total_emsys):
+        #Compara valores
+        if total_db == Decimal(field_total_emsys.replace('.', '').replace(',', '.')):
             #Clica gerar cobrança
             await worker_sleep(5)
             pyautogui.click(1135, 789)
         else:
-            log_msg = "Valores divergem! \nValor no EmSys: " + str(field_total_emsys) + " \nValor dos titulos: " + str(total_db)
+            log_msg = "Valores divergem! \nValor no EmSys: " + str(field_total_emsys.replace('.', '').replace(',', '.')) + " \nValor dos titulos: " + str(total_db)
             return RpaRetornoProcessoDTO(
                 sucesso=False, 
                 retorno=log_msg, status=RpaHistoricoStatusEnum.Falha, 
@@ -345,3 +344,4 @@ async def remessa_cobranca_cnab240(task: RpaProcessoEntradaDTO) -> RpaRetornoPro
         console.print(log_msg, style="bold red")
         return RpaRetornoProcessoDTO(
         sucesso=False, retorno=log_msg, status=RpaHistoricoStatusEnum.Falha, tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)])
+        

@@ -177,7 +177,8 @@ def get_updated_response_content(data=None,file_path=None):
         "created":get_created(data=data,file_path=file_path),
         "model":get_model(data=data,file_path=file_path),
         "file_path":get_file_path(data=data,file_path=file_path)}
-    content.update(new_js)
+    if isinstance(content,dict):
+        content.update(new_js)
     return content
 def get_files_list(directory=None,files_list=None):
     files_list = files_list or directory

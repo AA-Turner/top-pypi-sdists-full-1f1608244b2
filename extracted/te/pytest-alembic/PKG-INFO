@@ -1,24 +1,21 @@
 Metadata-Version: 2.1
 Name: pytest-alembic
-Version: 0.11.1
+Version: 0.12.0
 Summary: A pytest plugin for verifying alembic migrations.
 Home-page: https://github.com/schireson/pytest-alembic
 License: MIT
 Keywords: pytest,sqlalchemy,alembic,migration,revision
 Author: Dan Cardin
 Author-email: ddcardin@gmail.com
-Requires-Python: >=3.6,<4
+Requires-Python: >=3.9,<4
 Classifier: Framework :: Pytest
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.6
-Classifier: Programming Language :: Python :: 3.7
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Requires-Dist: alembic
-Requires-Dist: pytest (>=6.0)
+Requires-Dist: pytest (>=7.0)
 Requires-Dist: sqlalchemy
 Project-URL: Repository, https://github.com/schireson/pytest-alembic
 Description-Content-Type: text/markdown

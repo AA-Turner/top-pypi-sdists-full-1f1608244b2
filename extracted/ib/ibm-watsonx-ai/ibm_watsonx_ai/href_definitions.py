@@ -193,6 +193,7 @@ FM_DEPLOYMENT_CHAT_STREAM = "{}/ml/v1/deployments/{}/text/chat_stream"
 FM_DEPLOYMENT_GENERATION_BETA = (
     "{}/ml/v1-beta/deployments/{}/generation/{}"  # Remove on CPD 5.0 release
 )
+FM_DEPLOYMENT_TIME_SERIES = "{}/ml/v1/deployments/{}/time_series/forecast"
 
 AI_SERVICES_DEPLOYMENT_GENERATION = "{}/ml/v4/deployments/{}/ai_service"
 AI_SERVICES_DEPLOYMENT_GENERATION_STREAM = "{}/ml/v4/deployments/{}/ai_service_stream"
@@ -868,6 +869,9 @@ class HrefDefinitions:
 
     def get_time_series_href(self) -> str:
         return FM_TIME_SERIES.format(self._credentials.url)
+
+    def get_deployment_time_series_href(self, deployment_id: str) -> str:
+        return FM_DEPLOYMENT_TIME_SERIES.format(self._credentials.url, deployment_id)
 
     def get_taxonomy_href(self, taxonomy_id: str) -> str:
         return TAXONOMY.format(self._credentials.url, taxonomy_id)

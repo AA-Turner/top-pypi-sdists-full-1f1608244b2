@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #    Copyright (C) 2015 Yahoo! Inc. All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -17,7 +15,6 @@
 import contextlib
 import datetime
 import functools
-import re
 import string
 import threading
 import time
@@ -26,6 +23,7 @@ import fasteners
 import msgpack
 from oslo_serialization import msgpackutils
 from oslo_utils import excutils
+from oslo_utils import netutils
 from oslo_utils import strutils
 from oslo_utils import timeutils
 from oslo_utils import uuidutils
@@ -69,10 +67,10 @@ class RedisJob(base.Job):
                  created_on=None, backend=None,
                  book=None, book_data=None,
                  priority=base.JobPriority.NORMAL):
-        super(RedisJob, self).__init__(board, name,
-                                       uuid=uuid, details=details,
-                                       backend=backend,
-                                       book=book, book_data=book_data)
+        super().__init__(board, name,
+                         uuid=uuid, details=details,
+                         backend=backend,
+                         book=book, book_data=book_data)
         self._created_on = created_on
         self._client = board._client
         self._redis_version = board._redis_version
@@ -561,15 +559,17 @@ return cmsgpack.pack(result)
 
     @classmethod
     def _parse_sentinel(cls, sentinel):
-        # IPv6 (eg. [::1]:6379 )
-        match = re.search(r'^\[(\S+)\]:(\d+)$', sentinel)
-        if match:
-            return (match[1], int(match[2]))
-        # IPv4 or hostname (eg. 127.0.0.1:6379 or localhost:6379)
-        match = re.search(r'^(\S+):(\d+)$', sentinel)
-        if match:
-            return (match[1], int(match[2]))
-        raise ValueError('Malformed sentinel server format')
+        host, port = netutils.parse_host_port(sentinel)
+        if host is None or port is None:
+            raise ValueError('Malformed sentinel server format')
+        return (host, port)
+
+    @classmethod
+    def _filter_ssl_options(cls, opts):
+        if not opts.get('ssl', False):
+            return {k: v for (k, v) in opts.items()
+                    if not k.startswith('ssl_')}
+        return opts
 
     @classmethod
     def _make_client(cls, conf):
@@ -584,8 +584,12 @@ return cmsgpack.pack(result)
             sentinels = [(client_conf.pop('host'), client_conf.pop('port'))]
             for fallback in conf.get('sentinel_fallbacks', []):
                 sentinels.append(cls._parse_sentinel(fallback))
+            client_conf = cls._filter_ssl_options(client_conf)
+            sentinel_kwargs = conf.get('sentinel_kwargs')
+            if sentinel_kwargs is not None:
+                sentinel_kwargs = cls._filter_ssl_options(sentinel_kwargs)
             s = sentinel.Sentinel(sentinels,
-                                  sentinel_kwargs=conf.get('sentinel_kwargs'),
+                                  sentinel_kwargs=sentinel_kwargs,
                                   **client_conf)
             return s.master_for(conf['sentinel'])
         else:
@@ -593,7 +597,7 @@ return cmsgpack.pack(result)
 
     def __init__(self, name, conf,
                  client=None, persistence=None):
-        super(RedisJobBoard, self).__init__(name, conf)
+        super().__init__(name, conf)
         self._closed = True
         if client is not None:
             self._client = client

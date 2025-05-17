@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: archinfo
-Version: 9.2.154
+Version: 9.2.156
 Summary: Classes with architecture-specific information useful to other projects.
 Home-page: https://github.com/angr/archinfo
 License: BSD-2-Clause

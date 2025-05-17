@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: mkdocs-panzoom-plugin
-Version: 0.2.1
+Version: 0.2.2
 Summary: MkDocs Plugin to enable pan & zoom on images and mermaid diagrams
 Home-page: https://github.com/PLAYG0N/mkdocs-panzoom.git
 Author: PLAYG0N
@@ -128,9 +128,6 @@ plugins:
 ```
 
 ### Enable Fullscreen
-
-> [!WARNING]
->This is still in development!
 
 ```yml
 plugins:

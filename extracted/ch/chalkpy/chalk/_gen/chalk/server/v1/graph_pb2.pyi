@@ -179,21 +179,24 @@ class GetGraphRequest(_message.Message):
     def __init__(self, deployment_id: _Optional[str] = ...) -> None: ...
 
 class GetGraphResponse(_message.Message):
-    __slots__ = ("graph", "chalkpy_version", "tag", "export")
+    __slots__ = ("graph", "chalkpy_version", "tag", "export", "deployment_id")
     GRAPH_FIELD_NUMBER: _ClassVar[int]
     CHALKPY_VERSION_FIELD_NUMBER: _ClassVar[int]
     TAG_FIELD_NUMBER: _ClassVar[int]
     EXPORT_FIELD_NUMBER: _ClassVar[int]
+    DEPLOYMENT_ID_FIELD_NUMBER: _ClassVar[int]
     graph: _graph_pb2.Graph
     chalkpy_version: str
     tag: str
     export: _export_pb2.Export
+    deployment_id: str
     def __init__(
         self,
         graph: _Optional[_Union[_graph_pb2.Graph, _Mapping]] = ...,
         chalkpy_version: _Optional[str] = ...,
         tag: _Optional[str] = ...,
         export: _Optional[_Union[_export_pb2.Export, _Mapping]] = ...,
+        deployment_id: _Optional[str] = ...,
     ) -> None: ...
 
 class PythonVersion(_message.Message):

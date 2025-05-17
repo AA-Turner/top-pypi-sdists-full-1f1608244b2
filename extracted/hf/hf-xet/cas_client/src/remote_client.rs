@@ -1,4 +1,4 @@
-use std::io::{Cursor, Write};
+use std::io::Write;
 use std::mem::take;
 use std::path::PathBuf;
 use std::result::Result as stdResult;
@@ -6,7 +6,7 @@ use std::sync::Arc;
 
 use anyhow::anyhow;
 use async_trait::async_trait;
-use cas_object::{CasObject, CompressionScheme};
+use cas_object::SerializedCasObject;
 use cas_types::{
     BatchQueryReconstructionResponse, FileRange, HttpRange, Key, QueryReconstructionResponse, UploadShardResponse,
     UploadShardResponseType, UploadXorbResponse,
@@ -19,15 +19,15 @@ use mdb_shard::file_structs::{FileDataSequenceEntry, FileDataSequenceHeader, MDB
 use mdb_shard::shard_file_reconstructor::FileReconstructor;
 use mdb_shard::utils::shard_file_name;
 use merklehash::{HashedWrite, MerkleHash};
-use reqwest::{StatusCode, Url};
+use progress_tracking::item_tracking::SingleItemProgressUpdater;
+use progress_tracking::upload_tracking::CompletionTracker;
+use reqwest::{Body, StatusCode, Url};
 use reqwest_middleware::ClientWithMiddleware;
 use tokio::sync::{mpsc, OwnedSemaphorePermit};
 use tokio::task::{JoinError, JoinHandle, JoinSet};
 use tracing::{debug, info, instrument};
 use utils::auth::AuthConfig;
-use utils::progress::SimpleProgressUpdater;
 use utils::singleflight::Group;
-use xet_threadpool::ThreadPool;
 
 use crate::download_utils::*;
 use crate::error::{CasClientError, Result};
@@ -46,6 +46,9 @@ utils::configurable_constants! {
         standard: 16,
         high_performance: 100,
     };
+
+    // Send a report of successful partial upload every 512kb.
+    ref UPLOAD_REPORTING_BLOCK_SIZE : usize = 512 * 1024;
 }
 
 utils::configurable_bool_constants! {
@@ -116,28 +119,73 @@ impl RemoteClient {
 
 #[async_trait]
 impl UploadClient for RemoteClient {
-    async fn put(
+    #[instrument(skip_all, name="RemoteClient::upload_xorb", fields(key = Key{prefix : prefix.to_string(), hash : serialized_cas_object.hash}.to_string(), 
+                 xorb.len = serialized_cas_object.serialized_data.len(), xorb.num_chunks = serialized_cas_object.num_chunks))]
+    async fn upload_xorb(
         &self,
         prefix: &str,
-        hash: &MerkleHash,
-        data: Vec<u8>,
-        chunk_and_boundaries: Vec<(MerkleHash, u32)>,
-        compression: Option<CompressionScheme>,
-    ) -> Result<usize> {
+        serialized_cas_object: SerializedCasObject,
+        _upload_tracker: Option<Arc<CompletionTracker>>,
+    ) -> Result<u64> {
         let key = Key {
             prefix: prefix.to_string(),
-            hash: *hash,
+            hash: serialized_cas_object.hash,
         };
 
-        let (was_uploaded, nbytes_trans) = self.upload(&key, data, chunk_and_boundaries, compression).await?;
+        let url = Url::parse(&format!("{}/xorb/{key}", self.endpoint))?;
 
-        if !was_uploaded {
+        let n_upload_bytes = serialized_cas_object.serialized_data.len() as u64;
+
+        // Backing out the incremental progress reporting for now until we figure out the middleware issue.
+
+        /*
+        use crate::upload_progress_stream::UploadProgressStream;
+
+        let n_raw_bytes = serialized_cas_object.raw_num_bytes;
+        let xorb_hash = serialized_cas_object.hash;
+
+        let progress_callback = move |bytes_sent: u64| {
+            if let Some(utr) = upload_tracker.as_ref() {
+                // First, recallibrate the sending, as the compressed size is different than the actual data size.
+                let adjusted_update = (bytes_sent * n_raw_bytes) / n_upload_bytes;
+
+                utr.clone().register_xorb_upload_progress_background(xorb_hash, adjusted_update);
+            }
+        };
+
+        let upload_stream = UploadProgressStream::new(
+            serialized_cas_object.serialized_data,
+            *UPLOAD_REPORTING_BLOCK_SIZE,
+            progress_callback,
+        );
+        */
+
+        let xorb_uploaded = {
+            if !self.dry_run {
+                let response = self
+                    .authenticated_http_client
+                    .post(url)
+                    .with_extension(Api("cas::upload_xorb"))
+                    // This breaks the retry middleware: .body(Body::wrap_stream(upload_stream))
+                    .body(Body::from(serialized_cas_object.serialized_data))
+                    .send()
+                    .await
+                    .process_error("upload_xorb")?;
+                let response_parsed: UploadXorbResponse = response.json().await?;
+
+                response_parsed.was_inserted
+            } else {
+                true
+            }
+        };
+
+        if !xorb_uploaded {
             debug!("{key:?} not inserted into CAS.");
         } else {
             debug!("{key:?} inserted into CAS.");
         }
 
-        Ok(nbytes_trans)
+        Ok(n_upload_bytes)
     }
 
     async fn exists(&self, prefix: &str, hash: &MerkleHash) -> Result<bool> {
@@ -163,7 +211,7 @@ impl ReconstructionClient for RemoteClient {
         hash: &MerkleHash,
         byte_range: Option<FileRange>,
         output_provider: &OutputProvider,
-        progress_updater: Option<Arc<dyn SimpleProgressUpdater>>,
+        progress_updater: Option<Arc<SingleItemProgressUpdater>>,
     ) -> Result<u64> {
         // If the user has set the `HF_XET_RECONSTRUCT_WRITE_SEQUENTIALLY=true` env variable, then we
         // should write the file to the output sequentially instead of in parallel.
@@ -275,44 +323,6 @@ impl RemoteClient {
         Ok(query_reconstruction_response)
     }
 
-    #[instrument(skip_all, name="RemoteClient::upload_xorb", fields(key = key.to_string(), xorb.len = contents.len(), xorb.num_chunks = chunk_and_boundaries.len()))]
-    pub async fn upload(
-        &self,
-        key: &Key,
-        contents: Vec<u8>,
-        chunk_and_boundaries: Vec<(MerkleHash, u32)>,
-        compression: Option<CompressionScheme>,
-    ) -> Result<(bool, usize)> {
-        let url = Url::parse(&format!("{}/xorb/{key}", self.endpoint))?;
-
-        let mut writer = Cursor::new(Vec::new());
-
-        let (_, nbytes_trans) =
-            CasObject::serialize(&mut writer, &key.hash, &contents, &chunk_and_boundaries, compression)?;
-        // free memory before the "slow" network transfer below
-        drop(contents);
-
-        debug!("Upload: POST to {url:?} for {key:?}");
-        writer.set_position(0);
-        let data = writer.into_inner();
-
-        if !self.dry_run {
-            let response = self
-                .authenticated_http_client
-                .post(url)
-                .with_extension(Api("cas::upload_xorb"))
-                .body(data)
-                .send()
-                .await
-                .process_error("upload_xorb")?;
-            let response_parsed: UploadXorbResponse = response.json().await?;
-
-            Ok((response_parsed.was_inserted, nbytes_trans))
-        } else {
-            Ok((true, nbytes_trans))
-        }
-    }
-
     // Segmented download such that the file reconstruction and fetch info is not queried in its entirety
     // at the beginning of the download, but queried in segments. Range downloads are executed with
     // a certain degree of parallelism, but writing out to storage is sequential. Ideal when the external
@@ -323,7 +333,7 @@ impl RemoteClient {
         file_hash: &MerkleHash,
         byte_range: Option<FileRange>,
         writer: &OutputProvider,
-        progress_updater: Option<Arc<dyn SimpleProgressUpdater>>,
+        progress_updater: Option<Arc<SingleItemProgressUpdater>>,
     ) -> Result<u64> {
         // queue size is inherently bounded by degree of concurrency.
         let (task_tx, mut task_rx) = mpsc::unbounded_channel::<DownloadQueueItem<TermDownload>>();
@@ -349,14 +359,13 @@ impl RemoteClient {
         // download tasks are enqueued and spawned with the degree of concurrency equal to `num_concurrent_range_gets`.
         // After the above, a task that defines fetching the remainder of the file reconstruction info is enqueued,
         // which will execute after the first of the above term download tasks finishes.
-        let threadpool = ThreadPool::current();
         let chunk_cache = self.chunk_cache.clone();
         let term_download_client = self.http_client.clone();
         let range_download_single_flight = self.range_download_single_flight.clone();
         let download_scheduler = DownloadScheduler::new(*NUM_CONCURRENT_RANGE_GETS);
         let download_scheduler_clone = download_scheduler.clone();
 
-        let queue_dispatcher: JoinHandle<Result<()>> = threadpool.clone().spawn(async move {
+        let queue_dispatcher: JoinHandle<Result<()>> = tokio::spawn(async move {
             let mut remaining_total_len = total_len;
             while let Some(item) = task_rx.recv().await {
                 match item {
@@ -372,7 +381,7 @@ impl RemoteClient {
                         let permit = download_scheduler_clone.download_permit().await?;
                         debug!("spawning 1 download task");
                         let future: JoinHandle<Result<(TermDownloadResult<Vec<u8>>, OwnedSemaphorePermit)>> =
-                            threadpool.spawn(async move {
+                            tokio::spawn(async move {
                                 let data = term_download.run().await?;
                                 Ok((data, permit))
                             });
@@ -469,7 +478,7 @@ impl RemoteClient {
         file_hash: &MerkleHash,
         byte_range: Option<FileRange>,
         writer: &OutputProvider,
-        progress_updater: Option<Arc<dyn SimpleProgressUpdater>>,
+        progress_updater: Option<Arc<SingleItemProgressUpdater>>,
     ) -> Result<u64> {
         // queue size is inherently bounded by degree of concurrency.
         let (task_tx, mut task_rx) = mpsc::unbounded_channel::<DownloadQueueItem<TermDownloadAndWrite>>();
@@ -752,13 +761,15 @@ mod tests {
     use std::collections::HashMap;
 
     use anyhow::Result;
-    use cas_object::test_utils::{build_cas_object, ChunkSize};
+    use cas_object::test_utils::*;
+    use cas_object::CompressionScheme;
     use cas_types::{CASReconstructionFetchInfo, CASReconstructionTerm, ChunkRange};
     use deduplication::constants::MAX_XORB_BYTES;
     use httpmock::Method::GET;
     use httpmock::MockServer;
     use merkledb::constants::TARGET_CDC_CHUNK_SIZE;
     use tracing_test::traced_test;
+    use xet_threadpool::ThreadPool;
 
     use super::*;
     use crate::interface::buffer::BufferProvider;
@@ -769,17 +780,16 @@ mod tests {
     fn test_basic_put() {
         // Arrange
         let prefix = PREFIX_DEFAULT;
-        let (c, _, data, chunk_boundaries) = build_cas_object(3, ChunkSize::Random(512, 10248), CompressionScheme::LZ4);
+        let raw_xorb = build_raw_xorb(3, ChunkSize::Random(512, 10248));
 
         let threadpool = ThreadPool::new().unwrap();
         let client = RemoteClient::new(CAS_ENDPOINT, &None, &None, "".into(), "", false);
+
+        let cas_object = build_and_verify_cas_object(raw_xorb, Some(CompressionScheme::LZ4));
+
         // Act
         let result = threadpool
-            .external_run_async_task(async move {
-                client
-                    .put(prefix, &c.info.cashash, data, chunk_boundaries, Some(CompressionScheme::LZ4))
-                    .await
-            })
+            .external_run_async_task(async move { client.upload_xorb(prefix, cas_object, None).await })
             .unwrap();
 
         // Assert

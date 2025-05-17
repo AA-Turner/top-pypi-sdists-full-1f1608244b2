@@ -345,7 +345,7 @@ below is an example of the expected json dictionary response format, with the de
         self.header=self.window_mgr.get_from_value(text_to_key("header"),delim='')
         self.api_env=self.window_mgr.get_from_value(text_to_key("api_env"),delim='')
         self.api_key=self.window_mgr.get_from_value(text_to_key("api_key"),delim='')
-        self.api_mgr = ApiManager(header=self.header,api_env=self.api_env,api_key=self.api_key)
+        self.api_mgr = ApiManager(header=self.header,api_env=self.api_env,api_key=self.api_key,endpoint=self.model_mgr.selected_endpoint)
 
 #ModelManagement
 # Updates model manager with latest model name from GUI

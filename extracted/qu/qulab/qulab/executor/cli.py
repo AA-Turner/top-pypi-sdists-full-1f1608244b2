@@ -6,10 +6,12 @@ import sys
 from pathlib import Path
 
 import click
+import rich
 from loguru import logger
 
 from ..cli.config import get_config_value, log_options
 from ..cli.decorators import async_command
+from ..utils import combined_env
 from .load import (WorkflowType, find_unreferenced_workflows, get_entries,
                    load_workflow, make_graph)
 from .registry import Registry, set_config_api
@@ -20,12 +22,14 @@ from .utils import workflow_template
 
 
 @logger.catch(reraise=True)
-def run_script(script_path):
-    """Run a script in a new terminal."""
+def run_script(script_path, extra_paths=None):
+    """Run a script in a new process, inheriting current PYTHONPATH plus any extra paths."""
     import subprocess
     import sys
 
-    proc = subprocess.Popen([sys.executable, script_path])
+    # Launch the new process with the modified environment
+    proc = subprocess.Popen([sys.executable, script_path],
+                            env=combined_env(extra_paths))
     proc.communicate()
 
 
@@ -160,7 +164,7 @@ def get(key, api):
         api = importlib.import_module(api)
         set_config_api(api.query_config, api.update_config, api.delete_config,
                        api.export_config, api.clear_config)
-    click.echo(reg.get(key))
+    rich.print(reg.get(key))
 
 
 @click.command()
@@ -171,7 +175,7 @@ def get(key, api):
               help='The modlule name of the api.')
 @click.option('--format',
               '-f',
-              default='json',
+              default='pickle',
               help='The format of the config.')
 @log_options('export')
 def export(file, api, format):
@@ -209,7 +213,7 @@ def export(file, api, format):
               help='The modlule name of the api.')
 @click.option('--format',
               '-f',
-              default='json',
+              default='pickle',
               help='The format of the config.')
 @log_options('load')
 def load(file, api, format):

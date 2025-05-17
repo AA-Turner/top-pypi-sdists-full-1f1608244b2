@@ -13579,8 +13579,6 @@ class persistent_compute_api_InvalidComputationType(ConjureEnumType):
     '''CURVE_FITTING'''
     PAGE_SUMMARIZATION_STRATEGY = 'PAGE_SUMMARIZATION_STRATEGY'
     '''PAGE_SUMMARIZATION_STRATEGY'''
-    LOOK_BACK_TOO_FAR = 'LOOK_BACK_TOO_FAR'
-    '''LOOK_BACK_TOO_FAR'''
     LOG_SERIES = 'LOG_SERIES'
     '''LOG_SERIES'''
     LITERAL_RANGES = 'LITERAL_RANGES'
@@ -13927,6 +13925,8 @@ class persistent_compute_api_SubscriptionCreationError(ConjureBeanType):
     """
     This will be sent if there is an error while creating a subscription. This means that the subscription was
 never created and the client will have to re-try creating it if warranted.
+This can also be sent after a subscription was first successfully started and sent result. In that case it
+means that the subscription encountered an unrecoverable error at runtime and will be stopped.
     """
 
     @builtins.classmethod
@@ -22571,7 +22571,7 @@ class scout_chartdefinition_api_CartesianChartDefinitionV1(ConjureBeanType):
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
             'plots': ConjureFieldDefinition('plots', List[scout_chartdefinition_api_CartesianPlot]),
-            'events': ConjureFieldDefinition('events', List[scout_chartdefinition_api_Event]),
+            'events': ConjureFieldDefinition('events', OptionalTypeWrapper[List[scout_chartdefinition_api_Event]]),
             'comparison_run_groups': ConjureFieldDefinition('comparisonRunGroups', List[scout_comparisonrun_api_ComparisonRunGroup]),
             'title': ConjureFieldDefinition('title', OptionalTypeWrapper[str]),
             'value_axes': ConjureFieldDefinition('valueAxes', List[scout_chartdefinition_api_ValueAxis])
@@ -22579,7 +22579,7 @@ class scout_chartdefinition_api_CartesianChartDefinitionV1(ConjureBeanType):
 
     __slots__: List[str] = ['_plots', '_events', '_comparison_run_groups', '_title', '_value_axes']
 
-    def __init__(self, comparison_run_groups: List["scout_comparisonrun_api_ComparisonRunGroup"], events: List["scout_chartdefinition_api_Event"], plots: List["scout_chartdefinition_api_CartesianPlot"], value_axes: List["scout_chartdefinition_api_ValueAxis"], title: Optional[str] = None) -> None:
+    def __init__(self, comparison_run_groups: List["scout_comparisonrun_api_ComparisonRunGroup"], plots: List["scout_chartdefinition_api_CartesianPlot"], value_axes: List["scout_chartdefinition_api_ValueAxis"], events: Optional[List["scout_chartdefinition_api_Event"]] = None, title: Optional[str] = None) -> None:
         self._plots = plots
         self._events = events
         self._comparison_run_groups = comparison_run_groups
@@ -22591,7 +22591,7 @@ class scout_chartdefinition_api_CartesianChartDefinitionV1(ConjureBeanType):
         return self._plots
 
     @builtins.property
-    def events(self) -> List["scout_chartdefinition_api_Event"]:
+    def events(self) -> Optional[List["scout_chartdefinition_api_Event"]]:
         return self._events
 
     @builtins.property
@@ -23129,7 +23129,7 @@ class scout_chartdefinition_api_FrequencyChartDefinitionV1(ConjureBeanType):
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
             'plots': ConjureFieldDefinition('plots', List[scout_chartdefinition_api_FrequencyPlot]),
-            'events': ConjureFieldDefinition('events', List[scout_chartdefinition_api_Event]),
+            'events': ConjureFieldDefinition('events', OptionalTypeWrapper[List[scout_chartdefinition_api_Event]]),
             'comparison_run_groups': ConjureFieldDefinition('comparisonRunGroups', List[scout_comparisonrun_api_ComparisonRunGroup]),
             'title': ConjureFieldDefinition('title', OptionalTypeWrapper[str]),
             'value_axes': ConjureFieldDefinition('valueAxes', List[scout_chartdefinition_api_ValueAxis])
@@ -23137,7 +23137,7 @@ class scout_chartdefinition_api_FrequencyChartDefinitionV1(ConjureBeanType):
 
     __slots__: List[str] = ['_plots', '_events', '_comparison_run_groups', '_title', '_value_axes']
 
-    def __init__(self, comparison_run_groups: List["scout_comparisonrun_api_ComparisonRunGroup"], events: List["scout_chartdefinition_api_Event"], plots: List["scout_chartdefinition_api_FrequencyPlot"], value_axes: List["scout_chartdefinition_api_ValueAxis"], title: Optional[str] = None) -> None:
+    def __init__(self, comparison_run_groups: List["scout_comparisonrun_api_ComparisonRunGroup"], plots: List["scout_chartdefinition_api_FrequencyPlot"], value_axes: List["scout_chartdefinition_api_ValueAxis"], events: Optional[List["scout_chartdefinition_api_Event"]] = None, title: Optional[str] = None) -> None:
         self._plots = plots
         self._events = events
         self._comparison_run_groups = comparison_run_groups
@@ -23149,7 +23149,7 @@ class scout_chartdefinition_api_FrequencyChartDefinitionV1(ConjureBeanType):
         return self._plots
 
     @builtins.property
-    def events(self) -> List["scout_chartdefinition_api_Event"]:
+    def events(self) -> Optional[List["scout_chartdefinition_api_Event"]]:
         return self._events
 
     @builtins.property
@@ -26564,7 +26564,7 @@ class scout_chartdefinition_api_VideoVizDefinitionV1(ConjureBeanType):
     @builtins.classmethod
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
-            'events': ConjureFieldDefinition('events', List[scout_chartdefinition_api_Event]),
+            'events': ConjureFieldDefinition('events', OptionalTypeWrapper[List[scout_chartdefinition_api_Event]]),
             'comparison_run_groups': ConjureFieldDefinition('comparisonRunGroups', List[scout_comparisonrun_api_ComparisonRunGroup]),
             'title': ConjureFieldDefinition('title', OptionalTypeWrapper[str]),
             'ref_name': ConjureFieldDefinition('refName', OptionalTypeWrapper[scout_chartdefinition_api_DataSourceRefName])
@@ -26572,14 +26572,14 @@ class scout_chartdefinition_api_VideoVizDefinitionV1(ConjureBeanType):
 
     __slots__: List[str] = ['_events', '_comparison_run_groups', '_title', '_ref_name']
 
-    def __init__(self, comparison_run_groups: List["scout_comparisonrun_api_ComparisonRunGroup"], events: List["scout_chartdefinition_api_Event"], ref_name: Optional[str] = None, title: Optional[str] = None) -> None:
+    def __init__(self, comparison_run_groups: List["scout_comparisonrun_api_ComparisonRunGroup"], events: Optional[List["scout_chartdefinition_api_Event"]] = None, ref_name: Optional[str] = None, title: Optional[str] = None) -> None:
         self._events = events
         self._comparison_run_groups = comparison_run_groups
         self._title = title
         self._ref_name = ref_name
 
     @builtins.property
-    def events(self) -> List["scout_chartdefinition_api_Event"]:
+    def events(self) -> Optional[List["scout_chartdefinition_api_Event"]]:
         return self._events
 
     @builtins.property
@@ -64220,6 +64220,7 @@ class scout_internal_search_api_SearchQuery(ConjureUnionType):
     _long_field: Optional["scout_internal_search_api_LongField"] = None
     _boolean_field: Optional["scout_internal_search_api_BooleanField"] = None
     _exact_match: Optional[str] = None
+    _string_array_exact_match: Optional["scout_internal_search_api_StringArrayField"] = None
     _search_text: Optional[str] = None
     _label: Optional[str] = None
     _property: Optional["api_Property"] = None
@@ -64237,6 +64238,7 @@ class scout_internal_search_api_SearchQuery(ConjureUnionType):
             'long_field': ConjureFieldDefinition('longField', scout_internal_search_api_LongField),
             'boolean_field': ConjureFieldDefinition('booleanField', scout_internal_search_api_BooleanField),
             'exact_match': ConjureFieldDefinition('exactMatch', str),
+            'string_array_exact_match': ConjureFieldDefinition('stringArrayExactMatch', scout_internal_search_api_StringArrayField),
             'search_text': ConjureFieldDefinition('searchText', str),
             'label': ConjureFieldDefinition('label', api_Label),
             'property': ConjureFieldDefinition('property', api_Property),
@@ -64254,6 +64256,7 @@ class scout_internal_search_api_SearchQuery(ConjureUnionType):
             long_field: Optional["scout_internal_search_api_LongField"] = None,
             boolean_field: Optional["scout_internal_search_api_BooleanField"] = None,
             exact_match: Optional[str] = None,
+            string_array_exact_match: Optional["scout_internal_search_api_StringArrayField"] = None,
             search_text: Optional[str] = None,
             label: Optional[str] = None,
             property: Optional["api_Property"] = None,
@@ -64264,7 +64267,7 @@ class scout_internal_search_api_SearchQuery(ConjureUnionType):
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (date_time_field is not None) + (string_field is not None) + (timestamp_field is not None) + (long_field is not None) + (boolean_field is not None) + (exact_match is not None) + (search_text is not None) + (label is not None) + (property is not None) + (and_ is not None) + (or_ is not None) + (not_ is not None) + (workspace is not None) != 1:
+            if (date_time_field is not None) + (string_field is not None) + (timestamp_field is not None) + (long_field is not None) + (boolean_field is not None) + (exact_match is not None) + (string_array_exact_match is not None) + (search_text is not None) + (label is not None) + (property is not None) + (and_ is not None) + (or_ is not None) + (not_ is not None) + (workspace is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if date_time_field is not None:
@@ -64285,6 +64288,9 @@ class scout_internal_search_api_SearchQuery(ConjureUnionType):
             if exact_match is not None:
                 self._exact_match = exact_match
                 self._type = 'exactMatch'
+            if string_array_exact_match is not None:
+                self._string_array_exact_match = string_array_exact_match
+                self._type = 'stringArrayExactMatch'
             if search_text is not None:
                 self._search_text = search_text
                 self._type = 'searchText'
@@ -64337,6 +64343,11 @@ class scout_internal_search_api_SearchQuery(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._exact_match = exact_match
             self._type = 'exactMatch'
+        elif type_of_union == 'stringArrayExactMatch':
+            if string_array_exact_match is None:
+                raise ValueError('a union value must not be None')
+            self._string_array_exact_match = string_array_exact_match
+            self._type = 'stringArrayExactMatch'
         elif type_of_union == 'searchText':
             if search_text is None:
                 raise ValueError('a union value must not be None')
@@ -64401,6 +64412,14 @@ class scout_internal_search_api_SearchQuery(ConjureUnionType):
         return self._exact_match
 
     @builtins.property
+    def string_array_exact_match(self) -> Optional["scout_internal_search_api_StringArrayField"]:
+        """
+        Requires the string values in the query to exactly match the set of string values in the resource.
+To do a partial match, use an "and" on StringField queries.
+        """
+        return self._string_array_exact_match
+
+    @builtins.property
     def search_text(self) -> Optional[str]:
         return self._search_text
 
@@ -64443,6 +64462,8 @@ class scout_internal_search_api_SearchQuery(ConjureUnionType):
             return visitor._boolean_field(self.boolean_field)
         if self._type == 'exactMatch' and self.exact_match is not None:
             return visitor._exact_match(self.exact_match)
+        if self._type == 'stringArrayExactMatch' and self.string_array_exact_match is not None:
+            return visitor._string_array_exact_match(self.string_array_exact_match)
         if self._type == 'searchText' and self.search_text is not None:
             return visitor._search_text(self.search_text)
         if self._type == 'label' and self.label is not None:
@@ -64491,6 +64512,10 @@ class scout_internal_search_api_SearchQueryVisitor:
         pass
 
     @abstractmethod
+    def _string_array_exact_match(self, string_array_exact_match: "scout_internal_search_api_StringArrayField") -> Any:
+        pass
+
+    @abstractmethod
     def _search_text(self, search_text: str) -> Any:
         pass
 
@@ -64522,6 +64547,35 @@ class scout_internal_search_api_SearchQueryVisitor:
 scout_internal_search_api_SearchQueryVisitor.__name__ = "SearchQueryVisitor"
 scout_internal_search_api_SearchQueryVisitor.__qualname__ = "SearchQueryVisitor"
 scout_internal_search_api_SearchQueryVisitor.__module__ = "nominal_api.scout_internal_search_api"
+
+
+class scout_internal_search_api_StringArrayField(ConjureBeanType):
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'name': ConjureFieldDefinition('name', str),
+            'value': ConjureFieldDefinition('value', List[str])
+        }
+
+    __slots__: List[str] = ['_name', '_value']
+
+    def __init__(self, name: str, value: List[str]) -> None:
+        self._name = name
+        self._value = value
+
+    @builtins.property
+    def name(self) -> str:
+        return self._name
+
+    @builtins.property
+    def value(self) -> List[str]:
+        return self._value
+
+
+scout_internal_search_api_StringArrayField.__name__ = "StringArrayField"
+scout_internal_search_api_StringArrayField.__qualname__ = "StringArrayField"
+scout_internal_search_api_StringArrayField.__module__ = "nominal_api.scout_internal_search_api"
 
 
 class scout_internal_search_api_StringField(ConjureBeanType):
@@ -65652,13 +65706,13 @@ class scout_notebook_api_CreateNotebookRequest(ConjureBeanType):
             'content': ConjureFieldDefinition('content', OptionalTypeWrapper[scout_workbookcommon_api_WorkbookContent]),
             'content_v2': ConjureFieldDefinition('contentV2', OptionalTypeWrapper[scout_workbookcommon_api_UnifiedWorkbookContent]),
             'event_refs': ConjureFieldDefinition('eventRefs', List[scout_workbookcommon_api_EventReference]),
-            'check_alert_refs': ConjureFieldDefinition('checkAlertRefs', List[scout_workbookcommon_api_CheckAlertReference]),
+            'check_alert_refs': ConjureFieldDefinition('checkAlertRefs', OptionalTypeWrapper[List[scout_workbookcommon_api_CheckAlertReference]]),
             'workspace': ConjureFieldDefinition('workspace', OptionalTypeWrapper[api_rids_WorkspaceRid])
         }
 
     __slots__: List[str] = ['_title', '_description', '_notebook_type', '_is_draft', '_state_as_json', '_charts', '_run_rid', '_data_scope', '_layout', '_content', '_content_v2', '_event_refs', '_check_alert_refs', '_workspace']
 
-    def __init__(self, check_alert_refs: List["scout_workbookcommon_api_CheckAlertReference"], description: str, event_refs: List["scout_workbookcommon_api_EventReference"], is_draft: bool, layout: "scout_layout_api_WorkbookLayout", state_as_json: str, title: str, charts: Optional[List["scout_notebook_api_ChartWithOverlays"]] = None, content: Optional["scout_workbookcommon_api_WorkbookContent"] = None, content_v2: Optional["scout_workbookcommon_api_UnifiedWorkbookContent"] = None, data_scope: Optional["scout_notebook_api_NotebookDataScope"] = None, notebook_type: Optional["scout_notebook_api_NotebookType"] = None, run_rid: Optional[str] = None, workspace: Optional[str] = None) -> None:
+    def __init__(self, description: str, event_refs: List["scout_workbookcommon_api_EventReference"], is_draft: bool, layout: "scout_layout_api_WorkbookLayout", state_as_json: str, title: str, charts: Optional[List["scout_notebook_api_ChartWithOverlays"]] = None, check_alert_refs: Optional[List["scout_workbookcommon_api_CheckAlertReference"]] = None, content: Optional["scout_workbookcommon_api_WorkbookContent"] = None, content_v2: Optional["scout_workbookcommon_api_UnifiedWorkbookContent"] = None, data_scope: Optional["scout_notebook_api_NotebookDataScope"] = None, notebook_type: Optional["scout_notebook_api_NotebookType"] = None, run_rid: Optional[str] = None, workspace: Optional[str] = None) -> None:
         self._title = title
         self._description = description
         self._notebook_type = notebook_type
@@ -65733,14 +65787,15 @@ class scout_notebook_api_CreateNotebookRequest(ConjureBeanType):
     @builtins.property
     def event_refs(self) -> List["scout_workbookcommon_api_EventReference"]:
         """
-        Field to pin events to a workbook on creation. Optional for backcompatibility.
+        Field to pin events to a workbook on creation.
         """
         return self._event_refs
 
     @builtins.property
-    def check_alert_refs(self) -> List["scout_workbookcommon_api_CheckAlertReference"]:
+    def check_alert_refs(self) -> Optional[List["scout_workbookcommon_api_CheckAlertReference"]]:
         """
-        Field to pin check alerts to a workbook on creation. Optional for backcompatibility.
+        Field to pin check alerts to a workbook on creation.
+Any specified CheckAlertReference will be added to the workbook along with it's corresponding EventReference.
         """
         return self._check_alert_refs
 
@@ -65838,12 +65893,12 @@ class scout_notebook_api_Notebook(ConjureBeanType):
             'content': ConjureFieldDefinition('content', OptionalTypeWrapper[scout_workbookcommon_api_WorkbookContent]),
             'content_v2': ConjureFieldDefinition('contentV2', scout_workbookcommon_api_UnifiedWorkbookContent),
             'event_refs': ConjureFieldDefinition('eventRefs', List[scout_workbookcommon_api_EventReference]),
-            'check_alert_refs': ConjureFieldDefinition('checkAlertRefs', List[scout_workbookcommon_api_CheckAlertReference])
+            'check_alert_refs': ConjureFieldDefinition('checkAlertRefs', OptionalTypeWrapper[List[scout_workbookcommon_api_CheckAlertReference]])
         }
 
     __slots__: List[str] = ['_rid', '_snapshot_rid', '_snapshot_author_rid', '_snapshot_created_at', '_metadata', '_state_as_json', '_charts', '_layout', '_content', '_content_v2', '_event_refs', '_check_alert_refs']
 
-    def __init__(self, check_alert_refs: List["scout_workbookcommon_api_CheckAlertReference"], content_v2: "scout_workbookcommon_api_UnifiedWorkbookContent", event_refs: List["scout_workbookcommon_api_EventReference"], layout: "scout_layout_api_WorkbookLayout", metadata: "scout_notebook_api_NotebookMetadata", rid: str, snapshot_author_rid: str, snapshot_created_at: str, snapshot_rid: str, state_as_json: str, charts: Optional[List["scout_notebook_api_ChartWithOverlays"]] = None, content: Optional["scout_workbookcommon_api_WorkbookContent"] = None) -> None:
+    def __init__(self, content_v2: "scout_workbookcommon_api_UnifiedWorkbookContent", event_refs: List["scout_workbookcommon_api_EventReference"], layout: "scout_layout_api_WorkbookLayout", metadata: "scout_notebook_api_NotebookMetadata", rid: str, snapshot_author_rid: str, snapshot_created_at: str, snapshot_rid: str, state_as_json: str, charts: Optional[List["scout_notebook_api_ChartWithOverlays"]] = None, check_alert_refs: Optional[List["scout_workbookcommon_api_CheckAlertReference"]] = None, content: Optional["scout_workbookcommon_api_WorkbookContent"] = None) -> None:
         self._rid = rid
         self._snapshot_rid = snapshot_rid
         self._snapshot_author_rid = snapshot_author_rid
@@ -65902,7 +65957,7 @@ class scout_notebook_api_Notebook(ConjureBeanType):
         return self._event_refs
 
     @builtins.property
-    def check_alert_refs(self) -> List["scout_workbookcommon_api_CheckAlertReference"]:
+    def check_alert_refs(self) -> Optional[List["scout_workbookcommon_api_CheckAlertReference"]]:
         return self._check_alert_refs
 
 
@@ -66135,6 +66190,7 @@ class scout_notebook_api_SearchNotebooksQuery(ConjureUnionType):
     _label: Optional[str] = None
     _property: Optional["api_Property"] = None
     _asset_rid: Optional[str] = None
+    _exact_asset_rids: Optional[List[str]] = None
     _author_rid: Optional[str] = None
     _run_rid: Optional[str] = None
     _notebook_type: Optional["scout_notebook_api_NotebookType"] = None
@@ -66152,6 +66208,7 @@ class scout_notebook_api_SearchNotebooksQuery(ConjureUnionType):
             'label': ConjureFieldDefinition('label', api_Label),
             'property': ConjureFieldDefinition('property', api_Property),
             'asset_rid': ConjureFieldDefinition('assetRid', scout_rids_api_AssetRid),
+            'exact_asset_rids': ConjureFieldDefinition('exactAssetRids', List[scout_rids_api_AssetRid]),
             'author_rid': ConjureFieldDefinition('authorRid', scout_rids_api_UserRid),
             'run_rid': ConjureFieldDefinition('runRid', scout_run_api_RunRid),
             'notebook_type': ConjureFieldDefinition('notebookType', scout_notebook_api_NotebookType),
@@ -66169,6 +66226,7 @@ class scout_notebook_api_SearchNotebooksQuery(ConjureUnionType):
             label: Optional[str] = None,
             property: Optional["api_Property"] = None,
             asset_rid: Optional[str] = None,
+            exact_asset_rids: Optional[List[str]] = None,
             author_rid: Optional[str] = None,
             run_rid: Optional[str] = None,
             notebook_type: Optional["scout_notebook_api_NotebookType"] = None,
@@ -66178,7 +66236,7 @@ class scout_notebook_api_SearchNotebooksQuery(ConjureUnionType):
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (and_ is not None) + (or_ is not None) + (exact_match is not None) + (search_text is not None) + (label is not None) + (property is not None) + (asset_rid is not None) + (author_rid is not None) + (run_rid is not None) + (notebook_type is not None) + (draft_state is not None) + (archived is not None) + (workspace is not None) != 1:
+            if (and_ is not None) + (or_ is not None) + (exact_match is not None) + (search_text is not None) + (label is not None) + (property is not None) + (asset_rid is not None) + (exact_asset_rids is not None) + (author_rid is not None) + (run_rid is not None) + (notebook_type is not None) + (draft_state is not None) + (archived is not None) + (workspace is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if and_ is not None:
@@ -66202,6 +66260,9 @@ class scout_notebook_api_SearchNotebooksQuery(ConjureUnionType):
             if asset_rid is not None:
                 self._asset_rid = asset_rid
                 self._type = 'assetRid'
+            if exact_asset_rids is not None:
+                self._exact_asset_rids = exact_asset_rids
+                self._type = 'exactAssetRids'
             if author_rid is not None:
                 self._author_rid = author_rid
                 self._type = 'authorRid'
@@ -66256,6 +66317,11 @@ class scout_notebook_api_SearchNotebooksQuery(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._asset_rid = asset_rid
             self._type = 'assetRid'
+        elif type_of_union == 'exactAssetRids':
+            if exact_asset_rids is None:
+                raise ValueError('a union value must not be None')
+            self._exact_asset_rids = exact_asset_rids
+            self._type = 'exactAssetRids'
         elif type_of_union == 'authorRid':
             if author_rid is None:
                 raise ValueError('a union value must not be None')
@@ -66319,6 +66385,14 @@ class scout_notebook_api_SearchNotebooksQuery(ConjureUnionType):
         return self._asset_rid
 
     @builtins.property
+    def exact_asset_rids(self) -> Optional[List[str]]:
+        """
+        Requires the set of assets in the query to exactly match the set of assets in the notebook.
+To do a partial match, use an "and" on AssetRid queries.
+        """
+        return self._exact_asset_rids
+
+    @builtins.property
     def author_rid(self) -> Optional[str]:
         return self._author_rid
 
@@ -66359,6 +66433,8 @@ class scout_notebook_api_SearchNotebooksQuery(ConjureUnionType):
             return visitor._property(self.property)
         if self._type == 'assetRid' and self.asset_rid is not None:
             return visitor._asset_rid(self.asset_rid)
+        if self._type == 'exactAssetRids' and self.exact_asset_rids is not None:
+            return visitor._exact_asset_rids(self.exact_asset_rids)
         if self._type == 'authorRid' and self.author_rid is not None:
             return visitor._author_rid(self.author_rid)
         if self._type == 'runRid' and self.run_rid is not None:
@@ -66406,6 +66482,10 @@ class scout_notebook_api_SearchNotebooksQueryVisitor:
 
     @abstractmethod
     def _asset_rid(self, asset_rid: str) -> Any:
+        pass
+
+    @abstractmethod
+    def _exact_asset_rids(self, exact_asset_rids: List[str]) -> Any:
         pass
 
     @abstractmethod
@@ -66649,12 +66729,12 @@ class scout_notebook_api_UpdateNotebookRequest(ConjureBeanType):
             'content_v2': ConjureFieldDefinition('contentV2', OptionalTypeWrapper[scout_workbookcommon_api_UnifiedWorkbookContent]),
             'latest_snapshot_rid': ConjureFieldDefinition('latestSnapshotRid', OptionalTypeWrapper[scout_rids_api_SnapshotRid]),
             'event_refs': ConjureFieldDefinition('eventRefs', List[scout_workbookcommon_api_EventReference]),
-            'check_alert_refs': ConjureFieldDefinition('checkAlertRefs', List[scout_workbookcommon_api_CheckAlertReference])
+            'check_alert_refs': ConjureFieldDefinition('checkAlertRefs', OptionalTypeWrapper[List[scout_workbookcommon_api_CheckAlertReference]])
         }
 
     __slots__: List[str] = ['_state_as_json', '_charts', '_layout', '_content', '_content_v2', '_latest_snapshot_rid', '_event_refs', '_check_alert_refs']
 
-    def __init__(self, check_alert_refs: List["scout_workbookcommon_api_CheckAlertReference"], event_refs: List["scout_workbookcommon_api_EventReference"], layout: "scout_layout_api_WorkbookLayout", state_as_json: str, charts: Optional[List["scout_notebook_api_ChartWithOverlays"]] = None, content: Optional["scout_workbookcommon_api_WorkbookContent"] = None, content_v2: Optional["scout_workbookcommon_api_UnifiedWorkbookContent"] = None, latest_snapshot_rid: Optional[str] = None) -> None:
+    def __init__(self, event_refs: List["scout_workbookcommon_api_EventReference"], layout: "scout_layout_api_WorkbookLayout", state_as_json: str, charts: Optional[List["scout_notebook_api_ChartWithOverlays"]] = None, check_alert_refs: Optional[List["scout_workbookcommon_api_CheckAlertReference"]] = None, content: Optional["scout_workbookcommon_api_WorkbookContent"] = None, content_v2: Optional["scout_workbookcommon_api_UnifiedWorkbookContent"] = None, latest_snapshot_rid: Optional[str] = None) -> None:
         self._state_as_json = state_as_json
         self._charts = charts
         self._layout = layout
@@ -66703,9 +66783,12 @@ and throws SaveNotebookConflict otherwise.
         return self._event_refs
 
     @builtins.property
-    def check_alert_refs(self) -> List["scout_workbookcommon_api_CheckAlertReference"]:
+    def check_alert_refs(self) -> Optional[List["scout_workbookcommon_api_CheckAlertReference"]]:
         """
-        Replace existing pinned check alerts on the workbook.
+        Field to pin check alerts to a workbook on creation.
+If not provided, will keep the set of check alerts on the workbook unchanged.
+Providing an empty set will remove all check alerts from the workbook.
+Any specified CheckAlertReference will be added to the workbook along with it's corresponding EventReference.
         """
         return self._check_alert_refs
 
@@ -74122,22 +74205,22 @@ class scout_workbookcommon_api_EventReference(ConjureBeanType):
     @builtins.classmethod
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
-            'event_uuid': ConjureFieldDefinition('eventUuid', str),
-            'rid': ConjureFieldDefinition('rid', OptionalTypeWrapper[api_rids_EventRid])
+            'event_uuid': ConjureFieldDefinition('eventUuid', OptionalTypeWrapper[str]),
+            'rid': ConjureFieldDefinition('rid', api_rids_EventRid)
         }
 
     __slots__: List[str] = ['_event_uuid', '_rid']
 
-    def __init__(self, event_uuid: str, rid: Optional[str] = None) -> None:
+    def __init__(self, rid: str, event_uuid: Optional[str] = None) -> None:
         self._event_uuid = event_uuid
         self._rid = rid
 
     @builtins.property
-    def event_uuid(self) -> str:
+    def event_uuid(self) -> Optional[str]:
         return self._event_uuid
 
     @builtins.property
-    def rid(self) -> Optional[str]:
+    def rid(self) -> str:
         """
         The event's unique identifier. This will soon be a required field.
         """

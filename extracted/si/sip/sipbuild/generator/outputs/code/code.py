@@ -1163,17 +1163,18 @@ f'''    /* Export the module and publish it's API. */
         # Import the helpers.
         sf.write(
 f'''
+
     sip_{module_name}_qt_metaobject = (sip_qt_metaobject_func)sipImportSymbol("qtcore_qt_metaobject");
     sip_{module_name}_qt_metacall = (sip_qt_metacall_func)sipImportSymbol("qtcore_qt_metacall");
     sip_{module_name}_qt_metacast = (sip_qt_metacast_func)sipImportSymbol("qtcore_qt_metacast");
 
     if (!sip_{module_name}_qt_metacast)
         Py_FatalError("Unable to import qtcore_qt_metacast");
-
 ''')
 
     sf.write(
-f'''    /* Initialise the module now all its dependencies have been set up. */
+f'''
+    /* Initialise the module now all its dependencies have been set up. */
     if (sipInitModule(&sipModuleAPI_{module_name}, sipModuleDict) < 0)
     {{
         Py_DECREF(sipModule);
@@ -5353,6 +5354,9 @@ def _call_args(sf, spec, cpp_signature, py_signature):
         indirection = ''
         nr_derefs = len(arg.derefs)
 
+        # The argument may be surrounded by something type-specific.
+        prefix = suffix = ''
+
         if arg.type in (ArgumentType.ASCII_STRING, ArgumentType.LATIN1_STRING, ArgumentType.UTF8_STRING, ArgumentType.SSTRING, ArgumentType.USTRING, ArgumentType.STRING, ArgumentType.WSTRING):
             if nr_derefs > (0 if arg.is_out else 1) and not arg.is_reference:
                 indirection = '&'
@@ -5362,6 +5366,10 @@ def _call_args(sf, spec, cpp_signature, py_signature):
                 indirection = '&'
             elif nr_derefs == 0:
                 indirection = '*'
+
+                if arg.type is ArgumentType.MAPPED and arg.definition.movable:
+                    prefix = 'std::move('
+                    suffix = ')'
 
         elif arg.type in (ArgumentType.STRUCT, ArgumentType.UNION, ArgumentType.VOID):
             if nr_derefs == 2:
@@ -5394,12 +5402,12 @@ def _call_args(sf, spec, cpp_signature, py_signature):
             else:
                 sf.write(f'reinterpret_cast<{arg_cpp_type_name} *>({arg_name})')
         else:
-            sf.write(indirection)
+            sf.write(prefix + indirection)
 
             if arg.array is ArrayArgument.ARRAY_SIZE:
                 sf.write(f'({arg_cpp_type_name})')
 
-            sf.write(arg_name)
+            sf.write(arg_name + suffix)
 
 
 def _get_named_value_decl(spec, scope, type, name):
@@ -9126,7 +9134,11 @@ class SourceFile:
     def write(self, s):
         """ Write a string while tracking the current line number. """
 
-        self._f.write(s)
+        # Older C++ standards (pre-C++17) get confused with digraphs (usually
+        # when the default setuptools is being used to build C++ extensions).
+        # The easiest solution is to hack the string for the most common case
+        # and hope it doesn't have unintended consequences.
+        self._f.write(s.replace('_cast<::', '_cast< ::'))
         self._line_nr += s.count('\n')
 
     def write_code(self, code):

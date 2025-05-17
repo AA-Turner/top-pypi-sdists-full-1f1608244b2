@@ -33,6 +33,7 @@ else:
 
 
 __all__ = (
+    "AssetProcessingConfigurationTypeDef",
     "BlueprintTypeDef",
     "DataAutomationConfigurationTypeDef",
     "EncryptionConfigurationTypeDef",
@@ -49,7 +50,10 @@ __all__ = (
     "ResponseMetadataTypeDef",
     "TagResourceRequestTypeDef",
     "TagTypeDef",
+    "TimestampSegmentTypeDef",
     "UntagResourceRequestTypeDef",
+    "VideoAssetProcessingConfigurationTypeDef",
+    "VideoSegmentConfigurationTypeDef",
 )
 
 
@@ -89,10 +93,6 @@ class ResponseMetadataTypeDef(TypedDict):
     HostId: NotRequired[str]
 
 
-class InputConfigurationTypeDef(TypedDict):
-    s3Uri: str
-
-
 class TagTypeDef(TypedDict):
     key: str
     value: str
@@ -100,6 +100,11 @@ class TagTypeDef(TypedDict):
 
 class ListTagsForResourceRequestTypeDef(TypedDict):
     resourceARN: str
+
+
+class TimestampSegmentTypeDef(TypedDict):
+    startTimeMillis: int
+    endTimeMillis: int
 
 
 class UntagResourceRequestTypeDef(TypedDict):
@@ -132,6 +137,23 @@ class ListTagsForResourceResponseTypeDef(TypedDict):
 class TagResourceRequestTypeDef(TypedDict):
     resourceARN: str
     tags: Sequence[TagTypeDef]
+
+
+class VideoSegmentConfigurationTypeDef(TypedDict):
+    timestampSegment: NotRequired[TimestampSegmentTypeDef]
+
+
+class VideoAssetProcessingConfigurationTypeDef(TypedDict):
+    segmentConfiguration: NotRequired[VideoSegmentConfigurationTypeDef]
+
+
+class AssetProcessingConfigurationTypeDef(TypedDict):
+    video: NotRequired[VideoAssetProcessingConfigurationTypeDef]
+
+
+class InputConfigurationTypeDef(TypedDict):
+    s3Uri: str
+    assetProcessingConfiguration: NotRequired[AssetProcessingConfigurationTypeDef]
 
 
 class InvokeDataAutomationAsyncRequestTypeDef(TypedDict):

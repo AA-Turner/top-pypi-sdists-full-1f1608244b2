@@ -2,7 +2,12 @@ import warnings
 
 import numpy as np
 
-from .methods import bin_width_doane, get_bad_vals, methods
+from .methods import bin_width_doane_div5, get_bad_vals, methods
+from .contours import find_contours_level, get_quantile_levels
+
+
+class ContourSpacingTooLarge(UserWarning):
+    pass
 
 
 class KernelDensityEstimator:
@@ -112,6 +117,139 @@ class KernelDensityEstimator:
         X, Y, Z : coordinates
             The kernel density Z evaluated on a rectangular grid (X,Y).
         """
+        warnings.warn("`get_contour` is deprecated; please use "
+                      "`get_raster` instead", DeprecationWarning)
+        return self.get_raster(
+            xax=xax, yax=yax, xacc=xacc, yacc=yacc,
+            kde_type=kde_type, kde_kwargs=kde_kwargs,
+            xscale=xscale, yscale=yscale
+        )
+
+    def get_contour_lines(self, quantiles=None, xax="area_um", yax="deform",
+                          xacc=None, yacc=None, kde_type="histogram",
+                          kde_kwargs=None, xscale="linear", yscale="linear",
+                          ret_levels=False):
+        """Compute contour lines for a given kernel kensity estimate.
+
+        Parameters
+        ----------
+        quantiles: list or array of floats
+            KDE Quantiles for which contour levels are computed. The
+            values must be between 0 and 1. If set to None, use
+            [0.5, 0.95] as default.
+        xax: str
+            Identifier for X axis (e.g. "area_um", "aspect", "deform")
+        yax: str
+            Identifier for Y axis
+        xacc: float
+            Contour accuracy in x direction
+            if set to None, will use :func:`bin_width_doane_div5`
+        yacc: float
+            Contour accuracy in y direction
+            if set to None, will use :func:`bin_width_doane_div5`
+        kde_type: str
+            The KDE method to use
+        kde_kwargs: dict
+            Additional keyword arguments to the KDE method
+        xscale: str
+            If set to "log", take the logarithm of the x-values before
+            computing the KDE. This is useful when data are
+            displayed on a log-scale. Defaults to "linear".
+        yscale: str
+            See `xscale`
+        ret_levels: bool
+            If set to True, return the levels of the contours
+            (default: False)
+
+        Returns
+        -------
+        contour_lines: list of lists (of lists)
+            For every number in `quantiles`, this list contains a list of
+            corresponding contour lines. Each contour line is a 2D
+            array of shape (N, 2), where N is the number of points in the
+            contour line.
+        levels: list of floats
+            The density levels corresponding to each number in `quantiles`.
+            Only returned if `ret_levels` is set to True.
+        """
+        if not quantiles:
+            quantiles = [0.5, 0.95]
+        try:
+            x, y, density = self.get_raster(
+                xax=xax,
+                yax=yax,
+                xacc=xacc,
+                yacc=yacc,
+                xscale=xscale,
+                yscale=yscale,
+                kde_type=kde_type,
+                kde_kwargs=kde_kwargs,
+            )
+        except ValueError:
+            # most-likely there is nothing to compute a contour for
+            return []
+        if density.shape[0] < 3 or density.shape[1] < 3:
+            warnings.warn("Contour not possible; spacing may be too large!",
+                          ContourSpacingTooLarge)
+            return []
+        levels = get_quantile_levels(
+            density=density,
+            x=x,
+            y=y,
+            xp=self.rtdc_ds[xax][self.rtdc_ds.filter.all],
+            yp=self.rtdc_ds[yax][self.rtdc_ds.filter.all],
+            q=np.array(quantiles),
+            normalize=False)
+        contours = []
+        # Normalize levels to [0, 1]
+        nlevels = np.array(levels) / density.max()
+        for nlev in nlevels:
+            # make sure that the contour levels are not at the boundaries
+            if not (np.allclose(nlev, 0, atol=1e-12, rtol=0)
+                    or np.allclose(nlev, 1, atol=1e-12, rtol=0)):
+                cc = find_contours_level(
+                    density, x=x, y=y, level=nlev)
+                contours.append(cc)
+            else:
+                contours.append([])
+        if ret_levels:
+            return contours, levels
+        else:
+            return contours
+
+    def get_raster(self, xax="area_um", yax="deform", xacc=None, yacc=None,
+                   kde_type="histogram", kde_kwargs=None, xscale="linear",
+                   yscale="linear"):
+        """Evaluate the kernel density estimate on a grid
+
+        Parameters
+        ----------
+        xax: str
+            Identifier for X axis (e.g. "area_um", "aspect", "deform")
+        yax: str
+            Identifier for Y axis
+        xacc: float
+            Contour accuracy in x direction
+            if set to None, will use :func:`bin_width_doane_div5`
+        yacc: float
+            Contour accuracy in y direction
+            if set to None, will use :func:`bin_width_doane_div5`
+        kde_type: str
+            The KDE method to use
+        kde_kwargs: dict
+            Additional keyword arguments to the KDE method
+        xscale: str
+            If set to "log", take the logarithm of the x-values before
+            computing the KDE. This is useful when data are
+            displayed on a log-scale. Defaults to "linear".
+        yscale: str
+            See `xscale`.
+
+        Returns
+        -------
+        X, Y, Z : coordinates
+            The kernel density Z evaluated on a rectangular grid (X,Y).
+        """
         if kde_kwargs is None:
             kde_kwargs = {}
         xax = xax.lower()
@@ -128,21 +266,21 @@ class KernelDensityEstimator:
             a=x,
             feat=xax,
             scale=xscale,
-            method=bin_width_doane,
+            method=bin_width_doane_div5,
             ret_scaled=True)
 
         yacc_sc, ys = self.get_spacing(
             a=y,
             feat=yax,
             scale=yscale,
-            method=bin_width_doane,
+            method=bin_width_doane_div5,
             ret_scaled=True)
 
         if xacc is None or xacc == 0:
-            xacc = xacc_sc / 5
+            xacc = xacc_sc
 
         if yacc is None or yacc == 0:
-            yacc = yacc_sc / 5
+            yacc = yacc_sc
 
         # Ignore infs and nans
         bad = get_bad_vals(xs, ys)

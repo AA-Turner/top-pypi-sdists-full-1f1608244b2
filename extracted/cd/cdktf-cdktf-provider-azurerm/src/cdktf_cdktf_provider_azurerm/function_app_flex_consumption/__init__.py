@@ -1,7 +1,7 @@
 r'''
 # `azurerm_function_app_flex_consumption`
 
-Refer to the Terraform Registry for docs: [`azurerm_function_app_flex_consumption`](https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption).
+Refer to the Terraform Registry for docs: [`azurerm_function_app_flex_consumption`](https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class FunctionAppFlexConsumption(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-azurerm.functionAppFlexConsumption.FunctionAppFlexConsumption",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption azurerm_function_app_flex_consumption}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption azurerm_function_app_flex_consumption}.'''
 
     def __init__(
         self,
@@ -90,41 +90,41 @@ class FunctionAppFlexConsumption(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption azurerm_function_app_flex_consumption} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption azurerm_function_app_flex_consumption} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param location: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#location FunctionAppFlexConsumption#location}.
-        :param name: Specifies the name of the Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
-        :param resource_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#resource_group_name FunctionAppFlexConsumption#resource_group_name}.
-        :param runtime_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_name FunctionAppFlexConsumption#runtime_name}.
-        :param runtime_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}.
-        :param service_plan_id: The ID of the App Service Plan within which to create this Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#service_plan_id FunctionAppFlexConsumption#service_plan_id}
-        :param site_config: site_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#site_config FunctionAppFlexConsumption#site_config}
-        :param storage_authentication_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_authentication_type FunctionAppFlexConsumption#storage_authentication_type}.
-        :param storage_container_endpoint: The endpoint of the storage container where the function app's code is hosted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_container_endpoint FunctionAppFlexConsumption#storage_container_endpoint}
-        :param storage_container_type: The type of the storage container where the function app's code is hosted. Only ``blobContainer`` is supported currently. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_container_type FunctionAppFlexConsumption#storage_container_type}
-        :param app_settings: A map of key-value pairs for `App Settings <https://docs.microsoft.com/en-us/azure/azure-functions/functions-app-settings>`_ and custom values. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_settings FunctionAppFlexConsumption#app_settings}
-        :param auth_settings: auth_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#auth_settings FunctionAppFlexConsumption#auth_settings}
-        :param auth_settings_v2: auth_settings_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#auth_settings_v2 FunctionAppFlexConsumption#auth_settings_v2}
-        :param client_certificate_enabled: Should the function app use Client Certificates. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_certificate_enabled FunctionAppFlexConsumption#client_certificate_enabled}
-        :param client_certificate_exclusion_paths: Paths to exclude when using client certificates, separated by ; Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_certificate_exclusion_paths FunctionAppFlexConsumption#client_certificate_exclusion_paths}
-        :param client_certificate_mode: The mode of the Function App's client certificates requirement for incoming requests. Possible values are ``Required``, ``Optional``, and ``OptionalInteractiveUser`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_certificate_mode FunctionAppFlexConsumption#client_certificate_mode}
-        :param connection_string: connection_string block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#connection_string FunctionAppFlexConsumption#connection_string}
-        :param enabled: Is the Function App enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#enabled FunctionAppFlexConsumption#enabled}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#id FunctionAppFlexConsumption#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param identity: identity block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#identity FunctionAppFlexConsumption#identity}
-        :param instance_memory_in_mb: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#instance_memory_in_mb FunctionAppFlexConsumption#instance_memory_in_mb}.
-        :param maximum_instance_count: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#maximum_instance_count FunctionAppFlexConsumption#maximum_instance_count}.
-        :param public_network_access_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#public_network_access_enabled FunctionAppFlexConsumption#public_network_access_enabled}.
-        :param sticky_settings: sticky_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#sticky_settings FunctionAppFlexConsumption#sticky_settings}
-        :param storage_access_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_access_key FunctionAppFlexConsumption#storage_access_key}.
-        :param storage_user_assigned_identity_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_user_assigned_identity_id FunctionAppFlexConsumption#storage_user_assigned_identity_id}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#tags FunctionAppFlexConsumption#tags}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#timeouts FunctionAppFlexConsumption#timeouts}
-        :param virtual_network_subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#virtual_network_subnet_id FunctionAppFlexConsumption#virtual_network_subnet_id}.
-        :param webdeploy_publish_basic_authentication_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#webdeploy_publish_basic_authentication_enabled FunctionAppFlexConsumption#webdeploy_publish_basic_authentication_enabled}.
-        :param zip_deploy_file: The local path and filename of the Zip packaged application to deploy to this Function App. **Note:** Using this value requires either ``WEBSITE_RUN_FROM_PACKAGE=1`` or ``SCM_DO_BUILD_DURING_DEPLOYMENT=true`` to be set on the App in ``app_settings``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#zip_deploy_file FunctionAppFlexConsumption#zip_deploy_file}
+        :param location: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#location FunctionAppFlexConsumption#location}.
+        :param name: Specifies the name of the Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
+        :param resource_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#resource_group_name FunctionAppFlexConsumption#resource_group_name}.
+        :param runtime_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_name FunctionAppFlexConsumption#runtime_name}.
+        :param runtime_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}.
+        :param service_plan_id: The ID of the App Service Plan within which to create this Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#service_plan_id FunctionAppFlexConsumption#service_plan_id}
+        :param site_config: site_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#site_config FunctionAppFlexConsumption#site_config}
+        :param storage_authentication_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_authentication_type FunctionAppFlexConsumption#storage_authentication_type}.
+        :param storage_container_endpoint: The endpoint of the storage container where the function app's code is hosted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_container_endpoint FunctionAppFlexConsumption#storage_container_endpoint}
+        :param storage_container_type: The type of the storage container where the function app's code is hosted. Only ``blobContainer`` is supported currently. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_container_type FunctionAppFlexConsumption#storage_container_type}
+        :param app_settings: A map of key-value pairs for `App Settings <https://docs.microsoft.com/en-us/azure/azure-functions/functions-app-settings>`_ and custom values. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_settings FunctionAppFlexConsumption#app_settings}
+        :param auth_settings: auth_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#auth_settings FunctionAppFlexConsumption#auth_settings}
+        :param auth_settings_v2: auth_settings_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#auth_settings_v2 FunctionAppFlexConsumption#auth_settings_v2}
+        :param client_certificate_enabled: Should the function app use Client Certificates. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_certificate_enabled FunctionAppFlexConsumption#client_certificate_enabled}
+        :param client_certificate_exclusion_paths: Paths to exclude when using client certificates, separated by ; Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_certificate_exclusion_paths FunctionAppFlexConsumption#client_certificate_exclusion_paths}
+        :param client_certificate_mode: The mode of the Function App's client certificates requirement for incoming requests. Possible values are ``Required``, ``Optional``, and ``OptionalInteractiveUser`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_certificate_mode FunctionAppFlexConsumption#client_certificate_mode}
+        :param connection_string: connection_string block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#connection_string FunctionAppFlexConsumption#connection_string}
+        :param enabled: Is the Function App enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#enabled FunctionAppFlexConsumption#enabled}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#id FunctionAppFlexConsumption#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param identity: identity block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#identity FunctionAppFlexConsumption#identity}
+        :param instance_memory_in_mb: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#instance_memory_in_mb FunctionAppFlexConsumption#instance_memory_in_mb}.
+        :param maximum_instance_count: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#maximum_instance_count FunctionAppFlexConsumption#maximum_instance_count}.
+        :param public_network_access_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#public_network_access_enabled FunctionAppFlexConsumption#public_network_access_enabled}.
+        :param sticky_settings: sticky_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#sticky_settings FunctionAppFlexConsumption#sticky_settings}
+        :param storage_access_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_access_key FunctionAppFlexConsumption#storage_access_key}.
+        :param storage_user_assigned_identity_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_user_assigned_identity_id FunctionAppFlexConsumption#storage_user_assigned_identity_id}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#tags FunctionAppFlexConsumption#tags}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#timeouts FunctionAppFlexConsumption#timeouts}
+        :param virtual_network_subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#virtual_network_subnet_id FunctionAppFlexConsumption#virtual_network_subnet_id}.
+        :param webdeploy_publish_basic_authentication_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#webdeploy_publish_basic_authentication_enabled FunctionAppFlexConsumption#webdeploy_publish_basic_authentication_enabled}.
+        :param zip_deploy_file: The local path and filename of the Zip packaged application to deploy to this Function App. **Note:** Using this value requires either ``WEBSITE_RUN_FROM_PACKAGE=1`` or ``SCM_DO_BUILD_DURING_DEPLOYMENT=true`` to be set on the App in ``app_settings``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#zip_deploy_file FunctionAppFlexConsumption#zip_deploy_file}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -193,7 +193,7 @@ class FunctionAppFlexConsumption(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the FunctionAppFlexConsumption to import.
-        :param import_from_id: The id of the existing FunctionAppFlexConsumption that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing FunctionAppFlexConsumption that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the FunctionAppFlexConsumption to import is found.
         '''
         if __debug__:
@@ -225,21 +225,21 @@ class FunctionAppFlexConsumption(
         unauthenticated_client_action: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param enabled: Should the Authentication / Authorization feature be enabled? Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#enabled FunctionAppFlexConsumption#enabled}
-        :param active_directory: active_directory block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#active_directory FunctionAppFlexConsumption#active_directory}
-        :param additional_login_parameters: Specifies a map of Login Parameters to send to the OpenID Connect authorization endpoint when a user logs in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#additional_login_parameters FunctionAppFlexConsumption#additional_login_parameters}
-        :param allowed_external_redirect_urls: Specifies a list of External URLs that can be redirected to as part of logging in or logging out of the Windows Web App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_external_redirect_urls FunctionAppFlexConsumption#allowed_external_redirect_urls}
-        :param default_provider: The default authentication provider to use when multiple providers are configured. Possible values include: ``AzureActiveDirectory``, ``Facebook``, ``Google``, ``MicrosoftAccount``, ``Twitter``, ``Github``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#default_provider FunctionAppFlexConsumption#default_provider}
-        :param facebook: facebook block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#facebook FunctionAppFlexConsumption#facebook}
-        :param github: github block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#github FunctionAppFlexConsumption#github}
-        :param google: google block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#google FunctionAppFlexConsumption#google}
-        :param issuer: The OpenID Connect Issuer URI that represents the entity which issues access tokens. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#issuer FunctionAppFlexConsumption#issuer}
-        :param microsoft: microsoft block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#microsoft FunctionAppFlexConsumption#microsoft}
-        :param runtime_version: The RuntimeVersion of the Authentication / Authorization feature in use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}
-        :param token_refresh_extension_hours: The number of hours after session token expiration that a session token can be used to call the token refresh API. Defaults to ``72`` hours. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_refresh_extension_hours FunctionAppFlexConsumption#token_refresh_extension_hours}
-        :param token_store_enabled: Should the Windows Web App durably store platform-specific security tokens that are obtained during login flows? Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_store_enabled FunctionAppFlexConsumption#token_store_enabled}
-        :param twitter: twitter block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#twitter FunctionAppFlexConsumption#twitter}
-        :param unauthenticated_client_action: The action to take when an unauthenticated client attempts to access the app. Possible values include: ``RedirectToLoginPage``, ``AllowAnonymous``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#unauthenticated_client_action FunctionAppFlexConsumption#unauthenticated_client_action}
+        :param enabled: Should the Authentication / Authorization feature be enabled? Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#enabled FunctionAppFlexConsumption#enabled}
+        :param active_directory: active_directory block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#active_directory FunctionAppFlexConsumption#active_directory}
+        :param additional_login_parameters: Specifies a map of Login Parameters to send to the OpenID Connect authorization endpoint when a user logs in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#additional_login_parameters FunctionAppFlexConsumption#additional_login_parameters}
+        :param allowed_external_redirect_urls: Specifies a list of External URLs that can be redirected to as part of logging in or logging out of the Windows Web App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_external_redirect_urls FunctionAppFlexConsumption#allowed_external_redirect_urls}
+        :param default_provider: The default authentication provider to use when multiple providers are configured. Possible values include: ``AzureActiveDirectory``, ``Facebook``, ``Google``, ``MicrosoftAccount``, ``Twitter``, ``Github``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#default_provider FunctionAppFlexConsumption#default_provider}
+        :param facebook: facebook block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#facebook FunctionAppFlexConsumption#facebook}
+        :param github: github block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#github FunctionAppFlexConsumption#github}
+        :param google: google block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#google FunctionAppFlexConsumption#google}
+        :param issuer: The OpenID Connect Issuer URI that represents the entity which issues access tokens. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#issuer FunctionAppFlexConsumption#issuer}
+        :param microsoft: microsoft block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#microsoft FunctionAppFlexConsumption#microsoft}
+        :param runtime_version: The RuntimeVersion of the Authentication / Authorization feature in use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}
+        :param token_refresh_extension_hours: The number of hours after session token expiration that a session token can be used to call the token refresh API. Defaults to ``72`` hours. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_refresh_extension_hours FunctionAppFlexConsumption#token_refresh_extension_hours}
+        :param token_store_enabled: Should the Windows Web App durably store platform-specific security tokens that are obtained during login flows? Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_store_enabled FunctionAppFlexConsumption#token_store_enabled}
+        :param twitter: twitter block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#twitter FunctionAppFlexConsumption#twitter}
+        :param unauthenticated_client_action: The action to take when an unauthenticated client attempts to access the app. Possible values include: ``RedirectToLoginPage``, ``AllowAnonymous``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#unauthenticated_client_action FunctionAppFlexConsumption#unauthenticated_client_action}
         '''
         value = FunctionAppFlexConsumptionAuthSettings(
             enabled=enabled,
@@ -289,28 +289,28 @@ class FunctionAppFlexConsumption(
         unauthenticated_action: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param login: login block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login FunctionAppFlexConsumption#login}
-        :param active_directory_v2: active_directory_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#active_directory_v2 FunctionAppFlexConsumption#active_directory_v2}
-        :param apple_v2: apple_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#apple_v2 FunctionAppFlexConsumption#apple_v2}
-        :param auth_enabled: Should the AuthV2 Settings be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#auth_enabled FunctionAppFlexConsumption#auth_enabled}
-        :param azure_static_web_app_v2: azure_static_web_app_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#azure_static_web_app_v2 FunctionAppFlexConsumption#azure_static_web_app_v2}
-        :param config_file_path: The path to the App Auth settings. **Note:** Relative Paths are evaluated from the Site Root directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#config_file_path FunctionAppFlexConsumption#config_file_path}
-        :param custom_oidc_v2: custom_oidc_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#custom_oidc_v2 FunctionAppFlexConsumption#custom_oidc_v2}
-        :param default_provider: The Default Authentication Provider to use when the ``unauthenticated_action`` is set to ``RedirectToLoginPage``. Possible values include: ``apple``, ``azureactivedirectory``, ``facebook``, ``github``, ``google``, ``twitter`` and the ``name`` of your ``custom_oidc_v2`` provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#default_provider FunctionAppFlexConsumption#default_provider}
-        :param excluded_paths: The paths which should be excluded from the ``unauthenticated_action`` when it is set to ``RedirectToLoginPage``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#excluded_paths FunctionAppFlexConsumption#excluded_paths}
-        :param facebook_v2: facebook_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#facebook_v2 FunctionAppFlexConsumption#facebook_v2}
-        :param forward_proxy_convention: The convention used to determine the url of the request made. Possible values include ``ForwardProxyConventionNoProxy``, ``ForwardProxyConventionStandard``, ``ForwardProxyConventionCustom``. Defaults to ``ForwardProxyConventionNoProxy`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#forward_proxy_convention FunctionAppFlexConsumption#forward_proxy_convention}
-        :param forward_proxy_custom_host_header_name: The name of the header containing the host of the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#forward_proxy_custom_host_header_name FunctionAppFlexConsumption#forward_proxy_custom_host_header_name}
-        :param forward_proxy_custom_scheme_header_name: The name of the header containing the scheme of the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#forward_proxy_custom_scheme_header_name FunctionAppFlexConsumption#forward_proxy_custom_scheme_header_name}
-        :param github_v2: github_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#github_v2 FunctionAppFlexConsumption#github_v2}
-        :param google_v2: google_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#google_v2 FunctionAppFlexConsumption#google_v2}
-        :param http_route_api_prefix: The prefix that should precede all the authentication and authorisation paths. Defaults to ``/.auth``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#http_route_api_prefix FunctionAppFlexConsumption#http_route_api_prefix}
-        :param microsoft_v2: microsoft_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#microsoft_v2 FunctionAppFlexConsumption#microsoft_v2}
-        :param require_authentication: Should the authentication flow be used for all requests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#require_authentication FunctionAppFlexConsumption#require_authentication}
-        :param require_https: Should HTTPS be required on connections? Defaults to true. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#require_https FunctionAppFlexConsumption#require_https}
-        :param runtime_version: The Runtime Version of the Authentication and Authorisation feature of this App. Defaults to ``~1``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}
-        :param twitter_v2: twitter_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#twitter_v2 FunctionAppFlexConsumption#twitter_v2}
-        :param unauthenticated_action: The action to take for requests made without authentication. Possible values include ``RedirectToLoginPage``, ``AllowAnonymous``, ``Return401``, and ``Return403``. Defaults to ``RedirectToLoginPage``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#unauthenticated_action FunctionAppFlexConsumption#unauthenticated_action}
+        :param login: login block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login FunctionAppFlexConsumption#login}
+        :param active_directory_v2: active_directory_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#active_directory_v2 FunctionAppFlexConsumption#active_directory_v2}
+        :param apple_v2: apple_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#apple_v2 FunctionAppFlexConsumption#apple_v2}
+        :param auth_enabled: Should the AuthV2 Settings be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#auth_enabled FunctionAppFlexConsumption#auth_enabled}
+        :param azure_static_web_app_v2: azure_static_web_app_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#azure_static_web_app_v2 FunctionAppFlexConsumption#azure_static_web_app_v2}
+        :param config_file_path: The path to the App Auth settings. **Note:** Relative Paths are evaluated from the Site Root directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#config_file_path FunctionAppFlexConsumption#config_file_path}
+        :param custom_oidc_v2: custom_oidc_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#custom_oidc_v2 FunctionAppFlexConsumption#custom_oidc_v2}
+        :param default_provider: The Default Authentication Provider to use when the ``unauthenticated_action`` is set to ``RedirectToLoginPage``. Possible values include: ``apple``, ``azureactivedirectory``, ``facebook``, ``github``, ``google``, ``twitter`` and the ``name`` of your ``custom_oidc_v2`` provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#default_provider FunctionAppFlexConsumption#default_provider}
+        :param excluded_paths: The paths which should be excluded from the ``unauthenticated_action`` when it is set to ``RedirectToLoginPage``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#excluded_paths FunctionAppFlexConsumption#excluded_paths}
+        :param facebook_v2: facebook_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#facebook_v2 FunctionAppFlexConsumption#facebook_v2}
+        :param forward_proxy_convention: The convention used to determine the url of the request made. Possible values include ``ForwardProxyConventionNoProxy``, ``ForwardProxyConventionStandard``, ``ForwardProxyConventionCustom``. Defaults to ``ForwardProxyConventionNoProxy`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#forward_proxy_convention FunctionAppFlexConsumption#forward_proxy_convention}
+        :param forward_proxy_custom_host_header_name: The name of the header containing the host of the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#forward_proxy_custom_host_header_name FunctionAppFlexConsumption#forward_proxy_custom_host_header_name}
+        :param forward_proxy_custom_scheme_header_name: The name of the header containing the scheme of the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#forward_proxy_custom_scheme_header_name FunctionAppFlexConsumption#forward_proxy_custom_scheme_header_name}
+        :param github_v2: github_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#github_v2 FunctionAppFlexConsumption#github_v2}
+        :param google_v2: google_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#google_v2 FunctionAppFlexConsumption#google_v2}
+        :param http_route_api_prefix: The prefix that should precede all the authentication and authorisation paths. Defaults to ``/.auth``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#http_route_api_prefix FunctionAppFlexConsumption#http_route_api_prefix}
+        :param microsoft_v2: microsoft_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#microsoft_v2 FunctionAppFlexConsumption#microsoft_v2}
+        :param require_authentication: Should the authentication flow be used for all requests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#require_authentication FunctionAppFlexConsumption#require_authentication}
+        :param require_https: Should HTTPS be required on connections? Defaults to true. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#require_https FunctionAppFlexConsumption#require_https}
+        :param runtime_version: The Runtime Version of the Authentication and Authorisation feature of this App. Defaults to ``~1``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}
+        :param twitter_v2: twitter_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#twitter_v2 FunctionAppFlexConsumption#twitter_v2}
+        :param unauthenticated_action: The action to take for requests made without authentication. Possible values include ``RedirectToLoginPage``, ``AllowAnonymous``, ``Return401``, and ``Return403``. Defaults to ``RedirectToLoginPage``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#unauthenticated_action FunctionAppFlexConsumption#unauthenticated_action}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsV2(
             login=login,
@@ -360,8 +360,8 @@ class FunctionAppFlexConsumption(
         identity_ids: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#type FunctionAppFlexConsumption#type}.
-        :param identity_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#identity_ids FunctionAppFlexConsumption#identity_ids}.
+        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#type FunctionAppFlexConsumption#type}.
+        :param identity_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#identity_ids FunctionAppFlexConsumption#identity_ids}.
         '''
         value = FunctionAppFlexConsumptionIdentity(
             type=type, identity_ids=identity_ids
@@ -404,35 +404,35 @@ class FunctionAppFlexConsumption(
         worker_count: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param api_definition_url: The URL of the API definition that describes this Linux Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#api_definition_url FunctionAppFlexConsumption#api_definition_url}
-        :param api_management_api_id: The ID of the API Management API for this Linux Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#api_management_api_id FunctionAppFlexConsumption#api_management_api_id}
-        :param app_command_line: The program and any arguments used to launch this app via the command line. (Example ``node myapp.js``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_command_line FunctionAppFlexConsumption#app_command_line}
-        :param application_insights_connection_string: The Connection String for linking the Linux Function App to Application Insights. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#application_insights_connection_string FunctionAppFlexConsumption#application_insights_connection_string}
-        :param application_insights_key: The Instrumentation Key for connecting the Linux Function App to Application Insights. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#application_insights_key FunctionAppFlexConsumption#application_insights_key}
-        :param app_service_logs: app_service_logs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_service_logs FunctionAppFlexConsumption#app_service_logs}
-        :param container_registry_managed_identity_client_id: The Client ID of the Managed Service Identity to use for connections to the Azure Container Registry. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#container_registry_managed_identity_client_id FunctionAppFlexConsumption#container_registry_managed_identity_client_id}
-        :param container_registry_use_managed_identity: Should connections for Azure Container Registry use Managed Identity. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#container_registry_use_managed_identity FunctionAppFlexConsumption#container_registry_use_managed_identity}
-        :param cors: cors block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#cors FunctionAppFlexConsumption#cors}
-        :param default_documents: Specifies a list of Default Documents for the Linux Web App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#default_documents FunctionAppFlexConsumption#default_documents}
-        :param elastic_instance_minimum: The number of minimum instances for this Linux Function App. Only affects apps on Elastic Premium plans. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#elastic_instance_minimum FunctionAppFlexConsumption#elastic_instance_minimum}
-        :param health_check_eviction_time_in_min: The amount of time in minutes that a node is unhealthy before being removed from the load balancer. Possible values are between ``2`` and ``10``. Only valid in conjunction with ``health_check_path`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#health_check_eviction_time_in_min FunctionAppFlexConsumption#health_check_eviction_time_in_min}
-        :param health_check_path: The path to be checked for this function app health. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#health_check_path FunctionAppFlexConsumption#health_check_path}
-        :param http2_enabled: Specifies if the http2 protocol should be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#http2_enabled FunctionAppFlexConsumption#http2_enabled}
-        :param ip_restriction: ip_restriction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#ip_restriction FunctionAppFlexConsumption#ip_restriction}
-        :param ip_restriction_default_action: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#ip_restriction_default_action FunctionAppFlexConsumption#ip_restriction_default_action}.
-        :param load_balancing_mode: The Site load balancing mode. Possible values include: ``WeightedRoundRobin``, ``LeastRequests``, ``LeastResponseTime``, ``WeightedTotalTraffic``, ``RequestHash``, ``PerSiteRoundRobin``. Defaults to ``LeastRequests`` if omitted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#load_balancing_mode FunctionAppFlexConsumption#load_balancing_mode}
-        :param managed_pipeline_mode: The Managed Pipeline mode. Possible values include: ``Integrated``, ``Classic``. Defaults to ``Integrated``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#managed_pipeline_mode FunctionAppFlexConsumption#managed_pipeline_mode}
-        :param minimum_tls_version: The configures the minimum version of TLS required for SSL requests. Possible values include: ``1.0``, ``1.1``, and ``1.2``. Defaults to ``1.2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#minimum_tls_version FunctionAppFlexConsumption#minimum_tls_version}
-        :param remote_debugging_enabled: Should Remote Debugging be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#remote_debugging_enabled FunctionAppFlexConsumption#remote_debugging_enabled}
-        :param remote_debugging_version: The Remote Debugging Version. Possible values include ``VS2017``, ``VS2019``, and `VS2022``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#remote_debugging_version FunctionAppFlexConsumption#remote_debugging_version}
-        :param runtime_scale_monitoring_enabled: Should Functions Runtime Scale Monitoring be enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_scale_monitoring_enabled FunctionAppFlexConsumption#runtime_scale_monitoring_enabled}
-        :param scm_ip_restriction: scm_ip_restriction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#scm_ip_restriction FunctionAppFlexConsumption#scm_ip_restriction}
-        :param scm_ip_restriction_default_action: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#scm_ip_restriction_default_action FunctionAppFlexConsumption#scm_ip_restriction_default_action}.
-        :param scm_minimum_tls_version: Configures the minimum version of TLS required for SSL requests to the SCM site Possible values include: ``1.0``, ``1.1``, and ``1.2``. Defaults to ``1.2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#scm_minimum_tls_version FunctionAppFlexConsumption#scm_minimum_tls_version}
-        :param scm_use_main_ip_restriction: Should the Linux Function App ``ip_restriction`` configuration be used for the SCM also. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#scm_use_main_ip_restriction FunctionAppFlexConsumption#scm_use_main_ip_restriction}
-        :param use32_bit_worker: Should the Linux Web App use a 32-bit worker. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#use_32_bit_worker FunctionAppFlexConsumption#use_32_bit_worker}
-        :param websockets_enabled: Should Web Sockets be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#websockets_enabled FunctionAppFlexConsumption#websockets_enabled}
-        :param worker_count: The number of Workers for this Linux Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#worker_count FunctionAppFlexConsumption#worker_count}
+        :param api_definition_url: The URL of the API definition that describes this Linux Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#api_definition_url FunctionAppFlexConsumption#api_definition_url}
+        :param api_management_api_id: The ID of the API Management API for this Linux Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#api_management_api_id FunctionAppFlexConsumption#api_management_api_id}
+        :param app_command_line: The program and any arguments used to launch this app via the command line. (Example ``node myapp.js``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_command_line FunctionAppFlexConsumption#app_command_line}
+        :param application_insights_connection_string: The Connection String for linking the Linux Function App to Application Insights. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#application_insights_connection_string FunctionAppFlexConsumption#application_insights_connection_string}
+        :param application_insights_key: The Instrumentation Key for connecting the Linux Function App to Application Insights. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#application_insights_key FunctionAppFlexConsumption#application_insights_key}
+        :param app_service_logs: app_service_logs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_service_logs FunctionAppFlexConsumption#app_service_logs}
+        :param container_registry_managed_identity_client_id: The Client ID of the Managed Service Identity to use for connections to the Azure Container Registry. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#container_registry_managed_identity_client_id FunctionAppFlexConsumption#container_registry_managed_identity_client_id}
+        :param container_registry_use_managed_identity: Should connections for Azure Container Registry use Managed Identity. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#container_registry_use_managed_identity FunctionAppFlexConsumption#container_registry_use_managed_identity}
+        :param cors: cors block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#cors FunctionAppFlexConsumption#cors}
+        :param default_documents: Specifies a list of Default Documents for the Linux Web App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#default_documents FunctionAppFlexConsumption#default_documents}
+        :param elastic_instance_minimum: The number of minimum instances for this Linux Function App. Only affects apps on Elastic Premium plans. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#elastic_instance_minimum FunctionAppFlexConsumption#elastic_instance_minimum}
+        :param health_check_eviction_time_in_min: The amount of time in minutes that a node is unhealthy before being removed from the load balancer. Possible values are between ``2`` and ``10``. Only valid in conjunction with ``health_check_path`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#health_check_eviction_time_in_min FunctionAppFlexConsumption#health_check_eviction_time_in_min}
+        :param health_check_path: The path to be checked for this function app health. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#health_check_path FunctionAppFlexConsumption#health_check_path}
+        :param http2_enabled: Specifies if the http2 protocol should be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#http2_enabled FunctionAppFlexConsumption#http2_enabled}
+        :param ip_restriction: ip_restriction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#ip_restriction FunctionAppFlexConsumption#ip_restriction}
+        :param ip_restriction_default_action: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#ip_restriction_default_action FunctionAppFlexConsumption#ip_restriction_default_action}.
+        :param load_balancing_mode: The Site load balancing mode. Possible values include: ``WeightedRoundRobin``, ``LeastRequests``, ``LeastResponseTime``, ``WeightedTotalTraffic``, ``RequestHash``, ``PerSiteRoundRobin``. Defaults to ``LeastRequests`` if omitted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#load_balancing_mode FunctionAppFlexConsumption#load_balancing_mode}
+        :param managed_pipeline_mode: The Managed Pipeline mode. Possible values include: ``Integrated``, ``Classic``. Defaults to ``Integrated``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#managed_pipeline_mode FunctionAppFlexConsumption#managed_pipeline_mode}
+        :param minimum_tls_version: The configures the minimum version of TLS required for SSL requests. Possible values include: ``1.0``, ``1.1``, and ``1.2``. Defaults to ``1.2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#minimum_tls_version FunctionAppFlexConsumption#minimum_tls_version}
+        :param remote_debugging_enabled: Should Remote Debugging be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#remote_debugging_enabled FunctionAppFlexConsumption#remote_debugging_enabled}
+        :param remote_debugging_version: The Remote Debugging Version. Possible values include ``VS2017``, ``VS2019``, and `VS2022``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#remote_debugging_version FunctionAppFlexConsumption#remote_debugging_version}
+        :param runtime_scale_monitoring_enabled: Should Functions Runtime Scale Monitoring be enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_scale_monitoring_enabled FunctionAppFlexConsumption#runtime_scale_monitoring_enabled}
+        :param scm_ip_restriction: scm_ip_restriction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#scm_ip_restriction FunctionAppFlexConsumption#scm_ip_restriction}
+        :param scm_ip_restriction_default_action: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#scm_ip_restriction_default_action FunctionAppFlexConsumption#scm_ip_restriction_default_action}.
+        :param scm_minimum_tls_version: Configures the minimum version of TLS required for SSL requests to the SCM site Possible values include: ``1.0``, ``1.1``, and ``1.2``. Defaults to ``1.2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#scm_minimum_tls_version FunctionAppFlexConsumption#scm_minimum_tls_version}
+        :param scm_use_main_ip_restriction: Should the Linux Function App ``ip_restriction`` configuration be used for the SCM also. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#scm_use_main_ip_restriction FunctionAppFlexConsumption#scm_use_main_ip_restriction}
+        :param use32_bit_worker: Should the Linux Web App use a 32-bit worker. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#use_32_bit_worker FunctionAppFlexConsumption#use_32_bit_worker}
+        :param websockets_enabled: Should Web Sockets be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#websockets_enabled FunctionAppFlexConsumption#websockets_enabled}
+        :param worker_count: The number of Workers for this Linux Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#worker_count FunctionAppFlexConsumption#worker_count}
         '''
         value = FunctionAppFlexConsumptionSiteConfig(
             api_definition_url=api_definition_url,
@@ -476,8 +476,8 @@ class FunctionAppFlexConsumption(
         connection_string_names: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param app_setting_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_setting_names FunctionAppFlexConsumption#app_setting_names}.
-        :param connection_string_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#connection_string_names FunctionAppFlexConsumption#connection_string_names}.
+        :param app_setting_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_setting_names FunctionAppFlexConsumption#app_setting_names}.
+        :param connection_string_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#connection_string_names FunctionAppFlexConsumption#connection_string_names}.
         '''
         value = FunctionAppFlexConsumptionStickySettings(
             app_setting_names=app_setting_names,
@@ -496,10 +496,10 @@ class FunctionAppFlexConsumption(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#create FunctionAppFlexConsumption#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#delete FunctionAppFlexConsumption#delete}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#read FunctionAppFlexConsumption#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#update FunctionAppFlexConsumption#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#create FunctionAppFlexConsumption#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#delete FunctionAppFlexConsumption#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#read FunctionAppFlexConsumption#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#update FunctionAppFlexConsumption#update}.
         '''
         value = FunctionAppFlexConsumptionTimeouts(
             create=create, delete=delete, read=read, update=update
@@ -1214,21 +1214,21 @@ class FunctionAppFlexConsumptionAuthSettings:
         unauthenticated_client_action: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param enabled: Should the Authentication / Authorization feature be enabled? Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#enabled FunctionAppFlexConsumption#enabled}
-        :param active_directory: active_directory block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#active_directory FunctionAppFlexConsumption#active_directory}
-        :param additional_login_parameters: Specifies a map of Login Parameters to send to the OpenID Connect authorization endpoint when a user logs in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#additional_login_parameters FunctionAppFlexConsumption#additional_login_parameters}
-        :param allowed_external_redirect_urls: Specifies a list of External URLs that can be redirected to as part of logging in or logging out of the Windows Web App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_external_redirect_urls FunctionAppFlexConsumption#allowed_external_redirect_urls}
-        :param default_provider: The default authentication provider to use when multiple providers are configured. Possible values include: ``AzureActiveDirectory``, ``Facebook``, ``Google``, ``MicrosoftAccount``, ``Twitter``, ``Github``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#default_provider FunctionAppFlexConsumption#default_provider}
-        :param facebook: facebook block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#facebook FunctionAppFlexConsumption#facebook}
-        :param github: github block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#github FunctionAppFlexConsumption#github}
-        :param google: google block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#google FunctionAppFlexConsumption#google}
-        :param issuer: The OpenID Connect Issuer URI that represents the entity which issues access tokens. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#issuer FunctionAppFlexConsumption#issuer}
-        :param microsoft: microsoft block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#microsoft FunctionAppFlexConsumption#microsoft}
-        :param runtime_version: The RuntimeVersion of the Authentication / Authorization feature in use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}
-        :param token_refresh_extension_hours: The number of hours after session token expiration that a session token can be used to call the token refresh API. Defaults to ``72`` hours. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_refresh_extension_hours FunctionAppFlexConsumption#token_refresh_extension_hours}
-        :param token_store_enabled: Should the Windows Web App durably store platform-specific security tokens that are obtained during login flows? Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_store_enabled FunctionAppFlexConsumption#token_store_enabled}
-        :param twitter: twitter block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#twitter FunctionAppFlexConsumption#twitter}
-        :param unauthenticated_client_action: The action to take when an unauthenticated client attempts to access the app. Possible values include: ``RedirectToLoginPage``, ``AllowAnonymous``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#unauthenticated_client_action FunctionAppFlexConsumption#unauthenticated_client_action}
+        :param enabled: Should the Authentication / Authorization feature be enabled? Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#enabled FunctionAppFlexConsumption#enabled}
+        :param active_directory: active_directory block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#active_directory FunctionAppFlexConsumption#active_directory}
+        :param additional_login_parameters: Specifies a map of Login Parameters to send to the OpenID Connect authorization endpoint when a user logs in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#additional_login_parameters FunctionAppFlexConsumption#additional_login_parameters}
+        :param allowed_external_redirect_urls: Specifies a list of External URLs that can be redirected to as part of logging in or logging out of the Windows Web App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_external_redirect_urls FunctionAppFlexConsumption#allowed_external_redirect_urls}
+        :param default_provider: The default authentication provider to use when multiple providers are configured. Possible values include: ``AzureActiveDirectory``, ``Facebook``, ``Google``, ``MicrosoftAccount``, ``Twitter``, ``Github``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#default_provider FunctionAppFlexConsumption#default_provider}
+        :param facebook: facebook block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#facebook FunctionAppFlexConsumption#facebook}
+        :param github: github block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#github FunctionAppFlexConsumption#github}
+        :param google: google block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#google FunctionAppFlexConsumption#google}
+        :param issuer: The OpenID Connect Issuer URI that represents the entity which issues access tokens. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#issuer FunctionAppFlexConsumption#issuer}
+        :param microsoft: microsoft block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#microsoft FunctionAppFlexConsumption#microsoft}
+        :param runtime_version: The RuntimeVersion of the Authentication / Authorization feature in use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}
+        :param token_refresh_extension_hours: The number of hours after session token expiration that a session token can be used to call the token refresh API. Defaults to ``72`` hours. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_refresh_extension_hours FunctionAppFlexConsumption#token_refresh_extension_hours}
+        :param token_store_enabled: Should the Windows Web App durably store platform-specific security tokens that are obtained during login flows? Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_store_enabled FunctionAppFlexConsumption#token_store_enabled}
+        :param twitter: twitter block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#twitter FunctionAppFlexConsumption#twitter}
+        :param unauthenticated_client_action: The action to take when an unauthenticated client attempts to access the app. Possible values include: ``RedirectToLoginPage``, ``AllowAnonymous``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#unauthenticated_client_action FunctionAppFlexConsumption#unauthenticated_client_action}
         '''
         if isinstance(active_directory, dict):
             active_directory = FunctionAppFlexConsumptionAuthSettingsActiveDirectory(**active_directory)
@@ -1295,7 +1295,7 @@ class FunctionAppFlexConsumptionAuthSettings:
     def enabled(self) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
         '''Should the Authentication / Authorization feature be enabled?
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#enabled FunctionAppFlexConsumption#enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#enabled FunctionAppFlexConsumption#enabled}
         '''
         result = self._values.get("enabled")
         assert result is not None, "Required property 'enabled' is missing"
@@ -1307,7 +1307,7 @@ class FunctionAppFlexConsumptionAuthSettings:
     ) -> typing.Optional["FunctionAppFlexConsumptionAuthSettingsActiveDirectory"]:
         '''active_directory block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#active_directory FunctionAppFlexConsumption#active_directory}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#active_directory FunctionAppFlexConsumption#active_directory}
         '''
         result = self._values.get("active_directory")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionAuthSettingsActiveDirectory"], result)
@@ -1318,7 +1318,7 @@ class FunctionAppFlexConsumptionAuthSettings:
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
         '''Specifies a map of Login Parameters to send to the OpenID Connect authorization endpoint when a user logs in.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#additional_login_parameters FunctionAppFlexConsumption#additional_login_parameters}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#additional_login_parameters FunctionAppFlexConsumption#additional_login_parameters}
         '''
         result = self._values.get("additional_login_parameters")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -1329,7 +1329,7 @@ class FunctionAppFlexConsumptionAuthSettings:
     ) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a list of External URLs that can be redirected to as part of logging in or logging out of the Windows Web App.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_external_redirect_urls FunctionAppFlexConsumption#allowed_external_redirect_urls}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_external_redirect_urls FunctionAppFlexConsumption#allowed_external_redirect_urls}
         '''
         result = self._values.get("allowed_external_redirect_urls")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1340,7 +1340,7 @@ class FunctionAppFlexConsumptionAuthSettings:
 
         Possible values include: ``AzureActiveDirectory``, ``Facebook``, ``Google``, ``MicrosoftAccount``, ``Twitter``, ``Github``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#default_provider FunctionAppFlexConsumption#default_provider}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#default_provider FunctionAppFlexConsumption#default_provider}
         '''
         result = self._values.get("default_provider")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1351,7 +1351,7 @@ class FunctionAppFlexConsumptionAuthSettings:
     ) -> typing.Optional["FunctionAppFlexConsumptionAuthSettingsFacebook"]:
         '''facebook block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#facebook FunctionAppFlexConsumption#facebook}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#facebook FunctionAppFlexConsumption#facebook}
         '''
         result = self._values.get("facebook")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionAuthSettingsFacebook"], result)
@@ -1360,7 +1360,7 @@ class FunctionAppFlexConsumptionAuthSettings:
     def github(self) -> typing.Optional["FunctionAppFlexConsumptionAuthSettingsGithub"]:
         '''github block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#github FunctionAppFlexConsumption#github}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#github FunctionAppFlexConsumption#github}
         '''
         result = self._values.get("github")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionAuthSettingsGithub"], result)
@@ -1369,7 +1369,7 @@ class FunctionAppFlexConsumptionAuthSettings:
     def google(self) -> typing.Optional["FunctionAppFlexConsumptionAuthSettingsGoogle"]:
         '''google block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#google FunctionAppFlexConsumption#google}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#google FunctionAppFlexConsumption#google}
         '''
         result = self._values.get("google")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionAuthSettingsGoogle"], result)
@@ -1378,7 +1378,7 @@ class FunctionAppFlexConsumptionAuthSettings:
     def issuer(self) -> typing.Optional[builtins.str]:
         '''The OpenID Connect Issuer URI that represents the entity which issues access tokens.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#issuer FunctionAppFlexConsumption#issuer}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#issuer FunctionAppFlexConsumption#issuer}
         '''
         result = self._values.get("issuer")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1389,7 +1389,7 @@ class FunctionAppFlexConsumptionAuthSettings:
     ) -> typing.Optional["FunctionAppFlexConsumptionAuthSettingsMicrosoft"]:
         '''microsoft block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#microsoft FunctionAppFlexConsumption#microsoft}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#microsoft FunctionAppFlexConsumption#microsoft}
         '''
         result = self._values.get("microsoft")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionAuthSettingsMicrosoft"], result)
@@ -1398,7 +1398,7 @@ class FunctionAppFlexConsumptionAuthSettings:
     def runtime_version(self) -> typing.Optional[builtins.str]:
         '''The RuntimeVersion of the Authentication / Authorization feature in use.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}
         '''
         result = self._values.get("runtime_version")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1409,7 +1409,7 @@ class FunctionAppFlexConsumptionAuthSettings:
 
         Defaults to ``72`` hours.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_refresh_extension_hours FunctionAppFlexConsumption#token_refresh_extension_hours}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_refresh_extension_hours FunctionAppFlexConsumption#token_refresh_extension_hours}
         '''
         result = self._values.get("token_refresh_extension_hours")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1420,7 +1420,7 @@ class FunctionAppFlexConsumptionAuthSettings:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should the Windows Web App durably store platform-specific security tokens that are obtained during login flows? Defaults to ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_store_enabled FunctionAppFlexConsumption#token_store_enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_store_enabled FunctionAppFlexConsumption#token_store_enabled}
         '''
         result = self._values.get("token_store_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1431,7 +1431,7 @@ class FunctionAppFlexConsumptionAuthSettings:
     ) -> typing.Optional["FunctionAppFlexConsumptionAuthSettingsTwitter"]:
         '''twitter block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#twitter FunctionAppFlexConsumption#twitter}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#twitter FunctionAppFlexConsumption#twitter}
         '''
         result = self._values.get("twitter")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionAuthSettingsTwitter"], result)
@@ -1440,7 +1440,7 @@ class FunctionAppFlexConsumptionAuthSettings:
     def unauthenticated_client_action(self) -> typing.Optional[builtins.str]:
         '''The action to take when an unauthenticated client attempts to access the app. Possible values include: ``RedirectToLoginPage``, ``AllowAnonymous``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#unauthenticated_client_action FunctionAppFlexConsumption#unauthenticated_client_action}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#unauthenticated_client_action FunctionAppFlexConsumption#unauthenticated_client_action}
         '''
         result = self._values.get("unauthenticated_client_action")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1477,10 +1477,10 @@ class FunctionAppFlexConsumptionAuthSettingsActiveDirectory:
         client_secret_setting_name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param client_id: The ID of the Client to use to authenticate with Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param allowed_audiences: Specifies a list of Allowed audience values to consider when validating JWTs issued by Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
-        :param client_secret: The Client Secret for the Client ID. Cannot be used with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
-        :param client_secret_setting_name: The App Setting name that contains the client secret of the Client. Cannot be used with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param client_id: The ID of the Client to use to authenticate with Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param allowed_audiences: Specifies a list of Allowed audience values to consider when validating JWTs issued by Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
+        :param client_secret: The Client Secret for the Client ID. Cannot be used with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
+        :param client_secret_setting_name: The App Setting name that contains the client secret of the Client. Cannot be used with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__d5e6055c5e1def326ef64c02117c39a68690d59a1ab27e5c099bcbfe176028d8)
@@ -1502,7 +1502,7 @@ class FunctionAppFlexConsumptionAuthSettingsActiveDirectory:
     def client_id(self) -> builtins.str:
         '''The ID of the Client to use to authenticate with Azure Active Directory.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
         '''
         result = self._values.get("client_id")
         assert result is not None, "Required property 'client_id' is missing"
@@ -1512,7 +1512,7 @@ class FunctionAppFlexConsumptionAuthSettingsActiveDirectory:
     def allowed_audiences(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a list of Allowed audience values to consider when validating JWTs issued by Azure Active Directory.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
         '''
         result = self._values.get("allowed_audiences")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1521,7 +1521,7 @@ class FunctionAppFlexConsumptionAuthSettingsActiveDirectory:
     def client_secret(self) -> typing.Optional[builtins.str]:
         '''The Client Secret for the Client ID. Cannot be used with ``client_secret_setting_name``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
         '''
         result = self._values.get("client_secret")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1530,7 +1530,7 @@ class FunctionAppFlexConsumptionAuthSettingsActiveDirectory:
     def client_secret_setting_name(self) -> typing.Optional[builtins.str]:
         '''The App Setting name that contains the client secret of the Client. Cannot be used with ``client_secret``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
         '''
         result = self._values.get("client_secret_setting_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1685,10 +1685,10 @@ class FunctionAppFlexConsumptionAuthSettingsFacebook:
         oauth_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param app_id: The App ID of the Facebook app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_id FunctionAppFlexConsumption#app_id}
-        :param app_secret: The App Secret of the Facebook app used for Facebook Login. Cannot be specified with ``app_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_secret FunctionAppFlexConsumption#app_secret}
-        :param app_secret_setting_name: The app setting name that contains the ``app_secret`` value used for Facebook Login. Cannot be specified with ``app_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_secret_setting_name FunctionAppFlexConsumption#app_secret_setting_name}
-        :param oauth_scopes: Specifies a list of OAuth 2.0 scopes to be requested as part of Facebook Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
+        :param app_id: The App ID of the Facebook app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_id FunctionAppFlexConsumption#app_id}
+        :param app_secret: The App Secret of the Facebook app used for Facebook Login. Cannot be specified with ``app_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_secret FunctionAppFlexConsumption#app_secret}
+        :param app_secret_setting_name: The app setting name that contains the ``app_secret`` value used for Facebook Login. Cannot be specified with ``app_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_secret_setting_name FunctionAppFlexConsumption#app_secret_setting_name}
+        :param oauth_scopes: Specifies a list of OAuth 2.0 scopes to be requested as part of Facebook Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__5c9bc3da4ed6fe0bdd2a055f42cc1fe9d8a4bc7a8557519e8ce34a31441601a4)
@@ -1710,7 +1710,7 @@ class FunctionAppFlexConsumptionAuthSettingsFacebook:
     def app_id(self) -> builtins.str:
         '''The App ID of the Facebook app used for login.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_id FunctionAppFlexConsumption#app_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_id FunctionAppFlexConsumption#app_id}
         '''
         result = self._values.get("app_id")
         assert result is not None, "Required property 'app_id' is missing"
@@ -1720,7 +1720,7 @@ class FunctionAppFlexConsumptionAuthSettingsFacebook:
     def app_secret(self) -> typing.Optional[builtins.str]:
         '''The App Secret of the Facebook app used for Facebook Login. Cannot be specified with ``app_secret_setting_name``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_secret FunctionAppFlexConsumption#app_secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_secret FunctionAppFlexConsumption#app_secret}
         '''
         result = self._values.get("app_secret")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1729,7 +1729,7 @@ class FunctionAppFlexConsumptionAuthSettingsFacebook:
     def app_secret_setting_name(self) -> typing.Optional[builtins.str]:
         '''The app setting name that contains the ``app_secret`` value used for Facebook Login. Cannot be specified with ``app_secret``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_secret_setting_name FunctionAppFlexConsumption#app_secret_setting_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_secret_setting_name FunctionAppFlexConsumption#app_secret_setting_name}
         '''
         result = self._values.get("app_secret_setting_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1738,7 +1738,7 @@ class FunctionAppFlexConsumptionAuthSettingsFacebook:
     def oauth_scopes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a list of OAuth 2.0 scopes to be requested as part of Facebook Login authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
         '''
         result = self._values.get("oauth_scopes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1893,10 +1893,10 @@ class FunctionAppFlexConsumptionAuthSettingsGithub:
         oauth_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param client_id: The ID of the GitHub app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param client_secret: The Client Secret of the GitHub app used for GitHub Login. Cannot be specified with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
-        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for GitHub Login. Cannot be specified with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
-        :param oauth_scopes: Specifies a list of OAuth 2.0 scopes that will be requested as part of GitHub Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
+        :param client_id: The ID of the GitHub app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_secret: The Client Secret of the GitHub app used for GitHub Login. Cannot be specified with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
+        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for GitHub Login. Cannot be specified with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param oauth_scopes: Specifies a list of OAuth 2.0 scopes that will be requested as part of GitHub Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__c79c91699c982418e73af8c56c29efd7dda593ceec4a2da48b2f15c7b51035c8)
@@ -1918,7 +1918,7 @@ class FunctionAppFlexConsumptionAuthSettingsGithub:
     def client_id(self) -> builtins.str:
         '''The ID of the GitHub app used for login.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
         '''
         result = self._values.get("client_id")
         assert result is not None, "Required property 'client_id' is missing"
@@ -1928,7 +1928,7 @@ class FunctionAppFlexConsumptionAuthSettingsGithub:
     def client_secret(self) -> typing.Optional[builtins.str]:
         '''The Client Secret of the GitHub app used for GitHub Login. Cannot be specified with ``client_secret_setting_name``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
         '''
         result = self._values.get("client_secret")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1937,7 +1937,7 @@ class FunctionAppFlexConsumptionAuthSettingsGithub:
     def client_secret_setting_name(self) -> typing.Optional[builtins.str]:
         '''The app setting name that contains the ``client_secret`` value used for GitHub Login. Cannot be specified with ``client_secret``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
         '''
         result = self._values.get("client_secret_setting_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1946,7 +1946,7 @@ class FunctionAppFlexConsumptionAuthSettingsGithub:
     def oauth_scopes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a list of OAuth 2.0 scopes that will be requested as part of GitHub Login authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
         '''
         result = self._values.get("oauth_scopes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -2101,10 +2101,10 @@ class FunctionAppFlexConsumptionAuthSettingsGoogle:
         oauth_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param client_id: The OpenID Connect Client ID for the Google web application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param client_secret: The client secret associated with the Google web application. Cannot be specified with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
-        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for Google Login. Cannot be specified with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
-        :param oauth_scopes: Specifies a list of OAuth 2.0 scopes that will be requested as part of Google Sign-In authentication. If not specified, "openid", "profile", and "email" are used as default scopes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
+        :param client_id: The OpenID Connect Client ID for the Google web application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_secret: The client secret associated with the Google web application. Cannot be specified with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
+        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for Google Login. Cannot be specified with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param oauth_scopes: Specifies a list of OAuth 2.0 scopes that will be requested as part of Google Sign-In authentication. If not specified, "openid", "profile", and "email" are used as default scopes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__794063635fa89eb2055cc87f151fce401807ab61f387b80b74b30cd208819687)
@@ -2126,7 +2126,7 @@ class FunctionAppFlexConsumptionAuthSettingsGoogle:
     def client_id(self) -> builtins.str:
         '''The OpenID Connect Client ID for the Google web application.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
         '''
         result = self._values.get("client_id")
         assert result is not None, "Required property 'client_id' is missing"
@@ -2136,7 +2136,7 @@ class FunctionAppFlexConsumptionAuthSettingsGoogle:
     def client_secret(self) -> typing.Optional[builtins.str]:
         '''The client secret associated with the Google web application.  Cannot be specified with ``client_secret_setting_name``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
         '''
         result = self._values.get("client_secret")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2145,7 +2145,7 @@ class FunctionAppFlexConsumptionAuthSettingsGoogle:
     def client_secret_setting_name(self) -> typing.Optional[builtins.str]:
         '''The app setting name that contains the ``client_secret`` value used for Google Login. Cannot be specified with ``client_secret``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
         '''
         result = self._values.get("client_secret_setting_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2154,7 +2154,7 @@ class FunctionAppFlexConsumptionAuthSettingsGoogle:
     def oauth_scopes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a list of OAuth 2.0 scopes that will be requested as part of Google Sign-In authentication. If not specified, "openid", "profile", and "email" are used as default scopes.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
         '''
         result = self._values.get("oauth_scopes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -2309,10 +2309,10 @@ class FunctionAppFlexConsumptionAuthSettingsMicrosoft:
         oauth_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param client_id: The OAuth 2.0 client ID that was created for the app used for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param client_secret: The OAuth 2.0 client secret that was created for the app used for authentication. Cannot be specified with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
-        :param client_secret_setting_name: The app setting name containing the OAuth 2.0 client secret that was created for the app used for authentication. Cannot be specified with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
-        :param oauth_scopes: The list of OAuth 2.0 scopes that will be requested as part of Microsoft Account authentication. If not specified, ``wl.basic`` is used as the default scope. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
+        :param client_id: The OAuth 2.0 client ID that was created for the app used for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_secret: The OAuth 2.0 client secret that was created for the app used for authentication. Cannot be specified with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
+        :param client_secret_setting_name: The app setting name containing the OAuth 2.0 client secret that was created for the app used for authentication. Cannot be specified with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param oauth_scopes: The list of OAuth 2.0 scopes that will be requested as part of Microsoft Account authentication. If not specified, ``wl.basic`` is used as the default scope. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__98f2797aa67df612d5288813ab95d1c15223b7b4dbe09d4f8a09b0c5586f2c41)
@@ -2334,7 +2334,7 @@ class FunctionAppFlexConsumptionAuthSettingsMicrosoft:
     def client_id(self) -> builtins.str:
         '''The OAuth 2.0 client ID that was created for the app used for authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
         '''
         result = self._values.get("client_id")
         assert result is not None, "Required property 'client_id' is missing"
@@ -2344,7 +2344,7 @@ class FunctionAppFlexConsumptionAuthSettingsMicrosoft:
     def client_secret(self) -> typing.Optional[builtins.str]:
         '''The OAuth 2.0 client secret that was created for the app used for authentication. Cannot be specified with ``client_secret_setting_name``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
         '''
         result = self._values.get("client_secret")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2353,7 +2353,7 @@ class FunctionAppFlexConsumptionAuthSettingsMicrosoft:
     def client_secret_setting_name(self) -> typing.Optional[builtins.str]:
         '''The app setting name containing the OAuth 2.0 client secret that was created for the app used for authentication. Cannot be specified with ``client_secret``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
         '''
         result = self._values.get("client_secret_setting_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2362,7 +2362,7 @@ class FunctionAppFlexConsumptionAuthSettingsMicrosoft:
     def oauth_scopes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''The list of OAuth 2.0 scopes that will be requested as part of Microsoft Account authentication. If not specified, ``wl.basic`` is used as the default scope.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
         '''
         result = self._values.get("oauth_scopes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -2527,10 +2527,10 @@ class FunctionAppFlexConsumptionAuthSettingsOutputReference(
         client_secret_setting_name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param client_id: The ID of the Client to use to authenticate with Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param allowed_audiences: Specifies a list of Allowed audience values to consider when validating JWTs issued by Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
-        :param client_secret: The Client Secret for the Client ID. Cannot be used with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
-        :param client_secret_setting_name: The App Setting name that contains the client secret of the Client. Cannot be used with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param client_id: The ID of the Client to use to authenticate with Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param allowed_audiences: Specifies a list of Allowed audience values to consider when validating JWTs issued by Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
+        :param client_secret: The Client Secret for the Client ID. Cannot be used with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
+        :param client_secret_setting_name: The App Setting name that contains the client secret of the Client. Cannot be used with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsActiveDirectory(
             client_id=client_id,
@@ -2551,10 +2551,10 @@ class FunctionAppFlexConsumptionAuthSettingsOutputReference(
         oauth_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param app_id: The App ID of the Facebook app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_id FunctionAppFlexConsumption#app_id}
-        :param app_secret: The App Secret of the Facebook app used for Facebook Login. Cannot be specified with ``app_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_secret FunctionAppFlexConsumption#app_secret}
-        :param app_secret_setting_name: The app setting name that contains the ``app_secret`` value used for Facebook Login. Cannot be specified with ``app_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_secret_setting_name FunctionAppFlexConsumption#app_secret_setting_name}
-        :param oauth_scopes: Specifies a list of OAuth 2.0 scopes to be requested as part of Facebook Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
+        :param app_id: The App ID of the Facebook app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_id FunctionAppFlexConsumption#app_id}
+        :param app_secret: The App Secret of the Facebook app used for Facebook Login. Cannot be specified with ``app_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_secret FunctionAppFlexConsumption#app_secret}
+        :param app_secret_setting_name: The app setting name that contains the ``app_secret`` value used for Facebook Login. Cannot be specified with ``app_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_secret_setting_name FunctionAppFlexConsumption#app_secret_setting_name}
+        :param oauth_scopes: Specifies a list of OAuth 2.0 scopes to be requested as part of Facebook Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsFacebook(
             app_id=app_id,
@@ -2575,10 +2575,10 @@ class FunctionAppFlexConsumptionAuthSettingsOutputReference(
         oauth_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param client_id: The ID of the GitHub app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param client_secret: The Client Secret of the GitHub app used for GitHub Login. Cannot be specified with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
-        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for GitHub Login. Cannot be specified with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
-        :param oauth_scopes: Specifies a list of OAuth 2.0 scopes that will be requested as part of GitHub Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
+        :param client_id: The ID of the GitHub app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_secret: The Client Secret of the GitHub app used for GitHub Login. Cannot be specified with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
+        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for GitHub Login. Cannot be specified with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param oauth_scopes: Specifies a list of OAuth 2.0 scopes that will be requested as part of GitHub Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsGithub(
             client_id=client_id,
@@ -2599,10 +2599,10 @@ class FunctionAppFlexConsumptionAuthSettingsOutputReference(
         oauth_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param client_id: The OpenID Connect Client ID for the Google web application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param client_secret: The client secret associated with the Google web application. Cannot be specified with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
-        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for Google Login. Cannot be specified with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
-        :param oauth_scopes: Specifies a list of OAuth 2.0 scopes that will be requested as part of Google Sign-In authentication. If not specified, "openid", "profile", and "email" are used as default scopes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
+        :param client_id: The OpenID Connect Client ID for the Google web application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_secret: The client secret associated with the Google web application. Cannot be specified with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
+        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for Google Login. Cannot be specified with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param oauth_scopes: Specifies a list of OAuth 2.0 scopes that will be requested as part of Google Sign-In authentication. If not specified, "openid", "profile", and "email" are used as default scopes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsGoogle(
             client_id=client_id,
@@ -2623,10 +2623,10 @@ class FunctionAppFlexConsumptionAuthSettingsOutputReference(
         oauth_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param client_id: The OAuth 2.0 client ID that was created for the app used for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param client_secret: The OAuth 2.0 client secret that was created for the app used for authentication. Cannot be specified with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
-        :param client_secret_setting_name: The app setting name containing the OAuth 2.0 client secret that was created for the app used for authentication. Cannot be specified with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
-        :param oauth_scopes: The list of OAuth 2.0 scopes that will be requested as part of Microsoft Account authentication. If not specified, ``wl.basic`` is used as the default scope. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
+        :param client_id: The OAuth 2.0 client ID that was created for the app used for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_secret: The OAuth 2.0 client secret that was created for the app used for authentication. Cannot be specified with ``client_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret FunctionAppFlexConsumption#client_secret}
+        :param client_secret_setting_name: The app setting name containing the OAuth 2.0 client secret that was created for the app used for authentication. Cannot be specified with ``client_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param oauth_scopes: The list of OAuth 2.0 scopes that will be requested as part of Microsoft Account authentication. If not specified, ``wl.basic`` is used as the default scope. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#oauth_scopes FunctionAppFlexConsumption#oauth_scopes}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsMicrosoft(
             client_id=client_id,
@@ -2646,9 +2646,9 @@ class FunctionAppFlexConsumptionAuthSettingsOutputReference(
         consumer_secret_setting_name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param consumer_key: The OAuth 1.0a consumer key of the Twitter application used for sign-in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_key FunctionAppFlexConsumption#consumer_key}
-        :param consumer_secret: The OAuth 1.0a consumer secret of the Twitter application used for sign-in. Cannot be specified with ``consumer_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_secret FunctionAppFlexConsumption#consumer_secret}
-        :param consumer_secret_setting_name: The app setting name that contains the OAuth 1.0a consumer secret of the Twitter application used for sign-in. Cannot be specified with ``consumer_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_secret_setting_name FunctionAppFlexConsumption#consumer_secret_setting_name}
+        :param consumer_key: The OAuth 1.0a consumer key of the Twitter application used for sign-in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_key FunctionAppFlexConsumption#consumer_key}
+        :param consumer_secret: The OAuth 1.0a consumer secret of the Twitter application used for sign-in. Cannot be specified with ``consumer_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_secret FunctionAppFlexConsumption#consumer_secret}
+        :param consumer_secret_setting_name: The app setting name that contains the OAuth 1.0a consumer secret of the Twitter application used for sign-in. Cannot be specified with ``consumer_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_secret_setting_name FunctionAppFlexConsumption#consumer_secret_setting_name}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsTwitter(
             consumer_key=consumer_key,
@@ -2996,9 +2996,9 @@ class FunctionAppFlexConsumptionAuthSettingsTwitter:
         consumer_secret_setting_name: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param consumer_key: The OAuth 1.0a consumer key of the Twitter application used for sign-in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_key FunctionAppFlexConsumption#consumer_key}
-        :param consumer_secret: The OAuth 1.0a consumer secret of the Twitter application used for sign-in. Cannot be specified with ``consumer_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_secret FunctionAppFlexConsumption#consumer_secret}
-        :param consumer_secret_setting_name: The app setting name that contains the OAuth 1.0a consumer secret of the Twitter application used for sign-in. Cannot be specified with ``consumer_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_secret_setting_name FunctionAppFlexConsumption#consumer_secret_setting_name}
+        :param consumer_key: The OAuth 1.0a consumer key of the Twitter application used for sign-in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_key FunctionAppFlexConsumption#consumer_key}
+        :param consumer_secret: The OAuth 1.0a consumer secret of the Twitter application used for sign-in. Cannot be specified with ``consumer_secret_setting_name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_secret FunctionAppFlexConsumption#consumer_secret}
+        :param consumer_secret_setting_name: The app setting name that contains the OAuth 1.0a consumer secret of the Twitter application used for sign-in. Cannot be specified with ``consumer_secret``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_secret_setting_name FunctionAppFlexConsumption#consumer_secret_setting_name}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__1dacb4f234063a53547ec53cf68ff7e3971654da48aa2bd924fa83df696c3ce7)
@@ -3017,7 +3017,7 @@ class FunctionAppFlexConsumptionAuthSettingsTwitter:
     def consumer_key(self) -> builtins.str:
         '''The OAuth 1.0a consumer key of the Twitter application used for sign-in.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_key FunctionAppFlexConsumption#consumer_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_key FunctionAppFlexConsumption#consumer_key}
         '''
         result = self._values.get("consumer_key")
         assert result is not None, "Required property 'consumer_key' is missing"
@@ -3027,7 +3027,7 @@ class FunctionAppFlexConsumptionAuthSettingsTwitter:
     def consumer_secret(self) -> typing.Optional[builtins.str]:
         '''The OAuth 1.0a consumer secret of the Twitter application used for sign-in. Cannot be specified with ``consumer_secret_setting_name``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_secret FunctionAppFlexConsumption#consumer_secret}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_secret FunctionAppFlexConsumption#consumer_secret}
         '''
         result = self._values.get("consumer_secret")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3036,7 +3036,7 @@ class FunctionAppFlexConsumptionAuthSettingsTwitter:
     def consumer_secret_setting_name(self) -> typing.Optional[builtins.str]:
         '''The app setting name that contains the OAuth 1.0a consumer secret of the Twitter application used for sign-in. Cannot be specified with ``consumer_secret``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_secret_setting_name FunctionAppFlexConsumption#consumer_secret_setting_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_secret_setting_name FunctionAppFlexConsumption#consumer_secret_setting_name}
         '''
         result = self._values.get("consumer_secret_setting_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3206,28 +3206,28 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
         unauthenticated_action: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param login: login block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login FunctionAppFlexConsumption#login}
-        :param active_directory_v2: active_directory_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#active_directory_v2 FunctionAppFlexConsumption#active_directory_v2}
-        :param apple_v2: apple_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#apple_v2 FunctionAppFlexConsumption#apple_v2}
-        :param auth_enabled: Should the AuthV2 Settings be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#auth_enabled FunctionAppFlexConsumption#auth_enabled}
-        :param azure_static_web_app_v2: azure_static_web_app_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#azure_static_web_app_v2 FunctionAppFlexConsumption#azure_static_web_app_v2}
-        :param config_file_path: The path to the App Auth settings. **Note:** Relative Paths are evaluated from the Site Root directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#config_file_path FunctionAppFlexConsumption#config_file_path}
-        :param custom_oidc_v2: custom_oidc_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#custom_oidc_v2 FunctionAppFlexConsumption#custom_oidc_v2}
-        :param default_provider: The Default Authentication Provider to use when the ``unauthenticated_action`` is set to ``RedirectToLoginPage``. Possible values include: ``apple``, ``azureactivedirectory``, ``facebook``, ``github``, ``google``, ``twitter`` and the ``name`` of your ``custom_oidc_v2`` provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#default_provider FunctionAppFlexConsumption#default_provider}
-        :param excluded_paths: The paths which should be excluded from the ``unauthenticated_action`` when it is set to ``RedirectToLoginPage``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#excluded_paths FunctionAppFlexConsumption#excluded_paths}
-        :param facebook_v2: facebook_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#facebook_v2 FunctionAppFlexConsumption#facebook_v2}
-        :param forward_proxy_convention: The convention used to determine the url of the request made. Possible values include ``ForwardProxyConventionNoProxy``, ``ForwardProxyConventionStandard``, ``ForwardProxyConventionCustom``. Defaults to ``ForwardProxyConventionNoProxy`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#forward_proxy_convention FunctionAppFlexConsumption#forward_proxy_convention}
-        :param forward_proxy_custom_host_header_name: The name of the header containing the host of the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#forward_proxy_custom_host_header_name FunctionAppFlexConsumption#forward_proxy_custom_host_header_name}
-        :param forward_proxy_custom_scheme_header_name: The name of the header containing the scheme of the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#forward_proxy_custom_scheme_header_name FunctionAppFlexConsumption#forward_proxy_custom_scheme_header_name}
-        :param github_v2: github_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#github_v2 FunctionAppFlexConsumption#github_v2}
-        :param google_v2: google_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#google_v2 FunctionAppFlexConsumption#google_v2}
-        :param http_route_api_prefix: The prefix that should precede all the authentication and authorisation paths. Defaults to ``/.auth``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#http_route_api_prefix FunctionAppFlexConsumption#http_route_api_prefix}
-        :param microsoft_v2: microsoft_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#microsoft_v2 FunctionAppFlexConsumption#microsoft_v2}
-        :param require_authentication: Should the authentication flow be used for all requests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#require_authentication FunctionAppFlexConsumption#require_authentication}
-        :param require_https: Should HTTPS be required on connections? Defaults to true. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#require_https FunctionAppFlexConsumption#require_https}
-        :param runtime_version: The Runtime Version of the Authentication and Authorisation feature of this App. Defaults to ``~1``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}
-        :param twitter_v2: twitter_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#twitter_v2 FunctionAppFlexConsumption#twitter_v2}
-        :param unauthenticated_action: The action to take for requests made without authentication. Possible values include ``RedirectToLoginPage``, ``AllowAnonymous``, ``Return401``, and ``Return403``. Defaults to ``RedirectToLoginPage``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#unauthenticated_action FunctionAppFlexConsumption#unauthenticated_action}
+        :param login: login block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login FunctionAppFlexConsumption#login}
+        :param active_directory_v2: active_directory_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#active_directory_v2 FunctionAppFlexConsumption#active_directory_v2}
+        :param apple_v2: apple_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#apple_v2 FunctionAppFlexConsumption#apple_v2}
+        :param auth_enabled: Should the AuthV2 Settings be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#auth_enabled FunctionAppFlexConsumption#auth_enabled}
+        :param azure_static_web_app_v2: azure_static_web_app_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#azure_static_web_app_v2 FunctionAppFlexConsumption#azure_static_web_app_v2}
+        :param config_file_path: The path to the App Auth settings. **Note:** Relative Paths are evaluated from the Site Root directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#config_file_path FunctionAppFlexConsumption#config_file_path}
+        :param custom_oidc_v2: custom_oidc_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#custom_oidc_v2 FunctionAppFlexConsumption#custom_oidc_v2}
+        :param default_provider: The Default Authentication Provider to use when the ``unauthenticated_action`` is set to ``RedirectToLoginPage``. Possible values include: ``apple``, ``azureactivedirectory``, ``facebook``, ``github``, ``google``, ``twitter`` and the ``name`` of your ``custom_oidc_v2`` provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#default_provider FunctionAppFlexConsumption#default_provider}
+        :param excluded_paths: The paths which should be excluded from the ``unauthenticated_action`` when it is set to ``RedirectToLoginPage``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#excluded_paths FunctionAppFlexConsumption#excluded_paths}
+        :param facebook_v2: facebook_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#facebook_v2 FunctionAppFlexConsumption#facebook_v2}
+        :param forward_proxy_convention: The convention used to determine the url of the request made. Possible values include ``ForwardProxyConventionNoProxy``, ``ForwardProxyConventionStandard``, ``ForwardProxyConventionCustom``. Defaults to ``ForwardProxyConventionNoProxy`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#forward_proxy_convention FunctionAppFlexConsumption#forward_proxy_convention}
+        :param forward_proxy_custom_host_header_name: The name of the header containing the host of the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#forward_proxy_custom_host_header_name FunctionAppFlexConsumption#forward_proxy_custom_host_header_name}
+        :param forward_proxy_custom_scheme_header_name: The name of the header containing the scheme of the request. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#forward_proxy_custom_scheme_header_name FunctionAppFlexConsumption#forward_proxy_custom_scheme_header_name}
+        :param github_v2: github_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#github_v2 FunctionAppFlexConsumption#github_v2}
+        :param google_v2: google_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#google_v2 FunctionAppFlexConsumption#google_v2}
+        :param http_route_api_prefix: The prefix that should precede all the authentication and authorisation paths. Defaults to ``/.auth``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#http_route_api_prefix FunctionAppFlexConsumption#http_route_api_prefix}
+        :param microsoft_v2: microsoft_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#microsoft_v2 FunctionAppFlexConsumption#microsoft_v2}
+        :param require_authentication: Should the authentication flow be used for all requests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#require_authentication FunctionAppFlexConsumption#require_authentication}
+        :param require_https: Should HTTPS be required on connections? Defaults to true. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#require_https FunctionAppFlexConsumption#require_https}
+        :param runtime_version: The Runtime Version of the Authentication and Authorisation feature of this App. Defaults to ``~1``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}
+        :param twitter_v2: twitter_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#twitter_v2 FunctionAppFlexConsumption#twitter_v2}
+        :param unauthenticated_action: The action to take for requests made without authentication. Possible values include ``RedirectToLoginPage``, ``AllowAnonymous``, ``Return401``, and ``Return403``. Defaults to ``RedirectToLoginPage``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#unauthenticated_action FunctionAppFlexConsumption#unauthenticated_action}
         '''
         if isinstance(login, dict):
             login = FunctionAppFlexConsumptionAuthSettingsV2Login(**login)
@@ -3321,7 +3321,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     def login(self) -> "FunctionAppFlexConsumptionAuthSettingsV2Login":
         '''login block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login FunctionAppFlexConsumption#login}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login FunctionAppFlexConsumption#login}
         '''
         result = self._values.get("login")
         assert result is not None, "Required property 'login' is missing"
@@ -3333,7 +3333,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     ) -> typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2"]:
         '''active_directory_v2 block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#active_directory_v2 FunctionAppFlexConsumption#active_directory_v2}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#active_directory_v2 FunctionAppFlexConsumption#active_directory_v2}
         '''
         result = self._values.get("active_directory_v2")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2"], result)
@@ -3344,7 +3344,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     ) -> typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2AppleV2"]:
         '''apple_v2 block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#apple_v2 FunctionAppFlexConsumption#apple_v2}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#apple_v2 FunctionAppFlexConsumption#apple_v2}
         '''
         result = self._values.get("apple_v2")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2AppleV2"], result)
@@ -3355,7 +3355,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should the AuthV2 Settings be enabled. Defaults to ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#auth_enabled FunctionAppFlexConsumption#auth_enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#auth_enabled FunctionAppFlexConsumption#auth_enabled}
         '''
         result = self._values.get("auth_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -3366,7 +3366,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     ) -> typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2AzureStaticWebAppV2"]:
         '''azure_static_web_app_v2 block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#azure_static_web_app_v2 FunctionAppFlexConsumption#azure_static_web_app_v2}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#azure_static_web_app_v2 FunctionAppFlexConsumption#azure_static_web_app_v2}
         '''
         result = self._values.get("azure_static_web_app_v2")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2AzureStaticWebAppV2"], result)
@@ -3375,7 +3375,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     def config_file_path(self) -> typing.Optional[builtins.str]:
         '''The path to the App Auth settings. **Note:** Relative Paths are evaluated from the Site Root directory.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#config_file_path FunctionAppFlexConsumption#config_file_path}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#config_file_path FunctionAppFlexConsumption#config_file_path}
         '''
         result = self._values.get("config_file_path")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3386,7 +3386,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionAppFlexConsumptionAuthSettingsV2CustomOidcV2"]]]:
         '''custom_oidc_v2 block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#custom_oidc_v2 FunctionAppFlexConsumption#custom_oidc_v2}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#custom_oidc_v2 FunctionAppFlexConsumption#custom_oidc_v2}
         '''
         result = self._values.get("custom_oidc_v2")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionAppFlexConsumptionAuthSettingsV2CustomOidcV2"]]], result)
@@ -3397,7 +3397,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
 
         Possible values include: ``apple``, ``azureactivedirectory``, ``facebook``, ``github``, ``google``, ``twitter`` and the ``name`` of your ``custom_oidc_v2`` provider.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#default_provider FunctionAppFlexConsumption#default_provider}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#default_provider FunctionAppFlexConsumption#default_provider}
         '''
         result = self._values.get("default_provider")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3406,7 +3406,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     def excluded_paths(self) -> typing.Optional[typing.List[builtins.str]]:
         '''The paths which should be excluded from the ``unauthenticated_action`` when it is set to ``RedirectToLoginPage``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#excluded_paths FunctionAppFlexConsumption#excluded_paths}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#excluded_paths FunctionAppFlexConsumption#excluded_paths}
         '''
         result = self._values.get("excluded_paths")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -3417,7 +3417,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     ) -> typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2FacebookV2"]:
         '''facebook_v2 block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#facebook_v2 FunctionAppFlexConsumption#facebook_v2}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#facebook_v2 FunctionAppFlexConsumption#facebook_v2}
         '''
         result = self._values.get("facebook_v2")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2FacebookV2"], result)
@@ -3428,7 +3428,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
 
         Possible values include ``ForwardProxyConventionNoProxy``, ``ForwardProxyConventionStandard``, ``ForwardProxyConventionCustom``. Defaults to ``ForwardProxyConventionNoProxy``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#forward_proxy_convention FunctionAppFlexConsumption#forward_proxy_convention}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#forward_proxy_convention FunctionAppFlexConsumption#forward_proxy_convention}
         '''
         result = self._values.get("forward_proxy_convention")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3437,7 +3437,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     def forward_proxy_custom_host_header_name(self) -> typing.Optional[builtins.str]:
         '''The name of the header containing the host of the request.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#forward_proxy_custom_host_header_name FunctionAppFlexConsumption#forward_proxy_custom_host_header_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#forward_proxy_custom_host_header_name FunctionAppFlexConsumption#forward_proxy_custom_host_header_name}
         '''
         result = self._values.get("forward_proxy_custom_host_header_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3446,7 +3446,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     def forward_proxy_custom_scheme_header_name(self) -> typing.Optional[builtins.str]:
         '''The name of the header containing the scheme of the request.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#forward_proxy_custom_scheme_header_name FunctionAppFlexConsumption#forward_proxy_custom_scheme_header_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#forward_proxy_custom_scheme_header_name FunctionAppFlexConsumption#forward_proxy_custom_scheme_header_name}
         '''
         result = self._values.get("forward_proxy_custom_scheme_header_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3457,7 +3457,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     ) -> typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2GithubV2"]:
         '''github_v2 block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#github_v2 FunctionAppFlexConsumption#github_v2}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#github_v2 FunctionAppFlexConsumption#github_v2}
         '''
         result = self._values.get("github_v2")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2GithubV2"], result)
@@ -3468,7 +3468,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     ) -> typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2GoogleV2"]:
         '''google_v2 block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#google_v2 FunctionAppFlexConsumption#google_v2}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#google_v2 FunctionAppFlexConsumption#google_v2}
         '''
         result = self._values.get("google_v2")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2GoogleV2"], result)
@@ -3477,7 +3477,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     def http_route_api_prefix(self) -> typing.Optional[builtins.str]:
         '''The prefix that should precede all the authentication and authorisation paths. Defaults to ``/.auth``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#http_route_api_prefix FunctionAppFlexConsumption#http_route_api_prefix}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#http_route_api_prefix FunctionAppFlexConsumption#http_route_api_prefix}
         '''
         result = self._values.get("http_route_api_prefix")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3488,7 +3488,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     ) -> typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2MicrosoftV2"]:
         '''microsoft_v2 block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#microsoft_v2 FunctionAppFlexConsumption#microsoft_v2}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#microsoft_v2 FunctionAppFlexConsumption#microsoft_v2}
         '''
         result = self._values.get("microsoft_v2")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2MicrosoftV2"], result)
@@ -3499,7 +3499,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should the authentication flow be used for all requests.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#require_authentication FunctionAppFlexConsumption#require_authentication}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#require_authentication FunctionAppFlexConsumption#require_authentication}
         '''
         result = self._values.get("require_authentication")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -3510,7 +3510,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should HTTPS be required on connections? Defaults to true.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#require_https FunctionAppFlexConsumption#require_https}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#require_https FunctionAppFlexConsumption#require_https}
         '''
         result = self._values.get("require_https")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -3519,7 +3519,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     def runtime_version(self) -> typing.Optional[builtins.str]:
         '''The Runtime Version of the Authentication and Authorisation feature of this App. Defaults to ``~1``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}
         '''
         result = self._values.get("runtime_version")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3530,7 +3530,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
     ) -> typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2TwitterV2"]:
         '''twitter_v2 block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#twitter_v2 FunctionAppFlexConsumption#twitter_v2}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#twitter_v2 FunctionAppFlexConsumption#twitter_v2}
         '''
         result = self._values.get("twitter_v2")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionAuthSettingsV2TwitterV2"], result)
@@ -3541,7 +3541,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2:
 
         Possible values include ``RedirectToLoginPage``, ``AllowAnonymous``, ``Return401``, and ``Return403``. Defaults to ``RedirectToLoginPage``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#unauthenticated_action FunctionAppFlexConsumption#unauthenticated_action}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#unauthenticated_action FunctionAppFlexConsumption#unauthenticated_action}
         '''
         result = self._values.get("unauthenticated_action")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3594,18 +3594,18 @@ class FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2:
         www_authentication_disabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param client_id: The ID of the Client to use to authenticate with Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param tenant_auth_endpoint: The Azure Tenant Endpoint for the Authenticating Tenant. e.g. ``https://login.microsoftonline.com/v2.0/{tenant-guid}/``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#tenant_auth_endpoint FunctionAppFlexConsumption#tenant_auth_endpoint}
-        :param allowed_applications: The list of allowed Applications for the Default Authorisation Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_applications FunctionAppFlexConsumption#allowed_applications}
-        :param allowed_audiences: Specifies a list of Allowed audience values to consider when validating JWTs issued by Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
-        :param allowed_groups: The list of allowed Group Names for the Default Authorisation Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_groups FunctionAppFlexConsumption#allowed_groups}
-        :param allowed_identities: The list of allowed Identities for the Default Authorisation Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_identities FunctionAppFlexConsumption#allowed_identities}
-        :param client_secret_certificate_thumbprint: The thumbprint of the certificate used for signing purposes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_certificate_thumbprint FunctionAppFlexConsumption#client_secret_certificate_thumbprint}
-        :param client_secret_setting_name: The App Setting name that contains the client secret of the Client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
-        :param jwt_allowed_client_applications: A list of Allowed Client Applications in the JWT Claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#jwt_allowed_client_applications FunctionAppFlexConsumption#jwt_allowed_client_applications}
-        :param jwt_allowed_groups: A list of Allowed Groups in the JWT Claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#jwt_allowed_groups FunctionAppFlexConsumption#jwt_allowed_groups}
-        :param login_parameters: A map of key-value pairs to send to the Authorisation Endpoint when a user logs in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_parameters FunctionAppFlexConsumption#login_parameters}
-        :param www_authentication_disabled: Should the www-authenticate provider should be omitted from the request? Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#www_authentication_disabled FunctionAppFlexConsumption#www_authentication_disabled}
+        :param client_id: The ID of the Client to use to authenticate with Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param tenant_auth_endpoint: The Azure Tenant Endpoint for the Authenticating Tenant. e.g. ``https://login.microsoftonline.com/v2.0/{tenant-guid}/``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#tenant_auth_endpoint FunctionAppFlexConsumption#tenant_auth_endpoint}
+        :param allowed_applications: The list of allowed Applications for the Default Authorisation Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_applications FunctionAppFlexConsumption#allowed_applications}
+        :param allowed_audiences: Specifies a list of Allowed audience values to consider when validating JWTs issued by Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
+        :param allowed_groups: The list of allowed Group Names for the Default Authorisation Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_groups FunctionAppFlexConsumption#allowed_groups}
+        :param allowed_identities: The list of allowed Identities for the Default Authorisation Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_identities FunctionAppFlexConsumption#allowed_identities}
+        :param client_secret_certificate_thumbprint: The thumbprint of the certificate used for signing purposes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_certificate_thumbprint FunctionAppFlexConsumption#client_secret_certificate_thumbprint}
+        :param client_secret_setting_name: The App Setting name that contains the client secret of the Client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param jwt_allowed_client_applications: A list of Allowed Client Applications in the JWT Claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#jwt_allowed_client_applications FunctionAppFlexConsumption#jwt_allowed_client_applications}
+        :param jwt_allowed_groups: A list of Allowed Groups in the JWT Claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#jwt_allowed_groups FunctionAppFlexConsumption#jwt_allowed_groups}
+        :param login_parameters: A map of key-value pairs to send to the Authorisation Endpoint when a user logs in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_parameters FunctionAppFlexConsumption#login_parameters}
+        :param www_authentication_disabled: Should the www-authenticate provider should be omitted from the request? Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#www_authentication_disabled FunctionAppFlexConsumption#www_authentication_disabled}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__c826ee12ce712e999382c1dd8274134e138ba026af083581c82e4791b5584d54)
@@ -3650,7 +3650,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2:
     def client_id(self) -> builtins.str:
         '''The ID of the Client to use to authenticate with Azure Active Directory.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
         '''
         result = self._values.get("client_id")
         assert result is not None, "Required property 'client_id' is missing"
@@ -3660,7 +3660,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2:
     def tenant_auth_endpoint(self) -> builtins.str:
         '''The Azure Tenant Endpoint for the Authenticating Tenant. e.g. ``https://login.microsoftonline.com/v2.0/{tenant-guid}/``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#tenant_auth_endpoint FunctionAppFlexConsumption#tenant_auth_endpoint}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#tenant_auth_endpoint FunctionAppFlexConsumption#tenant_auth_endpoint}
         '''
         result = self._values.get("tenant_auth_endpoint")
         assert result is not None, "Required property 'tenant_auth_endpoint' is missing"
@@ -3670,7 +3670,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2:
     def allowed_applications(self) -> typing.Optional[typing.List[builtins.str]]:
         '''The list of allowed Applications for the Default Authorisation Policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_applications FunctionAppFlexConsumption#allowed_applications}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_applications FunctionAppFlexConsumption#allowed_applications}
         '''
         result = self._values.get("allowed_applications")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -3679,7 +3679,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2:
     def allowed_audiences(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a list of Allowed audience values to consider when validating JWTs issued by Azure Active Directory.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
         '''
         result = self._values.get("allowed_audiences")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -3688,7 +3688,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2:
     def allowed_groups(self) -> typing.Optional[typing.List[builtins.str]]:
         '''The list of allowed Group Names for the Default Authorisation Policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_groups FunctionAppFlexConsumption#allowed_groups}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_groups FunctionAppFlexConsumption#allowed_groups}
         '''
         result = self._values.get("allowed_groups")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -3697,7 +3697,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2:
     def allowed_identities(self) -> typing.Optional[typing.List[builtins.str]]:
         '''The list of allowed Identities for the Default Authorisation Policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_identities FunctionAppFlexConsumption#allowed_identities}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_identities FunctionAppFlexConsumption#allowed_identities}
         '''
         result = self._values.get("allowed_identities")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -3706,7 +3706,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2:
     def client_secret_certificate_thumbprint(self) -> typing.Optional[builtins.str]:
         '''The thumbprint of the certificate used for signing purposes.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_certificate_thumbprint FunctionAppFlexConsumption#client_secret_certificate_thumbprint}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_certificate_thumbprint FunctionAppFlexConsumption#client_secret_certificate_thumbprint}
         '''
         result = self._values.get("client_secret_certificate_thumbprint")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3715,7 +3715,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2:
     def client_secret_setting_name(self) -> typing.Optional[builtins.str]:
         '''The App Setting name that contains the client secret of the Client.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
         '''
         result = self._values.get("client_secret_setting_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3726,7 +3726,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2:
     ) -> typing.Optional[typing.List[builtins.str]]:
         '''A list of Allowed Client Applications in the JWT Claim.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#jwt_allowed_client_applications FunctionAppFlexConsumption#jwt_allowed_client_applications}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#jwt_allowed_client_applications FunctionAppFlexConsumption#jwt_allowed_client_applications}
         '''
         result = self._values.get("jwt_allowed_client_applications")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -3735,7 +3735,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2:
     def jwt_allowed_groups(self) -> typing.Optional[typing.List[builtins.str]]:
         '''A list of Allowed Groups in the JWT Claim.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#jwt_allowed_groups FunctionAppFlexConsumption#jwt_allowed_groups}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#jwt_allowed_groups FunctionAppFlexConsumption#jwt_allowed_groups}
         '''
         result = self._values.get("jwt_allowed_groups")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -3746,7 +3746,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2:
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
         '''A map of key-value pairs to send to the Authorisation Endpoint when a user logs in.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_parameters FunctionAppFlexConsumption#login_parameters}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_parameters FunctionAppFlexConsumption#login_parameters}
         '''
         result = self._values.get("login_parameters")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -3757,7 +3757,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should the www-authenticate provider should be omitted from the request? Defaults to ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#www_authentication_disabled FunctionAppFlexConsumption#www_authentication_disabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#www_authentication_disabled FunctionAppFlexConsumption#www_authentication_disabled}
         '''
         result = self._values.get("www_authentication_disabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -4088,8 +4088,8 @@ class FunctionAppFlexConsumptionAuthSettingsV2AppleV2:
         client_secret_setting_name: builtins.str,
     ) -> None:
         '''
-        :param client_id: The OpenID Connect Client ID for the Apple web application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for Apple Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param client_id: The OpenID Connect Client ID for the Apple web application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for Apple Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__a7ac3bea0836b88b805792ef6ba6d70f63eacdcb4741fbeed4271eb140b3566c)
@@ -4104,7 +4104,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2AppleV2:
     def client_id(self) -> builtins.str:
         '''The OpenID Connect Client ID for the Apple web application.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
         '''
         result = self._values.get("client_id")
         assert result is not None, "Required property 'client_id' is missing"
@@ -4114,7 +4114,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2AppleV2:
     def client_secret_setting_name(self) -> builtins.str:
         '''The app setting name that contains the ``client_secret`` value used for Apple Login.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
         '''
         result = self._values.get("client_secret_setting_name")
         assert result is not None, "Required property 'client_secret_setting_name' is missing"
@@ -4217,7 +4217,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2AppleV2OutputReference(
 class FunctionAppFlexConsumptionAuthSettingsV2AzureStaticWebAppV2:
     def __init__(self, *, client_id: builtins.str) -> None:
         '''
-        :param client_id: The ID of the Client to use to authenticate with Azure Static Web App Authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_id: The ID of the Client to use to authenticate with Azure Static Web App Authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__668c3cd99571cde538d3e11ec36734dd9e304386a0874b875364894493010983)
@@ -4230,7 +4230,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2AzureStaticWebAppV2:
     def client_id(self) -> builtins.str:
         '''The ID of the Client to use to authenticate with Azure Static Web App Authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
         '''
         result = self._values.get("client_id")
         assert result is not None, "Required property 'client_id' is missing"
@@ -4325,11 +4325,11 @@ class FunctionAppFlexConsumptionAuthSettingsV2CustomOidcV2:
         scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param client_id: The ID of the Client to use to authenticate with this Custom OIDC. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param name: The name of the Custom OIDC Authentication Provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
-        :param openid_configuration_endpoint: The endpoint that contains all the configuration endpoints for this Custom OIDC provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#openid_configuration_endpoint FunctionAppFlexConsumption#openid_configuration_endpoint}
-        :param name_claim_type: The name of the claim that contains the users name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#name_claim_type FunctionAppFlexConsumption#name_claim_type}
-        :param scopes: The list of the scopes that should be requested while authenticating. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#scopes FunctionAppFlexConsumption#scopes}
+        :param client_id: The ID of the Client to use to authenticate with this Custom OIDC. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param name: The name of the Custom OIDC Authentication Provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
+        :param openid_configuration_endpoint: The endpoint that contains all the configuration endpoints for this Custom OIDC provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#openid_configuration_endpoint FunctionAppFlexConsumption#openid_configuration_endpoint}
+        :param name_claim_type: The name of the claim that contains the users name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#name_claim_type FunctionAppFlexConsumption#name_claim_type}
+        :param scopes: The list of the scopes that should be requested while authenticating. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#scopes FunctionAppFlexConsumption#scopes}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__ff5e9967f723ffaae30c4ebbd2ec9caf5dbccf98f95431b6b01a443d4ed86c4d)
@@ -4352,7 +4352,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2CustomOidcV2:
     def client_id(self) -> builtins.str:
         '''The ID of the Client to use to authenticate with this Custom OIDC.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
         '''
         result = self._values.get("client_id")
         assert result is not None, "Required property 'client_id' is missing"
@@ -4362,7 +4362,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2CustomOidcV2:
     def name(self) -> builtins.str:
         '''The name of the Custom OIDC Authentication Provider.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -4372,7 +4372,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2CustomOidcV2:
     def openid_configuration_endpoint(self) -> builtins.str:
         '''The endpoint that contains all the configuration endpoints for this Custom OIDC provider.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#openid_configuration_endpoint FunctionAppFlexConsumption#openid_configuration_endpoint}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#openid_configuration_endpoint FunctionAppFlexConsumption#openid_configuration_endpoint}
         '''
         result = self._values.get("openid_configuration_endpoint")
         assert result is not None, "Required property 'openid_configuration_endpoint' is missing"
@@ -4382,7 +4382,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2CustomOidcV2:
     def name_claim_type(self) -> typing.Optional[builtins.str]:
         '''The name of the claim that contains the users name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#name_claim_type FunctionAppFlexConsumption#name_claim_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#name_claim_type FunctionAppFlexConsumption#name_claim_type}
         '''
         result = self._values.get("name_claim_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4391,7 +4391,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2CustomOidcV2:
     def scopes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''The list of the scopes that should be requested while authenticating.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#scopes FunctionAppFlexConsumption#scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#scopes FunctionAppFlexConsumption#scopes}
         '''
         result = self._values.get("scopes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -4688,10 +4688,10 @@ class FunctionAppFlexConsumptionAuthSettingsV2FacebookV2:
         login_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param app_id: The App ID of the Facebook app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_id FunctionAppFlexConsumption#app_id}
-        :param app_secret_setting_name: The app setting name that contains the ``app_secret`` value used for Facebook Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_secret_setting_name FunctionAppFlexConsumption#app_secret_setting_name}
-        :param graph_api_version: The version of the Facebook API to be used while logging in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#graph_api_version FunctionAppFlexConsumption#graph_api_version}
-        :param login_scopes: Specifies a list of scopes to be requested as part of Facebook Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
+        :param app_id: The App ID of the Facebook app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_id FunctionAppFlexConsumption#app_id}
+        :param app_secret_setting_name: The app setting name that contains the ``app_secret`` value used for Facebook Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_secret_setting_name FunctionAppFlexConsumption#app_secret_setting_name}
+        :param graph_api_version: The version of the Facebook API to be used while logging in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#graph_api_version FunctionAppFlexConsumption#graph_api_version}
+        :param login_scopes: Specifies a list of scopes to be requested as part of Facebook Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__d16da4ea6bed4b4248197d312acfe2e1b8be3a6099b43e90d80bed5bfbeec3ad)
@@ -4712,7 +4712,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2FacebookV2:
     def app_id(self) -> builtins.str:
         '''The App ID of the Facebook app used for login.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_id FunctionAppFlexConsumption#app_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_id FunctionAppFlexConsumption#app_id}
         '''
         result = self._values.get("app_id")
         assert result is not None, "Required property 'app_id' is missing"
@@ -4722,7 +4722,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2FacebookV2:
     def app_secret_setting_name(self) -> builtins.str:
         '''The app setting name that contains the ``app_secret`` value used for Facebook Login.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_secret_setting_name FunctionAppFlexConsumption#app_secret_setting_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_secret_setting_name FunctionAppFlexConsumption#app_secret_setting_name}
         '''
         result = self._values.get("app_secret_setting_name")
         assert result is not None, "Required property 'app_secret_setting_name' is missing"
@@ -4732,7 +4732,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2FacebookV2:
     def graph_api_version(self) -> typing.Optional[builtins.str]:
         '''The version of the Facebook API to be used while logging in.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#graph_api_version FunctionAppFlexConsumption#graph_api_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#graph_api_version FunctionAppFlexConsumption#graph_api_version}
         '''
         result = self._values.get("graph_api_version")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -4741,7 +4741,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2FacebookV2:
     def login_scopes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a list of scopes to be requested as part of Facebook Login authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
         '''
         result = self._values.get("login_scopes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -4890,9 +4890,9 @@ class FunctionAppFlexConsumptionAuthSettingsV2GithubV2:
         login_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param client_id: The ID of the GitHub app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for GitHub Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
-        :param login_scopes: Specifies a list of OAuth 2.0 scopes that will be requested as part of GitHub Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
+        :param client_id: The ID of the GitHub app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for GitHub Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param login_scopes: Specifies a list of OAuth 2.0 scopes that will be requested as part of GitHub Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__a25a58e0b6ac2f8cfdecc006790d5afbed1ceb57bc3bb20925b4fd79a16c9673)
@@ -4910,7 +4910,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2GithubV2:
     def client_id(self) -> builtins.str:
         '''The ID of the GitHub app used for login.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
         '''
         result = self._values.get("client_id")
         assert result is not None, "Required property 'client_id' is missing"
@@ -4920,7 +4920,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2GithubV2:
     def client_secret_setting_name(self) -> builtins.str:
         '''The app setting name that contains the ``client_secret`` value used for GitHub Login.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
         '''
         result = self._values.get("client_secret_setting_name")
         assert result is not None, "Required property 'client_secret_setting_name' is missing"
@@ -4930,7 +4930,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2GithubV2:
     def login_scopes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a list of OAuth 2.0 scopes that will be requested as part of GitHub Login authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
         '''
         result = self._values.get("login_scopes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -5060,10 +5060,10 @@ class FunctionAppFlexConsumptionAuthSettingsV2GoogleV2:
         login_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param client_id: The OpenID Connect Client ID for the Google web application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for Google Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
-        :param allowed_audiences: Specifies a list of Allowed Audiences that will be requested as part of Google Sign-In authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
-        :param login_scopes: Specifies a list of Login scopes that will be requested as part of Google Sign-In authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
+        :param client_id: The OpenID Connect Client ID for the Google web application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for Google Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param allowed_audiences: Specifies a list of Allowed Audiences that will be requested as part of Google Sign-In authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
+        :param login_scopes: Specifies a list of Login scopes that will be requested as part of Google Sign-In authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__ec25a76e6fe6cd742576ae625df87dd6db025ceb7a18f3423a32a67897fa5efd)
@@ -5084,7 +5084,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2GoogleV2:
     def client_id(self) -> builtins.str:
         '''The OpenID Connect Client ID for the Google web application.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
         '''
         result = self._values.get("client_id")
         assert result is not None, "Required property 'client_id' is missing"
@@ -5094,7 +5094,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2GoogleV2:
     def client_secret_setting_name(self) -> builtins.str:
         '''The app setting name that contains the ``client_secret`` value used for Google Login.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
         '''
         result = self._values.get("client_secret_setting_name")
         assert result is not None, "Required property 'client_secret_setting_name' is missing"
@@ -5104,7 +5104,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2GoogleV2:
     def allowed_audiences(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a list of Allowed Audiences that will be requested as part of Google Sign-In authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
         '''
         result = self._values.get("allowed_audiences")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -5113,7 +5113,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2GoogleV2:
     def login_scopes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a list of Login scopes that will be requested as part of Google Sign-In authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
         '''
         result = self._values.get("login_scopes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -5278,17 +5278,17 @@ class FunctionAppFlexConsumptionAuthSettingsV2Login:
         validate_nonce: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param allowed_external_redirect_urls: External URLs that can be redirected to as part of logging in or logging out of the app. This is an advanced setting typically only needed by Windows Store application backends. **Note:** URLs within the current domain are always implicitly allowed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_external_redirect_urls FunctionAppFlexConsumption#allowed_external_redirect_urls}
-        :param cookie_expiration_convention: The method by which cookies expire. Possible values include: ``FixedTime``, and ``IdentityProviderDerived``. Defaults to ``FixedTime``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#cookie_expiration_convention FunctionAppFlexConsumption#cookie_expiration_convention}
-        :param cookie_expiration_time: The time after the request is made when the session cookie should expire. Defaults to ``08:00:00``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#cookie_expiration_time FunctionAppFlexConsumption#cookie_expiration_time}
-        :param logout_endpoint: The endpoint to which logout requests should be made. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#logout_endpoint FunctionAppFlexConsumption#logout_endpoint}
-        :param nonce_expiration_time: The time after the request is made when the nonce should expire. Defaults to ``00:05:00``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#nonce_expiration_time FunctionAppFlexConsumption#nonce_expiration_time}
-        :param preserve_url_fragments_for_logins: Should the fragments from the request be preserved after the login request is made. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#preserve_url_fragments_for_logins FunctionAppFlexConsumption#preserve_url_fragments_for_logins}
-        :param token_refresh_extension_time: The number of hours after session token expiration that a session token can be used to call the token refresh API. Defaults to ``72`` hours. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_refresh_extension_time FunctionAppFlexConsumption#token_refresh_extension_time}
-        :param token_store_enabled: Should the Token Store configuration Enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_store_enabled FunctionAppFlexConsumption#token_store_enabled}
-        :param token_store_path: The directory path in the App Filesystem in which the tokens will be stored. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_store_path FunctionAppFlexConsumption#token_store_path}
-        :param token_store_sas_setting_name: The name of the app setting which contains the SAS URL of the blob storage containing the tokens. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_store_sas_setting_name FunctionAppFlexConsumption#token_store_sas_setting_name}
-        :param validate_nonce: Should the nonce be validated while completing the login flow. Defaults to ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#validate_nonce FunctionAppFlexConsumption#validate_nonce}
+        :param allowed_external_redirect_urls: External URLs that can be redirected to as part of logging in or logging out of the app. This is an advanced setting typically only needed by Windows Store application backends. **Note:** URLs within the current domain are always implicitly allowed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_external_redirect_urls FunctionAppFlexConsumption#allowed_external_redirect_urls}
+        :param cookie_expiration_convention: The method by which cookies expire. Possible values include: ``FixedTime``, and ``IdentityProviderDerived``. Defaults to ``FixedTime``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#cookie_expiration_convention FunctionAppFlexConsumption#cookie_expiration_convention}
+        :param cookie_expiration_time: The time after the request is made when the session cookie should expire. Defaults to ``08:00:00``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#cookie_expiration_time FunctionAppFlexConsumption#cookie_expiration_time}
+        :param logout_endpoint: The endpoint to which logout requests should be made. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#logout_endpoint FunctionAppFlexConsumption#logout_endpoint}
+        :param nonce_expiration_time: The time after the request is made when the nonce should expire. Defaults to ``00:05:00``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#nonce_expiration_time FunctionAppFlexConsumption#nonce_expiration_time}
+        :param preserve_url_fragments_for_logins: Should the fragments from the request be preserved after the login request is made. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#preserve_url_fragments_for_logins FunctionAppFlexConsumption#preserve_url_fragments_for_logins}
+        :param token_refresh_extension_time: The number of hours after session token expiration that a session token can be used to call the token refresh API. Defaults to ``72`` hours. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_refresh_extension_time FunctionAppFlexConsumption#token_refresh_extension_time}
+        :param token_store_enabled: Should the Token Store configuration Enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_store_enabled FunctionAppFlexConsumption#token_store_enabled}
+        :param token_store_path: The directory path in the App Filesystem in which the tokens will be stored. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_store_path FunctionAppFlexConsumption#token_store_path}
+        :param token_store_sas_setting_name: The name of the app setting which contains the SAS URL of the blob storage containing the tokens. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_store_sas_setting_name FunctionAppFlexConsumption#token_store_sas_setting_name}
+        :param validate_nonce: Should the nonce be validated while completing the login flow. Defaults to ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#validate_nonce FunctionAppFlexConsumption#validate_nonce}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__ff5540f20938b5f316eae4f8834a2333116c441ab57aa3836d36e42b0a7cdbf8)
@@ -5335,7 +5335,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2Login:
 
         This is an advanced setting typically only needed by Windows Store application backends. **Note:** URLs within the current domain are always implicitly allowed.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_external_redirect_urls FunctionAppFlexConsumption#allowed_external_redirect_urls}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_external_redirect_urls FunctionAppFlexConsumption#allowed_external_redirect_urls}
         '''
         result = self._values.get("allowed_external_redirect_urls")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -5344,7 +5344,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2Login:
     def cookie_expiration_convention(self) -> typing.Optional[builtins.str]:
         '''The method by which cookies expire. Possible values include: ``FixedTime``, and ``IdentityProviderDerived``. Defaults to ``FixedTime``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#cookie_expiration_convention FunctionAppFlexConsumption#cookie_expiration_convention}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#cookie_expiration_convention FunctionAppFlexConsumption#cookie_expiration_convention}
         '''
         result = self._values.get("cookie_expiration_convention")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5353,7 +5353,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2Login:
     def cookie_expiration_time(self) -> typing.Optional[builtins.str]:
         '''The time after the request is made when the session cookie should expire. Defaults to ``08:00:00``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#cookie_expiration_time FunctionAppFlexConsumption#cookie_expiration_time}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#cookie_expiration_time FunctionAppFlexConsumption#cookie_expiration_time}
         '''
         result = self._values.get("cookie_expiration_time")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5362,7 +5362,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2Login:
     def logout_endpoint(self) -> typing.Optional[builtins.str]:
         '''The endpoint to which logout requests should be made.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#logout_endpoint FunctionAppFlexConsumption#logout_endpoint}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#logout_endpoint FunctionAppFlexConsumption#logout_endpoint}
         '''
         result = self._values.get("logout_endpoint")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5371,7 +5371,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2Login:
     def nonce_expiration_time(self) -> typing.Optional[builtins.str]:
         '''The time after the request is made when the nonce should expire. Defaults to ``00:05:00``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#nonce_expiration_time FunctionAppFlexConsumption#nonce_expiration_time}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#nonce_expiration_time FunctionAppFlexConsumption#nonce_expiration_time}
         '''
         result = self._values.get("nonce_expiration_time")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5382,7 +5382,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2Login:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should the fragments from the request be preserved after the login request is made. Defaults to ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#preserve_url_fragments_for_logins FunctionAppFlexConsumption#preserve_url_fragments_for_logins}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#preserve_url_fragments_for_logins FunctionAppFlexConsumption#preserve_url_fragments_for_logins}
         '''
         result = self._values.get("preserve_url_fragments_for_logins")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -5393,7 +5393,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2Login:
 
         Defaults to ``72`` hours.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_refresh_extension_time FunctionAppFlexConsumption#token_refresh_extension_time}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_refresh_extension_time FunctionAppFlexConsumption#token_refresh_extension_time}
         '''
         result = self._values.get("token_refresh_extension_time")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -5404,7 +5404,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2Login:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should the Token Store configuration Enabled. Defaults to ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_store_enabled FunctionAppFlexConsumption#token_store_enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_store_enabled FunctionAppFlexConsumption#token_store_enabled}
         '''
         result = self._values.get("token_store_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -5413,7 +5413,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2Login:
     def token_store_path(self) -> typing.Optional[builtins.str]:
         '''The directory path in the App Filesystem in which the tokens will be stored.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_store_path FunctionAppFlexConsumption#token_store_path}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_store_path FunctionAppFlexConsumption#token_store_path}
         '''
         result = self._values.get("token_store_path")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5422,7 +5422,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2Login:
     def token_store_sas_setting_name(self) -> typing.Optional[builtins.str]:
         '''The name of the app setting which contains the SAS URL of the blob storage containing the tokens.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_store_sas_setting_name FunctionAppFlexConsumption#token_store_sas_setting_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_store_sas_setting_name FunctionAppFlexConsumption#token_store_sas_setting_name}
         '''
         result = self._values.get("token_store_sas_setting_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -5433,7 +5433,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2Login:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should the nonce be validated while completing the login flow. Defaults to ``true``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#validate_nonce FunctionAppFlexConsumption#validate_nonce}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#validate_nonce FunctionAppFlexConsumption#validate_nonce}
         '''
         result = self._values.get("validate_nonce")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -5762,10 +5762,10 @@ class FunctionAppFlexConsumptionAuthSettingsV2MicrosoftV2:
         login_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param client_id: The OAuth 2.0 client ID that was created for the app used for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param client_secret_setting_name: The app setting name containing the OAuth 2.0 client secret that was created for the app used for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
-        :param allowed_audiences: Specifies a list of Allowed Audiences that will be requested as part of Microsoft Sign-In authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
-        :param login_scopes: The list of Login scopes that will be requested as part of Microsoft Account authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
+        :param client_id: The OAuth 2.0 client ID that was created for the app used for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_secret_setting_name: The app setting name containing the OAuth 2.0 client secret that was created for the app used for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param allowed_audiences: Specifies a list of Allowed Audiences that will be requested as part of Microsoft Sign-In authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
+        :param login_scopes: The list of Login scopes that will be requested as part of Microsoft Account authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__c5984875dba9d9f68bffe29890c351a6a991d3be4c3497fad1e700e79f267a38)
@@ -5786,7 +5786,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2MicrosoftV2:
     def client_id(self) -> builtins.str:
         '''The OAuth 2.0 client ID that was created for the app used for authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
         '''
         result = self._values.get("client_id")
         assert result is not None, "Required property 'client_id' is missing"
@@ -5796,7 +5796,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2MicrosoftV2:
     def client_secret_setting_name(self) -> builtins.str:
         '''The app setting name containing the OAuth 2.0 client secret that was created for the app used for authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
         '''
         result = self._values.get("client_secret_setting_name")
         assert result is not None, "Required property 'client_secret_setting_name' is missing"
@@ -5806,7 +5806,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2MicrosoftV2:
     def allowed_audiences(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a list of Allowed Audiences that will be requested as part of Microsoft Sign-In authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
         '''
         result = self._values.get("allowed_audiences")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -5815,7 +5815,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2MicrosoftV2:
     def login_scopes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''The list of Login scopes that will be requested as part of Microsoft Account authentication.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
         '''
         result = self._values.get("login_scopes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -5984,18 +5984,18 @@ class FunctionAppFlexConsumptionAuthSettingsV2OutputReference(
         www_authentication_disabled: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param client_id: The ID of the Client to use to authenticate with Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param tenant_auth_endpoint: The Azure Tenant Endpoint for the Authenticating Tenant. e.g. ``https://login.microsoftonline.com/v2.0/{tenant-guid}/``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#tenant_auth_endpoint FunctionAppFlexConsumption#tenant_auth_endpoint}
-        :param allowed_applications: The list of allowed Applications for the Default Authorisation Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_applications FunctionAppFlexConsumption#allowed_applications}
-        :param allowed_audiences: Specifies a list of Allowed audience values to consider when validating JWTs issued by Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
-        :param allowed_groups: The list of allowed Group Names for the Default Authorisation Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_groups FunctionAppFlexConsumption#allowed_groups}
-        :param allowed_identities: The list of allowed Identities for the Default Authorisation Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_identities FunctionAppFlexConsumption#allowed_identities}
-        :param client_secret_certificate_thumbprint: The thumbprint of the certificate used for signing purposes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_certificate_thumbprint FunctionAppFlexConsumption#client_secret_certificate_thumbprint}
-        :param client_secret_setting_name: The App Setting name that contains the client secret of the Client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
-        :param jwt_allowed_client_applications: A list of Allowed Client Applications in the JWT Claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#jwt_allowed_client_applications FunctionAppFlexConsumption#jwt_allowed_client_applications}
-        :param jwt_allowed_groups: A list of Allowed Groups in the JWT Claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#jwt_allowed_groups FunctionAppFlexConsumption#jwt_allowed_groups}
-        :param login_parameters: A map of key-value pairs to send to the Authorisation Endpoint when a user logs in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_parameters FunctionAppFlexConsumption#login_parameters}
-        :param www_authentication_disabled: Should the www-authenticate provider should be omitted from the request? Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#www_authentication_disabled FunctionAppFlexConsumption#www_authentication_disabled}
+        :param client_id: The ID of the Client to use to authenticate with Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param tenant_auth_endpoint: The Azure Tenant Endpoint for the Authenticating Tenant. e.g. ``https://login.microsoftonline.com/v2.0/{tenant-guid}/``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#tenant_auth_endpoint FunctionAppFlexConsumption#tenant_auth_endpoint}
+        :param allowed_applications: The list of allowed Applications for the Default Authorisation Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_applications FunctionAppFlexConsumption#allowed_applications}
+        :param allowed_audiences: Specifies a list of Allowed audience values to consider when validating JWTs issued by Azure Active Directory. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
+        :param allowed_groups: The list of allowed Group Names for the Default Authorisation Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_groups FunctionAppFlexConsumption#allowed_groups}
+        :param allowed_identities: The list of allowed Identities for the Default Authorisation Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_identities FunctionAppFlexConsumption#allowed_identities}
+        :param client_secret_certificate_thumbprint: The thumbprint of the certificate used for signing purposes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_certificate_thumbprint FunctionAppFlexConsumption#client_secret_certificate_thumbprint}
+        :param client_secret_setting_name: The App Setting name that contains the client secret of the Client. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param jwt_allowed_client_applications: A list of Allowed Client Applications in the JWT Claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#jwt_allowed_client_applications FunctionAppFlexConsumption#jwt_allowed_client_applications}
+        :param jwt_allowed_groups: A list of Allowed Groups in the JWT Claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#jwt_allowed_groups FunctionAppFlexConsumption#jwt_allowed_groups}
+        :param login_parameters: A map of key-value pairs to send to the Authorisation Endpoint when a user logs in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_parameters FunctionAppFlexConsumption#login_parameters}
+        :param www_authentication_disabled: Should the www-authenticate provider should be omitted from the request? Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#www_authentication_disabled FunctionAppFlexConsumption#www_authentication_disabled}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsV2ActiveDirectoryV2(
             client_id=client_id,
@@ -6022,8 +6022,8 @@ class FunctionAppFlexConsumptionAuthSettingsV2OutputReference(
         client_secret_setting_name: builtins.str,
     ) -> None:
         '''
-        :param client_id: The OpenID Connect Client ID for the Apple web application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for Apple Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param client_id: The OpenID Connect Client ID for the Apple web application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for Apple Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsV2AppleV2(
             client_id=client_id, client_secret_setting_name=client_secret_setting_name
@@ -6034,7 +6034,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2OutputReference(
     @jsii.member(jsii_name="putAzureStaticWebAppV2")
     def put_azure_static_web_app_v2(self, *, client_id: builtins.str) -> None:
         '''
-        :param client_id: The ID of the Client to use to authenticate with Azure Static Web App Authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_id: The ID of the Client to use to authenticate with Azure Static Web App Authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsV2AzureStaticWebAppV2(
             client_id=client_id
@@ -6065,10 +6065,10 @@ class FunctionAppFlexConsumptionAuthSettingsV2OutputReference(
         login_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param app_id: The App ID of the Facebook app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_id FunctionAppFlexConsumption#app_id}
-        :param app_secret_setting_name: The app setting name that contains the ``app_secret`` value used for Facebook Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_secret_setting_name FunctionAppFlexConsumption#app_secret_setting_name}
-        :param graph_api_version: The version of the Facebook API to be used while logging in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#graph_api_version FunctionAppFlexConsumption#graph_api_version}
-        :param login_scopes: Specifies a list of scopes to be requested as part of Facebook Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
+        :param app_id: The App ID of the Facebook app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_id FunctionAppFlexConsumption#app_id}
+        :param app_secret_setting_name: The app setting name that contains the ``app_secret`` value used for Facebook Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_secret_setting_name FunctionAppFlexConsumption#app_secret_setting_name}
+        :param graph_api_version: The version of the Facebook API to be used while logging in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#graph_api_version FunctionAppFlexConsumption#graph_api_version}
+        :param login_scopes: Specifies a list of scopes to be requested as part of Facebook Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsV2FacebookV2(
             app_id=app_id,
@@ -6088,9 +6088,9 @@ class FunctionAppFlexConsumptionAuthSettingsV2OutputReference(
         login_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param client_id: The ID of the GitHub app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for GitHub Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
-        :param login_scopes: Specifies a list of OAuth 2.0 scopes that will be requested as part of GitHub Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
+        :param client_id: The ID of the GitHub app used for login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for GitHub Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param login_scopes: Specifies a list of OAuth 2.0 scopes that will be requested as part of GitHub Login authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsV2GithubV2(
             client_id=client_id,
@@ -6110,10 +6110,10 @@ class FunctionAppFlexConsumptionAuthSettingsV2OutputReference(
         login_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param client_id: The OpenID Connect Client ID for the Google web application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for Google Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
-        :param allowed_audiences: Specifies a list of Allowed Audiences that will be requested as part of Google Sign-In authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
-        :param login_scopes: Specifies a list of Login scopes that will be requested as part of Google Sign-In authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
+        :param client_id: The OpenID Connect Client ID for the Google web application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_secret_setting_name: The app setting name that contains the ``client_secret`` value used for Google Login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param allowed_audiences: Specifies a list of Allowed Audiences that will be requested as part of Google Sign-In authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
+        :param login_scopes: Specifies a list of Login scopes that will be requested as part of Google Sign-In authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsV2GoogleV2(
             client_id=client_id,
@@ -6141,17 +6141,17 @@ class FunctionAppFlexConsumptionAuthSettingsV2OutputReference(
         validate_nonce: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param allowed_external_redirect_urls: External URLs that can be redirected to as part of logging in or logging out of the app. This is an advanced setting typically only needed by Windows Store application backends. **Note:** URLs within the current domain are always implicitly allowed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_external_redirect_urls FunctionAppFlexConsumption#allowed_external_redirect_urls}
-        :param cookie_expiration_convention: The method by which cookies expire. Possible values include: ``FixedTime``, and ``IdentityProviderDerived``. Defaults to ``FixedTime``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#cookie_expiration_convention FunctionAppFlexConsumption#cookie_expiration_convention}
-        :param cookie_expiration_time: The time after the request is made when the session cookie should expire. Defaults to ``08:00:00``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#cookie_expiration_time FunctionAppFlexConsumption#cookie_expiration_time}
-        :param logout_endpoint: The endpoint to which logout requests should be made. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#logout_endpoint FunctionAppFlexConsumption#logout_endpoint}
-        :param nonce_expiration_time: The time after the request is made when the nonce should expire. Defaults to ``00:05:00``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#nonce_expiration_time FunctionAppFlexConsumption#nonce_expiration_time}
-        :param preserve_url_fragments_for_logins: Should the fragments from the request be preserved after the login request is made. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#preserve_url_fragments_for_logins FunctionAppFlexConsumption#preserve_url_fragments_for_logins}
-        :param token_refresh_extension_time: The number of hours after session token expiration that a session token can be used to call the token refresh API. Defaults to ``72`` hours. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_refresh_extension_time FunctionAppFlexConsumption#token_refresh_extension_time}
-        :param token_store_enabled: Should the Token Store configuration Enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_store_enabled FunctionAppFlexConsumption#token_store_enabled}
-        :param token_store_path: The directory path in the App Filesystem in which the tokens will be stored. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_store_path FunctionAppFlexConsumption#token_store_path}
-        :param token_store_sas_setting_name: The name of the app setting which contains the SAS URL of the blob storage containing the tokens. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#token_store_sas_setting_name FunctionAppFlexConsumption#token_store_sas_setting_name}
-        :param validate_nonce: Should the nonce be validated while completing the login flow. Defaults to ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#validate_nonce FunctionAppFlexConsumption#validate_nonce}
+        :param allowed_external_redirect_urls: External URLs that can be redirected to as part of logging in or logging out of the app. This is an advanced setting typically only needed by Windows Store application backends. **Note:** URLs within the current domain are always implicitly allowed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_external_redirect_urls FunctionAppFlexConsumption#allowed_external_redirect_urls}
+        :param cookie_expiration_convention: The method by which cookies expire. Possible values include: ``FixedTime``, and ``IdentityProviderDerived``. Defaults to ``FixedTime``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#cookie_expiration_convention FunctionAppFlexConsumption#cookie_expiration_convention}
+        :param cookie_expiration_time: The time after the request is made when the session cookie should expire. Defaults to ``08:00:00``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#cookie_expiration_time FunctionAppFlexConsumption#cookie_expiration_time}
+        :param logout_endpoint: The endpoint to which logout requests should be made. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#logout_endpoint FunctionAppFlexConsumption#logout_endpoint}
+        :param nonce_expiration_time: The time after the request is made when the nonce should expire. Defaults to ``00:05:00``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#nonce_expiration_time FunctionAppFlexConsumption#nonce_expiration_time}
+        :param preserve_url_fragments_for_logins: Should the fragments from the request be preserved after the login request is made. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#preserve_url_fragments_for_logins FunctionAppFlexConsumption#preserve_url_fragments_for_logins}
+        :param token_refresh_extension_time: The number of hours after session token expiration that a session token can be used to call the token refresh API. Defaults to ``72`` hours. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_refresh_extension_time FunctionAppFlexConsumption#token_refresh_extension_time}
+        :param token_store_enabled: Should the Token Store configuration Enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_store_enabled FunctionAppFlexConsumption#token_store_enabled}
+        :param token_store_path: The directory path in the App Filesystem in which the tokens will be stored. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_store_path FunctionAppFlexConsumption#token_store_path}
+        :param token_store_sas_setting_name: The name of the app setting which contains the SAS URL of the blob storage containing the tokens. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#token_store_sas_setting_name FunctionAppFlexConsumption#token_store_sas_setting_name}
+        :param validate_nonce: Should the nonce be validated while completing the login flow. Defaults to ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#validate_nonce FunctionAppFlexConsumption#validate_nonce}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsV2Login(
             allowed_external_redirect_urls=allowed_external_redirect_urls,
@@ -6179,10 +6179,10 @@ class FunctionAppFlexConsumptionAuthSettingsV2OutputReference(
         login_scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param client_id: The OAuth 2.0 client ID that was created for the app used for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
-        :param client_secret_setting_name: The app setting name containing the OAuth 2.0 client secret that was created for the app used for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
-        :param allowed_audiences: Specifies a list of Allowed Audiences that will be requested as part of Microsoft Sign-In authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
-        :param login_scopes: The list of Login scopes that will be requested as part of Microsoft Account authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
+        :param client_id: The OAuth 2.0 client ID that was created for the app used for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_id FunctionAppFlexConsumption#client_id}
+        :param client_secret_setting_name: The app setting name containing the OAuth 2.0 client secret that was created for the app used for authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_secret_setting_name FunctionAppFlexConsumption#client_secret_setting_name}
+        :param allowed_audiences: Specifies a list of Allowed Audiences that will be requested as part of Microsoft Sign-In authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_audiences FunctionAppFlexConsumption#allowed_audiences}
+        :param login_scopes: The list of Login scopes that will be requested as part of Microsoft Account authentication. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#login_scopes FunctionAppFlexConsumption#login_scopes}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsV2MicrosoftV2(
             client_id=client_id,
@@ -6201,8 +6201,8 @@ class FunctionAppFlexConsumptionAuthSettingsV2OutputReference(
         consumer_secret_setting_name: builtins.str,
     ) -> None:
         '''
-        :param consumer_key: The OAuth 1.0a consumer key of the Twitter application used for sign-in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_key FunctionAppFlexConsumption#consumer_key}
-        :param consumer_secret_setting_name: The app setting name that contains the OAuth 1.0a consumer secret of the Twitter application used for sign-in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_secret_setting_name FunctionAppFlexConsumption#consumer_secret_setting_name}
+        :param consumer_key: The OAuth 1.0a consumer key of the Twitter application used for sign-in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_key FunctionAppFlexConsumption#consumer_key}
+        :param consumer_secret_setting_name: The app setting name that contains the OAuth 1.0a consumer secret of the Twitter application used for sign-in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_secret_setting_name FunctionAppFlexConsumption#consumer_secret_setting_name}
         '''
         value = FunctionAppFlexConsumptionAuthSettingsV2TwitterV2(
             consumer_key=consumer_key,
@@ -6692,8 +6692,8 @@ class FunctionAppFlexConsumptionAuthSettingsV2TwitterV2:
         consumer_secret_setting_name: builtins.str,
     ) -> None:
         '''
-        :param consumer_key: The OAuth 1.0a consumer key of the Twitter application used for sign-in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_key FunctionAppFlexConsumption#consumer_key}
-        :param consumer_secret_setting_name: The app setting name that contains the OAuth 1.0a consumer secret of the Twitter application used for sign-in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_secret_setting_name FunctionAppFlexConsumption#consumer_secret_setting_name}
+        :param consumer_key: The OAuth 1.0a consumer key of the Twitter application used for sign-in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_key FunctionAppFlexConsumption#consumer_key}
+        :param consumer_secret_setting_name: The app setting name that contains the OAuth 1.0a consumer secret of the Twitter application used for sign-in. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_secret_setting_name FunctionAppFlexConsumption#consumer_secret_setting_name}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__78e27d0e425e4d555553aa198e3437ec863ebb76c3e25c19938396352d4b965a)
@@ -6708,7 +6708,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2TwitterV2:
     def consumer_key(self) -> builtins.str:
         '''The OAuth 1.0a consumer key of the Twitter application used for sign-in.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_key FunctionAppFlexConsumption#consumer_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_key FunctionAppFlexConsumption#consumer_key}
         '''
         result = self._values.get("consumer_key")
         assert result is not None, "Required property 'consumer_key' is missing"
@@ -6718,7 +6718,7 @@ class FunctionAppFlexConsumptionAuthSettingsV2TwitterV2:
     def consumer_secret_setting_name(self) -> builtins.str:
         '''The app setting name that contains the OAuth 1.0a consumer secret of the Twitter application used for sign-in.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#consumer_secret_setting_name FunctionAppFlexConsumption#consumer_secret_setting_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#consumer_secret_setting_name FunctionAppFlexConsumption#consumer_secret_setting_name}
         '''
         result = self._values.get("consumer_secret_setting_name")
         assert result is not None, "Required property 'consumer_secret_setting_name' is missing"
@@ -6903,37 +6903,37 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param location: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#location FunctionAppFlexConsumption#location}.
-        :param name: Specifies the name of the Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
-        :param resource_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#resource_group_name FunctionAppFlexConsumption#resource_group_name}.
-        :param runtime_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_name FunctionAppFlexConsumption#runtime_name}.
-        :param runtime_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}.
-        :param service_plan_id: The ID of the App Service Plan within which to create this Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#service_plan_id FunctionAppFlexConsumption#service_plan_id}
-        :param site_config: site_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#site_config FunctionAppFlexConsumption#site_config}
-        :param storage_authentication_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_authentication_type FunctionAppFlexConsumption#storage_authentication_type}.
-        :param storage_container_endpoint: The endpoint of the storage container where the function app's code is hosted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_container_endpoint FunctionAppFlexConsumption#storage_container_endpoint}
-        :param storage_container_type: The type of the storage container where the function app's code is hosted. Only ``blobContainer`` is supported currently. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_container_type FunctionAppFlexConsumption#storage_container_type}
-        :param app_settings: A map of key-value pairs for `App Settings <https://docs.microsoft.com/en-us/azure/azure-functions/functions-app-settings>`_ and custom values. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_settings FunctionAppFlexConsumption#app_settings}
-        :param auth_settings: auth_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#auth_settings FunctionAppFlexConsumption#auth_settings}
-        :param auth_settings_v2: auth_settings_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#auth_settings_v2 FunctionAppFlexConsumption#auth_settings_v2}
-        :param client_certificate_enabled: Should the function app use Client Certificates. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_certificate_enabled FunctionAppFlexConsumption#client_certificate_enabled}
-        :param client_certificate_exclusion_paths: Paths to exclude when using client certificates, separated by ; Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_certificate_exclusion_paths FunctionAppFlexConsumption#client_certificate_exclusion_paths}
-        :param client_certificate_mode: The mode of the Function App's client certificates requirement for incoming requests. Possible values are ``Required``, ``Optional``, and ``OptionalInteractiveUser`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_certificate_mode FunctionAppFlexConsumption#client_certificate_mode}
-        :param connection_string: connection_string block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#connection_string FunctionAppFlexConsumption#connection_string}
-        :param enabled: Is the Function App enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#enabled FunctionAppFlexConsumption#enabled}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#id FunctionAppFlexConsumption#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param identity: identity block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#identity FunctionAppFlexConsumption#identity}
-        :param instance_memory_in_mb: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#instance_memory_in_mb FunctionAppFlexConsumption#instance_memory_in_mb}.
-        :param maximum_instance_count: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#maximum_instance_count FunctionAppFlexConsumption#maximum_instance_count}.
-        :param public_network_access_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#public_network_access_enabled FunctionAppFlexConsumption#public_network_access_enabled}.
-        :param sticky_settings: sticky_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#sticky_settings FunctionAppFlexConsumption#sticky_settings}
-        :param storage_access_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_access_key FunctionAppFlexConsumption#storage_access_key}.
-        :param storage_user_assigned_identity_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_user_assigned_identity_id FunctionAppFlexConsumption#storage_user_assigned_identity_id}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#tags FunctionAppFlexConsumption#tags}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#timeouts FunctionAppFlexConsumption#timeouts}
-        :param virtual_network_subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#virtual_network_subnet_id FunctionAppFlexConsumption#virtual_network_subnet_id}.
-        :param webdeploy_publish_basic_authentication_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#webdeploy_publish_basic_authentication_enabled FunctionAppFlexConsumption#webdeploy_publish_basic_authentication_enabled}.
-        :param zip_deploy_file: The local path and filename of the Zip packaged application to deploy to this Function App. **Note:** Using this value requires either ``WEBSITE_RUN_FROM_PACKAGE=1`` or ``SCM_DO_BUILD_DURING_DEPLOYMENT=true`` to be set on the App in ``app_settings``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#zip_deploy_file FunctionAppFlexConsumption#zip_deploy_file}
+        :param location: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#location FunctionAppFlexConsumption#location}.
+        :param name: Specifies the name of the Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
+        :param resource_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#resource_group_name FunctionAppFlexConsumption#resource_group_name}.
+        :param runtime_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_name FunctionAppFlexConsumption#runtime_name}.
+        :param runtime_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}.
+        :param service_plan_id: The ID of the App Service Plan within which to create this Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#service_plan_id FunctionAppFlexConsumption#service_plan_id}
+        :param site_config: site_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#site_config FunctionAppFlexConsumption#site_config}
+        :param storage_authentication_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_authentication_type FunctionAppFlexConsumption#storage_authentication_type}.
+        :param storage_container_endpoint: The endpoint of the storage container where the function app's code is hosted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_container_endpoint FunctionAppFlexConsumption#storage_container_endpoint}
+        :param storage_container_type: The type of the storage container where the function app's code is hosted. Only ``blobContainer`` is supported currently. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_container_type FunctionAppFlexConsumption#storage_container_type}
+        :param app_settings: A map of key-value pairs for `App Settings <https://docs.microsoft.com/en-us/azure/azure-functions/functions-app-settings>`_ and custom values. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_settings FunctionAppFlexConsumption#app_settings}
+        :param auth_settings: auth_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#auth_settings FunctionAppFlexConsumption#auth_settings}
+        :param auth_settings_v2: auth_settings_v2 block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#auth_settings_v2 FunctionAppFlexConsumption#auth_settings_v2}
+        :param client_certificate_enabled: Should the function app use Client Certificates. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_certificate_enabled FunctionAppFlexConsumption#client_certificate_enabled}
+        :param client_certificate_exclusion_paths: Paths to exclude when using client certificates, separated by ; Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_certificate_exclusion_paths FunctionAppFlexConsumption#client_certificate_exclusion_paths}
+        :param client_certificate_mode: The mode of the Function App's client certificates requirement for incoming requests. Possible values are ``Required``, ``Optional``, and ``OptionalInteractiveUser`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_certificate_mode FunctionAppFlexConsumption#client_certificate_mode}
+        :param connection_string: connection_string block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#connection_string FunctionAppFlexConsumption#connection_string}
+        :param enabled: Is the Function App enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#enabled FunctionAppFlexConsumption#enabled}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#id FunctionAppFlexConsumption#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param identity: identity block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#identity FunctionAppFlexConsumption#identity}
+        :param instance_memory_in_mb: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#instance_memory_in_mb FunctionAppFlexConsumption#instance_memory_in_mb}.
+        :param maximum_instance_count: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#maximum_instance_count FunctionAppFlexConsumption#maximum_instance_count}.
+        :param public_network_access_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#public_network_access_enabled FunctionAppFlexConsumption#public_network_access_enabled}.
+        :param sticky_settings: sticky_settings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#sticky_settings FunctionAppFlexConsumption#sticky_settings}
+        :param storage_access_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_access_key FunctionAppFlexConsumption#storage_access_key}.
+        :param storage_user_assigned_identity_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_user_assigned_identity_id FunctionAppFlexConsumption#storage_user_assigned_identity_id}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#tags FunctionAppFlexConsumption#tags}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#timeouts FunctionAppFlexConsumption#timeouts}
+        :param virtual_network_subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#virtual_network_subnet_id FunctionAppFlexConsumption#virtual_network_subnet_id}.
+        :param webdeploy_publish_basic_authentication_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#webdeploy_publish_basic_authentication_enabled FunctionAppFlexConsumption#webdeploy_publish_basic_authentication_enabled}.
+        :param zip_deploy_file: The local path and filename of the Zip packaged application to deploy to this Function App. **Note:** Using this value requires either ``WEBSITE_RUN_FROM_PACKAGE=1`` or ``SCM_DO_BUILD_DURING_DEPLOYMENT=true`` to be set on the App in ``app_settings``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#zip_deploy_file FunctionAppFlexConsumption#zip_deploy_file}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -7124,7 +7124,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def location(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#location FunctionAppFlexConsumption#location}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#location FunctionAppFlexConsumption#location}.'''
         result = self._values.get("location")
         assert result is not None, "Required property 'location' is missing"
         return typing.cast(builtins.str, result)
@@ -7133,7 +7133,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Specifies the name of the Function App.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -7141,21 +7141,21 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def resource_group_name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#resource_group_name FunctionAppFlexConsumption#resource_group_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#resource_group_name FunctionAppFlexConsumption#resource_group_name}.'''
         result = self._values.get("resource_group_name")
         assert result is not None, "Required property 'resource_group_name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def runtime_name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_name FunctionAppFlexConsumption#runtime_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_name FunctionAppFlexConsumption#runtime_name}.'''
         result = self._values.get("runtime_name")
         assert result is not None, "Required property 'runtime_name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def runtime_version(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_version FunctionAppFlexConsumption#runtime_version}.'''
         result = self._values.get("runtime_version")
         assert result is not None, "Required property 'runtime_version' is missing"
         return typing.cast(builtins.str, result)
@@ -7164,7 +7164,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def service_plan_id(self) -> builtins.str:
         '''The ID of the App Service Plan within which to create this Function App.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#service_plan_id FunctionAppFlexConsumption#service_plan_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#service_plan_id FunctionAppFlexConsumption#service_plan_id}
         '''
         result = self._values.get("service_plan_id")
         assert result is not None, "Required property 'service_plan_id' is missing"
@@ -7174,7 +7174,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def site_config(self) -> "FunctionAppFlexConsumptionSiteConfig":
         '''site_config block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#site_config FunctionAppFlexConsumption#site_config}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#site_config FunctionAppFlexConsumption#site_config}
         '''
         result = self._values.get("site_config")
         assert result is not None, "Required property 'site_config' is missing"
@@ -7182,7 +7182,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def storage_authentication_type(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_authentication_type FunctionAppFlexConsumption#storage_authentication_type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_authentication_type FunctionAppFlexConsumption#storage_authentication_type}.'''
         result = self._values.get("storage_authentication_type")
         assert result is not None, "Required property 'storage_authentication_type' is missing"
         return typing.cast(builtins.str, result)
@@ -7191,7 +7191,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def storage_container_endpoint(self) -> builtins.str:
         '''The endpoint of the storage container where the function app's code is hosted.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_container_endpoint FunctionAppFlexConsumption#storage_container_endpoint}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_container_endpoint FunctionAppFlexConsumption#storage_container_endpoint}
         '''
         result = self._values.get("storage_container_endpoint")
         assert result is not None, "Required property 'storage_container_endpoint' is missing"
@@ -7201,7 +7201,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def storage_container_type(self) -> builtins.str:
         '''The type of the storage container where the function app's code is hosted. Only ``blobContainer`` is supported currently.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_container_type FunctionAppFlexConsumption#storage_container_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_container_type FunctionAppFlexConsumption#storage_container_type}
         '''
         result = self._values.get("storage_container_type")
         assert result is not None, "Required property 'storage_container_type' is missing"
@@ -7213,7 +7213,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
         '''A map of key-value pairs for `App Settings <https://docs.microsoft.com/en-us/azure/azure-functions/functions-app-settings>`_ and custom values.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_settings FunctionAppFlexConsumption#app_settings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_settings FunctionAppFlexConsumption#app_settings}
         '''
         result = self._values.get("app_settings")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
@@ -7222,7 +7222,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def auth_settings(self) -> typing.Optional[FunctionAppFlexConsumptionAuthSettings]:
         '''auth_settings block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#auth_settings FunctionAppFlexConsumption#auth_settings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#auth_settings FunctionAppFlexConsumption#auth_settings}
         '''
         result = self._values.get("auth_settings")
         return typing.cast(typing.Optional[FunctionAppFlexConsumptionAuthSettings], result)
@@ -7233,7 +7233,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[FunctionAppFlexConsumptionAuthSettingsV2]:
         '''auth_settings_v2 block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#auth_settings_v2 FunctionAppFlexConsumption#auth_settings_v2}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#auth_settings_v2 FunctionAppFlexConsumption#auth_settings_v2}
         '''
         result = self._values.get("auth_settings_v2")
         return typing.cast(typing.Optional[FunctionAppFlexConsumptionAuthSettingsV2], result)
@@ -7244,7 +7244,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should the function app use Client Certificates.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_certificate_enabled FunctionAppFlexConsumption#client_certificate_enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_certificate_enabled FunctionAppFlexConsumption#client_certificate_enabled}
         '''
         result = self._values.get("client_certificate_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -7253,7 +7253,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def client_certificate_exclusion_paths(self) -> typing.Optional[builtins.str]:
         '''Paths to exclude when using client certificates, separated by ;
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_certificate_exclusion_paths FunctionAppFlexConsumption#client_certificate_exclusion_paths}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_certificate_exclusion_paths FunctionAppFlexConsumption#client_certificate_exclusion_paths}
         '''
         result = self._values.get("client_certificate_exclusion_paths")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -7264,7 +7264,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Possible values are ``Required``, ``Optional``, and ``OptionalInteractiveUser``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#client_certificate_mode FunctionAppFlexConsumption#client_certificate_mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#client_certificate_mode FunctionAppFlexConsumption#client_certificate_mode}
         '''
         result = self._values.get("client_certificate_mode")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -7275,7 +7275,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionAppFlexConsumptionConnectionString"]]]:
         '''connection_string block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#connection_string FunctionAppFlexConsumption#connection_string}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#connection_string FunctionAppFlexConsumption#connection_string}
         '''
         result = self._values.get("connection_string")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionAppFlexConsumptionConnectionString"]]], result)
@@ -7286,14 +7286,14 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Is the Function App enabled.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#enabled FunctionAppFlexConsumption#enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#enabled FunctionAppFlexConsumption#enabled}
         '''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#id FunctionAppFlexConsumption#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#id FunctionAppFlexConsumption#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -7305,20 +7305,20 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def identity(self) -> typing.Optional["FunctionAppFlexConsumptionIdentity"]:
         '''identity block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#identity FunctionAppFlexConsumption#identity}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#identity FunctionAppFlexConsumption#identity}
         '''
         result = self._values.get("identity")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionIdentity"], result)
 
     @builtins.property
     def instance_memory_in_mb(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#instance_memory_in_mb FunctionAppFlexConsumption#instance_memory_in_mb}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#instance_memory_in_mb FunctionAppFlexConsumption#instance_memory_in_mb}.'''
         result = self._values.get("instance_memory_in_mb")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def maximum_instance_count(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#maximum_instance_count FunctionAppFlexConsumption#maximum_instance_count}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#maximum_instance_count FunctionAppFlexConsumption#maximum_instance_count}.'''
         result = self._values.get("maximum_instance_count")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -7326,7 +7326,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def public_network_access_enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#public_network_access_enabled FunctionAppFlexConsumption#public_network_access_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#public_network_access_enabled FunctionAppFlexConsumption#public_network_access_enabled}.'''
         result = self._values.get("public_network_access_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -7336,26 +7336,26 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional["FunctionAppFlexConsumptionStickySettings"]:
         '''sticky_settings block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#sticky_settings FunctionAppFlexConsumption#sticky_settings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#sticky_settings FunctionAppFlexConsumption#sticky_settings}
         '''
         result = self._values.get("sticky_settings")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionStickySettings"], result)
 
     @builtins.property
     def storage_access_key(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_access_key FunctionAppFlexConsumption#storage_access_key}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_access_key FunctionAppFlexConsumption#storage_access_key}.'''
         result = self._values.get("storage_access_key")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def storage_user_assigned_identity_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#storage_user_assigned_identity_id FunctionAppFlexConsumption#storage_user_assigned_identity_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#storage_user_assigned_identity_id FunctionAppFlexConsumption#storage_user_assigned_identity_id}.'''
         result = self._values.get("storage_user_assigned_identity_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def tags(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#tags FunctionAppFlexConsumption#tags}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#tags FunctionAppFlexConsumption#tags}.'''
         result = self._values.get("tags")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -7363,14 +7363,14 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["FunctionAppFlexConsumptionTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#timeouts FunctionAppFlexConsumption#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#timeouts FunctionAppFlexConsumption#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionTimeouts"], result)
 
     @builtins.property
     def virtual_network_subnet_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#virtual_network_subnet_id FunctionAppFlexConsumption#virtual_network_subnet_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#virtual_network_subnet_id FunctionAppFlexConsumption#virtual_network_subnet_id}.'''
         result = self._values.get("virtual_network_subnet_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -7378,7 +7378,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def webdeploy_publish_basic_authentication_enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#webdeploy_publish_basic_authentication_enabled FunctionAppFlexConsumption#webdeploy_publish_basic_authentication_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#webdeploy_publish_basic_authentication_enabled FunctionAppFlexConsumption#webdeploy_publish_basic_authentication_enabled}.'''
         result = self._values.get("webdeploy_publish_basic_authentication_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -7388,7 +7388,7 @@ class FunctionAppFlexConsumptionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         **Note:** Using this value requires either ``WEBSITE_RUN_FROM_PACKAGE=1`` or ``SCM_DO_BUILD_DURING_DEPLOYMENT=true`` to be set on the App in ``app_settings``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#zip_deploy_file FunctionAppFlexConsumption#zip_deploy_file}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#zip_deploy_file FunctionAppFlexConsumption#zip_deploy_file}
         '''
         result = self._values.get("zip_deploy_file")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -7419,9 +7419,9 @@ class FunctionAppFlexConsumptionConnectionString:
         value: builtins.str,
     ) -> None:
         '''
-        :param name: The name which should be used for this Connection. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
-        :param type: Type of database. Possible values include: ``MySQL``, ``SQLServer``, ``SQLAzure``, ``Custom``, ``NotificationHub``, ``ServiceBus``, ``EventHub``, ``APIHub``, ``DocDb``, ``RedisCache``, and ``PostgreSQL``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#type FunctionAppFlexConsumption#type}
-        :param value: The connection string value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#value FunctionAppFlexConsumption#value}
+        :param name: The name which should be used for this Connection. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
+        :param type: Type of database. Possible values include: ``MySQL``, ``SQLServer``, ``SQLAzure``, ``Custom``, ``NotificationHub``, ``ServiceBus``, ``EventHub``, ``APIHub``, ``DocDb``, ``RedisCache``, and ``PostgreSQL``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#type FunctionAppFlexConsumption#type}
+        :param value: The connection string value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#value FunctionAppFlexConsumption#value}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__5d00811589a6a329b77c5dc0cddc6de28e03c2bed3e769bb716afd51254a2c9f)
@@ -7438,7 +7438,7 @@ class FunctionAppFlexConsumptionConnectionString:
     def name(self) -> builtins.str:
         '''The name which should be used for this Connection.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -7448,7 +7448,7 @@ class FunctionAppFlexConsumptionConnectionString:
     def type(self) -> builtins.str:
         '''Type of database. Possible values include: ``MySQL``, ``SQLServer``, ``SQLAzure``, ``Custom``, ``NotificationHub``, ``ServiceBus``, ``EventHub``, ``APIHub``, ``DocDb``, ``RedisCache``, and ``PostgreSQL``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#type FunctionAppFlexConsumption#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#type FunctionAppFlexConsumption#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -7458,7 +7458,7 @@ class FunctionAppFlexConsumptionConnectionString:
     def value(self) -> builtins.str:
         '''The connection string value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#value FunctionAppFlexConsumption#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#value FunctionAppFlexConsumption#value}
         '''
         result = self._values.get("value")
         assert result is not None, "Required property 'value' is missing"
@@ -7677,8 +7677,8 @@ class FunctionAppFlexConsumptionIdentity:
         identity_ids: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#type FunctionAppFlexConsumption#type}.
-        :param identity_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#identity_ids FunctionAppFlexConsumption#identity_ids}.
+        :param type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#type FunctionAppFlexConsumption#type}.
+        :param identity_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#identity_ids FunctionAppFlexConsumption#identity_ids}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__9c38c6d84f8c80719fa4e2c1884a601b1774f9d5daa430cec0263aff1ba3a860)
@@ -7692,14 +7692,14 @@ class FunctionAppFlexConsumptionIdentity:
 
     @builtins.property
     def type(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#type FunctionAppFlexConsumption#type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#type FunctionAppFlexConsumption#type}.'''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def identity_ids(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#identity_ids FunctionAppFlexConsumption#identity_ids}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#identity_ids FunctionAppFlexConsumption#identity_ids}.'''
         result = self._values.get("identity_ids")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
@@ -7869,35 +7869,35 @@ class FunctionAppFlexConsumptionSiteConfig:
         worker_count: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param api_definition_url: The URL of the API definition that describes this Linux Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#api_definition_url FunctionAppFlexConsumption#api_definition_url}
-        :param api_management_api_id: The ID of the API Management API for this Linux Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#api_management_api_id FunctionAppFlexConsumption#api_management_api_id}
-        :param app_command_line: The program and any arguments used to launch this app via the command line. (Example ``node myapp.js``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_command_line FunctionAppFlexConsumption#app_command_line}
-        :param application_insights_connection_string: The Connection String for linking the Linux Function App to Application Insights. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#application_insights_connection_string FunctionAppFlexConsumption#application_insights_connection_string}
-        :param application_insights_key: The Instrumentation Key for connecting the Linux Function App to Application Insights. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#application_insights_key FunctionAppFlexConsumption#application_insights_key}
-        :param app_service_logs: app_service_logs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_service_logs FunctionAppFlexConsumption#app_service_logs}
-        :param container_registry_managed_identity_client_id: The Client ID of the Managed Service Identity to use for connections to the Azure Container Registry. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#container_registry_managed_identity_client_id FunctionAppFlexConsumption#container_registry_managed_identity_client_id}
-        :param container_registry_use_managed_identity: Should connections for Azure Container Registry use Managed Identity. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#container_registry_use_managed_identity FunctionAppFlexConsumption#container_registry_use_managed_identity}
-        :param cors: cors block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#cors FunctionAppFlexConsumption#cors}
-        :param default_documents: Specifies a list of Default Documents for the Linux Web App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#default_documents FunctionAppFlexConsumption#default_documents}
-        :param elastic_instance_minimum: The number of minimum instances for this Linux Function App. Only affects apps on Elastic Premium plans. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#elastic_instance_minimum FunctionAppFlexConsumption#elastic_instance_minimum}
-        :param health_check_eviction_time_in_min: The amount of time in minutes that a node is unhealthy before being removed from the load balancer. Possible values are between ``2`` and ``10``. Only valid in conjunction with ``health_check_path`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#health_check_eviction_time_in_min FunctionAppFlexConsumption#health_check_eviction_time_in_min}
-        :param health_check_path: The path to be checked for this function app health. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#health_check_path FunctionAppFlexConsumption#health_check_path}
-        :param http2_enabled: Specifies if the http2 protocol should be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#http2_enabled FunctionAppFlexConsumption#http2_enabled}
-        :param ip_restriction: ip_restriction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#ip_restriction FunctionAppFlexConsumption#ip_restriction}
-        :param ip_restriction_default_action: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#ip_restriction_default_action FunctionAppFlexConsumption#ip_restriction_default_action}.
-        :param load_balancing_mode: The Site load balancing mode. Possible values include: ``WeightedRoundRobin``, ``LeastRequests``, ``LeastResponseTime``, ``WeightedTotalTraffic``, ``RequestHash``, ``PerSiteRoundRobin``. Defaults to ``LeastRequests`` if omitted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#load_balancing_mode FunctionAppFlexConsumption#load_balancing_mode}
-        :param managed_pipeline_mode: The Managed Pipeline mode. Possible values include: ``Integrated``, ``Classic``. Defaults to ``Integrated``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#managed_pipeline_mode FunctionAppFlexConsumption#managed_pipeline_mode}
-        :param minimum_tls_version: The configures the minimum version of TLS required for SSL requests. Possible values include: ``1.0``, ``1.1``, and ``1.2``. Defaults to ``1.2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#minimum_tls_version FunctionAppFlexConsumption#minimum_tls_version}
-        :param remote_debugging_enabled: Should Remote Debugging be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#remote_debugging_enabled FunctionAppFlexConsumption#remote_debugging_enabled}
-        :param remote_debugging_version: The Remote Debugging Version. Possible values include ``VS2017``, ``VS2019``, and `VS2022``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#remote_debugging_version FunctionAppFlexConsumption#remote_debugging_version}
-        :param runtime_scale_monitoring_enabled: Should Functions Runtime Scale Monitoring be enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_scale_monitoring_enabled FunctionAppFlexConsumption#runtime_scale_monitoring_enabled}
-        :param scm_ip_restriction: scm_ip_restriction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#scm_ip_restriction FunctionAppFlexConsumption#scm_ip_restriction}
-        :param scm_ip_restriction_default_action: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#scm_ip_restriction_default_action FunctionAppFlexConsumption#scm_ip_restriction_default_action}.
-        :param scm_minimum_tls_version: Configures the minimum version of TLS required for SSL requests to the SCM site Possible values include: ``1.0``, ``1.1``, and ``1.2``. Defaults to ``1.2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#scm_minimum_tls_version FunctionAppFlexConsumption#scm_minimum_tls_version}
-        :param scm_use_main_ip_restriction: Should the Linux Function App ``ip_restriction`` configuration be used for the SCM also. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#scm_use_main_ip_restriction FunctionAppFlexConsumption#scm_use_main_ip_restriction}
-        :param use32_bit_worker: Should the Linux Web App use a 32-bit worker. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#use_32_bit_worker FunctionAppFlexConsumption#use_32_bit_worker}
-        :param websockets_enabled: Should Web Sockets be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#websockets_enabled FunctionAppFlexConsumption#websockets_enabled}
-        :param worker_count: The number of Workers for this Linux Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#worker_count FunctionAppFlexConsumption#worker_count}
+        :param api_definition_url: The URL of the API definition that describes this Linux Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#api_definition_url FunctionAppFlexConsumption#api_definition_url}
+        :param api_management_api_id: The ID of the API Management API for this Linux Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#api_management_api_id FunctionAppFlexConsumption#api_management_api_id}
+        :param app_command_line: The program and any arguments used to launch this app via the command line. (Example ``node myapp.js``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_command_line FunctionAppFlexConsumption#app_command_line}
+        :param application_insights_connection_string: The Connection String for linking the Linux Function App to Application Insights. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#application_insights_connection_string FunctionAppFlexConsumption#application_insights_connection_string}
+        :param application_insights_key: The Instrumentation Key for connecting the Linux Function App to Application Insights. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#application_insights_key FunctionAppFlexConsumption#application_insights_key}
+        :param app_service_logs: app_service_logs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_service_logs FunctionAppFlexConsumption#app_service_logs}
+        :param container_registry_managed_identity_client_id: The Client ID of the Managed Service Identity to use for connections to the Azure Container Registry. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#container_registry_managed_identity_client_id FunctionAppFlexConsumption#container_registry_managed_identity_client_id}
+        :param container_registry_use_managed_identity: Should connections for Azure Container Registry use Managed Identity. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#container_registry_use_managed_identity FunctionAppFlexConsumption#container_registry_use_managed_identity}
+        :param cors: cors block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#cors FunctionAppFlexConsumption#cors}
+        :param default_documents: Specifies a list of Default Documents for the Linux Web App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#default_documents FunctionAppFlexConsumption#default_documents}
+        :param elastic_instance_minimum: The number of minimum instances for this Linux Function App. Only affects apps on Elastic Premium plans. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#elastic_instance_minimum FunctionAppFlexConsumption#elastic_instance_minimum}
+        :param health_check_eviction_time_in_min: The amount of time in minutes that a node is unhealthy before being removed from the load balancer. Possible values are between ``2`` and ``10``. Only valid in conjunction with ``health_check_path`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#health_check_eviction_time_in_min FunctionAppFlexConsumption#health_check_eviction_time_in_min}
+        :param health_check_path: The path to be checked for this function app health. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#health_check_path FunctionAppFlexConsumption#health_check_path}
+        :param http2_enabled: Specifies if the http2 protocol should be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#http2_enabled FunctionAppFlexConsumption#http2_enabled}
+        :param ip_restriction: ip_restriction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#ip_restriction FunctionAppFlexConsumption#ip_restriction}
+        :param ip_restriction_default_action: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#ip_restriction_default_action FunctionAppFlexConsumption#ip_restriction_default_action}.
+        :param load_balancing_mode: The Site load balancing mode. Possible values include: ``WeightedRoundRobin``, ``LeastRequests``, ``LeastResponseTime``, ``WeightedTotalTraffic``, ``RequestHash``, ``PerSiteRoundRobin``. Defaults to ``LeastRequests`` if omitted. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#load_balancing_mode FunctionAppFlexConsumption#load_balancing_mode}
+        :param managed_pipeline_mode: The Managed Pipeline mode. Possible values include: ``Integrated``, ``Classic``. Defaults to ``Integrated``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#managed_pipeline_mode FunctionAppFlexConsumption#managed_pipeline_mode}
+        :param minimum_tls_version: The configures the minimum version of TLS required for SSL requests. Possible values include: ``1.0``, ``1.1``, and ``1.2``. Defaults to ``1.2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#minimum_tls_version FunctionAppFlexConsumption#minimum_tls_version}
+        :param remote_debugging_enabled: Should Remote Debugging be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#remote_debugging_enabled FunctionAppFlexConsumption#remote_debugging_enabled}
+        :param remote_debugging_version: The Remote Debugging Version. Possible values include ``VS2017``, ``VS2019``, and `VS2022``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#remote_debugging_version FunctionAppFlexConsumption#remote_debugging_version}
+        :param runtime_scale_monitoring_enabled: Should Functions Runtime Scale Monitoring be enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_scale_monitoring_enabled FunctionAppFlexConsumption#runtime_scale_monitoring_enabled}
+        :param scm_ip_restriction: scm_ip_restriction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#scm_ip_restriction FunctionAppFlexConsumption#scm_ip_restriction}
+        :param scm_ip_restriction_default_action: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#scm_ip_restriction_default_action FunctionAppFlexConsumption#scm_ip_restriction_default_action}.
+        :param scm_minimum_tls_version: Configures the minimum version of TLS required for SSL requests to the SCM site Possible values include: ``1.0``, ``1.1``, and ``1.2``. Defaults to ``1.2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#scm_minimum_tls_version FunctionAppFlexConsumption#scm_minimum_tls_version}
+        :param scm_use_main_ip_restriction: Should the Linux Function App ``ip_restriction`` configuration be used for the SCM also. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#scm_use_main_ip_restriction FunctionAppFlexConsumption#scm_use_main_ip_restriction}
+        :param use32_bit_worker: Should the Linux Web App use a 32-bit worker. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#use_32_bit_worker FunctionAppFlexConsumption#use_32_bit_worker}
+        :param websockets_enabled: Should Web Sockets be enabled. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#websockets_enabled FunctionAppFlexConsumption#websockets_enabled}
+        :param worker_count: The number of Workers for this Linux Function App. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#worker_count FunctionAppFlexConsumption#worker_count}
         '''
         if isinstance(app_service_logs, dict):
             app_service_logs = FunctionAppFlexConsumptionSiteConfigAppServiceLogs(**app_service_logs)
@@ -7998,7 +7998,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     def api_definition_url(self) -> typing.Optional[builtins.str]:
         '''The URL of the API definition that describes this Linux Function App.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#api_definition_url FunctionAppFlexConsumption#api_definition_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#api_definition_url FunctionAppFlexConsumption#api_definition_url}
         '''
         result = self._values.get("api_definition_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8007,7 +8007,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     def api_management_api_id(self) -> typing.Optional[builtins.str]:
         '''The ID of the API Management API for this Linux Function App.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#api_management_api_id FunctionAppFlexConsumption#api_management_api_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#api_management_api_id FunctionAppFlexConsumption#api_management_api_id}
         '''
         result = self._values.get("api_management_api_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8016,7 +8016,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     def app_command_line(self) -> typing.Optional[builtins.str]:
         '''The program and any arguments used to launch this app via the command line. (Example ``node myapp.js``).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_command_line FunctionAppFlexConsumption#app_command_line}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_command_line FunctionAppFlexConsumption#app_command_line}
         '''
         result = self._values.get("app_command_line")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8025,7 +8025,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     def application_insights_connection_string(self) -> typing.Optional[builtins.str]:
         '''The Connection String for linking the Linux Function App to Application Insights.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#application_insights_connection_string FunctionAppFlexConsumption#application_insights_connection_string}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#application_insights_connection_string FunctionAppFlexConsumption#application_insights_connection_string}
         '''
         result = self._values.get("application_insights_connection_string")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8034,7 +8034,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     def application_insights_key(self) -> typing.Optional[builtins.str]:
         '''The Instrumentation Key for connecting the Linux Function App to Application Insights.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#application_insights_key FunctionAppFlexConsumption#application_insights_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#application_insights_key FunctionAppFlexConsumption#application_insights_key}
         '''
         result = self._values.get("application_insights_key")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8045,7 +8045,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     ) -> typing.Optional["FunctionAppFlexConsumptionSiteConfigAppServiceLogs"]:
         '''app_service_logs block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_service_logs FunctionAppFlexConsumption#app_service_logs}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_service_logs FunctionAppFlexConsumption#app_service_logs}
         '''
         result = self._values.get("app_service_logs")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionSiteConfigAppServiceLogs"], result)
@@ -8056,7 +8056,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     ) -> typing.Optional[builtins.str]:
         '''The Client ID of the Managed Service Identity to use for connections to the Azure Container Registry.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#container_registry_managed_identity_client_id FunctionAppFlexConsumption#container_registry_managed_identity_client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#container_registry_managed_identity_client_id FunctionAppFlexConsumption#container_registry_managed_identity_client_id}
         '''
         result = self._values.get("container_registry_managed_identity_client_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8067,7 +8067,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should connections for Azure Container Registry use Managed Identity.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#container_registry_use_managed_identity FunctionAppFlexConsumption#container_registry_use_managed_identity}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#container_registry_use_managed_identity FunctionAppFlexConsumption#container_registry_use_managed_identity}
         '''
         result = self._values.get("container_registry_use_managed_identity")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -8076,7 +8076,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     def cors(self) -> typing.Optional["FunctionAppFlexConsumptionSiteConfigCors"]:
         '''cors block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#cors FunctionAppFlexConsumption#cors}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#cors FunctionAppFlexConsumption#cors}
         '''
         result = self._values.get("cors")
         return typing.cast(typing.Optional["FunctionAppFlexConsumptionSiteConfigCors"], result)
@@ -8085,7 +8085,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     def default_documents(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a list of Default Documents for the Linux Web App.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#default_documents FunctionAppFlexConsumption#default_documents}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#default_documents FunctionAppFlexConsumption#default_documents}
         '''
         result = self._values.get("default_documents")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -8094,7 +8094,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     def elastic_instance_minimum(self) -> typing.Optional[jsii.Number]:
         '''The number of minimum instances for this Linux Function App. Only affects apps on Elastic Premium plans.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#elastic_instance_minimum FunctionAppFlexConsumption#elastic_instance_minimum}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#elastic_instance_minimum FunctionAppFlexConsumption#elastic_instance_minimum}
         '''
         result = self._values.get("elastic_instance_minimum")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -8105,7 +8105,7 @@ class FunctionAppFlexConsumptionSiteConfig:
 
         Possible values are between ``2`` and ``10``. Only valid in conjunction with ``health_check_path``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#health_check_eviction_time_in_min FunctionAppFlexConsumption#health_check_eviction_time_in_min}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#health_check_eviction_time_in_min FunctionAppFlexConsumption#health_check_eviction_time_in_min}
         '''
         result = self._values.get("health_check_eviction_time_in_min")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -8114,7 +8114,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     def health_check_path(self) -> typing.Optional[builtins.str]:
         '''The path to be checked for this function app health.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#health_check_path FunctionAppFlexConsumption#health_check_path}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#health_check_path FunctionAppFlexConsumption#health_check_path}
         '''
         result = self._values.get("health_check_path")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8125,7 +8125,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Specifies if the http2 protocol should be enabled. Defaults to ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#http2_enabled FunctionAppFlexConsumption#http2_enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#http2_enabled FunctionAppFlexConsumption#http2_enabled}
         '''
         result = self._values.get("http2_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -8136,14 +8136,14 @@ class FunctionAppFlexConsumptionSiteConfig:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionAppFlexConsumptionSiteConfigIpRestriction"]]]:
         '''ip_restriction block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#ip_restriction FunctionAppFlexConsumption#ip_restriction}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#ip_restriction FunctionAppFlexConsumption#ip_restriction}
         '''
         result = self._values.get("ip_restriction")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionAppFlexConsumptionSiteConfigIpRestriction"]]], result)
 
     @builtins.property
     def ip_restriction_default_action(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#ip_restriction_default_action FunctionAppFlexConsumption#ip_restriction_default_action}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#ip_restriction_default_action FunctionAppFlexConsumption#ip_restriction_default_action}.'''
         result = self._values.get("ip_restriction_default_action")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -8151,7 +8151,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     def load_balancing_mode(self) -> typing.Optional[builtins.str]:
         '''The Site load balancing mode. Possible values include: ``WeightedRoundRobin``, ``LeastRequests``, ``LeastResponseTime``, ``WeightedTotalTraffic``, ``RequestHash``, ``PerSiteRoundRobin``. Defaults to ``LeastRequests`` if omitted.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#load_balancing_mode FunctionAppFlexConsumption#load_balancing_mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#load_balancing_mode FunctionAppFlexConsumption#load_balancing_mode}
         '''
         result = self._values.get("load_balancing_mode")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8160,7 +8160,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     def managed_pipeline_mode(self) -> typing.Optional[builtins.str]:
         '''The Managed Pipeline mode. Possible values include: ``Integrated``, ``Classic``. Defaults to ``Integrated``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#managed_pipeline_mode FunctionAppFlexConsumption#managed_pipeline_mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#managed_pipeline_mode FunctionAppFlexConsumption#managed_pipeline_mode}
         '''
         result = self._values.get("managed_pipeline_mode")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8171,7 +8171,7 @@ class FunctionAppFlexConsumptionSiteConfig:
 
         Possible values include: ``1.0``, ``1.1``, and  ``1.2``. Defaults to ``1.2``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#minimum_tls_version FunctionAppFlexConsumption#minimum_tls_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#minimum_tls_version FunctionAppFlexConsumption#minimum_tls_version}
         '''
         result = self._values.get("minimum_tls_version")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8182,7 +8182,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should Remote Debugging be enabled. Defaults to ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#remote_debugging_enabled FunctionAppFlexConsumption#remote_debugging_enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#remote_debugging_enabled FunctionAppFlexConsumption#remote_debugging_enabled}
         '''
         result = self._values.get("remote_debugging_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -8191,7 +8191,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     def remote_debugging_version(self) -> typing.Optional[builtins.str]:
         '''The Remote Debugging Version. Possible values include ``VS2017``, ``VS2019``, and `VS2022``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#remote_debugging_version FunctionAppFlexConsumption#remote_debugging_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#remote_debugging_version FunctionAppFlexConsumption#remote_debugging_version}
         '''
         result = self._values.get("remote_debugging_version")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8202,7 +8202,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should Functions Runtime Scale Monitoring be enabled.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#runtime_scale_monitoring_enabled FunctionAppFlexConsumption#runtime_scale_monitoring_enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#runtime_scale_monitoring_enabled FunctionAppFlexConsumption#runtime_scale_monitoring_enabled}
         '''
         result = self._values.get("runtime_scale_monitoring_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -8213,14 +8213,14 @@ class FunctionAppFlexConsumptionSiteConfig:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionAppFlexConsumptionSiteConfigScmIpRestriction"]]]:
         '''scm_ip_restriction block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#scm_ip_restriction FunctionAppFlexConsumption#scm_ip_restriction}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#scm_ip_restriction FunctionAppFlexConsumption#scm_ip_restriction}
         '''
         result = self._values.get("scm_ip_restriction")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionAppFlexConsumptionSiteConfigScmIpRestriction"]]], result)
 
     @builtins.property
     def scm_ip_restriction_default_action(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#scm_ip_restriction_default_action FunctionAppFlexConsumption#scm_ip_restriction_default_action}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#scm_ip_restriction_default_action FunctionAppFlexConsumption#scm_ip_restriction_default_action}.'''
         result = self._values.get("scm_ip_restriction_default_action")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -8228,7 +8228,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     def scm_minimum_tls_version(self) -> typing.Optional[builtins.str]:
         '''Configures the minimum version of TLS required for SSL requests to the SCM site Possible values include: ``1.0``, ``1.1``, and  ``1.2``. Defaults to ``1.2``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#scm_minimum_tls_version FunctionAppFlexConsumption#scm_minimum_tls_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#scm_minimum_tls_version FunctionAppFlexConsumption#scm_minimum_tls_version}
         '''
         result = self._values.get("scm_minimum_tls_version")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8239,7 +8239,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should the Linux Function App ``ip_restriction`` configuration be used for the SCM also.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#scm_use_main_ip_restriction FunctionAppFlexConsumption#scm_use_main_ip_restriction}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#scm_use_main_ip_restriction FunctionAppFlexConsumption#scm_use_main_ip_restriction}
         '''
         result = self._values.get("scm_use_main_ip_restriction")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -8250,7 +8250,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should the Linux Web App use a 32-bit worker.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#use_32_bit_worker FunctionAppFlexConsumption#use_32_bit_worker}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#use_32_bit_worker FunctionAppFlexConsumption#use_32_bit_worker}
         '''
         result = self._values.get("use32_bit_worker")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -8261,7 +8261,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Should Web Sockets be enabled. Defaults to ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#websockets_enabled FunctionAppFlexConsumption#websockets_enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#websockets_enabled FunctionAppFlexConsumption#websockets_enabled}
         '''
         result = self._values.get("websockets_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -8270,7 +8270,7 @@ class FunctionAppFlexConsumptionSiteConfig:
     def worker_count(self) -> typing.Optional[jsii.Number]:
         '''The number of Workers for this Linux Function App.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#worker_count FunctionAppFlexConsumption#worker_count}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#worker_count FunctionAppFlexConsumption#worker_count}
         '''
         result = self._values.get("worker_count")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -8303,8 +8303,8 @@ class FunctionAppFlexConsumptionSiteConfigAppServiceLogs:
         retention_period_days: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param disk_quota_mb: The amount of disk space to use for logs. Valid values are between ``25`` and ``100``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#disk_quota_mb FunctionAppFlexConsumption#disk_quota_mb}
-        :param retention_period_days: The retention period for logs in days. Valid values are between ``0`` and ``99999``. Defaults to ``0`` (never delete). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#retention_period_days FunctionAppFlexConsumption#retention_period_days}
+        :param disk_quota_mb: The amount of disk space to use for logs. Valid values are between ``25`` and ``100``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#disk_quota_mb FunctionAppFlexConsumption#disk_quota_mb}
+        :param retention_period_days: The retention period for logs in days. Valid values are between ``0`` and ``99999``. Defaults to ``0`` (never delete). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#retention_period_days FunctionAppFlexConsumption#retention_period_days}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__e1b291dafcb6caacce4d4fc2a5dedd916fe8c31404ced4bbcdb106f9ba3851d3)
@@ -8320,7 +8320,7 @@ class FunctionAppFlexConsumptionSiteConfigAppServiceLogs:
     def disk_quota_mb(self) -> typing.Optional[jsii.Number]:
         '''The amount of disk space to use for logs. Valid values are between ``25`` and ``100``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#disk_quota_mb FunctionAppFlexConsumption#disk_quota_mb}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#disk_quota_mb FunctionAppFlexConsumption#disk_quota_mb}
         '''
         result = self._values.get("disk_quota_mb")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -8329,7 +8329,7 @@ class FunctionAppFlexConsumptionSiteConfigAppServiceLogs:
     def retention_period_days(self) -> typing.Optional[jsii.Number]:
         '''The retention period for logs in days. Valid values are between ``0`` and ``99999``. Defaults to ``0`` (never delete).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#retention_period_days FunctionAppFlexConsumption#retention_period_days}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#retention_period_days FunctionAppFlexConsumption#retention_period_days}
         '''
         result = self._values.get("retention_period_days")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -8442,8 +8442,8 @@ class FunctionAppFlexConsumptionSiteConfigCors:
         support_credentials: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param allowed_origins: Specifies a list of origins that should be allowed to make cross-origin calls. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_origins FunctionAppFlexConsumption#allowed_origins}
-        :param support_credentials: Are credentials allowed in CORS requests? Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#support_credentials FunctionAppFlexConsumption#support_credentials}
+        :param allowed_origins: Specifies a list of origins that should be allowed to make cross-origin calls. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_origins FunctionAppFlexConsumption#allowed_origins}
+        :param support_credentials: Are credentials allowed in CORS requests? Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#support_credentials FunctionAppFlexConsumption#support_credentials}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__67d65cbb36cc86f8eb47dc6da3bb4c1b34a873ab66937f39813a4df2cee69554)
@@ -8459,7 +8459,7 @@ class FunctionAppFlexConsumptionSiteConfigCors:
     def allowed_origins(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Specifies a list of origins that should be allowed to make cross-origin calls.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_origins FunctionAppFlexConsumption#allowed_origins}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_origins FunctionAppFlexConsumption#allowed_origins}
         '''
         result = self._values.get("allowed_origins")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -8470,7 +8470,7 @@ class FunctionAppFlexConsumptionSiteConfigCors:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Are credentials allowed in CORS requests? Defaults to ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#support_credentials FunctionAppFlexConsumption#support_credentials}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#support_credentials FunctionAppFlexConsumption#support_credentials}
         '''
         result = self._values.get("support_credentials")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -8602,14 +8602,14 @@ class FunctionAppFlexConsumptionSiteConfigIpRestriction:
         virtual_network_subnet_id: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param action: The action to take. Possible values are ``Allow`` or ``Deny``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#action FunctionAppFlexConsumption#action}
-        :param description: The description of the IP restriction rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#description FunctionAppFlexConsumption#description}
-        :param headers: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#headers FunctionAppFlexConsumption#headers}.
-        :param ip_address: The CIDR notation of the IP or IP Range to match. For example: ``10.0.0.0/24`` or ``192.168.10.1/32`` or ``fe80::/64`` or ``13.107.6.152/31,13.107.128.0/22`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#ip_address FunctionAppFlexConsumption#ip_address}
-        :param name: The name which should be used for this ``ip_restriction``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
-        :param priority: The priority value of this ``ip_restriction``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#priority FunctionAppFlexConsumption#priority}
-        :param service_tag: The Service Tag used for this IP Restriction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#service_tag FunctionAppFlexConsumption#service_tag}
-        :param virtual_network_subnet_id: The Virtual Network Subnet ID used for this IP Restriction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#virtual_network_subnet_id FunctionAppFlexConsumption#virtual_network_subnet_id}
+        :param action: The action to take. Possible values are ``Allow`` or ``Deny``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#action FunctionAppFlexConsumption#action}
+        :param description: The description of the IP restriction rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#description FunctionAppFlexConsumption#description}
+        :param headers: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#headers FunctionAppFlexConsumption#headers}.
+        :param ip_address: The CIDR notation of the IP or IP Range to match. For example: ``10.0.0.0/24`` or ``192.168.10.1/32`` or ``fe80::/64`` or ``13.107.6.152/31,13.107.128.0/22`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#ip_address FunctionAppFlexConsumption#ip_address}
+        :param name: The name which should be used for this ``ip_restriction``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
+        :param priority: The priority value of this ``ip_restriction``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#priority FunctionAppFlexConsumption#priority}
+        :param service_tag: The Service Tag used for this IP Restriction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#service_tag FunctionAppFlexConsumption#service_tag}
+        :param virtual_network_subnet_id: The Virtual Network Subnet ID used for this IP Restriction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#virtual_network_subnet_id FunctionAppFlexConsumption#virtual_network_subnet_id}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__28c4176aef5f3ee89da611fe480ed39d783467f20aff0e4348a7fd56cda75cec)
@@ -8643,7 +8643,7 @@ class FunctionAppFlexConsumptionSiteConfigIpRestriction:
     def action(self) -> typing.Optional[builtins.str]:
         '''The action to take. Possible values are ``Allow`` or ``Deny``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#action FunctionAppFlexConsumption#action}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#action FunctionAppFlexConsumption#action}
         '''
         result = self._values.get("action")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8652,7 +8652,7 @@ class FunctionAppFlexConsumptionSiteConfigIpRestriction:
     def description(self) -> typing.Optional[builtins.str]:
         '''The description of the IP restriction rule.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#description FunctionAppFlexConsumption#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#description FunctionAppFlexConsumption#description}
         '''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8661,7 +8661,7 @@ class FunctionAppFlexConsumptionSiteConfigIpRestriction:
     def headers(
         self,
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionAppFlexConsumptionSiteConfigIpRestrictionHeaders"]]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#headers FunctionAppFlexConsumption#headers}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#headers FunctionAppFlexConsumption#headers}.'''
         result = self._values.get("headers")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionAppFlexConsumptionSiteConfigIpRestrictionHeaders"]]], result)
 
@@ -8671,7 +8671,7 @@ class FunctionAppFlexConsumptionSiteConfigIpRestriction:
 
         For example: ``10.0.0.0/24`` or ``192.168.10.1/32`` or ``fe80::/64`` or ``13.107.6.152/31,13.107.128.0/22``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#ip_address FunctionAppFlexConsumption#ip_address}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#ip_address FunctionAppFlexConsumption#ip_address}
         '''
         result = self._values.get("ip_address")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8680,7 +8680,7 @@ class FunctionAppFlexConsumptionSiteConfigIpRestriction:
     def name(self) -> typing.Optional[builtins.str]:
         '''The name which should be used for this ``ip_restriction``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
         '''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8689,7 +8689,7 @@ class FunctionAppFlexConsumptionSiteConfigIpRestriction:
     def priority(self) -> typing.Optional[jsii.Number]:
         '''The priority value of this ``ip_restriction``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#priority FunctionAppFlexConsumption#priority}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#priority FunctionAppFlexConsumption#priority}
         '''
         result = self._values.get("priority")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -8698,7 +8698,7 @@ class FunctionAppFlexConsumptionSiteConfigIpRestriction:
     def service_tag(self) -> typing.Optional[builtins.str]:
         '''The Service Tag used for this IP Restriction.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#service_tag FunctionAppFlexConsumption#service_tag}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#service_tag FunctionAppFlexConsumption#service_tag}
         '''
         result = self._values.get("service_tag")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8707,7 +8707,7 @@ class FunctionAppFlexConsumptionSiteConfigIpRestriction:
     def virtual_network_subnet_id(self) -> typing.Optional[builtins.str]:
         '''The Virtual Network Subnet ID used for this IP Restriction.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#virtual_network_subnet_id FunctionAppFlexConsumption#virtual_network_subnet_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#virtual_network_subnet_id FunctionAppFlexConsumption#virtual_network_subnet_id}
         '''
         result = self._values.get("virtual_network_subnet_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -8744,10 +8744,10 @@ class FunctionAppFlexConsumptionSiteConfigIpRestrictionHeaders:
         x_forwarded_host: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param x_azure_fdid: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_azure_fdid FunctionAppFlexConsumption#x_azure_fdid}.
-        :param x_fd_health_probe: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_fd_health_probe FunctionAppFlexConsumption#x_fd_health_probe}.
-        :param x_forwarded_for: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_forwarded_for FunctionAppFlexConsumption#x_forwarded_for}.
-        :param x_forwarded_host: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_forwarded_host FunctionAppFlexConsumption#x_forwarded_host}.
+        :param x_azure_fdid: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_azure_fdid FunctionAppFlexConsumption#x_azure_fdid}.
+        :param x_fd_health_probe: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_fd_health_probe FunctionAppFlexConsumption#x_fd_health_probe}.
+        :param x_forwarded_for: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_forwarded_for FunctionAppFlexConsumption#x_forwarded_for}.
+        :param x_forwarded_host: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_forwarded_host FunctionAppFlexConsumption#x_forwarded_host}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__8ea77a56a27dbc98c1072047570fc30bebd2c15dc1a112abcdf93e05a6bcbcb9)
@@ -8767,25 +8767,25 @@ class FunctionAppFlexConsumptionSiteConfigIpRestrictionHeaders:
 
     @builtins.property
     def x_azure_fdid(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_azure_fdid FunctionAppFlexConsumption#x_azure_fdid}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_azure_fdid FunctionAppFlexConsumption#x_azure_fdid}.'''
         result = self._values.get("x_azure_fdid")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def x_fd_health_probe(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_fd_health_probe FunctionAppFlexConsumption#x_fd_health_probe}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_fd_health_probe FunctionAppFlexConsumption#x_fd_health_probe}.'''
         result = self._values.get("x_fd_health_probe")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def x_forwarded_for(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_forwarded_for FunctionAppFlexConsumption#x_forwarded_for}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_forwarded_for FunctionAppFlexConsumption#x_forwarded_for}.'''
         result = self._values.get("x_forwarded_for")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def x_forwarded_host(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_forwarded_host FunctionAppFlexConsumption#x_forwarded_host}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_forwarded_host FunctionAppFlexConsumption#x_forwarded_host}.'''
         result = self._values.get("x_forwarded_host")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
@@ -9363,8 +9363,8 @@ class FunctionAppFlexConsumptionSiteConfigOutputReference(
         retention_period_days: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param disk_quota_mb: The amount of disk space to use for logs. Valid values are between ``25`` and ``100``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#disk_quota_mb FunctionAppFlexConsumption#disk_quota_mb}
-        :param retention_period_days: The retention period for logs in days. Valid values are between ``0`` and ``99999``. Defaults to ``0`` (never delete). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#retention_period_days FunctionAppFlexConsumption#retention_period_days}
+        :param disk_quota_mb: The amount of disk space to use for logs. Valid values are between ``25`` and ``100``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#disk_quota_mb FunctionAppFlexConsumption#disk_quota_mb}
+        :param retention_period_days: The retention period for logs in days. Valid values are between ``0`` and ``99999``. Defaults to ``0`` (never delete). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#retention_period_days FunctionAppFlexConsumption#retention_period_days}
         '''
         value = FunctionAppFlexConsumptionSiteConfigAppServiceLogs(
             disk_quota_mb=disk_quota_mb, retention_period_days=retention_period_days
@@ -9380,8 +9380,8 @@ class FunctionAppFlexConsumptionSiteConfigOutputReference(
         support_credentials: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param allowed_origins: Specifies a list of origins that should be allowed to make cross-origin calls. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#allowed_origins FunctionAppFlexConsumption#allowed_origins}
-        :param support_credentials: Are credentials allowed in CORS requests? Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#support_credentials FunctionAppFlexConsumption#support_credentials}
+        :param allowed_origins: Specifies a list of origins that should be allowed to make cross-origin calls. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#allowed_origins FunctionAppFlexConsumption#allowed_origins}
+        :param support_credentials: Are credentials allowed in CORS requests? Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#support_credentials FunctionAppFlexConsumption#support_credentials}
         '''
         value = FunctionAppFlexConsumptionSiteConfigCors(
             allowed_origins=allowed_origins, support_credentials=support_credentials
@@ -10114,14 +10114,14 @@ class FunctionAppFlexConsumptionSiteConfigScmIpRestriction:
         virtual_network_subnet_id: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param action: The action to take. Possible values are ``Allow`` or ``Deny``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#action FunctionAppFlexConsumption#action}
-        :param description: The description of the IP restriction rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#description FunctionAppFlexConsumption#description}
-        :param headers: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#headers FunctionAppFlexConsumption#headers}.
-        :param ip_address: The CIDR notation of the IP or IP Range to match. For example: ``10.0.0.0/24`` or ``192.168.10.1/32`` or ``fe80::/64`` or ``13.107.6.152/31,13.107.128.0/22`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#ip_address FunctionAppFlexConsumption#ip_address}
-        :param name: The name which should be used for this ``ip_restriction``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
-        :param priority: The priority value of this ``ip_restriction``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#priority FunctionAppFlexConsumption#priority}
-        :param service_tag: The Service Tag used for this IP Restriction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#service_tag FunctionAppFlexConsumption#service_tag}
-        :param virtual_network_subnet_id: The Virtual Network Subnet ID used for this IP Restriction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#virtual_network_subnet_id FunctionAppFlexConsumption#virtual_network_subnet_id}
+        :param action: The action to take. Possible values are ``Allow`` or ``Deny``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#action FunctionAppFlexConsumption#action}
+        :param description: The description of the IP restriction rule. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#description FunctionAppFlexConsumption#description}
+        :param headers: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#headers FunctionAppFlexConsumption#headers}.
+        :param ip_address: The CIDR notation of the IP or IP Range to match. For example: ``10.0.0.0/24`` or ``192.168.10.1/32`` or ``fe80::/64`` or ``13.107.6.152/31,13.107.128.0/22`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#ip_address FunctionAppFlexConsumption#ip_address}
+        :param name: The name which should be used for this ``ip_restriction``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
+        :param priority: The priority value of this ``ip_restriction``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#priority FunctionAppFlexConsumption#priority}
+        :param service_tag: The Service Tag used for this IP Restriction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#service_tag FunctionAppFlexConsumption#service_tag}
+        :param virtual_network_subnet_id: The Virtual Network Subnet ID used for this IP Restriction. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#virtual_network_subnet_id FunctionAppFlexConsumption#virtual_network_subnet_id}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__06b8b644e276a07b2ecd045a37dbf9f06917b90825604a458780ad2028108912)
@@ -10155,7 +10155,7 @@ class FunctionAppFlexConsumptionSiteConfigScmIpRestriction:
     def action(self) -> typing.Optional[builtins.str]:
         '''The action to take. Possible values are ``Allow`` or ``Deny``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#action FunctionAppFlexConsumption#action}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#action FunctionAppFlexConsumption#action}
         '''
         result = self._values.get("action")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10164,7 +10164,7 @@ class FunctionAppFlexConsumptionSiteConfigScmIpRestriction:
     def description(self) -> typing.Optional[builtins.str]:
         '''The description of the IP restriction rule.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#description FunctionAppFlexConsumption#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#description FunctionAppFlexConsumption#description}
         '''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10173,7 +10173,7 @@ class FunctionAppFlexConsumptionSiteConfigScmIpRestriction:
     def headers(
         self,
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionAppFlexConsumptionSiteConfigScmIpRestrictionHeaders"]]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#headers FunctionAppFlexConsumption#headers}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#headers FunctionAppFlexConsumption#headers}.'''
         result = self._values.get("headers")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FunctionAppFlexConsumptionSiteConfigScmIpRestrictionHeaders"]]], result)
 
@@ -10183,7 +10183,7 @@ class FunctionAppFlexConsumptionSiteConfigScmIpRestriction:
 
         For example: ``10.0.0.0/24`` or ``192.168.10.1/32`` or ``fe80::/64`` or ``13.107.6.152/31,13.107.128.0/22``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#ip_address FunctionAppFlexConsumption#ip_address}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#ip_address FunctionAppFlexConsumption#ip_address}
         '''
         result = self._values.get("ip_address")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10192,7 +10192,7 @@ class FunctionAppFlexConsumptionSiteConfigScmIpRestriction:
     def name(self) -> typing.Optional[builtins.str]:
         '''The name which should be used for this ``ip_restriction``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#name FunctionAppFlexConsumption#name}
         '''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10201,7 +10201,7 @@ class FunctionAppFlexConsumptionSiteConfigScmIpRestriction:
     def priority(self) -> typing.Optional[jsii.Number]:
         '''The priority value of this ``ip_restriction``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#priority FunctionAppFlexConsumption#priority}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#priority FunctionAppFlexConsumption#priority}
         '''
         result = self._values.get("priority")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -10210,7 +10210,7 @@ class FunctionAppFlexConsumptionSiteConfigScmIpRestriction:
     def service_tag(self) -> typing.Optional[builtins.str]:
         '''The Service Tag used for this IP Restriction.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#service_tag FunctionAppFlexConsumption#service_tag}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#service_tag FunctionAppFlexConsumption#service_tag}
         '''
         result = self._values.get("service_tag")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10219,7 +10219,7 @@ class FunctionAppFlexConsumptionSiteConfigScmIpRestriction:
     def virtual_network_subnet_id(self) -> typing.Optional[builtins.str]:
         '''The Virtual Network Subnet ID used for this IP Restriction.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#virtual_network_subnet_id FunctionAppFlexConsumption#virtual_network_subnet_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#virtual_network_subnet_id FunctionAppFlexConsumption#virtual_network_subnet_id}
         '''
         result = self._values.get("virtual_network_subnet_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -10256,10 +10256,10 @@ class FunctionAppFlexConsumptionSiteConfigScmIpRestrictionHeaders:
         x_forwarded_host: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param x_azure_fdid: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_azure_fdid FunctionAppFlexConsumption#x_azure_fdid}.
-        :param x_fd_health_probe: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_fd_health_probe FunctionAppFlexConsumption#x_fd_health_probe}.
-        :param x_forwarded_for: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_forwarded_for FunctionAppFlexConsumption#x_forwarded_for}.
-        :param x_forwarded_host: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_forwarded_host FunctionAppFlexConsumption#x_forwarded_host}.
+        :param x_azure_fdid: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_azure_fdid FunctionAppFlexConsumption#x_azure_fdid}.
+        :param x_fd_health_probe: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_fd_health_probe FunctionAppFlexConsumption#x_fd_health_probe}.
+        :param x_forwarded_for: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_forwarded_for FunctionAppFlexConsumption#x_forwarded_for}.
+        :param x_forwarded_host: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_forwarded_host FunctionAppFlexConsumption#x_forwarded_host}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__3458f39701815ec143c3630e0149960fc4e9e8b9fcb8be1737519fbc865dc4f1)
@@ -10279,25 +10279,25 @@ class FunctionAppFlexConsumptionSiteConfigScmIpRestrictionHeaders:
 
     @builtins.property
     def x_azure_fdid(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_azure_fdid FunctionAppFlexConsumption#x_azure_fdid}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_azure_fdid FunctionAppFlexConsumption#x_azure_fdid}.'''
         result = self._values.get("x_azure_fdid")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def x_fd_health_probe(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_fd_health_probe FunctionAppFlexConsumption#x_fd_health_probe}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_fd_health_probe FunctionAppFlexConsumption#x_fd_health_probe}.'''
         result = self._values.get("x_fd_health_probe")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def x_forwarded_for(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_forwarded_for FunctionAppFlexConsumption#x_forwarded_for}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_forwarded_for FunctionAppFlexConsumption#x_forwarded_for}.'''
         result = self._values.get("x_forwarded_for")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def x_forwarded_host(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#x_forwarded_host FunctionAppFlexConsumption#x_forwarded_host}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#x_forwarded_host FunctionAppFlexConsumption#x_forwarded_host}.'''
         result = self._values.get("x_forwarded_host")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
@@ -11016,8 +11016,8 @@ class FunctionAppFlexConsumptionStickySettings:
         connection_string_names: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param app_setting_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_setting_names FunctionAppFlexConsumption#app_setting_names}.
-        :param connection_string_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#connection_string_names FunctionAppFlexConsumption#connection_string_names}.
+        :param app_setting_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_setting_names FunctionAppFlexConsumption#app_setting_names}.
+        :param connection_string_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#connection_string_names FunctionAppFlexConsumption#connection_string_names}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__79317e5333bcc7f18255fa5eee6b64fa5f94e7fedb9366c365d37cc0040e577e)
@@ -11031,13 +11031,13 @@ class FunctionAppFlexConsumptionStickySettings:
 
     @builtins.property
     def app_setting_names(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#app_setting_names FunctionAppFlexConsumption#app_setting_names}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#app_setting_names FunctionAppFlexConsumption#app_setting_names}.'''
         result = self._values.get("app_setting_names")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def connection_string_names(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#connection_string_names FunctionAppFlexConsumption#connection_string_names}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#connection_string_names FunctionAppFlexConsumption#connection_string_names}.'''
         result = self._values.get("connection_string_names")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
@@ -11155,10 +11155,10 @@ class FunctionAppFlexConsumptionTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#create FunctionAppFlexConsumption#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#delete FunctionAppFlexConsumption#delete}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#read FunctionAppFlexConsumption#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#update FunctionAppFlexConsumption#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#create FunctionAppFlexConsumption#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#delete FunctionAppFlexConsumption#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#read FunctionAppFlexConsumption#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#update FunctionAppFlexConsumption#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__bfd8edd64cb7b77d5bc7a9c73c1f28f97d8198c92e6dbee354c9b407f192bb03)
@@ -11178,25 +11178,25 @@ class FunctionAppFlexConsumptionTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#create FunctionAppFlexConsumption#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#create FunctionAppFlexConsumption#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#delete FunctionAppFlexConsumption#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#delete FunctionAppFlexConsumption#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#read FunctionAppFlexConsumption#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#read FunctionAppFlexConsumption#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/function_app_flex_consumption#update FunctionAppFlexConsumption#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/function_app_flex_consumption#update FunctionAppFlexConsumption#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 

@@ -1,6 +1,7 @@
 from worker_automate_hub.tasks.jobs.abertura_livros_fiscais import (
     abertura_livros_fiscais,
 )
+from worker_automate_hub.tasks.jobs.cte_xml import importar_cte_xml
 from worker_automate_hub.tasks.jobs.fidc_exportacao_docs_portal_b2b import (
     exportacao_docs_portal_b2b,
 )
@@ -81,6 +82,7 @@ from worker_automate_hub.tasks.jobs.devolucao_prazo_a_faturar import (
 )
 from worker_automate_hub.tasks.jobs.devolucao_ctf import devolucao_ctf
 from worker_automate_hub.tasks.jobs.integracao_contabil import integracao_contabil
+from worker_automate_hub.tasks.jobs.lancamento_pis_cofins import lancamento_pis_cofins
 
 task_definitions = {
     "5b295021-8df7-40a1-a45e-fe7109ae3902": exemplo_processo,
@@ -172,6 +174,8 @@ task_definitions = {
     "c8527e90-c65b-4d68-b4cf-25008b678957": geracao_aprovacao_pedidos_34,
     "260380b7-a3e5-4c23-ab69-b428ee552830": geracao_aprovacao_pedidos_171,
     "c10bbf8c-3949-4a0e-9e10-3d85d367263d": abertura_livros_fiscais,
+    "68d6a695-73f0-424c-afb6-54b5dba3ab9d": lancamento_pis_cofins,
+    "def194c2-ffa0-4b9e-b95c-920fb4ad4150": importar_cte_xml
 }
 
 

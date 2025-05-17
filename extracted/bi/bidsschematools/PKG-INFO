@@ -1,29 +1,32 @@
-Metadata-Version: 2.4
+Metadata-Version: 2.1
 Name: bidsschematools
-Version: 1.0.5
+Version: 1.0.8
 Summary: Python tools for working with the BIDS schema.
-Home-page: https://github.com/bids-standard/bids-specification
 Author: bids-standard developers
-Author-email: bids.maintenance@gmail.com
+Maintainer-Email: bids-standard developers <bids.maintenance@gmail.com>
 License: MIT
 Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Science/Research
 Classifier: Topic :: Scientific/Engineering :: Information Analysis
 Classifier: License :: OSI Approved :: MIT License
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
-Requires-Python: >=3.8
-Description-Content-Type: text/markdown; charset=UTF-8; variant=GFM
-License-File: LICENSE
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Project-URL: Homepage, https://github.com/bids-standard/bids-specification
+Requires-Python: >=3.9
+Requires-Dist: acres
 Requires-Dist: click
 Requires-Dist: pyyaml
-Requires-Dist: importlib_resources; python_version < "3.9"
-Requires-Dist: jsonschema
+Provides-Extra: validation
+Requires-Dist: jsonschema; extra == "validation"
 Provides-Extra: doc
 Requires-Dist: sphinx>=1.5.3; extra == "doc"
 Requires-Dist: sphinx_rtd_theme; extra == "doc"
+Provides-Extra: dev
+Requires-Dist: bidsschematools[tests]; extra == "dev"
+Requires-Dist: ruff; extra == "dev"
 Provides-Extra: render
 Requires-Dist: tabulate; extra == "render"
 Requires-Dist: pandas; extra == "render"
@@ -31,28 +34,14 @@ Requires-Dist: markdown-it-py; extra == "render"
 Provides-Extra: expressions
 Requires-Dist: pyparsing; extra == "expressions"
 Provides-Extra: tests
+Requires-Dist: bidsschematools[expressions,render,validation]; extra == "tests"
 Requires-Dist: codecov; extra == "tests"
 Requires-Dist: coverage[toml]; extra == "tests"
-Requires-Dist: flake8; extra == "tests"
-Requires-Dist: flake8-black; extra == "tests"
-Requires-Dist: flake8-isort; extra == "tests"
 Requires-Dist: pytest; extra == "tests"
 Requires-Dist: pytest-cov; extra == "tests"
 Provides-Extra: all
-Requires-Dist: sphinx>=1.5.3; extra == "all"
-Requires-Dist: sphinx_rtd_theme; extra == "all"
-Requires-Dist: tabulate; extra == "all"
-Requires-Dist: pandas; extra == "all"
-Requires-Dist: markdown-it-py; extra == "all"
-Requires-Dist: codecov; extra == "all"
-Requires-Dist: coverage[toml]; extra == "all"
-Requires-Dist: flake8; extra == "all"
-Requires-Dist: flake8-black; extra == "all"
-Requires-Dist: flake8-isort; extra == "all"
-Requires-Dist: pytest; extra == "all"
-Requires-Dist: pytest-cov; extra == "all"
-Requires-Dist: pyparsing; extra == "all"
-Dynamic: license-file
+Requires-Dist: bidsschematools[doc,tests]; extra == "all"
+Description-Content-Type: text/markdown
 
 # BIDS Schema Tools
 

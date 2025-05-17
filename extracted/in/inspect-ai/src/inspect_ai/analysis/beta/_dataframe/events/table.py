@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Callable, Literal, TypeAlias
+from typing import TYPE_CHECKING, Callable, Literal, Sequence, TypeAlias
 
 from inspect_ai.analysis.beta._dataframe.events.columns import EventInfo
 from inspect_ai.log._file import list_eval_logs
@@ -11,61 +11,44 @@ if TYPE_CHECKING:
 
 from typing_extensions import overload
 
-from ..columns import Column, ColumnErrors
+from ..columns import Column, ColumnError
 from ..samples.table import EventsDetail, _read_samples_df
 from ..util import LogPaths, verify_prerequisites
 
-EventFilter: TypeAlias = (
-    list[
-        Literal[
-            "sample_init",
-            "sample_limit",
-            "sandbox",
-            "state",
-            "store",
-            "model",
-            "tool",
-            "sandbox",
-            "approval",
-            "input",
-            "score",
-            "error",
-            "logger",
-            "info",
-            "span_begin",
-            "span_end",
-            "subtask",
-        ]
-    ]
-    | Callable[[Event], bool]
-)
+EventFilter: TypeAlias = Callable[[Event], bool]
 """Filter for `events_df()` rows."""
 
 
 @overload
 def events_df(
     logs: LogPaths = list_eval_logs(),
-    columns: list[Column] = EventInfo,
+    columns: Sequence[Column] = EventInfo,
     filter: EventFilter | None = None,
     strict: Literal[True] = True,
+    parallel: bool | int = False,
+    quiet: bool = False,
 ) -> "pd.DataFrame": ...
 
 
 @overload
 def events_df(
     logs: LogPaths = list_eval_logs(),
-    columns: list[Column] = EventInfo,
+    columns: Sequence[Column] = EventInfo,
     filter: EventFilter | None = None,
     strict: Literal[False] = False,
-) -> tuple["pd.DataFrame", ColumnErrors]: ...
+    parallel: bool | int = False,
+    quiet: bool = False,
+) -> tuple["pd.DataFrame", list[ColumnError]]: ...
 
 
 def events_df(
     logs: LogPaths = list_eval_logs(),
-    columns: list[Column] = EventInfo,
+    columns: Sequence[Column] = EventInfo,
     filter: EventFilter | None = None,
     strict: bool = True,
-) -> "pd.DataFrame" | tuple["pd.DataFrame", ColumnErrors]:
+    parallel: bool | int = False,
+    quiet: bool = False,
+) -> "pd.DataFrame" | tuple["pd.DataFrame", list[ColumnError]]:
     """Read a dataframe containing events from a set of evals.
 
     Args:
@@ -73,9 +56,14 @@ def events_df(
           Defaults to the contents of the currently active log directory
           (e.g. ./logs or INSPECT_LOG_DIR).
        columns: Specification for what columns to read from log files.
-       filter: List of event types to include or callable that performs the filter.
+       filter: Callable that filters event types.
        strict: Raise import errors immediately. Defaults to `True`.
           If `False` then a tuple of `DataFrame` and errors is returned.
+       parallel: If `True`, use `ProcessPoolExecutor` to read logs in parallel
+          (with workers based on `mp.cpu_count()`, capped at 8). If `int`, read
+          in parallel with the specified number of workers. If `False` (the default)
+          do not read in parallel.
+       quiet: If `True` do not print any output or progress (defaults to `False`).
 
     Returns:
        For `strict`, a Pandas `DataFrame` with information for the specified logs.
@@ -85,16 +73,16 @@ def events_df(
     verify_prerequisites()
 
     # resolve filter/detail
-    if filter is None:
-        detail = EventsDetail(filter=lambda e: True)
-    elif callable(filter):
+    if callable(filter):
         detail = EventsDetail(filter=filter)
     else:
-        detail = EventsDetail(filter=lambda e: e.event in filter)
+        detail = EventsDetail()
 
     return _read_samples_df(
         logs=logs,
         columns=columns,
         strict=strict,
         detail=detail,
+        progress=not quiet,
+        parallel=parallel,
     )

@@ -6,6 +6,7 @@ from .._impl import (
     scout_internal_search_api_Operator as Operator,
     scout_internal_search_api_SearchQuery as SearchQuery,
     scout_internal_search_api_SearchQueryVisitor as SearchQueryVisitor,
+    scout_internal_search_api_StringArrayField as StringArrayField,
     scout_internal_search_api_StringField as StringField,
     scout_internal_search_api_TimestampField as TimestampField,
 )

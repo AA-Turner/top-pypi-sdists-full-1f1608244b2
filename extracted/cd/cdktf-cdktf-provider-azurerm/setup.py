@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-azurerm",
-    "version": "13.27.0",
+    "version": "13.28.0",
     "description": "Prebuilt azurerm Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-azurerm.git",
@@ -1413,6 +1413,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_azurerm.system_center_virtual_machine_manager_cloud",
         "cdktf_cdktf_provider_azurerm.system_center_virtual_machine_manager_server",
         "cdktf_cdktf_provider_azurerm.system_center_virtual_machine_manager_virtual_machine_instance",
+        "cdktf_cdktf_provider_azurerm.system_center_virtual_machine_manager_virtual_machine_instance_guest_agent",
         "cdktf_cdktf_provider_azurerm.system_center_virtual_machine_manager_virtual_machine_template",
         "cdktf_cdktf_provider_azurerm.system_center_virtual_machine_manager_virtual_network",
         "cdktf_cdktf_provider_azurerm.tenant_template_deployment",
@@ -1494,7 +1495,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_azurerm._jsii": [
-            "provider-azurerm@13.27.0.jsii.tgz"
+            "provider-azurerm@13.28.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_azurerm": [
             "py.typed"

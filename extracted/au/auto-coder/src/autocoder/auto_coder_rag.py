@@ -6,6 +6,8 @@ from typing import Optional, List
 import byzerllm
 from autocoder.rag.api_server import serve, ServerArgs
 from autocoder.rag.rag_entry import RAGFactory
+from autocoder.rag.agentic_rag import AgenticRAG
+from autocoder.rag.long_context_rag import LongContextRAG
 from autocoder.rag.llm_wrapper import LLWrapper
 from autocoder.common import AutoCoderArgs
 from autocoder.lang import lang_desc
@@ -301,6 +303,7 @@ def main(input_args: Optional[List[str]] = None):
         help="Document directory path, also used as the root directory for serving static files"
     )
     serve_parser.add_argument("--enable_local_image_host", action="store_true", help=" enable local image host for local Chat app")
+    serve_parser.add_argument("--agentic", action="store_true", help="使用 AgenticRAG 而不是 LongContextRAG")
     serve_parser.add_argument("--tokenizer_path", default=tokenizer_path, help="")
     serve_parser.add_argument(
         "--collections", default="", help="Collection name for indexing"
@@ -430,6 +433,18 @@ def main(input_args: Optional[List[str]] = None):
         "--emb_model",
         default="",
         help="The model used for embedding documents",
+    )
+
+    serve_parser.add_argument(
+        "--agentic_model",
+        default="",
+        help="The model used for agentic operations",
+    )
+
+    serve_parser.add_argument(
+        "--context_prune_model",
+        default="",
+        help="The model used for context pruning",
     )
 
     # Benchmark command
@@ -622,6 +637,18 @@ def main(input_args: Optional[List[str]] = None):
                 emb_model.skip_nontext_check = True
                 llm.setup_sub_client("emb_model", emb_model)
 
+            if args.agentic_model:
+                agentic_model = byzerllm.ByzerLLM()
+                agentic_model.setup_default_model_name(args.agentic_model)
+                agentic_model.skip_nontext_check = True
+                llm.setup_sub_client("agentic_model", agentic_model)
+
+            if args.context_prune_model:
+                context_prune_model = byzerllm.ByzerLLM()
+                context_prune_model.setup_default_model_name(args.context_prune_model)
+                context_prune_model.skip_nontext_check = True
+                llm.setup_sub_client("context_prune_model", context_prune_model)
+
             # 当启用hybrid_index时,检查必要的组件
             if auto_coder_args.enable_hybrid_index:
                 if not args.emb_model and not llm.is_model_exist("emb"):
@@ -698,7 +725,7 @@ def main(input_args: Optional[List[str]] = None):
                         "saas.max_output_tokens": model_info.get("max_output_tokens", 8096)
                     }
                 )
-                llm.setup_sub_client("qa_model", qa_model)
+                llm.setup_sub_client("qa_model", qa_model)                
 
             if args.emb_model:
                 model_info = models_module.get_model_by_name(args.emb_model)
@@ -717,22 +744,52 @@ def main(input_args: Optional[List[str]] = None):
                 )
                 llm.setup_sub_client("emb_model", emb_model)
 
+            if args.agentic_model:
+                model_info = models_module.get_model_by_name(args.agentic_model)
+                agentic_model = byzerllm.SimpleByzerLLM(default_model_name=args.agentic_model)
+                agentic_model.deploy(
+                    model_path="",
+                    pretrained_model_type=model_info["model_type"],
+                    udf_name=args.agentic_model,
+                    infer_params={
+                        "saas.base_url": model_info["base_url"],
+                        "saas.api_key": model_info["api_key"],
+                        "saas.model": model_info["model_name"],
+                        "saas.is_reasoning": model_info["is_reasoning"],
+                        "saas.max_output_tokens": model_info.get("max_output_tokens", 8096)
+                    }
+                )
+                llm.setup_sub_client("agentic_model", agentic_model)
+
+            if args.context_prune_model:
+                model_info = models_module.get_model_by_name(args.context_prune_model)
+                context_prune_model = byzerllm.SimpleByzerLLM(default_model_name=args.context_prune_model)
+                context_prune_model.deploy(
+                    model_path="",
+                    pretrained_model_type=model_info["model_type"],
+                    udf_name=args.context_prune_model,
+                    infer_params={
+                        "saas.base_url": model_info["base_url"],
+                        "saas.api_key": model_info["api_key"],
+                        "saas.model": model_info["model_name"],
+                        "saas.is_reasoning": model_info["is_reasoning"],
+                        "saas.max_output_tokens": model_info.get("max_output_tokens", 8096)
+                    }
+                )
+                llm.setup_sub_client("context_prune_model", context_prune_model)
+
             if args.enable_hybrid_index:
                 if not args.emb_model:
                     raise Exception("When enable_hybrid_index is true, an 'emb' model must be specified")                
 
-        if server_args.doc_dir:
-            auto_coder_args.rag_type = "simple"
+        if server_args.doc_dir:            
             auto_coder_args.rag_build_name = generate_unique_name_from_path(server_args.doc_dir)
-            rag = RAGFactory.get_rag(
-                llm=llm,
-                args=auto_coder_args,
-                path=server_args.doc_dir,
-                tokenizer_path=server_args.tokenizer_path,
-            )
+            if args.agentic:
+                rag = AgenticRAG(llm=llm, args=auto_coder_args, path=server_args.doc_dir, tokenizer_path=server_args.tokenizer_path)
+            else:
+                rag = LongContextRAG(llm=llm, args=auto_coder_args, path=server_args.doc_dir, tokenizer_path=server_args.tokenizer_path)
         else:
-            auto_coder_args.rag_build_name = generate_unique_name_from_path("")
-            rag = RAGFactory.get_rag(llm=llm, args=auto_coder_args, path="")
+            raise Exception("doc_dir is required")
 
         llm_wrapper = LLWrapper(llm=llm, rag=rag)
         # Save service info    

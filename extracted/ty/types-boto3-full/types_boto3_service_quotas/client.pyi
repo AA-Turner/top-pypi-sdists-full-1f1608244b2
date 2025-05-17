@@ -34,6 +34,7 @@ from .paginator import (
     ListServicesPaginator,
 )
 from .type_defs import (
+    CreateSupportCaseRequestTypeDef,
     DeleteServiceQuotaIncreaseRequestFromTemplateRequestTypeDef,
     GetAssociationForServiceQuotaTemplateResponseTypeDef,
     GetAWSDefaultServiceQuotaRequestTypeDef,
@@ -140,6 +141,16 @@ class ServiceQuotasClient(BaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/service-quotas/client/associate_service_quota_template.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_service_quotas/client/#associate_service_quota_template)
+        """
+
+    def create_support_case(
+        self, **kwargs: Unpack[CreateSupportCaseRequestTypeDef]
+    ) -> Dict[str, Any]:
+        """
+        Creates a Support case for an existing quota increase request.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/service-quotas/client/create_support_case.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_service_quotas/client/#create_support_case)
         """
 
     def delete_service_quota_increase_request_from_template(

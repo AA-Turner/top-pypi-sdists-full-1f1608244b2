@@ -1,7 +1,7 @@
 r'''
-# CDKTF prebuilt bindings for hashicorp/azurerm provider version 4.28.0
+# CDKTF prebuilt bindings for hashicorp/azurerm provider version 4.29.0
 
-This repo builds and publishes the [Terraform azurerm provider](https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform azurerm provider](https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -63,7 +63,7 @@ This project is explicitly not tracking the Terraform azurerm provider version 1
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform azurerm provider](https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0)
+* [Terraform azurerm provider](https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.
@@ -1516,6 +1516,7 @@ __all__ = [
     "system_center_virtual_machine_manager_cloud",
     "system_center_virtual_machine_manager_server",
     "system_center_virtual_machine_manager_virtual_machine_instance",
+    "system_center_virtual_machine_manager_virtual_machine_instance_guest_agent",
     "system_center_virtual_machine_manager_virtual_machine_template",
     "system_center_virtual_machine_manager_virtual_network",
     "tenant_template_deployment",
@@ -2989,6 +2990,7 @@ from . import system_center_virtual_machine_manager_availability_set
 from . import system_center_virtual_machine_manager_cloud
 from . import system_center_virtual_machine_manager_server
 from . import system_center_virtual_machine_manager_virtual_machine_instance
+from . import system_center_virtual_machine_manager_virtual_machine_instance_guest_agent
 from . import system_center_virtual_machine_manager_virtual_machine_template
 from . import system_center_virtual_machine_manager_virtual_network
 from . import tenant_template_deployment

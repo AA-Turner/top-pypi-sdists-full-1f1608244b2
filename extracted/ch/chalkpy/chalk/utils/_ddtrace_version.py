@@ -2,8 +2,17 @@ def _can_use_ddtrace() -> bool:
     try:
         from ddtrace import __version__ as version
 
-        # allow ddtrace 2.6+ to be used
-        return version.startswith("2.") and version[2].isdigit() and int(version[2]) >= 6
+        # Parse version string into components (e.g. "2.6.0" -> [2, 6, 0])
+        version_parts = version.split(".")
+
+        # Check if it's version 2.6.0 or higher
+        if len(version_parts) >= 2:
+            major = int(version_parts[0])
+            minor = int(version_parts[1])
+
+            # Allow ddtrace 2.6+ to be used
+            return major == 2 and minor >= 6
+        return False
     except Exception:
         return False
 

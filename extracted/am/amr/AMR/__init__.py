@@ -118,6 +118,7 @@ from .functions import count_all
 from .functions import n_sir
 from .functions import count_df
 from .functions import custom_eucast_rules
+from .functions import custom_mdro_guideline
 from .functions import eucast_rules
 from .functions import eucast_dosage
 from .functions import export_ncbi_biosample
@@ -142,7 +143,6 @@ from .functions import all_antimicrobials
 from .functions import kurtosis
 from .functions import like
 from .functions import mdro
-from .functions import custom_mdro_guideline
 from .functions import brmo
 from .functions import mrgn
 from .functions import mdr_tb

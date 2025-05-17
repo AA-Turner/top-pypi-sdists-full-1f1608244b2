@@ -172,13 +172,7 @@ class _Cls(modal._object._Object):
     def from_local(user_cls, app: modal.app._App, class_service_function: modal._functions._Function) -> _Cls: ...
     @classmethod
     def from_name(
-        cls: type[_Cls],
-        app_name: str,
-        name: str,
-        *,
-        namespace=1,
-        environment_name: typing.Optional[str] = None,
-        workspace: typing.Optional[str] = None,
+        cls: type[_Cls], app_name: str, name: str, *, namespace=1, environment_name: typing.Optional[str] = None
     ) -> _Cls: ...
     def with_options(
         self: _Cls,
@@ -206,7 +200,6 @@ class _Cls(modal._object._Object):
         namespace=1,
         client: typing.Optional[modal.client._Client] = None,
         environment_name: typing.Optional[str] = None,
-        workspace: typing.Optional[str] = None,
     ) -> _Cls: ...
     def __call__(self, *args, **kwargs) -> _Obj: ...
     def __getattr__(self, k): ...
@@ -238,13 +231,7 @@ class Cls(modal.object.Object):
     def from_local(user_cls, app: modal.app.App, class_service_function: modal.functions.Function) -> Cls: ...
     @classmethod
     def from_name(
-        cls: type[Cls],
-        app_name: str,
-        name: str,
-        *,
-        namespace=1,
-        environment_name: typing.Optional[str] = None,
-        workspace: typing.Optional[str] = None,
+        cls: type[Cls], app_name: str, name: str, *, namespace=1, environment_name: typing.Optional[str] = None
     ) -> Cls: ...
     def with_options(
         self: Cls,
@@ -275,7 +262,6 @@ class Cls(modal.object.Object):
             namespace=1,
             client: typing.Optional[modal.client.Client] = None,
             environment_name: typing.Optional[str] = None,
-            workspace: typing.Optional[str] = None,
         ) -> Cls: ...
         async def aio(
             self,
@@ -285,7 +271,6 @@ class Cls(modal.object.Object):
             namespace=1,
             client: typing.Optional[modal.client.Client] = None,
             environment_name: typing.Optional[str] = None,
-            workspace: typing.Optional[str] = None,
         ) -> Cls: ...
 
     lookup: __lookup_spec

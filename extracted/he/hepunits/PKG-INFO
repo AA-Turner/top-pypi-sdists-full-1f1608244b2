@@ -1,6 +1,6 @@
-Metadata-Version: 2.3
+Metadata-Version: 2.4
 Name: hepunits
-Version: 2.3.5
+Version: 2.3.6
 Summary: Units and constants in the HEP system of units
 Project-URL: Homepage, https://github.com/scikit-hep/hepunits
 Author-email: Eduardo Rodrigues <eduardo.rodrigues@cern.ch>
@@ -189,5 +189,5 @@ to ensure an explicit conversion to the desired unit dividing by it (GeV in the 
 .. |GitHub Actions Status: CI| image:: https://github.com/scikit-hep/hepunits/workflows/CI/badge.svg
    :target: https://github.com/scikit-hep/hepunits/actions
 
-.. |Code Coverage| image:: https://codecov.io/gh/scikit-hep/hepunits/graph/badge.svg?branch=master
-   :target: https://codecov.io/gh/scikit-hep/hepunits?branch=master
+.. |Code Coverage| image:: https://codecov.io/gh/scikit-hep/hepunits/graph/badge.svg?branch=main
+   :target: https://codecov.io/gh/scikit-hep/hepunits?branch=main

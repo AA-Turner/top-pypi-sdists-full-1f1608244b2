@@ -42,6 +42,7 @@ __all__ = (
     "DescribeGlobalClustersPaginatorName",
     "DescribeOrderableDBInstanceOptionsPaginatorName",
     "DescribePendingMaintenanceActionsPaginatorName",
+    "FailoverStatusType",
     "NeptuneServiceName",
     "PaginatorName",
     "RegionName",
@@ -71,6 +72,7 @@ DescribeEventsPaginatorName = Literal["describe_events"]
 DescribeGlobalClustersPaginatorName = Literal["describe_global_clusters"]
 DescribeOrderableDBInstanceOptionsPaginatorName = Literal["describe_orderable_db_instance_options"]
 DescribePendingMaintenanceActionsPaginatorName = Literal["describe_pending_maintenance_actions"]
+FailoverStatusType = Literal["cancelling", "failing-over", "pending"]
 SourceTypeType = Literal[
     "db-cluster",
     "db-cluster-snapshot",

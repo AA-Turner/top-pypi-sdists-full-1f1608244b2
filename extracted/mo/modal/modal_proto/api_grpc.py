@@ -599,6 +599,10 @@ class ModalClientBase(abc.ABC):
         pass
 
     @abc.abstractmethod
+    async def VolumeListFiles2(self, stream: 'grpclib.server.Stream[modal_proto.api_pb2.VolumeListFiles2Request, modal_proto.api_pb2.VolumeListFiles2Response]') -> None:
+        pass
+
+    @abc.abstractmethod
     async def VolumePutFiles(self, stream: 'grpclib.server.Stream[modal_proto.api_pb2.VolumePutFilesRequest, google.protobuf.empty_pb2.Empty]') -> None:
         pass
 
@@ -612,6 +616,10 @@ class ModalClientBase(abc.ABC):
 
     @abc.abstractmethod
     async def VolumeRemoveFile(self, stream: 'grpclib.server.Stream[modal_proto.api_pb2.VolumeRemoveFileRequest, google.protobuf.empty_pb2.Empty]') -> None:
+        pass
+
+    @abc.abstractmethod
+    async def VolumeRemoveFile2(self, stream: 'grpclib.server.Stream[modal_proto.api_pb2.VolumeRemoveFile2Request, google.protobuf.empty_pb2.Empty]') -> None:
         pass
 
     @abc.abstractmethod
@@ -1494,6 +1502,12 @@ class ModalClientBase(abc.ABC):
                 modal_proto.api_pb2.VolumeListFilesRequest,
                 modal_proto.api_pb2.VolumeListFilesResponse,
             ),
+            '/modal.client.ModalClient/VolumeListFiles2': grpclib.const.Handler(
+                self.VolumeListFiles2,
+                grpclib.const.Cardinality.UNARY_STREAM,
+                modal_proto.api_pb2.VolumeListFiles2Request,
+                modal_proto.api_pb2.VolumeListFiles2Response,
+            ),
             '/modal.client.ModalClient/VolumePutFiles': grpclib.const.Handler(
                 self.VolumePutFiles,
                 grpclib.const.Cardinality.UNARY_UNARY,
@@ -1516,6 +1530,12 @@ class ModalClientBase(abc.ABC):
                 self.VolumeRemoveFile,
                 grpclib.const.Cardinality.UNARY_UNARY,
                 modal_proto.api_pb2.VolumeRemoveFileRequest,
+                google.protobuf.empty_pb2.Empty,
+            ),
+            '/modal.client.ModalClient/VolumeRemoveFile2': grpclib.const.Handler(
+                self.VolumeRemoveFile2,
+                grpclib.const.Cardinality.UNARY_UNARY,
+                modal_proto.api_pb2.VolumeRemoveFile2Request,
                 google.protobuf.empty_pb2.Empty,
             ),
             '/modal.client.ModalClient/VolumeRename': grpclib.const.Handler(
@@ -2406,6 +2426,12 @@ class ModalClientStub:
             modal_proto.api_pb2.VolumeListFilesRequest,
             modal_proto.api_pb2.VolumeListFilesResponse,
         )
+        self.VolumeListFiles2 = grpclib.client.UnaryStreamMethod(
+            channel,
+            '/modal.client.ModalClient/VolumeListFiles2',
+            modal_proto.api_pb2.VolumeListFiles2Request,
+            modal_proto.api_pb2.VolumeListFiles2Response,
+        )
         self.VolumePutFiles = grpclib.client.UnaryUnaryMethod(
             channel,
             '/modal.client.ModalClient/VolumePutFiles',
@@ -2428,6 +2454,12 @@ class ModalClientStub:
             channel,
             '/modal.client.ModalClient/VolumeRemoveFile',
             modal_proto.api_pb2.VolumeRemoveFileRequest,
+            google.protobuf.empty_pb2.Empty,
+        )
+        self.VolumeRemoveFile2 = grpclib.client.UnaryUnaryMethod(
+            channel,
+            '/modal.client.ModalClient/VolumeRemoveFile2',
+            modal_proto.api_pb2.VolumeRemoveFile2Request,
             google.protobuf.empty_pb2.Empty,
         )
         self.VolumeRename = grpclib.client.UnaryUnaryMethod(

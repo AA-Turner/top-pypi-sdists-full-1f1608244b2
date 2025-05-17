@@ -14,6 +14,8 @@
 
 from __future__ import annotations
 
+import sys
+from logging import getLogger
 from pathlib import Path
 from typing import List, Optional
 
@@ -26,8 +28,14 @@ from snowflake.cli.api.commands.flags import (
 from snowflake.cli.api.commands.overrideable_parameter import OverrideableOption
 from snowflake.cli.api.commands.snow_typer import SnowTyperFactory
 from snowflake.cli.api.commands.utils import parse_key_value_variables
-from snowflake.cli.api.output.types import CommandResult, MultipleResults, QueryResult
+from snowflake.cli.api.exceptions import CliArgumentError
+from snowflake.cli.api.output.types import (
+    CommandResult,
+    MultipleResults,
+    QueryResult,
+)
 
+logger = getLogger(__name__)
 # simple Typer with defaults because it won't become a command group as it contains only one command
 app = SnowTyperFactory()
 
@@ -38,7 +46,7 @@ SourceOption = OverrideableOption(
 )
 
 
-@app.command(name="sql", requires_connection=True, no_args_is_help=True)
+@app.command(name="sql", requires_connection=True, no_args_is_help=False)
 @with_project_definition(is_optional=True)
 def execute_sql(
     query: Optional[str] = SourceOption(
@@ -69,6 +77,12 @@ def execute_sql(
         "--retain-comments",
         help="Retains comments in queries passed to Snowflake",
     ),
+    single_transaction: Optional[bool] = typer.Option(
+        False,
+        help="Connects with autocommit disabled. Wraps BEGIN/COMMIT around statements to execute them as a single transaction, ensuring all commands complete successfully or no change is applied.",
+        flag_value=False,
+        is_flag=True,
+    ),
     **options,
 ) -> CommandResult:
     """
@@ -86,9 +100,46 @@ def execute_sql(
     if data_override:
         data = {v.key: v.value for v in parse_key_value_variables(data_override)}
 
-    single_statement, cursors = SqlManager().execute(
-        query, files, std_in, data=data, retain_comments=retain_comments
+    retain_comments = bool(retain_comments)
+    single_transaction = bool(single_transaction)
+    std_in = bool(std_in)
+
+    no_source_provided = not any([query, files, std_in])
+    if no_source_provided and not sys.stdin.isatty():
+        maybe_pipe = sys.stdin.read().strip()
+        if maybe_pipe:
+            query = maybe_pipe
+            std_in = True
+
+    if no_source_provided:
+        if single_transaction:
+            raise CliArgumentError("single transaction cannot be used with REPL")
+        from snowflake.cli._plugins.sql.repl import Repl
+
+        Repl(SqlManager(), data=data, retain_comments=retain_comments).run()
+        sys.exit(0)
+
+    manager = SqlManager()
+
+    expected_results_cnt, cursors = manager.execute(
+        query,
+        files,
+        std_in,
+        data=data,
+        retain_comments=retain_comments,
+        single_transaction=single_transaction,
     )
-    if single_statement:
-        return QueryResult(next(cursors))
+    if expected_results_cnt == 0:
+        # case expected if input only scheduled async queries
+        list(cursors)  # evaluate the result to schedule potential async queries
+        # ends gracefully with no message for consistency with snowsql.
+        sys.exit(0)
+
+    if expected_results_cnt == 1:
+        # evaluate the result to schedule async queries
+        results = list(cursors)
+        if not results:
+            return sys.exit(0)
+        return QueryResult(results[0])
+
     return MultipleResults((QueryResult(c) for c in cursors))

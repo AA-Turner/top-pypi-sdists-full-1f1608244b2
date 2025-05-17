@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pyutils_spirit",  # 包名（PyPI唯一标识）
-    version="1.5.3.9",  # 版本号（每次上传需更新）
+    version="1.5.5.6",  # 版本号（每次上传需更新）
     author="Spirit",
     author_email="2969643689@qq.com",
     description="A Small Python package",

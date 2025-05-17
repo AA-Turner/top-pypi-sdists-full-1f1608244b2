@@ -384,6 +384,9 @@ def count_df(data, *args, **kwargs):
 def custom_eucast_rules(*args, **kwargs):
     """Please see our website of the R package for the full manual: https://amr-for-r.org"""
     return convert_to_python(amr_r.custom_eucast_rules(*args, **kwargs))
+def custom_mdro_guideline(*args, **kwargs):
+    """Please see our website of the R package for the full manual: https://amr-for-r.org"""
+    return convert_to_python(amr_r.custom_mdro_guideline(*args, **kwargs))
 def eucast_rules(x, *args, **kwargs):
     """Please see our website of the R package for the full manual: https://amr-for-r.org"""
     return convert_to_python(amr_r.eucast_rules(x, *args, **kwargs))
@@ -456,9 +459,6 @@ def like(x, *args, **kwargs):
 def mdro(x = None, *args, **kwargs):
     """Please see our website of the R package for the full manual: https://amr-for-r.org"""
     return convert_to_python(amr_r.mdro(x = None, *args, **kwargs))
-def custom_mdro_guideline(*args, **kwargs):
-    """Please see our website of the R package for the full manual: https://amr-for-r.org"""
-    return convert_to_python(amr_r.custom_mdro_guideline(*args, **kwargs))
 def brmo(x = None, *args, **kwargs):
     """Please see our website of the R package for the full manual: https://amr-for-r.org"""
     return convert_to_python(amr_r.brmo(x = None, *args, **kwargs))

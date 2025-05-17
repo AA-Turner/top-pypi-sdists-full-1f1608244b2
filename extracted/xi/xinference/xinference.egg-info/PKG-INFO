@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: xinference
-Version: 1.5.1
+Version: 1.6.0
 Summary: Model Serving Made Easy
 Home-page: https://github.com/xorbitsai/inference
 Author: Qin Xuye
@@ -19,11 +19,11 @@ Classifier: Programming Language :: Python :: Implementation :: CPython
 Classifier: Topic :: Software Development :: Libraries
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: xoscar>=0.6.1
+Requires-Dist: xoscar>=0.7.2
 Requires-Dist: torch
 Requires-Dist: gradio
 Requires-Dist: pillow
-Requires-Dist: click
+Requires-Dist: click<8.2.0
 Requires-Dist: tqdm>=4.27
 Requires-Dist: tabulate
 Requires-Dist: requests
@@ -67,35 +67,50 @@ Requires-Dist: sphinx-tabs; extra == "dev"
 Requires-Dist: sphinx-design; extra == "dev"
 Provides-Extra: all
 Requires-Dist: uv; extra == "all"
-Requires-Dist: llama-cpp-python!=0.2.58,>=0.2.25; extra == "all"
 Requires-Dist: xllamacpp; extra == "all"
 Requires-Dist: transformers>=4.46.0; extra == "all"
-Requires-Dist: torch>=2.0.0; extra == "all"
+Requires-Dist: torch; extra == "all"
 Requires-Dist: accelerate>=0.28.0; extra == "all"
 Requires-Dist: sentencepiece; extra == "all"
 Requires-Dist: transformers_stream_generator; extra == "all"
-Requires-Dist: bitsandbytes; extra == "all"
+Requires-Dist: bitsandbytes; sys_platform == "linux" and extra == "all"
 Requires-Dist: protobuf; extra == "all"
 Requires-Dist: einops; extra == "all"
-Requires-Dist: tiktoken>=0.6.0; extra == "all"
-Requires-Dist: sentence-transformers>=3.1.0; extra == "all"
-Requires-Dist: vllm>=0.2.6; sys_platform == "linux" and extra == "all"
-Requires-Dist: imageio-ffmpeg; extra == "all"
-Requires-Dist: controlnet_aux; extra == "all"
-Requires-Dist: orjson; extra == "all"
-Requires-Dist: gptqmodel; extra == "all"
-Requires-Dist: autoawq<0.2.6; sys_platform != "darwin" and extra == "all"
+Requires-Dist: tiktoken; extra == "all"
 Requires-Dist: optimum; extra == "all"
-Requires-Dist: outlines>=0.0.34; extra == "all"
-Requires-Dist: sglang[srt]>=0.4.2.post4; sys_platform == "linux" and extra == "all"
-Requires-Dist: mlx-lm>=0.21.5; (sys_platform == "darwin" and platform_machine == "arm64") and extra == "all"
-Requires-Dist: mlx-vlm>=0.1.11; (sys_platform == "darwin" and platform_machine == "arm64") and extra == "all"
-Requires-Dist: mlx-whisper; (sys_platform == "darwin" and platform_machine == "arm64") and extra == "all"
-Requires-Dist: f5-tts-mlx; (sys_platform == "darwin" and platform_machine == "arm64") and extra == "all"
 Requires-Dist: attrdict; extra == "all"
 Requires-Dist: timm>=0.9.16; extra == "all"
 Requires-Dist: torchvision; extra == "all"
+Requires-Dist: peft; extra == "all"
+Requires-Dist: eva-decord; extra == "all"
+Requires-Dist: jj-pytorchvideo; extra == "all"
+Requires-Dist: qwen-vl-utils!=0.0.9; extra == "all"
+Requires-Dist: qwen_omni_utils; extra == "all"
+Requires-Dist: datamodel_code_generator; extra == "all"
+Requires-Dist: jsonschema; extra == "all"
+Requires-Dist: blobfile; extra == "all"
+Requires-Dist: vllm>=0.2.6; extra == "all"
+Requires-Dist: sglang[srt]>=0.4.2.post4; sys_platform == "linux" and extra == "all"
+Requires-Dist: mlx-lm>=0.21.5; extra == "all"
+Requires-Dist: mlx-vlm>=0.1.11; extra == "all"
+Requires-Dist: mlx-whisper; extra == "all"
+Requires-Dist: f5-tts-mlx; extra == "all"
+Requires-Dist: qwen_vl_utils!=0.0.9; extra == "all"
+Requires-Dist: tomli; extra == "all"
+Requires-Dist: sentence-transformers>=3.1.0; extra == "all"
 Requires-Dist: FlagEmbedding; extra == "all"
+Requires-Dist: diffusers>=0.32.0; extra == "all"
+Requires-Dist: controlnet_aux; extra == "all"
+Requires-Dist: deepcache; extra == "all"
+Requires-Dist: gguf; extra == "all"
+Requires-Dist: verovio>=4.3.1; extra == "all"
+Requires-Dist: transformers>=4.37.2; extra == "all"
+Requires-Dist: tiktoken>=0.6.0; extra == "all"
+Requires-Dist: accelerate>=0.28.0; extra == "all"
+Requires-Dist: torch; extra == "all"
+Requires-Dist: torchvision; extra == "all"
+Requires-Dist: diffusers>=0.32.0; extra == "all"
+Requires-Dist: imageio-ffmpeg; extra == "all"
 Requires-Dist: funasr<1.1.17; extra == "all"
 Requires-Dist: omegaconf~=2.3.0; extra == "all"
 Requires-Dist: nemo_text_processing<1.1.0; sys_platform == "linux" and extra == "all"
@@ -104,20 +119,18 @@ Requires-Dist: librosa; extra == "all"
 Requires-Dist: xxhash; extra == "all"
 Requires-Dist: torchaudio; extra == "all"
 Requires-Dist: ChatTTS>=0.2.1; extra == "all"
+Requires-Dist: tiktoken; extra == "all"
+Requires-Dist: torch>=2.0.0; extra == "all"
 Requires-Dist: lightning>=2.0.0; extra == "all"
 Requires-Dist: hydra-core>=1.3.2; extra == "all"
 Requires-Dist: inflect; extra == "all"
 Requires-Dist: conformer; extra == "all"
 Requires-Dist: diffusers>=0.32.0; extra == "all"
-Requires-Dist: gguf; extra == "all"
 Requires-Dist: gdown; extra == "all"
 Requires-Dist: pyarrow; extra == "all"
 Requires-Dist: HyperPyYAML; extra == "all"
 Requires-Dist: onnxruntime>=1.16.0; extra == "all"
-Requires-Dist: boto3<1.28.65,>=1.28.55; extra == "all"
-Requires-Dist: tensorizer~=2.9.0; extra == "all"
-Requires-Dist: eva-decord; extra == "all"
-Requires-Dist: jj-pytorchvideo; extra == "all"
+Requires-Dist: pyworld>=0.3.4; extra == "all"
 Requires-Dist: loguru; extra == "all"
 Requires-Dist: natsort; extra == "all"
 Requires-Dist: loralib; extra == "all"
@@ -133,20 +146,24 @@ Requires-Dist: vocos; extra == "all"
 Requires-Dist: librosa; extra == "all"
 Requires-Dist: jieba; extra == "all"
 Requires-Dist: soundfile; extra == "all"
-Requires-Dist: qwen-vl-utils!=0.0.9; extra == "all"
-Requires-Dist: qwen_omni_utils; extra == "all"
-Requires-Dist: datamodel_code_generator; extra == "all"
-Requires-Dist: jsonschema; extra == "all"
-Requires-Dist: verovio>=4.3.1; extra == "all"
-Requires-Dist: accelerate>=0.28.0; extra == "all"
-Requires-Dist: blobfile; extra == "all"
+Requires-Dist: cached_path; extra == "all"
+Requires-Dist: unidic-lite; extra == "all"
+Requires-Dist: cn2an; extra == "all"
+Requires-Dist: mecab-python3; extra == "all"
+Requires-Dist: num2words; extra == "all"
+Requires-Dist: pykakasi; extra == "all"
+Requires-Dist: fugashi; extra == "all"
+Requires-Dist: g2p_en; extra == "all"
+Requires-Dist: anyascii; extra == "all"
+Requires-Dist: gruut[de,es,fr]; extra == "all"
+Requires-Dist: kokoro>=0.7.15; extra == "all"
+Requires-Dist: misaki[en,ja,zh]>=0.7.15; extra == "all"
 Requires-Dist: langdetect; extra == "all"
 Requires-Dist: pyloudnorm; extra == "all"
 Provides-Extra: intel
 Requires-Dist: torch==2.1.0a0; extra == "intel"
 Requires-Dist: intel_extension_for_pytorch==2.1.10+xpu; extra == "intel"
 Provides-Extra: llama-cpp
-Requires-Dist: llama-cpp-python!=0.2.58,>=0.2.25; extra == "llama-cpp"
 Requires-Dist: xllamacpp; extra == "llama-cpp"
 Provides-Extra: transformers
 Requires-Dist: transformers>=4.46.0; extra == "transformers"
@@ -158,8 +175,6 @@ Requires-Dist: bitsandbytes; sys_platform == "linux" and extra == "transformers"
 Requires-Dist: protobuf; extra == "transformers"
 Requires-Dist: einops; extra == "transformers"
 Requires-Dist: tiktoken; extra == "transformers"
-Requires-Dist: gptqmodel; extra == "transformers"
-Requires-Dist: autoawq<0.2.6; sys_platform != "darwin" and extra == "transformers"
 Requires-Dist: optimum; extra == "transformers"
 Requires-Dist: attrdict; extra == "transformers"
 Requires-Dist: timm>=0.9.16; extra == "transformers"
@@ -172,6 +187,10 @@ Requires-Dist: qwen_omni_utils; extra == "transformers"
 Requires-Dist: datamodel_code_generator; extra == "transformers"
 Requires-Dist: jsonschema; extra == "transformers"
 Requires-Dist: blobfile; extra == "transformers"
+Provides-Extra: transformers-quantization
+Requires-Dist: bitsandbytes; sys_platform == "linux" and extra == "transformers-quantization"
+Requires-Dist: gptqmodel; extra == "transformers-quantization"
+Requires-Dist: autoawq!=0.2.6; sys_platform != "darwin" and extra == "transformers-quantization"
 Provides-Extra: vllm
 Requires-Dist: vllm>=0.2.6; extra == "vllm"
 Provides-Extra: sglang
@@ -221,6 +240,7 @@ Requires-Dist: gdown; extra == "audio"
 Requires-Dist: pyarrow; extra == "audio"
 Requires-Dist: HyperPyYAML; extra == "audio"
 Requires-Dist: onnxruntime>=1.16.0; extra == "audio"
+Requires-Dist: pyworld>=0.3.4; extra == "audio"
 Requires-Dist: loguru; extra == "audio"
 Requires-Dist: natsort; extra == "audio"
 Requires-Dist: loralib; extra == "audio"
@@ -316,6 +336,7 @@ potential of cutting-edge AI models.
 - Support SGLang backend: [#1161](https://github.com/xorbitsai/inference/pull/1161)
 - Support LoRA for LLM and image models: [#1080](https://github.com/xorbitsai/inference/pull/1080)
 ### New Models
+- Built-in support for [Qwen3](https://qwenlm.github.io/blog/qwen3/): [#3347](https://github.com/xorbitsai/inference/pull/3347)
 - Built-in support for [Qwen2.5-Omni](https://github.com/QwenLM/Qwen2.5-Omni): [#3279](https://github.com/xorbitsai/inference/pull/3279)
 - Built-in support for [Skywork-OR1](https://github.com/SkyworkAI/Skywork-OR1): [#3274](https://github.com/xorbitsai/inference/pull/3274)
 - Built-in support for [GLM-4-0414](https://github.com/THUDM/GLM-4): [#3251](https://github.com/xorbitsai/inference/pull/3251)
@@ -323,7 +344,6 @@ potential of cutting-edge AI models.
 - Built-in support for [paraformer-zh](https://huggingface.co/funasr/paraformer-zh): [#3236](https://github.com/xorbitsai/inference/pull/3236)
 - Built-in support for [InternVL3](https://internvl.github.io/blog/2025-04-11-InternVL-3.0/): [#3235](https://github.com/xorbitsai/inference/pull/3235)
 - Built-in support for [MegaTTS3](https://github.com/bytedance/MegaTTS3): [#3224](https://github.com/xorbitsai/inference/pull/3224)
-- Built-in support for [Deepseek-VL2](https://github.com/deepseek-ai/DeepSeek-VL2): [#3179](https://github.com/xorbitsai/inference/pull/3179)
 ### Integrations
 - [Dify](https://docs.dify.ai/advanced/model-configuration/xinference): an LLMOps platform that enables developers (and even non-developers) to quickly build useful applications based on large language models, ensuring they are visual, operable, and improvable.
 - [FastGPT](https://github.com/labring/FastGPT): a knowledge-based platform built on the LLM, offers out-of-the-box data processing and model invocation capabilities, allows for workflow orchestration through Flow visualization.

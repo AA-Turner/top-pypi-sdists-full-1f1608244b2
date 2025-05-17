@@ -47,6 +47,10 @@ class TestJdbcReader:
 
         assert sorted(actual) == sorted(expected)
 
+        with pytest.raises(KeyError) as e:
+            actual["dbtable"]
+            assert e.type is KeyError
+
     def test_execute_wo_dbtable_and_query(self):
         with pytest.raises(ValueError) as e:
             _ = JdbcReader(**self.common_options)

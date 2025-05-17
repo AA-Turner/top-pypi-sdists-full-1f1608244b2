@@ -48,8 +48,7 @@ class Builder(AbstractBuilder):
         project = self.project
 
         # The sdist name.
-        sdist_name = '{}-{}'.format(project.name.replace('-', '_').lower(),
-                project.version_str)
+        sdist_name = project.normalized_name
 
         # Create the sdist root directory.
         sdist_root = os.path.join(project.build_dir, sdist_name)
@@ -164,20 +163,25 @@ class Builder(AbstractBuilder):
         # Copy the wheel contents.
         self.install_project(wheel_build_dir, wheel_tag=wheel_tag)
 
-        wheel_file = '{}-{}'.format(project.name.replace('-', '_'),
-                project.version_str)
+        wheel_file = [project.normalized_name]
 
         if project.build_tag:
-            wheel_file += '-{}'.format(project.build_tag)
+            wheel_file.append(project.build_tag)
 
-        wheel_file += '-{}.whl'.format(wheel_tag)
-        wheel_path = os.path.abspath(os.path.join(wheel_directory, wheel_file))
+        wheel_file.append(wheel_tag)
+        wheel_path = os.path.abspath(
+                os.path.join(wheel_directory, '-'.join(wheel_file) + '.whl'))
 
         # Create the .whl file.
         saved_cwd = os.getcwd()
         os.chdir(wheel_build_dir)
 
-        from zipfile import ZipFile, ZIP_DEFLATED
+        import time 
+        from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
+
+        # Ensure reproducible wheel file timestamps
+        epoch = int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))
+        zip_timestamp = time.gmtime(epoch)[:6]
 
         with ZipFile(wheel_path, 'w', compression=ZIP_DEFLATED) as zf:
             for dirpath, _, filenames in os.walk('.'):
@@ -185,7 +189,10 @@ class Builder(AbstractBuilder):
                     # This will result in a name with no leading '.'.
                     name = os.path.relpath(os.path.join(dirpath, filename))
 
-                    zf.write(name)
+                    zi = ZipInfo(name, zip_timestamp)
+
+                    with open(name, 'rb') as f:
+                        zf.writestr(zi, f.read())
 
         os.chdir(saved_cwd)
 

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: keystoneauth1
-Version: 5.10.0
+Version: 5.11.0
 Summary: Authentication Library for OpenStack Identity
 Home-page: https://docs.openstack.org/keystoneauth/latest/
 Author: OpenStack

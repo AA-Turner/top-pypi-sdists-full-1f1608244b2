@@ -206,7 +206,7 @@ def features(
                 raise_error=ValueError,
             )
 
-        if notebook.is_notebook() and previous_features_class is not None and not notebook.is_defined_in_module(previous_features_class):
+        if notebook.is_notebook() and previous_features_class is not None and notebook.is_defined_in_module(previous_features_class):
             # Not generating an LSP here because we're in a notebook anyway
             # TODO: See if we can pretty-print lsp errors in notebooks, at which point we can generate one that points to the old feature class
             raise ValueError(
@@ -396,6 +396,8 @@ def _get_field(
     if isinstance(default, Feature):
         # The feature was set like x: int = Feature(...)
         f = default
+        if f.unversioned_attribute_name is None:
+            f.unversioned_attribute_name = annotation_name
         if f.version is not None:
             f.version.base_name = f.name if f.is_name_set() else annotation_name
             f.name = f.version.name_for_version(f.version.default)
@@ -1217,6 +1219,7 @@ def _process_class(
         for i in range(1, f.version.maximum + 1):
             f_i = copy.copy(f)
             f_i.name = f.version.name_for_version(i)
+            f_i.unversioned_attribute_name = f.attribute_name
             f_i.attribute_name = f"{f.attribute_name}_v{i}"
             f_i.version = VersionInfo(
                 version=i,

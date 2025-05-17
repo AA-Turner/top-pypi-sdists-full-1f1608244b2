@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: augmax
-Version: 0.4.0
+Version: 0.4.1
 Summary: Efficiently Composable Data Augmentation on the GPU with Jax
 Author: Konrad Heidler
 Author-email: Konrad Heidler <k.heidler@tum.de>
@@ -16,7 +16,7 @@ Classifier: Intended Audience :: Science/Research
 Classifier: License :: OSI Approved :: Apache Software License
 Requires-Dist: einops>=0.3
 Requires-Dist: jax>=0.1
-Requires-Dist: numpy>=2.0.0
+Requires-Dist: numpy>=1.22
 Requires-Python: >=3.9.0
 Project-URL: Documentation, https://augmax.readthedocs.io/en/latest/
 Project-URL: Issues, https://github.com/khdlr/augmax/issues
@@ -28,7 +28,7 @@ Description-Content-Type: text/markdown
 
 Augmax is an image data augmentation framework supporting efficiently-composable transformations
 with support for JAX function transformations.
-Its strengths are efficient execution of complex augmentation pipelines and batched data augmentation on the GPU/TPU via the use of [`jax.jit`](jax:jax-jit) and `jax.vmap`.
+Its strengths are efficient execution of complex augmentation pipelines and batched data augmentation on the GPU/TPU via the use of [`jax.jit`](jax-jit) and `jax.vmap`.
 
 In existing data augmentation frameworks,
 each transformation is executed separately,

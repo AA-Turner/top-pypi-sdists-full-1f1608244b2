@@ -46,9 +46,12 @@ from .literals import (
     JobFlowExecutionStateType,
     MarketTypeType,
     NotebookExecutionStatusType,
+    OnClusterAppUITypeType,
     OnDemandCapacityReservationPreferenceType,
     OnDemandProvisioningAllocationStrategyType,
+    PersistentAppUITypeType,
     PlacementGroupStrategyType,
+    ProfilerTypeType,
     ReconfigurationTypeType,
     RepoUpgradeOnBootType,
     ScaleDownBehaviorType,
@@ -115,6 +118,8 @@ __all__ = (
     "ConfigurationPaginatorTypeDef",
     "ConfigurationTypeDef",
     "ConfigurationUnionTypeDef",
+    "CreatePersistentAppUIInputTypeDef",
+    "CreatePersistentAppUIOutputTypeDef",
     "CreateSecurityConfigurationInputTypeDef",
     "CreateSecurityConfigurationOutputTypeDef",
     "CreateStudioInputTypeDef",
@@ -132,6 +137,8 @@ __all__ = (
     "DescribeJobFlowsOutputTypeDef",
     "DescribeNotebookExecutionInputTypeDef",
     "DescribeNotebookExecutionOutputTypeDef",
+    "DescribePersistentAppUIInputTypeDef",
+    "DescribePersistentAppUIOutputTypeDef",
     "DescribeReleaseLabelInputTypeDef",
     "DescribeReleaseLabelOutputTypeDef",
     "DescribeSecurityConfigurationInputTypeDef",
@@ -141,6 +148,7 @@ __all__ = (
     "DescribeStepOutputTypeDef",
     "DescribeStudioInputTypeDef",
     "DescribeStudioOutputTypeDef",
+    "EMRContainersConfigTypeDef",
     "EbsBlockDeviceConfigTypeDef",
     "EbsBlockDeviceTypeDef",
     "EbsConfigurationTypeDef",
@@ -157,6 +165,10 @@ __all__ = (
     "GetClusterSessionCredentialsOutputTypeDef",
     "GetManagedScalingPolicyInputTypeDef",
     "GetManagedScalingPolicyOutputTypeDef",
+    "GetOnClusterAppUIPresignedURLInputTypeDef",
+    "GetOnClusterAppUIPresignedURLOutputTypeDef",
+    "GetPersistentAppUIPresignedURLInputTypeDef",
+    "GetPersistentAppUIPresignedURLOutputTypeDef",
     "GetStudioSessionMappingInputTypeDef",
     "GetStudioSessionMappingOutputTypeDef",
     "HadoopJarStepConfigOutputTypeDef",
@@ -249,6 +261,7 @@ __all__ = (
     "OutputNotebookS3LocationForOutputTypeDef",
     "OutputNotebookS3LocationFromInputTypeDef",
     "PaginatorConfigTypeDef",
+    "PersistentAppUITypeDef",
     "PlacementGroupConfigTypeDef",
     "PlacementTypeOutputTypeDef",
     "PlacementTypeTypeDef",
@@ -473,6 +486,10 @@ class ConfigurationTypeDef(TypedDict):
     Properties: NotRequired[Mapping[str, str]]
 
 
+class EMRContainersConfigTypeDef(TypedDict):
+    JobRunId: NotRequired[str]
+
+
 class CreateSecurityConfigurationInputTypeDef(TypedDict):
     Name: str
     SecurityConfiguration: str
@@ -520,6 +537,10 @@ TimestampTypeDef = Union[datetime, str]
 
 class DescribeNotebookExecutionInputTypeDef(TypedDict):
     NotebookExecutionId: str
+
+
+class DescribePersistentAppUIInputTypeDef(TypedDict):
+    PersistentAppUIId: str
 
 
 class DescribeReleaseLabelInputTypeDef(TypedDict):
@@ -590,6 +611,22 @@ class GetClusterSessionCredentialsInputTypeDef(TypedDict):
 
 class GetManagedScalingPolicyInputTypeDef(TypedDict):
     ClusterId: str
+
+
+class GetOnClusterAppUIPresignedURLInputTypeDef(TypedDict):
+    ClusterId: str
+    OnClusterAppUIType: NotRequired[OnClusterAppUITypeType]
+    ApplicationId: NotRequired[str]
+    DryRun: NotRequired[bool]
+    ExecutionRoleArn: NotRequired[str]
+
+
+class GetPersistentAppUIPresignedURLInputTypeDef(TypedDict):
+    PersistentAppUIId: str
+    PersistentAppUIType: NotRequired[PersistentAppUITypeType]
+    ApplicationId: NotRequired[str]
+    AuthProxyCall: NotRequired[bool]
+    ExecutionRoleArn: NotRequired[str]
 
 
 class GetStudioSessionMappingInputTypeDef(TypedDict):
@@ -967,6 +1004,12 @@ class AddJobFlowStepsOutputTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
+class CreatePersistentAppUIOutputTypeDef(TypedDict):
+    PersistentAppUIId: str
+    RuntimeRoleEnabledCluster: bool
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
 class CreateSecurityConfigurationOutputTypeDef(TypedDict):
     Name: str
     CreationDateTime: datetime
@@ -987,6 +1030,18 @@ class DescribeSecurityConfigurationOutputTypeDef(TypedDict):
 
 
 class EmptyResponseMetadataTypeDef(TypedDict):
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class GetOnClusterAppUIPresignedURLOutputTypeDef(TypedDict):
+    PresignedURLReady: bool
+    PresignedURL: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+
+class GetPersistentAppUIPresignedURLOutputTypeDef(TypedDict):
+    PresignedURLReady: bool
+    PresignedURL: str
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -1035,6 +1090,17 @@ class CreateStudioInputTypeDef(TypedDict):
     IdcUserAssignment: NotRequired[IdcUserAssignmentType]
     IdcInstanceArn: NotRequired[str]
     EncryptionKeyArn: NotRequired[str]
+
+
+class PersistentAppUITypeDef(TypedDict):
+    PersistentAppUIId: NotRequired[str]
+    PersistentAppUITypeList: NotRequired[List[PersistentAppUITypeType]]
+    PersistentAppUIStatus: NotRequired[str]
+    AuthorId: NotRequired[str]
+    CreationTime: NotRequired[datetime]
+    LastModifiedTime: NotRequired[datetime]
+    LastStateChangeReason: NotRequired[str]
+    Tags: NotRequired[List[TagTypeDef]]
 
 
 class StudioTypeDef(TypedDict):
@@ -1143,6 +1209,14 @@ class ManagedScalingPolicyTypeDef(TypedDict):
 
 
 ConfigurationUnionTypeDef = Union[ConfigurationTypeDef, ConfigurationOutputTypeDef]
+
+
+class CreatePersistentAppUIInputTypeDef(TypedDict):
+    TargetResourceArn: str
+    EMRContainersConfig: NotRequired[EMRContainersConfigTypeDef]
+    Tags: NotRequired[Sequence[TagTypeDef]]
+    XReferer: NotRequired[str]
+    ProfilerType: NotRequired[ProfilerTypeType]
 
 
 class CredentialsTypeDef(TypedDict):
@@ -1437,6 +1511,11 @@ class StepStatusTypeDef(TypedDict):
     StateChangeReason: NotRequired[StepStateChangeReasonTypeDef]
     FailureDetails: NotRequired[FailureDetailsTypeDef]
     Timeline: NotRequired[StepTimelineTypeDef]
+
+
+class DescribePersistentAppUIOutputTypeDef(TypedDict):
+    PersistentAppUI: PersistentAppUITypeDef
+    ResponseMetadata: ResponseMetadataTypeDef
 
 
 class DescribeStudioOutputTypeDef(TypedDict):

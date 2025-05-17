@@ -1,19 +1,25 @@
 import asyncio
 import importlib
+from asyncio.events import AbstractEventLoop
 from contextlib import ExitStack, contextmanager
 from functools import wraps
+from typing import Any, List, Optional, Union
 from unittest.mock import patch
 
-from mongomock import Collection as MongoMockCollection
-from mongomock import Database as MongoMockDatabase
-from mongomock import MongoClient
+from mongomock.collection import Collection as MongoMockCollection
+from mongomock.collection import Cursor as MongoMockCursor
+from mongomock.command_cursor import CommandCursor as MongoMockCommandCursor
+from mongomock.database import Database as MongoMockDatabase
 from mongomock.gridfs import _create_grid_out_cursor
+from mongomock.mongo_client import MongoClient as MongoMockMongoClient
 from pymongo.database import Database as PyMongoDatabase
+from typing_extensions import Self
 
 from .patches import _patch_client_internals, _patch_collection_internals
+from .typing import BuildInfo, DocumentType
 
 
-def masquerade_class(name):
+def masquerade_class(name: str):
     module_name, target_name = name.rsplit('.', 1)
 
     try:
@@ -33,11 +39,11 @@ def masquerade_class(name):
     return decorator
 
 
-def with_async_methods(source, async_methods):
+def with_async_methods(source: str, async_methods: List[str]):
     def decorator(cls):
         for method_name in async_methods:
 
-            def make_wrapper(method_name):
+            def make_wrapper(method_name: str):
                 async def wrapper(self, *args, **kwargs):
                     proxy_source = self.__dict__.get(f'_{cls.__name__}{source}')
                     return getattr(proxy_source, method_name)(*args, **kwargs)
@@ -51,11 +57,11 @@ def with_async_methods(source, async_methods):
     return decorator
 
 
-def with_cursor_chaining_methods(source, chaining_methods):
+def with_cursor_chaining_methods(source: str, chaining_methods: List[str]):
     def decorator(cls):
         for method_name in chaining_methods:
 
-            def make_wrapper(method_name):
+            def make_wrapper(method_name: str):
                 def wrapper(self, *args, **kwargs):
                     proxy_source = self.__dict__.get(f'_{cls.__name__}{source}')
                     getattr(proxy_source, method_name)(*args, **kwargs)
@@ -76,6 +82,7 @@ def with_cursor_chaining_methods(source, chaining_methods):
     [
         'add_option',
         'allow_disk_use',
+        'batch_size',
         'collation',
         'comment',
         'hint',
@@ -94,20 +101,21 @@ def with_cursor_chaining_methods(source, chaining_methods):
 @with_async_methods(
     '__cursor',
     [
+        'distinct',
         'close',
     ],
 )
 class AsyncCursor:
-    def __init__(self, cursor):
+    def __init__(self, cursor: MongoMockCursor) -> None:
         self.__cursor = cursor
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Any:
         return getattr(self.__cursor, name)
 
-    def __aiter__(self):
+    def __aiter__(self) -> Self:
         return self
 
-    async def next(self):
+    async def next(self) -> Any:
         try:
             return next(self.__cursor)
         except StopIteration:
@@ -115,13 +123,45 @@ class AsyncCursor:
 
     __anext__ = next
 
-    def clone(self):
+    def clone(self) -> 'AsyncCursor':
         return AsyncCursor(self.__cursor.clone())
 
-    async def distinct(self, *args, **kwargs):
-        return self.__cursor.distinct(*args, **kwargs)
+    async def to_list(self, *args, **kwargs) -> List:
+        return list(self.__cursor)
 
-    async def to_list(self, *args, **kwargs):
+
+@masquerade_class('motor.motor_asyncio.AsyncIOMotorCommandCursor')
+@with_cursor_chaining_methods(
+    '__cursor',
+    [
+        'batch_size',
+    ],
+)
+@with_async_methods(
+    '__cursor',
+    [
+        'close',
+    ],
+)
+class AsyncCommandCursor:
+    def __init__(self, cursor: MongoMockCommandCursor) -> None:
+        self.__cursor = cursor
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self.__cursor, name)
+
+    def __aiter__(self) -> Self:
+        return self
+
+    async def next(self) -> DocumentType:
+        try:
+            return next(self.__cursor)
+        except StopIteration:
+            raise StopAsyncIteration()
+
+    __anext__ = next
+
+    async def to_list(self, *args, **kwargs) -> List[DocumentType]:
         return list(self.__cursor)
 
 
@@ -133,16 +173,16 @@ class AsyncCursor:
     ],
 )
 class AsyncLatentCommandCursor:
-    def __init__(self, cursor):
+    def __init__(self, cursor: MongoMockCommandCursor) -> None:
         self.__cursor = cursor
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Any:
         return getattr(self.__cursor, name)
 
-    def __aiter__(self):
+    def __aiter__(self) -> Self:
         return self
 
-    async def next(self):
+    async def next(self) -> DocumentType:
         try:
             return next(self.__cursor)
         except StopIteration:
@@ -150,7 +190,7 @@ class AsyncLatentCommandCursor:
 
     __anext__ = next
 
-    async def to_list(self, *args, **kwargs):
+    async def to_list(self, *args, **kwargs) -> List[DocumentType]:
         return list(self.__cursor)
 
 
@@ -191,20 +231,24 @@ class AsyncLatentCommandCursor:
     ],
 )
 class AsyncMongoMockCollection:
-    def __init__(self, database, collection):
+    def __init__(
+        self, database: 'AsyncMongoMockDatabase', collection: MongoMockCollection
+    ) -> None:
         self.database = database
         self.__collection = _patch_collection_internals(collection)
 
-    def get_io_loop(self):
+    def get_io_loop(self) -> AbstractEventLoop:
         return self.database.get_io_loop()
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, AsyncMongoMockCollection):
+            return NotImplemented
         return self.__collection == other.__collection
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Any:
         return getattr(self.__collection, name)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.__collection)
 
     def find(self, *args, **kwargs) -> AsyncCursor:
@@ -213,8 +257,12 @@ class AsyncMongoMockCollection:
     def aggregate(self, *args, **kwargs) -> AsyncLatentCommandCursor:
         return AsyncLatentCommandCursor(self.__collection.aggregate(*args, **kwargs))
 
-    def list_indexes(self, *args, **kwargs) -> AsyncCursor:
-        return AsyncCursor(self.__collection.list_indexes(*args, **kwargs))
+    def list_indexes(self, *args, **kwargs) -> AsyncCommandCursor:
+        return AsyncCommandCursor(
+            MongoMockCommandCursor(
+                list(self.__collection.list_indexes(*args, **kwargs))
+            )
+        )
 
 
 @masquerade_class('motor.motor_asyncio.AsyncIOMotorDatabase')
@@ -229,7 +277,12 @@ class AsyncMongoMockCollection:
     ],
 )
 class AsyncMongoMockDatabase:
-    def __init__(self, client, database, mock_build_info=None):
+    def __init__(
+        self,
+        client: 'AsyncMongoMockClient',
+        database: MongoMockDatabase,
+        mock_build_info: Optional[BuildInfo] = None,
+    ) -> None:
         self.client = client
         self.__database = database
         self.__build_info = mock_build_info or {
@@ -239,22 +292,22 @@ class AsyncMongoMockDatabase:
         }
 
     @property
-    def delegate(self):
+    def delegate(self) -> MongoMockDatabase:
         return self.__database
 
-    def get_io_loop(self):
+    def get_io_loop(self) -> AbstractEventLoop:
         return self.client.get_io_loop()
 
-    def get_collection(self, *args, **kwargs):
+    def get_collection(self, *args, **kwargs) -> AsyncMongoMockCollection:
         return AsyncMongoMockCollection(
             self,
             self.__database.get_collection(*args, **kwargs),
         )
 
-    def aggregate(self, *args, **kwargs) -> AsyncCursor:
-        return AsyncCursor(self.__database.aggregate(*args, **kwargs))
+    def aggregate(self, *args, **kwargs) -> AsyncLatentCommandCursor:
+        return AsyncLatentCommandCursor(self.__database.aggregate(*args, **kwargs))
 
-    async def command(self, *args, **kwargs):
+    async def command(self, *args, **kwargs) -> Union[DocumentType, BuildInfo]:
         try:
             return getattr(self.__database, 'command')(*args, **kwargs)
         except NotImplementedError:
@@ -270,19 +323,21 @@ class AsyncMongoMockDatabase:
                 return self.__build_info
             raise
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, AsyncMongoMockDatabase):
+            return NotImplemented
         return self.__database == other.__database
 
-    def __getitem__(self, name):
+    def __getitem__(self, name: str) -> AsyncMongoMockCollection:
         return self.get_collection(name)
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Union[AsyncMongoMockCollection, Any]:
         if name in dir(self.__database):
             return getattr(self.__database, name)
 
         return self.get_collection(name)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.__database)
 
 
@@ -300,40 +355,42 @@ class AsyncMongoMockClient:
     def __init__(
         self,
         *args,
-        mock_build_info=None,
-        mock_mongo_client=None,
-        mock_io_loop=None,
+        mock_build_info: Optional[BuildInfo] = None,
+        mock_mongo_client: Optional[MongoMockMongoClient] = None,
+        mock_io_loop: Optional[AbstractEventLoop] = None,
         **kwargs,
-    ):
+    ) -> None:
         self.__client = _patch_client_internals(
-            mock_mongo_client or MongoClient(*args, **kwargs)
+            mock_mongo_client or MongoMockMongoClient(*args, **kwargs)
         )
         self.__build_info = mock_build_info
         self.__io_loop = mock_io_loop
 
-    def get_io_loop(self):
+    def get_io_loop(self) -> AbstractEventLoop:
         return self.__io_loop or asyncio.get_event_loop()
 
-    def get_database(self, *args, **kwargs):
+    def get_database(self, *args, **kwargs) -> AsyncMongoMockDatabase:
         return AsyncMongoMockDatabase(
             self,
             self.__client.get_database(*args, **kwargs),
             mock_build_info=self.__build_info,
         )
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, AsyncMongoMockClient):
+            return NotImplemented
         return self.__client == other.__client
 
-    def __getitem__(self, name):
+    def __getitem__(self, name) -> AsyncMongoMockDatabase:
         return self.get_database(name)
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Union[Any, AsyncMongoMockDatabase]:
         if name in dir(self.__client):
             return getattr(self.__client, name)
 
         return self.get_database(name)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.__client)
 
 

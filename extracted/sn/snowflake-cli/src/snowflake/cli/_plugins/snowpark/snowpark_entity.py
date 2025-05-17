@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import Generic, List, Optional, TypeVar
 
 from click import ClickException
-from snowflake.cli._plugins.nativeapp.feature_flags import FeatureFlag
 from snowflake.cli._plugins.snowpark import package_utils
 from snowflake.cli._plugins.snowpark.common import (
     DEFAULT_RUNTIME,
@@ -25,6 +24,7 @@ from snowflake.cli._plugins.snowpark.snowpark_project_paths import SnowparkProje
 from snowflake.cli._plugins.snowpark.zipper import zip_dir
 from snowflake.cli._plugins.workspace.context import ActionContext
 from snowflake.cli.api.entities.common import EntityBase
+from snowflake.cli.api.feature_flags import FeatureFlag
 from snowflake.cli.api.secure_path import SecurePath
 from snowflake.connector import ProgrammingError
 
@@ -176,6 +176,17 @@ class SnowparkEntity(EntityBase[Generic[T]]):
         if self.model.type == "procedure" and self.model.execute_as_caller:
             query.append("EXECUTE AS CALLER")
 
+        if self.model.artifact_repository and self.model.artifact_repository_packages:
+            packages = [f"'{item}'" for item in self.model.artifact_repository_packages]
+            query.extend(
+                [
+                    f"ARTIFACT_REPOSITORY= {self.model.artifact_repository} ",
+                    f"ARTIFACT_REPOSITORY_PACKAGES=({','.join(packages)})",
+                ]
+            )
+        if self.model.resource_constraint:
+            query.append(self._get_resource_constraints_sql())
+
         return "\n".join(query)
 
     def get_execute_sql(self, execution_arguments: List[str] | None = None):
@@ -236,6 +247,15 @@ class SnowparkEntity(EntityBase[Generic[T]]):
                 )
 
         return download_result
+
+    def _get_resource_constraints_sql(self) -> str:
+        if self.model.resource_constraint:
+            constraints = ",".join(
+                f"{key}='{value}'"
+                for key, value in self.model.resource_constraint.items()
+            )
+            return f"RESOURCE_CONSTRAINT=({constraints})"
+        return ""
 
 
 class FunctionEntity(SnowparkEntity[FunctionEntityModel]):

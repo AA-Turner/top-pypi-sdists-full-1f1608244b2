@@ -1,6 +1,6 @@
 [project]
 name = "datacontract-cli"
-version = "0.10.25"
+version = "0.10.26"
 description = "The datacontract CLI is an open source command-line tool for working with Data Contracts. It uses data contract YAML files to lint the data contract, connect to data sources and execute schema and quality tests, detect breaking changes, and export to different formats. The tool is written in Python. It can be used as a standalone CLI tool, in a CI/CD pipeline, or directly as a Python library."
 license = "MIT"
 readme = "README.md"
@@ -112,7 +112,7 @@ rdf = [
 
 api = [
   "fastapi==0.115.12",
-  "uvicorn==0.34.0",
+  "uvicorn==0.34.2",
 ]
 
 protobuf = [
@@ -132,7 +132,7 @@ dev = [
   "pre-commit>=3.7.1,<4.3.0",
   "pytest",
   "pytest-xdist",
-  "pymssql==2.3.2",
+  "pymssql==2.3.4",
   "ruff",
   "testcontainers[minio,postgres,kafka,mssql]==4.9.2",
   "trino==0.333.0",

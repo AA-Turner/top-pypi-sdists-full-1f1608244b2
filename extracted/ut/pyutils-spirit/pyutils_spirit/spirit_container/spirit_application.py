@@ -48,21 +48,15 @@ SIGNATURE_SET: set[str] = {"Component", "Mapper", "Service", "Controller",
 
 
 class SpiritApplication:
-    start_status: bool = None
+    __spirit_application: object = None
 
     __request_body_key__: str = None
 
     __unified_response_type__: bool = None
 
-    __current_file__: str = None
-
     __container: SpiritApplicationContainer = None
 
-    __auto_wired_set__: set[object] = None
-
-    __lock: Lock = None
-
-    __executor: ThreadExecutor = None
+    __lock: Lock = Lock()
 
     __controller_paths_set: set[str] = None
 
@@ -74,35 +68,43 @@ class SpiritApplication:
 
     __interceptor_function_after__: Callable[[BaseHTTPRequestHandler], None] = None
 
-    def __init__(self, __file__):
-        SpiritApplication.__lock = Lock()
-        self.__executor = ThreadExecutor()
-        self.__current_file__ = os.path.basename(__file__)
-        SpiritApplication.__container = SpiritApplicationContainer()
-        self.__auto_wired_set__ = set()
-        SpiritApplication.__controller_paths_set = set()
-        SpiritApplication.__exception_advice_methods__ = HashAssemble()
-        SpiritApplication.__interceptor_paths_set = set()
-
-    def start_service(self, host: str, port: int,
-                      unified_response_type: bool = True,
-                      request_body_key: str = "body"):
-        SpiritApplication.__lock.acquire()
-        try:
-            if SpiritApplication.start_status is True:
-                raise SpiritContainerServiceException
-            SpiritApplication.start_status = True
-        finally:
-            SpiritApplication.__lock.release()
+    def __init__(self, host: str, port: int,
+                 unified_response_type: bool = True,
+                 request_body_key: str = "body") -> None:
         SpiritApplication.__unified_response_type__ = unified_response_type
         SpiritApplication.__request_body_key__ = request_body_key
+        self.__host: str = host
+        self.__port: int = port
+        self.__executor = ThreadExecutor()
+        self.__auto_wired_set__ = set()
+
+    def __new__(cls, host: str, port: int,
+                unified_response_type: bool = True,
+                request_body_key: str = "body") -> object:
+        cls.__lock.acquire()
+        try:
+            if cls.__spirit_application is None:
+                cls.__container = SpiritApplicationContainer()
+                cls.__controller_paths_set = set()
+                cls.__exception_advice_methods__ = HashAssemble()
+                cls.__interceptor_paths_set = set()
+                cls.__spirit_application = object.__new__(cls)
+            else:
+                raise SpiritContainerServiceException
+            return cls.__spirit_application
+        finally:
+            cls.__lock.release()
+
+    def __call__(self, cls) -> type:
+        module = inspect.getmodule(cls)
+        self.__current_file__ = module.__file__
         draw_spirit_banner()
         self.__scan_modules(os.getcwd())
-        self.__start_service(host=host, port=port)
+        self.__start_service(host=self.__host, port=self.__port)
+        return cls
 
     def __scan_modules(self, work_directory: str):
         for dirpath, dir_names, filenames in os.walk(work_directory):
-
             for file_name in filenames:
                 if file_name == "__init__.py":
                     continue
@@ -112,8 +114,7 @@ class SpiritApplication:
         self.__auto_injected()
 
     def __load_module(self, file_path):
-        current_file_path = os.path.abspath(self.__current_file__)
-        if file_path == current_file_path:
+        if file_path == self.__current_file__:
             return None
         module_path = file_path[:-3]
         module_name = os.path.basename(module_path)

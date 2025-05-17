@@ -13,11 +13,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import fixtures
 import hashlib
 import uuid
 import warnings
 
+import fixtures
 from oslotest import base as test_base
 
 from oslo_context import context
@@ -29,7 +29,6 @@ def generate_id(name):
 
 
 class WarningsFixture(fixtures.Fixture):
-
     def __init__(self, action="always", category=DeprecationWarning):
         super().__init__()
         self.action = action
@@ -59,6 +58,7 @@ class TestContext(context.RequestContext):
     This is representative of how at least some of our consumers use the
     RequestContext class in their projects.
     """
+
     FROM_DICT_EXTRA_KEYS = ['auth_token_info']
 
     def __init__(self, auth_token_info=None, **kwargs):
@@ -72,7 +72,6 @@ class TestContext(context.RequestContext):
 
 
 class ContextTest(test_base.BaseTestCase):
-
     def setUp(self):
         super().setUp()
         self.warnings = self.useFixture(WarningsFixture())
@@ -143,7 +142,7 @@ class ContextTest(test_base.BaseTestCase):
             "global_request_id": "req-uuid",
             "resource_uuid": "instance1",
             "extra_data": "foo",
-            "system_scope": "all"
+            "system_scope": "all",
         }
         ctx = context.RequestContext.from_dict(dct)
         self.assertEqual(dct['auth_token'], ctx.auth_token)
@@ -172,7 +171,7 @@ class ContextTest(test_base.BaseTestCase):
             "read_only": True,
             "roles": "role1,role2,role3",  # future review provides this
             "color": "red",
-            "unknown": ""
+            "unknown": "",
         }
         ctx = context.RequestContext.from_dict(dct)
         self.assertEqual("token1", ctx.auth_token)
@@ -185,17 +184,19 @@ class ContextTest(test_base.BaseTestCase):
     def test_from_dict_overrides(self):
         dct = {
             "auth_token": "token1",
-            "user": "user1",
+            "user_id": "user1",
             "read_only": True,
             "roles": "role1,role2,role3",
             "color": "red",
-            "unknown": ""
+            "unknown": "",
         }
-        ctx = context.RequestContext.from_dict(dct,
-                                               user="user2",
-                                               project_name="project1")
+        ctx = context.RequestContext.from_dict(
+            dct,
+            user_id="user2",
+            project_name="project1",
+        )
         self.assertEqual("token1", ctx.auth_token)
-        self.assertEqual("user2", ctx.user)
+        self.assertEqual("user2", ctx.user_id)
         self.assertEqual("project1", ctx.project_name)
         self.assertIsNone(ctx.project_id)
         self.assertFalse(ctx.is_admin)
@@ -287,14 +288,17 @@ class ContextTest(test_base.BaseTestCase):
         self.assertEqual(service_user_id, ctx.service_user_id)
         self.assertEqual(service_user_name, ctx.service_user_name)
         self.assertEqual(service_user_domain_id, ctx.service_user_domain_id)
-        self.assertEqual(service_user_domain_name,
-                         ctx.service_user_domain_name)
+        self.assertEqual(
+            service_user_domain_name, ctx.service_user_domain_name
+        )
         self.assertEqual(service_project_id, ctx.service_project_id)
         self.assertEqual(service_project_name, ctx.service_project_name)
-        self.assertEqual(service_project_domain_id,
-                         ctx.service_project_domain_id)
-        self.assertEqual(service_project_domain_name,
-                         ctx.service_project_domain_name)
+        self.assertEqual(
+            service_project_domain_id, ctx.service_project_domain_id
+        )
+        self.assertEqual(
+            service_project_domain_name, ctx.service_project_domain_name
+        )
         self.assertEqual(service_roles, ctx.service_roles)
 
     def test_from_environ_no_roles(self):
@@ -309,7 +313,7 @@ class ContextTest(test_base.BaseTestCase):
 
         environ = {'HTTP_X_USER': value}
         ctx = context.RequestContext.from_environ(environ=environ)
-        self.assertEqual(value, ctx.user)
+        self.assertEqual(value, ctx.user_id)
 
         environ = {'HTTP_X_TENANT_ID': value}
         ctx = context.RequestContext.from_environ(environ=environ)
@@ -336,68 +340,70 @@ class ContextTest(test_base.BaseTestCase):
         new = uuid.uuid4().hex
         override = uuid.uuid4().hex
 
-        environ = {'HTTP_X_USER': old,
-                   'HTTP_X_USER_ID': new}
+        environ = {'HTTP_X_USER': old, 'HTTP_X_USER_ID': new}
 
         ctx = context.RequestContext.from_environ(environ=environ)
-        self.assertEqual(new, ctx.user)
+        self.assertEqual(new, ctx.user_id)
 
-        ctx = context.RequestContext.from_environ(environ=environ,
-                                                  user=override)
-        self.assertEqual(override, ctx.user)
+        ctx = context.RequestContext.from_environ(
+            environ=environ, user_id=override
+        )
+        self.assertEqual(override, ctx.user_id)
 
-        environ = {'HTTP_X_TENANT': old,
-                   'HTTP_X_PROJECT_ID': new}
+        environ = {'HTTP_X_TENANT': old, 'HTTP_X_PROJECT_ID': new}
 
         ctx = context.RequestContext.from_environ(environ=environ)
         self.assertEqual(new, ctx.project_id)
 
-        ctx = context.RequestContext.from_environ(environ=environ,
-                                                  project_id=override)
+        ctx = context.RequestContext.from_environ(
+            environ=environ, project_id=override
+        )
         self.assertEqual(override, ctx.project_id)
 
-        environ = {'HTTP_X_TENANT_NAME': old,
-                   'HTTP_X_PROJECT_NAME': new}
+        environ = {'HTTP_X_TENANT_NAME': old, 'HTTP_X_PROJECT_NAME': new}
 
         ctx = context.RequestContext.from_environ(environ=environ)
         self.assertEqual(new, ctx.project_name)
 
     def test_from_environ_strip_roles(self):
-        environ = {'HTTP_X_ROLES': ' abc\t,\ndef\n,ghi\n\n',
-                   'HTTP_X_SERVICE_ROLES': ' jkl\t,\nmno\n,pqr\n\n'}
+        environ = {
+            'HTTP_X_ROLES': ' abc\t,\ndef\n,ghi\n\n',
+            'HTTP_X_SERVICE_ROLES': ' jkl\t,\nmno\n,pqr\n\n',
+        }
         ctx = context.RequestContext.from_environ(environ=environ)
         self.assertEqual(['abc', 'def', 'ghi'], ctx.roles)
         self.assertEqual(['jkl', 'mno', 'pqr'], ctx.service_roles)
 
     def test_environ_admin_project(self):
-        environ = {}
-        ctx = context.RequestContext.from_environ(environ=environ)
+        ctx = context.RequestContext.from_environ(environ={})
         self.assertIs(True, ctx.is_admin_project)
         self.assertIs(True, ctx.to_policy_values()['is_admin_project'])
 
-        environ = {'HTTP_X_IS_ADMIN_PROJECT': 'True'}
-        ctx = context.RequestContext.from_environ(environ=environ)
+        ctx = context.RequestContext.from_environ(
+            environ={'HTTP_X_IS_ADMIN_PROJECT': 'True'}
+        )
         self.assertIs(True, ctx.is_admin_project)
         self.assertIs(True, ctx.to_policy_values()['is_admin_project'])
 
-        environ = {'HTTP_X_IS_ADMIN_PROJECT': 'False'}
-        ctx = context.RequestContext.from_environ(environ=environ)
+        ctx = context.RequestContext.from_environ(
+            environ={'HTTP_X_IS_ADMIN_PROJECT': 'False'}
+        )
         self.assertIs(False, ctx.is_admin_project)
         self.assertIs(False, ctx.to_policy_values()['is_admin_project'])
 
     def test_from_function_and_args(self):
-        ctx = context.RequestContext(user="user1")
-        arg = []
-        kw = dict(c=ctx, s="s")
-        fn = context.get_context_from_function_and_args
-        ctx1 = context.get_context_from_function_and_args(fn, arg, kw)
+        ctx = context.RequestContext(user_id="user1")
+        ctx1 = context.get_context_from_function_and_args(
+            context.get_context_from_function_and_args,
+            [],
+            {'c': ctx, 's': 's'},
+        )
         self.assertIs(ctx1, ctx)
 
     def test_not_in_from_function_and_args(self):
-        arg = []
-        kw = dict()
-        fn = context.get_context_from_function_and_args
-        ctx1 = context.get_context_from_function_and_args(fn, arg, kw)
+        ctx1 = context.get_context_from_function_and_args(
+            context.get_context_from_function_and_args, [], {}
+        )
         self.assertIsNone(ctx1)
 
     def test_values(self):
@@ -420,23 +426,25 @@ class ContextTest(test_base.BaseTestCase):
         global_request_id = "req-id1"
         resource_uuid = "uuid1"
 
-        ctx = context.RequestContext(auth_token=auth_token,
-                                     user=user_id,
-                                     user_name=user_name,
-                                     project_id=project_id,
-                                     project_name=project_name,
-                                     domain=domain_id,
-                                     domain_name=domain_name,
-                                     user_domain=user_domain_id,
-                                     user_domain_name=user_domain_name,
-                                     project_domain=project_domain_id,
-                                     project_domain_name=project_domain_name,
-                                     is_admin=is_admin,
-                                     read_only=read_only,
-                                     show_deleted=show_deleted,
-                                     request_id=request_id,
-                                     global_request_id=global_request_id,
-                                     resource_uuid=resource_uuid)
+        ctx = context.RequestContext(
+            auth_token=auth_token,
+            user_id=user_id,
+            user_name=user_name,
+            project_id=project_id,
+            project_name=project_name,
+            domain_id=domain_id,
+            domain_name=domain_name,
+            user_domain_id=user_domain_id,
+            user_domain_name=user_domain_name,
+            project_domain_id=project_domain_id,
+            project_domain_name=project_domain_name,
+            is_admin=is_admin,
+            read_only=read_only,
+            show_deleted=show_deleted,
+            request_id=request_id,
+            global_request_id=global_request_id,
+            resource_uuid=resource_uuid,
+        )
         self.assertEqual(auth_token, ctx.auth_token)
         self.assertEqual(user_id, ctx.user_id)
         self.assertEqual(user_name, ctx.user_name)
@@ -484,8 +492,7 @@ class ContextTest(test_base.BaseTestCase):
         self.assertEqual(show_deleted, d['show_deleted'])
         self.assertEqual(request_id, d['request_id'])
         self.assertEqual(resource_uuid, d['resource_uuid'])
-        user_identity = "{} {} {} {} {}".format(
-            user_id, project_id, domain_id, user_domain_id, project_domain_id)
+        user_identity = f"{user_id} {project_id} {domain_id} {user_domain_id} {project_domain_id}"
         self.assertEqual(user_identity, d['user_identity'])
         self.assertEqual([], d['roles'])
 
@@ -528,7 +535,8 @@ class ContextTest(test_base.BaseTestCase):
             auth_token_info={'auth_token': 'topsecret'},
             service_token="1234567",
             auth_token="8901234",
-            user_id=userid)
+            user_id=userid,
+        )
         safe_ctxt = ctx.redacted_copy()
         self.assertIsNone(safe_ctxt.auth_token_info)
         self.assertIsNone(safe_ctxt.service_token)
@@ -557,172 +565,137 @@ class ContextTest(test_base.BaseTestCase):
         self.assertIsNone(d['global_request_id'])
 
     def test_policy_dict(self):
-        user = uuid.uuid4().hex
-        user_domain = uuid.uuid4().hex
+        user_id = uuid.uuid4().hex
+        user_domain_id = uuid.uuid4().hex
         project_id = uuid.uuid4().hex
-        project_domain = uuid.uuid4().hex
+        project_domain_id = uuid.uuid4().hex
         roles = [uuid.uuid4().hex, uuid.uuid4().hex, uuid.uuid4().hex]
         service_user_id = uuid.uuid4().hex
         service_project_id = uuid.uuid4().hex
         service_roles = [uuid.uuid4().hex, uuid.uuid4().hex, uuid.uuid4().hex]
 
         # default is_admin_project is True
-        ctx = context.RequestContext(user=user,
-                                     user_domain=user_domain,
-                                     project_id=project_id,
-                                     project_domain=project_domain,
-                                     roles=roles,
-                                     service_user_id=service_user_id,
-                                     service_project_id=service_project_id,
-                                     service_roles=service_roles)
+        ctx = context.RequestContext(
+            user_id=user_id,
+            user_domain_id=user_domain_id,
+            project_id=project_id,
+            project_domain_id=project_domain_id,
+            roles=roles,
+            service_user_id=service_user_id,
+            service_project_id=service_project_id,
+            service_roles=service_roles,
+        )
 
-        self.assertEqual({'user_id': user,
-                          'user_domain_id': user_domain,
-                          'system_scope': None,
-                          'domain_id': None,
-                          'project_id': project_id,
-                          'project_domain_id': project_domain,
-                          'roles': roles,
-                          'is_admin_project': True,
-                          'service_user_id': service_user_id,
-                          'service_user_domain_id': None,
-                          'service_project_id': service_project_id,
-                          'service_project_domain_id': None,
-                          'service_roles': service_roles},
-                         ctx.to_policy_values())
+        self.assertEqual(
+            {
+                'user_id': user_id,
+                'user_domain_id': user_domain_id,
+                'system_scope': None,
+                'domain_id': None,
+                'project_id': project_id,
+                'project_domain_id': project_domain_id,
+                'roles': roles,
+                'is_admin_project': True,
+                'service_user_id': service_user_id,
+                'service_user_domain_id': None,
+                'service_project_id': service_project_id,
+                'service_project_domain_id': None,
+                'service_roles': service_roles,
+            },
+            ctx.to_policy_values(),
+        )
 
         # NOTE(lbragstad): This string has special meaning in that the value
         # ``all`` represents the entire deployment system.
         system_all = 'all'
 
-        ctx = context.RequestContext(user=user,
-                                     user_domain=user_domain,
-                                     system_scope=system_all,
-                                     roles=roles,
-                                     service_user_id=service_user_id,
-                                     service_project_id=service_project_id,
-                                     service_roles=service_roles)
+        ctx = context.RequestContext(
+            user_id=user_id,
+            user_domain_id=user_domain_id,
+            system_scope=system_all,
+            roles=roles,
+            service_user_id=service_user_id,
+            service_project_id=service_project_id,
+            service_roles=service_roles,
+        )
 
-        self.assertEqual({'user_id': user,
-                          'user_domain_id': user_domain,
-                          'system_scope': system_all,
-                          'domain_id': None,
-                          'project_id': None,
-                          'project_domain_id': None,
-                          'roles': roles,
-                          'is_admin_project': True,
-                          'service_user_id': service_user_id,
-                          'service_user_domain_id': None,
-                          'service_project_id': service_project_id,
-                          'service_project_domain_id': None,
-                          'service_roles': service_roles},
-                         ctx.to_policy_values())
+        self.assertEqual(
+            {
+                'user_id': user_id,
+                'user_domain_id': user_domain_id,
+                'system_scope': system_all,
+                'domain_id': None,
+                'project_id': None,
+                'project_domain_id': None,
+                'roles': roles,
+                'is_admin_project': True,
+                'service_user_id': service_user_id,
+                'service_user_domain_id': None,
+                'service_project_id': service_project_id,
+                'service_project_domain_id': None,
+                'service_roles': service_roles,
+            },
+            ctx.to_policy_values(),
+        )
 
         # context representing a domain-scoped token.
         domain_id = uuid.uuid4().hex
-        ctx = context.RequestContext(user=user,
-                                     user_domain=user_domain,
-                                     domain_id=domain_id,
-                                     roles=roles,
-                                     service_user_id=service_user_id,
-                                     service_project_id=service_project_id,
-                                     service_roles=service_roles)
+        ctx = context.RequestContext(
+            user_id=user_id,
+            user_domain_id=user_domain_id,
+            domain_id=domain_id,
+            roles=roles,
+            service_user_id=service_user_id,
+            service_project_id=service_project_id,
+            service_roles=service_roles,
+        )
 
-        self.assertEqual({'user_id': user,
-                          'user_domain_id': user_domain,
-                          'system_scope': None,
-                          'domain_id': domain_id,
-                          'project_id': None,
-                          'project_domain_id': None,
-                          'roles': roles,
-                          'is_admin_project': True,
-                          'service_user_id': service_user_id,
-                          'service_user_domain_id': None,
-                          'service_project_id': service_project_id,
-                          'service_project_domain_id': None,
-                          'service_roles': service_roles},
-                         ctx.to_policy_values())
+        self.assertEqual(
+            {
+                'user_id': user_id,
+                'user_domain_id': user_domain_id,
+                'system_scope': None,
+                'domain_id': domain_id,
+                'project_id': None,
+                'project_domain_id': None,
+                'roles': roles,
+                'is_admin_project': True,
+                'service_user_id': service_user_id,
+                'service_user_domain_id': None,
+                'service_project_id': service_project_id,
+                'service_project_domain_id': None,
+                'service_roles': service_roles,
+            },
+            ctx.to_policy_values(),
+        )
 
-        ctx = context.RequestContext(user=user,
-                                     user_domain=user_domain,
-                                     project_id=project_id,
-                                     project_domain=project_domain,
-                                     roles=roles,
-                                     is_admin_project=False,
-                                     service_user_id=service_user_id,
-                                     service_project_id=service_project_id,
-                                     service_roles=service_roles)
+        ctx = context.RequestContext(
+            user_id=user_id,
+            user_domain_id=user_domain_id,
+            project_id=project_id,
+            project_domain_id=project_domain_id,
+            roles=roles,
+            is_admin_project=False,
+            service_user_id=service_user_id,
+            service_project_id=service_project_id,
+            service_roles=service_roles,
+        )
 
-        self.assertEqual({'user_id': user,
-                          'user_domain_id': user_domain,
-                          'system_scope': None,
-                          'domain_id': None,
-                          'project_id': project_id,
-                          'project_domain_id': project_domain,
-                          'roles': roles,
-                          'is_admin_project': False,
-                          'service_user_id': service_user_id,
-                          'service_user_domain_id': None,
-                          'service_project_id': service_project_id,
-                          'service_project_domain_id': None,
-                          'service_roles': service_roles},
-                         ctx.to_policy_values())
-
-    def test_policy_deprecations(self):
-        user = uuid.uuid4().hex
-        user_domain = uuid.uuid4().hex
-        project_id = uuid.uuid4().hex
-        project_domain = uuid.uuid4().hex
-        roles = [uuid.uuid4().hex, uuid.uuid4().hex, uuid.uuid4().hex]
-
-        ctx = context.RequestContext(user=user,
-                                     user_domain=user_domain,
-                                     project_id=project_id,
-                                     project_domain=project_domain,
-                                     roles=roles)
-
-        policy = ctx.to_policy_values()
-        key = uuid.uuid4().hex
-        val = uuid.uuid4().hex
-
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter("always")
-
-            # no warning triggered by adding key to dict
-            policy[key] = val
-            self.assertEqual(0, len(w))
-
-            # warning triggered by fetching key from dict
-            self.assertIs(val, policy[key])
-            self.assertEqual(1, len(w))
-            self.assertIn(key, str(w[0].message))
-
-    def test_deprecated_args(self):
-        user_id = uuid.uuid4().hex
-        project_id = uuid.uuid4().hex
-        domain_id = uuid.uuid4().hex
-        user_domain_id = uuid.uuid4().hex
-        project_domain_id = uuid.uuid4().hex
-
-        ctx = context.RequestContext(user_id=user_id,
-                                     project_id=project_id,
-                                     domain_id=domain_id,
-                                     user_domain_id=user_domain_id,
-                                     project_domain_id=project_domain_id)
-
-        self.assertEqual(0, len(self.warnings))
-        self.assertEqual(user_id, ctx.user_id)
-        self.assertEqual(project_id, ctx.project_id)
-        self.assertEqual(domain_id, ctx.domain_id)
-        self.assertEqual(user_domain_id, ctx.user_domain_id)
-        self.assertEqual(project_domain_id, ctx.project_domain_id)
-
-        self.assertEqual(0, len(self.warnings))
-        self.assertEqual(user_id, ctx.user)
-        self.assertEqual(1, len(self.warnings))
-        self.assertEqual(domain_id, ctx.domain)
-        self.assertEqual(2, len(self.warnings))
-        self.assertEqual(user_domain_id, ctx.user_domain)
-        self.assertEqual(3, len(self.warnings))
-        self.assertEqual(project_domain_id, ctx.project_domain)
-        self.assertEqual(4, len(self.warnings))
+        self.assertEqual(
+            {
+                'user_id': user_id,
+                'user_domain_id': user_domain_id,
+                'system_scope': None,
+                'domain_id': None,
+                'project_id': project_id,
+                'project_domain_id': project_domain_id,
+                'roles': roles,
+                'is_admin_project': False,
+                'service_user_id': service_user_id,
+                'service_user_domain_id': None,
+                'service_project_id': service_project_id,
+                'service_project_domain_id': None,
+                'service_roles': service_roles,
+            },
+            ctx.to_policy_values(),
+        )

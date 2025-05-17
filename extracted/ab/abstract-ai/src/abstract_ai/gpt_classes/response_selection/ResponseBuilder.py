@@ -57,7 +57,7 @@ class ResponseManager:
         self.prompt_as_previous_clone=None
     def get_response(self):
         # Convert the response to JSON directly within this method
-        self.current_response = safe_json_loads(self.response)
+        self.current_response = safe_json_loads(self.response) or {}
         self.current_created = self.current_response.get("created") or time.time()
         self.current_title = get_title(self.current_response) or get_any_value(self.current_response,'generate_title') or self.current_created or 'response'
         self.current_model = get_model(self.current_response) or get_any_value(self.current_response,'model') or self.model or 'default'

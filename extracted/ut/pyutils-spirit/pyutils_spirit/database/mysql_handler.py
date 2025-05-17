@@ -61,7 +61,7 @@ class MySQLHandler(Handler):
                 port=port,
                 user=user,
                 password=password,
-                cursorclass=cursors.DictCursor
+                cursorclass=cursors.SSDictCursor
             )
             connection.select_db(database)
             info(f"Connected to database {database} successfully!!!")

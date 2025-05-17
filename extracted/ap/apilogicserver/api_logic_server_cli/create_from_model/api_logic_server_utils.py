@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import shutil
 import subprocess, os, sys
 from pathlib import Path
 from os.path import abspath
@@ -335,6 +336,7 @@ def get_config(search_for: str, in_file: str) -> str:
                             f'.. seeking {search_for}\n'
                             f'.. in {in_file}')
         return file_lines[insert_line].split('=')[1].strip().replace("'","",2)
+
 def get_ontimize_apps(project_dir_path):
     result = []
     for name in os.listdir(f"{project_dir_path}/ui"):
@@ -346,6 +348,7 @@ def get_ontimize_apps(project_dir_path):
                         result.append(name)    
     log.debug(f"Found {len(result)} Ontimize app(s)")          
     return result
+
 def does_file_contain(search_for: str, in_file: str) -> bool:
     """ returns True if <search_for> is <in_file> """
     with open(Path(in_file), 'r+') as fp:
@@ -482,3 +485,47 @@ def run_command(cmd: str, env=None, msg: str = "", new_line: bool=False,
     elif result != "" and result != "Downloaded the skeleton app, good coding!":
         log.debug(f'{log_msg} {cmd_to_run} result: {spaces}{result}')
     return result.replace('\\n','\n')
+
+
+def recursive_overwrite(src, dest, ignore=None):
+    """
+    copyTree, with overwrite
+    thanks: https://stackoverflow.com/questions/12683834/how-to-copy-directory-recursively-in-python-and-overwrite-all
+    """
+    if os.path.isdir(src):
+        if not os.path.isdir(dest):
+            os.makedirs(dest)
+        files = os.listdir(src)
+        if ignore is not None:
+            ignored = ignore(src, files)
+        else:
+            ignored = set()
+        for f in files:
+            if f not in ignored:
+                recursive_overwrite(os.path.join(src, f),
+                                    os.path.join(dest, f),
+                                    ignore)
+    else:
+        shutil.copyfile(src, dest)
+
+def find_replace_recursive(directory, find, replace, filePattern):
+    """
+
+    find_replace_recursive("some_dir", "find this", "replace with this", "*.txt")
+
+    thanks: https://stackoverflow.com/questions/4205854/recursively-find-and-replace-string-in-text-files
+
+    Args:
+        directory (_type_): _description_
+        find (_type_): _description_
+        replace (_type_): _description_
+        filePattern (_type_): _description_
+    """
+    for path, dirs, files in os.walk(os.path.abspath(directory)):
+        for filename in fnmatch.filter(files, filePattern):
+            filepath = os.path.join(path, filename)
+            with open(filepath) as f:
+                s = f.read()
+            s = s.replace(find, replace)
+            with open(filepath, "w") as f:
+                f.write(s)

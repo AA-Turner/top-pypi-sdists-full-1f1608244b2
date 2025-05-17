@@ -8,6 +8,7 @@ import inspect
 import asyncio
 
 from ...agents import extract_chat_history, handle_special_commands
+from ..chat_history import extract_chat_history_async
 from ...qna.parsers import parse_output
 from ...streaming import start_streaming_chat, start_streaming_chat_async
 from ...archive import archive_qa
@@ -57,11 +58,12 @@ if __name__ == "__main__":
 ```
     
     """
-    def __init__(self, app, stream_interpreter, vac_interpreter=None, additional_routes=None):
+    def __init__(self, app, stream_interpreter: callable, vac_interpreter:callable=None, additional_routes:dict=None, async_stream:bool=False):
         self.app = app
         self.stream_interpreter = stream_interpreter
         self.vac_interpreter = vac_interpreter or partial(self.vac_interpreter_default)
         self.additional_routes = additional_routes if additional_routes is not None else []
+        self.async_stream = async_stream
         self.register_routes()
         
 
@@ -99,7 +101,15 @@ if __name__ == "__main__":
         self.app.route('/vac/streaming/<vector_name>', 
                        methods=['POST'], 
                        provide_automatic_options=False)(self.handle_stream_vac)
-
+        
+        if self.async_stream:  # Use async treatment
+            self.app.route('/vac/streaming/<vector_name>', 
+                        methods=['POST'], 
+                        provide_automatic_options=False)(self.handle_stream_vac_async)
+        else:
+            self.app.route('/vac/streaming/<vector_name>', 
+                        methods=['POST'], 
+                        provide_automatic_options=False)(self.handle_stream_vac)
         # Static VAC
         self.app.route('/vac/<vector_name>', 
                        methods=['POST'], 
@@ -329,6 +339,51 @@ if __name__ == "__main__":
             span.end(output=response)
             trace.update(output=response)
             self.langfuse_eval_response(trace_id=trace.id, eval_percent=all_input.get('eval_percent'))
+
+        return response
+
+    async def handle_stream_vac_async(self, vector_name):
+        observed_stream_interpreter = self.stream_interpreter
+        is_async = inspect.iscoroutinefunction(self.stream_interpreter)
+
+        if not is_async:
+            raise ValueError(f"Stream interpreter must be async: {observed_stream_interpreter}")
+
+        # Use the async version of prep_vac
+        prep = await self.prep_vac_async(request, vector_name)
+        log.info(f"Processing prep: {prep}")
+        all_input = prep["all_input"]
+
+        log.info(f'Streaming data with: {all_input}')
+
+        async def generate_response_content():
+            try:
+                # Direct async handling without the queue/thread approach
+                async_gen = start_streaming_chat_async(
+                    question=all_input["user_input"],
+                    vector_name=vector_name,
+                    qna_func_async=observed_stream_interpreter,
+                    chat_history=all_input["chat_history"],
+                    wait_time=all_input["stream_wait_time"],
+                    timeout=all_input["stream_timeout"],
+                    **all_input["kwargs"]
+                )
+                
+                log.info(f"{async_gen=}")
+                async for chunk in async_gen:
+                    if isinstance(chunk, dict) and 'answer' in chunk:
+                        await archive_qa(chunk, vector_name)
+                        yield json.dumps(chunk)
+                    else:
+                        yield chunk
+
+            except Exception as e:
+                yield f"Streaming Error: {str(e)} {traceback.format_exc()}"
+
+        response = Response(generate_response_content(), content_type='text/plain; charset=utf-8')
+        response.headers['Transfer-Encoding'] = 'chunked'
+
+        log.debug(f"streaming response: {response}")
 
         return response
 
@@ -699,6 +754,66 @@ if __name__ == "__main__":
             "vac_config": vac_config
         }
 
+    async def prep_vac_async(self, request, vector_name):
+        """Async version of prep_vac."""
+        # Parse request data
+        if request.content_type.startswith('application/json'):
+            data = request.get_json()
+        elif request.content_type.startswith('multipart/form-data'):
+            data = request.form.to_dict()
+            if 'file' in request.files:
+                file = request.files['file']
+                if file.filename != '':
+                    log.info(f"Found file: {file.filename} to upload to GCS")
+                    try:
+                        # Make file upload async if possible
+                        image_uri, mime_type = await self.handle_file_upload_async(file, vector_name)
+                        data["image_uri"] = image_uri
+                        data["mime"] = mime_type
+                    except Exception as e:
+                        log.error(traceback.format_exc())
+                        return jsonify({'error': str(e), 'traceback': traceback.format_exc()}), 500
+                else:
+                    log.error("No file selected")
+                    return jsonify({"error": "No file selected"}), 400
+        else:
+            return jsonify({"error": "Unsupported content type"}), 400
+
+        log.info(f"vac/{vector_name} got data: {data}")
+
+        # Run these operations concurrently
+        tasks = []
+        
+        # Extract other data while configs load
+        user_input = data.pop('user_input').strip()
+        stream_wait_time = data.pop('stream_wait_time', 7)
+        stream_timeout = data.pop('stream_timeout', 120)
+        chat_history = data.pop('chat_history', None)
+        vector_name_param = data.pop('vector_name', vector_name)
+        data.pop('trace_id', None)  # to ensure not in kwargs
+        
+        # Task 3: Process chat history
+        chat_history_task = asyncio.create_task(extract_chat_history_async(chat_history))
+        tasks.append(chat_history_task)
+        
+        # Await all tasks concurrently
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        paired_messages = results[0] if not isinstance(results[0], Exception) else []
+        
+        # Only create span after we have trace
+        all_input = {
+            'user_input': user_input, 
+            'vector_name': vector_name_param, 
+            'chat_history': paired_messages, 
+            'stream_wait_time': stream_wait_time,
+            'stream_timeout': stream_timeout,
+            'kwargs': data
+        }
+        
+        return {
+            "all_input": all_input
+        }
 
     def handle_file_upload(self, file, vector_name):
         try:

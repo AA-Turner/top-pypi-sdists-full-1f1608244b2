@@ -40,7 +40,6 @@ class _Sandbox(modal._object._Object):
     def _new(
         entrypoint_args: collections.abc.Sequence[str],
         image: modal.image._Image,
-        mounts: collections.abc.Sequence[modal.mount._Mount],
         secrets: collections.abc.Sequence[modal.secret._Secret],
         timeout: typing.Optional[int] = None,
         workdir: typing.Optional[str] = None,
@@ -49,6 +48,7 @@ class _Sandbox(modal._object._Object):
         region: typing.Union[str, collections.abc.Sequence[str], None] = None,
         cpu: typing.Optional[float] = None,
         memory: typing.Union[int, tuple[int, int], None] = None,
+        mounts: collections.abc.Sequence[modal.mount._Mount] = (),
         network_file_systems: dict[typing.Union[str, os.PathLike], modal.network_file_system._NetworkFileSystem] = {},
         block_network: bool = False,
         cidr_allowlist: typing.Optional[collections.abc.Sequence[str]] = None,
@@ -69,7 +69,6 @@ class _Sandbox(modal._object._Object):
         app: typing.Optional[modal.app._App] = None,
         environment_name: typing.Optional[str] = None,
         image: typing.Optional[modal.image._Image] = None,
-        mounts: collections.abc.Sequence[modal.mount._Mount] = (),
         secrets: collections.abc.Sequence[modal.secret._Secret] = (),
         network_file_systems: dict[typing.Union[str, os.PathLike], modal.network_file_system._NetworkFileSystem] = {},
         timeout: typing.Optional[int] = None,
@@ -93,6 +92,36 @@ class _Sandbox(modal._object._Object):
         _experimental_scheduler_placement: typing.Optional[modal.scheduler_placement.SchedulerPlacement] = None,
         client: typing.Optional[modal.client._Client] = None,
     ) -> _Sandbox: ...
+    @staticmethod
+    async def _create(
+        *entrypoint_args: str,
+        app: typing.Optional[modal.app._App] = None,
+        environment_name: typing.Optional[str] = None,
+        image: typing.Optional[modal.image._Image] = None,
+        secrets: collections.abc.Sequence[modal.secret._Secret] = (),
+        mounts: collections.abc.Sequence[modal.mount._Mount] = (),
+        network_file_systems: dict[typing.Union[str, os.PathLike], modal.network_file_system._NetworkFileSystem] = {},
+        timeout: typing.Optional[int] = None,
+        workdir: typing.Optional[str] = None,
+        gpu: typing.Union[None, str, modal.gpu._GPUConfig] = None,
+        cloud: typing.Optional[str] = None,
+        region: typing.Union[str, collections.abc.Sequence[str], None] = None,
+        cpu: typing.Union[float, tuple[float, float], None] = None,
+        memory: typing.Union[int, tuple[int, int], None] = None,
+        block_network: bool = False,
+        cidr_allowlist: typing.Optional[collections.abc.Sequence[str]] = None,
+        volumes: dict[
+            typing.Union[str, os.PathLike],
+            typing.Union[modal.volume._Volume, modal.cloud_bucket_mount._CloudBucketMount],
+        ] = {},
+        pty_info: typing.Optional[modal_proto.api_pb2.PTYInfo] = None,
+        encrypted_ports: collections.abc.Sequence[int] = [],
+        unencrypted_ports: collections.abc.Sequence[int] = [],
+        proxy: typing.Optional[modal.proxy._Proxy] = None,
+        _experimental_enable_snapshot: bool = False,
+        _experimental_scheduler_placement: typing.Optional[modal.scheduler_placement.SchedulerPlacement] = None,
+        client: typing.Optional[modal.client._Client] = None,
+    ): ...
     def _hydrate_metadata(self, handle_metadata: typing.Optional[google.protobuf.message.Message]): ...
     @staticmethod
     async def from_id(sandbox_id: str, client: typing.Optional[modal.client._Client] = None) -> _Sandbox: ...
@@ -182,7 +211,6 @@ class Sandbox(modal.object.Object):
     def _new(
         entrypoint_args: collections.abc.Sequence[str],
         image: modal.image.Image,
-        mounts: collections.abc.Sequence[modal.mount.Mount],
         secrets: collections.abc.Sequence[modal.secret.Secret],
         timeout: typing.Optional[int] = None,
         workdir: typing.Optional[str] = None,
@@ -191,6 +219,7 @@ class Sandbox(modal.object.Object):
         region: typing.Union[str, collections.abc.Sequence[str], None] = None,
         cpu: typing.Optional[float] = None,
         memory: typing.Union[int, tuple[int, int], None] = None,
+        mounts: collections.abc.Sequence[modal.mount.Mount] = (),
         network_file_systems: dict[typing.Union[str, os.PathLike], modal.network_file_system.NetworkFileSystem] = {},
         block_network: bool = False,
         cidr_allowlist: typing.Optional[collections.abc.Sequence[str]] = None,
@@ -213,7 +242,6 @@ class Sandbox(modal.object.Object):
             app: typing.Optional[modal.app.App] = None,
             environment_name: typing.Optional[str] = None,
             image: typing.Optional[modal.image.Image] = None,
-            mounts: collections.abc.Sequence[modal.mount.Mount] = (),
             secrets: collections.abc.Sequence[modal.secret.Secret] = (),
             network_file_systems: dict[
                 typing.Union[str, os.PathLike], modal.network_file_system.NetworkFileSystem
@@ -246,7 +274,6 @@ class Sandbox(modal.object.Object):
             app: typing.Optional[modal.app.App] = None,
             environment_name: typing.Optional[str] = None,
             image: typing.Optional[modal.image.Image] = None,
-            mounts: collections.abc.Sequence[modal.mount.Mount] = (),
             secrets: collections.abc.Sequence[modal.secret.Secret] = (),
             network_file_systems: dict[
                 typing.Union[str, os.PathLike], modal.network_file_system.NetworkFileSystem
@@ -274,6 +301,76 @@ class Sandbox(modal.object.Object):
         ) -> Sandbox: ...
 
     create: __create_spec
+
+    class ___create_spec(typing_extensions.Protocol):
+        def __call__(
+            self,
+            /,
+            *entrypoint_args: str,
+            app: typing.Optional[modal.app.App] = None,
+            environment_name: typing.Optional[str] = None,
+            image: typing.Optional[modal.image.Image] = None,
+            secrets: collections.abc.Sequence[modal.secret.Secret] = (),
+            mounts: collections.abc.Sequence[modal.mount.Mount] = (),
+            network_file_systems: dict[
+                typing.Union[str, os.PathLike], modal.network_file_system.NetworkFileSystem
+            ] = {},
+            timeout: typing.Optional[int] = None,
+            workdir: typing.Optional[str] = None,
+            gpu: typing.Union[None, str, modal.gpu._GPUConfig] = None,
+            cloud: typing.Optional[str] = None,
+            region: typing.Union[str, collections.abc.Sequence[str], None] = None,
+            cpu: typing.Union[float, tuple[float, float], None] = None,
+            memory: typing.Union[int, tuple[int, int], None] = None,
+            block_network: bool = False,
+            cidr_allowlist: typing.Optional[collections.abc.Sequence[str]] = None,
+            volumes: dict[
+                typing.Union[str, os.PathLike],
+                typing.Union[modal.volume.Volume, modal.cloud_bucket_mount.CloudBucketMount],
+            ] = {},
+            pty_info: typing.Optional[modal_proto.api_pb2.PTYInfo] = None,
+            encrypted_ports: collections.abc.Sequence[int] = [],
+            unencrypted_ports: collections.abc.Sequence[int] = [],
+            proxy: typing.Optional[modal.proxy.Proxy] = None,
+            _experimental_enable_snapshot: bool = False,
+            _experimental_scheduler_placement: typing.Optional[modal.scheduler_placement.SchedulerPlacement] = None,
+            client: typing.Optional[modal.client.Client] = None,
+        ): ...
+        async def aio(
+            self,
+            /,
+            *entrypoint_args: str,
+            app: typing.Optional[modal.app.App] = None,
+            environment_name: typing.Optional[str] = None,
+            image: typing.Optional[modal.image.Image] = None,
+            secrets: collections.abc.Sequence[modal.secret.Secret] = (),
+            mounts: collections.abc.Sequence[modal.mount.Mount] = (),
+            network_file_systems: dict[
+                typing.Union[str, os.PathLike], modal.network_file_system.NetworkFileSystem
+            ] = {},
+            timeout: typing.Optional[int] = None,
+            workdir: typing.Optional[str] = None,
+            gpu: typing.Union[None, str, modal.gpu._GPUConfig] = None,
+            cloud: typing.Optional[str] = None,
+            region: typing.Union[str, collections.abc.Sequence[str], None] = None,
+            cpu: typing.Union[float, tuple[float, float], None] = None,
+            memory: typing.Union[int, tuple[int, int], None] = None,
+            block_network: bool = False,
+            cidr_allowlist: typing.Optional[collections.abc.Sequence[str]] = None,
+            volumes: dict[
+                typing.Union[str, os.PathLike],
+                typing.Union[modal.volume.Volume, modal.cloud_bucket_mount.CloudBucketMount],
+            ] = {},
+            pty_info: typing.Optional[modal_proto.api_pb2.PTYInfo] = None,
+            encrypted_ports: collections.abc.Sequence[int] = [],
+            unencrypted_ports: collections.abc.Sequence[int] = [],
+            proxy: typing.Optional[modal.proxy.Proxy] = None,
+            _experimental_enable_snapshot: bool = False,
+            _experimental_scheduler_placement: typing.Optional[modal.scheduler_placement.SchedulerPlacement] = None,
+            client: typing.Optional[modal.client.Client] = None,
+        ): ...
+
+    _create: ___create_spec
 
     def _hydrate_metadata(self, handle_metadata: typing.Optional[google.protobuf.message.Message]): ...
 
@@ -483,7 +580,5 @@ class Sandbox(modal.object.Object):
         ) -> collections.abc.AsyncGenerator[Sandbox, None]: ...
 
     list: __list_spec
-
-def __getattr__(name): ...
 
 _default_image: modal.image._Image

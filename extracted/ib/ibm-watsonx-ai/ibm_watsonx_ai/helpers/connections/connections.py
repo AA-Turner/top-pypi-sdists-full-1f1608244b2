@@ -117,7 +117,9 @@ class DataConnection(BaseDataConnection):
         if data_asset_id is None and location is None:
             if connection_asset_id is not None:
                 connection = ConnectionAsset(connection_id=connection_asset_id)
-            else:
+            elif not isinstance(
+                connection, (S3Connection, NFSConnection, ConnectionAsset)
+            ):
                 raise MissingValue(
                     "location or data_asset_id",
                     reason="Provide 'location' or 'data_asset_id'.",
@@ -385,13 +387,20 @@ class DataConnection(BaseDataConnection):
         try:
             flight_conn = self._prepare_flight_connection_for_discovery()
 
-            paths = [
-                r["path"].replace(f"/{self.location.bucket}/", "", 1)
-                for r in flight_conn.discovery(f"/{self.location.bucket}/{prefix}")[
-                    "assets"
+            if isinstance(self.location, NFSLocation):
+                paths = [
+                    r["path"]
+                    for r in flight_conn.discovery(f"{prefix}")["assets"]
+                    if r["type"] in include_types
                 ]
-                if r["type"] in include_types
-            ]
+            else:
+                paths = [
+                    r["path"].replace(f"/{self.location.bucket}/", "", 1)
+                    for r in flight_conn.discovery(f"/{self.location.bucket}/{prefix}")[
+                        "assets"
+                    ]
+                    if r["type"] in include_types
+                ]
 
         except Exception as e:
             if include_folders or isinstance(self.location, NFSLocation):
@@ -1266,16 +1275,13 @@ class DataConnection(BaseDataConnection):
                         total_percentage_limit=total_percentage_limit,
                     )
 
-        elif self.type == DataConnectionTypes.FS:
+        elif (
+            self.type == DataConnectionTypes.FS
+            or self.type == DataConnectionTypes.CN
+            and getattr(self._api_client, "ICP_PLATFORM_SPACES", False)
+        ):
             data = self._download_training_data_from_file_system(binary=binary)
-
         elif self.type == DataConnectionTypes.CA or self.type == DataConnectionTypes.CN:
-            if (
-                getattr(self._api_client, "ICP_PLATFORM_SPACES", False)
-                and self.type == DataConnectionTypes.CN
-            ):
-                raise ContainerTypeNotSupported()  # block Container type on CPD
-
             if self.type == DataConnectionTypes.CA and self.location is None:
                 raise ConnectionAssetNotSupported()
 
@@ -1506,13 +1512,11 @@ class DataConnection(BaseDataConnection):
                 "S3 DataConnection is not supported. Please use data_asset_id instead."
             )
 
-        elif self.type == DataConnectionTypes.CA or self.type == DataConnectionTypes.CN:
-            if (
-                getattr(self._api_client, "ICP_PLATFORM_SPACES", False)
-                and self.type == DataConnectionTypes.CN
-            ):
-                raise ContainerTypeNotSupported()  # block Container type on CPD
-
+        elif (
+            self.type == DataConnectionTypes.CA
+            or self.type == DataConnectionTypes.CN
+            and not getattr(self._api_client, "ICP_PLATFORM_SPACES", False)
+        ):
             if self.type == DataConnectionTypes.CA and self.location is None:
                 raise ConnectionAssetNotSupported()
 
@@ -1687,7 +1691,11 @@ class DataConnection(BaseDataConnection):
                     flight_parameters=flight_parameters,
                     headers=headers,
                 )
-        elif self.type == DataConnectionTypes.FS:
+        elif (
+            self.type == DataConnectionTypes.FS
+            or self.type == DataConnectionTypes.CN
+            and getattr(self._api_client, "ICP_PLATFORM_SPACES", False)
+        ):
             if isinstance(data, str):
                 with open(data, "rb") as file_data:
                     self._upload_data_to_file_system(
@@ -1828,6 +1836,79 @@ class DataConnection(BaseDataConnection):
         with open(filename, "wb") as file:
             file.write(self.read(binary=True))
 
+    def _get_asset_files(self, flat: bool = True) -> dict:
+        """Return asset files.
+
+        :raises WMLClientError: If location is not one of ``ContainerLocation``, ``FSLocation``, or used on Cloud
+
+        :param flat: if `True`, folder structures are recursively flattened and the response is a list of all files in parent and child directories, defaults to `True`
+        :type flat: bool, optional
+
+        :return: asset files
+        :rtype: dict
+        """
+        if not self._api_client.ICP_PLATFORM_SPACES or not isinstance(
+            self.location, (FSLocation, ContainerLocation)
+        ):
+            raise WMLClientError(
+                error_msg="Can't list asset files from this DataConnection.",
+                reason="Location must be: `FSLocation` or `ContainerLocation`, only on IBM Cloud Pak for Data.",
+            )
+        url = (
+            self._api_client.service_instance._href_definitions.get_wsd_model_attachment_href()
+        )
+        params = self._api_client._params()
+        if flat:
+            params["flat"] = "true"
+        response = requests.get(
+            url,
+            params=params,
+            headers=self._api_client._get_headers(),
+        )
+        return self._api_client.repository._handle_response(
+            200, "listing file paths", response
+        )
+
+    def _get_file_paths_from_location(self) -> list[str]:
+        """Return list of asset file paths that exist under this data connection's location and child directories.
+
+        :return: list of file paths
+        :rtype: list[str]
+        """
+        asset_files = self._get_asset_files()
+        file_paths = [
+            asset["path"]
+            for asset in asset_files["resources"]
+            if asset["type"] == "file" and asset["path"].startswith(self.location.path)
+        ]
+        return file_paths
+
+    def _get_connections_from_paths(self, paths: list[str]) -> list["DataConnection"]:
+        """Return connections for every asset in a CPD cluster, included in `paths`.
+
+        :raises WMLClientError: If location is not one of ``ContainerLocation``, ``FSLocation``
+
+        :param paths: list of paths to asset in a CPD cluster
+        :type paths: list[str]
+
+        :return: list of connections to asset
+        :rtype: list[DataConnection]
+        """
+        if not isinstance(self.location, (FSLocation, ContainerLocation)):
+            raise WMLClientError(
+                error_msg=f"Can't get connections from path for `{self.location}`.",
+                reason="Location must be: `FSLocation` or `ContainerLocation`",
+            )
+        new_data_connections = []
+        for path in paths:
+            new_data_conn = DataConnection(
+                location=self.location._set_path(path),
+            )
+            if self._api_client:
+                new_data_conn.set_client(self._api_client)
+            new_data_connections.append(new_data_conn)
+        return new_data_connections
+
     def download_folder(self, local_dir: str | None = None) -> None:
         """Download files from a folder and subfolders stored in a remote data storage and save to a local directory.
 
@@ -1845,10 +1926,12 @@ class DataConnection(BaseDataConnection):
             folder_reference.download(local_dir="./data")
 
         """
-        if not isinstance(self.location, (S3Location, ContainerLocation, NFSLocation)):
+        if not isinstance(
+            self.location, (S3Location, ContainerLocation, NFSLocation, FSLocation)
+        ):
             raise WMLClientError(
                 error_msg="Can't download folder from this DataConnection.",
-                reason="Location must be one of: `S3Location`, `ContainerLocation`, `NFSLocation`.",
+                reason="Location must be one of: `S3Location`, `ContainerLocation`, `NFSLocation`, `FSLocation`.",
             )
 
         if local_dir is None:
@@ -1856,21 +1939,39 @@ class DataConnection(BaseDataConnection):
         else:
             os.makedirs(local_dir, exist_ok=True)
 
-        file_extension = os.path.splitext(self.location.get_location())[1]
+        file_extension = self.location._get_file_extension()
         if file_extension:
             raise WMLClientError(
                 "Location of the data connection does not point to a folder."
             )
 
-        data_connections = self._get_connections_from_folder(include_folders=True)
-        for data_connection in data_connections:
-            extension = os.path.splitext(data_connection.location.get_location())[1]
-            item_name = os.path.basename(data_connection.location.get_location())
-            path = os.path.join(local_dir, item_name)
-            if extension:
-                data_connection.download(path)
-            else:
-                data_connection.download_folder(path)
+        if (
+            isinstance(self.location, (S3Location, NFSLocation))
+            or isinstance(self.location, ContainerLocation)
+            and self._api_client.CLOUD_PLATFORM_SPACES
+        ):  # S3Location, NFSLocation and ContainerLocation on Cloud
+            data_connections = self._get_connections_from_folder(include_folders=True)
+            for data_connection in data_connections:
+                extension = os.path.splitext(data_connection.location.get_location())[1]
+                item_name = os.path.basename(data_connection.location.get_location())
+                path = os.path.join(local_dir, item_name)
+                if extension:
+                    data_connection.download(path)
+                else:
+                    data_connection.download_folder(path)
+        else:  # FSLocation and ContainerLocation on CPD
+            file_paths = self._get_file_paths_from_location()
+            data_connections = self._get_connections_from_paths(file_paths)
+            for data_connection in data_connections:
+                file_path = data_connection.location.get_location().removeprefix(
+                    self.location.path
+                )
+                directory = os.path.dirname(file_path)
+                if directory:
+                    directory = os.path.join(local_dir, directory)
+                    os.makedirs(directory, exist_ok=True)
+                download_path = os.path.join(local_dir, file_path)
+                data_connection.download(download_path)
 
     def _get_filename(self):
         """Get file name of the file in data connection, if applicable.
@@ -2158,6 +2259,12 @@ class FSLocation(BaseLocation):
         If no file extension is specified in self.path then empty string "" is returned.
         """
         return os.path.splitext(self.path)[-1]
+
+    def get_location(self) -> str:
+        if hasattr(self, "file_name"):
+            return self.file_name
+        else:
+            return self.path
 
 
 class AssetLocation(BaseLocation):

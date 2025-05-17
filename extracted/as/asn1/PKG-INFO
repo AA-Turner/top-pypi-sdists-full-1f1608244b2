@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: asn1
-Version: 3.0.1
+Version: 3.1.0
 Summary: Python-ASN1 is a simple ASN.1 encoder and decoder for Python 2.7+ and 3.5+.
 Home-page: https://github.com/andrivet/python-asn1
 Author: Sebastien Andrivet
@@ -154,6 +154,11 @@ The following people have contributed to Python-ASN1. Collectively they own the 
 
 Changelog
 =========
+
+3.1.0 (2025-05-16)
+------------------
+
+* #291 - Add support for mypy. As a consequence, the previous module has been migrated to a package.
 
 3.0.1 (2025-05-02)
 ------------------

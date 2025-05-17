@@ -52,7 +52,7 @@ class ParserManager:
         rules.parser = self._parser
 
         # The list of class templates.  Each element is a 2-tuple of the
-        # template arguments and the class itself.
+        # template arguments (as a Signature instance) and the class itself.
         self.class_templates = []
 
         # Public state.
@@ -256,7 +256,7 @@ class ParserManager:
                 type_hints=self.get_type_hints(p, symbol, annotations))
 
         klass.class_key = class_key
-        klass.superclasses = superclasses
+        klass.superclasses = superclasses if superclasses is not None else []
 
         self.push_scope(klass,
                 AccessSpecifier.PRIVATE if class_key is ClassKey.CLASS else AccessSpecifier.PUBLIC)
@@ -579,7 +579,9 @@ class ParserManager:
         base_type = EnumBaseType.ENUM
 
         if base_type_s is not None:
-            if self.spec.target_abi is not None and self.spec.target_abi < (13, 0):
+            # The minor version of the target ABI may not be known yet (and we
+            # don't need it) so just test the major version.
+            if self.spec.target_abi is not None and self.spec.target_abi[0] < 13:
                 self.parser_error(p, symbol,
                         "/BaseType/ is only supported for ABI v13.0 and later")
 
@@ -917,6 +919,7 @@ class ParserManager:
         """ Apply annotations to a mapped type. """
 
         mapped_type.handles_none = annotations.get('AllowNone', False)
+        mapped_type.movable = annotations.get('Movable', False)
         mapped_type.no_assignment_operator = annotations.get(
                 'NoAssignmentOperator', False)
         mapped_type.no_copy_ctor = annotations.get('NoCopyCtor', False)
@@ -1244,7 +1247,7 @@ class ParserManager:
         if upper_name:
             upper_qual = self._find_timeline_qualifier(p, symbol_upper)
             if upper_qual is None:
-                return False
+                return True
         else:
             upper_qual = None
 
@@ -1446,8 +1449,8 @@ class ParserManager:
 
     def instantiate_class_template(self, p, symbol, fq_cpp_name, template,
             py_name, no_type_name, docstring):
-        """ Try and instantiate a class template and return True if one was
-        found.
+        """ Try and instantiate a class template and return the instantiated
+        class or None if no template was found.
         """
 
         # Look for an appropriate class template.
@@ -1456,12 +1459,10 @@ class ParserManager:
                 break
         else:
             # There was no class template to instantiate.
-            return False
+            return None
 
-        instantiate_class(p, symbol, fq_cpp_name, tmpl_names, proto_class,
-                template, py_name, no_type_name, docstring, self)
-
-        return True
+        return instantiate_class(p, symbol, fq_cpp_name, tmpl_names,
+                proto_class, template, py_name, no_type_name, docstring, self)
 
     def lexer_error(self, t, text):
         """ Record an error caused by a token. """
@@ -1531,7 +1532,13 @@ class ParserManager:
     def parser_error(self, p, symbol, text):
         """ Record an error caused by a symbol in a production. """
 
-        self._error_log.log(text, self.get_source_location(p, symbol))
+        self.parser_error_at_location(self.get_source_location(p, symbol),
+                text)
+
+    def parser_error_at_location(self, source_location, text):
+        """ Record an error caused by a symbol in a production. """
+
+        self._error_log.log(text, source_location)
 
     def pop_file(self):
         """ Restore the current .sip file from the stack and make it current.
@@ -1997,7 +2004,7 @@ class ParserManager:
 
         name = p[symbol]
 
-        qual = self.find_qualifier(p, symbol, name)
+        qual = self.find_qualifier(p, symbol, name, required=False)
         if qual is None:
             return None
 

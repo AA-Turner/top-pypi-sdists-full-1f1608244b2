@@ -2279,29 +2279,32 @@ async def select_documento_type(document_type: str) -> RpaRetornoProcessoDTO:
         try:
             set_combobox("||List", document_type)
         except Exception as e:
-            console.log(
-                "Não foi possivel selecionar o tipo de documento via set combobox, realizando a alteração utilizando send keys"
-            )
-            combo_box_tipo_documento.click()
-            await worker_sleep(2)
-            pyautogui.write("N")
-            await worker_sleep(1)
-            pyautogui.hotkey("enter")
-            await worker_sleep(2)
-
-            max_try = 20
-            i = 0
-            while i <= max_try:
-                combo_box_tipo_documento = panel_TTabSheet.child_window(
-                    class_name="TDBIComboBox", found_index=1
+            try:
+                set_combobox("||List", "DANFE - NOTA FISCAL DE ENTRADA ELETRONICA - DANFE")
+            except:
+                console.log(
+                    "Não foi possivel selecionar o tipo de documento via set combobox, realizando a alteração utilizando send keys"
                 )
-                document_type_selected = combo_box_tipo_documento.window_text()
-                if document_type == document_type_selected:
-                    break
-                else:
-                    pyautogui.press("down")
-                    await worker_sleep(2)
-                    i = i + 1
+                combo_box_tipo_documento.click()
+                await worker_sleep(2)
+                pyautogui.write("N")
+                await worker_sleep(1)
+                pyautogui.hotkey("enter")
+                await worker_sleep(2)
+
+                max_try = 20
+                i = 0
+                while i <= max_try:
+                    combo_box_tipo_documento = panel_TTabSheet.child_window(
+                        class_name="TDBIComboBox", found_index=1
+                    )
+                    document_type_selected = combo_box_tipo_documento.window_text()
+                    if document_type == document_type_selected:
+                        break
+                    else:
+                        pyautogui.press("down")
+                        await worker_sleep(2)
+                        i = i + 1
 
         combo_box_tipo_documento = panel_TTabSheet.child_window(
             class_name="TDBIComboBox", found_index=1

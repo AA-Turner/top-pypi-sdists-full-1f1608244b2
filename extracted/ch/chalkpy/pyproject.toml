@@ -86,7 +86,7 @@ runtime = [
     "google-cloud-storage",
     "s3fs",
     "python-json-logger",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     "polars[timezone]<0.20.32",
 ]
 
@@ -125,7 +125,7 @@ sql = [
     "polars[timezone]<0.20.32",
     "python-json-logger",
     "s3fs",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     # [[[end]]]
 ]
 
@@ -146,7 +146,7 @@ athena = [
     "python-json-logger",
     "s3fs",
     "sqlalchemy[asyncio]>=1.4.26,<2",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     # [[[end]]]
 ]
 
@@ -169,7 +169,7 @@ bigquery = [
     "python-json-logger",
     "s3fs",
     "sqlalchemy[asyncio]>=1.4.26,<2",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     # [[[end]]]
 ]
 
@@ -191,7 +191,7 @@ clickhouse = [
     "python-json-logger",
     "s3fs",
     "sqlalchemy[asyncio]>=1.4.26,<2",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     # [[[end]]]
 ]
 
@@ -214,7 +214,7 @@ spanner = [
     "python-json-logger",
     "s3fs",
     "sqlalchemy[asyncio]>=1.4.26,<2",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     # [[[end]]]
 ]
 
@@ -237,7 +237,7 @@ postgresql = [
     "python-json-logger",
     "s3fs",
     "sqlalchemy[asyncio]>=1.4.26,<2",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     # [[[end]]]
 ]
 
@@ -260,7 +260,7 @@ snowflake = [
     "python-json-logger",
     "s3fs",
     "sqlalchemy[asyncio]>=1.4.26,<2",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     # [[[end]]]
 ]
 
@@ -281,7 +281,7 @@ sqlite = [
     "python-json-logger",
     "s3fs",
     "sqlalchemy[asyncio]>=1.4.26,<2",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     # [[[end]]]
 ]
 
@@ -307,7 +307,7 @@ redshift = [
     "python-json-logger",
     "s3fs",
     "sqlalchemy[asyncio]>=1.4.26,<2",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     # [[[end]]]
 ]
 
@@ -329,7 +329,7 @@ mysql = [
     "python-json-logger",
     "s3fs",
     "sqlalchemy[asyncio]>=1.4.26,<2",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     # [[[end]]]
 ]
 
@@ -350,7 +350,7 @@ trino = [
     "python-json-logger",
     "s3fs",
     "sqlalchemy[asyncio]>=1.4.26,<2",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     # [[[end]]]
 ]
 
@@ -372,7 +372,7 @@ databricks = [
     "python-json-logger",
     "s3fs",
     "sqlalchemy[asyncio]>=1.4.26,<2",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     # [[[end]]]
 ]
 
@@ -394,7 +394,7 @@ dynamodb = [
     "python-json-logger",
     "s3fs",
     "sqlalchemy[asyncio]>=1.4.26,<2",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     # [[[end]]]
 ]
 
@@ -445,7 +445,7 @@ all = [
     "sqlalchemy-redshift>=0.8.11,<0.9",
     "sqlalchemy-spanner",
     "sqlalchemy[asyncio]>=1.4.26,<2",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     "tiktoken>=0.5.1,<0.9",
     "trino[sqlalchemy]",
     # [[[end]]]
@@ -467,7 +467,7 @@ polars = [
     "polars[timezone]<0.20.32",
     "python-json-logger",
     "s3fs",
-    "sqlglot>=19.0.0",
+    "sqlglot>=19.0.0,<22",
     # [[[end]]]
 ]
 

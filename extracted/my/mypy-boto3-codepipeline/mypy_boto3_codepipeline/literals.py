@@ -44,6 +44,7 @@ __all__ = (
     "JobStatusType",
     "ListActionExecutionsPaginatorName",
     "ListActionTypesPaginatorName",
+    "ListDeployActionExecutionTargetsPaginatorName",
     "ListPipelineExecutionsPaginatorName",
     "ListPipelinesPaginatorName",
     "ListRuleExecutionsPaginatorName",
@@ -67,6 +68,7 @@ __all__ = (
     "StageRetryModeType",
     "StageTransitionTypeType",
     "StartTimeRangeType",
+    "TargetFilterNameType",
     "TriggerTypeType",
     "WebhookAuthenticationTypeType",
 )
@@ -103,6 +105,7 @@ JobStatusType = Literal[
 ]
 ListActionExecutionsPaginatorName = Literal["list_action_executions"]
 ListActionTypesPaginatorName = Literal["list_action_types"]
+ListDeployActionExecutionTargetsPaginatorName = Literal["list_deploy_action_execution_targets"]
 ListPipelineExecutionsPaginatorName = Literal["list_pipeline_executions"]
 ListPipelinesPaginatorName = Literal["list_pipelines"]
 ListRuleExecutionsPaginatorName = Literal["list_rule_executions"]
@@ -128,6 +131,7 @@ StageExecutionStatusType = Literal[
 StageRetryModeType = Literal["ALL_ACTIONS", "FAILED_ACTIONS"]
 StageTransitionTypeType = Literal["Inbound", "Outbound"]
 StartTimeRangeType = Literal["All", "Latest"]
+TargetFilterNameType = Literal["TARGET_STATUS"]
 TriggerTypeType = Literal[
     "AutomatedRollback",
     "CloudWatchEvent",
@@ -562,6 +566,7 @@ ResourceServiceName = Literal[
 PaginatorName = Literal[
     "list_action_executions",
     "list_action_types",
+    "list_deploy_action_execution_targets",
     "list_pipeline_executions",
     "list_pipelines",
     "list_rule_executions",

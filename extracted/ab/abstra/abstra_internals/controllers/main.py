@@ -30,7 +30,6 @@ from abstra_internals.repositories.project.project import (
     FormStage,
     HookStage,
     JobStage,
-    ProjectRepository,
     ScriptStage,
     Stage,
     StageWithFile,
@@ -110,7 +109,7 @@ class MainController:
     execution_logs_repository: ExecutionLogsRepository
 
     def __init__(self, repositories: Repositories):
-        ProjectRepository.initialize_or_migrate()
+        repositories.project.initialize_or_migrate()
 
         RequirementsRepository.ensure("abstra")
         ensure_abstraignore(Settings.root_path)
@@ -149,19 +148,15 @@ class MainController:
         self.tasks_repository.clear()
 
     def get_workspace(self) -> StyleSettingsWithSidebar:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         return project.get_workspace()
 
     def get_stage(self, id: str) -> Optional[Stage]:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         return project.get_stage(id)
 
-    def get_action(self, id: str) -> Optional[Stage]:
-        project = ProjectRepository.load()
-        return project.get_action(id)
-
     def get_async_stage_ids(self):
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         job_ids = [stage.id for stage in project.jobs]
         script_ids = [stage.id for stage in project.scripts]
         return job_ids + script_ids
@@ -253,14 +248,14 @@ class MainController:
             ]
 
     def update_workspace(self, changes: Dict[str, Any]):
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         project.workspace.update(changes)
-        ProjectRepository.save(project)
+        self.repositories.project.save(project)
         return project.workspace
 
     def is_initial(self, id: str):
-        project = ProjectRepository.load()
-        stage = project.get_action(id)
+        project = self.repositories.project.load()
+        stage = project.get_stage(id)
         if not stage:
             raise Exception(f"Stage {id} not found")
         return project.is_initial(stage)
@@ -272,28 +267,28 @@ class MainController:
         workflow_position: Tuple[int, int] = (0, 0),
         id: Optional[str] = None,
     ) -> ScriptStage:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         script = ScriptStage.create(
             title, file, workflow_position=workflow_position, id=id
         )
         self.init_code_file(script.file, new_script_code)
         project.add_stage(script)
-        ProjectRepository.save(project)
+        self.repositories.project.save(project)
 
         return script
 
     def get_scripts(self) -> List[ScriptStage]:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         return project.scripts
 
     def get_script(self, id: str) -> Optional[ScriptStage]:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         return project.get_script(id)
 
     def delete_script(self, id: str, remove_file: bool = False):
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         project.delete_stage(id, remove_file)
-        ProjectRepository.save(project)
+        self.repositories.project.save(project)
 
     def create_form(
         self,
@@ -302,23 +297,23 @@ class MainController:
         workflow_position: Tuple[int, int] = (0, 0),
         id: Optional[str] = None,
     ) -> FormStage:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         form = FormStage.create(title, file, workflow_position=workflow_position, id=id)
         self.init_code_file(form.file, new_form_code)
         project.add_stage(form)
-        ProjectRepository.save(project)
+        self.repositories.project.save(project)
         return form
 
     def get_forms(self) -> List[FormStage]:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         return project.forms
 
     def get_form(self, id: str) -> Optional[FormStage]:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         return project.get_form(id)
 
     def get_form_by_path(self, path: str) -> Optional[FormStage]:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         return project.get_form_by_path(path)
 
     def write_test_data(self, data: str) -> None:
@@ -334,9 +329,9 @@ class MainController:
         return test_file.read_text(encoding="utf-8")
 
     def delete_form(self, id: str, remove_file: bool = False):
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         project.delete_stage(id, remove_file)
-        ProjectRepository.save(project)
+        self.repositories.project.save(project)
 
     def create_hook(
         self,
@@ -345,36 +340,36 @@ class MainController:
         workflow_position: Tuple[int, int] = (0, 0),
         id: Optional[str] = None,
     ) -> HookStage:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         hook = HookStage.create(title, file, workflow_position=workflow_position, id=id)
         self.init_code_file(hook.file, new_hook_code)
         project.add_stage(hook)
-        ProjectRepository.save(project)
+        self.repositories.project.save(project)
         return hook
 
     def get_hook(self, id: str) -> Optional[HookStage]:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         return project.get_hook(id)
 
     def get_hooks(self) -> List[HookStage]:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         return project.hooks
 
     def get_hook_by_path(self, path: str) -> Optional[HookStage]:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         return project.get_hook_by_path(path)
 
     def delete_hook(self, id: str, remove_file: bool = False) -> None:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         project.delete_stage(id, remove_file)
-        ProjectRepository.save(project)
+        self.repositories.project.save(project)
 
     def get_jobs(self) -> List[JobStage]:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         return project.jobs
 
     def get_job(self, id: str) -> Optional[JobStage]:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         stage = project.get_stage(id)
 
         if isinstance(stage, JobStage):
@@ -389,16 +384,16 @@ class MainController:
         workflow_position: Tuple[int, int] = (0, 0),
         id: Optional[str] = None,
     ) -> JobStage:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         job = JobStage.create(title, file, workflow_position=workflow_position, id=id)
         self.init_code_file(job.file, new_job_code)
         project.add_stage(job)
-        ProjectRepository.save(project)
+        self.repositories.project.save(project)
         return job
 
     def update_stage(self, id: str, changes: Dict[str, Any]) -> Stage:
-        project = ProjectRepository.load()
-        stage = project.get_action(id)
+        project = self.repositories.project.load()
+        stage = project.get_stage(id)
 
         if not stage:
             raise Exception(f"Stage with id {id} not found")
@@ -414,16 +409,16 @@ class MainController:
             self.write_test_data(test_data)
 
         stage = project.update_stage(stage, changes)
-        ProjectRepository.save(project)
+        self.repositories.project.save(project)
         return stage
 
     def delete_job(self, id: str, remove_file: bool = False):
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         project.delete_stage(id, remove_file)
-        ProjectRepository.save(project)
+        self.repositories.project.save(project)
 
     def get_stages(self) -> List[Stage]:
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         return project.workflow_stages
 
     # Login
@@ -453,17 +448,17 @@ class MainController:
 
     # access_control
     def list_access_controls(self):
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         return [s.to_access_dto() for s in project.secured_stages]
 
     def update_access_controls(self, changes: List[Dict[str, Any]]):
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         response = project.update_access_controls(changes)
-        ProjectRepository.save(project)
+        self.repositories.project.save(project)
         return response
 
     def get_access_control_by_stage_id(self, id):
-        project = ProjectRepository.load()
+        project = self.repositories.project.load()
         return project.get_access_control_by_stage_id(id)
 
     # logs
@@ -488,8 +483,7 @@ class MainController:
         )
 
     # Worker lifecycle
-
-    def child_exit(self, *, app_id: str, worker_id: str, err_msg: str):
+    def worker_exit(self, *, app_id: str, worker_id: str, err_msg: str):
         killed_executions = self.execution_repository.find_by_worker(
             worker_id=worker_id,
             status="running",
@@ -513,7 +507,7 @@ class MainController:
 
             self.tasks_repository.set_locked_tasks_to_pending(execution.id)
 
-    def self_exit(self, *, app_id: str, err_msg: str):
+    def app_exit(self, *, app_id: str, err_msg: str):
         exited_execs = self.execution_repository.find_by_app(
             status="running",
             app_id=app_id,

@@ -45,7 +45,6 @@ def _flatten_str_args(
     function_name: str, arg_name: str, args: collections.abc.Sequence[typing.Union[str, list[str]]]
 ) -> list[str]: ...
 def _validate_packages(packages: list[str]) -> bool: ...
-def _warn_invalid_packages(old_command: str) -> None: ...
 def _make_pip_install_args(
     find_links: typing.Optional[str] = None,
     index_url: typing.Optional[str] = None,
@@ -121,7 +120,7 @@ class _Image(modal._object._Object):
         _namespace: int = 1,
         _do_assert_no_mount_layers: bool = True,
     ): ...
-    def copy_mount(self, mount: modal.mount._Mount, remote_path: typing.Union[str, pathlib.Path] = ".") -> _Image: ...
+    def _copy_mount(self, mount: modal.mount._Mount, remote_path: typing.Union[str, pathlib.Path] = ".") -> _Image: ...
     def add_local_file(
         self, local_path: typing.Union[str, pathlib.Path], remote_path: str, *, copy: bool = False
     ) -> _Image: ...
@@ -317,7 +316,6 @@ class _Image(modal._object._Object):
         *,
         secrets: collections.abc.Sequence[modal.secret._Secret] = (),
         gpu: typing.Union[None, str, modal.gpu._GPUConfig, list[typing.Union[None, str, modal.gpu._GPUConfig]]] = None,
-        mounts: collections.abc.Sequence[modal.mount._Mount] = (),
         volumes: dict[
             typing.Union[str, pathlib.PurePosixPath],
             typing.Union[modal.volume._Volume, modal.cloud_bucket_mount._CloudBucketMount],
@@ -378,7 +376,7 @@ class Image(modal.object.Object):
         _namespace: int = 1,
         _do_assert_no_mount_layers: bool = True,
     ): ...
-    def copy_mount(self, mount: modal.mount.Mount, remote_path: typing.Union[str, pathlib.Path] = ".") -> Image: ...
+    def _copy_mount(self, mount: modal.mount.Mount, remote_path: typing.Union[str, pathlib.Path] = ".") -> Image: ...
     def add_local_file(
         self, local_path: typing.Union[str, pathlib.Path], remote_path: str, *, copy: bool = False
     ) -> Image: ...
@@ -579,7 +577,6 @@ class Image(modal.object.Object):
         *,
         secrets: collections.abc.Sequence[modal.secret.Secret] = (),
         gpu: typing.Union[None, str, modal.gpu._GPUConfig, list[typing.Union[None, str, modal.gpu._GPUConfig]]] = None,
-        mounts: collections.abc.Sequence[modal.mount.Mount] = (),
         volumes: dict[
             typing.Union[str, pathlib.PurePosixPath],
             typing.Union[modal.volume.Volume, modal.cloud_bucket_mount.CloudBucketMount],

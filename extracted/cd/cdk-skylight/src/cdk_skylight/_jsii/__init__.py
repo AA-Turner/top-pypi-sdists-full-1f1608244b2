@@ -32,7 +32,7 @@ import aws_cdk._jsii
 import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
-    "cdk-skylight", "1.1.780", __name__[0:-6], "cdk-skylight@1.1.780.jsii.tgz"
+    "cdk-skylight", "1.1.781", __name__[0:-6], "cdk-skylight@1.1.781.jsii.tgz"
 )
 
 __all__ = [

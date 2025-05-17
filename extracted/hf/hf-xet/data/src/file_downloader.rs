@@ -4,9 +4,9 @@ use std::sync::Arc;
 use cas_client::{Client, OutputProvider};
 use cas_types::FileRange;
 use merklehash::MerkleHash;
+use progress_tracking::item_tracking::ItemProgressUpdater;
 use tracing::instrument;
 use ulid::Ulid;
-use utils::progress::{ItemProgressUpdater, SimpleProgressUpdater, TrackingProgressUpdater};
 
 use crate::configurations::TranslatorConfig;
 use crate::errors::*;
@@ -44,10 +44,9 @@ impl FileDownloader {
         file_name: Arc<str>,
         output: &OutputProvider,
         range: Option<FileRange>,
-        progress_updater: Option<Arc<dyn TrackingProgressUpdater>>,
+        progress_updater: Option<Arc<ItemProgressUpdater>>,
     ) -> Result<u64> {
-        let file_progress_tracker =
-            progress_updater.map(|p| ItemProgressUpdater::new(p, file_name, None) as Arc<dyn SimpleProgressUpdater>);
+        let file_progress_tracker = progress_updater.map(|p| ItemProgressUpdater::item_tracker(&p, file_name, None));
 
         // Currently, this works by always directly querying the remote server.
         let n_bytes = self.client.get_file(file_id, range, output, file_progress_tracker).await?;

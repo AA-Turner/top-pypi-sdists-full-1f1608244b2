@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: BabelDOC
-Version: 0.3.48
+Version: 0.3.50
 Summary: Yet Another Document Translator
 Project-URL: Homepage, https://github.com/funstory-ai/BabelDOC
 Project-URL: Issues, https://github.com/funstory-ai/BabelDOC/issues
@@ -11,7 +11,7 @@ License-File: LICENSE
 Keywords: PDF
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
-Requires-Python: <3.13,>=3.10
+Requires-Python: <3.14,>=3.10
 Requires-Dist: bitstring>=4.3.0
 Requires-Dist: configargparse>=1.7
 Requires-Dist: freetype-py>=2.5.1
@@ -19,7 +19,7 @@ Requires-Dist: httpx[socks]>=0.27.0
 Requires-Dist: huggingface-hub>=0.27.0
 Requires-Dist: msgpack>=1.1.0
 Requires-Dist: numpy>=2.0.2
-Requires-Dist: onnx>=1.17.0
+Requires-Dist: onnx>=1.18.0
 Requires-Dist: onnxruntime>=1.16.1
 Requires-Dist: openai>=1.59.3
 Requires-Dist: opencv-python-headless>=4.10.0.84
