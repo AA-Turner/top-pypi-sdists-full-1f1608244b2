@@ -152,6 +152,7 @@ class ChartLinkKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     CHART_LINK_KIND_FEATURE: _ClassVar[ChartLinkKind]
     CHART_LINK_KIND_QUERY: _ClassVar[ChartLinkKind]
     CHART_LINK_KIND_MANUAL: _ClassVar[ChartLinkKind]
+    CHART_LINK_KIND_SCHEDULED_QUERY: _ClassVar[ChartLinkKind]
 
 METRIC_KIND_UNSPECIFIED: MetricKind
 METRIC_KIND_FEATURE_REQUEST_COUNT: MetricKind
@@ -267,6 +268,7 @@ CHART_LINK_KIND_RESOLVER: ChartLinkKind
 CHART_LINK_KIND_FEATURE: ChartLinkKind
 CHART_LINK_KIND_QUERY: ChartLinkKind
 CHART_LINK_KIND_MANUAL: ChartLinkKind
+CHART_LINK_KIND_SCHEDULED_QUERY: ChartLinkKind
 
 class AlertTrigger(_message.Message):
     __slots__ = (

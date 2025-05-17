@@ -1,7 +1,6 @@
 # Copyright Modal Labs 2022
 import inspect
 import typing
-import warnings
 from collections.abc import AsyncGenerator, Coroutine, Sequence
 from pathlib import PurePosixPath
 from textwrap import dedent
@@ -30,9 +29,7 @@ from ._partial_function import (
 )
 from ._utils.async_utils import synchronize_api
 from ._utils.deprecation import (
-    deprecation_error,
     deprecation_warning,
-    renamed_parameter,
     warn_on_renamed_autoscaler_settings,
 )
 from ._utils.function_utils import FunctionInfo, is_global_object, is_method_fn
@@ -47,7 +44,6 @@ from .exception import ExecutionError, InvalidError
 from .functions import Function
 from .gpu import GPU_T
 from .image import _Image
-from .mount import _Mount
 from .network_file_system import _NetworkFileSystem
 from .partial_function import PartialFunction
 from .proxy import _Proxy
@@ -78,11 +74,6 @@ class _LocalEntrypoint:
 
     @property
     def app(self) -> "_App":
-        return self._app
-
-    @property
-    def stub(self) -> "_App":
-        # Deprecated soon, only for backwards compatibility
         return self._app
 
 
@@ -164,7 +155,6 @@ class _App:
     _classes: dict[str, _Cls]
 
     _image: Optional[_Image]
-    _mounts: Sequence[_Mount]
     _secrets: Sequence[_Secret]
     _volumes: dict[Union[str, PurePosixPath], _Volume]
     _web_endpoints: list[str]  # Used by the CLI
@@ -182,7 +172,6 @@ class _App:
         name: Optional[str] = None,
         *,
         image: Optional[_Image] = None,  # default image for all functions (default is `modal.Image.debian_slim()`)
-        mounts: Sequence[_Mount] = [],  # default mounts for all functions
         secrets: Sequence[_Secret] = [],  # default secrets for all functions
         volumes: dict[Union[str, PurePosixPath], _Volume] = {},  # default volumes for all functions
         include_source: Optional[bool] = None,
@@ -203,7 +192,6 @@ class _App:
         self._description = name
         self._include_source_default = include_source
 
-        check_sequence(mounts, _Mount, "`mounts=` has to be a list or tuple of `modal.Mount` objects")
         check_sequence(secrets, _Secret, "`secrets=` has to be a list or tuple of `modal.Secret` objects")
         validate_volumes(volumes)
 
@@ -213,7 +201,6 @@ class _App:
         self._functions = {}
         self._classes = {}
         self._image = image
-        self._mounts = mounts
         self._secrets = secrets
         self._volumes = volumes
         self._local_entrypoints = {}
@@ -251,7 +238,6 @@ class _App:
         return self._description
 
     @staticmethod
-    @renamed_parameter((2024, 12, 18), "label", "name")
     async def lookup(
         name: str,
         *,
@@ -330,7 +316,6 @@ class _App:
         self,
         *,
         client: Optional[_Client] = None,
-        show_progress: Optional[bool] = None,
         detach: bool = False,
         interactive: bool = False,
         environment_name: Optional[str] = None,
@@ -375,16 +360,6 @@ class _App:
 
         """
         from .runner import _run_app  # Defer import of runner.py, which imports a lot from Rich
-
-        # See Github discussion here: https://github.com/modal-labs/modal-client/pull/2030#issuecomment-2237266186
-
-        if show_progress is True:
-            deprecation_error(
-                (2024, 11, 20),
-                "`show_progress=True` is no longer supported. Use `with modal.enable_output():` instead.",
-            )
-        elif show_progress is False:
-            deprecation_warning((2024, 11, 20), "`show_progress=False` is deprecated (and has no effect)")
 
         async with _run_app(
             self, client=client, detach=detach, interactive=interactive, environment_name=environment_name
@@ -466,9 +441,7 @@ class _App:
         if not self._running_app:
             raise ExecutionError("`_get_watch_mounts` requires a running app.")
 
-        all_mounts = [
-            *self._mounts,
-        ]
+        all_mounts = []
         for function in self.registered_functions.values():
             all_mounts.extend(function._serve_mounts)
 
@@ -547,14 +520,6 @@ class _App:
     def registered_entrypoints(self) -> dict[str, _LocalEntrypoint]:
         """All local CLI entrypoints registered on the app."""
         return self._local_entrypoints
-
-    @property
-    def indexed_objects(self) -> dict[str, _Object]:
-        deprecation_warning(
-            (2024, 11, 25),
-            "`app.indexed_objects` is deprecated! Use `app.registered_functions` or `app.registered_classes` instead.",
-        )
-        return dict(**self._functions, **self._classes)
 
     @property
     def registered_web_endpoints(self) -> list[str]:
@@ -640,7 +605,6 @@ class _App:
             GPU_T, list[GPU_T]
         ] = None,  # GPU request as string ("any", "T4", ...), object (`modal.GPU.A100()`, ...), or a list of either
         serialized: bool = False,  # Whether to send the function over using cloudpickle.
-        mounts: Sequence[_Mount] = (),  # Modal Mounts added to the container
         network_file_systems: dict[
             Union[str, PurePosixPath], _NetworkFileSystem
         ] = {},  # Mountpoints for Modal NetworkFileSystems
@@ -803,12 +767,6 @@ class _App:
                 rdma = None
                 i6pn_enabled = i6pn
 
-            if info.function_name.endswith(".app"):
-                warnings.warn(
-                    "Beware: the function name is `app`. Modal will soon rename `Stub` to `App`, "
-                    "so you might run into issues if you have code like `app = modal.App()` in the same scope"
-                )
-
             if is_generator is None:
                 is_generator = inspect.isgeneratorfunction(raw_f) or inspect.isasyncgenfunction(raw_f)
 
@@ -826,7 +784,6 @@ class _App:
                 schedule=schedule,
                 is_generator=is_generator,
                 gpu=gpu,
-                mounts=[*self._mounts, *mounts],
                 network_file_systems=network_file_systems,
                 volumes={**self._volumes, **volumes},
                 cpu=cpu,
@@ -877,7 +834,6 @@ class _App:
             GPU_T, list[GPU_T]
         ] = None,  # GPU request as string ("any", "T4", ...), object (`modal.GPU.A100()`, ...), or a list of either
         serialized: bool = False,  # Whether to send the function over using cloudpickle.
-        mounts: Sequence[_Mount] = (),
         network_file_systems: dict[
             Union[str, PurePosixPath], _NetworkFileSystem
         ] = {},  # Mountpoints for Modal NetworkFileSystems
@@ -999,7 +955,6 @@ class _App:
                 image=image or self._get_default_image(),
                 secrets=[*self._secrets, *secrets],
                 gpu=gpu,
-                mounts=[*self._mounts, *mounts],
                 network_file_systems=network_file_systems,
                 volumes={**self._volumes, **volumes},
                 cpu=cpu,
@@ -1038,44 +993,6 @@ class _App:
             return cls  # type: ignore  # a _Cls instance "simulates" being the user provided class
 
         return wrapper
-
-    async def spawn_sandbox(
-        self,
-        *entrypoint_args: str,
-        image: Optional[_Image] = None,  # The image to run as the container for the sandbox.
-        mounts: Sequence[_Mount] = (),  # Mounts to attach to the sandbox.
-        secrets: Sequence[_Secret] = (),  # Environment variables to inject into the sandbox.
-        network_file_systems: dict[Union[str, PurePosixPath], _NetworkFileSystem] = {},
-        timeout: Optional[int] = None,  # Maximum execution time of the sandbox in seconds.
-        workdir: Optional[str] = None,  # Working directory of the sandbox.
-        gpu: GPU_T = None,
-        cloud: Optional[str] = None,
-        region: Optional[Union[str, Sequence[str]]] = None,  # Region or regions to run the sandbox on.
-        # Specify, in fractional CPU cores, how many CPU cores to request.
-        # Or, pass (request, limit) to additionally specify a hard limit in fractional CPU cores.
-        # CPU throttling will prevent a container from exceeding its specified limit.
-        cpu: Optional[Union[float, tuple[float, float]]] = None,
-        # Specify, in MiB, a memory request which is the minimum memory required.
-        # Or, pass (request, limit) to additionally specify a hard limit in MiB.
-        memory: Optional[Union[int, tuple[int, int]]] = None,
-        block_network: bool = False,  # Whether to block network access
-        volumes: dict[
-            Union[str, PurePosixPath], Union[_Volume, _CloudBucketMount]
-        ] = {},  # Mount points for Modal Volumes and CloudBucketMounts
-        pty_info: Optional[api_pb2.PTYInfo] = None,
-        _experimental_scheduler_placement: Optional[
-            SchedulerPlacement
-        ] = None,  # Experimental controls over fine-grained scheduling (alpha).
-    ) -> None:
-        """mdmd:hidden"""
-        arglist = ", ".join(repr(s) for s in entrypoint_args)
-        message = (
-            "`App.spawn_sandbox` is deprecated.\n\n"
-            "Sandboxes can be created using the `Sandbox` object:\n\n"
-            f"```\nsb = Sandbox.create({arglist}, app=app)\n```\n\n"
-            "See https://modal.com/docs/guide/sandbox for more info on working with sandboxes."
-        )
-        deprecation_error((2024, 7, 5), message)
 
     def include(self, /, other_app: "_App") -> typing_extensions.Self:
         """Include another App's objects in this one.
@@ -1156,23 +1073,3 @@ class _App:
 
 
 App = synchronize_api(_App)
-
-
-class _Stub(_App):
-    """mdmd:hidden
-    This enables using a "Stub" class instead of "App".
-
-    For most of Modal's history, the app class was called "Stub", so this exists for
-    backwards compatibility, in order to facilitate moving from "Stub" to "App".
-    """
-
-    def __new__(cls, *args, **kwargs):
-        deprecation_warning(
-            (2024, 4, 29),
-            'The use of "Stub" has been deprecated in favor of "App".'
-            " This is a pure name change with no other implications.",
-        )
-        return _App(*args, **kwargs)
-
-
-Stub = synchronize_api(_Stub)

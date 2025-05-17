@@ -88,9 +88,8 @@ class ImageToVideoResource(SyncAPIResource):
 
           duration: The number of seconds of duration for the output video.
 
-          prompt_text: A non-empty string up to 1000 UTF-16 code points in length (that is,
-              `promptText.length === 1000` in JavaScript). This should describe in detail what
-              should appear in the output.
+          prompt_text: A non-empty string up to 1000 characters (measured in UTF-16 code units). This
+              should describe in detail what should appear in the output.
 
           seed: If unspecified, a random number is chosen. Varying the seed integer is a way to
               get different results for the same other request parameters. Using the same seed
@@ -188,9 +187,8 @@ class AsyncImageToVideoResource(AsyncAPIResource):
 
           duration: The number of seconds of duration for the output video.
 
-          prompt_text: A non-empty string up to 1000 UTF-16 code points in length (that is,
-              `promptText.length === 1000` in JavaScript). This should describe in detail what
-              should appear in the output.
+          prompt_text: A non-empty string up to 1000 characters (measured in UTF-16 code units). This
+              should describe in detail what should appear in the output.
 
           seed: If unspecified, a random number is chosen. Varying the seed integer is a way to
               get different results for the same other request parameters. Using the same seed

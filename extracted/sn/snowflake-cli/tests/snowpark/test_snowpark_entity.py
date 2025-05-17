@@ -224,3 +224,12 @@ def test_get_usage_grant_sql(example_function_workspace):
         entity.get_usage_grant_sql("test_role")
         == "GRANT USAGE ON FUNCTION IDENTIFIER('func1') TO ROLE test_role;"
     )
+
+
+def test_get_deploy_sql_with_repository_packages(example_function_workspace, snapshot):
+    entity, _ = example_function_workspace
+    entity.model.artifact_repository = "snowflake.snowpark.pypi_shared_repository"
+    entity.model.artifact_repository_packages = ["package1", "package2"]
+    entity.model.resource_constraint = {"architecture": "x86"}
+    deploy_sql = entity.get_deploy_sql(CreateMode.create)
+    assert deploy_sql == snapshot

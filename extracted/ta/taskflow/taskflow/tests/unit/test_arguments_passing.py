@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #    Copyright (C) 2012 Yahoo! Inc. All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -22,11 +20,6 @@ from taskflow import exceptions as exc
 from taskflow import test
 from taskflow.tests import utils
 from taskflow.utils import eventlet_utils as eu
-
-try:
-    from taskflow.engines.action_engine import process_executor as pe
-except ImportError:
-    pe = None
 
 
 class ArgumentsPassingTest(utils.EngineTestBase):
@@ -55,9 +48,9 @@ class ArgumentsPassingTest(utils.EngineTestBase):
         }, engine.storage.fetch_all())
 
     def test_save_dict(self):
-        flow = utils.TaskMultiDict(provides=set(['badger',
-                                                 'mushroom',
-                                                 'snake']))
+        flow = utils.TaskMultiDict(provides={'badger',
+                                             'mushroom',
+                                             'snake'})
         engine = self._make_engine(flow)
         engine.run()
         self.assertEqual({
@@ -224,18 +217,3 @@ class ParallelEngineWithEventletTest(ArgumentsPassingTest, test.TestCase):
                                      backend=self.backend,
                                      engine='parallel',
                                      executor=executor)
-
-
-@testtools.skipIf(pe is None, 'process_executor is not available')
-class ParallelEngineWithProcessTest(ArgumentsPassingTest, test.TestCase):
-    _EXECUTOR_WORKERS = 2
-
-    def _make_engine(self, flow, flow_detail=None, executor=None):
-        if executor is None:
-            executor = 'processes'
-        return taskflow.engines.load(flow,
-                                     flow_detail=flow_detail,
-                                     backend=self.backend,
-                                     engine='parallel',
-                                     executor=executor,
-                                     max_workers=self._EXECUTOR_WORKERS)

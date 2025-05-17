@@ -17,6 +17,8 @@ try:
 except ImportError:
     raise MissingExtension("langchain_elasticsearch")
 
+TEXT_FIELD = "text_field"
+
 
 class RetrievalOptions:
     """Retrieval options to be used when conducting hybrid search."""
@@ -39,6 +41,9 @@ class HybridStrategyElasticsearch(RetrievalStrategy):
 
     :param rrf_params: rrf method's parameters, default to None
     :type rrf_params: dict, optional
+
+    :param text_field: text field name, default to `text_field`
+    :type text_field: str, optional
 
     **Example:**
 
@@ -85,7 +90,6 @@ class HybridStrategyElasticsearch(RetrievalStrategy):
 
     _sparse_vector_field = "sparse_vector"
     _dense_vector_field = "dense_vector"
-    _text_field = "text_field"
     _tokens_field = "tokens"
     _sparse_model_id = ".elser_model_2"
     _dense_model_id = None
@@ -95,27 +99,29 @@ class HybridStrategyElasticsearch(RetrievalStrategy):
         retrieval_strategies: dict[str, dict[str, Any]],
         use_rrf: bool = False,
         rrf_params: dict | None = None,
+        text_field: str = TEXT_FIELD,
     ):
         self._retrieval_strategies = retrieval_strategies
+        self._text_field = text_field
 
         if RetrievalOptions.DENSE in self._retrieval_strategies:
             dense_strategy_config = self._retrieval_strategies[RetrievalOptions.DENSE]
             self._dense_model_id = dense_strategy_config.get("model_id")
-            if vector_field := dense_strategy_config.get("vector_field"):
+            if (vector_field := dense_strategy_config.get("vector_field")) is not None:
                 self._dense_vector_field = vector_field
 
         if RetrievalOptions.SPARSE in self._retrieval_strategies:
             self._pipeline_name = f"{self._sparse_model_id}_sparse_embedding"
             sparse_strategy_config = self._retrieval_strategies[RetrievalOptions.SPARSE]
-            if model_id := sparse_strategy_config.get("model_id"):
+            if (model_id := sparse_strategy_config.get("model_id")) is not None:
                 self._sparse_model_id = model_id
-            if vector_field := sparse_strategy_config.get("vector_field"):
+            if (vector_field := sparse_strategy_config.get("vector_field")) is not None:
                 self._sparse_vector_field = vector_field
 
         if RetrievalOptions.BM25 in self._retrieval_strategies:
             bm25_strategy_config = self._retrieval_strategies[RetrievalOptions.BM25]
-            if text_field := bm25_strategy_config.get("text_field"):
-                self._text_field = text_field
+            if (bm25_text_field := bm25_strategy_config.get("text_field")) is not None:
+                self._text_field = bm25_text_field
 
         if not use_rrf and (
             any(
@@ -349,11 +355,16 @@ class HybridStrategyElasticsearch(RetrievalStrategy):
         :return: dict for the from_dict initialization
         :rtype: dict
         """
-        return {
+        raw_data = {
             "retrieval_strategies": self._retrieval_strategies,
             "use_rrf": bool(self.rrf),
-            "rrf_params": self.rrf or None,
+            "rrf_params": self.rrf,
         }
+
+        if self._text_field is not TEXT_FIELD:
+            raw_data["text_field"] = self._text_field
+
+        return raw_data
 
     @classmethod
     def from_dict(cls, data: dict) -> "HybridStrategyElasticsearch":

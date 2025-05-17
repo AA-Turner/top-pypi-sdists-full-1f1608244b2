@@ -116,12 +116,12 @@ def gsd(levels, reduction, n=1):
 
     """
     try:
-        assert all(
-            isinstance(v, int) for v in levels
-        ), "levels has to be sequence of integers"
-        assert (
-            isinstance(reduction, int) and reduction > 1
-        ), "reduction has to be integer larger than 1"
+        assert all(isinstance(v, int) for v in levels), (
+            "levels has to be sequence of integers"
+        )
+        assert isinstance(reduction, int) and reduction > 1, (
+            "reduction has to be integer larger than 1"
+        )
         assert isinstance(n, int) and n > 0, "n has to be positive integer"
     except AssertionError as e:
         raise ValueError(e)
@@ -205,8 +205,8 @@ def _make_partitions(factor_levels, num_partitions):
 
         for num_levels in factor_levels:
             part = list()
-            for level_i in range(1, num_levels):
-                index = partition_i + (level_i - 1) * num_partitions
+            for level_i in range(num_levels):
+                index = partition_i + level_i * num_partitions
                 if index <= num_levels:
                     part.append(index)
 

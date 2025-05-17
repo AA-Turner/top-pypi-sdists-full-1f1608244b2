@@ -1,4 +1,4 @@
-# ------------------ Memory Management 3.4.3 for the GPU Poor by DeepBeepMeep (mmgp)------------------
+# ------------------ Memory Management 3.4.5 for the GPU Poor by DeepBeepMeep (mmgp)------------------
 #
 # This module contains multiples optimisations so that models such as Flux (and derived), Mochi, CogView, HunyuanVideo, ...  can run smoothly on a 24 GB GPU limited card. 
 # This a replacement for the accelerate library that should in theory manage offloading, but doesn't work properly with models that are loaded / unloaded several
@@ -619,7 +619,7 @@ def _welcome():
     if welcome_displayed:
          return 
     welcome_displayed = True
-    print(f"{BOLD}{HEADER}************ Memory Management for the GPU Poor (mmgp 3.4.3) by DeepBeepMeep ************{ENDC}{UNBOLD}")
+    print(f"{BOLD}{HEADER}************ Memory Management for the GPU Poor (mmgp 3.4.5) by DeepBeepMeep ************{ENDC}{UNBOLD}")
 
 def change_dtype(model, new_dtype, exclude_buffers = False):
     for submodule_name, submodule in model.named_modules():  
@@ -1259,7 +1259,6 @@ def fast_load_transformers_model(model_path: str, do_quantize = False, quantizat
         with init_empty_weights():
             model = transfomer_class(config_obj)
                 
-        model = model.base_model
 
     elif "_class_name" in transformer_config:
         class_name = transformer_config["_class_name"]
@@ -1401,7 +1400,7 @@ def load_model_data(model, file_path: str, do_quantize = False, quantizationType
                 base_model_prefix = k[:-len(missing_keys[0])]
                 break
         if base_model_prefix == None:
-            raise Exception("Missing keys: {missing_keys}")
+            raise Exception(f"Missing keys: {missing_keys}")
         state_dict = filter_state_dict(state_dict, base_model_prefix)
         missing_keys , unexpected_keys = model.load_state_dict(state_dict, False,  assign = True )
     del state_dict
@@ -2030,7 +2029,7 @@ class offload:
         else:
             dtype = model._dtype
 
-        def check_change_module(module, *args, **kwargs):            
+        def check_change_module(module, *args, **kwargs):      
             self.ensure_model_loaded(model_id)
             # transfer leftovers inputs that were incorrectly created in the RAM (mostly due to some .device tests that returned incorrectly "cpu")
             if dtype != None:
@@ -2064,10 +2063,7 @@ class offload:
         # current_budget = 5000 * ONE_MB
         base_size = self.blocks_of_modules_sizes[model_id] 
         current_budget -= base_size
-        if current_budget <= 0:
-            if self.verboseLevel >=1:
-                print(f"Async loading plan for model '{model_id}' : minimum budget management, beside the async shuttle only base model ({(base_size)/ONE_MB:0.2f} MB) will be preloaded")
-            return
+        current_budget = max(0, current_budget)
         
         towers = []
         total_size = 0
@@ -2086,25 +2082,21 @@ class offload:
             towers.append( (floors, max_floor_size, tower_size) )
             total_size += tower_size
             current_budget -=  2 * max_floor_size
-            if current_budget <= 0:
-                if self.verboseLevel >=1:
-                    print(f"Async loading plan for model '{model_id}' : minimum budget management, beside the async shuttle only the base model ({(base_size)/ONE_MB:0.2f} MB) will be preloaded")
-                return
-
+            current_budget = max(0, current_budget)
 
         for floors, max_floor_size, tower_size in towers:
             tower_budget = tower_size / total_size * current_budget
             preload_blocks_count = int( tower_budget / max_floor_size)
             preload_total += preload_blocks_count * max_floor_size
             max_blocks_fetch = max(max_floor_size, max_blocks_fetch)
-            if preload_blocks_count  <= 0:
-                if self.verboseLevel >=1:
-                    print(f"Async loading plan for model '{model_id}' : minimum budget management, beside the async shuttle only the base model ({(base_size)/ONE_MB:0.2f} MB) will be preloaded")
-                return 
             
             nb_blocks= len(floors)
-            space_between =  (nb_blocks - preload_blocks_count) / preload_blocks_count 
-            cursor = space_between
+            if preload_blocks_count == 0:
+                space_between = 0
+                cursor = len(floors)
+            else:
+                space_between =  (nb_blocks - preload_blocks_count) / preload_blocks_count 
+                cursor = space_between
             first_non_preloaded = None
             prev_non_preloaded = None
             for block in floors:
@@ -2131,7 +2123,10 @@ class offload:
         self.preloaded_blocks_per_model[model_id] = preloaded_blocks
 
         if self.verboseLevel >=1:
-            print(f"Async loading plan for model '{model_id}' : {(preload_total+base_size)/ONE_MB:0.2f} MB will be preloaded (base size of {base_size/ONE_MB:0.2f} MB + {preload_total/total_size*100:0.1f}% of recurrent layers data) with a {max_blocks_fetch/ONE_MB:0.2f} MB async" + (" circular" if len(towers) == 1 else "") + " shuttle")
+            if preload_total == 0:
+                print(f"Async loading plan for model '{model_id}' : base size of {(preload_total+base_size)/ONE_MB:0.2f} MB will be preloaded with a {max_blocks_fetch/ONE_MB:0.2f} MB async" + (" circular" if len(towers) == 1 else "") + " shuttle")
+            else:
+                print(f"Async loading plan for model '{model_id}' : {(preload_total+base_size)/ONE_MB:0.2f} MB will be preloaded (base size of {base_size/ONE_MB:0.2f} MB + {preload_total/total_size*100:0.1f}% of recurrent layers data) with a {max_blocks_fetch/ONE_MB:0.2f} MB async" + (" circular" if len(towers) == 1 else "") + " shuttle")
 
     def release(self):
         global last_offload_obj, total_pinned_bytes
@@ -2273,7 +2268,9 @@ def all(pipe_or_dict_of_modules, pinnedMemory = False, pinnedPEFTLora = False, p
         modelPinned = (pinAllModels or model_id in modelsToPin) and not hasattr(current_model,"_already_pinned")
 
         current_model_size = 0
-        model_dtype = None
+        model_dtype = getattr(current_model, "_model_dtype", None)
+        # if model_dtype == None:
+        #     model_dtype = getattr(current_model, "dtype", None)
         
         for _ , m in current_model.named_modules():
             ignore_dtype = hasattr(m, "_lock_dtype")
@@ -2296,10 +2293,11 @@ def all(pipe_or_dict_of_modules, pinnedMemory = False, pinnedPEFTLora = False, p
                 else:
                     if not ignore_dtype:
                         dtype = p.data.dtype
-                        if convertWeightsFloatTo != None and  dtype == torch.float32 :
+                        if convertWeightsFloatTo != None and dtype == torch.float32 :
                             # convert any left overs float32 weight to bfloat16 / float16 to divide by 2 the model memory footprint
                             dtype = convertWeightsFloatTo if model_dtype == None else model_dtype
-                            p.data = p.data.to(dtype)
+                            if dtype != torch.float32:
+                                p.data = p.data.to(dtype)
                         if model_dtype== None:
                             model_dtype = dtype
                         else:

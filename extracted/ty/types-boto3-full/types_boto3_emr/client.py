@@ -47,6 +47,8 @@ from .type_defs import (
     AddTagsInputTypeDef,
     CancelStepsInputTypeDef,
     CancelStepsOutputTypeDef,
+    CreatePersistentAppUIInputTypeDef,
+    CreatePersistentAppUIOutputTypeDef,
     CreateSecurityConfigurationInputTypeDef,
     CreateSecurityConfigurationOutputTypeDef,
     CreateStudioInputTypeDef,
@@ -61,6 +63,8 @@ from .type_defs import (
     DescribeJobFlowsOutputTypeDef,
     DescribeNotebookExecutionInputTypeDef,
     DescribeNotebookExecutionOutputTypeDef,
+    DescribePersistentAppUIInputTypeDef,
+    DescribePersistentAppUIOutputTypeDef,
     DescribeReleaseLabelInputTypeDef,
     DescribeReleaseLabelOutputTypeDef,
     DescribeSecurityConfigurationInputTypeDef,
@@ -77,6 +81,10 @@ from .type_defs import (
     GetClusterSessionCredentialsOutputTypeDef,
     GetManagedScalingPolicyInputTypeDef,
     GetManagedScalingPolicyOutputTypeDef,
+    GetOnClusterAppUIPresignedURLInputTypeDef,
+    GetOnClusterAppUIPresignedURLOutputTypeDef,
+    GetPersistentAppUIPresignedURLInputTypeDef,
+    GetPersistentAppUIPresignedURLOutputTypeDef,
     GetStudioSessionMappingInputTypeDef,
     GetStudioSessionMappingOutputTypeDef,
     ListBootstrapActionsInputTypeDef,
@@ -234,6 +242,16 @@ class EMRClient(BaseClient):
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_emr/client/#cancel_steps)
         """
 
+    def create_persistent_app_ui(
+        self, **kwargs: Unpack[CreatePersistentAppUIInputTypeDef]
+    ) -> CreatePersistentAppUIOutputTypeDef:
+        """
+        Creates a persistent application user interface.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/emr/client/create_persistent_app_ui.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_emr/client/#create_persistent_app_ui)
+        """
+
     def create_security_configuration(
         self, **kwargs: Unpack[CreateSecurityConfigurationInputTypeDef]
     ) -> CreateSecurityConfigurationOutputTypeDef:
@@ -328,6 +346,16 @@ class EMRClient(BaseClient):
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_emr/client/#describe_notebook_execution)
         """
 
+    def describe_persistent_app_ui(
+        self, **kwargs: Unpack[DescribePersistentAppUIInputTypeDef]
+    ) -> DescribePersistentAppUIOutputTypeDef:
+        """
+        Describes a persistent application user interface.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/emr/client/describe_persistent_app_ui.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_emr/client/#describe_persistent_app_ui)
+        """
+
     def describe_release_label(
         self, **kwargs: Unpack[DescribeReleaseLabelInputTypeDef]
     ) -> DescribeReleaseLabelOutputTypeDef:
@@ -413,6 +441,26 @@ class EMRClient(BaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/emr/client/get_managed_scaling_policy.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_emr/client/#get_managed_scaling_policy)
+        """
+
+    def get_on_cluster_app_ui_presigned_url(
+        self, **kwargs: Unpack[GetOnClusterAppUIPresignedURLInputTypeDef]
+    ) -> GetOnClusterAppUIPresignedURLOutputTypeDef:
+        """
+        The presigned URL properties for the cluster's application user interface.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/emr/client/get_on_cluster_app_ui_presigned_url.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_emr/client/#get_on_cluster_app_ui_presigned_url)
+        """
+
+    def get_persistent_app_ui_presigned_url(
+        self, **kwargs: Unpack[GetPersistentAppUIPresignedURLInputTypeDef]
+    ) -> GetPersistentAppUIPresignedURLOutputTypeDef:
+        """
+        The presigned URL properties for the cluster's application user interface.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/emr/client/get_persistent_app_ui_presigned_url.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_emr/client/#get_persistent_app_ui_presigned_url)
         """
 
     def get_studio_session_mapping(

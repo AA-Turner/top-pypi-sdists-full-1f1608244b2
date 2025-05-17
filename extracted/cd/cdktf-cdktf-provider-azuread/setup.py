@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-azuread",
-    "version": "13.3.0",
+    "version": "13.4.0",
     "description": "Prebuilt azuread Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-azuread.git",
@@ -100,7 +100,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_azuread._jsii": [
-            "provider-azuread@13.3.0.jsii.tgz"
+            "provider-azuread@13.4.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_azuread": [
             "py.typed"
@@ -110,7 +110,7 @@ kwargs = json.loads(
     "install_requires": [
         "cdktf>=0.20.0, <0.21.0",
         "constructs>=10.3.0, <11.0.0",
-        "jsii>=1.110.0, <2.0.0",
+        "jsii>=1.111.0, <2.0.0",
         "publication>=0.0.3",
         "typeguard>=2.13.3,<4.3.0"
     ],

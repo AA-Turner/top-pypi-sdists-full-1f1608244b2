@@ -125,20 +125,18 @@ class cached_metadata:
 _cached_entry = None # ideally we should create a dict of the last n entries but one entry covers most cases
 
 def  _parse_metadata(metadata):
-    if metadata == None:
-        return None
-    
     new_metadata= {}
-    
-    for k,v in metadata.items():
-        if k.endswith("_base64"):
-            v_decoded = json.loads(base64.b64decode(v.encode('utf8')).decode('utf8'))
-            p = k.rfind("_")
-            new_k = k[:p]
-            new_metadata[new_k]= v_decoded
-        else:
-            new_metadata[k] = v
-
+    if metadata != None:
+        for k,v in metadata.items():
+            if k.endswith("_base64"):
+                v_decoded = json.loads(base64.b64decode(v.encode('utf8')).decode('utf8'))
+                p = k.rfind("_")
+                new_k = k[:p]
+                new_metadata[new_k]= v_decoded
+            else:
+                new_metadata[k] = v
+    if "format" not in new_metadata:
+        new_metadata["format"] = "pt"
     return new_metadata
 
 def _read_safetensors_header(path, file):

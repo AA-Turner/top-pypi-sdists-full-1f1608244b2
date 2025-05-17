@@ -268,8 +268,8 @@ class Export(object):
         compression_kwargs: dict
             Dictionary with the keys "compression" and "compression_opts"
             which are passed to :func:`h5py.H5File.create_dataset`. The
-            default is Zstandard compression with the lowest compression
-            level `hdf5plugin.Zstd(clevel=1)`.
+            default is Zstandard compression with the compression
+            level 5 `hdf5plugin.Zstd(clevel=5)`.
         compression: str or None
             Compression method used for data storage;
             one of [None, "lzf", "gzip", "szip"].
@@ -300,7 +300,7 @@ class Export(object):
             # be backwards-compatible
             compression_kwargs = {"compression": compression}
         if compression_kwargs is None:
-            compression_kwargs = hdf5plugin.Zstd(clevel=1)
+            compression_kwargs = hdf5plugin.Zstd(clevel=5)
         path = pathlib.Path(path)
         # Make sure that path ends with .rtdc
         if path.suffix not in [".rtdc", ".rtdc~"]:
@@ -504,6 +504,11 @@ class Export(object):
                         # Internal basins are only valid for files they were
                         # defined in. Since we are exporting, it does not
                         # make sense to store these basins in the output file.
+                        continue
+                    elif bn_dict.get("perishable"):
+                        # Perishable basins require secret keys or complicated
+                        # logic to execute in order to refresh them. We do not
+                        # store them in the output file.
                         continue
                     basinmap_orig = bn_dict.get("basin_map")
                     if not filtered:

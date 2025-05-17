@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #    Copyright (C) 2012 Yahoo! Inc. All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -41,11 +39,6 @@ from taskflow.utils import eventlet_utils as eu
 from taskflow.utils import persistence_utils as p_utils
 from taskflow.utils import threading_utils as tu
 
-try:
-    from taskflow.engines.action_engine import process_executor as pe
-except ImportError:
-    pe = None
-
 
 # Expected engine transitions when empty workflows are ran...
 _EMPTY_TRANSITIONS = [
@@ -54,7 +47,7 @@ _EMPTY_TRANSITIONS = [
 ]
 
 
-class EngineTaskNotificationsTest(object):
+class EngineTaskNotificationsTest:
     def test_run_capture_task_notifications(self):
         captured = collections.defaultdict(list)
 
@@ -89,7 +82,7 @@ class EngineTaskNotificationsTest(object):
             self.assertEqual(expected, captured[name])
 
 
-class EngineTaskTest(object):
+class EngineTaskTest:
 
     def test_run_task_as_flow(self):
         flow = utils.ProgressingTask(name='task1')
@@ -583,8 +576,8 @@ class EngineParallelFlowTest(utils.EngineTestBase):
         engine = self._make_engine(flow)
         with utils.CaptureListener(engine, capture_flow=False) as capturer:
             engine.run()
-        expected = set(['task2.t SUCCESS(5)', 'task2.t RUNNING',
-                        'task1.t RUNNING', 'task1.t SUCCESS(5)'])
+        expected = {'task2.t SUCCESS(5)', 'task2.t RUNNING',
+                    'task1.t RUNNING', 'task1.t SUCCESS(5)'}
         self.assertEqual(expected, set(capturer.values))
 
     def test_parallel_revert(self):
@@ -858,8 +851,8 @@ class EngineGraphFlowTest(utils.EngineTestBase):
         engine = self._make_engine(flow)
         with utils.CaptureListener(engine, capture_flow=False) as capturer:
             engine.run()
-        expected = set(['task2.t SUCCESS(5)', 'task2.t RUNNING',
-                        'task1.t RUNNING', 'task1.t SUCCESS(5)'])
+        expected = {'task2.t SUCCESS(5)', 'task2.t RUNNING',
+                    'task1.t RUNNING', 'task1.t SUCCESS(5)'}
         self.assertEqual(expected, set(capturer.values))
         self.assertEqual(2, len(flow))
 
@@ -1223,7 +1216,7 @@ class EngineGraphConditionalFlowTest(utils.EngineTestBase):
         with utils.CaptureListener(engine, capture_flow=False) as capturer:
             engine.run()
 
-        expected = set([
+        expected = {
             'task1.t RUNNING',
             'task1.t SUCCESS(5)',
 
@@ -1232,7 +1225,7 @@ class EngineGraphConditionalFlowTest(utils.EngineTestBase):
 
             'task3.t RUNNING',
             'task3.t SUCCESS(5)',
-        ])
+        }
         self.assertEqual(expected, set(capturer.values))
 
     def test_graph_flow_conditional_ignore_reset(self):
@@ -1251,7 +1244,7 @@ class EngineGraphConditionalFlowTest(utils.EngineTestBase):
         with utils.CaptureListener(engine, capture_flow=False) as capturer:
             engine.run()
 
-        expected = set([
+        expected = {
             'task1.t RUNNING',
             'task1.t SUCCESS(5)',
 
@@ -1259,7 +1252,7 @@ class EngineGraphConditionalFlowTest(utils.EngineTestBase):
             'task2.t SUCCESS(5)',
 
             'task3.t IGNORE',
-        ])
+        }
         self.assertEqual(expected, set(capturer.values))
         self.assertEqual(states.IGNORE,
                          engine.storage.get_atom_state('task3'))
@@ -1271,7 +1264,7 @@ class EngineGraphConditionalFlowTest(utils.EngineTestBase):
         with utils.CaptureListener(engine, capture_flow=False) as capturer:
             engine.run()
 
-        expected = set([
+        expected = {
             'task1.t RUNNING',
             'task1.t SUCCESS(5)',
 
@@ -1280,7 +1273,7 @@ class EngineGraphConditionalFlowTest(utils.EngineTestBase):
 
             'task3.t RUNNING',
             'task3.t SUCCESS(5)',
-        ])
+        }
         self.assertEqual(expected, set(capturer.values))
 
     def test_graph_flow_diamond_ignored(self):
@@ -1301,7 +1294,7 @@ class EngineGraphConditionalFlowTest(utils.EngineTestBase):
         with utils.CaptureListener(engine, capture_flow=False) as capturer:
             engine.run()
 
-        expected = set([
+        expected = {
             'task1.t RUNNING',
             'task1.t SUCCESS(5)',
 
@@ -1312,7 +1305,7 @@ class EngineGraphConditionalFlowTest(utils.EngineTestBase):
             'task3.t SUCCESS(5)',
 
             'task4.t IGNORE',
-        ])
+        }
         self.assertEqual(expected, set(capturer.values))
         self.assertEqual(states.IGNORE,
                          engine.storage.get_atom_state('task4'))
@@ -1350,12 +1343,12 @@ class EngineGraphConditionalFlowTest(utils.EngineTestBase):
         with utils.CaptureListener(engine, capture_flow=False) as capturer:
             engine.run()
 
-        expected = set([
+        expected = {
             'task1.t RUNNING', 'task1.t SUCCESS(2)',
             'task3.t IGNORE', 'task3_3.t IGNORE',
             'task2.t RUNNING', 'task2.t SUCCESS(5)',
             'task2_2.t RUNNING', 'task2_2.t SUCCESS(5)',
-        ])
+        }
         self.assertEqual(expected, set(capturer.values))
 
         engine = self._make_engine(flow)
@@ -1363,12 +1356,12 @@ class EngineGraphConditionalFlowTest(utils.EngineTestBase):
         with utils.CaptureListener(engine, capture_flow=False) as capturer:
             engine.run()
 
-        expected = set([
+        expected = {
             'task1.t RUNNING', 'task1.t SUCCESS(1)',
             'task2.t IGNORE', 'task2_2.t IGNORE',
             'task3.t RUNNING', 'task3.t SUCCESS(5)',
             'task3_3.t RUNNING', 'task3_3.t SUCCESS(5)',
-        ])
+        }
         self.assertEqual(expected, set(capturer.values))
 
 
@@ -1499,82 +1492,6 @@ class ParallelEngineWithEventletTest(EngineTaskTest,
                                      store=store, **kwargs)
 
 
-@testtools.skipIf(pe is None, 'process_executor is not available')
-class ParallelEngineWithProcessTest(EngineTaskTest,
-                                    EngineMultipleResultsTest,
-                                    EngineLinearFlowTest,
-                                    EngineParallelFlowTest,
-                                    EngineLinearAndUnorderedExceptionsTest,
-                                    EngineOptionalRequirementsTest,
-                                    EngineGraphFlowTest,
-                                    EngineResetTests,
-                                    EngineMissingDepsTest,
-                                    EngineGraphConditionalFlowTest,
-                                    EngineDeciderDepthTest,
-                                    EngineTaskNotificationsTest,
-                                    test.TestCase):
-    _EXECUTOR_WORKERS = 2
-
-    def test_correct_load(self):
-        engine = self._make_engine(utils.TaskNoRequiresNoReturns)
-        self.assertIsInstance(engine, eng.ParallelActionEngine)
-
-    def _make_engine(self, flow,
-                     flow_detail=None, executor=None, store=None,
-                     **kwargs):
-        if executor is None:
-            executor = 'processes'
-        return taskflow.engines.load(flow, flow_detail=flow_detail,
-                                     backend=self.backend,
-                                     engine='parallel',
-                                     executor=executor,
-                                     store=store,
-                                     max_workers=self._EXECUTOR_WORKERS,
-                                     **kwargs)
-
-    def test_update_progress_notifications_proxied(self):
-        captured = collections.defaultdict(list)
-
-        def notify_me(event_type, details):
-            captured[event_type].append(details)
-
-        a = utils.MultiProgressingTask('a')
-        a.notifier.register(a.notifier.ANY, notify_me)
-        progress_chunks = list(x / 10.0 for x in range(1, 10))
-        e = self._make_engine(a, store={'progress_chunks': progress_chunks})
-        e.run()
-
-        self.assertEqual(11, len(captured[task.EVENT_UPDATE_PROGRESS]))
-
-    def test_custom_notifications_proxied(self):
-        captured = collections.defaultdict(list)
-
-        def notify_me(event_type, details):
-            captured[event_type].append(details)
-
-        a = utils.EmittingTask('a')
-        a.notifier.register(a.notifier.ANY, notify_me)
-        e = self._make_engine(a)
-        e.run()
-
-        self.assertEqual(1, len(captured['hi']))
-        self.assertEqual(2, len(captured[task.EVENT_UPDATE_PROGRESS]))
-
-    def test_just_custom_notifications_proxied(self):
-        captured = collections.defaultdict(list)
-
-        def notify_me(event_type, details):
-            captured[event_type].append(details)
-
-        a = utils.EmittingTask('a')
-        a.notifier.register('hi', notify_me)
-        e = self._make_engine(a)
-        e.run()
-
-        self.assertEqual(1, len(captured['hi']))
-        self.assertEqual(0, len(captured[task.EVENT_UPDATE_PROGRESS]))
-
-
 class WorkerBasedEngineTest(EngineTaskTest,
                             EngineMultipleResultsTest,
                             EngineLinearFlowTest,
@@ -1589,7 +1506,7 @@ class WorkerBasedEngineTest(EngineTaskTest,
                             EngineTaskNotificationsTest,
                             test.TestCase):
     def setUp(self):
-        super(WorkerBasedEngineTest, self).setUp()
+        super().setUp()
         shared_conf = {
             'exchange': 'test',
             'transport': 'memory',

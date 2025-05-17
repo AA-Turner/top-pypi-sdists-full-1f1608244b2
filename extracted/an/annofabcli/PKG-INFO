@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: annofabcli
-Version: 1.100.5
+Version: 1.101.0
 Summary: Utility Command Line Interface for AnnoFab
 Author: Kurusugawa Computer Inc.
 License: MIT
@@ -17,7 +17,7 @@ Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Utilities
 Requires-Python: >=3.9
-Requires-Dist: annofabapi>=1.4.1
+Requires-Dist: annofabapi>=1.4.7
 Requires-Dist: bokeh<3.7,>=3.3
 Requires-Dist: dictdiffer
 Requires-Dist: isodate
@@ -30,6 +30,7 @@ Requires-Dist: python-datauri
 Requires-Dist: pyyaml
 Requires-Dist: requests
 Requires-Dist: typing-extensions>=4.5
+Requires-Dist: ulid-py>=1.1.0
 Description-Content-Type: text/markdown
 
 # annofab-cli

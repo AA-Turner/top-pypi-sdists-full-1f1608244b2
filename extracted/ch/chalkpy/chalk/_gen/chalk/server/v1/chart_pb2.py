@@ -21,7 +21,7 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b'\n\x1b\x63halk/server/v1/chart.proto\x12\x0f\x63halk.server.v1\x1a\x1e\x63halk/artifacts/v1/chart.proto\x1a\x1f\x63halk/auth/v1/permissions.proto\x1a)chalk/chart/v1/densetimeserieschart.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1fgoogle/protobuf/timestamp.proto"L\n\x06Series\x12\x16\n\x06points\x18\x01 \x03(\x01R\x06points\x12\x14\n\x05label\x18\x02 \x01(\tR\x05label\x12\x14\n\x05units\x18\x03 \x01(\tR\x05units"t\n\x05\x43hart\x12\x14\n\x05title\x18\x01 \x01(\tR\x05title\x12/\n\x06series\x18\x02 \x03(\x0b\x32\x17.chalk.server.v1.SeriesR\x06series\x12$\n\x0ex_timestamp_ms\x18\x04 \x03(\x03R\x0cxTimestampMs"0\n\x05Point\x12\x19\n\x05value\x18\x01 \x01(\x03H\x00R\x05value\x88\x01\x01:\x02\x18\x01\x42\x08\n\x06_value"l\n\nTimeSeries\x12.\n\x06points\x18\x01 \x03(\x0b\x32\x16.chalk.server.v1.PointR\x06points\x12\x14\n\x05label\x18\x02 \x01(\tR\x05label\x12\x14\n\x05units\x18\x03 \x01(\tR\x05units:\x02\x18\x01"\xd7\x01\n\x0fTimeSeriesChart\x12\x14\n\x05title\x18\x01 \x01(\tR\x05title\x12\x33\n\x06series\x18\x02 \x03(\x0b\x32\x1b.chalk.server.v1.TimeSeriesR\x06series\x12\x35\n\x08x_series\x18\x03 \x03(\x0b\x32\x1a.google.protobuf.TimestampR\x07xSeries\x12>\n\rwindow_period\x18\x04 \x01(\x0b\x32\x19.google.protobuf.DurationR\x0cwindowPeriod:\x02\x18\x01"\x13\n\x11ListChartsRequest"N\n\x12ListChartsResponse\x12\x38\n\x06\x63harts\x18\x01 \x03(\x0b\x32 .chalk.artifacts.v1.MetricConfigR\x06\x63harts"\xd2\x01\n\x17GetChartSnapshotRequest\x12\x45\n\rmetric_config\x18\x01 \x01(\x0b\x32 .chalk.artifacts.v1.MetricConfigR\x0cmetricConfig\x12\x39\n\nstart_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\tstartTime\x12\x35\n\x08\x65nd_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x07\x65ndTime"\xcf\x01\n\x18GetChartSnapshotResponse\x12<\n\x06\x63harts\x18\x01 \x03(\x0b\x32$.chalk.chart.v1.DenseTimeSeriesChartR\x06\x63harts\x12\x35\n\x08x_series\x18\x02 \x03(\x0b\x32\x1a.google.protobuf.TimestampR\x07xSeries\x12>\n\rwindow_period\x18\x03 \x01(\x0b\x32\x19.google.protobuf.DurationR\x0cwindowPeriod2\xd9\x01\n\rChartsService\x12Z\n\nListCharts\x12".chalk.server.v1.ListChartsRequest\x1a#.chalk.server.v1.ListChartsResponse"\x03\x80}\x06\x12l\n\x10GetChartSnapshot\x12(.chalk.server.v1.GetChartSnapshotRequest\x1a).chalk.server.v1.GetChartSnapshotResponse"\x03\x80}\x06\x42\x93\x01\n\x13\x63om.chalk.server.v1B\nChartProtoP\x01Z\x12server/v1;serverv1\xa2\x02\x03\x43SX\xaa\x02\x0f\x43halk.Server.V1\xca\x02\x0f\x43halk\\Server\\V1\xe2\x02\x1b\x43halk\\Server\\V1\\GPBMetadata\xea\x02\x11\x43halk::Server::V1b\x06proto3'
+    b'\n\x1b\x63halk/server/v1/chart.proto\x12\x0f\x63halk.server.v1\x1a\x1e\x63halk/artifacts/v1/chart.proto\x1a\x1f\x63halk/auth/v1/permissions.proto\x1a)chalk/chart/v1/densetimeserieschart.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1fgoogle/protobuf/timestamp.proto"L\n\x06Series\x12\x16\n\x06points\x18\x01 \x03(\x01R\x06points\x12\x14\n\x05label\x18\x02 \x01(\tR\x05label\x12\x14\n\x05units\x18\x03 \x01(\tR\x05units"t\n\x05\x43hart\x12\x14\n\x05title\x18\x01 \x01(\tR\x05title\x12/\n\x06series\x18\x02 \x03(\x0b\x32\x17.chalk.server.v1.SeriesR\x06series\x12$\n\x0ex_timestamp_ms\x18\x04 \x03(\x03R\x0cxTimestampMs"0\n\x05Point\x12\x19\n\x05value\x18\x01 \x01(\x03H\x00R\x05value\x88\x01\x01:\x02\x18\x01\x42\x08\n\x06_value"l\n\nTimeSeries\x12.\n\x06points\x18\x01 \x03(\x0b\x32\x16.chalk.server.v1.PointR\x06points\x12\x14\n\x05label\x18\x02 \x01(\tR\x05label\x12\x14\n\x05units\x18\x03 \x01(\tR\x05units:\x02\x18\x01"\xd7\x01\n\x0fTimeSeriesChart\x12\x14\n\x05title\x18\x01 \x01(\tR\x05title\x12\x33\n\x06series\x18\x02 \x03(\x0b\x32\x1b.chalk.server.v1.TimeSeriesR\x06series\x12\x35\n\x08x_series\x18\x03 \x03(\x0b\x32\x1a.google.protobuf.TimestampR\x07xSeries\x12>\n\rwindow_period\x18\x04 \x01(\x0b\x32\x19.google.protobuf.DurationR\x0cwindowPeriod:\x02\x18\x01"\x13\n\x11ListChartsRequest"\x99\x01\n\x12ListChartsResponse\x12<\n\x06\x63harts\x18\x01 \x03(\x0b\x32 .chalk.artifacts.v1.MetricConfigB\x02\x18\x01R\x06\x63harts\x12\x45\n\x11\x63harts_with_links\x18\x02 \x03(\x0b\x32\x19.chalk.artifacts.v1.ChartR\x0f\x63hartsWithLinks"\xd2\x01\n\x17GetChartSnapshotRequest\x12\x45\n\rmetric_config\x18\x01 \x01(\x0b\x32 .chalk.artifacts.v1.MetricConfigR\x0cmetricConfig\x12\x39\n\nstart_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\tstartTime\x12\x35\n\x08\x65nd_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x07\x65ndTime"\xcf\x01\n\x18GetChartSnapshotResponse\x12<\n\x06\x63harts\x18\x01 \x03(\x0b\x32$.chalk.chart.v1.DenseTimeSeriesChartR\x06\x63harts\x12\x35\n\x08x_series\x18\x02 \x03(\x0b\x32\x1a.google.protobuf.TimestampR\x07xSeries\x12>\n\rwindow_period\x18\x03 \x01(\x0b\x32\x19.google.protobuf.DurationR\x0cwindowPeriod2\xd9\x01\n\rChartsService\x12Z\n\nListCharts\x12".chalk.server.v1.ListChartsRequest\x1a#.chalk.server.v1.ListChartsResponse"\x03\x80}\x06\x12l\n\x10GetChartSnapshot\x12(.chalk.server.v1.GetChartSnapshotRequest\x1a).chalk.server.v1.GetChartSnapshotResponse"\x03\x80}\x06\x42\x93\x01\n\x13\x63om.chalk.server.v1B\nChartProtoP\x01Z\x12server/v1;serverv1\xa2\x02\x03\x43SX\xaa\x02\x0f\x43halk.Server.V1\xca\x02\x0f\x43halk\\Server\\V1\xe2\x02\x1b\x43halk\\Server\\V1\\GPBMetadata\xea\x02\x11\x43halk::Server::V1b\x06proto3'
 )
 
 _globals = globals()
@@ -38,6 +38,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
     _globals["_TIMESERIES"]._serialized_options = b"\030\001"
     _globals["_TIMESERIESCHART"]._options = None
     _globals["_TIMESERIESCHART"]._serialized_options = b"\030\001"
+    _globals["_LISTCHARTSRESPONSE"].fields_by_name["charts"]._options = None
+    _globals["_LISTCHARTSRESPONSE"].fields_by_name["charts"]._serialized_options = b"\030\001"
     _globals["_CHARTSSERVICE"].methods_by_name["ListCharts"]._options = None
     _globals["_CHARTSSERVICE"].methods_by_name["ListCharts"]._serialized_options = b"\200}\006"
     _globals["_CHARTSSERVICE"].methods_by_name["GetChartSnapshot"]._options = None
@@ -54,12 +56,12 @@ if _descriptor._USE_C_DESCRIPTORS == False:
     _globals["_TIMESERIESCHART"]._serialized_end = 793
     _globals["_LISTCHARTSREQUEST"]._serialized_start = 795
     _globals["_LISTCHARTSREQUEST"]._serialized_end = 814
-    _globals["_LISTCHARTSRESPONSE"]._serialized_start = 816
-    _globals["_LISTCHARTSRESPONSE"]._serialized_end = 894
-    _globals["_GETCHARTSNAPSHOTREQUEST"]._serialized_start = 897
-    _globals["_GETCHARTSNAPSHOTREQUEST"]._serialized_end = 1107
-    _globals["_GETCHARTSNAPSHOTRESPONSE"]._serialized_start = 1110
-    _globals["_GETCHARTSNAPSHOTRESPONSE"]._serialized_end = 1317
-    _globals["_CHARTSSERVICE"]._serialized_start = 1320
-    _globals["_CHARTSSERVICE"]._serialized_end = 1537
+    _globals["_LISTCHARTSRESPONSE"]._serialized_start = 817
+    _globals["_LISTCHARTSRESPONSE"]._serialized_end = 970
+    _globals["_GETCHARTSNAPSHOTREQUEST"]._serialized_start = 973
+    _globals["_GETCHARTSNAPSHOTREQUEST"]._serialized_end = 1183
+    _globals["_GETCHARTSNAPSHOTRESPONSE"]._serialized_start = 1186
+    _globals["_GETCHARTSNAPSHOTRESPONSE"]._serialized_end = 1393
+    _globals["_CHARTSSERVICE"]._serialized_start = 1396
+    _globals["_CHARTSSERVICE"]._serialized_end = 1613
 # @@protoc_insertion_point(module_scope)

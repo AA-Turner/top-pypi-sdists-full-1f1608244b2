@@ -64,6 +64,7 @@ def test_command_context_is_passed_to_snowflake_connection(
         warehouse="xs",
         password="dummy_password",
         application_name="snowcli",
+        using_session_keep_alive=True,
     )
 
 
@@ -143,6 +144,7 @@ def test_private_key_loading_and_aliases(
             application=mock_command_info.return_value,
             authenticator="SNOWFLAKE_JWT",
             application_name="snowcli",
+            using_session_keep_alive=True,
             **expected_private_key_args,
         )
         if expected_private_key_file_value is not None:
@@ -153,7 +155,8 @@ def test_private_key_loading_and_aliases(
 @mock.patch.dict(os.environ, {}, clear=True)
 def test_returns_nice_error_in_case_of_connectivity_error(runner):
     result = runner.invoke(["sql", "-q", "select 1"])
-    assert result.exit_code == 1
+
+    assert result.exit_code == 1, result.output
     assert "Invalid connection configuration" in result.output
     assert "User is empty" in result.output
 
@@ -237,6 +240,7 @@ def test_internal_application_data_is_sent_if_feature_flag_is_set(
         "warehouse": "xs",
         "password": "dummy_password",
         "application_name": "snowcli",
+        "using_session_keep_alive": True,
     }
     env = {}
     if feature_flag is not None:

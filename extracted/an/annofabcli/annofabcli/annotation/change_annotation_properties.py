@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import functools
+import json
 import logging
 import multiprocessing
 import sys
@@ -156,7 +157,7 @@ class ChangePropertiesOfAnnotationMain(CommandLineWithConfirm):
             return False
 
         logger.debug(
-            f"{logger_prefix}task_id={task_id}, phase={dict_task['phase']}, status={dict_task['status']}, "
+            f"{logger_prefix}task_id='{task_id}', phase={dict_task['phase']}, status={dict_task['status']}, "
             f"updated_datetime={dict_task['updated_datetime']}"
         )
 
@@ -202,10 +203,10 @@ class ChangePropertiesOfAnnotationMain(CommandLineWithConfirm):
 
         try:
             self.change_annotation_properties(task_id, annotation_list, properties)
-            logger.info(f"{logger_prefix}task_id={task_id}: アノテーションのプロパティを変更しました。")
+            logger.info(f"{logger_prefix}task_id='{task_id}' :: アノテーションのプロパティを変更しました。")
             return True  # noqa: TRY300
         except Exception:  # pylint: disable=broad-except
-            logger.warning(f"task_id={task_id}: アノテーションのプロパティの変更に失敗しました。", exc_info=True)
+            logger.warning(f"task_id='{task_id}' :: アノテーションのプロパティの変更に失敗しました。", exc_info=True)
             return False
         finally:
             if changed_operator:
@@ -234,7 +235,7 @@ class ChangePropertiesOfAnnotationMain(CommandLineWithConfirm):
                 task_index=task_index,
             )
         except Exception:  # pylint: disable=broad-except
-            logger.warning(f"task_id={task_id}: アノテーションのプロパティの変更に失敗しました。", exc_info=True)
+            logger.warning(f"task_id='{task_id}' :: アノテーションのプロパティの変更に失敗しました。", exc_info=True)
             return False
 
     def change_annotation_properties_task_list(  # noqa: ANN201
@@ -277,7 +278,7 @@ class ChangePropertiesOfAnnotationMain(CommandLineWithConfirm):
                     if result:
                         success_count += 1
                 except Exception:  # pylint: disable=broad-except
-                    logger.warning(f"task_id={task_id}: アノテーションのプロパティの変更に失敗しました。", exc_info=True)
+                    logger.warning(f"task_id='{task_id}' :: アノテーションのプロパティの変更に失敗しました。", exc_info=True)
                     continue
 
         logger.info(f"{success_count} / {len(task_id_list)} 件のタスクに対してアノテーションのプロパティを変更しました。")
@@ -359,14 +360,14 @@ def parse_args(parser: argparse.ArgumentParser) -> None:
     argument_parser.add_project_id()
     argument_parser.add_task_id()
 
-    EXAMPLE_ANNOTATION_QUERY = '{"label": "car", "attributes":{"occluded" true} }'  # noqa: N806
+    EXAMPLE_ANNOTATION_QUERY = {"label": "car", "attributes": {"occluded": True}}  # noqa: N806
 
     parser.add_argument(
         "-aq",
         "--annotation_query",
         type=str,
         required=False,
-        help=f"変更対象のアノテーションを検索する条件をJSON形式で指定します。(ex): ``{EXAMPLE_ANNOTATION_QUERY}``",
+        help=f"変更対象のアノテーションを検索する条件をJSON形式で指定します。(ex): ``{json.dumps(EXAMPLE_ANNOTATION_QUERY)}``",
     )
 
     EXAMPLE_PROPERTIES = '{"is_protected": true}'  # noqa: N806

@@ -441,7 +441,7 @@ class EndPoint:
             raise TypeError("the signature must be a string")
         self.__signature: str = signature
 
-    def __call__(self, end_point_cls: type) -> type:
+    def __call__(self, end_point_cls: type):
         end_point_cls.__decorator__ = "WebSocketServerEndPoint"
         end_point_cls.__decorator_signature__ = self.__signature
         end_point_cls.partial_data = {}

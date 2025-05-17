@@ -33,7 +33,6 @@ def _serve_app(
     _watcher: typing.Optional[collections.abc.AsyncGenerator[set[str], None]] = None,
     environment_name: typing.Optional[str] = None,
 ) -> typing.AsyncContextManager[_App]: ...
-def _serve_stub(*args, **kwargs): ...
 
 class __serve_app_spec(typing_extensions.Protocol):
     def __call__(
@@ -56,5 +55,3 @@ class __serve_app_spec(typing_extensions.Protocol):
     ) -> typing.AsyncContextManager[_App]: ...
 
 serve_app: __serve_app_spec
-
-def serve_stub(*args, **kwargs): ...

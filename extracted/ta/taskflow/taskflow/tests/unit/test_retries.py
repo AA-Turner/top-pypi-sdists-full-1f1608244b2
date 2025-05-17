@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #    Copyright (C) 2012 Yahoo! Inc. All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -29,11 +27,6 @@ from taskflow import test
 from taskflow.tests import utils
 from taskflow.types import failure
 from taskflow.utils import eventlet_utils as eu
-
-try:
-    from taskflow.engines.action_engine import process_executor as pe
-except ImportError:
-    pe = None
 
 
 class FailingRetry(retry.Retry):
@@ -740,7 +733,7 @@ class RetryTest(utils.EngineTestBase):
         self.assertEqual(expected, capturer.values)
 
     def test_for_each_with_set(self):
-        collection = set([3, 2, 5])
+        collection = {3, 2, 5}
         retry1 = retry.ForEach(collection, 'r1', provides='x')
         flow = lf.Flow('flow-1', retry1).add(utils.FailingTaskWithOneArg('t1'))
         engine = self._make_engine(flow)
@@ -1367,21 +1360,4 @@ class ParallelEngineWithEventletTest(RetryTest, test.TestCase):
                                      backend=self.backend,
                                      engine='parallel',
                                      executor=executor,
-                                     defer_reverts=defer_reverts)
-
-
-@testtools.skipIf(pe is None, 'process_executor is not available')
-class ParallelEngineWithProcessTest(RetryTest, test.TestCase):
-    _EXECUTOR_WORKERS = 2
-
-    def _make_engine(self, flow, defer_reverts=None, flow_detail=None,
-                     executor=None):
-        if executor is None:
-            executor = 'processes'
-        return taskflow.engines.load(flow,
-                                     flow_detail=flow_detail,
-                                     engine='parallel',
-                                     backend=self.backend,
-                                     executor=executor,
-                                     max_workers=self._EXECUTOR_WORKERS,
                                      defer_reverts=defer_reverts)

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: agno
-Version: 1.5.0
+Version: 1.5.1
 Summary: Agno: a lightweight library for building Reasoning Agents
 Author-email: Ashpreet Bedi <ashpreet@agno.com>
 License: Copyright (c) Agno, Inc.
@@ -422,6 +422,12 @@ Requires-Dist: types-aiofiles; extra == "dev"
 Requires-Dist: fastapi; extra == "dev"
 Requires-Dist: uvicorn; extra == "dev"
 Requires-Dist: arxiv; extra == "dev"
+Provides-Extra: integration-tests
+Requires-Dist: exa_py; extra == "integration-tests"
+Requires-Dist: duckduckgo-search; extra == "integration-tests"
+Requires-Dist: yfinance; extra == "integration-tests"
+Requires-Dist: sqlalchemy; extra == "integration-tests"
+Requires-Dist: Pillow; extra == "integration-tests"
 Provides-Extra: opentelemetry
 Requires-Dist: opentelemetry-sdk; extra == "opentelemetry"
 Requires-Dist: opentelemetry-exporter-otlp; extra == "opentelemetry"
@@ -647,6 +653,10 @@ Dynamic: license-file
   <a href="https://docs.agno.com">📚 Documentation</a> &nbsp;|&nbsp;
   <a href="https://docs.agno.com/examples/introduction">💡 Examples</a> &nbsp;|&nbsp;
   <a href="https://github.com/agno-agi/agno/stargazers">🌟 Star Us</a>
+</div>
+
+<div align="center">
+  <img src="https://img.shields.io/pypi/v/agno" alt="PyPI - Version">
 </div>
 
 ## Introduction

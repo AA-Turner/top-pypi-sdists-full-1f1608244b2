@@ -32,6 +32,7 @@ from ..types import (
 )
 
 if TYPE_CHECKING:
+    from ..models.series_value_object_dto import SeriesValueObjectDTO
     from ..models.single_time_series_view_bucket import SingleTimeSeriesViewBucket
 
 
@@ -45,12 +46,14 @@ class Point:
         interpolation (bool):
         x (float):
         bucket (Union[Unset, SingleTimeSeriesViewBucket]):
+        object_ (Union[Unset, SeriesValueObjectDTO]):
         y (Union[Unset, float]):
     """
 
     interpolation: bool
     x: float
     bucket: Union[Unset, "SingleTimeSeriesViewBucket"] = UNSET
+    object_: Union[Unset, "SeriesValueObjectDTO"] = UNSET
     y: Union[Unset, float] = UNSET
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -62,6 +65,10 @@ class Point:
         bucket: Union[Unset, Dict[str, Any]] = UNSET
         if not isinstance(self.bucket, Unset):
             bucket = self.bucket.to_dict()
+
+        object_: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.object_, Unset):
+            object_ = self.object_.to_dict()
 
         y = self.y
 
@@ -75,6 +82,8 @@ class Point:
         )
         if bucket is not UNSET:
             field_dict["bucket"] = bucket
+        if object_ is not UNSET:
+            field_dict["object"] = object_
         if y is not UNSET:
             field_dict["y"] = y
 
@@ -82,6 +91,7 @@ class Point:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
+        from ..models.series_value_object_dto import SeriesValueObjectDTO
         from ..models.single_time_series_view_bucket import SingleTimeSeriesViewBucket
 
         d = src_dict.copy()
@@ -96,12 +106,20 @@ class Point:
         else:
             bucket = SingleTimeSeriesViewBucket.from_dict(_bucket)
 
+        _object_ = d.pop("object", UNSET)
+        object_: Union[Unset, SeriesValueObjectDTO]
+        if isinstance(_object_, Unset):
+            object_ = UNSET
+        else:
+            object_ = SeriesValueObjectDTO.from_dict(_object_)
+
         y = d.pop("y", UNSET)
 
         point = cls(
             interpolation=interpolation,
             x=x,
             bucket=bucket,
+            object_=object_,
             y=y,
         )
 

@@ -1,6 +1,6 @@
 import flask
 
-from abstra_internals.controllers.execution import ExecutionController
+from abstra_internals.controllers.execution.execution import ExecutionController
 from abstra_internals.controllers.main import MainController
 from abstra_internals.entities.execution_context import ScriptContext
 from abstra_internals.repositories.project.project import ScriptStage
@@ -77,10 +77,9 @@ def get_editor_bp(controller: MainController):
 
         ExecutionController(
             repositories=controller.repositories,
-        ).run(
             stage=script,
             context=ScriptContext(task_id=task_id),
-        )
+        ).run()
 
         return {"ok": True}
 

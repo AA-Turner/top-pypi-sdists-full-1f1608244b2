@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     )
     app_name: str = "Mtmai"
     work_dir: str = os.getcwd()
-    PORT: int = os.getenv("PORT", 7861)
+    PORT: int = os.getenv("MTMAI_HTTP_PORT", 7860)
     HOSTNAME: str | None = "0.0.0.0"  # noqa: S104
     SERVE_IP: str | None = "0.0.0.0"  # noqa: S104
     Serve_ADDR: str | None = None  # 明确指定服务器域名
@@ -57,6 +57,7 @@ class Settings(BaseSettings):
 
     # db
     MTM_DATABASE_URL: str | None = os.environ.get("MTM_DATABASE_URL", "development")
+    MTM_DATABASE_POOL_SIZE: int = 10
 
     API_PREFIX: str = "/api/mtmai"
     # OPENAPI_JSON_PATH: str = "pyprojects/mtmai/mtmai/openapi.json"
@@ -176,8 +177,13 @@ class Settings(BaseSettings):
     # socks
     SOCKS_PROXY: str | None = None
 
-    # https://serper.dev/api-key
-    SERPER_DEV_TOKEN: str | None = None
+    #
+    # SERPER_DEV_TOKEN: str | None = None
+
+    @property
+    def SERPER_DEV_TOKEN(self) -> str | None:
+        # https://serper.dev/api-key
+        return os.environ.get("SERPER_DEV_TOKEN", "serper_dev_token_not_set")
 
     # selenium
     SELENIUM_VERSION: str = "4.24.0"
@@ -288,6 +294,10 @@ class Settings(BaseSettings):
     @property
     def QUEUE_SHORTVIDEO_COMBINE(self) -> str | None:
         return os.environ.get("QUEUE_SHORTVIDEO_COMBINE", "shortvideo_combine")
+
+    @property
+    def IS_DEV(self) -> bool:
+        return os.environ.get("MTM_DEV", "development").lower() == "development"
 
 
 settings = Settings()  # type: ignore

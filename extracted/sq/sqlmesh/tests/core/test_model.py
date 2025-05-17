@@ -17,7 +17,7 @@ from sqlmesh.core.environment import EnvironmentNamingInfo
 from sqlmesh.core.model.kind import TimeColumn, ModelKindName
 
 from sqlmesh import CustomMaterialization, CustomKind
-from pydantic import model_validator
+from pydantic import model_validator, ValidationError
 from sqlmesh.core import constants as c
 from sqlmesh.core import dialect as d
 from sqlmesh.core.console import get_console
@@ -470,6 +470,40 @@ def test_model_missing_audits(tmp_path: Path):
             """Model `audits` must be configured to test data quality."""
             in mock_logger.call_args[0][0]
         )
+
+
+def test_project_is_set_in_standalone_audit(tmp_path: Path) -> None:
+    init_example_project(tmp_path, dialect="duckdb", template=ProjectTemplate.EMPTY)
+
+    db_path = str(tmp_path / "db.db")
+    db_connection = DuckDBConnectionConfig(database=db_path)
+
+    config = Config(
+        project="test",
+        gateways={"gw": GatewayConfig(connection=db_connection)},
+        model_defaults=ModelDefaultsConfig(dialect="duckdb"),
+    )
+
+    model = tmp_path / "models" / "some_model.sql"
+    model.parent.mkdir(parents=True, exist_ok=True)
+    model.write_text("MODEL (name m); SELECT 1 AS c")
+
+    audit = tmp_path / "audits" / "a_standalone_audit.sql"
+    audit.parent.mkdir(parents=True, exist_ok=True)
+    audit.write_text("AUDIT (name a, standalone true); SELECT * FROM m WHERE c <= 0")
+
+    context = Context(paths=tmp_path, config=config)
+    context.plan(no_prompts=True, auto_apply=True)
+
+    model = tmp_path / "models" / "some_model.sql"
+    model.parent.mkdir(parents=True, exist_ok=True)
+    model.write_text("MODEL (name m); SELECT 2 AS c")
+
+    assert context.fetchdf(
+        "select snapshot -> 'node' -> 'project' AS standalone_audit_project "
+        """from sqlmesh._snapshots where (snapshot -> 'node' -> 'source_type')::text = '"audit"'"""
+    ).to_dict()["standalone_audit_project"] == {0: '"test"'}
+    assert context.load().standalone_audits["a"].project == "test"
 
 
 @pytest.mark.parametrize(
@@ -1031,7 +1065,7 @@ def test_seed_model_creation_error():
         );
     """
     )
-    with pytest.raises(ConfigError, match="No such file or directory"):
+    with pytest.raises(FileNotFoundError, match="No such file or directory"):
         load_sql_based_model(expressions)
 
 
@@ -4478,7 +4512,7 @@ def test_view_non_materialized_partition_by():
         SELECT 1;
         """
     )
-    with pytest.raises(ConfigError, match=r".*partitioned_by field cannot be set for ViewKind.*"):
+    with pytest.raises(ValidationError, match=r".*partitioned_by field cannot be set for VIEW.*"):
         load_sql_based_model(view_model_expressions)
 
 
@@ -4493,7 +4527,7 @@ def test_view_non_materialized_clustered_by():
         SELECT 1;
         """
     )
-    with pytest.raises(ConfigError, match=r".*clustered_by field cannot be set for ViewKind.*"):
+    with pytest.raises(ValidationError, match=r".*clustered_by field cannot be set for VIEW.*"):
         load_sql_based_model(view_model_expressions)
 
 
@@ -5544,7 +5578,7 @@ def test_end_date():
     assert model.end == "2023-06-01"
     assert model.interval_unit == IntervalUnit.DAY
 
-    with pytest.raises(ConfigError, match=".*Start date.+can't be greater than end date.*"):
+    with pytest.raises(ValidationError, match=".*Start date.+can't be greater than end date.*"):
         load_sql_based_model(
             d.parse(
                 """
@@ -6795,7 +6829,7 @@ def test_incremental_by_partition(sushi_context, assert_exp_eq):
     assert not model.kind.disable_restatement
 
     with pytest.raises(
-        ConfigError,
+        ValidationError,
         match=r".*partitioned_by field is required for INCREMENTAL_BY_PARTITION models.*",
     ):
         expressions = d.parse(

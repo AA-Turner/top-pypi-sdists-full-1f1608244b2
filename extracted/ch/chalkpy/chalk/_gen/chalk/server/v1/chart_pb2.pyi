@@ -87,10 +87,16 @@ class ListChartsRequest(_message.Message):
     def __init__(self) -> None: ...
 
 class ListChartsResponse(_message.Message):
-    __slots__ = ("charts",)
+    __slots__ = ("charts", "charts_with_links")
     CHARTS_FIELD_NUMBER: _ClassVar[int]
+    CHARTS_WITH_LINKS_FIELD_NUMBER: _ClassVar[int]
     charts: _containers.RepeatedCompositeFieldContainer[_chart_pb2.MetricConfig]
-    def __init__(self, charts: _Optional[_Iterable[_Union[_chart_pb2.MetricConfig, _Mapping]]] = ...) -> None: ...
+    charts_with_links: _containers.RepeatedCompositeFieldContainer[_chart_pb2.Chart]
+    def __init__(
+        self,
+        charts: _Optional[_Iterable[_Union[_chart_pb2.MetricConfig, _Mapping]]] = ...,
+        charts_with_links: _Optional[_Iterable[_Union[_chart_pb2.Chart, _Mapping]]] = ...,
+    ) -> None: ...
 
 class GetChartSnapshotRequest(_message.Message):
     __slots__ = ("metric_config", "start_time", "end_time")

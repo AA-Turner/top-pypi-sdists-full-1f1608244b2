@@ -1,6 +1,6 @@
 import json
 from datetime import date, datetime, time, timezone
-from typing import Any, Callable, Literal, Type, cast, overload
+from typing import Any, Callable, Literal, Sequence, Type, cast, overload
 
 import yaml
 from jsonpath_ng import JSONPath  # type: ignore
@@ -20,38 +20,41 @@ from .extract import model_to_record
 
 @overload
 def import_record(
+    log: EvalLog,
     record: EvalLog
     | EvalSampleSummary
     | EvalSample
     | ChatMessage
     | Event
     | dict[str, JsonValue],
-    columns: list[Column],
+    columns: Sequence[Column],
     strict: Literal[True] = True,
 ) -> dict[str, ColumnType]: ...
 
 
 @overload
 def import_record(
+    log: EvalLog,
     record: EvalLog
     | EvalSampleSummary
     | EvalSample
     | ChatMessage
     | Event
     | dict[str, JsonValue],
-    columns: list[Column],
+    columns: Sequence[Column],
     strict: Literal[False],
 ) -> tuple[dict[str, ColumnType], list[ColumnError]]: ...
 
 
 def import_record(
+    log: EvalLog,
     record: EvalLog
     | EvalSampleSummary
     | EvalSample
     | ChatMessage
     | Event
     | dict[str, JsonValue],
-    columns: list[Column],
+    columns: Sequence[Column],
     strict: bool = True,
 ) -> dict[str, ColumnType] | tuple[dict[str, ColumnType], list[ColumnError]]:
     # resolve the record BaseModel into a dict (and optionally a summary dict).
@@ -80,7 +83,7 @@ def import_record(
         try:
             result[name] = _resolve_value(value, column.type)
         except ValueError as ex:
-            error = ColumnError(name, path=column.path, message=str(ex))
+            error = ColumnError(name, path=column.path, error=ex, log=log)
             if strict:
                 raise ValueError(str(error))
             else:
@@ -90,10 +93,10 @@ def import_record(
     def field_not_found(
         name: str, path: JSONPath | None, required_type: str | None = None
     ) -> None:
-        message = (
+        ex = ValueError(
             f"field not of type {required_type}" if required_type else "field not found"
         )
-        error = ColumnError(name, path=path, message=f"{message}")
+        error = ColumnError(name, path=path, error=ex, log=log)
         if strict:
             raise ValueError(str(error))
         else:
@@ -157,7 +160,8 @@ def import_record(
             error = ColumnError(
                 column.name,
                 path=str(column.path) if column.path else None,
-                message=str(ex),
+                error=ex,
+                log=log,
             )
             if strict:
                 raise ValueError(str(error))
@@ -190,7 +194,7 @@ def import_record(
         return result, errors
 
 
-def resolve_duplicate_columns(columns: list[Column]) -> list[Column]:
+def resolve_duplicate_columns(columns: Sequence[Column]) -> list[Column]:
     """Remove duplicate columns (with the later columns winning)"""
     seen = set[str]()
     deduped: list[Column] = []

@@ -8,9 +8,9 @@ Copyright 2025 Vlad Emelianov
 Usage::
 
     ```python
-    from mypy_boto3_service_quotas.type_defs import DeleteServiceQuotaIncreaseRequestFromTemplateRequestTypeDef
+    from mypy_boto3_service_quotas.type_defs import CreateSupportCaseRequestTypeDef
 
-    data: DeleteServiceQuotaIncreaseRequestFromTemplateRequestTypeDef = ...
+    data: CreateSupportCaseRequestTypeDef = ...
     ```
 """
 
@@ -40,6 +40,7 @@ else:
     from typing_extensions import NotRequired, TypedDict
 
 __all__ = (
+    "CreateSupportCaseRequestTypeDef",
     "DeleteServiceQuotaIncreaseRequestFromTemplateRequestTypeDef",
     "ErrorReasonTypeDef",
     "GetAWSDefaultServiceQuotaRequestTypeDef",
@@ -88,6 +89,9 @@ __all__ = (
     "TagTypeDef",
     "UntagResourceRequestTypeDef",
 )
+
+class CreateSupportCaseRequestTypeDef(TypedDict):
+    RequestId: str
 
 class DeleteServiceQuotaIncreaseRequestFromTemplateRequestTypeDef(TypedDict):
     ServiceCode: str

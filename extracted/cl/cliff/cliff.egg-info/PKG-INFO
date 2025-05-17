@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: cliff
-Version: 4.9.1
+Version: 4.10.0
 Summary: Command Line Interface Formulation Framework
 Home-page: https://docs.openstack.org/cliff/latest/
 Author: OpenStack
@@ -9,18 +9,16 @@ Classifier: Development Status :: 5 - Production/Stable
 Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Programming Language :: Python :: 3 :: Only
-Classifier: Programming Language :: Python :: Implementation :: CPython
 Classifier: Intended Audience :: Developers
 Classifier: Environment :: Console
-Requires-Python: >=3.9
+Requires-Python: >=3.10
 License-File: LICENSE
 Requires-Dist: autopage>=0.4.0
-Requires-Dist: importlib_metadata>=4.4
 Requires-Dist: cmd2>=1.0.0
 Requires-Dist: PrettyTable>=0.7.2
 Requires-Dist: stevedore>=2.0.1

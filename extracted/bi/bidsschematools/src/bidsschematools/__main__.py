@@ -7,13 +7,8 @@ from itertools import chain
 
 import click
 
-if sys.version_info < (3, 9):
-    from importlib_resources import files
-else:
-    from importlib.resources import files
-
 from .rules import regexify_filename_rules
-from .schema import export_schema, load_schema
+from .schema import load_schema
 from .utils import configure_logger, get_logger
 from .validator import _bidsignore_check
 
@@ -36,7 +31,7 @@ def cli(verbose, quiet):
 def export(ctx, schema, output):
     """Export BIDS schema to JSON document"""
     schema = load_schema(schema)
-    text = export_schema(schema)
+    text = schema.to_json()
     if output == "-":
         lgr.debug("Writing to stdout")
         print(text)
@@ -52,7 +47,9 @@ def export(ctx, schema, output):
 @click.pass_context
 def export_metaschema(ctx, output):
     """Export BIDS schema to JSON document"""
-    metaschema = files("bidsschematools.data").joinpath("metaschema.json").read_text()
+    from .data import load
+
+    metaschema = load.readable("metaschema.json").read_text()
     if output == "-":
         print(metaschema, end="")
     else:

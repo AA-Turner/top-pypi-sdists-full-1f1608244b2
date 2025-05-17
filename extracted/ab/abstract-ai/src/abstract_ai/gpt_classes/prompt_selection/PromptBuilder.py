@@ -7,11 +7,106 @@ from abstract_utilities import (
 from abstract_utilities.parse_utils import (
     num_tokens_from_string,
     chunk_source_code,
-    chunk_any_to_tokens,
+    chunk_data_by_type,
 )
+from abstract_math import divide_it,multiply_it,add_it,subtract_it,floor_divide_it
 from ..model_selection.ModelBuilder import ModelManager
 from ..instruction_selection import InstructionManager
 from ..api_selection.ApiBuilder import ApiManager
+import re
+from typing import List, Optional
+import tiktoken
+
+def get_encoder(model_name: str = "gpt-4", encoding_name: Optional[str] = None):
+    """Return a tiktoken encoder for your model or encoding."""
+    if encoding_name:
+        return tiktoken.get_encoding(encoding_name)
+    return tiktoken.encoding_for_model(model_name)
+
+def count_tokens(text: str, encoder) -> int:
+    """Count how many tokens `text` encodes to."""
+    return len(encoder.encode(text))
+
+def recursive_chunk(
+    text: str,
+    desired_tokens: int,
+    model_name: str = "gpt-4",
+    separators: Optional[List[str]] = None,
+    overlap: int = 0
+) -> List[str]:
+    """
+    Split `text` into chunks as close to `desired_tokens` tokens as possible,
+    preserving contiguous blocks via `separators`, and *only* splitting inside
+    a block if it can’t possibly fit otherwise.
+    
+    Args:
+        text: the full string to split
+        desired_tokens: target token count per chunk (never exceed)
+        encoder: a tiktoken encoder
+        separators: list of splitters, from largest to smallest logical unit
+        overlap: how many tokens to overlap between adjacent chunks
+    """
+    encoder = get_encoder(model_name)
+    if separators is None:
+        # from big (paragraphs) to small (words)
+        separators = ["\n\n", "\n", r"(?<=[\.\?\!])\s", ", ", " "]
+
+    # If it already fits, return it whole:
+    if count_tokens(text, encoder) <= desired_tokens:
+        return [text]
+
+    # Try splitting by each separator in turn
+    for sep in separators:
+        # use regex split when the separator is a lookbehind pattern
+        parts = re.split(sep, text) if sep.startswith("(?") else text.split(sep)
+        if len(parts) > 1:
+            chunks: List[str] = []
+            current = ""
+            current_tokens = 0
+
+            for part in parts:
+                part = part.strip()
+                if not part:
+                    continue
+                part_tokens = count_tokens(part, encoder)
+
+                # If this block alone is too big, recurse into it with the next-level separators
+                if part_tokens > desired_tokens:
+                    # flush current
+                    if current:
+                        chunks.extend(recursive_chunk(
+                            current, desired_tokens, model_name, separators[1:], overlap
+                        ))
+                        current, current_tokens = "", 0
+                    # now chunk the oversized block
+                    chunks.extend(recursive_chunk(
+                        part, desired_tokens, model_name, separators[1:], overlap
+                    ))
+                else:
+                    # can we add it to the current chunk?
+                    if current_tokens + part_tokens <= desired_tokens:
+                        # include the separator back in
+                        current = sep.join([current, part]) if current else part
+                        current_tokens += part_tokens
+                    else:
+                        # flush current, start new
+                        chunks.append(current)
+                        current, current_tokens = part, part_tokens
+
+            if current:
+                chunks.append(current)
+            return chunks
+
+    # Fallback: pure token sliding window (the only time we’ll split “inside” a block)
+    tokens = encoder.encode(text)
+    stride = desired_tokens - overlap
+    return [
+        encoder.decode(tokens[i : i + desired_tokens])
+        for i in range(0, len(tokens), stride)
+    ]
+
+def subtract_it_int(*args):
+    return int(subtract_it(*args))
 class PromptManager:
     """
     Manages the generation and management of prompts. This includes creating prompts based on user input or predefined conditions, formatting prompts, and handling errors or special cases.
@@ -152,11 +247,11 @@ class PromptManager:
             """
             current_chunk_token_length = num_tokens_from_string(str(chunk_data))
 
-            prompt_token_used = initial_prompt_token_length + current_chunk_token_length
-            prompt_token_available = prompt_token_desired - prompt_token_used
+            prompt_token_used = add_it(initial_prompt_token_length,current_chunk_token_length)
+            prompt_token_available = subtract_it_int(prompt_token_desired,prompt_token_used)
 
             completion_token_used = initial_completion_token_length
-            completion_token_available = (completion_token_desired - completion_token_used)
+            completion_token_available = subtract_it_int(completion_token_desired,completion_token_used)
             if prompt_token_available <0:
                 completion_token_available+=prompt_token_available
             chunk_js = {
@@ -203,7 +298,7 @@ class PromptManager:
             """
             # Function implementation ...
             get_token_distributions = []
-            data_chunks_list = chunk_any_to_tokens(total_chunk_data, fictitious_chunk_token_length)
+            data_chunks_list = recursive_chunk(text=total_chunk_data, desired_tokens=fictitious_chunk_token_length)
             while '' in data_chunks_list:
                 data_chunks_list.remove('')
             total_chunks = len(data_chunks_list)
@@ -246,23 +341,23 @@ class PromptManager:
             max_tokens = int(tokenize_js["max_tokens"])
             
             completion_percent = convert_to_percentage(tokenize_js["completion_percentage"])
-            completion_token_desired = int(max_tokens*completion_percent)
+            completion_token_desired = int(multiply_it(max_tokens,completion_percent))
             
             
             prompt_percent = convert_to_percentage(100-tokenize_js["completion_percentage"])
-            prompt_token_desired = int(max_tokens*prompt_percent)
-            bot_notation_token_count=num_tokens_from_string(str(self.notation_text))
+            prompt_token_desired = int(multiply_it(max_tokens,prompt_percent))
+            bot_notation_token_count= num_tokens_from_string(str(self.notation_text))
             prompt_as_previous_token_count = num_tokens_from_string(str(self.prompt_as_previous_text))
             total_prompt_length = num_tokens_from_string(str(total_prompt))
-            initial_prompt_token_length = total_prompt_length+max(200,bot_notation_token_count)+max(200,prompt_as_previous_token_count)
+            initial_prompt_token_length = add_it(total_prompt_length,max(200,bot_notation_token_count),max(200,prompt_as_previous_token_count))
 
             initial_completion_token_length=bot_notation_token_count
             
             total_chunk_data = tokenize_js["chunk_prompt"] or ''
         
             total_chunk_token_length = num_tokens_from_string(str(total_chunk_data))
-            ficticious_chunk_token_length = prompt_token_desired-initial_prompt_token_length
-            num_chunks = total_chunk_token_length // ficticious_chunk_token_length      
+            ficticious_chunk_token_length = subtract_it_int(prompt_token_desired,initial_prompt_token_length)
+            num_chunks = floor_divide_it(total_chunk_token_length,ficticious_chunk_token_length)      
             instruction_token_size = 0
             
             token_distributions.append(get_token_distributions(prompt_token_desired=prompt_token_desired,
@@ -420,8 +515,15 @@ class PromptManager:
                                               notation=notation,
                                               generate_title=generate_title,
                                               request_chunks=request_chunks,
-                                              prompt_as_previous=prompt_as_previous)    
-        max_tokens = self.model_mgr.selected_max_tokens -num_tokens_from_string(str({"model": self.model_mgr.selected_model_name, "messages": [{"role": self.role or "user", "content":self.prompt }]}))
+                                              prompt_as_previous=prompt_as_previous)
+
+        role = self.role or "user"
+        init_message = {"role": role, "content":self.prompt}
+        init_message_ls = [init_message]
+        init_prompt = {"model": self.model_mgr.selected_model_name, "messages": init_message_ls}
+        init_prompt_str = str(init_prompt)
+        init_prompt_str_tokens = num_tokens_from_string(init_prompt_str)
+        max_tokens = subtract_it_int(self.model_mgr.selected_max_tokens,init_prompt_str_tokens)
         self.prompt ={"model": self.model_mgr.selected_model_name, "messages": [{"role": self.role or "user", "content":self.prompt }],"max_tokens": max_tokens}
         blank = True
         for key in self.key_check:

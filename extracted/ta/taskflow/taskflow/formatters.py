@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #    Copyright (C) 2014 Yahoo! Inc. All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -14,6 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import copy
 import functools
 
 from taskflow.engines.action_engine import compiler
@@ -58,16 +57,28 @@ def _fetch_predecessor_tree(graph, atom):
     return root
 
 
-class FailureFormatter(object):
+class FailureFormatter:
     """Formats a failure and connects it to associated atoms & engine."""
 
     _BUILDERS = {
         states.EXECUTE: (_fetch_predecessor_tree, 'predecessors'),
     }
 
-    def __init__(self, engine, hide_inputs_outputs_of=()):
+    def __init__(self, engine, hide_inputs_outputs_of=(),
+                 mask_inputs_keys=(), mask_outputs_keys=()):
         self._hide_inputs_outputs_of = hide_inputs_outputs_of
+        self._mask_inputs_keys = mask_inputs_keys
+        self._mask_outputs_keys = mask_outputs_keys
         self._engine = engine
+
+    def _mask_keys(self, data, mask_keys):
+        if not data or not isinstance(data, dict):
+            return data
+        result = copy.deepcopy(data)
+        for k in mask_keys:
+            if k in result:
+                result[k] = '***'
+        return result
 
     def _format_node(self, storage, cache, node):
         """Formats a single tree node into a string version."""
@@ -100,14 +111,16 @@ class FailureFormatter(object):
                                                        atom_name,
                                                        fetch_mapped_args)
                 if requires_found:
-                    atom_attrs['requires'] = requires
+                    atom_attrs['requires'] = self._mask_keys(
+                        requires, self._mask_inputs_keys)
                 provides, provides_found = _cached_get(
                     cache, 'provides', atom_name,
                     storage.get_execute_result, atom_name)
                 if provides_found:
-                    atom_attrs['provides'] = provides
+                    atom_attrs['provides'] = self._mask_keys(
+                        provides, self._mask_outputs_keys)
             if atom_attrs:
-                return "Atom '%s' %s" % (atom_name, atom_attrs)
+                return "Atom '{}' {}".format(atom_name, atom_attrs)
             else:
                 return "Atom '%s'" % (atom_name)
         else:
@@ -156,7 +169,8 @@ class FailureFormatter(object):
             builder, kind = self._BUILDERS[atom_intention]
             rooted_tree = builder(graph, atom)
             child_count = rooted_tree.child_count(only_direct=False)
-            buff.write_nl('%s %s (most recent first):' % (child_count, kind))
+            buff.write_nl(
+                '{} {} (most recent first):'.format(child_count, kind))
             formatter = functools.partial(self._format_node, storage, cache)
             direct_child_count = rooted_tree.child_count(only_direct=True)
             for i, child in enumerate(rooted_tree, 1):

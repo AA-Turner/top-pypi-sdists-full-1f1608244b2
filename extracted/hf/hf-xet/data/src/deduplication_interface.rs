@@ -1,16 +1,16 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
-use deduplication::{DeduplicationDataInterface, FileXorbDependency, RawXorbData};
+use deduplication::{DeduplicationDataInterface, RawXorbData};
 use mdb_shard::file_structs::FileDataSequenceEntry;
 use merklehash::MerkleHash;
+use progress_tracking::upload_tracking::{CompletionTrackerFileId, FileXorbDependency};
 use tokio::task::JoinSet;
 use tracing::Instrument;
 
 use crate::configurations::GlobalDedupPolicy;
 use crate::errors::Result;
 use crate::file_upload_session::FileUploadSession;
-use crate::progress_tracking::CompletionTrackerFileId;
 
 pub struct UploadSessionDataManager {
     file_id: CompletionTrackerFileId,
@@ -89,7 +89,7 @@ impl DeduplicationDataInterface for UploadSessionDataManager {
     /// Registers a Xorb of new data that has no deduplication references.
     async fn register_new_xorb(&mut self, xorb: RawXorbData) -> Result<()> {
         // Begin the process for upload.
-        self.session.register_new_xorb(xorb).await?;
+        self.session.register_new_xorb(xorb, &[]).await?;
 
         Ok(())
     }

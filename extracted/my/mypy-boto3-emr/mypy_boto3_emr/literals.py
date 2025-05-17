@@ -62,12 +62,15 @@ __all__ = (
     "ListStudiosPaginatorName",
     "MarketTypeType",
     "NotebookExecutionStatusType",
+    "OnClusterAppUITypeType",
     "OnDemandCapacityReservationPreferenceType",
     "OnDemandCapacityReservationUsageStrategyType",
     "OnDemandProvisioningAllocationStrategyType",
     "OutputNotebookFormatType",
     "PaginatorName",
+    "PersistentAppUITypeType",
     "PlacementGroupStrategyType",
+    "ProfilerTypeType",
     "ReconfigurationTypeType",
     "RegionName",
     "RepoUpgradeOnBootType",
@@ -197,11 +200,21 @@ NotebookExecutionStatusType = Literal[
     "STOPPING",
     "STOP_PENDING",
 ]
+OnClusterAppUITypeType = Literal[
+    "ApplicationMaster",
+    "JobHistoryServer",
+    "ResourceManager",
+    "SparkHistoryServer",
+    "TezUI",
+    "YarnTimelineService",
+]
 OnDemandCapacityReservationPreferenceType = Literal["none", "open"]
 OnDemandCapacityReservationUsageStrategyType = Literal["use-capacity-reservations-first"]
 OnDemandProvisioningAllocationStrategyType = Literal["lowest-price", "prioritized"]
 OutputNotebookFormatType = Literal["HTML"]
+PersistentAppUITypeType = Literal["SHS", "TEZ", "YTS"]
 PlacementGroupStrategyType = Literal["CLUSTER", "NONE", "PARTITION", "SPREAD"]
+ProfilerTypeType = Literal["SHS", "TEZUI", "YTS"]
 ReconfigurationTypeType = Literal["MERGE", "OVERWRITE"]
 RepoUpgradeOnBootType = Literal["NONE", "SECURITY"]
 ScaleDownBehaviorType = Literal["TERMINATE_AT_INSTANCE_HOUR", "TERMINATE_AT_TASK_COMPLETION"]
@@ -612,7 +625,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -620,6 +632,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",

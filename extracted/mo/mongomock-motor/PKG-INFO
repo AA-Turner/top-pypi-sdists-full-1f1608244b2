@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: mongomock-motor
-Version: 0.0.35
+Version: 0.0.36
 Summary: Library for mocking AsyncIOMotorClient built on top of mongomock.
 License: MIT
 Keywords: library,mongodb
@@ -16,6 +16,7 @@ Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Requires-Dist: mongomock (>=4.1.2,<5.0.0)
+Requires-Dist: motor (>=2.5)
 Project-URL: Repository, https://github.com/michaelkryukov/mongomock_motor
 Description-Content-Type: text/markdown
 

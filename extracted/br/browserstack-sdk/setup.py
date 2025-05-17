@@ -24,6 +24,8 @@ requirements=[
         'pypac',
         'GitPython',
         'pytest-xdist',
+        'pytest-rerunfailures',
+        'robotframework-retryfailed',
         'protobuf==4.21.6',
         'watchdog',
     ]

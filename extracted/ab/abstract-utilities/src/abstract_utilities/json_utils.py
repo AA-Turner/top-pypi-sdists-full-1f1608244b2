@@ -188,42 +188,46 @@ def find_keys(data, target_keys):
     values = []
     _find_keys_recursive(data, target_keys, values)
     return values
-
+def get_logNone(e):
+    logger(f"{e}")
+    return None
 def try_json_loads(data):
     try:
-        return json.loads(data)
-    except json.JSONDecodeError:
-        return None
-    
+        data = json.loads(data)
+    except Exception as e:
+        data = None#get_logNone(e)
+    return data
 def try_json_load(file):
     try:
-        return json.load(file)
-    except json.JSONDecodeError:
-        return None
-    
+        file = json.load(file)
+    except Exception as e:
+        file = get_logNone(e)
+    return file
 def try_json_dump(file):
     try:
-        return json.dump(file)
-    except json.JSONDecodeError:
-        return None
-    
+        file = json.dump(file)
+    except Exception as e:
+        file = get_logNone(e)
+    return file
 def try_json_dumps(data):
     try:
-        return json.dumps(data)
-    except json.JSONDecodeError:
-        return None
-    
+        data = json.dumps(data)
+    except Exception as e:
+        data = get_logNone(e)
+    return data
 def safe_json_loads(data):
-    return try_json_loads(data) or data
-    
+    if not isinstance(data,dict):
+        data = try_json_loads(data) or data
+    return data
 def safe_json_load(file):
-    return try_json_load(file) or file
-    
+    file = try_json_load(file) or file
+    return file
 def safe_json_dump(file):
-    return try_json_dump(file) or file
-    
+    file = try_json_dump(file) or file
+    return file
 def safe_json_dumps(data):
-    return try_json_dumps(data) or data
+    data = try_json_dumps(data) or data
+    return data
 def unified_json_loader(file_path, default_value=None, encoding='utf-8'):
     # Try to load from the file
     with open(file_path, 'r', encoding=encoding) as file:
@@ -307,7 +311,7 @@ def all_try(function=None, data=None, var_data=None, error=False, error_msg=None
 def all_try_json_loads(data, error=False, error_msg=None, error_value=(json.JSONDecodeError, TypeError)):
     return all_try(data=data, function=json.loads, error=error, error_msg=error_msg, error_value=error_value)
 
-def safe_json_loads(data, default_value=None, error=False, error_msg=None): 
+def safe_json_loadss(data, default_value=None, error=False, error_msg=None): 
     """ Safely attempts to load a JSON string. Returns the original data or a default value if parsing fails.
     Args:
         data (str): The JSON string to parse.

@@ -7,7 +7,7 @@ packages = [{ include = "airbyte" }]
 
 # This project uses dynamic versioning
 # https://github.com/mtkennerly/poetry-dynamic-versioning
-version = "0.24.2"
+version = "0.25.0"
 
 [tool.poetry-dynamic-versioning]
 enable = false

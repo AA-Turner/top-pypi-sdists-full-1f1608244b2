@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import logging
 import os
+import re
 import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
 from typing import Union, Optional
 
-from seeq import spy
+from seeq import spy, sdk
 from seeq.base import util
 from seeq.spy import _datalab
 from seeq.spy._errors import *
@@ -42,6 +44,9 @@ class ExecutionInstance:
                                                  scheduled_file_filename,
                                                  scheduled_file_folder,
                                                  extension='.html', result=True)
+        # Keep track of whether in-notebook errors occurred during execution.
+        # If they did, mark it as a warning and have Appserver point the user back to the generated HTML file.
+        self.execution_warning = None
 
     @property
     def logger(self) -> logging.Logger:
@@ -68,9 +73,14 @@ class ExecutionInstance:
         return executor_logger
 
     def execute(self):
+        _login()
+        execution_start_time = datetime.now()
+
         # Abort if scheduled notebook does not exist
         if not Path(self.file_path).exists():
-            self._unschedule_and_notify("The notebook cannot be found at the scheduled path.")
+            message = f'The notebook cannot be found at the scheduled path: {self.file_path}'
+            self._unschedule_and_notify(message)
+            self._report_job_result_to_appserver(start_time=execution_start_time, error=message)
             self.logger.error('not found, aborting')
             return
 
@@ -86,6 +96,7 @@ class ExecutionInstance:
             self.export_html()
 
             # Log success for executor
+            self._report_job_result_to_appserver(start_time=execution_start_time, end_time=datetime.now())
             self.logger.info('succeeded')
         except Exception as e:
             message = getattr(e, 'message', repr(e))
@@ -103,6 +114,8 @@ class ExecutionInstance:
 
             self.notify_on_skipped_execution(message)
             self.logger.error('encountered error', exc_info=e)
+
+            self._report_job_result_to_appserver(start_time=execution_start_time, error=message)
 
             # Raise so that job status message will indicate failure
             raise SPyRuntimeError(message) from e
@@ -193,6 +206,9 @@ class ExecutionInstance:
         # Remove login cell from notebook
         del nb_notebook_merged['cells'][0]
 
+        # Count the number of errors in the notebook so we can report them back to Appserver
+        num_errors = 0
+
         # Decrement the "execution_count" by 1 to correct notebook cell numbering
         # "execution_count" can have 'None' as value so just pass on any exception to continue
         for cell in nb_notebook_merged['cells']:
@@ -213,8 +229,14 @@ class ExecutionInstance:
                             execution_count = int(output['execution_count'])
                             execution_count -= 1
                             output['execution_count'] = execution_count
+                        # If an error occurred, mark that for stats collection. More details will be set in export_html.
+                        if 'output_type' in output and output.output_type == 'error':
+                            num_errors += 1
                     except Exception:
                         pass
+
+        if num_errors > 0:
+            self.execution_warning = f'{num_errors} error(s) were encountered during execution.'
 
         # Write the scheduled notebook
         with util.safe_open(self.merged_notebook_path, 'w') as f_notebook_merged:
@@ -250,6 +272,9 @@ class ExecutionInstance:
         with util.safe_open(self.job_result_path, 'w') as f_job_result_file:
             f_job_result_file.write(job_result_html)
 
+        if self.execution_warning:
+            self.execution_warning += f' Check the notebook result at /{self.job_result_path} for details.'
+
         # Log to executor
         self.logger.debug('successfully exported merged notebook')
 
@@ -278,7 +303,6 @@ class ExecutionInstance:
     def notify_on_skipped_execution(self, error_message: Optional[str] = None) -> None:
         try:
             if is_notify_on_skipped_execution():
-                _login()
                 self.logger.debug(
                     f'Notifying user {spy.session.user.username} about skipped execution of the notebook in project '
                     f'{self.project_name}, path {self.file_path}, label {self.label}. The notebook failed to execute.')
@@ -293,7 +317,6 @@ class ExecutionInstance:
 
     def _unschedule_and_notify(self, error_message: Optional[str] = None) -> None:
         try:
-            _login()
             spy.jobs.unschedule(label=self.label)
             if is_notify_on_automatic_unschedule():
                 self.logger.debug(
@@ -308,6 +331,40 @@ class ExecutionInstance:
                 )
         except Exception as e:
             self.logger.error(e, exc_info=e)
+
+    def _report_job_result_to_appserver(self, start_time: datetime,
+                                        end_time: Optional[datetime] = None,
+                                        error: Optional[str] = None) -> None:
+        # Report run stats back to Appserver if the endpoint is available
+        if not spy.utils.is_sdk_module_version_at_least(66, 21):
+            return
+        try:
+            # Extract the ID of the scheduled notebook from the job_key string
+            uuid_pattern = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+            notebook_id_match = uuid_pattern.search(self.job_key)
+            if not notebook_id_match:
+                self.logger.debug(f'No notebook ID found for job key {self.job_key} in Project {self.project_uuid} ')
+                return
+            notebook_id = notebook_id_match.group(0)
+
+            start_string = start_time.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+            duration_millis = None
+            if end_time:
+                duration_millis = int((end_time - start_time).total_seconds() * 1000)
+            notebook_result_input = sdk.ScheduledNotebookResultInputV1(
+                run_started_at=start_string, run_time=duration_millis, warning=self.execution_warning, error=error,
+            )
+            projects_api = sdk.ProjectsApi(spy.client)
+            projects_api.add_schedule_notebook_result(id=notebook_id, body=notebook_result_input)
+            result_log_details = f'Run stats for {self.project_uuid} {self.file_path} {self.label} ({notebook_id}): '
+            if error:
+                result_log_details += f'Failed run at {start_string} with error "{error}"'
+            else:
+                result_log_details += f'Successful run at {start_string} with duration {duration_millis}ms'
+            self.logger.debug(result_log_details)
+        except Exception as e:
+            self.logger.error(f'Failed to report run stats for '
+                              f'{self.project_uuid} {self.file_path} {self.label}', exc_info=e)
 
 
 def execute():

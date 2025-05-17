@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "llama_stack"
-version = "0.2.6"
+version = "0.2.7"
 authors = [{ name = "Meta Llama", email = "llama-oss@meta.com" }]
 description = "Llama Stack"
 readme = "README.md"
@@ -27,7 +27,7 @@ dependencies = [
     "huggingface-hub",
     "jinja2>=3.1.6",
     "jsonschema",
-    "llama-stack-client>=0.2.6",
+    "llama-stack-client>=0.2.7",
     "openai>=1.66",
     "prompt-toolkit",
     "python-dotenv",
@@ -106,7 +106,7 @@ codegen = ["rich", "pydantic", "jinja2>=3.1.6"]
 ui = [
     "streamlit",
     "pandas",
-    "llama-stack-client>=0.2.6",
+    "llama-stack-client>=0.2.7",
     "streamlit-option-menu",
 ]
 
@@ -304,7 +304,6 @@ exclude = [
     "^llama_stack/strong_typing/inspection\\.py$",
     "^llama_stack/strong_typing/schema\\.py$",
     "^llama_stack/strong_typing/serializer\\.py$",
-    "^llama_stack/templates/dev/dev\\.py$",
     "^llama_stack/templates/groq/groq\\.py$",
     "^llama_stack/templates/llama_api/llama_api\\.py$",
     "^llama_stack/templates/sambanova/sambanova\\.py$",
@@ -320,3 +319,6 @@ ignore_missing_imports = true
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
+
+[tool.ruff.lint.pep8-naming]
+classmethod-decorators = ["classmethod", "pydantic.field_validator"]

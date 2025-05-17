@@ -47,6 +47,16 @@ _KNOWN_SIG_GLOBAL_PARAMETERS_WITH_CONNECTION = [
     "enable_diag",
     "diag_log_path",
     "diag_allowlist_path",
+    "oauth_client_id",
+    "oauth_client_secret",
+    "oauth_authorization_url",
+    "oauth_token_request_url",
+    "oauth_redirect_uri",
+    "oauth_scope",
+    "oauth_disable_pkce",
+    "oauth_enable_refresh_tokens",
+    "oauth_enable_single_use_refresh_tokens",
+    "client_store_temporary_credential",
 ] + _KNOWN_SIG_GLOBAL_PARAMETERS
 
 

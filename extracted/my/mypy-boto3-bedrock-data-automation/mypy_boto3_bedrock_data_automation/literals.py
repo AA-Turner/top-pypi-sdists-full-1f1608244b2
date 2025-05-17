@@ -67,7 +67,7 @@ ListBlueprintsPaginatorName = Literal["list_blueprints"]
 ListDataAutomationProjectsPaginatorName = Literal["list_data_automation_projects"]
 ResourceOwnerType = Literal["ACCOUNT", "SERVICE"]
 StateType = Literal["DISABLED", "ENABLED"]
-TypeType = Literal["AUDIO", "DOCUMENT", "IMAGE"]
+TypeType = Literal["AUDIO", "DOCUMENT", "IMAGE", "VIDEO"]
 VideoExtractionCategoryTypeType = Literal[
     "CONTENT_MODERATION", "LOGOS", "TEXT_DETECTION", "TRANSCRIPT"
 ]
@@ -431,7 +431,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",

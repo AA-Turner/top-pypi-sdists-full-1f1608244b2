@@ -17,7 +17,7 @@ import pytest
 from snowflake.cli.api.secure_path import SecurePath
 
 from typing import Set, Optional, Tuple
-from tests_integration.test_utils import assert_stage_has_files
+from tests_integration.test_utils import assert_stage_has_files, does_stage_exist
 
 
 def _assert_project_has_versions(
@@ -203,9 +203,9 @@ def test_project_add_version(
         )
         assert result.exit_code == 0, result.output
 
-        # no "prune" - unexpected file remains
+        # --no-prune - unexpected file remains
         result = runner.invoke_with_connection(
-            ["project", "add-version", "--alias", "v3.1"]
+            ["project", "add-version", "--alias", "v3.1", "--no-prune"]
         )
         assert result.exit_code == 0, result.output
         _assert_project_has_versions(
@@ -225,7 +225,7 @@ def test_project_add_version(
 
         # prune flag - unexpected file should be removed
         result = runner.invoke_with_connection(
-            ["project", "add-version", "--prune", "--alias", "v3.2"]
+            ["project", "add-version", "--alias", "v3.2"]
         )
         assert result.exit_code == 0, result.output
         _assert_project_has_versions(
@@ -246,3 +246,27 @@ def test_project_add_version(
                 f"{default_stage_name}/file_a.sql",
             },
         )
+
+
+@pytest.mark.integration
+@pytest.mark.qa_only
+def test_project_add_version_without_create_fails(
+    runner,
+    test_database,
+    project_directory,
+):
+    project_name = "project_descriptive_name"
+    default_stage_name = "my_project_stage"
+
+    with project_directory("dcm_project"):
+        # call add-version first (by mistake)
+        result = runner.invoke_with_connection(["project", "add-version"])
+        assert result.exit_code == 1, result.output
+        assert f"Project '{project_name}' does not exist." in result.output
+
+        assert does_stage_exist(runner, default_stage_name) is False
+
+        # make sure that user can still create a project and stage
+        result = runner.invoke_with_connection_json(["project", "create"])
+        assert result.exit_code == 0, result.output
+        assert does_stage_exist(runner, default_stage_name) is True

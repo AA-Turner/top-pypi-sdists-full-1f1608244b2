@@ -4,13 +4,26 @@ from fastapi.concurrency import asynccontextmanager
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRoute
 from loguru import logger
+from pydantic import BaseModel
 
 from mtmai._version import version
-from mtmai.api import mount_api_routes
 from mtmai.core.config import settings
+from mtmai.otel import setup_instrumentor
 from mtmai.worker_v2 import WorkerV2
 
 # from mtmai.middleware import AuthMiddleware
+
+class MtmaiServeOptions(BaseModel):
+    host: str = "0.0.0.0"
+    port: int = 8000
+    # workers: int = 1
+    enable_worker: bool = True
+
+
+def mount_api_routes(app: FastAPI, prefix=""):
+    from mtmai.api import tiktok_api
+
+    app.include_router(tiktok_api.router, prefix=prefix, tags=["tiktok_api"])
 
 
 def setup_main_routes(target_app: FastAPI):
@@ -32,19 +45,21 @@ def setup_main_routes(target_app: FastAPI):
     mount_api_routes(target_app, prefix=settings.API_PREFIX)
 
 
-def build_app():
+def build_app(enable_worker: bool = True):
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         try:
-            # from mtmai.worker_app import run_worker
+            if enable_worker:
+                # from mtmai.worker_app import run_worker
 
-            # worker_task = asyncio.create_task(run_worker())
-            worker = WorkerV2(
-                db_url=settings.MTM_DATABASE_URL,
-            )
-            await worker.start()
+                # worker_task = asyncio.create_task(run_worker())
+                worker = WorkerV2(
+                    db_url=settings.MTM_DATABASE_URL,
+                )
+                await worker.start()
             yield
-            await worker.stop()
+            if enable_worker:
+                await worker.stop()
             # Cleanup worker on shutdown
             # if not worker_task.done():
             #     worker_task.cancel()
@@ -238,26 +253,23 @@ def build_app():
     return app
 
 
-async def serve():
-    app = build_app()
+async def serve(options: MtmaiServeOptions):
+    setup_instrumentor()
+    app = build_app(enable_worker=options.enable_worker)
     config = uvicorn.Config(
         app,
-        host=settings.SERVE_IP,
-        port=settings.PORT,
+        host=options.host,
+        port=options.port,
         log_level="info",
     )
-    host = (
-        "127.0.0.1"
-        if settings.SERVE_IP == "0.0.0.0"
-        else settings.server_host.split("://")[-1]
-    )
+    host = "127.0.0.1" if options.host == "0.0.0.0" else options.host.split("://")[-1]
 
     server = uvicorn.Server(config)
 
     logger.info(
         "server starting",
-        host="0.0.0.0",
-        port=settings.PORT,
-        server_url=f"{settings.server_host.split('://')[0]}://{host}:{settings.PORT}",
+        host=options.host,
+        port=options.port,
+        server_url=f"{options.host.split('://')[0]}://{host}:{options.port}",
     )
     await server.serve()

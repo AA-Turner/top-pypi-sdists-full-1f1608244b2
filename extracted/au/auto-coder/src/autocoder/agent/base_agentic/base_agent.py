@@ -24,7 +24,7 @@ from autocoder.common.printer import Printer
 from autocoder.utils.auto_project_type import ProjectTypeAnalyzer
 from autocoder.common.mcp_server import get_mcp_server, McpServerInfoRequest
 from autocoder.common.file_monitor.monitor import FileMonitor
-from autocoder.common.rulefiles.autocoderrules_utils import get_rules
+from autocoder.common.rulefiles.autocoderrules_utils import get_required_and_index_rules
 from autocoder.auto_coder_runner import load_tokenizer
 from autocoder.linters.shadow_linter import ShadowLinter
 from autocoder.compilers.shadow_compiler import ShadowCompiler
@@ -34,6 +34,10 @@ from autocoder.events.event_types import Event, EventType, EventMetadata
 from autocoder.events import event_content as EventContentCreator
 from autocoder.memory.active_context_manager import ActiveContextManager
 from autocoder.common.action_yml_file_manager import ActionYmlFileManager
+from autocoder.common.file_checkpoint.models import FileChange as CheckpointFileChange
+from autocoder.common.file_checkpoint.manager import FileChangeManager as CheckpointFileChangeManager
+from autocoder.linters.normal_linter import NormalLinter
+from autocoder.compilers.normal_compiler import NormalCompiler
 
 from .types import (
     BaseTool, ToolResult, AgentRequest, FileChangeEntry,
@@ -64,6 +68,7 @@ class BaseAgent(ABC):
         files: SourceCodeList,
         args: AutoCoderArgs,
         conversation_history: Optional[List[Dict[str, Any]]] = None,
+        default_tools_list: Optional[List[str]] = None
     ):
         """
         初始化代理
@@ -102,9 +107,21 @@ class BaseAgent(ABC):
         
         # 5. 初始化其他组件
         self.project_type_analyzer = ProjectTypeAnalyzer(args=args, llm=self.llm)        
-        self.shadow_manager = ShadowManager(args.source_dir, args.event_file, args.ignore_clean_shadows)
-        self.shadow_linter = ShadowLinter(self.shadow_manager, verbose=False)
-        self.shadow_compiler = ShadowCompiler(self.shadow_manager, verbose=False)
+       # self.shadow_manager = ShadowManager(
+        #     args.source_dir, args.event_file, args.ignore_clean_shadows)
+        self.shadow_manager = None
+        # self.shadow_linter = ShadowLinter(self.shadow_manager, verbose=False)
+        self.shadow_compiler = None
+        # self.shadow_compiler = ShadowCompiler(self.shadow_manager, verbose=False)
+        self.shadow_linter = None
+
+        self.checkpoint_manager = CheckpointFileChangeManager(
+            project_dir=args.source_dir,
+            backup_dir=os.path.join(args.source_dir,".auto-coder","checkpoint"),
+            store_dir=os.path.join(args.source_dir,".auto-coder","checkpoint_store"),
+            max_history=50)
+        self.linter = NormalLinter(args.source_dir,verbose=False)
+        self.compiler = NormalCompiler(args.source_dir,verbose=False) 
         
         
         
@@ -138,7 +155,7 @@ class BaseAgent(ABC):
         self._chat_lock = threading.RLock()   # 保护 private_chats
         # 自动注册到AgentHub
         AgentHub.register_agent(self)
-        register_default_tools(params=self._render_context())
+        register_default_tools(params=self._render_context(), default_tools_list=default_tools_list)
         
 
     def who_am_i(self, role: str) -> 'BaseAgent':
@@ -536,28 +553,7 @@ class BaseAgent(ABC):
         
         {{ case_info.doc }}
         {% endfor %}
-
-        ====
-
-        ACT MODE V.S. PLAN MODE
-
-        In each user message, the environment_details will specify the current mode. There are two modes:
-
-        - ACT MODE: In this mode, you have access to all tools EXCEPT the plan_mode_respond tool.
-        - In ACT MODE, you use tools to accomplish the user's task. Once you've completed the user's task, you use the attempt_completion tool to present the result of the task to the user.
-        - PLAN MODE: In this special mode, you have access to the plan_mode_respond tool.
-        - In PLAN MODE, the goal is to gather information and get context to create a detailed plan for accomplishing the task, which the user will review and approve before they switch you to ACT MODE to implement the solution.
-        - In PLAN MODE, when you need to converse with the user or present a plan, you should use the plan_mode_respond tool to deliver your response directly, rather than using <thinking> tags to analyze when to respond. Do not talk about using plan_mode_respond - just use it directly to share your thoughts and provide helpful answers.
-
-        ## What is PLAN MODE?
-
-        - While you are usually in ACT MODE, the user may switch to PLAN MODE in order to have a back and forth with you to plan how to best accomplish the task. 
-        - When starting in PLAN MODE, depending on the user's request, you may need to do some information gathering e.g. using read_file or search_files to get more context about the task. You may also ask the user clarifying questions to get a better understanding of the task. You may return mermaid diagrams to visually display your understanding.
-        - Once you've gained more context about the user's request, you should architect a detailed plan for how you will accomplish the task. Returning mermaid diagrams may be helpful here as well.
-        - Then you might ask the user if they are pleased with this plan, or if they would like to make any changes. Think of this as a brainstorming session where you can discuss the task and plan the best way to accomplish it.
-        - If at any point a mermaid diagram would make your plan clearer to help the user quickly see the structure, you are encouraged to include a Mermaid code block in the response. (Note: if you use colors in your mermaid diagrams, be sure to use high contrast colors so the text is readable.)
-        - Finally once it seems like you've reached a good plan, ask the user to switch you back to ACT MODE to implement the solution.
-
+        
         {% if enable_active_context_in_generate %}
         ====
 
@@ -623,16 +619,20 @@ class BaseAgent(ABC):
         {% if extra_docs %}  
         ====
       
-        RULES PROVIDED BY USER
+        RULES OR  DOCUMENTS PROVIDED BY USER
 
         The following rules are provided by the user, and you must follow them strictly.
 
+        <user_rule_or_document_files>
         {% for key, value in extra_docs.items() %}
-        <user_rule>
+        <user_rule_or_document_file>
         ##File: {{ key }}
         {{ value }}
-        </user_rule>
-        {% endfor %}        
+        </user_rule_or_document_file>
+        {% endfor %}  
+        </user_rule_or_document_files>              
+        
+        Make sure you always start your task by using the read_file tool to get the relevant RULE files listed in index.md based on the user's specific requirements.        
         {% endif %}
 
         ====
@@ -675,7 +675,7 @@ class BaseAgent(ABC):
         tool_case_docs = ToolRegistry.get_all_tools_case_docs()
         tool_guidelines = ToolRegistry.get_all_tool_use_guidelines()
         
-        extra_docs = get_rules()
+        extra_docs = get_required_and_index_rules()  
         
         env_info = detect_env()
         shell_type = "bash"
@@ -763,6 +763,10 @@ class BaseAgent(ABC):
 
         iteration_count = 0
         tool_executed = False
+        
+        should_yield_completion_event = False   
+        completion_event = None    
+
         while True:
             iteration_count += 1            
             logger.info(f"Starting LLM interaction cycle #{iteration_count}")
@@ -770,10 +774,14 @@ class BaseAgent(ABC):
             last_message = conversations[-1]
             if last_message["role"] == "assistant":
                 logger.info(f"Last message is assistant, skipping LLM interaction cycle")
-                yield CompletionEvent(completion=AttemptCompletionTool(
-                    result=last_message["content"],
-                    command=""
-                ), completion_xml="")
+                if should_yield_completion_event:
+                    if completion_event is None:
+                        yield CompletionEvent(completion=AttemptCompletionTool(
+                            result=last_message["content"],
+                            command=""
+                        ), completion_xml="")  
+                    else:
+                        yield completion_event 
                 break
             logger.info(
                 f"Starting LLM interaction cycle. History size: {len(conversations)}")
@@ -834,11 +842,13 @@ class BaseAgent(ABC):
                         logger.info(
                             "AttemptCompletionTool received. Finalizing session.")
                         logger.info(f"Completion result: {tool_obj.result[:50]}...")
-                        yield CompletionEvent(completion=tool_obj, completion_xml=tool_xml)
+                        completion_event = CompletionEvent(completion=tool_obj, completion_xml=tool_xml)
                         logger.info(
                             "AgenticEdit analyze loop finished due to AttemptCompletion.")
                         save_formatted_log(self.args.source_dir, json.dumps(conversations, ensure_ascii=False), "agentic_conversation")    
-                        return
+                        mark_event_should_finish = True
+                        should_yield_completion_event = True
+                        continue
 
                     if isinstance(tool_obj, PlanModeRespondTool):
                         logger.info(
@@ -848,7 +858,7 @@ class BaseAgent(ABC):
                         logger.info(
                             "AgenticEdit analyze loop finished due to PlanModeRespond.")
                         save_formatted_log(self.args.source_dir, json.dumps(conversations, ensure_ascii=False), "agentic_conversation")    
-                        return
+                        continue
 
                     # Resolve the tool
                     resolver_cls = ToolRegistry.get_resolver_for_tool(tool_obj)
@@ -1184,7 +1194,7 @@ class BaseAgent(ABC):
         base_url = "/agent/base"
 
         try:
-            event_stream = self.analyze(request)
+            event_stream = self.agentic_run(request)
             for agent_event in event_stream:
                 content = None
                 metadata = EventMetadata(
@@ -1308,6 +1318,148 @@ class BaseAgent(ABC):
             event_manager.write_error(
                 content=error_content.to_dict(), metadata=metadata.to_dict())
             raise e
+
+    def run_with_generator(self, request: AgentRequest):        
+        start_time = time.time()             
+        project_name = os.path.basename(os.path.abspath(self.args.source_dir))
+        yield ("thinking",agentic_lang.get_message_with_format("agent_start", project_name=project_name))
+
+        # 添加token累计变量
+        total_input_tokens = 0
+        total_output_tokens = 0
+        total_input_cost = 0.0
+        total_output_cost = 0.0
+        model_name = ""
+
+        try:
+            event_stream = self.agentic_run(request)
+            for event in event_stream:
+                if isinstance(event, TokenUsageEvent):
+                    # 获取模型信息以计算价格
+                    from autocoder.utils import llms as llm_utils
+                    model_name = ",".join(llm_utils.get_llm_names(self.llm))
+                    model_info = llm_utils.get_model_info(
+                        model_name, self.args.product_mode) or {}
+                    input_price = model_info.get(
+                        "input_price", 0.0) if model_info else 0.0
+                    output_price = model_info.get(
+                        "output_price", 0.0) if model_info else 0.0
+
+                    # 计算成本
+                    last_meta = event.usage
+                    input_cost = (last_meta.input_tokens_count *
+                                 input_price) / 1000000  # 转换为百万
+                    output_cost = (
+                        last_meta.generated_tokens_count * output_price) / 1000000
+
+                    # 累计token使用情况
+                    total_input_tokens += last_meta.input_tokens_count
+                    total_output_tokens += last_meta.generated_tokens_count
+                    total_input_cost += input_cost
+                    total_output_cost += output_cost
+
+                    # 记录日志
+                    logger.info(agentic_lang.get_message_with_format(
+                        "token_usage_log", 
+                        model=model_name, 
+                        input_tokens=last_meta.input_tokens_count, 
+                        output_tokens=last_meta.generated_tokens_count, 
+                        input_cost=input_cost, 
+                        output_cost=output_cost))
+                    
+                elif isinstance(event, LLMThinkingEvent):
+                    # 以较不显眼的样式呈现思考内容
+                    yield ("thinking",f"{event.text}")
+                elif isinstance(event, LLMOutputEvent):
+                    # 打印常规LLM输出
+                    yield ("thinking",event.text)
+                elif isinstance(event, ToolCallEvent):
+                    # 跳过显示完成工具的调用
+                    if hasattr(event.tool, "result") and hasattr(event.tool, "command"):
+                        continue  # 不显示完成工具的调用
+
+                    tool_name = type(event.tool).__name__
+                    # 使用工具展示函数（需要自行实现）
+                    display_content = get_tool_display_message(event.tool)                    
+                    yield ("thinking", agentic_lang.get_message_with_format("tool_operation_title", tool_name=tool_name))
+                    yield ("thinking",display_content)
+
+                elif isinstance(event, ToolResultEvent):
+                    # 跳过显示完成工具的结果
+                    if event.tool_name == "AttemptCompletionTool":
+                        continue
+
+                    result = event.result 
+                    success_status = agentic_lang.get_message("success_status") if result.success else agentic_lang.get_message("failure_status")                   
+                    base_content = agentic_lang.get_message_with_format("status", status=success_status) + "\n"
+                    base_content += agentic_lang.get_message_with_format("message", message=result.message) + "\n"
+
+                    # 格式化内容函数
+                    def _format_content(content):
+                        if len(content) > 200:
+                            return f"{content[:100]}\n...\n{content[-100:]}"
+                        else:
+                            return content
+
+                    # 首先准备基本信息面板
+                    panel_content = [base_content]
+                    syntax_content = None
+
+                    if result.content is not None:
+                        content_str = ""
+                        try:
+                            if isinstance(result.content, (dict, list)):
+                                import json
+                                content_str = json.dumps(
+                                    result.content, indent=2, ensure_ascii=False)
+                                syntax_content = _format_content(content_str)                                    
+                            elif isinstance(result.content, str) and ('\n' in result.content or result.content.strip().startswith('<')):                                                                
+                                syntax_content = _format_content(result.content)
+                            else:
+                                content_str = str(result.content)
+                                # 直接附加简单字符串内容
+                                panel_content.append(
+                                    _format_content(content_str))
+                        except Exception as e:
+                            logger.warning(agentic_lang.get_message_with_format("format_tool_error", error=str(e)))
+                            panel_content.append(
+                                # 备用
+                                _format_content(str(result.content)))
+
+                    # 打印基本信息面板
+                    yield ("thinking",_format_content("\n".join(panel_content)))
+                    # 单独打印语法高亮内容（如果存在）
+                    if syntax_content:
+                        yield ("thinking",syntax_content)
+
+                elif isinstance(event, CompletionEvent):                    
+                    yield ("result",event.completion.result)
+                    if event.completion.command:
+                        yield ("result", agentic_lang.get_message_with_format("suggested_command", command=event.completion.command))
+                elif isinstance(event, ErrorEvent):
+                    yield ("result", agentic_lang.get_message("error_title"))
+                    yield ("result", agentic_lang.get_message_with_format("error_content", message=event.message))                    
+
+                time.sleep(0.1)  # 小延迟以获得更好的视觉流
+
+        except Exception as e:
+            logger.exception(agentic_lang.get_message("unexpected_error"))
+            yield ("result",agentic_lang.get_message("fatal_error_title"))
+            yield ("result",agentic_lang.get_message_with_format("fatal_error_content", error=str(e)))
+            raise e
+        finally:
+            # 在结束时打印累计的token使用情况
+            duration = time.time() - start_time            
+            yield ("result","\n" + self.printer.get_message_from_key_with_format("code_generation_complete",
+                duration=duration,
+                input_tokens=total_input_tokens,
+                output_tokens=total_output_tokens,
+                input_cost=total_input_cost,
+                output_cost=total_output_cost,
+                speed=0.0,
+                model_names=model_name,
+                sampling_count=1))
+            yield ("result", "\n" + agentic_lang.get_message("agent_execution_complete"))
     
     def run_in_terminal(self, request: AgentRequest):
         """
@@ -1402,10 +1554,7 @@ class BaseAgent(ABC):
 
                     # 格式化内容函数
                     def _format_content(content):
-                        if len(content) > 200:
-                            return f"{content[:100]}\n...\n{content[-100:]}"
-                        else:
-                            return content
+                        return content[:200]
 
                     # 首先准备基本信息面板
                     panel_content = [base_content]

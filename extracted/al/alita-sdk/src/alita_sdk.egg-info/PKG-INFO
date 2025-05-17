@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: alita_sdk
-Version: 0.3.107
+Version: 0.3.108
 Summary: SDK for building langchain agents using resouces from Alita
 Author-email: Artem Rozumenko <artyom.rozumenko@gmail.com>, Mikalai Biazruchka <mikalai_biazruchka@epam.com>, Roman Mitusov <roman_mitusov@epam.com>, Ivan Krakhmaliuk <lifedjik@gmail.com>
 Project-URL: Homepage, https://projectalita.ai
@@ -137,6 +137,9 @@ To use the SDK with Streamlit for local development, follow these steps:
     ```bash
     streamlit run alita_local.py
     ```
+
+Note: If **streamlite** throws an error related to **pytorch**, add this `--server.fileWatcherType none` extra arguments.   
+Sometimes it try to index **pytorch** modules and since they are **C** modules it raises an exception. 
 
 Streamlit Web Application
 ------------------------

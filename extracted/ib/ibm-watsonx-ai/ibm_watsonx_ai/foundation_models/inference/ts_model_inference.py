@@ -23,7 +23,7 @@ class TSModelInference(WMLResource):
     Instantiate the time series model interface
 
     :param model_id: type of model to use
-    :type model_id: str
+    :type model_id: str, optional
 
     :param params: parameters to use during request generation
     :type params: dict, TSForecastParameters, optional
@@ -47,6 +47,9 @@ class TSModelInference(WMLResource):
 
     :param api_client: initialized APIClient object with a set project ID or space ID. If passed, ``credentials`` and ``project_id``/``space_id`` are not required.
     :type api_client: APIClient, optional
+
+    :param deployment_id: ID of tuned model's deployment
+    :type deployment_id: str, optional
 
     **Example:**
 
@@ -72,17 +75,29 @@ class TSModelInference(WMLResource):
 
     def __init__(
         self,
-        model_id: str,
+        model_id: str | None = None,
         params: dict | TSForecastParameters | None = None,
         credentials: Credentials | None = None,
         project_id: str | None = None,
         space_id: str | None = None,
         verify: bool | str | None = None,
         api_client: APIClient | None = None,
+        deployment_id: str | None = None,
     ) -> None:
 
         self.model_id = model_id
-        TSModelInference._validate_type(model_id, "model_id", str, True)
+        self.deployment_id = deployment_id
+
+        if self.model_id and self.deployment_id:
+            raise InvalidMultipleArguments(
+                params_names_list=["model_id", "deployment_id"],
+                reason="Both arguments were provided.",
+            )
+        elif not self.model_id and not self.deployment_id:
+            raise InvalidMultipleArguments(
+                params_names_list=["model_id", "deployment_id"],
+                reason="None of the arguments were provided.",
+            )
 
         self.params = params
         TSModelInference._validate_type(
@@ -165,15 +180,19 @@ class TSModelInference(WMLResource):
             print(response)
 
         """
-
-        self._client._check_if_either_is_set()
+        if not self.deployment_id:
+            self._client._check_if_either_is_set()
 
         if isinstance(data, pd.DataFrame):
             data = data.to_dict(orient="list")
 
         self._validate_type(data, "data", dict, True)
 
-        payload: dict = {"model_id": self.model_id, "data": data}
+        payload: dict = (
+            {"model_id": self.model_id, "data": data}
+            if self.model_id
+            else {"data": data}
+        )
 
         if params is not None:
             parameters = params
@@ -222,8 +241,16 @@ class TSModelInference(WMLResource):
         elif self._client.default_space_id:
             payload["space_id"] = self._client.default_space_id
 
+        url = (
+            self._client.service_instance._href_definitions.get_deployment_time_series_href(
+                deployment_id=self.deployment_id
+            )
+            if self.deployment_id
+            else self._client.service_instance._href_definitions.get_time_series_href()
+        )
+
         response = self._client.httpx_client.post(
-            url=self._client.service_instance._href_definitions.get_time_series_href(),
+            url=url,
             json=payload,
             params=self._client._params(skip_for_create=True, skip_userfs=True),
             headers=self._client._get_headers(),

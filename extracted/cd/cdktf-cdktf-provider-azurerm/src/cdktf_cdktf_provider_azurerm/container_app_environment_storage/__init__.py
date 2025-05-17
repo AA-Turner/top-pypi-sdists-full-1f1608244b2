@@ -1,7 +1,7 @@
 r'''
 # `azurerm_container_app_environment_storage`
 
-Refer to the Terraform Registry for docs: [`azurerm_container_app_environment_storage`](https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage).
+Refer to the Terraform Registry for docs: [`azurerm_container_app_environment_storage`](https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,20 +44,21 @@ class ContainerAppEnvironmentStorage(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-azurerm.containerAppEnvironmentStorage.ContainerAppEnvironmentStorage",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage azurerm_container_app_environment_storage}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage azurerm_container_app_environment_storage}.'''
 
     def __init__(
         self,
         scope: _constructs_77d1e7e8.Construct,
         id_: builtins.str,
         *,
-        access_key: builtins.str,
         access_mode: builtins.str,
-        account_name: builtins.str,
         container_app_environment_id: builtins.str,
         name: builtins.str,
         share_name: builtins.str,
+        access_key: typing.Optional[builtins.str] = None,
+        account_name: typing.Optional[builtins.str] = None,
         id: typing.Optional[builtins.str] = None,
+        nfs_server_url: typing.Optional[builtins.str] = None,
         timeouts: typing.Optional[typing.Union["ContainerAppEnvironmentStorageTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -67,18 +68,19 @@ class ContainerAppEnvironmentStorage(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage azurerm_container_app_environment_storage} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage azurerm_container_app_environment_storage} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param access_key: The Storage Account Access Key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#access_key ContainerAppEnvironmentStorage#access_key}
-        :param access_mode: The access mode to connect this storage to the Container App. Possible values include ``ReadOnly`` and ``ReadWrite``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#access_mode ContainerAppEnvironmentStorage#access_mode}
-        :param account_name: The Azure Storage Account in which the Share to be used is located. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#account_name ContainerAppEnvironmentStorage#account_name}
-        :param container_app_environment_id: The ID of the Container App Environment to which this storage belongs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#container_app_environment_id ContainerAppEnvironmentStorage#container_app_environment_id}
-        :param name: The name for this Storage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#name ContainerAppEnvironmentStorage#name}
-        :param share_name: The name of the Azure Storage Share to use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#share_name ContainerAppEnvironmentStorage#share_name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#id ContainerAppEnvironmentStorage#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#timeouts ContainerAppEnvironmentStorage#timeouts}
+        :param access_mode: The access mode to connect this storage to the Container App. Possible values include ``ReadOnly`` and ``ReadWrite``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#access_mode ContainerAppEnvironmentStorage#access_mode}
+        :param container_app_environment_id: The ID of the Container App Environment to which this storage belongs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#container_app_environment_id ContainerAppEnvironmentStorage#container_app_environment_id}
+        :param name: The name for this Storage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#name ContainerAppEnvironmentStorage#name}
+        :param share_name: The name of the Azure Storage Share to use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#share_name ContainerAppEnvironmentStorage#share_name}
+        :param access_key: The Storage Account Access Key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#access_key ContainerAppEnvironmentStorage#access_key}
+        :param account_name: The Azure Storage Account in which the Share to be used is located. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#account_name ContainerAppEnvironmentStorage#account_name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#id ContainerAppEnvironmentStorage#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param nfs_server_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#nfs_server_url ContainerAppEnvironmentStorage#nfs_server_url}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#timeouts ContainerAppEnvironmentStorage#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -92,13 +94,14 @@ class ContainerAppEnvironmentStorage(
             check_type(argname="argument scope", value=scope, expected_type=type_hints["scope"])
             check_type(argname="argument id_", value=id_, expected_type=type_hints["id_"])
         config = ContainerAppEnvironmentStorageConfig(
-            access_key=access_key,
             access_mode=access_mode,
-            account_name=account_name,
             container_app_environment_id=container_app_environment_id,
             name=name,
             share_name=share_name,
+            access_key=access_key,
+            account_name=account_name,
             id=id,
+            nfs_server_url=nfs_server_url,
             timeouts=timeouts,
             connection=connection,
             count=count,
@@ -124,7 +127,7 @@ class ContainerAppEnvironmentStorage(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the ContainerAppEnvironmentStorage to import.
-        :param import_from_id: The id of the existing ContainerAppEnvironmentStorage that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing ContainerAppEnvironmentStorage that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the ContainerAppEnvironmentStorage to import is found.
         '''
         if __debug__:
@@ -145,10 +148,10 @@ class ContainerAppEnvironmentStorage(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#create ContainerAppEnvironmentStorage#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#delete ContainerAppEnvironmentStorage#delete}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#read ContainerAppEnvironmentStorage#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#update ContainerAppEnvironmentStorage#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#create ContainerAppEnvironmentStorage#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#delete ContainerAppEnvironmentStorage#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#read ContainerAppEnvironmentStorage#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#update ContainerAppEnvironmentStorage#update}.
         '''
         value = ContainerAppEnvironmentStorageTimeouts(
             create=create, delete=delete, read=read, update=update
@@ -156,9 +159,21 @@ class ContainerAppEnvironmentStorage(
 
         return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
+    @jsii.member(jsii_name="resetAccessKey")
+    def reset_access_key(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetAccessKey", []))
+
+    @jsii.member(jsii_name="resetAccountName")
+    def reset_account_name(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetAccountName", []))
+
     @jsii.member(jsii_name="resetId")
     def reset_id(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetId", []))
+
+    @jsii.member(jsii_name="resetNfsServerUrl")
+    def reset_nfs_server_url(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetNfsServerUrl", []))
 
     @jsii.member(jsii_name="resetTimeouts")
     def reset_timeouts(self) -> None:
@@ -211,6 +226,11 @@ class ContainerAppEnvironmentStorage(
     @jsii.member(jsii_name="nameInput")
     def name_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "nameInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="nfsServerUrlInput")
+    def nfs_server_url_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "nfsServerUrlInput"))
 
     @builtins.property
     @jsii.member(jsii_name="shareNameInput")
@@ -297,6 +317,18 @@ class ContainerAppEnvironmentStorage(
         jsii.set(self, "name", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
+    @jsii.member(jsii_name="nfsServerUrl")
+    def nfs_server_url(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "nfsServerUrl"))
+
+    @nfs_server_url.setter
+    def nfs_server_url(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__a47f253336c9d643455c7b0739f7f7dcf5c916faedb9da9cb1cb7e99f72fb409)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "nfsServerUrl", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
     @jsii.member(jsii_name="shareName")
     def share_name(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "shareName"))
@@ -320,13 +352,14 @@ class ContainerAppEnvironmentStorage(
         "lifecycle": "lifecycle",
         "provider": "provider",
         "provisioners": "provisioners",
-        "access_key": "accessKey",
         "access_mode": "accessMode",
-        "account_name": "accountName",
         "container_app_environment_id": "containerAppEnvironmentId",
         "name": "name",
         "share_name": "shareName",
+        "access_key": "accessKey",
+        "account_name": "accountName",
         "id": "id",
+        "nfs_server_url": "nfsServerUrl",
         "timeouts": "timeouts",
     },
 )
@@ -341,13 +374,14 @@ class ContainerAppEnvironmentStorageConfig(_cdktf_9a9027ec.TerraformMetaArgument
         lifecycle: typing.Optional[typing.Union[_cdktf_9a9027ec.TerraformResourceLifecycle, typing.Dict[builtins.str, typing.Any]]] = None,
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
-        access_key: builtins.str,
         access_mode: builtins.str,
-        account_name: builtins.str,
         container_app_environment_id: builtins.str,
         name: builtins.str,
         share_name: builtins.str,
+        access_key: typing.Optional[builtins.str] = None,
+        account_name: typing.Optional[builtins.str] = None,
         id: typing.Optional[builtins.str] = None,
+        nfs_server_url: typing.Optional[builtins.str] = None,
         timeouts: typing.Optional[typing.Union["ContainerAppEnvironmentStorageTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
@@ -358,14 +392,15 @@ class ContainerAppEnvironmentStorageConfig(_cdktf_9a9027ec.TerraformMetaArgument
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param access_key: The Storage Account Access Key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#access_key ContainerAppEnvironmentStorage#access_key}
-        :param access_mode: The access mode to connect this storage to the Container App. Possible values include ``ReadOnly`` and ``ReadWrite``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#access_mode ContainerAppEnvironmentStorage#access_mode}
-        :param account_name: The Azure Storage Account in which the Share to be used is located. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#account_name ContainerAppEnvironmentStorage#account_name}
-        :param container_app_environment_id: The ID of the Container App Environment to which this storage belongs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#container_app_environment_id ContainerAppEnvironmentStorage#container_app_environment_id}
-        :param name: The name for this Storage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#name ContainerAppEnvironmentStorage#name}
-        :param share_name: The name of the Azure Storage Share to use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#share_name ContainerAppEnvironmentStorage#share_name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#id ContainerAppEnvironmentStorage#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#timeouts ContainerAppEnvironmentStorage#timeouts}
+        :param access_mode: The access mode to connect this storage to the Container App. Possible values include ``ReadOnly`` and ``ReadWrite``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#access_mode ContainerAppEnvironmentStorage#access_mode}
+        :param container_app_environment_id: The ID of the Container App Environment to which this storage belongs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#container_app_environment_id ContainerAppEnvironmentStorage#container_app_environment_id}
+        :param name: The name for this Storage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#name ContainerAppEnvironmentStorage#name}
+        :param share_name: The name of the Azure Storage Share to use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#share_name ContainerAppEnvironmentStorage#share_name}
+        :param access_key: The Storage Account Access Key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#access_key ContainerAppEnvironmentStorage#access_key}
+        :param account_name: The Azure Storage Account in which the Share to be used is located. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#account_name ContainerAppEnvironmentStorage#account_name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#id ContainerAppEnvironmentStorage#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param nfs_server_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#nfs_server_url ContainerAppEnvironmentStorage#nfs_server_url}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#timeouts ContainerAppEnvironmentStorage#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -380,18 +415,17 @@ class ContainerAppEnvironmentStorageConfig(_cdktf_9a9027ec.TerraformMetaArgument
             check_type(argname="argument lifecycle", value=lifecycle, expected_type=type_hints["lifecycle"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
             check_type(argname="argument provisioners", value=provisioners, expected_type=type_hints["provisioners"])
-            check_type(argname="argument access_key", value=access_key, expected_type=type_hints["access_key"])
             check_type(argname="argument access_mode", value=access_mode, expected_type=type_hints["access_mode"])
-            check_type(argname="argument account_name", value=account_name, expected_type=type_hints["account_name"])
             check_type(argname="argument container_app_environment_id", value=container_app_environment_id, expected_type=type_hints["container_app_environment_id"])
             check_type(argname="argument name", value=name, expected_type=type_hints["name"])
             check_type(argname="argument share_name", value=share_name, expected_type=type_hints["share_name"])
+            check_type(argname="argument access_key", value=access_key, expected_type=type_hints["access_key"])
+            check_type(argname="argument account_name", value=account_name, expected_type=type_hints["account_name"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
+            check_type(argname="argument nfs_server_url", value=nfs_server_url, expected_type=type_hints["nfs_server_url"])
             check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
-            "access_key": access_key,
             "access_mode": access_mode,
-            "account_name": account_name,
             "container_app_environment_id": container_app_environment_id,
             "name": name,
             "share_name": share_name,
@@ -410,8 +444,14 @@ class ContainerAppEnvironmentStorageConfig(_cdktf_9a9027ec.TerraformMetaArgument
             self._values["provider"] = provider
         if provisioners is not None:
             self._values["provisioners"] = provisioners
+        if access_key is not None:
+            self._values["access_key"] = access_key
+        if account_name is not None:
+            self._values["account_name"] = account_name
         if id is not None:
             self._values["id"] = id
+        if nfs_server_url is not None:
+            self._values["nfs_server_url"] = nfs_server_url
         if timeouts is not None:
             self._values["timeouts"] = timeouts
 
@@ -480,40 +520,20 @@ class ContainerAppEnvironmentStorageConfig(_cdktf_9a9027ec.TerraformMetaArgument
         return typing.cast(typing.Optional[typing.List[typing.Union[_cdktf_9a9027ec.FileProvisioner, _cdktf_9a9027ec.LocalExecProvisioner, _cdktf_9a9027ec.RemoteExecProvisioner]]], result)
 
     @builtins.property
-    def access_key(self) -> builtins.str:
-        '''The Storage Account Access Key.
-
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#access_key ContainerAppEnvironmentStorage#access_key}
-        '''
-        result = self._values.get("access_key")
-        assert result is not None, "Required property 'access_key' is missing"
-        return typing.cast(builtins.str, result)
-
-    @builtins.property
     def access_mode(self) -> builtins.str:
         '''The access mode to connect this storage to the Container App. Possible values include ``ReadOnly`` and ``ReadWrite``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#access_mode ContainerAppEnvironmentStorage#access_mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#access_mode ContainerAppEnvironmentStorage#access_mode}
         '''
         result = self._values.get("access_mode")
         assert result is not None, "Required property 'access_mode' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
-    def account_name(self) -> builtins.str:
-        '''The Azure Storage Account in which the Share to be used is located.
-
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#account_name ContainerAppEnvironmentStorage#account_name}
-        '''
-        result = self._values.get("account_name")
-        assert result is not None, "Required property 'account_name' is missing"
-        return typing.cast(builtins.str, result)
-
-    @builtins.property
     def container_app_environment_id(self) -> builtins.str:
         '''The ID of the Container App Environment to which this storage belongs.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#container_app_environment_id ContainerAppEnvironmentStorage#container_app_environment_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#container_app_environment_id ContainerAppEnvironmentStorage#container_app_environment_id}
         '''
         result = self._values.get("container_app_environment_id")
         assert result is not None, "Required property 'container_app_environment_id' is missing"
@@ -523,7 +543,7 @@ class ContainerAppEnvironmentStorageConfig(_cdktf_9a9027ec.TerraformMetaArgument
     def name(self) -> builtins.str:
         '''The name for this Storage.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#name ContainerAppEnvironmentStorage#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#name ContainerAppEnvironmentStorage#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -533,15 +553,33 @@ class ContainerAppEnvironmentStorageConfig(_cdktf_9a9027ec.TerraformMetaArgument
     def share_name(self) -> builtins.str:
         '''The name of the Azure Storage Share to use.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#share_name ContainerAppEnvironmentStorage#share_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#share_name ContainerAppEnvironmentStorage#share_name}
         '''
         result = self._values.get("share_name")
         assert result is not None, "Required property 'share_name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
+    def access_key(self) -> typing.Optional[builtins.str]:
+        '''The Storage Account Access Key.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#access_key ContainerAppEnvironmentStorage#access_key}
+        '''
+        result = self._values.get("access_key")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def account_name(self) -> typing.Optional[builtins.str]:
+        '''The Azure Storage Account in which the Share to be used is located.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#account_name ContainerAppEnvironmentStorage#account_name}
+        '''
+        result = self._values.get("account_name")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#id ContainerAppEnvironmentStorage#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#id ContainerAppEnvironmentStorage#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -550,10 +588,16 @@ class ContainerAppEnvironmentStorageConfig(_cdktf_9a9027ec.TerraformMetaArgument
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
+    def nfs_server_url(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#nfs_server_url ContainerAppEnvironmentStorage#nfs_server_url}.'''
+        result = self._values.get("nfs_server_url")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
     def timeouts(self) -> typing.Optional["ContainerAppEnvironmentStorageTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#timeouts ContainerAppEnvironmentStorage#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#timeouts ContainerAppEnvironmentStorage#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["ContainerAppEnvironmentStorageTimeouts"], result)
@@ -590,10 +634,10 @@ class ContainerAppEnvironmentStorageTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#create ContainerAppEnvironmentStorage#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#delete ContainerAppEnvironmentStorage#delete}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#read ContainerAppEnvironmentStorage#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#update ContainerAppEnvironmentStorage#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#create ContainerAppEnvironmentStorage#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#delete ContainerAppEnvironmentStorage#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#read ContainerAppEnvironmentStorage#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#update ContainerAppEnvironmentStorage#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__05cc944071ec5f995eabe7198b20379aac727e5d0678e364c93e3bb9c300dc53)
@@ -613,25 +657,25 @@ class ContainerAppEnvironmentStorageTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#create ContainerAppEnvironmentStorage#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#create ContainerAppEnvironmentStorage#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#delete ContainerAppEnvironmentStorage#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#delete ContainerAppEnvironmentStorage#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#read ContainerAppEnvironmentStorage#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#read ContainerAppEnvironmentStorage#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.28.0/docs/resources/container_app_environment_storage#update ContainerAppEnvironmentStorage#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.29.0/docs/resources/container_app_environment_storage#update ContainerAppEnvironmentStorage#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -782,13 +826,14 @@ def _typecheckingstub__51fb0f227a2c89fc2e917000b55de8cde32a6ab2d293d147689a9a7de
     scope: _constructs_77d1e7e8.Construct,
     id_: builtins.str,
     *,
-    access_key: builtins.str,
     access_mode: builtins.str,
-    account_name: builtins.str,
     container_app_environment_id: builtins.str,
     name: builtins.str,
     share_name: builtins.str,
+    access_key: typing.Optional[builtins.str] = None,
+    account_name: typing.Optional[builtins.str] = None,
     id: typing.Optional[builtins.str] = None,
+    nfs_server_url: typing.Optional[builtins.str] = None,
     timeouts: typing.Optional[typing.Union[ContainerAppEnvironmentStorageTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -846,6 +891,12 @@ def _typecheckingstub__47d71220d0cf103ebb3470cccf896bc155386951e5565a8ac36e47f4c
     """Type checking stubs"""
     pass
 
+def _typecheckingstub__a47f253336c9d643455c7b0739f7f7dcf5c916faedb9da9cb1cb7e99f72fb409(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
 def _typecheckingstub__b6f92820c2c9157b4b295df6f1210b6a1328bc492b4cada368a9a80c5611fd99(
     value: builtins.str,
 ) -> None:
@@ -861,13 +912,14 @@ def _typecheckingstub__3c78fab3c682b444ae375969a7bd42f4e6be088e2a7d515d4de57f21f
     lifecycle: typing.Optional[typing.Union[_cdktf_9a9027ec.TerraformResourceLifecycle, typing.Dict[builtins.str, typing.Any]]] = None,
     provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
     provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
-    access_key: builtins.str,
     access_mode: builtins.str,
-    account_name: builtins.str,
     container_app_environment_id: builtins.str,
     name: builtins.str,
     share_name: builtins.str,
+    access_key: typing.Optional[builtins.str] = None,
+    account_name: typing.Optional[builtins.str] = None,
     id: typing.Optional[builtins.str] = None,
+    nfs_server_url: typing.Optional[builtins.str] = None,
     timeouts: typing.Optional[typing.Union[ContainerAppEnvironmentStorageTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
 ) -> None:
     """Type checking stubs"""

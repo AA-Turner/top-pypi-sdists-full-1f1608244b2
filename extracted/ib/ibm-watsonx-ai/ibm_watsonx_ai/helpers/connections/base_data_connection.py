@@ -1330,10 +1330,10 @@ class BaseDataConnection(ABC):
                     asset_path = location.split("/assets/")[-1] + "/" + remote_name
             else:
                 asset_path = "/" + remote_name
-        elif data.raw.name:
-            asset_path = "/" + data.raw.name
         elif is_filename_location:
             asset_path = "/" + location
+        elif data.raw.name:
+            asset_path = "/" + data.raw.name
         else:
             raise ValueError(
                 "The `remote_name` and `location` fields provided are invalid."

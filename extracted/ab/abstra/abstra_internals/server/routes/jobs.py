@@ -1,6 +1,6 @@
 import flask
 
-from abstra_internals.controllers.execution import ExecutionController
+from abstra_internals.controllers.execution.execution import ExecutionController
 from abstra_internals.controllers.main import MainController
 from abstra_internals.entities.execution_context import JobContext
 from abstra_internals.repositories.project.project import JobStage
@@ -68,12 +68,13 @@ def get_editor_bp(controller: MainController):
         if not job:
             flask.abort(404)
 
+        print(f"Running job {job.id} ({job.title})")
+
         ExecutionController(
             repositories=controller.repositories,
-        ).run(
             stage=job,
             context=JobContext(),
-        )
+        ).run()
 
         return {"ok": True}
 

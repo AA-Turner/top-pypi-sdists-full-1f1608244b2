@@ -1,12 +1,12 @@
 Metadata-Version: 2.4
 Name: koheesio
-Version: 0.10.2
+Version: 0.10.3
 Summary: The steps-based Koheesio framework
 Project-URL: Documentation, https://github.com/Nike-Inc/koheesio#readme
 Project-URL: Issues, https://github.com/Nike-Inc/koheesio/issues
 Project-URL: Source, https://github.com/Nike-Inc/koheesio
 Project-URL: Project, https://github.com/orgs/Nike-Inc/projects/4
-Author-email: Danny Meijer <danny.meijer@nike.com>, Mikita Sakalouski <mikita.sakalouski@nike.com>, Maxim Mityutko <maxim.mityutko@nike.com>, Tone Vanden Bergh <tone.vandenbergh@nike.com>
+Author: Danny Meijer, Mikita Sakalouski, Maxim Mityutko, Tone Vanden Bergh, Pariksheet Barapatre, Riccardo Iacomini
 License-Expression: Apache-2.0
 License-File: LICENSE.txt
 Classifier: Development Status :: 5 - Production/Stable

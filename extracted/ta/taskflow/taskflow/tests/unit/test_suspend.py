@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #    Copyright (C) 2012 Yahoo! Inc. All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -25,23 +23,18 @@ from taskflow import test
 from taskflow.tests import utils
 from taskflow.utils import eventlet_utils as eu
 
-try:
-    from taskflow.engines.action_engine import process_executor as pe
-except ImportError:
-    pe = None
-
 
 class SuspendingListener(utils.CaptureListener):
 
     def __init__(self, engine,
                  task_name, task_state, capture_flow=False):
-        super(SuspendingListener, self).__init__(
+        super().__init__(
             engine,
             capture_flow=capture_flow)
         self._revert_match = (task_name, task_state)
 
     def _task_receiver(self, state, details):
-        super(SuspendingListener, self)._task_receiver(state, details)
+        super()._task_receiver(state, details)
         if (details['task_name'], state) == self._revert_match:
             self._engine.suspend()
 
@@ -227,17 +220,3 @@ class ParallelEngineWithEventletTest(SuspendTest, test.TestCase):
         return taskflow.engines.load(flow, flow_detail=flow_detail,
                                      backend=self.backend, engine='parallel',
                                      executor=executor)
-
-
-@testtools.skipIf(pe is None, 'process_executor is not available')
-class ParallelEngineWithProcessTest(SuspendTest, test.TestCase):
-    _EXECUTOR_WORKERS = 2
-
-    def _make_engine(self, flow, flow_detail=None, executor=None):
-        if executor is None:
-            executor = 'processes'
-        return taskflow.engines.load(flow, flow_detail=flow_detail,
-                                     engine='parallel',
-                                     backend=self.backend,
-                                     executor=executor,
-                                     max_workers=self._EXECUTOR_WORKERS)

@@ -740,6 +740,11 @@ class ModalClientStub(object):
                 request_serializer=modal__proto_dot_api__pb2.VolumeListFilesRequest.SerializeToString,
                 response_deserializer=modal__proto_dot_api__pb2.VolumeListFilesResponse.FromString,
                 )
+        self.VolumeListFiles2 = channel.unary_stream(
+                '/modal.client.ModalClient/VolumeListFiles2',
+                request_serializer=modal__proto_dot_api__pb2.VolumeListFiles2Request.SerializeToString,
+                response_deserializer=modal__proto_dot_api__pb2.VolumeListFiles2Response.FromString,
+                )
         self.VolumePutFiles = channel.unary_unary(
                 '/modal.client.ModalClient/VolumePutFiles',
                 request_serializer=modal__proto_dot_api__pb2.VolumePutFilesRequest.SerializeToString,
@@ -758,6 +763,11 @@ class ModalClientStub(object):
         self.VolumeRemoveFile = channel.unary_unary(
                 '/modal.client.ModalClient/VolumeRemoveFile',
                 request_serializer=modal__proto_dot_api__pb2.VolumeRemoveFileRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.VolumeRemoveFile2 = channel.unary_unary(
+                '/modal.client.ModalClient/VolumeRemoveFile2',
+                request_serializer=modal__proto_dot_api__pb2.VolumeRemoveFile2Request.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
         self.VolumeRename = channel.unary_unary(
@@ -1674,6 +1684,12 @@ class ModalClientServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def VolumeListFiles2(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def VolumePutFiles(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -1693,6 +1709,12 @@ class ModalClientServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def VolumeRemoveFile(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def VolumeRemoveFile2(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -2439,6 +2461,11 @@ def add_ModalClientServicer_to_server(servicer, server):
                     request_deserializer=modal__proto_dot_api__pb2.VolumeListFilesRequest.FromString,
                     response_serializer=modal__proto_dot_api__pb2.VolumeListFilesResponse.SerializeToString,
             ),
+            'VolumeListFiles2': grpc.unary_stream_rpc_method_handler(
+                    servicer.VolumeListFiles2,
+                    request_deserializer=modal__proto_dot_api__pb2.VolumeListFiles2Request.FromString,
+                    response_serializer=modal__proto_dot_api__pb2.VolumeListFiles2Response.SerializeToString,
+            ),
             'VolumePutFiles': grpc.unary_unary_rpc_method_handler(
                     servicer.VolumePutFiles,
                     request_deserializer=modal__proto_dot_api__pb2.VolumePutFilesRequest.FromString,
@@ -2457,6 +2484,11 @@ def add_ModalClientServicer_to_server(servicer, server):
             'VolumeRemoveFile': grpc.unary_unary_rpc_method_handler(
                     servicer.VolumeRemoveFile,
                     request_deserializer=modal__proto_dot_api__pb2.VolumeRemoveFileRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'VolumeRemoveFile2': grpc.unary_unary_rpc_method_handler(
+                    servicer.VolumeRemoveFile2,
+                    request_deserializer=modal__proto_dot_api__pb2.VolumeRemoveFile2Request.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'VolumeRename': grpc.unary_unary_rpc_method_handler(
@@ -4945,6 +4977,23 @@ class ModalClient(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
+    def VolumeListFiles2(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/modal.client.ModalClient/VolumeListFiles2',
+            modal__proto_dot_api__pb2.VolumeListFiles2Request.SerializeToString,
+            modal__proto_dot_api__pb2.VolumeListFiles2Response.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
     def VolumePutFiles(request,
             target,
             options=(),
@@ -5008,6 +5057,23 @@ class ModalClient(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/modal.client.ModalClient/VolumeRemoveFile',
             modal__proto_dot_api__pb2.VolumeRemoveFileRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def VolumeRemoveFile2(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/modal.client.ModalClient/VolumeRemoveFile2',
+            modal__proto_dot_api__pb2.VolumeRemoveFile2Request.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

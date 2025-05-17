@@ -13,7 +13,7 @@
 
 from __future__ import absolute_import
 
-__version__ = "3.2.0"
+__version__ = "3.3.0"
 
 # import apis into sdk package
 from phrase_api.api.accounts_api import AccountsApi
@@ -103,7 +103,6 @@ from phrase_api.models.comment_create_parameters1 import CommentCreateParameters
 from phrase_api.models.comment_mark_read_parameters import CommentMarkReadParameters
 from phrase_api.models.comment_reaction import CommentReaction
 from phrase_api.models.comment_update_parameters import CommentUpdateParameters
-from phrase_api.models.comments_list_parameters import CommentsListParameters
 from phrase_api.models.current_user import CurrentUser
 from phrase_api.models.custom_metadata_data_type import CustomMetadataDataType
 from phrase_api.models.custom_metadata_properties_create_parameters import CustomMetadataPropertiesCreateParameters
@@ -227,7 +226,6 @@ from phrase_api.models.release_preview import ReleasePreview
 from phrase_api.models.release_trigger import ReleaseTrigger
 from phrase_api.models.release_update_parameters import ReleaseUpdateParameters
 from phrase_api.models.release_update_parameters1 import ReleaseUpdateParameters1
-from phrase_api.models.replies_list_parameters import RepliesListParameters
 from phrase_api.models.repo_sync import RepoSync
 from phrase_api.models.repo_sync_event import RepoSyncEvent
 from phrase_api.models.screenshot import Screenshot
@@ -270,6 +268,7 @@ from phrase_api.models.translation_key_details import TranslationKeyDetails
 from phrase_api.models.translation_order import TranslationOrder
 from phrase_api.models.translation_parent import TranslationParent
 from phrase_api.models.translation_review_parameters import TranslationReviewParameters
+from phrase_api.models.translation_unreview_parameters import TranslationUnreviewParameters
 from phrase_api.models.translation_unverify_parameters import TranslationUnverifyParameters
 from phrase_api.models.translation_update_parameters import TranslationUpdateParameters
 from phrase_api.models.translation_verify_parameters import TranslationVerifyParameters
@@ -279,6 +278,7 @@ from phrase_api.models.translations_exclude_parameters import TranslationsExclud
 from phrase_api.models.translations_include_parameters import TranslationsIncludeParameters
 from phrase_api.models.translations_review_parameters import TranslationsReviewParameters
 from phrase_api.models.translations_search_parameters import TranslationsSearchParameters
+from phrase_api.models.translations_unreview_parameters import TranslationsUnreviewParameters
 from phrase_api.models.translations_unverify_parameters import TranslationsUnverifyParameters
 from phrase_api.models.translations_verify_parameters import TranslationsVerifyParameters
 from phrase_api.models.upload import Upload

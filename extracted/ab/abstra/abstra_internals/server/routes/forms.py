@@ -1,8 +1,8 @@
 import flask
 import flask_sock
 
-from abstra_internals.controllers.execution import ExecutionController
-from abstra_internals.controllers.execution_client_form import FormClient
+from abstra_internals.controllers.execution.execution import ExecutionController
+from abstra_internals.controllers.execution.execution_client_form import FormClient
 from abstra_internals.controllers.main import MainController
 from abstra_internals.entities.execution_context import (
     FormContext,
@@ -37,11 +37,10 @@ def get_editor_bp(controller: MainController):
 
             ExecutionController(
                 repositories=controller.repositories,
-            ).run(
                 stage=form,
                 client=client,
                 context=context,
-            )
+            ).run()
 
         except Exception as e:
             AbstraLogger.capture_exception(e)

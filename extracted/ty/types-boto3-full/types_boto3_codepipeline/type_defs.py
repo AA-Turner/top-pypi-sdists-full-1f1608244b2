@@ -119,6 +119,9 @@ __all__ = (
     "DeleteCustomActionTypeInputTypeDef",
     "DeletePipelineInputTypeDef",
     "DeleteWebhookInputTypeDef",
+    "DeployActionExecutionTargetTypeDef",
+    "DeployTargetEventContextTypeDef",
+    "DeployTargetEventTypeDef",
     "DeregisterWebhookWithThirdPartyInputTypeDef",
     "DisableStageTransitionInputTypeDef",
     "EmptyResponseMetadataTypeDef",
@@ -171,6 +174,9 @@ __all__ = (
     "ListActionTypesInputPaginateTypeDef",
     "ListActionTypesInputTypeDef",
     "ListActionTypesOutputTypeDef",
+    "ListDeployActionExecutionTargetsInputPaginateTypeDef",
+    "ListDeployActionExecutionTargetsInputTypeDef",
+    "ListDeployActionExecutionTargetsOutputTypeDef",
     "ListPipelineExecutionsInputPaginateTypeDef",
     "ListPipelineExecutionsInputTypeDef",
     "ListPipelineExecutionsOutputTypeDef",
@@ -265,6 +271,7 @@ __all__ = (
     "SuccessConditionsTypeDef",
     "TagResourceInputTypeDef",
     "TagTypeDef",
+    "TargetFilterTypeDef",
     "ThirdPartyJobDataTypeDef",
     "ThirdPartyJobDetailsTypeDef",
     "ThirdPartyJobTypeDef",
@@ -493,6 +500,11 @@ class DeleteWebhookInputTypeDef(TypedDict):
     name: str
 
 
+class DeployTargetEventContextTypeDef(TypedDict):
+    ssmCommandId: NotRequired[str]
+    message: NotRequired[str]
+
+
 class DeregisterWebhookWithThirdPartyInputTypeDef(TypedDict):
     webhookName: NotRequired[str]
 
@@ -626,6 +638,11 @@ class ListActionTypesInputTypeDef(TypedDict):
     actionOwnerFilter: NotRequired[ActionOwnerType]
     nextToken: NotRequired[str]
     regionFilter: NotRequired[str]
+
+
+class TargetFilterTypeDef(TypedDict):
+    name: NotRequired[Literal["TARGET_STATUS"]]
+    values: NotRequired[Sequence[str]]
 
 
 class ListPipelinesInputTypeDef(TypedDict):
@@ -1032,6 +1049,14 @@ class TagResourceInputTypeDef(TypedDict):
     tags: Sequence[TagTypeDef]
 
 
+class DeployTargetEventTypeDef(TypedDict):
+    name: NotRequired[str]
+    status: NotRequired[str]
+    startTime: NotRequired[datetime]
+    endTime: NotRequired[datetime]
+    context: NotRequired[DeployTargetEventContextTypeDef]
+
+
 class ExecutorConfigurationOutputTypeDef(TypedDict):
     lambdaExecutorConfiguration: NotRequired[LambdaExecutorConfigurationTypeDef]
     jobWorkerExecutorConfiguration: NotRequired[JobWorkerExecutorConfigurationOutputTypeDef]
@@ -1094,6 +1119,21 @@ class ListTagsForResourceInputPaginateTypeDef(TypedDict):
 
 class ListWebhooksInputPaginateTypeDef(TypedDict):
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
+class ListDeployActionExecutionTargetsInputPaginateTypeDef(TypedDict):
+    actionExecutionId: str
+    pipelineName: NotRequired[str]
+    filters: NotRequired[Sequence[TargetFilterTypeDef]]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+
+class ListDeployActionExecutionTargetsInputTypeDef(TypedDict):
+    actionExecutionId: str
+    pipelineName: NotRequired[str]
+    filters: NotRequired[Sequence[TargetFilterTypeDef]]
+    maxResults: NotRequired[int]
+    nextToken: NotRequired[str]
 
 
 class ListPipelinesOutputTypeDef(TypedDict):
@@ -1323,6 +1363,15 @@ class ArtifactTypeDef(TypedDict):
     location: NotRequired[ArtifactLocationTypeDef]
 
 
+class DeployActionExecutionTargetTypeDef(TypedDict):
+    targetId: NotRequired[str]
+    targetType: NotRequired[str]
+    status: NotRequired[str]
+    startTime: NotRequired[datetime]
+    endTime: NotRequired[datetime]
+    events: NotRequired[List[DeployTargetEventTypeDef]]
+
+
 ActionTypeExecutorOutputTypeDef = TypedDict(
     "ActionTypeExecutorOutputTypeDef",
     {
@@ -1479,6 +1528,12 @@ class ThirdPartyJobDataTypeDef(TypedDict):
     artifactCredentials: NotRequired[AWSSessionCredentialsTypeDef]
     continuationToken: NotRequired[str]
     encryptionKey: NotRequired[EncryptionKeyTypeDef]
+
+
+class ListDeployActionExecutionTargetsOutputTypeDef(TypedDict):
+    targets: List[DeployActionExecutionTargetTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
 
 
 ActionTypeDeclarationOutputTypeDef = TypedDict(

@@ -31,8 +31,9 @@ class CurrentUserResponse(BaseModel):
     type:  StrictStr = Field(...,alias="type", description="The type of user (e.g. Personal or Service)") 
     domain_type:  Optional[StrictStr] = Field(None,alias="domainType", description="The type of domain in which the user exists") 
     user_expiry: Optional[datetime] = Field(None, alias="userExpiry", description="The user's user expiry datetime")
+    groups: Optional[conlist(StrictStr)] = Field(None, description="The groups this user belongs to")
     links: Optional[conlist(Link)] = None
-    __properties = ["id", "emailAddress", "type", "domainType", "userExpiry", "links"]
+    __properties = ["id", "emailAddress", "type", "domainType", "userExpiry", "groups", "links"]
 
     class Config:
         """Pydantic configuration"""
@@ -83,6 +84,11 @@ class CurrentUserResponse(BaseModel):
         if self.user_expiry is None and "user_expiry" in self.__fields_set__:
             _dict['userExpiry'] = None
 
+        # set to None if groups (nullable) is None
+        # and __fields_set__ contains the field
+        if self.groups is None and "groups" in self.__fields_set__:
+            _dict['groups'] = None
+
         # set to None if links (nullable) is None
         # and __fields_set__ contains the field
         if self.links is None and "links" in self.__fields_set__:
@@ -105,6 +111,7 @@ class CurrentUserResponse(BaseModel):
             "type": obj.get("type"),
             "domain_type": obj.get("domainType"),
             "user_expiry": obj.get("userExpiry"),
+            "groups": obj.get("groups"),
             "links": [Link.from_dict(_item) for _item in obj.get("links")] if obj.get("links") is not None else None
         })
         return _obj

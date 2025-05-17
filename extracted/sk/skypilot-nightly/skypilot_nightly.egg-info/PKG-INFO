@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: skypilot-nightly
-Version: 1.0.0.dev20250515
+Version: 1.0.0.dev20250516
 Summary: SkyPilot: Run AI on Any Infra — Unified, Faster, Cheaper.
 Author: SkyPilot Team
 License: Apache 2.0
@@ -21,7 +21,7 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: wheel<0.46.0
 Requires-Dist: cachetools
-Requires-Dist: click>=7.0
+Requires-Dist: click<8.2.0,>=7.0
 Requires-Dist: colorama
 Requires-Dist: cryptography
 Requires-Dist: jinja2>=3.0

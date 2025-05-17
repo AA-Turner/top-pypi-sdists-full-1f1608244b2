@@ -1741,7 +1741,7 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                         totais_panel = panel_TNotebook.child_window(title="Totais")
                         totais_panel.set_focus()
 
-                        total_pre_venda_field = totais_panel.child_window(class_name="TDBIEditNumber", found_index=3)
+                        total_pre_venda_field = totais_panel.child_window(class_name="TDBIEditNumber", found_index=4)
                         valor_total_value = total_pre_venda_field.window_text()
 
                         console.print(f'Valor capturado: {valor_total_value}')
@@ -1953,7 +1953,6 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
 
                             btn_yes = main_window.child_window(class_name="TButton", found_index=1)
                             btn_yes.click()
-                            await worker_sleep(3)
                         except Exception as e:
                             retorno = f"Não foi possivel clicar para confirmar a janela 'Deseja realmente confirmar esta pre-venda' \nEtapas Executadas:\n{steps}"
                             return RpaRetornoProcessoDTO(
@@ -1964,140 +1963,17 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                             )
 
 
-                        warning_pop = await is_window_open_by_class("TFrmPreVenda", "Warning")
-                        if warning_pop["IsOpened"] == True:
-                            app = Application().connect(class_name="TFrmPreVenda", timeout=10)
-                            main_window = app["Warning"]
-                            main_window.set_focus()
-
+                        await worker_sleep(5)
+                        app = Application().connect(title="Information", timeout=180)
+                        main_window = app["Information"]
+                        main_window.set_focus()
+                        try:
                             btn_ok = main_window.child_window(class_name="TButton", found_index=0)
                             btn_ok.click()
-                            await worker_sleep(3)
-                        else:
-                            console.print("Nenhum pop-up de Warning Encontrado... \n")
-                        
-
-                        #VERIFICANDO POP UP - DE ACORDO COM OS PARÂMETROS DO SISTEMA..
-                        console.print("VERIFICANDO POP UP - DE ACORDO COM OS PARÂMETROS DO SISTEMA... \n")
-                        information_pop_up = await is_window_open_by_class("TFrmPreVenda", "Confirm")
-                        if information_pop_up["IsOpened"] == True:
-                            msg_pop_up = await ocr_by_class(numero_nota_fiscal, "TFrmPreVenda", "Confirm")
-                            console.print(f'retorno:{msg_pop_up.sucesso}')
-                            console.print(f'retorno:{msg_pop_up}')
-                            if msg_pop_up.sucesso == True:
-                                msg_retorno = msg_pop_up.retorno
-                                console.print(msg_retorno)
-                                if 'finan' in msg_retorno.lower():
-                                    app = Application().connect(class_name="TFrmPreVenda", timeout=10)
-                                    main_window = app["Confirm"]
-                                    main_window.set_focus()
-
-                                    btn_yes = main_window.child_window(class_name="TButton", found_index=1)
-                                    btn_yes.click()
-                                else:
-                                    retorno = f"Pop up nao mapeado para seguimento do robo {msg_pop_up.retorno} \nEtapas Executadas:\n{steps}"
-                                    return RpaRetornoProcessoDTO(
-                                        sucesso=False,
-                                        retorno=retorno,
-                                        status=RpaHistoricoStatusEnum.Falha,
-                                        tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                                    )
-                            else:
-                                retorno = f"Não foi possivel realizar a confirmação do msg do OCR \nEtapas Executadas:\n{steps}"
-                                return RpaRetornoProcessoDTO(
-                                    sucesso=False,
-                                    retorno=retorno,
-                                    status=RpaHistoricoStatusEnum.Falha,
-                                    tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                                )
-                            
-
-                        #APROVAR CREDITO
-                        try:
-                            console.print("Aprovar Credito... \n")
-                            app = Application().connect(class_name="TFrmPreVenda", timeout=10)
-                            main_window = app["TFrmPreVenda"]
-                            main_window.set_focus()
-
-                            panel_Tnotebook = main_window.child_window(class_name="TNotebook", found_index=0)
-                            panel_Tnotebook = panel_Tnotebook.child_window(class_name="TPage", found_index=0)
-                            btn_aprovar_credito = panel_Tnotebook.child_window(class_name="TBitBtn", found_index=8)
-                            console.print("Clicando em aprovar Credito... \n")
-                            btn_aprovar_credito.click()
-                            await worker_sleep(2)
                         except Exception as e:
-                            retorno = f"Não foi possivel clicar em aprovar credito na tela de Pre venda \nEtapas Executadas:\n{steps}"
-                            return RpaRetornoProcessoDTO(
-                                sucesso=False,
-                                retorno=retorno,
-                                status=RpaHistoricoStatusEnum.Falha,
-                                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                            )
-
-
-                        console.print("O valor desta pré venda exige uma aprovação... \n")
-                        try:
-                            app = Application().connect(class_name="TFrmPreVenda", timeout=10)
-                            main_window = app["Confirm"]
-                            main_window.set_focus()
-
-                            btn_yes = main_window.child_window(class_name="TButton", found_index=1)
-                            btn_yes.click()
-                            await worker_sleep(3)
-                        except:
-                            retorno = f"Não foi possivel clicar no pop-up 'O valor desta pré venda exige uma aprovação financeira' na tela de Pre venda \nEtapas Executadas:\n{steps}"
-                            return RpaRetornoProcessoDTO(
-                                sucesso=False,
-                                retorno=retorno,
-                                status=RpaHistoricoStatusEnum.Falha,
-                                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                            )
-
-
-                        #VERIFICANDO SE A PRÉ VENDA FOI INCLUIDA COM SUCESSO
-                        console.print("VERIFICANDO SE A APROVAÇÃO FINANCEIRA FOI REALIZADA COM SUCESSO... \n")
-                        information_pop_up = await is_window_open("Information")
-                        if information_pop_up["IsOpened"] == True:
-                            msg_pop_up = await ocr_title(numero_nota_fiscal, "Information")
-                            console.print(f'retorno:{msg_pop_up.sucesso}')
-                            console.print(f'retorno:{msg_pop_up}')
-                            if msg_pop_up.sucesso == True:
-                                msg_retorno = msg_pop_up.retorno
-                                console.print(msg_retorno)
-                                if 'sucesso' in msg_retorno.lower():
-                                    try:
-                                        information_operacao_concluida = main_window.child_window(title="Information")
-                                        btn_ok = information_operacao_concluida.child_window(class_name="TButton")
-                                        btn_ok.click()
-                                        await worker_sleep(4)
-                                    except:
-                                        pyautogui.press('enter')
-                                        await worker_sleep(4)
-                                else:
-                                    retorno = f"Pop up nao mapeado para seguimento do robo {msg_pop_up.retorno} \nEtapas Executadas:\n{steps}"
-                                    return RpaRetornoProcessoDTO(
-                                        sucesso=False,
-                                        retorno=retorno,
-                                        status=RpaHistoricoStatusEnum.Falha,
-                                        tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                                    )
-                            else:
-                                retorno = f"Não foi possivel realizar a confirmação do msg do OCR \nEtapas Executadas:\n{steps}"
-                                return RpaRetornoProcessoDTO(
-                                    sucesso=False,
-                                    retorno=retorno,
-                                    status=RpaHistoricoStatusEnum.Falha,
-                                    tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                                )
-                        else:
-                            retorno = f"Janela de confirmação de Aprovação financeira realizada com sucesso \nEtapas Executadas:\n{steps}"
-                            return RpaRetornoProcessoDTO(
-                                    sucesso=False,
-                                    retorno=retorno,
-                                    status=RpaHistoricoStatusEnum.Falha,
-                                    tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                                )
-                        await worker_sleep(3)
+                            pyautogui.press('enter')
+                        finally:
+                            pyautogui.press('enter')
 
 
                         #FATURAR
@@ -2123,44 +1999,24 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                             )
                         
 
-                        console.print("Recalcular Parcelas da Pre venda... \n")
-                        try:
-                            app = Application().connect(class_name="TFrmPreVenda", timeout=40)
-                            main_window = app["Confirm"]
-                            main_window.set_focus()
-
-                            btn_no = main_window.child_window(class_name="TButton", found_index=0)
-                            btn_no.click()
+                        await worker_sleep(10)
+                        warning_pop = await is_window_open_by_class("TFrmPreVenda", "Warning")
+                        if warning_pop["IsOpened"] == True:
+                            app = Application().connect(class_name="TFrmPreVenda", timeout=10)
                             try:
-                                btn_no.click()
-                            except:
-                                pass
-                            await worker_sleep(3)
-                        except:
-                            retorno = f"Não foi possivel clicar no pop-up 'Recalcular Parcelas da Pre venda' na tela de Pre venda \nEtapas Executadas:\n{steps}"
-                            return RpaRetornoProcessoDTO(
-                                sucesso=False,
-                                retorno=retorno,
-                                status=RpaHistoricoStatusEnum.Falha,
-                                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                            )
-
-
-                        parcelas_nf_saida_pop_up = await is_window_open("Parcelas - Nota Fiscal Saída")
-                        if parcelas_nf_saida_pop_up["IsOpened"] == True:
-                            app = Application().connect(title="Parcelas - Nota Fiscal Saída", timeout=60)
-                            main_window = app.window(title="Parcelas - Nota Fiscal Saída")
-                            main_window.set_focus()
-                            send_keys("%n")
-                            await worker_sleep(3)
+                                main_window = app["Warning"]
+                                main_window.set_focus()
+                                retorno = f"Cliente Cliente sem permissão para realizar a emissão da nota fiscal, por favor verificar o cadastro do mesmo \nEtapas Executadas:\n{steps}"
+                                return RpaRetornoProcessoDTO(
+                                    sucesso=False,
+                                    retorno=retorno,
+                                    status=RpaHistoricoStatusEnum.Falha,
+                                    tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)]
+                                )
+                            except Exception as e:
+                                console.print('Não possui tela de Warning')
                         else:
-                            retorno = f"Não foi encontrada a Janela de Parcelas - Nota Fiscal Saída \nEtapas Executadas:\n{steps}"
-                            return RpaRetornoProcessoDTO(
-                                sucesso=False,
-                                retorno=retorno,
-                                status=RpaHistoricoStatusEnum.Falha,
-                                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                            )
+                            console.print("Nenhum pop-up de Warning Encontrado... \n")
 
 
                         information_pop_up = await is_window_open("Information")
@@ -2173,8 +2029,6 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
 
 
                         await worker_sleep(15)
-
-
                         #FATURAMENTO PRÉ-VENDA
                         try:
                             console.print("FATURAMENTO PRÉ-VENDA... \n")
@@ -3250,7 +3104,7 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                     totais_panel = panel_TNotebook.child_window(title="Totais")
                     totais_panel.set_focus()
 
-                    total_pre_venda_field = totais_panel.child_window(class_name="TDBIEditNumber", found_index=0)
+                    total_pre_venda_field = totais_panel.child_window(class_name="TDBIEditNumber", found_index=4)
                     valor_total_value = total_pre_venda_field.window_text()
 
                     console.print(f'Valor capturado: {valor_total_value}')
@@ -3449,140 +3303,17 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                         )
 
 
-                    warning_pop = await is_window_open_by_class("TFrmPreVenda", "Warning")
-                    if warning_pop["IsOpened"] == True:
-                        app = Application().connect(class_name="TFrmPreVenda", timeout=10)
-                        main_window = app["Warning"]
-                        main_window.set_focus()
-
+                    await worker_sleep(5)
+                    app = Application().connect(title="Information", timeout=180)
+                    main_window = app["Information"]
+                    main_window.set_focus()
+                    try:
                         btn_ok = main_window.child_window(class_name="TButton", found_index=0)
                         btn_ok.click()
-                        await worker_sleep(3)
-                    else:
-                        console.print("Nenhum pop-up de Warning Encontrado... \n")
-                    
-
-                    #VERIFICANDO POP UP - DE ACORDO COM OS PARÂMETROS DO SISTEMA..
-                    console.print("VERIFICANDO POP UP - DE ACORDO COM OS PARÂMETROS DO SISTEMA... \n")
-                    information_pop_up = await is_window_open_by_class("TFrmPreVenda", "Confirm")
-                    if information_pop_up["IsOpened"] == True:
-                        msg_pop_up = await ocr_by_class(numero_nota_fiscal, "TFrmPreVenda", "Confirm")
-                        console.print(f'retorno:{msg_pop_up.sucesso}')
-                        console.print(f'retorno:{msg_pop_up}')
-                        if msg_pop_up.sucesso == True:
-                            msg_retorno = msg_pop_up.retorno
-                            console.print(msg_retorno)
-                            if 'finan' in msg_retorno.lower():
-                                app = Application().connect(class_name="TFrmPreVenda", timeout=10)
-                                main_window = app["Confirm"]
-                                main_window.set_focus()
-
-                                btn_yes = main_window.child_window(class_name="TButton", found_index=1)
-                                btn_yes.click()
-                            else:
-                                retorno = f"Pop up nao mapeado para seguimento do robo {msg_pop_up.retorno} \nEtapas Executadas:\n{steps}"
-                                return RpaRetornoProcessoDTO(
-                                    sucesso=False,
-                                    retorno=retorno,
-                                    status=RpaHistoricoStatusEnum.Falha,
-                                    tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                                )
-                        else:
-                            retorno = f"Não foi possivel realizar a confirmação do msg do OCR \nEtapas Executadas:\n{steps}"
-                            return RpaRetornoProcessoDTO(
-                                sucesso=False,
-                                retorno=retorno,
-                                status=RpaHistoricoStatusEnum.Falha,
-                                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                            )
-                        
-
-                    #APROVAR CREDITO
-                    try:
-                        console.print("Aprovar Credito... \n")
-                        app = Application().connect(class_name="TFrmPreVenda", timeout=10)
-                        main_window = app["TFrmPreVenda"]
-                        main_window.set_focus()
-
-                        panel_Tnotebook = main_window.child_window(class_name="TNotebook", found_index=0)
-                        panel_Tnotebook = panel_Tnotebook.child_window(class_name="TPage", found_index=0)
-                        btn_aprovar_credito = panel_Tnotebook.child_window(class_name="TBitBtn", found_index=8)
-                        console.print("Clicando em aprovar Credito... \n")
-                        btn_aprovar_credito.click()
-                        await worker_sleep(2)
                     except Exception as e:
-                        retorno = f"Não foi possivel clicar em aprovar credito na tela de Pre venda \nEtapas Executadas:\n{steps}"
-                        return RpaRetornoProcessoDTO(
-                            sucesso=False,
-                            retorno=retorno,
-                            status=RpaHistoricoStatusEnum.Falha,
-                            tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                        )
-
-
-                    console.print("O valor desta pré venda exige uma aprovação... \n")
-                    try:
-                        app = Application().connect(class_name="TFrmPreVenda", timeout=10)
-                        main_window = app["Confirm"]
-                        main_window.set_focus()
-
-                        btn_yes = main_window.child_window(class_name="TButton", found_index=1)
-                        btn_yes.click()
-                        await worker_sleep(3)
-                    except:
-                        retorno = f"Não foi possivel clicar no pop-up 'O valor desta pré venda exige uma aprovação financeira' na tela de Pre venda \nEtapas Executadas:\n{steps}"
-                        return RpaRetornoProcessoDTO(
-                            sucesso=False,
-                            retorno=retorno,
-                            status=RpaHistoricoStatusEnum.Falha,
-                            tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                        )
-
-
-                    #VERIFICANDO SE A PRÉ VENDA FOI INCLUIDA COM SUCESSO
-                    console.print("VERIFICANDO SE A APROVAÇÃO FINANCEIRA FOI REALIZADA COM SUCESSO... \n")
-                    information_pop_up = await is_window_open("Information")
-                    if information_pop_up["IsOpened"] == True:
-                        msg_pop_up = await ocr_title(numero_nota_fiscal, "Information")
-                        console.print(f'retorno:{msg_pop_up.sucesso}')
-                        console.print(f'retorno:{msg_pop_up}')
-                        if msg_pop_up.sucesso == True:
-                            msg_retorno = msg_pop_up.retorno
-                            console.print(msg_retorno)
-                            if 'sucesso' in msg_retorno.lower():
-                                try:
-                                    information_operacao_concluida = main_window.child_window(title="Information")
-                                    btn_ok = information_operacao_concluida.child_window(class_name="TButton")
-                                    btn_ok.click()
-                                    await worker_sleep(4)
-                                except:
-                                    pyautogui.press('enter')
-                                    await worker_sleep(4)
-                            else:
-                                retorno = f"Pop up nao mapeado para seguimento do robo {msg_pop_up.retorno} \nEtapas Executadas:\n{steps}"
-                                return RpaRetornoProcessoDTO(
-                                    sucesso=False,
-                                    retorno=retorno,
-                                    status=RpaHistoricoStatusEnum.Falha,
-                                    tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                                )
-                        else:
-                            retorno = f"Não foi possivel realizar a confirmação do msg do OCR \nEtapas Executadas:\n{steps}"
-                            return RpaRetornoProcessoDTO(
-                                sucesso=False,
-                                retorno=retorno,
-                                status=RpaHistoricoStatusEnum.Falha,
-                                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                            )
-                    else:
-                        retorno = f"Janela de confirmação de Aprovação financeira realizada com sucesso \nEtapas Executadas:\n{steps}"
-                        return RpaRetornoProcessoDTO(
-                                sucesso=False,
-                                retorno=retorno,
-                                status=RpaHistoricoStatusEnum.Falha,
-                                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                            )
-                    await worker_sleep(3)
+                        pyautogui.press('enter')
+                    finally:
+                        pyautogui.press('enter')
 
 
                     #FATURAR
@@ -3608,44 +3339,24 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                         )
                     
 
-                    console.print("Recalcular Parcelas da Pre venda... \n")
-                    try:
-                        app = Application().connect(class_name="TFrmPreVenda", timeout=40)
-                        main_window = app["Confirm"]
-                        main_window.set_focus()
-
-                        btn_no = main_window.child_window(class_name="TButton", found_index=0)
-                        btn_no.click()
+                    await worker_sleep(10)
+                    warning_pop = await is_window_open_by_class("TFrmPreVenda", "Warning")
+                    if warning_pop["IsOpened"] == True:
+                        app = Application().connect(class_name="TFrmPreVenda", timeout=10)
                         try:
-                            btn_no.click()
-                        except:
-                            pass
-                        await worker_sleep(3)
-                    except:
-                        retorno = f"Não foi possivel clicar no pop-up 'Recalcular Parcelas da Pre venda' na tela de Pre venda \nEtapas Executadas:\n{steps}"
-                        return RpaRetornoProcessoDTO(
-                            sucesso=False,
-                            retorno=retorno,
-                            status=RpaHistoricoStatusEnum.Falha,
-                            tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                        )
-
-
-                    parcelas_nf_saida_pop_up = await is_window_open("Parcelas - Nota Fiscal Saída")
-                    if parcelas_nf_saida_pop_up["IsOpened"] == True:
-                        app = Application().connect(title="Parcelas - Nota Fiscal Saída", timeout=60)
-                        main_window = app.window(title="Parcelas - Nota Fiscal Saída")
-                        main_window.set_focus()
-                        send_keys("%n")
-                        await worker_sleep(3)
+                            main_window = app["Warning"]
+                            main_window.set_focus()
+                            retorno = f"Cliente Cliente sem permissão para realizar a emissão da nota fiscal, por favor verificar o cadastro do mesmo \nEtapas Executadas:\n{steps}"
+                            return RpaRetornoProcessoDTO(
+                                sucesso=False,
+                                retorno=retorno,
+                                status=RpaHistoricoStatusEnum.Falha,
+                                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
+                            )
+                        except Exception as e:
+                            console.print('Não possui tela de Warning')
                     else:
-                        retorno = f"Não foi encontrada a Janela de Parcelas - Nota Fiscal Saída \nEtapas Executadas:\n{steps}"
-                        return RpaRetornoProcessoDTO(
-                            sucesso=False,
-                            retorno=retorno,
-                            status=RpaHistoricoStatusEnum.Falha,
-                            tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
-                        )
+                        console.print("Nenhum pop-up de Warning Encontrado... \n")
 
 
                     information_pop_up = await is_window_open("Information")
@@ -3658,8 +3369,6 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
 
 
                     await worker_sleep(15)
-
-
                     #FATURAMENTO PRÉ-VENDA
                     try:
                         console.print("FATURAMENTO PRÉ-VENDA... \n")

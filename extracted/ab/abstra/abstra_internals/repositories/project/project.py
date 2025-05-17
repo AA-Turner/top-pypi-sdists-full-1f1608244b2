@@ -1293,13 +1293,6 @@ class Project:
         else:
             raise Exception(f"Cannot add stage of type {type(stage)}")
 
-    def get_stage(self, id: str) -> Optional[Stage]:
-        for stage in self.workflow_stages:
-            if stage.id == id:
-                return stage
-
-        return None
-
     def get_workspace(self):
         sidebar = [stage.to_sidebar_item.as_dict for stage in self.secured_stages]
         return StyleSettingsWithSidebar.from_dict(
@@ -1360,18 +1353,12 @@ class Project:
             raise StageNotFoundError(f"Stage with id '{id}' not found")
         return stage
 
-    def get_action(self, id: str) -> Optional[Stage]:
+    def get_stage(self, id: str) -> Optional[Stage]:
         for stage in self.workflow_stages:
             if stage.id == id:
                 return stage
 
         return None
-
-    def get_action_raises(self, id: str) -> Stage:
-        stage = self.get_action(id)
-        if not stage:
-            raise StageNotFoundError(f"Stage with id '{id}' not found")
-        return stage
 
     def get_form(self, id: str) -> Optional[FormStage]:
         for form in self.forms:
@@ -1457,7 +1444,7 @@ class Project:
 
     def update_stage(self, stage: Stage, changes: Dict[str, Any]) -> Stage:
         # This guarantees that the updated stage will be the one from the project
-        project_stage = self.get_action(stage.id)
+        project_stage = self.get_stage(stage.id)
 
         if project_stage is None:
             raise StageNotFoundError(f"Stage with id '{stage.id}' not found")
@@ -1480,7 +1467,7 @@ class Project:
         return project_stage
 
     def delete_stage(self, id: str, remove_file: bool = False):
-        stage = self.get_action(id)
+        stage = self.get_stage(id)
 
         if remove_file and isinstance(stage, StageWithFile):
             if not stage:
@@ -1595,18 +1582,15 @@ def _update_file(
 class ProjectRepository:
     lock = Lock()
 
-    @classmethod
-    def get_file_path(cls):
+    def get_file_path(self):
         return Settings.root_path / "abstra.json"
 
-    @classmethod
-    def initialize(cls):
-        if not cls.exists():  # double check
-            cls.save(Project.create())
-            cls.add_assets()
+    def initialize(self):
+        if not self.exists():  # double check
+            self.save(Project.create())
+            self.add_assets()
 
-    @classmethod
-    def add_assets(cls):
+    def add_assets(self):
         logo_path = Settings.root_path / "logo.png"
         if not logo_path.exists():
             logo_path.write_bytes(abstra_logo)
@@ -1615,12 +1599,10 @@ class ProjectRepository:
         if not favicon_path.exists():
             favicon_path.write_bytes(abstra_favicon)
 
-    @classmethod
-    def exists(cls):
-        return cls.get_file_path().exists()
+    def exists(self):
+        return self.get_file_path().exists()
 
-    @classmethod
-    def save(cls, project: Project):
+    def save(self, project: Project):
         temp_file = Path(tempfile.mkdtemp()) / "abstra.json"
 
         project_dto = project.to_abstra_json_dto()
@@ -1628,15 +1610,14 @@ class ProjectRepository:
         with temp_file.open("w") as f:
             json.dump(project_dto.to_dict(), f, indent=2)
 
-        with cls.lock:
-            shutil.move(str(temp_file), cls.get_file_path())
+        with self.lock:
+            shutil.move(str(temp_file), self.get_file_path())
             Path.rmdir(temp_file.parent)
 
-    @classmethod
-    def migrate_config_file(cls, verbose=True):
-        if not cls.exists():
+    def migrate_config_file(self, verbose=True):
+        if not self.exists():
             return
-        data = json.loads(cls.get_file_path().read_text(encoding="utf-8"))
+        data = json.loads(self.get_file_path().read_text(encoding="utf-8"))
         assert isinstance(data, dict)
         initial_version = data.get("version")
 
@@ -1647,21 +1628,27 @@ class ProjectRepository:
         )
 
         if migrated_data["version"] != initial_version:
-            cls.save(Project.from_dict(migrated_data))
+            self.save(Project.from_dict(migrated_data))
 
-    @classmethod
-    def load(cls) -> Project:
-        file_path = cls.get_file_path()
+    def load(self) -> Project:
+        file_path = self.get_file_path()
 
-        with cls.lock:
+        with self.lock:
             data = json.loads(file_path.read_text(encoding="utf-8"))
             if data["version"] == "v13.0":
                 CommonAbstraJsonV13.from_dict(data)
             return Project.from_dict(data)
 
-    @classmethod
-    def initialize_or_migrate(cls, verbose=True):
-        if not cls.exists():
-            cls.initialize()
+    def initialize_or_migrate(self, verbose=True):
+        if not self.exists():
+            self.initialize()
         else:
-            cls.migrate_config_file(verbose=verbose)
+            self.migrate_config_file(verbose=verbose)
+
+
+class LocalProjectRepository(ProjectRepository):
+    pass
+
+
+class ProductionProjectRepository(ProjectRepository):
+    pass

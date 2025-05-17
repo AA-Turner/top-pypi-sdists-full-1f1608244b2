@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: QuLab
-Version: 2.11.1
+Version: 2.11.3
 Summary: contral instruments and manage data
 Author-email: feihoo87 <feihoo87@gmail.com>
 Maintainer-email: feihoo87 <feihoo87@gmail.com>
@@ -47,6 +47,7 @@ Requires-Dist: SQLAlchemy>=2.0.19
 Requires-Dist: watchdog>=4.0.0
 Requires-Dist: wath>=1.1.6
 Requires-Dist: waveforms>=1.9.4
+Requires-Dist: rich>=14.0.0
 Provides-Extra: full
 Requires-Dist: uvloop>=0.19.0; extra == "full"
 Dynamic: license-file

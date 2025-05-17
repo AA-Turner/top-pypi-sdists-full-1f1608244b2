@@ -1,27 +1,27 @@
 use std::borrow::Cow;
-use std::collections::HashSet;
 use std::mem::{swap, take};
 use std::sync::Arc;
 
 use cas_client::Client;
-use cas_object::{CompressionScheme, NUM_COMPRESSION_SCHEMES};
+use cas_object::{CompressionScheme, SerializedCasObject, NUM_COMPRESSION_SCHEMES};
 use deduplication::constants::{MAX_XORB_BYTES, MAX_XORB_CHUNKS};
-use deduplication::{DataAggregator, DeduplicationMetrics, FileXorbDependency, RawXorbData};
+use deduplication::{DataAggregator, DeduplicationMetrics, RawXorbData};
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use mdb_shard::file_structs::MDBFileInfo;
-use merklehash::MerkleHash;
 use more_asserts::*;
+use progress_tracking::upload_tracking::{CompletionTracker, FileXorbDependency};
+#[cfg(debug_assertions)] // Used here to verify the update accuracy
+use progress_tracking::verification_wrapper::ProgressUpdaterVerificationWrapper;
+use progress_tracking::{NoOpProgressUpdater, TrackingProgressUpdater};
 use tokio::sync::{Mutex, OwnedSemaphorePermit, Semaphore};
 use tokio::task::JoinSet;
 use tracing::{info_span, instrument, Instrument};
 use ulid::Ulid;
-use utils::progress::{NoOpProgressUpdater, TrackingProgressUpdater};
 
 use crate::configurations::*;
 use crate::constants::MAX_CONCURRENT_UPLOADS;
 use crate::errors::*;
 use crate::file_cleaner::SingleFileCleaner;
-use crate::progress_tracking::CompletionTracker;
 use crate::prometheus_metrics;
 use crate::remote_client_interface::create_remote_client;
 use crate::shard_interface::SessionShardInterface;
@@ -82,12 +82,8 @@ pub struct FileUploadSession {
     /// to determine the compression scheme. Then lock it from then on.
     compression_scheme: Mutex<Option<CompressionScheme>>,
 
-    /// Xorbs that have been uploaded as part of this session -- and thus are tracked in the
-    /// completion tracker.
-    session_xorbs: Mutex<HashSet<MerkleHash>>,
-
     #[cfg(debug_assertions)]
-    progress_verification_tracker: Arc<utils::progress::ProgressUpdaterVerificationWrapper>,
+    progress_verification_tracker: Arc<ProgressUpdaterVerificationWrapper>,
 }
 
 // Constructors
@@ -123,7 +119,7 @@ impl FileUploadSession {
         // and correctness.  This is checked at the end.
         #[cfg(debug_assertions)]
         let (progress_updater, progress_verification_tracker) = {
-            let updater = utils::progress::ProgressUpdaterVerificationWrapper::new(progress_updater);
+            let updater = ProgressUpdaterVerificationWrapper::new(progress_updater);
 
             (updater.clone() as Arc<dyn TrackingProgressUpdater>, updater)
         };
@@ -162,7 +158,6 @@ impl FileUploadSession {
             deduplication_metrics: Mutex::new(DeduplicationMetrics::default()),
             xorb_upload_tasks: Mutex::new(JoinSet::new()),
             compression_scheme,
-            session_xorbs: Mutex::new(HashSet::new()),
 
             #[cfg(debug_assertions)]
             progress_verification_tracker,
@@ -188,7 +183,11 @@ impl FileUploadSession {
     /// Registers a new xorb for upload, returning true if the xorb was added to the upload queue and false
     /// if it was already in the queue and didn't need to be uploaded again.
     #[instrument(skip_all, name="FileUploadSession::register_new_xorb_for_upload", fields(xorb_len = xorb.num_bytes()))]
-    pub(crate) async fn register_new_xorb(self: &Arc<Self>, xorb: RawXorbData) -> Result<bool> {
+    pub(crate) async fn register_new_xorb(
+        self: &Arc<Self>,
+        xorb: RawXorbData,
+        file_dependencies: &[FileXorbDependency],
+    ) -> Result<bool> {
         // First check the current xorb upload tasks to see if any can be cleaned up.
         {
             let mut upload_tasks = self.xorb_upload_tasks.lock().await;
@@ -199,15 +198,21 @@ impl FileUploadSession {
 
         let xorb_hash = xorb.hash();
 
-        // Register that this xorb is part of this session, and thus tracked in the upload completion
-        // part.
+        // Register that this xorb is part of this session and set up completion tracking.
         //
         // In some circumstances, we can cut to instances of the same xorb, namely when there are two files
         // with the same starting data that get processed simultaneously.  When this happens, we only upload
         // the first one, returning early here.
-        let new_xorb = self.session_xorbs.lock().await.insert(xorb_hash);
+        let xorb_already_completed = self
+            .completion_tracker
+            .register_new_xorb(xorb_hash, xorb.num_bytes() as u64)
+            .await;
 
-        if !new_xorb {
+        // Make sure we add in all the dependencies.  This should happen after the xorb is registered but before
+        // we start the upload.
+        self.completion_tracker.register_dependencies(file_dependencies).await;
+
+        if xorb_already_completed {
             return Ok(false);
         }
 
@@ -243,20 +248,21 @@ impl FileUploadSession {
         }
 
         let xorb_hash = xorb.hash();
-        let xorb_data = xorb.to_vec();
-        let chunks_and_boundaries = xorb.cas_info.chunks_and_boundaries();
 
-        drop(xorb);
+        // Serialize the object; this can be relatively expensive, so run it on a compute thread.
+        let cas_object =
+            tokio::task::spawn_blocking(move || SerializedCasObject::from_xorb(xorb, compression_scheme)).await??;
 
         let session = self.clone();
         let upload_permit = acquire_upload_permit().await?;
         let cas_prefix = session.config.data_config.prefix.clone();
+        let completion_tracker = self.completion_tracker.clone();
 
         self.xorb_upload_tasks.lock().await.spawn(
             async move {
                 let n_bytes_transmitted = session
                     .client
-                    .put(&cas_prefix, &xorb_hash, xorb_data, chunks_and_boundaries, compression_scheme)
+                    .upload_xorb(&cas_prefix, cas_object, Some(completion_tracker))
                     .await?;
 
                 drop(upload_permit);
@@ -265,7 +271,7 @@ impl FileUploadSession {
                 session.completion_tracker.register_xorb_upload_completion(xorb_hash).await;
 
                 // Record the number of bytes uploaded.
-                session.deduplication_metrics.lock().await.xorb_bytes_uploaded += n_bytes_transmitted;
+                session.deduplication_metrics.lock().await.xorb_bytes_uploaded += n_bytes_transmitted as u64;
                 Ok(())
             }
             .instrument(info_span!("FileUploadSession::upload_xorb_task", xorb.hash = xorb_hash.hex())),
@@ -345,11 +351,8 @@ impl FileUploadSession {
             }
         }
 
-        self.completion_tracker.register_dependencies(&new_dependencies).await;
-
-        // Now we can go ahead and start the upload process; this is spun off into a background thread
-        // but might as well get it started.
-        self.register_new_xorb(xorb).await?;
+        // Register the xorb and start the upload process.
+        self.register_new_xorb(xorb, &new_dependencies).await?;
 
         Ok(())
     }
@@ -393,8 +396,8 @@ impl FileUploadSession {
         metrics.total_bytes_uploaded = metrics.shard_bytes_uploaded + metrics.xorb_bytes_uploaded;
 
         // Update the global counters
-        prometheus_metrics::FILTER_CAS_BYTES_PRODUCED.inc_by(metrics.new_bytes as u64);
-        prometheus_metrics::FILTER_BYTES_CLEANED.inc_by(metrics.total_bytes as u64);
+        prometheus_metrics::FILTER_CAS_BYTES_PRODUCED.inc_by(metrics.new_bytes);
+        prometheus_metrics::FILTER_BYTES_CLEANED.inc_by(metrics.total_bytes);
 
         #[cfg(debug_assertions)]
         {

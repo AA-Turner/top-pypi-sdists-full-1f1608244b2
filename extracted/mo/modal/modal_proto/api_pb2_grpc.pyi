@@ -620,6 +620,10 @@ class ModalClientStub:
         modal_proto.api_pb2.VolumeListFilesRequest,
         modal_proto.api_pb2.VolumeListFilesResponse,
     ]
+    VolumeListFiles2: grpc.UnaryStreamMultiCallable[
+        modal_proto.api_pb2.VolumeListFiles2Request,
+        modal_proto.api_pb2.VolumeListFiles2Response,
+    ]
     VolumePutFiles: grpc.UnaryUnaryMultiCallable[
         modal_proto.api_pb2.VolumePutFilesRequest,
         google.protobuf.empty_pb2.Empty,
@@ -634,6 +638,10 @@ class ModalClientStub:
     ]
     VolumeRemoveFile: grpc.UnaryUnaryMultiCallable[
         modal_proto.api_pb2.VolumeRemoveFileRequest,
+        google.protobuf.empty_pb2.Empty,
+    ]
+    VolumeRemoveFile2: grpc.UnaryUnaryMultiCallable[
+        modal_proto.api_pb2.VolumeRemoveFile2Request,
         google.protobuf.empty_pb2.Empty,
     ]
     VolumeRename: grpc.UnaryUnaryMultiCallable[
@@ -1548,6 +1556,12 @@ class ModalClientServicer(metaclass=abc.ABCMeta):
         context: grpc.ServicerContext,
     ) -> collections.abc.Iterator[modal_proto.api_pb2.VolumeListFilesResponse]: ...
     @abc.abstractmethod
+    def VolumeListFiles2(
+        self,
+        request: modal_proto.api_pb2.VolumeListFiles2Request,
+        context: grpc.ServicerContext,
+    ) -> collections.abc.Iterator[modal_proto.api_pb2.VolumeListFiles2Response]: ...
+    @abc.abstractmethod
     def VolumePutFiles(
         self,
         request: modal_proto.api_pb2.VolumePutFilesRequest,
@@ -1569,6 +1583,12 @@ class ModalClientServicer(metaclass=abc.ABCMeta):
     def VolumeRemoveFile(
         self,
         request: modal_proto.api_pb2.VolumeRemoveFileRequest,
+        context: grpc.ServicerContext,
+    ) -> google.protobuf.empty_pb2.Empty: ...
+    @abc.abstractmethod
+    def VolumeRemoveFile2(
+        self,
+        request: modal_proto.api_pb2.VolumeRemoveFile2Request,
         context: grpc.ServicerContext,
     ) -> google.protobuf.empty_pb2.Empty: ...
     @abc.abstractmethod

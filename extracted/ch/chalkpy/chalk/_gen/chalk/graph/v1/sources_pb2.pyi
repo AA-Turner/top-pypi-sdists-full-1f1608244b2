@@ -231,6 +231,7 @@ class DatabaseSource(_message.Message):
         "trino",
         "dynamodb",
         "athena",
+        "clickhouse",
     )
     BIGQUERY_FIELD_NUMBER: _ClassVar[int]
     CLOUDSQL_FIELD_NUMBER: _ClassVar[int]
@@ -244,6 +245,7 @@ class DatabaseSource(_message.Message):
     TRINO_FIELD_NUMBER: _ClassVar[int]
     DYNAMODB_FIELD_NUMBER: _ClassVar[int]
     ATHENA_FIELD_NUMBER: _ClassVar[int]
+    CLICKHOUSE_FIELD_NUMBER: _ClassVar[int]
     bigquery: BigQuerySource
     cloudsql: CloudSQLSource
     databricks: DatabricksSource
@@ -256,6 +258,7 @@ class DatabaseSource(_message.Message):
     trino: TrinoSource
     dynamodb: DynamoDBSource
     athena: AthenaSource
+    clickhouse: ClickhouseSource
     def __init__(
         self,
         bigquery: _Optional[_Union[BigQuerySource, _Mapping]] = ...,
@@ -270,6 +273,7 @@ class DatabaseSource(_message.Message):
         trino: _Optional[_Union[TrinoSource, _Mapping]] = ...,
         dynamodb: _Optional[_Union[DynamoDBSource, _Mapping]] = ...,
         athena: _Optional[_Union[AthenaSource, _Mapping]] = ...,
+        clickhouse: _Optional[_Union[ClickhouseSource, _Mapping]] = ...,
     ) -> None: ...
 
 class BigQuerySource(_message.Message):
@@ -932,4 +936,57 @@ class AthenaSource(_message.Message):
         engine_args: _Optional[_Mapping[str, _arrow_pb2.ScalarValue]] = ...,
         async_engine_args: _Optional[_Mapping[str, _arrow_pb2.ScalarValue]] = ...,
         work_group: _Optional[str] = ...,
+    ) -> None: ...
+
+class ClickhouseSource(_message.Message):
+    __slots__ = ("name", "host", "port", "db", "user", "password", "use_tls", "engine_args", "async_engine_args")
+    class EngineArgsEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: _arrow_pb2.ScalarValue
+        def __init__(
+            self, key: _Optional[str] = ..., value: _Optional[_Union[_arrow_pb2.ScalarValue, _Mapping]] = ...
+        ) -> None: ...
+
+    class AsyncEngineArgsEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: _arrow_pb2.ScalarValue
+        def __init__(
+            self, key: _Optional[str] = ..., value: _Optional[_Union[_arrow_pb2.ScalarValue, _Mapping]] = ...
+        ) -> None: ...
+
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    HOST_FIELD_NUMBER: _ClassVar[int]
+    PORT_FIELD_NUMBER: _ClassVar[int]
+    DB_FIELD_NUMBER: _ClassVar[int]
+    USER_FIELD_NUMBER: _ClassVar[int]
+    PASSWORD_FIELD_NUMBER: _ClassVar[int]
+    USE_TLS_FIELD_NUMBER: _ClassVar[int]
+    ENGINE_ARGS_FIELD_NUMBER: _ClassVar[int]
+    ASYNC_ENGINE_ARGS_FIELD_NUMBER: _ClassVar[int]
+    name: str
+    host: str
+    port: str
+    db: str
+    user: str
+    password: str
+    use_tls: bool
+    engine_args: _containers.MessageMap[str, _arrow_pb2.ScalarValue]
+    async_engine_args: _containers.MessageMap[str, _arrow_pb2.ScalarValue]
+    def __init__(
+        self,
+        name: _Optional[str] = ...,
+        host: _Optional[str] = ...,
+        port: _Optional[str] = ...,
+        db: _Optional[str] = ...,
+        user: _Optional[str] = ...,
+        password: _Optional[str] = ...,
+        use_tls: bool = ...,
+        engine_args: _Optional[_Mapping[str, _arrow_pb2.ScalarValue]] = ...,
+        async_engine_args: _Optional[_Mapping[str, _arrow_pb2.ScalarValue]] = ...,
     ) -> None: ...

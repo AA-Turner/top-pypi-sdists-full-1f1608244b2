@@ -1,15 +1,26 @@
 from functools import wraps
+from typing import Union
 from unittest.mock import Mock
 
 from mongomock import DuplicateKeyError, helpers
+from mongomock.collection import Collection
+from mongomock.mongo_client import MongoClient
+
+from .typing import DocumentType
 
 try:
-    from beanie.odm.fields import ExpressionField
+    from beanie.odm.fields import ExpressionField as _ExpressionField
 except ModuleNotFoundError:
     ExpressionField = None
+else:
+    ExpressionField = _ExpressionField
 
 
-def _provide_error_details(collection, data, exception):
+def _provide_error_details(
+    collection: Collection,
+    data: DocumentType,
+    exception: Exception,
+) -> Union[Exception, DuplicateKeyError]:
     if not isinstance(exception, DuplicateKeyError):
         return exception
 
@@ -44,7 +55,7 @@ def _provide_error_details(collection, data, exception):
     return exception
 
 
-def _patch_insert_and_ensure_uniques(collection):
+def _patch_insert_and_ensure_uniques(collection: Collection) -> Collection:
     """
     Adds details with 'keyPattern' and 'keyValue' when
     raising DuplicateKeyError from _insert or _ensure_uniques
@@ -53,11 +64,11 @@ def _patch_insert_and_ensure_uniques(collection):
 
     def with_enriched_duplicate_key_error(fn):
         @wraps(fn)
-        def wrapper(data, *args, **kwargs):
+        def wrapper(*args, **kwargs):
             try:
-                return fn(data, *args, **kwargs)
+                return fn(*args, **kwargs)
             except DuplicateKeyError as exc:
-                raise _provide_error_details(collection, data, exc)
+                raise _provide_error_details(collection, args[0], exc)
 
         return wrapper
 
@@ -88,7 +99,7 @@ def _normalize_strings(obj):
     return obj
 
 
-def _patch_iter_documents_and_get_dataset(collection):
+def _patch_iter_documents_and_get_dataset(collection: Collection) -> Collection:
     """
     When using beanie or other solutions that utilize classes inheriting from
     the "str" type, we need to explicitly transform these instances to plain
@@ -122,17 +133,17 @@ def _patch_iter_documents_and_get_dataset(collection):
     return collection
 
 
-def _patch_collection_internals(collection):
+def _patch_collection_internals(collection: Collection) -> Collection:
     if getattr(collection, '_patched_by_mongomock_motor', False):
         return collection
     collection = _patch_insert_and_ensure_uniques(collection)
     collection = _patch_iter_documents_and_get_dataset(collection)
-    collection._patched_by_mongomock_motor = True
+    collection._patched_by_mongomock_motor = True  # type: ignore
     return collection
 
 
-def _patch_client_internals(client):
-    client.options = Mock(timeout=None)
+def _patch_client_internals(client: MongoClient) -> MongoClient:
+    client.options = Mock(timeout=None)  # type: ignore
     return client
 
 

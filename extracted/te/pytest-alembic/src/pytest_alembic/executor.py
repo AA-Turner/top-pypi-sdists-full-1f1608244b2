@@ -164,10 +164,9 @@ class ConnectionExecutor:
         """
         # The user may not have sqlalchemy 1.4+, and therefore may not even be able to
         # use async engines.
-        try:
+        AsyncEngine = None  # noqa: N806
+        with contextlib.suppress(ImportError):
             from sqlalchemy.ext.asyncio import AsyncEngine
-        except ImportError:  # pragma: no cover
-            AsyncEngine = None  # noqa: N806
 
         if AsyncEngine and isinstance(self.connection, AsyncEngine):
             import asyncio
@@ -184,6 +183,10 @@ class ConnectionExecutor:
 
         if isinstance(self.connection, Engine):
             with self.connection.begin() as connection:
-                return fn(connection=connection, **kwargs)
+                result = fn(connection=connection, **kwargs)
+
+            # SQLite does not close via the context manager, close expliclitly
+            connection.close()
+            return result
 
         return fn(connection=self.connection, **kwargs)
