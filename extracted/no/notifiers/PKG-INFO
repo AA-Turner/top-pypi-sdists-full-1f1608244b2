@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: notifiers
-Version: 1.3.5
+Version: 1.3.6
 Summary: The easy way to send notifications
 Project-URL: Homepage, https://github.com/liiight/notifiers
 Project-URL: Repository, https://github.com/liiight/notifiers
@@ -15,7 +15,6 @@ Classifier: Intended Audience :: End Users/Desktop
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
@@ -23,6 +22,7 @@ Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Requires-Python: >=3.8
 Requires-Dist: click>=8.0.3
+Requires-Dist: importlib-metadata>=3.6
 Requires-Dist: jsonschema>=4.4.0
 Requires-Dist: requests<3,>=2.27.1
 Description-Content-Type: text/markdown

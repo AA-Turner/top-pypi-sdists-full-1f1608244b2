@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: itables
-Version: 2.3.0
+Version: 2.4.0
 Summary: Pandas and Polar DataFrames as interactive DataTables
 Project-URL: Homepage, https://mwouts.github.io/itables/
 Project-URL: Documentation, https://mwouts.github.io/itables
@@ -39,31 +39,39 @@ Classifier: Intended Audience :: Science/Research
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.7
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
-Requires-Python: >=3.7
+Requires-Python: >=3.9
 Requires-Dist: ipython
 Requires-Dist: numpy
 Requires-Dist: pandas
 Provides-Extra: all
 Requires-Dist: anywidget; extra == 'all'
+Requires-Dist: dash; extra == 'all'
 Requires-Dist: matplotlib; extra == 'all'
 Requires-Dist: polars; extra == 'all'
 Requires-Dist: pyarrow; extra == 'all'
 Requires-Dist: pytz; extra == 'all'
+Requires-Dist: shiny; extra == 'all'
+Requires-Dist: shinywidgets; extra == 'all'
+Requires-Dist: streamlit; extra == 'all'
 Requires-Dist: traitlets; extra == 'all'
+Requires-Dist: typeguard>=4.4.1; extra == 'all'
 Requires-Dist: world-bank-data; extra == 'all'
+Provides-Extra: check-type
+Requires-Dist: typeguard>=4.4.1; extra == 'check-type'
+Provides-Extra: dash
+Requires-Dist: dash; extra == 'dash'
 Provides-Extra: dev
 Requires-Dist: anywidget; extra == 'dev'
 Requires-Dist: dash; extra == 'dev'
 Requires-Dist: ipykernel; extra == 'dev'
 Requires-Dist: jupyterlab; extra == 'dev'
 Requires-Dist: jupytext; extra == 'dev'
+Requires-Dist: marimo; extra == 'dev'
 Requires-Dist: matplotlib; extra == 'dev'
 Requires-Dist: nbconvert; extra == 'dev'
 Requires-Dist: polars; extra == 'dev'
@@ -73,7 +81,10 @@ Requires-Dist: pytest-cov; extra == 'dev'
 Requires-Dist: pytz; extra == 'dev'
 Requires-Dist: requests; extra == 'dev'
 Requires-Dist: shiny; extra == 'dev'
+Requires-Dist: shinywidgets; extra == 'dev'
+Requires-Dist: streamlit; extra == 'dev'
 Requires-Dist: traitlets; extra == 'dev'
+Requires-Dist: typeguard>=4.4.1; extra == 'dev'
 Requires-Dist: watchfiles; extra == 'dev'
 Requires-Dist: world-bank-data; extra == 'dev'
 Provides-Extra: polars
@@ -82,6 +93,11 @@ Requires-Dist: pyarrow; extra == 'polars'
 Provides-Extra: samples
 Requires-Dist: pytz; extra == 'samples'
 Requires-Dist: world-bank-data; extra == 'samples'
+Provides-Extra: shiny
+Requires-Dist: shiny; extra == 'shiny'
+Requires-Dist: shinywidgets; extra == 'shiny'
+Provides-Extra: streamlit
+Requires-Dist: streamlit; extra == 'streamlit'
 Provides-Extra: style
 Requires-Dist: matplotlib; extra == 'style'
 Provides-Extra: test
@@ -89,6 +105,7 @@ Requires-Dist: anywidget; extra == 'test'
 Requires-Dist: dash; extra == 'test'
 Requires-Dist: ipykernel; extra == 'test'
 Requires-Dist: jupytext; extra == 'test'
+Requires-Dist: marimo; extra == 'test'
 Requires-Dist: matplotlib; extra == 'test'
 Requires-Dist: nbconvert; extra == 'test'
 Requires-Dist: polars; extra == 'test'
@@ -98,7 +115,10 @@ Requires-Dist: pytest-cov; extra == 'test'
 Requires-Dist: pytz; extra == 'test'
 Requires-Dist: requests; extra == 'test'
 Requires-Dist: shiny; extra == 'test'
+Requires-Dist: shinywidgets; extra == 'test'
+Requires-Dist: streamlit; extra == 'test'
 Requires-Dist: traitlets; extra == 'test'
+Requires-Dist: typeguard>=4.4.1; extra == 'test'
 Requires-Dist: world-bank-data; extra == 'test'
 Provides-Extra: widget
 Requires-Dist: anywidget; extra == 'widget'
@@ -114,10 +134,11 @@ Description-Content-Type: text/markdown
 [![Conda Version](https://img.shields.io/conda/vn/conda-forge/itables.svg)](https://anaconda.org/conda-forge/itables)
 [![pyversions](https://img.shields.io/pypi/pyversions/itables.svg)](https://pypi.python.org/pypi/itables)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Jupyter Widget](https://img.shields.io/badge/Jupyter-Widget-F37626.svg?style=flat&logo=Jupyter)](https://mwouts.github.io/itables/widget.html)
+[![Jupyter Widget](https://img.shields.io/badge/Jupyter-Widget-F37626.svg?style=flat&logo=Jupyter)](https://mwouts.github.io/itables/apps/widget.html)
+[![Dash Component](https://img.shields.io/badge/Dash-Plotly-1098F7.svg?style=flat&logo=Plotly)](https://mwouts.github.io/itables/apps/dash.html)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_red.svg)](https://itables.streamlit.app)
 
-This packages changes how Pandas and Polars DataFrames are rendered in Jupyter Notebooks.
+This packages changes how Pandas and Polars DataFrames are rendered in Python notebooks and applications.
 With `itables` you can display your tables as interactive [DataTables](https://datatables.net/)
 that you can sort, paginate, scroll or filter.
 
@@ -145,7 +166,7 @@ or
 conda install itables -c conda-forge
 ```
 
-Activate the interactive mode for all series and dataframes with
+Activate the interactive mode for all series and dataframes in Jupyter with
 ```python
 import itables
 
@@ -157,14 +178,8 @@ and then render any DataFrame as an interactive table that you can sort, search 
 If you prefer to render only selected DataFrames as interactive tables, call `itables.init_notebook_mode(all_interactive=False)`, then use `itables.show` to show just one Series or DataFrame as an interactive table:
 ![show](docs/show_df.png)
 
-Since ITables v1.0, the [jQuery](https://jquery.com/) and [DataTables](https://datatables.net/) libraries and CSS
-are injected in the notebook when you execute `init_notebook_mode` with its default argument `connected=False`.
-Thanks to this the interactive tables will work even without a connection to the internet.
 
-If you prefer to load the libraries dynamically (and keep the notebook lighter), use `connected=True` when you
-execute `init_notebook_mode`.
-
-## Supported notebook environments
+## ITables in Notebooks
 
 ITables works in all the usual Jupyter Notebook environments, including Jupyter Notebook, Jupyter Lab, Jupyter nbconvert (i.e. the tables are still interactive in the HTML export of a notebook), Jupyter Book, Google Colab and Kaggle.
 
@@ -174,8 +189,16 @@ ITables works well in VS Code, both in Jupyter Notebooks and in interactive Pyth
 
 ## ITables in Python applications
 
-Last but not least, ITables is also available as
+ITables is also available as
 - a [Jupyter Widget](https://mwouts.github.io/itables/widget.html)
 - a [Dash](https://mwouts.github.io/itables/dash.html) component
 - a [Streamlit](https://mwouts.github.io/itables/streamlit.html) component,
 - and it also works in [Shiny](https://mwouts.github.io/itables/shiny.html) applications.
+
+## Licence
+
+ITables is developed by [Marc Wouts](https://github.com/mwouts) on [GitHub](https://github.com/mwouts/itables),
+under a MIT license.
+
+ITables is a wrapper for [datatables.net](https://datatables.net/) which is developed by Allan Jardine
+[(sponsor him!)](https://github.com/sponsors/AllanJard), also under a MIT license.

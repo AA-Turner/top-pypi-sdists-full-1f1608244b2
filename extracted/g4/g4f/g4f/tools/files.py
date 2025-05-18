@@ -89,11 +89,14 @@ def secure_filename(filename: str) -> str:
     # Keep letters, numbers, basic punctuation and all Unicode chars
     filename = re.sub(
         r'[^\w.,_+-]+',
-        '_', 
-        unquote(filename).strip(), 
+        '_',
+        unquote(filename).strip(),
         flags=re.UNICODE
     )
-    filename = filename[:100].strip(".,_-+")
+    max_length = 100
+    if len(filename.encode()) > len(filename):
+        max_length = 50
+    filename = filename[:max_length].strip(".,_+-")
     return filename
 
 def supports_filename(filename: str):
@@ -189,7 +192,7 @@ def stream_read_files(bucket_dir: Path, filenames: list, delete_files: bool = Fa
                                 else:
                                     os.unlink(filepath)
             continue
-        yield f"```{filename}\n"
+        yield f"```{filename.replace('.md', '')}\n"
         if has_pypdf2 and filename.endswith(".pdf"):
             try:
                 reader = PyPDF2.PdfReader(file_path)

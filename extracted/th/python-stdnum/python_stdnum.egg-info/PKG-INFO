@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: python-stdnum
-Version: 2.0
+Version: 2.1
 Summary: Python module to handle standardized numbers and codes
 Home-page: https://arthurdejong.org/python-stdnum/
 Author: Arthur de Jong
@@ -27,6 +27,7 @@ Classifier: Programming Language :: Python :: Implementation :: PyPy
 Classifier: Topic :: Office/Business :: Financial
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Topic :: Text Processing :: General
+Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: COPYING
 Provides-Extra: soap
@@ -41,6 +42,7 @@ Dynamic: license
 Dynamic: license-file
 Dynamic: project-url
 Dynamic: provides-extra
+Dynamic: requires-python
 Dynamic: summary
 
 python-stdnum

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: object-storage-proxy
-Version: 0.3.11
+Version: 0.4.1
 Classifier: License :: Other/Proprietary License
 Classifier: Programming Language :: Rust
 Classifier: Programming Language :: Python :: Implementation :: CPython
@@ -10,11 +10,10 @@ Requires-Dist: patchelf>=0.17.2.2 ; sys_platform == 'linux'
 License-File: LICENSE
 Summary: <object-storage-proxy ⚡> Yet Another Object Storage Proxy
 Author-email: Jeroen <jeroen@flexworks.eu>
-License: Personal Use License
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
-Project-URL: Homepage, https://github.com/opensourceworks-org/object-storage-proxy
-Project-URL: Documentation, https://github.com/opensourceworks-org/object-storage-proxy/blob/main/README.md
+Project-URL: Homepage, https://osp.flexworks.eu
+Project-URL: Documentation, https://osp.flexworks.eu
 Project-URL: Repository, https://github.com/opensourceworks-org/object-storage-proxy/tree/main
 Project-URL: BugTracker, https://github.com/opensourceworks-org/object-storage-proxy/issues
 
@@ -388,8 +387,11 @@ See the included [python test script](https://github.com/opensourceworks-org/obj
 Create self-signed certificates and export the environment variables:
 
 ```bash
-openssl req -x509 -newkey rsa:4096 -sha256 -nodes \
-        -keyout key.pem -out cert.pem -days 365 -subj "/CN=localhost"
+openssl req -x509 -nodes -days 365 \
+  -newkey rsa:4096 \
+  -keyout key.pem \
+  -out cert.pem \
+  -config localhost.cnf
 ```
 
 ```bash
@@ -414,4 +416,6 @@ export TLS_KEY_PATH=/full/path/key.pem
 - [ ] also pass path and method to python callbacks and cache by token/bucket/path/method (identity based access/cache)
 - [x] option to disable upstream/peer certificate validation (for development, not production!)
 - [ ] expose pingora proxy server and services configuration to python
-- [x] drop proxy headers (x-forwarded-proto, x-forwarded-host, ..) for signing
+- [x] exclude proxy headers (x-forwarded-proto, x-forwarded-host, ..) for signing
+- [ ] https://github.com/aws/aws-cli/issues/9214 (workaround: export AWS_REQUEST_CHECKSUM_CALCULATION=WHEN_REQUIRED)
+- [ ] spark streaming writes 

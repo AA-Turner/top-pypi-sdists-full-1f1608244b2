@@ -5,6 +5,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
+from ...models.get_config_response_200 import GetConfigResponse200
 from ...types import Response
 
 
@@ -21,16 +22,27 @@ def _get_kwargs(
     }
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[Any]:
+def _parse_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Optional[Optional[GetConfigResponse200]]:
     if response.status_code == HTTPStatus.OK:
-        return None
+        _response_200 = response.json()
+        response_200: Optional[GetConfigResponse200]
+        if _response_200 is None:
+            response_200 = None
+        else:
+            response_200 = GetConfigResponse200.from_dict(_response_200)
+
+        return response_200
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
     else:
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[Any]:
+def _build_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Response[Optional[GetConfigResponse200]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -43,7 +55,7 @@ def sync_detailed(
     name: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[Any]:
+) -> Response[Optional[GetConfigResponse200]]:
     """get config
 
     Args:
@@ -54,7 +66,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Any]
+        Response[Optional[GetConfigResponse200]]
     """
 
     kwargs = _get_kwargs(
@@ -68,11 +80,11 @@ def sync_detailed(
     return _build_response(client=client, response=response)
 
 
-async def asyncio_detailed(
+def sync(
     name: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[Any]:
+) -> Optional[Optional[GetConfigResponse200]]:
     """get config
 
     Args:
@@ -83,7 +95,31 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Any]
+        Optional[GetConfigResponse200]
+    """
+
+    return sync_detailed(
+        name=name,
+        client=client,
+    ).parsed
+
+
+async def asyncio_detailed(
+    name: str,
+    *,
+    client: Union[AuthenticatedClient, Client],
+) -> Response[Optional[GetConfigResponse200]]:
+    """get config
+
+    Args:
+        name (str):
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
+
+    Returns:
+        Response[Optional[GetConfigResponse200]]
     """
 
     kwargs = _get_kwargs(
@@ -93,3 +129,29 @@ async def asyncio_detailed(
     response = await client.get_async_httpx_client().request(**kwargs)
 
     return _build_response(client=client, response=response)
+
+
+async def asyncio(
+    name: str,
+    *,
+    client: Union[AuthenticatedClient, Client],
+) -> Optional[Optional[GetConfigResponse200]]:
+    """get config
+
+    Args:
+        name (str):
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
+
+    Returns:
+        Optional[GetConfigResponse200]
+    """
+
+    return (
+        await asyncio_detailed(
+            name=name,
+            client=client,
+        )
+    ).parsed

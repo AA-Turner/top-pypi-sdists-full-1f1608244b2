@@ -701,9 +701,7 @@ class Tableview(ttk.Frame):
     def insert_row(self, index=END, values=[]) -> TableRow:
         """Insert a row into the tableview at index.
 
-        You must call `Tableview.load_table_data()` to update the
-        current view. If the data is filtered, you will need to call
-        `Tableview.load_table_data(clear_filters=True)`.
+        Inserting a row will reload the table data and clear the applied filters.
 
         Parameters:
 
@@ -729,7 +727,8 @@ class Tableview(ttk.Frame):
 
         # validate the index
         if len(values) == 0:
-            return
+            print('[TableView] Cannot insert. No values found.')
+            return None
         if index == END:
             index = -1
         elif index > rowcount - 1:
@@ -741,6 +740,8 @@ class Tableview(ttk.Frame):
         else:
             self._tablerows.insert(index, record)
 
+        self.load_table_data(self.is_filtered)
+
         return record
 
     def insert_rows(self, index, rowdata):
@@ -748,6 +749,10 @@ class Tableview(ttk.Frame):
         not exist then the records are appended to the end of the table.
         You can also use the string 'end' to append records at the end
         of the table.
+
+        Rows are inserted in reverse order.
+
+        Inserting rows will rebuild the table view and clear the filters.
 
         Parameters:
 
@@ -1026,7 +1031,10 @@ class Tableview(ttk.Frame):
     def unload_table_data(self):
         """Unload all data from the table"""
         for row in self.tablerows_visible:
-            row.hide()
+            tmp_row_id = row.iid
+            for tmp in self._tablerows:
+                if tmp_row_id == tmp.iid:
+                    row.hide()
         self.tablerows_visible.clear()
 
     def load_table_data(self, clear_filters=False):

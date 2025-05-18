@@ -13,10 +13,12 @@ from pymimir.pymimir.advanced.search import (
 # Common
 from pymimir.pymimir.advanced.search import (   
     BlindHeuristic,
+    is_applicable,
     IApplicableActionGenerator,
     IAxiomEvaluator,
     IHeuristic,
     Plan,
+    PartiallyOrderedPlan,
     SearchResult,
     State,
     StateList,

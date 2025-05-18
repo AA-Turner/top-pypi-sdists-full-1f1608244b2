@@ -72,6 +72,11 @@ _run_mode_to_channels = {
         "L1": "GDS-CALIB_STRAIN_INJ1_O3Replay",
         "V1": "Hrec_hoft_16384Hz_INJ1_O3Replay",
     },
+    "o4llpic": {
+        "H1": "GDS-CALIB_STRAIN_CLEAN_INJ1_O4Replay",
+        "L1": "GDS-CALIB_STRAIN_CLEAN_INJ1_O4Replay",
+        "V1": "Hrec_hoft_16384Hz_INJ1_O4Replay",
+    },
 }
 
 shm_basedir = "/dev/shm/kafka/"
@@ -83,6 +88,10 @@ _run_mode_to_shm_dir["online"] = {
 }
 _run_mode_to_shm_dir["o3replay"] = {
     ifo: os.path.join(shm_basedir, f"{ifo}_O3ReplayMDC")
+    for ifo in ["H1", "L1", "V1"]
+}
+_run_mode_to_shm_dir["o4llpic"] = {
+    ifo: os.path.join(shm_basedir, f"{ifo}_O4LLPIC")
     for ifo in ["H1", "L1", "V1"]
 }
 

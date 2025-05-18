@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: urllib3-future
-Version: 2.12.920
+Version: 2.12.921
 Summary: urllib3.future is a powerful HTTP 1.1, 2, and 3 client with both sync and async interfaces
 Project-URL: Changelog, https://github.com/jawah/urllib3.future/blob/main/CHANGES.rst
 Project-URL: Documentation, https://urllib3future.readthedocs.io
@@ -44,7 +44,7 @@ Requires-Dist: python-socks<=2.6.1,>=2.0; extra == 'socks'
 Provides-Extra: ws
 Requires-Dist: wsproto<2,>=1.2; extra == 'ws'
 Provides-Extra: zstd
-Requires-Dist: zstandard>=0.18.0; extra == 'zstd'
+Requires-Dist: zstandard>=0.18.0; (python_version < '3.14') and extra == 'zstd'
 Description-Content-Type: text/markdown
 
 <h1 align="center">

@@ -1,6 +1,13 @@
+from typing_extensions import Unpack
+
 import itables.options as opt
 
-from .javascript import generate_init_offline_itables_html, to_html_datatable
+from .javascript import (
+    generate_init_offline_itables_html,
+    set_caption_from_positional_args,
+    to_html_datatable,
+)
+from .typing import ITableOptions
 from .utils import read_package_file
 
 _CONNECTED = True
@@ -28,30 +35,27 @@ def init_itables(
     return html
 
 
-def DT(df, caption=None, table_id=None, **kwargs):
+def DT(df, *args, **kwargs: Unpack[ITableOptions]):
     """This is a version of 'to_html_datatable' that works in Shiny applications."""
-
+    kwargs["connected"] = kwargs.get("connected", _CONNECTED)
+    set_caption_from_positional_args(args, kwargs)
     html = to_html_datatable(
         df,
-        caption=caption,
-        table_id=table_id,
-        connected=_CONNECTED,
         **kwargs,
     )
 
     html = html.replace("<code>init_notebook_mode</code>", "<code>init_itables</code>")
 
-    if table_id is None:
+    if "table_id" not in kwargs:
         return html
 
     script_end = "\n    });\n</script>\n"
     assert html.endswith(script_end)
-    assert "let dt = new DataTable" in html
-    assert "let filtered_row_count =" in html
+    assert "let dt = new ITable" in html
 
     selected_rows_code = f"""
         function set_selected_rows_in_shiny(...args) {{
-            Shiny.setInputValue('{table_id}_selected_rows', DataTable.get_selected_rows(dt, filtered_row_count));
+            Shiny.setInputValue('{kwargs["table_id"]}_selected_rows', dt.selected_rows);
         }};
 
         set_selected_rows_in_shiny();

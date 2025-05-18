@@ -28,23 +28,22 @@ namespace mimir::search
 class Plan
 {
 private:
+    SearchContext m_context;
+    StateList m_states;
     formalism::GroundActionList m_actions;
     ContinuousCost m_cost;
 
 public:
-    Plan(formalism::GroundActionList actions, ContinuousCost cost);
+    Plan(SearchContext context, StateList states, formalism::GroundActionList actions, ContinuousCost cost);
 
+    const SearchContext& get_search_context() const;
+    const StateList& get_states() const;
     const formalism::GroundActionList& get_actions() const;
-
     ContinuousCost get_cost() const;
+    size_t get_length() const;
 };
-}
 
-namespace mimir
-{
-/// @brief Write the plan to an ostream.
-template<>
-std::ostream& operator<<(std::ostream& os, const std::tuple<const search::Plan&, const formalism::ProblemImpl&>& data);
+extern std::ostream& operator<<(std::ostream& os, const search::Plan& plan);
 
 }
 

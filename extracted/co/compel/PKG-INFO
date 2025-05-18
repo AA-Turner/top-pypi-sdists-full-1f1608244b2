@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: compel
-Version: 2.1.0
+Version: 2.1.1
 Summary: A prompting enhancement library for transformers-type text embedding systems.
 Author-email: Damian Stewart <null@damianstewart.com>
 Project-URL: Homepage, https://github.com/damian0815/compel
@@ -103,6 +103,8 @@ If this doesn't help, you could try this advice offered by @kshieh1:
 See https://github.com/damian0815/compel/issues/24 for more details. Thanks @kshieh1 !
 
 ## Changelog
+
+#### 2.1.1 - expose `split_long_text_mode` to top-level Compel, default to `SENTENCES`, fix bug where splitting would fail sometimes.
 
 ### 2.1.0 - add `split_long_text_mode` arg to control word splitting for long prompts when `truncate_long_prompts` is False. See `SplitLongTextMode`. Defaults to `WORDS`. 
 

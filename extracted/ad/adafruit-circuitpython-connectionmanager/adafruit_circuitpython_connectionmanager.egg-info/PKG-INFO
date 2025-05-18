@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: adafruit-circuitpython-connectionmanager
-Version: 3.1.3
+Version: 3.1.4
 Summary: A urllib3.poolmanager/urllib3.connectionpool-like library for managing sockets and connections
 Author-email: Adafruit Industries <circuitpython@adafruit.com>
 License: MIT
@@ -16,6 +16,7 @@ Description-Content-Type: text/x-rst
 License-File: LICENSE
 Requires-Dist: Adafruit-Blinka
 Provides-Extra: optional
+Dynamic: license-file
 
 Introduction
 ============
@@ -36,9 +37,9 @@ Introduction
     :alt: Build Status
 
 
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-    :target: https://github.com/psf/black
-    :alt: Code Style: Black
+.. image:: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json
+    :target: https://github.com/astral-sh/ruff
+    :alt: Code Style: Ruff
 
 A urllib3.poolmanager/urllib3.connectionpool-like library for managing sockets and connections
 

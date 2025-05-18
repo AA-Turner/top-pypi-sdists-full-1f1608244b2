@@ -2,9 +2,9 @@ import math
 
 import torch
 
-from pytorch_optimizer.base.exception import NoSparseGradientError
+from pytorch_optimizer.base.exception import NoComplexParameterError, NoSparseGradientError
 from pytorch_optimizer.base.optimizer import BaseOptimizer
-from pytorch_optimizer.base.type import BETAS, CLOSURE, DEFAULTS, LOSS, PARAMETERS
+from pytorch_optimizer.base.type import BETAS, CLOSURE, DEFAULTS, GROUP, LOSS, PARAMETERS
 from pytorch_optimizer.optimizer.galore_utils import GaLoreProjector
 
 
@@ -16,6 +16,7 @@ class GaLore(BaseOptimizer):
     :param betas: BETAS. coefficients used for computing running averages of gradient and the squared hessian trace.
     :param weight_decay: float. weight decay (L2 penalty).
     :param eps: float. term added to the denominator to improve numerical stability.
+    :param maximize: bool. maximize the objective with respect to the params, instead of minimizing.
     """
 
     def __init__(
@@ -25,12 +26,15 @@ class GaLore(BaseOptimizer):
         betas: BETAS = (0.9, 0.999),
         weight_decay: float = 0.0,
         eps: float = 1e-6,
+        maximize: bool = False,
         **kwargs,
     ):
         self.validate_learning_rate(lr)
         self.validate_betas(betas)
         self.validate_non_negative(weight_decay, 'weight_decay')
         self.validate_non_negative(eps, 'eps')
+
+        self.maximize = maximize
 
         defaults: DEFAULTS = {
             'lr': lr,
@@ -45,14 +49,17 @@ class GaLore(BaseOptimizer):
     def __str__(self) -> str:
         return 'GaLore'
 
-    @torch.no_grad()
-    def reset(self):
-        for group in self.param_groups:
-            for p in group['params']:
-                state = self.state[p]
+    def init_group(self, group: GROUP, **kwargs) -> None:
+        for p in group['params']:
+            if p.grad is None:
+                continue
 
-                state['exp_avg'] = torch.zeros_like(p)
-                state['exp_avg_sq'] = torch.zeros_like(p)
+            grad = p.grad
+            if grad.is_sparse:
+                raise NoSparseGradientError(str(self))
+
+            if torch.is_complex(p):
+                raise NoComplexParameterError(str(self))
 
     @torch.no_grad()
     def step(self, closure: CLOSURE = None) -> LOSS:
@@ -62,10 +69,11 @@ class GaLore(BaseOptimizer):
                 loss = closure()
 
         for group in self.param_groups:
-            if 'step' in group:
-                group['step'] += 1
-            else:
+            if 'step' not in group:
+                self.init_group(group)
                 group['step'] = 1
+            else:
+                group['step'] += 1
 
             beta1, beta2 = group['betas']
 
@@ -79,16 +87,12 @@ class GaLore(BaseOptimizer):
                     continue
 
                 grad = p.grad
-                if grad.is_sparse:
-                    raise NoSparseGradientError(str(self))
+
+                self.maximize_gradient(grad, maximize=self.maximize)
 
                 state = self.state[p]
 
-                if len(state) == 0:
-                    state['exp_avg'] = torch.zeros_like(p)
-                    state['exp_avg_sq'] = torch.zeros_like(p)
-
-                if 'rank' in group and p.dim() > 1:
+                if 'rank' in group and p.dim() == 2:
                     if 'projector' not in state:
                         state['projector'] = GaLoreProjector(
                             rank=group['rank'],
@@ -99,14 +103,9 @@ class GaLore(BaseOptimizer):
 
                     grad = state['projector'].project(grad, group['step'])
 
-                self.apply_weight_decay(
-                    p=p,
-                    grad=None,
-                    lr=group['lr'],
-                    weight_decay=group['weight_decay'],
-                    weight_decouple=True,
-                    fixed_decay=False,
-                )
+                if 'exp_avg' not in state:
+                    state['exp_avg'] = torch.zeros_like(grad)
+                    state['exp_avg_sq'] = torch.zeros_like(grad)
 
                 exp_avg, exp_avg_sq = state['exp_avg'], state['exp_avg_sq']
                 exp_avg.mul_(beta1).add_(grad, alpha=1.0 - beta1)
@@ -116,9 +115,18 @@ class GaLore(BaseOptimizer):
 
                 norm_grad = exp_avg / de_nom
 
-                if 'rank' in group and p.dim() > 1:
+                if 'rank' in group and p.dim() == 2:
                     norm_grad = state['projector'].project_back(norm_grad)
 
                 p.add_(norm_grad, alpha=-step_size)
+
+                self.apply_weight_decay(
+                    p=p,
+                    grad=grad,
+                    lr=group['lr'],
+                    weight_decay=group['weight_decay'],
+                    weight_decouple=True,
+                    fixed_decay=False,
+                )
 
         return loss
