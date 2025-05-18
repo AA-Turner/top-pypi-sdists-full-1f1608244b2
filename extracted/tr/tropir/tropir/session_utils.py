@@ -9,6 +9,7 @@ import httpx # Added for httpx patching
 from urllib.parse import urlparse # Added for URL parsing
 import inspect # Added for checking async functions
 import json # Added for JSON parsing and printing
+import asyncio # Added for async operations
 
 # Define thread-local storage
 _thread_local = threading.local()
@@ -16,6 +17,7 @@ _thread_local = threading.local()
 # Global dictionary to store cross-thread sessions by name
 # This will allow us to maintain session continuity between threads
 _global_sessions_by_name = {}
+_global_session_managers = {}
 
 # Global parent thread tracker
 _parent_thread_sessions = {}
@@ -23,6 +25,10 @@ _parent_thread_sessions = {}
 # Store original requests.Session.send method
 _original_requests_session_send = requests.Session.send
 _original_httpx_async_client_send = httpx.AsyncClient.send # Added for httpx
+
+# Default metadata endpoint
+TROPIR_ENV = os.environ.get("TROPIR_ENV", "dev")
+DEFAULT_METADATA_ENDPOINT = "http://api.tropir.com/api/v1/metadata" if TROPIR_ENV == "prod" else "http://localhost:8080/api/v1/metadata"
 
 # Initialize thread-local storage
 def _init_thread_local():
@@ -38,6 +44,203 @@ def _init_thread_local():
         _thread_local.patch_count = 0
     if not hasattr(_thread_local, 'httpx_patch_count'): # Added for httpx
         _thread_local.httpx_patch_count = 0
+    if not hasattr(_thread_local, 'manually_managed_sessions'):
+        _thread_local.manually_managed_sessions = {}
+    if not hasattr(_thread_local, 'tropir_api_key'):
+        _thread_local.tropir_api_key = os.environ.get("TROPIR_API_KEY")
+
+class SessionManager:
+    """
+    Manager class for Tropir sessions that provides methods for adding metadata steps.
+    Can be used as a context manager or directly accessed to add steps to an existing session.
+    """
+    def __init__(self, session_name=None):
+        self.session_name = session_name
+        self.session_id = None
+        self.is_context_manager = False
+        self.previous_stack = None
+        self.previous_session_name = None
+        
+        # If this is an existing session manager, retrieve it
+        if session_name and session_name in _global_session_managers:
+            existing_manager = _global_session_managers[session_name]
+            self.session_id = existing_manager.session_id
+            return
+            
+        # If session_name is provided, try to find an existing session ID
+        if session_name:
+            _init_thread_local()
+            # Check thread-local named sessions first
+            if session_name in _thread_local.named_sessions:
+                self.session_id = _thread_local.named_sessions[session_name]
+            # Then check global sessions by name
+            elif session_name in _global_sessions_by_name:
+                self.session_id = _global_sessions_by_name[session_name]
+                # Copy to thread-local too
+                _thread_local.named_sessions[session_name] = self.session_id
+            
+        # Store the manager in the global dict
+        if session_name:
+            _global_session_managers[session_name] = self
+    
+    def __enter__(self):
+        """Start the session when used as a context manager."""
+        _init_thread_local()
+        self.is_context_manager = True
+        self.previous_stack = list(_thread_local.session_stack)  # Create a copy of the stack
+        self.previous_session_name = _thread_local.current_session_name
+        
+        # If we don't have a session ID yet, generate one
+        if not self.session_id:
+            self.session_id = str(uuid.uuid4())
+            if self.session_name:
+                _thread_local.named_sessions[self.session_name] = self.session_id
+                _global_sessions_by_name[self.session_name] = self.session_id
+        
+        # Push session ID to the stack and set current session name
+        _thread_local.session_stack.append(self.session_id)
+        _thread_local.current_session_name = self.session_name
+        
+        # Register in parent thread sessions for inheritance by child threads
+        current_thread = threading.current_thread().name
+        _parent_thread_sessions[current_thread] = (self.session_id, self.session_name)
+        
+        _apply_requests_patch_if_needed() # Apply requests patch
+        _apply_httpx_patch_if_needed() # Apply httpx patch
+        logging.debug(f"Started session: {self.session_name or 'unnamed'} with ID: {self.session_id} on thread {current_thread}")
+        
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """End the session when the context manager exits."""
+        if not self.is_context_manager:
+            return
+            
+        # Restore previous stack state and session name
+        _thread_local.session_stack = self.previous_stack
+        _thread_local.current_session_name = self.previous_session_name
+        
+        current_thread = threading.current_thread().name
+        
+        # Update parent thread sessions register with previous state
+        if self.previous_session_name:
+            prev_id = _thread_local.named_sessions.get(self.previous_session_name)
+            if prev_id:
+                _parent_thread_sessions[current_thread] = (prev_id, self.previous_session_name)
+        elif not self.previous_stack and not self.previous_session_name:
+            # If we're ending all sessions, remove from parent thread register
+            if current_thread in _parent_thread_sessions:
+                del _parent_thread_sessions[current_thread]
+        
+        _revert_requests_patch_if_needed() # Revert requests patch
+        _revert_httpx_patch_if_needed() # Revert httpx patch
+        logging.debug(f"Ended session: {self.session_name or 'unnamed'} on thread {current_thread}")
+    
+    def add_step(self, data, step_name=None):
+        """
+        Add metadata as a step to the current session.
+        Works in both synchronous and asynchronous code.
+        
+        Args:
+            data: Any JSON-serializable data to be sent as metadata
+            step_name: Optional name for this step
+        
+        Returns:
+            Response from the metadata endpoint, or None if there was an error
+        """
+        # Ensure we have a session
+        if not self.session_id:
+            # Try to find an existing session by name
+            if self.session_name:
+                self.__init__(self.session_name)  # Re-initialize to find session
+            
+            # If we still don't have a session ID, get the current one
+            if not self.session_id:
+                current_session_id = get_session_id()
+                if current_session_id:
+                    self.session_id = current_session_id
+                else:
+                    logging.warning(f"Cannot add step: No active session found for {self.session_name or 'unnamed'}")
+                    return None
+        
+        # Prepare the payload
+        payload = {
+            "session_id": self.session_id,
+            "metadata": data
+        }
+        
+        if self.session_name:
+            payload["session_name"] = self.session_name
+            
+        if step_name:
+            payload["step_name"] = step_name
+        
+        # Determine the endpoint
+        endpoint = os.environ.get("TROPIR_METADATA_ENDPOINT", DEFAULT_METADATA_ENDPOINT)
+        
+        # Setup headers with Tropir headers
+        headers = {
+            "Content-Type": "application/json"
+        }
+        
+        # Add Tropir headers (including API key for target hosts)
+        _add_tropir_headers(headers, endpoint)
+        
+        # Check if we're in an async context
+        try:
+            loop = asyncio.get_running_loop()
+            is_async = True
+        except RuntimeError:
+            is_async = False
+        
+        # Handle synchronous case
+        if not is_async:
+            try:
+                # Use the patched requests library to send the metadata
+                # Create and prepare a Request object to properly use the patched send
+                req = requests.Request('POST', endpoint, json=payload, headers=headers)
+                prepared_req = req.prepare()
+                
+                logging.info(f"Tropir SessionManager: Sending metadata step (sync) to {endpoint}. Payload: {json.dumps(payload)}")
+                
+                # Use a session to send (will use the patched send method)
+                with requests.Session() as s:
+                    response = s.send(prepared_req)
+                
+                if response.status_code >= 400:
+                    logging.warning(f"Failed to send metadata: {response.status_code} - {response.text}")
+                else:
+                    logging.debug(f"Successfully sent metadata for session {self.session_name or 'unnamed'}")
+                    
+                return response
+            except Exception as e:
+                logging.warning(f"Error sending metadata: {str(e)}")
+                return None
+        
+        # Handle asynchronous case
+        else:
+            # Create a future that will call httpx in a thread to avoid blocking
+            async def _async_send():
+                try:
+                    # Create an httpx request to use the patched send method
+                    async with httpx.AsyncClient() as client:
+                        # httpx.Request will be processed by the patched send method
+                        logging.info(f"Tropir SessionManager: Sending metadata step (async) to {endpoint}. Payload: {json.dumps(payload)}")
+                        request = httpx.Request('POST', endpoint, json=payload, headers=headers)
+                        response = await client.send(request)
+                        
+                        if response.status_code >= 400:
+                            logging.warning(f"Failed to send metadata: {response.status_code} - {response.text}")
+                        else:
+                            logging.debug(f"Successfully sent metadata for session {self.session_name or 'unnamed'}")
+                            
+                        return response
+                except Exception as e:
+                    logging.warning(f"Error sending metadata: {str(e)}")
+                    return None
+            
+            # Return the coroutine - caller must await it if they care about response
+            return _async_send()
 
 def _add_tropir_headers(headers_obj, url_str):
     """Helper function to add all Tropir headers to a headers object."""
@@ -55,26 +258,24 @@ def _add_tropir_headers(headers_obj, url_str):
     else:
         logging.debug("Tropir Session: No active session name found, X-Session-Name header not added.")
 
-    tropir_api_key = os.environ.get("TROPIR_API_KEY")
+    tropir_api_key = getattr(_thread_local, 'tropir_api_key', None)
+    
+    # Determine if it's a target host for logging purposes (original logic retained for other potential uses)
     parsed_url = urlparse(url_str)
     hostname = parsed_url.hostname
     port = parsed_url.port
 
-    target_host = False
-    if (hostname == "api.tropir.com") or \
+    is_target_host_for_logging = (hostname == "api.tropir.com") or \
        (hostname == "localhost" and port == 8080) or \
-       (hostname == "host.docker.internal" and port == 8080):
-        target_host = True
+       (hostname == "host.docker.internal" and port == 8080)
 
-    if tropir_api_key and target_host:
+    if tropir_api_key:
         headers_obj["X-TROPIR-API-KEY"] = tropir_api_key
         logging.debug("Tropir Session: Added X-TROPIR-API-KEY to headers for URL: %s", url_str)
-    elif tropir_api_key:
-        logging.debug("Tropir Session: TROPIR_API_KEY found, but URL %s does not match target hosts. Skipping header.", url_str)
     else:
-        logging.debug("Tropir Session: TROPIR_API_KEY not found, skipping header.")
+        logging.debug("Tropir Session: TROPIR_API_KEY not found in thread local, skipping API key header for URL: %s", url_str)
     
-    return target_host # Return if it was a target host for logging body
+    return is_target_host_for_logging # Return original target_host status, mainly for _log_request_details
 
 def _log_request_details(url_str, headers_obj, body_content, content_type_str):
     """Helper function to log request details including headers and body."""
@@ -284,71 +485,50 @@ def clear_session_id():
     if current_thread in _parent_thread_sessions:
         del _parent_thread_sessions[current_thread]
 
-@contextmanager
 def session(session_name=None):
-    """Context manager for defining session boundaries.
+    """Create or access a session manager for the given session name.
+    
+    This can be used both as a context manager or to get a reference to
+    an existing session manager:
+    
+    # As a context manager:
+    with session("my_session") as s:
+        s.add_step({"key": "value"})
+    
+    # To access an existing session:
+    session("my_session").add_step({"key": "value"})
     
     Args:
         session_name: Optional name for the session. If provided and this
                      session has been used before, the same session ID will be reused.
+                     
+    Returns:
+        SessionManager: A manager for the session that can be used to add metadata steps.
     """
-    _init_thread_local()
-    previous_stack = list(_thread_local.session_stack)  # Create a copy of the stack
-    previous_session_name = _thread_local.current_session_name
-    
-    # Generate or retrieve session ID
-    # First check thread-local named sessions
-    if session_name and session_name in _thread_local.named_sessions:
-        session_id = _thread_local.named_sessions[session_name]
-    # Then check global sessions by name
-    elif session_name and session_name in _global_sessions_by_name:
-        session_id = _global_sessions_by_name[session_name]
-        # Copy to thread-local too
-        _thread_local.named_sessions[session_name] = session_id
-    else:
-        session_id = str(uuid.uuid4())
-        if session_name:
-            _thread_local.named_sessions[session_name] = session_id
-            _global_sessions_by_name[session_name] = session_id
-    
-    # Push session ID to the stack and set current session name
-    _thread_local.session_stack.append(session_id)
-    _thread_local.current_session_name = session_name
-    
-    # Register in parent thread sessions for inheritance by child threads
-    current_thread = threading.current_thread().name
-    _parent_thread_sessions[current_thread] = (session_id, session_name)
-    
-    _apply_requests_patch_if_needed() # Apply requests patch
-    _apply_httpx_patch_if_needed() # Apply httpx patch
-    logging.debug(f"Started session: {session_name or 'unnamed'} with ID: {session_id} on thread {current_thread}")
-    
-    try:
-        yield session_id
-    finally:
-        # Restore previous stack state and session name
-        _thread_local.session_stack = previous_stack
-        _thread_local.current_session_name = previous_session_name
-        
-        # Update parent thread sessions register with previous state
-        if previous_session_name:
-            prev_id = _thread_local.named_sessions.get(previous_session_name)
-            if prev_id:
-                _parent_thread_sessions[current_thread] = (prev_id, previous_session_name)
-        elif not previous_stack and not previous_session_name:
-            # If we're ending all sessions, remove from parent thread register
-            if current_thread in _parent_thread_sessions:
-                del _parent_thread_sessions[current_thread]
-        
-        _revert_requests_patch_if_needed() # Revert requests patch
-        _revert_httpx_patch_if_needed() # Revert httpx patch
-        logging.debug(f"Ended session: {session_name or 'unnamed'} on thread {current_thread}")
+    return SessionManager(session_name)
 
 def begin_session(session_name_or_func=None):
     """Decorator or function to begin a session.
     
-    This can be used as a decorator around a function or as a function call
-    to mark the beginning of a session.
+    This can be used as:
+    
+    1. A decorator around a function:
+       @begin_session
+       def my_func():
+           # Do something
+           session(None).add_step({"data": "value"})  # Add step to unnamed session
+    
+    2. A decorator with a session name:
+       @begin_session("my_session")
+       def my_func():
+           # Do something
+           session("my_session").add_step({"data": "value"})
+    
+    3. A direct function call to start a session:
+       begin_session("my_session")
+       # Later:
+       session("my_session").add_step({"data": "value"})
+       end_session("my_session")  # End the session
     
     Args:
         session_name_or_func: Optional name for the session, or the function to decorate.
@@ -368,13 +548,13 @@ def begin_session(session_name_or_func=None):
         if inspect.iscoroutinefunction(func_to_decorate):
             @functools.wraps(func_to_decorate)
             async def async_wrapper(*args, **kwargs):
-                with session(session_name_to_use):
+                with SessionManager(session_name_to_use) as session_manager:
                     return await func_to_decorate(*args, **kwargs)
             return async_wrapper
         else:
             @functools.wraps(func_to_decorate)
             def sync_wrapper(*args, **kwargs):
-                with session(session_name_to_use):
+                with SessionManager(session_name_to_use) as session_manager:
                     return func_to_decorate(*args, **kwargs)
             return sync_wrapper
 
@@ -393,50 +573,35 @@ def begin_session(session_name_or_func=None):
             if inspect.iscoroutinefunction(func_to_decorate):
                 @functools.wraps(func_to_decorate)
                 async def async_wrapper(*args, **kwargs):
-                    with session(actual_session_name):
+                    with SessionManager(actual_session_name) as session_manager:
                         return await func_to_decorate(*args, **kwargs)
                 return async_wrapper
             else:
                 @functools.wraps(func_to_decorate)
                 def sync_wrapper(*args, **kwargs):
-                    with session(actual_session_name):
+                    with SessionManager(actual_session_name) as session_manager:
                         return func_to_decorate(*args, **kwargs)
                 return sync_wrapper
         
         # If begin_session("some_name") was called directly, this part also starts the session.
         if isinstance(session_name_from_call, str):
-            # Logic to immediately start a session if begin_session("name") is called directly.
-            # This is copied and adapted from the original function's behavior.
+            # Create a session manager and start the session
+            session_manager = SessionManager(session_name_from_call)
+            session_manager.__enter__()
             
-            # Ensure _thread_local attributes exist if not already (though _init_thread_local should handle it)
-            if not hasattr(_thread_local, 'named_sessions'): _thread_local.named_sessions = {}
-            if not hasattr(_thread_local, 'session_stack'): _thread_local.session_stack = []
-
-            session_id_to_start = None
-            if session_name_from_call in _thread_local.named_sessions:
-                session_id_to_start = _thread_local.named_sessions[session_name_from_call]
-            elif session_name_from_call in _global_sessions_by_name:
-                session_id_to_start = _global_sessions_by_name[session_name_from_call]
-                _thread_local.named_sessions[session_name_from_call] = session_id_to_start # copy to thread-local
-            else:
-                session_id_to_start = str(uuid.uuid4())
-                _thread_local.named_sessions[session_name_from_call] = session_id_to_start
-                _global_sessions_by_name[session_name_from_call] = session_id_to_start
+            # Store the session manager in thread-local storage for end_session to use
+            _thread_local.manually_managed_sessions[session_name_from_call] = session_manager
             
-            _thread_local.session_stack.append(session_id_to_start)
-            _thread_local.current_session_name = session_name_from_call
-            
-            current_thread_name = threading.current_thread().name
-            _parent_thread_sessions[current_thread_name] = (session_id_to_start, session_name_from_call)
-            
-            _apply_requests_patch_if_needed()
-            _apply_httpx_patch_if_needed() # Apply httpx patch
-            logging.debug(f"Started session: {session_name_from_call} with ID: {session_id_to_start} on thread {current_thread_name} (via direct begin_session call)")
+            logging.debug(f"Started session: {session_name_from_call} with ID: {session_manager.session_id} (via direct begin_session call)")
 
         return decorator_factory
 
 def end_session(session_name=None):
     """Function to end a session.
+    
+    This is primarily used to end sessions started by direct calls to begin_session.
+    For sessions started using the context manager or decorator, the session will
+    be ended automatically.
     
     Args:
         session_name: Optional name of the session to end. If not provided,
@@ -446,6 +611,16 @@ def end_session(session_name=None):
     
     current_thread = threading.current_thread().name
     
+    # First check for manually managed sessions
+    if hasattr(_thread_local, 'manually_managed_sessions') and session_name in _thread_local.manually_managed_sessions:
+        session_manager = _thread_local.manually_managed_sessions[session_name]
+        session_id = session_manager.session_id
+        session_manager.__exit__(None, None, None)
+        del _thread_local.manually_managed_sessions[session_name]
+        logging.debug(f"Ended manually managed session: {session_name} with ID: {session_id} on thread {current_thread}")
+        return
+    
+    # Otherwise, handle traditional session stack
     if _thread_local.session_stack:
         session_id = _thread_local.session_stack.pop()
         # Clear current session name if it matches the ended session

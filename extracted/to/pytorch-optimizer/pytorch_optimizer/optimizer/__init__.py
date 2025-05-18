@@ -21,7 +21,7 @@ from pytorch_optimizer.optimizer.adam_mini import AdamMini
 from pytorch_optimizer.optimizer.adamax import AdaMax
 from pytorch_optimizer.optimizer.adamg import AdamG
 from pytorch_optimizer.optimizer.adamod import AdaMod
-from pytorch_optimizer.optimizer.adamp import AdamP
+from pytorch_optimizer.optimizer.adamp import SGDP, AdamP
 from pytorch_optimizer.optimizer.adams import AdamS
 from pytorch_optimizer.optimizer.adamw import StableAdamW
 from pytorch_optimizer.optimizer.adan import Adan
@@ -45,6 +45,7 @@ from pytorch_optimizer.optimizer.diffgrad import DiffGrad
 from pytorch_optimizer.optimizer.exadam import EXAdam
 from pytorch_optimizer.optimizer.experimental.ranger25 import Ranger25
 from pytorch_optimizer.optimizer.fadam import FAdam
+from pytorch_optimizer.optimizer.fira import Fira
 from pytorch_optimizer.optimizer.focus import FOCUS
 from pytorch_optimizer.optimizer.fp16 import DynamicLossScaler, SafeFP16Optimizer
 from pytorch_optimizer.optimizer.fromage import Fromage
@@ -76,6 +77,7 @@ from pytorch_optimizer.optimizer.prodigy import Prodigy
 from pytorch_optimizer.optimizer.psgd import Kron
 from pytorch_optimizer.optimizer.qhadam import QHAdam
 from pytorch_optimizer.optimizer.qhm import QHM
+from pytorch_optimizer.optimizer.racs import RACS, Alice
 from pytorch_optimizer.optimizer.radam import RAdam
 from pytorch_optimizer.optimizer.ranger import Ranger
 from pytorch_optimizer.optimizer.ranger21 import Ranger21
@@ -88,8 +90,7 @@ from pytorch_optimizer.optimizer.schedulefree import (
     ScheduleFreeWrapper,
 )
 from pytorch_optimizer.optimizer.scion import SCION, SCIONLight
-from pytorch_optimizer.optimizer.sgd import ASGD, SGDW, AccSGD, SGDSaI, SignSGD
-from pytorch_optimizer.optimizer.sgdp import SGDP
+from pytorch_optimizer.optimizer.sgd import ASGD, SGDW, VSGD, AccSGD, SGDSaI, SignSGD
 from pytorch_optimizer.optimizer.shampoo import ScalableShampoo, Shampoo
 from pytorch_optimizer.optimizer.sm3 import SM3
 from pytorch_optimizer.optimizer.soap import SOAP
@@ -313,6 +314,10 @@ OPTIMIZER_LIST: List[OPTIMIZER] = [
     StableSPAM,
     AdaGC,
     Ranger25,
+    Fira,
+    RACS,
+    Alice,
+    VSGD,
 ]
 OPTIMIZERS: Dict[str, OPTIMIZER] = {str(optimizer.__name__).lower(): optimizer for optimizer in OPTIMIZER_LIST}
 

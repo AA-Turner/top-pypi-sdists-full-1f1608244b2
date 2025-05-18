@@ -3,6 +3,7 @@ import string
 from datetime import datetime, timedelta
 from functools import lru_cache
 from itertools import cycle
+from typing import cast
 
 import numpy as np
 import pandas as pd
@@ -37,7 +38,7 @@ if PANDAS_VERSION_MAJOR == 2 and PANDAS_VERSION_MINOR == 1:
     COLUMN_TYPES = [type for type in COLUMN_TYPES if type != "timedelta"]
 
 
-def get_countries(html=True):
+def get_countries(html: bool = True, climate_zone: bool = False):
     """A Pandas DataFrame with the world countries (from the world bank data)
     Flags are loaded from https://flagpedia.net/"""
     df = pd.read_csv(find_package_file("samples/countries.csv"))
@@ -48,23 +49,38 @@ def get_countries(html=True):
     ].dropna()
     df.index.name = "code"
 
-    if not html:
-        return df
+    if html:
+        df["flag"] = [
+            '<a href="https://flagpedia.net/{code}">'
+            '<img src="https://flagpedia.net/data/flags/h80/{code}.webp" '
+            'alt="Flag of {country}"></a>'.format(
+                code=cast(str, code).lower(), country=country
+            )
+            for code, country in zip(df.index, df["country"])
+        ]
+        df["country"] = [
+            '<a href="https://en.wikipedia.org/wiki/{}">{}</a>'.format(country, country)
+            for country in df["country"]
+        ]
+        df["capital"] = [
+            '<a href="https://en.wikipedia.org/wiki/{}">{}</a>'.format(capital, capital)
+            for capital in df["capital"]
+        ]
 
-    df["flag"] = [
-        '<a href="https://flagpedia.net/{code}">'
-        '<img src="https://flagpedia.net/data/flags/h80/{code}.webp" '
-        'alt="Flag of {country}"></a>'.format(code=code.lower(), country=country)
-        for code, country in zip(df.index, df["country"])
-    ]
-    df["country"] = [
-        '<a href="https://en.wikipedia.org/wiki/{}">{}</a>'.format(country, country)
-        for country in df["country"]
-    ]
-    df["capital"] = [
-        '<a href="https://en.wikipedia.org/wiki/{}">{}</a>'.format(capital, capital)
-        for capital in df["capital"]
-    ]
+    # Add columns for the searchPanes demo
+    if climate_zone:
+        df["climate_zone"] = np.where(
+            df["latitude"].abs() < 23.43615,
+            "Tropical",
+            np.where(
+                df["latitude"].abs() < 35,
+                "Sub-tropical",
+                # Artic circle is 66.563861 but there is no capital there => using 64
+                np.where(df["latitude"].abs() < 64, "Temperate", "Frigid"),
+            ),
+        )
+        df["hemisphere"] = np.where(df["latitude"] > 0, "North", "South")
+
     return df
 
 
@@ -166,7 +182,7 @@ def get_dict_of_test_dfs(N=100, M=100, polars=False):
                 "timedelta": [
                     timedelta(days=2),
                     timedelta(seconds=50),
-                    pd.NaT - datetime(2000, 1, 1),
+                    pd.NaT - datetime(2000, 1, 1),  # type: ignore
                 ],
             }
         ),
@@ -242,18 +258,20 @@ def get_dict_of_test_dfs(N=100, M=100, polars=False):
             np.arange(4, 8).reshape((2, 2)),
             columns=pd.Index(["A", "A"]),
             index=pd.MultiIndex.from_arrays(
-                np.arange(4).reshape((2, 2)), names=["A", "A"]
+                np.arange(4).reshape((2, 2)), names=["A", "A"]  # type: ignore
             ),
         ),
         "named_column_index": pd.DataFrame({"a": [1]}).rename_axis("columns", axis=1),
         "big_integers": pd.DataFrame(
             {
                 "bigint": [
+                    -1234567890123456789,
                     1234567890123456789,
                     2345678901234567890,
                     3456789012345678901,
                 ],
                 "expected": [
+                    "-1234567890123456789",
                     "1234567890123456789",
                     "2345678901234567890",
                     "3456789012345678901",
@@ -273,7 +291,7 @@ def get_dict_of_test_dfs(N=100, M=100, polars=False):
                 # ValueError: Pandas dataframe contains non-unique indices and/or column names.
                 # Polars dataframes require unique string names for columns.
                 # See https://github.com/pola-rs/polars/issues/18130
-                df.index = df.index.tolist()
+                df.index = df.index.tolist()  # type: ignore
             try:
                 polars_dfs[key] = pl.from_pandas(df)
             except (pa.ArrowInvalid, ValueError):
@@ -329,14 +347,14 @@ def generate_random_series(rows, type):
         return pd.Series(np.random.binomial(n=1, p=0.5, size=rows), dtype=bool)
     if type == "boolean":
         x = generate_random_series(rows, "bool").astype(type)
-        x.loc[np.random.binomial(n=1, p=0.1, size=rows) == 0] = pd.NA
+        x.loc[np.random.binomial(n=1, p=0.1, size=rows) == 0] = pd.NA  # type: ignore
         return x
     if type == "int":
         return pd.Series(np.random.geometric(p=0.1, size=rows), dtype=int)
     if type == "Int64":
         x = generate_random_series(rows, "int").astype(type)
-        if PANDAS_VERSION_MAJOR >= 1:
-            x.loc[np.random.binomial(n=1, p=0.1, size=rows) == 0] = pd.NA
+        if int(PANDAS_VERSION_MAJOR) >= 1:
+            x.loc[np.random.binomial(n=1, p=0.1, size=rows) == 0] = pd.NA  # type: ignore
         return x
     if type == "float":
         x = pd.Series(np.random.normal(size=rows), dtype=float)
@@ -351,7 +369,7 @@ def generate_random_series(rows, type):
         return pd.Series(x, dtype="category")
     if type == "date":
         x = generate_date_series().sample(rows, replace=True)
-        x.loc[np.random.binomial(n=1, p=0.1, size=rows) == 0] = pd.NaT
+        x.loc[np.random.binomial(n=1, p=0.1, size=rows) == 0] = pd.NaT  # type: ignore
         return x
     if type == "datetime":
         x = generate_random_series(rows, "date") + np.random.uniform(
@@ -394,11 +412,7 @@ def get_pandas_styler():
     s = df.style
     s.background_gradient(axis=None, cmap="YlOrRd")
     s.format("{:.3f}")
-    try:
-        s.format_index("{:.3f}")
-    except AttributeError:
-        # Python 3.7 AttributeError: 'Styler' object has no attribute 'format_index'
-        pass
+    s.format_index("{:.3f}")
 
     s.set_caption(
         "A Pandas Styler object with background colors and tooltips"

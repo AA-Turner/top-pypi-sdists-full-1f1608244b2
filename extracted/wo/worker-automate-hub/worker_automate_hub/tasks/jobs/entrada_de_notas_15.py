@@ -76,12 +76,14 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
         # Fecha a instancia do emsys - caso esteja aberta
         await kill_all_emsys()
 
-        #Verifica se a nota ja foi lançada
+        # Verifica se a nota ja foi lançada
         console.print("\nVerifica se a nota ja foi lançada...")
         nf_chave_acesso = int(nota.get("nfe"))
         status_nf_emsys = await get_status_nf_emsys(nf_chave_acesso)
         if status_nf_emsys.get("status") == "Lançada":
-            console.print("\nNota ja lançada, processo finalizado...", style="bold green")
+            console.print(
+                "\nNota ja lançada, processo finalizado...", style="bold green"
+            )
             return RpaRetornoProcessoDTO(
                 sucesso=False,
                 retorno="Nota já lançada",
@@ -162,7 +164,7 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
                 sucesso=False,
                 retorno=imported_nfe.retorno,
                 status=RpaHistoricoStatusEnum.Falha,
-                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
+                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
             )
 
         await worker_sleep(10)
@@ -190,7 +192,7 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
                     sucesso=False,
                     retorno=warning_work.retorno,
                     status=RpaHistoricoStatusEnum.Falha,
-                    tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
+                    tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
                 )
 
         # VERIFICANDO A EXISTENCIA DE ERRO
@@ -201,7 +203,7 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
                 sucesso=error_work.sucesso,
                 retorno=error_work.retorno,
                 status=error_work.status,
-                tags=error_work.tags
+                tags=error_work.tags,
             )
 
         # Deleta o xml
@@ -225,7 +227,6 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
             console.print(
                 f"A chave recebimentoFisico não está presente na config de entrada...\n"
             )
-
 
         combo_box_natureza_operacao = main_window.child_window(
             class_name="TDBIComboBox", found_index=0
@@ -256,28 +257,39 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
                     await worker_sleep(2)
 
                     console.print(f"Obtendo item com multiplas referências...\n")
-                    console.print(f"Tirando print da janela para realização do OCR...\n")
+                    console.print(
+                        f"Tirando print da janela para realização do OCR...\n"
+                    )
 
                     text_captured = False
                     count_while = 0
                     max_attempts = 3
-                    item_da_nota = ''
+                    item_da_nota = ""
 
                     while count_while < max_attempts:
                         window_rect = window.rectangle()
-                        console.print(f"Area que sera utulizada para o screenshot {window_rect}...\n")
+                        console.print(
+                            f"Area que sera utulizada para o screenshot {window_rect}...\n"
+                        )
                         screenshot = window.capture_as_image()
 
                         username = getpass.getuser()
-                        short_uuid = str(uuid.uuid4()).replace('-', '')[:6]
-                        path_to_png = f"C:\\Users\\{username}\\Downloads\\{short_uuid}.png"
+                        short_uuid = str(uuid.uuid4()).replace("-", "")[:6]
+                        path_to_png = (
+                            f"C:\\Users\\{username}\\Downloads\\{short_uuid}.png"
+                        )
                         screenshot.save(path_to_png)
-                        while not os.path.exists(path_to_png) or os.path.getsize(path_to_png) == 0:
+                        while (
+                            not os.path.exists(path_to_png)
+                            or os.path.getsize(path_to_png) == 0
+                        ):
                             time.sleep(0.1)
                         console.print(f"Print salvo em {path_to_png}...\n")
 
                         await worker_sleep(2)
-                        console.print("Preparando a imagem para maior resolução e assertividade no OCR...\n")
+                        console.print(
+                            "Preparando a imagem para maior resolução e assertividade no OCR...\n"
+                        )
                         image = Image.open(path_to_png)
                         image = image.convert("L")
                         enhancer = ImageEnhance.Contrast(image)
@@ -290,36 +302,52 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
 
                         console.print("Realizando OCR...\n")
                         captured_text = pytesseract.image_to_string(image)
-                        console.print(f"Texto Full capturado {captured_text}, tentando obter o item da nota...\n")
+                        console.print(
+                            f"Texto Full capturado {captured_text}, tentando obter o item da nota...\n"
+                        )
 
                         match = re.search(r"Item da Nota:\s*(.*)\s*", captured_text)
                         if os.path.exists(path_to_png):
                             os.remove(path_to_png)
-                            console.print(f"Imagem apagada com sucesso do diretorio {path_to_png}... \n")
+                            console.print(
+                                f"Imagem apagada com sucesso do diretorio {path_to_png}... \n"
+                            )
                         else:
-                            console.print(f"Imagem não encontrada para realização do OCR... \n")
+                            console.print(
+                                f"Imagem não encontrada para realização do OCR... \n"
+                            )
 
                         console.print(f"Texto extraido do RegEx: {match}... \n")
                         if match:
                             item_da_nota = match.group(1).strip()
-                            console.print(f"Item da Nota capturado: {item_da_nota}... \n")
+                            console.print(
+                                f"Item da Nota capturado: {item_da_nota}... \n"
+                            )
                             text_captured = True
                             break
                         else:
                             if match:
                                 item_da_nota = match.group(1).strip()
-                                console.print(f"Item da Nota capturado: {item_da_nota}... \n")
+                                console.print(
+                                    f"Item da Nota capturado: {item_da_nota}... \n"
+                                )
                                 text_captured = True
                                 break
                             else:
-                                match = re.search(r"Item da (Nota|Nata|N0ta)\s*(.*)\s*", captured_text)
+                                match = re.search(
+                                    r"Item da (Nota|Nata|N0ta)\s*(.*)\s*", captured_text
+                                )
                                 if match:
                                     item_da_nota = match.group(1).strip()
-                                    console.print(f"Item da Nota capturado: {item_da_nota}... \n")
+                                    console.print(
+                                        f"Item da Nota capturado: {item_da_nota}... \n"
+                                    )
                                     text_captured = True
                                     break
                                 else:
-                                    console.print(f"Tentativa {count_while + 1} de {max_attempts} falhou. Tentando novamente...\n")
+                                    console.print(
+                                        f"Tentativa {count_while + 1} de {max_attempts} falhou. Tentando novamente...\n"
+                                    )
                                     count_while += 1
 
                     if not text_captured:
@@ -327,7 +355,7 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
                             sucesso=False,
                             retorno="Quantidade de tentativa atingida (3), não foi possivel capturar o item da nota com multiplas referencias para andamento no processo",
                             status=RpaHistoricoStatusEnum.Falha,
-                            tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
+                            tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
                         )
 
                     console.print(
@@ -423,11 +451,13 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
                     sucesso=False,
                     retorno=f"Não foi possivel encontrar o item mais proximo ao item da nota com multiplas referencias {itens_nao_semelhantes}",
                     status=RpaHistoricoStatusEnum.Falha,
-                    tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
+                    tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
                 )
         except Exception as error:
-            console.print("Erro durante a trativa de multiplas referencias, erro : {error}")
-            
+            console.print(
+                "Erro durante a trativa de multiplas referencias, erro : {error}"
+            )
+
         await worker_sleep(3)
 
         # INTERAGINDO COM O CAMPO ALMOXARIFADO
@@ -457,12 +487,14 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
 
             await worker_sleep(1)
             i += 1
-        
+
         await worker_sleep(2)
 
         try:
             console.print("Verificando itens não localizados ou NCM...\n")
-            itens_by_supplier = await is_window_open_by_class("TFrmAguarde", "TMessageForm")
+            itens_by_supplier = await is_window_open_by_class(
+                "TFrmAguarde", "TMessageForm"
+            )
 
             if itens_by_supplier["IsOpened"] == True:
                 itens_by_supplier_work = await itens_not_found_supplier(nota.get("nfe"))
@@ -475,7 +507,7 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
                 sucesso=False,
                 retorno=f"Falha ao verificar a existência de POP-UP de itens não localizados: {error}",
                 status=RpaHistoricoStatusEnum.Falha,
-                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
+                tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
             )
 
         await worker_sleep(3)
@@ -506,7 +538,9 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
 
         panel_TabPagamento = panel_TTabSheet.child_window(class_name="TTabSheet")
 
-        panel_TabPagamentoCaixa = panel_TTabSheet.child_window(title="Pagamento Pelo Caixa")
+        panel_TabPagamentoCaixa = panel_TTabSheet.child_window(
+            title="Pagamento Pelo Caixa"
+        )
 
         tipo_cobranca = panel_TabPagamentoCaixa.child_window(
             class_name="TDBIComboBox", found_index=0
@@ -518,7 +552,7 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
             set_combobox("||List", "BANCO DO BRASIL BOLETO")
         except:
             set_combobox("||List", "BOLETO")
-        
+
         await emsys.inserir_vencimento_e_valor(
             nota.get("nomeFornecedor"),
             nota.get("dataEmissao"),
@@ -582,13 +616,13 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
                             sucesso=False,
                             retorno=observacao,
                             status=RpaHistoricoStatusEnum.Falha,
-                            tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
+                            tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
                         )
             else:
                 console.print(f"Aguardando confirmação de nota incluida...\n")
                 await worker_sleep(5)
                 i += 1
-        
+
         await worker_sleep(15)
         console.print("\nVerifica se a nota ja foi lançada...")
         nf_chave_acesso = int(nota.get("nfe"))
@@ -597,7 +631,7 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
             return RpaRetornoProcessoDTO(
                 sucesso=False,
                 retorno=f"Erro ao lançar nota",
-                status=RpaHistoricoStatusEnum.Descartado,
+                status=RpaHistoricoStatusEnum.Falha,
             )
         else:
             nf_imported = await check_nota_importada(nota.get("nfe"))
@@ -606,7 +640,10 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
                 console.print("\nVerifica se a nota ja foi lançada...")
                 status_nf_emsys = await get_status_nf_emsys(nf_chave_acesso)
                 if status_nf_emsys.get("status") == "Lançada":
-                    console.print("\nNota lançada com sucesso, processo finalizado...", style="bold green")
+                    console.print(
+                        "\nNota lançada com sucesso, processo finalizado...",
+                        style="bold green",
+                    )
                     return RpaRetornoProcessoDTO(
                         sucesso=True,
                         retorno="Nota Lançada com sucesso!",
@@ -618,7 +655,7 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
                         sucesso=False,
                         retorno=f"Pop-up nota incluida encontrada, porém nota encontrada como 'já lançada' trazendo as seguintes informações: {nf_imported.retorno} - {error_work}",
                         status=RpaHistoricoStatusEnum.Falha,
-                        tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)]
+                        tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)],
                     )
             else:
                 console.print("Erro ao lançar nota", style="bold red")
@@ -626,9 +663,9 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
                     sucesso=False,
                     retorno=f"Erro ao lançar nota, erro: {nf_imported.retorno}",
                     status=RpaHistoricoStatusEnum.Falha,
-                    tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
+                    tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
                 )
-    
+
     except Exception as ex:
         observacao = f"Erro Processo Entrada de Notas: {str(ex)}"
         logger.error(observacao)
@@ -637,5 +674,5 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
             sucesso=False,
             retorno=observacao,
             status=RpaHistoricoStatusEnum.Falha,
-            tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
+            tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
         )

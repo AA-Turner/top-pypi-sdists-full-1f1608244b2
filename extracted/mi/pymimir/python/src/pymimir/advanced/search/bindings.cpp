@@ -319,16 +319,20 @@ void bind_module_definitions(nb::module_& m)
 
     /* Plan */
     nb::class_<Plan>(m, "Plan")  //
-        .def("to_string",
-             [](const Plan& self, const ProblemImpl& problem)
-             {
-                 std::stringstream ss;
-                 mimir::operator<<(ss, std::make_tuple(std::cref(self), std::cref(problem)));
-                 return ss.str();
-             })
-        .def("__len__", [](const Plan& arg) { return arg.get_actions().size(); })
-        .def("get_actions", &Plan::get_actions)
+        .def(nb::init<SearchContext, StateList, GroundActionList, ContinuousCost>(), "search_context"_a, "states"_a, "actions"_a, "cost"_a)
+        .def("__str__", [](const Plan& self) { return to_string(self); })
+        .def("__len__", &Plan::get_length)
+        .def("get_search_context", &Plan::get_search_context)
+        .def("get_states", &Plan::get_states, nb::rv_policy::copy)
+        .def("get_actions", &Plan::get_actions, nb::rv_policy::copy)
         .def("get_cost", &Plan::get_cost);
+
+    /* PartiallyOrderedPlan*/
+    nb::class_<PartiallyOrderedPlan>(m, "PartiallyOrderedPlan")  //
+        .def(nb::init<Plan>(), "total_ordered_plan"_a)
+        .def("compute_totally_ordered_plan_with_maximal_makespan", &PartiallyOrderedPlan::compute_t_o_plan_with_maximal_makespan)
+        .def("get_totally_ordered_plan", &PartiallyOrderedPlan::get_t_o_plan, nb::rv_policy::reference_internal)  // Plan is immutable
+        .def("get_graph", [](const PartiallyOrderedPlan& self) { return PyImmutable<graphs::DynamicDigraph>(self.get_graph()); });
 
     /* ConjunctiveConditionSatisficingBindingGenerator */
     nb::class_<ConjunctiveConditionSatisficingBindingGenerator>(m, "ConjunctiveConditionSatisficingBindingGenerator")  //
@@ -404,6 +408,12 @@ void bind_module_definitions(nb::module_& m)
             "max_num_groundings"_a);
 
     /* ApplicableActionGenerators */
+    m.def("is_applicable",
+          nb::overload_cast<formalism::GroundAction, const formalism::ProblemImpl&, State>(&search::is_applicable),
+          "action"_a,
+          "problem"_a,
+          "state"_a);
+
     nb::class_<IApplicableActionGenerator>(m, "IApplicableActionGenerator")
         .def("get_problem", &IApplicableActionGenerator::get_problem)
         .def(

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: alita_tools
-Version: 0.3.171
+Version: 0.3.172
 Summary: Default set of tools and toolkits available within ELITEA Agents.
 Author-email: Artem Rozumenko <support@projectalita.ai>, Artem Dubrovskii <artem_dubrovskii@epam.com>
 Project-URL: Homepage, https://projectalita.ai
@@ -66,6 +66,8 @@ Requires-Dist: pypdf2~=3.0.1
 Requires-Dist: astor~=0.8.1
 Requires-Dist: opencv-python==4.11.0.86
 Requires-Dist: python-pptx==1.0.2
+Requires-Dist: factor_analyzer==0.5.1
+Requires-Dist: statsmodels==0.14.4
 Dynamic: license-file
 
 # application-tools

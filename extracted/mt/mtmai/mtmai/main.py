@@ -113,8 +113,7 @@ def mcpserver():
 
 @app.command()
 def setup():
-  install1 = "sudo apt install -yqq ffmpeg imagemagick"
-  os.system(install1)
+  os.system("sudo apt install -yqq ffmpeg imagemagick")
 
   os.system("apt-get install -y libpq-dev")
 
@@ -137,6 +136,11 @@ uv pip install torch
 uv sync
 """
   os.system(commamd_line)
+
+
+@app.command()
+def setup_dev():
+  os.system("uv pip install git+https://github.com/google/adk-python.git@main")
 
 
 @app.command()
@@ -173,6 +177,13 @@ def run_short():
     )
 
   asyncio.run(run_task())
+
+
+# @app.command()
+# def mtmagent():
+#   from mtmai.agents.mtmagent import MtmaiAgent
+
+#   asyncio.run(MtmaiAgent().run())
 
 
 if __name__ == "__main__":

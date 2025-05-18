@@ -83,9 +83,15 @@ def list_folders():
     folder_lines = []
     for i, folder in enumerate(folders):
       if i == len(folders) - 1:  # Last item in the list
-        folder_lines.append(f"[bold]{folder}[/bold] (f)")
+        if folder != "Calendar":
+          folder_lines.append(f"[bold]{folder}[/bold] (f)")
+        else:
+          folder_lines.append(f"[bold aquamarine1]{folder}[/bold aquamarine1] (C)")
       else:
-        folder_lines.append(f"[bold]{folder}[/bold] (f)")
+        if folder != "Calendar":
+          folder_lines.append(f"[bold]{folder}[/bold] (f)")
+        else:
+          folder_lines.append(f"[bold aquamarine1]{folder}[/bold aquamarine1] (C)")
     content = "\n".join([f"├── {line}" for line in folder_lines[:-1]] + [f"└── {folder_lines[-1]}"])
 
   inner_panel = Panel(content, title="[bold blue]Folders[/bold blue]", expand=True, box=DOUBLE_EDGE)  # Customize title color
@@ -121,12 +127,18 @@ def list_notes(folder):
   folder_lines = []
   for i, some_folder in enumerate(folders):
     if some_folder == folder:  # Last item in the list
-      folder_lines.append(f"[bold underline]{some_folder}[/bold underline] (f)")
+      if some_folder == "Calendar":
+        folder_lines.append(f"[bold underline aquamarine1]{some_folder}[/bold underline aquamarine1] (C)")
+      else:
+        folder_lines.append(f"[bold underline]{some_folder}[/bold underline] (f)")        
     else:
-      folder_lines.append(f"[bold]{some_folder}[/bold] (f)")
+      if some_folder == "Calendar":
+        folder_lines.append(f"[bold aquamarine1]{some_folder}[/bold aquamarine1] (C)")
+      else:
+        folder_lines.append(f"[bold]{some_folder}[/bold] (f)")
   folder_content = "\n".join([f"├── {line}" for line in folder_lines[:-1]] + [f"└── {folder_lines[-1]}"])
 
-  all_folders_panel = Panel(folder_content, title="[bold blue]Folders[/bold blue]", expand=True, box=DOUBLE_EDGE)  # Customize title color
+  all_folders_panel = Panel(folder_content, title="[bold blue]Folders[/bold blue]", expand=True, box=DOUBLE_EDGE)
 
   panel_title = f"[bold blue]{folder}[/bold blue]"  # Customize title color
   folder_panel = Panel(content, title=panel_title, expand=True, box=DOUBLE_EDGE)
@@ -141,7 +153,8 @@ def create_folder(name):
   folder_path = os.path.join(BASE_DIR, name)
   if check_name(name):
     os.makedirs(folder_path, exist_ok=True)
-    print(f"\n[bold green]New folder '{name}' created.[/bold green]\n")
+    if name != "Calendar" and name != "quick_notes":
+      print(f"\n[bold green]New folder '{name}' created.[/bold green]\n")
   else:
     print("\n[bold red]There's already a file with that name.[/bold red]\n")
 
@@ -454,7 +467,10 @@ def delete_note_or_folder(name, is_folder):
   if is_folder:
     if os.path.exists(path) and os.path.isdir(path):
       shutil.rmtree(path)
-      print(f"\n[bold green]Folder '{name}' deleted.[/bold green]\n")
+      if name == "Calendar":
+        print(f"\n[bold green]Calendar deleted.[/bold green]\n")
+      else:
+        print(f"\n[bold green]Folder '{name}' deleted.[/bold green]\n")
     else:
       print("\n[bold red]Folder not found.[/bold red]\n")
   else:
@@ -733,6 +749,10 @@ def run():
   \__\___|_|  |_| |_| |_|_| |_|\___/ \__\___||___/
   """)
   print("'Help' for commands.")
+
+  if "Calendar" not in [f for f in os.listdir(BASE_DIR) if os.path.isdir(os.path.join(BASE_DIR, f))]:
+    create_folder("Calendar") 
+
   quick_note_opened = False
   if quick_note_opened is False:
     if "quick_notes" not in [f for f in os.listdir(BASE_DIR) if os.path.isdir(os.path.join(BASE_DIR, f))]:
@@ -859,7 +879,8 @@ def run():
         in_folder = None
         list_folders()
       else:
-        print("\nNowhere to go.\n")
+        list_folders()
+        print("Nowhere to go.\n")
 
     elif choice.startswith("e "):  # Edit folder or note
       name = choice[2:]

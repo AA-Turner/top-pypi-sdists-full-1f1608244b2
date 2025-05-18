@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: BabelDOC
-Version: 0.3.50
+Version: 0.3.51
 Summary: Yet Another Document Translator
 Project-URL: Homepage, https://github.com/funstory-ai/BabelDOC
 Project-URL: Issues, https://github.com/funstory-ai/BabelDOC/issues
@@ -30,6 +30,7 @@ Requires-Dist: psutil>=7.0.0
 Requires-Dist: pydantic>=2.10.6
 Requires-Dist: pymupdf>=1.25.1
 Requires-Dist: python-levenshtein>=0.27.1
+Requires-Dist: pyzstd>=0.17.0
 Requires-Dist: rapidocr-onnxruntime>=1.4.4
 Requires-Dist: rich>=13.9.4
 Requires-Dist: scikit-image>=0.25.2
@@ -38,7 +39,6 @@ Requires-Dist: tiktoken>=0.9.0
 Requires-Dist: toml>=0.10.2
 Requires-Dist: tqdm>=4.67.1
 Requires-Dist: xsdata[cli,lxml,soap]>=24.12
-Requires-Dist: zstd>=1.5.6.7
 Provides-Extra: cuda
 Requires-Dist: onnxruntime-gpu>=1.16.1; extra == 'cuda'
 Provides-Extra: directml

@@ -8009,6 +8009,19 @@ def _filter_valid_constraints(constraints: List[str]) -> List[str]:
     return final_constraints_list
 
 @beartype
+def load_username_to_args() -> None:
+    if not args.calculate_pareto_front_of_job:
+        return
+
+    username_file_path = os.path.join(args.calculate_pareto_front_of_job, "state_files", "username")
+    if os.path.isfile(username_file_path) and not args.username:
+        try:
+            with open(username_file_path, mode="r", encoding="utf-8") as f:
+                args.username = f.readline().strip()
+        except Exception as e:
+            print_red(f"Error reading from file: {e}")
+
+@beartype
 def post_job_calculate_pareto_front() -> None:
     if not args.calculate_pareto_front_of_job:
         return
@@ -8065,13 +8078,7 @@ def post_job_calculate_pareto_front() -> None:
         print_red(f"Error: There are less than 2 result names (is: {len(res_names)}, {', '.join(res_names)}). Cannot continue calculating the pareto front.")
         my_exit(24)
 
-    username_file_path = os.path.join(args.calculate_pareto_front_of_job, "state_files", "username")
-    if os.path.isfile(username_file_path) and not args.username:
-        try:
-            with open(username_file_path, mode="r", encoding="utf-8") as f:
-                args.username = f.readline().strip()
-        except Exception as e:
-            print_red(f"Error reading from file: {e}")
+    load_username_to_args()
 
     CURRENT_RUN_FOLDER = args.calculate_pareto_front_of_job
 
@@ -8096,6 +8103,20 @@ def post_job_calculate_pareto_front() -> None:
     my_exit(0)
 
 @beartype
+def set_arg_states_from_continue() -> None:
+    if args.continue_previous_job and not args.num_random_steps:
+        num_random_steps_file = f"{args.continue_previous_job}/state_files/num_random_steps"
+
+        if os.path.exists(num_random_steps_file):
+            args.num_random_steps = int(open(num_random_steps_file, mode="r", encoding="utf-8").readline().strip())
+        else:
+            print_red(f"Cannot find >{num_random_steps_file}<. Will use default, it being >{args.num_random_steps}<.")
+
+    if args.continue_previous_job:
+        if os.path.exists(f"{args.continue_previous_job}/state_files/revert_to_random_when_seemingly_exhausted"):
+            args.revert_to_random_when_seemingly_exhausted = True
+
+@beartype
 def main() -> None:
     global RESULT_CSV_FILE, ax_client, LOGFILE_DEBUG_GET_NEXT_TRIALS
 
@@ -8108,17 +8129,7 @@ def main() -> None:
 
     debug_vars_unused_by_python_for_linter()
 
-    if args.continue_previous_job and not args.num_random_steps:
-        num_random_steps_file = f"{args.continue_previous_job}/state_files/num_random_steps"
-
-        if os.path.exists(num_random_steps_file):
-            args.num_random_steps = int(open(num_random_steps_file, mode="r", encoding="utf-8").readline().strip())
-        else:
-            print_red(f"Cannot find >{num_random_steps_file}<. Will use default, it being >{args.num_random_steps}<.")
-
-    if args.continue_previous_job:
-        if os.path.exists(f"{args.continue_previous_job}/state_files/revert_to_random_when_seemingly_exhausted"):
-            args.revert_to_random_when_seemingly_exhausted = True
+    set_arg_states_from_continue()
 
     disable_logging()
 
@@ -8811,30 +8822,30 @@ def main_outside() -> None:
 
         if args.tests:
             run_tests()
-        else:
-            try:
-                main()
-            except (SignalUSR, SignalINT, SignalCONT, KeyboardInterrupt):
-                signal.signal(signal.SIGINT, signal.SIG_IGN)
 
-                print_red("\n⚠ You pressed CTRL+C or got a signal. Optimization stopped.")
+        try:
+            main()
+        except (SignalUSR, SignalINT, SignalCONT, KeyboardInterrupt):
+            signal.signal(signal.SIGINT, signal.SIG_IGN)
 
-                end_program(False, 1)
-            except SearchSpaceExhausted:
-                _get_perc: int = abs(int(((count_done_jobs() - NR_INSERTED_JOBS) / max_eval) * 100))
+            print_red("\n⚠ You pressed CTRL+C or got a signal. Optimization stopped.")
 
-                if _get_perc < 100:
-                    print_red(
-                        f"\nIt seems like the search space was exhausted. "
-                        f"You were able to get {_get_perc}% of the jobs you requested "
-                        f"(got: {count_done_jobs() - NR_INSERTED_JOBS}, submitted: {submitted_jobs()}, failed: {failed_jobs()}, "
-                        f"requested: {max_eval}) after main ran"
-                    )
+            end_program(False, 1)
+        except SearchSpaceExhausted:
+            _get_perc: int = abs(int(((count_done_jobs() - NR_INSERTED_JOBS) / max_eval) * 100))
 
-                if _get_perc != 100:
-                    end_program(True, 87)
-                else:
-                    end_program(True)
+            if _get_perc < 100:
+                print_red(
+                    f"\nIt seems like the search space was exhausted. "
+                    f"You were able to get {_get_perc}% of the jobs you requested "
+                    f"(got: {count_done_jobs() - NR_INSERTED_JOBS}, submitted: {submitted_jobs()}, failed: {failed_jobs()}, "
+                    f"requested: {max_eval}) after main ran"
+                )
+
+            if _get_perc != 100:
+                end_program(True, 87)
+            else:
+                end_program(True)
 
 if __name__ == "__main__":
     try:

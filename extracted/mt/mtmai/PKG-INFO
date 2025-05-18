@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: mtmai
-Version: 0.7.8
+Version: 0.7.11
 Summary: A web scraping library based on LangChain which uses LLM and direct graph logic to create scraping pipelines.
 Author-email: Marco Vinciguerra <mvincig11@gmail.com>
 License-Expression: MIT
@@ -135,7 +135,7 @@ Requires-Dist: semchunk>=2.2.0
 Requires-Dist: serpapi>=0.1.5
 Requires-Dist: simpleeval>=1.0.0
 Requires-Dist: slugify>=0.0.1
-Requires-Dist: smolagents[telemetry]>=1.15.0
+Requires-Dist: smolagents[litellm,telemetry]>=1.16.1
 Requires-Dist: snowballstemmer~=2.2
 Requires-Dist: speechrecognition>=3.14.2
 Requires-Dist: sqlalchemy>=2.0.37

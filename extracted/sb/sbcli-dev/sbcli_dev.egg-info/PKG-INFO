@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sbcli-dev
-Version: 18.0.41
+Version: 18.0.43
 Summary: CLI for managing SimplyBlock cluster
 Home-page: https://www.simplyblock.io/
 Author: Hamdy
@@ -28,6 +28,7 @@ Requires-Dist: prometheus-client
 Requires-Dist: ec2-metadata
 Requires-Dist: flask-swagger-ui
 Requires-Dist: sentry-sdk[flask]
+Requires-Dist: flask-openapi3
 Dynamic: author
 Dynamic: author-email
 Dynamic: description
