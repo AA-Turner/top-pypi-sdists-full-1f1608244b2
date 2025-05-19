@@ -17,6 +17,18 @@ class DeviceClass(res.GlobalResource, m_resource_v1alpha3.DeviceClass):
     )
 
 
+class DeviceTaintRule(res.GlobalResource, m_resource_v1alpha3.DeviceTaintRule):
+    """* **Extends**: ``models.resource_v1alpha3.DeviceTaintRule``
+       * **Type**: Global Resource
+       * **Accepted client methods**: `delete`, `deletecollection`, `get`, `list`, `patch`, `create`, `replace`, `watch`
+    """
+    _api_info = res.ApiInfo(
+        resource=res.ResourceDef('resource.k8s.io', 'v1alpha3', 'DeviceTaintRule'),
+        plural='devicetaintrules',
+        verbs=['delete', 'deletecollection', 'get', 'list', 'patch', 'post', 'put', 'watch'],
+    )
+
+
 class ResourceClaimStatus(res.NamespacedSubResource, m_resource_v1alpha3.ResourceClaim):
     """* **Extends**: ``models.resource_v1alpha3.ResourceClaim``
        * **Type**: Namespaced Resource

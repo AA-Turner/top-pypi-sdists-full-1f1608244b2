@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: podman-compose
-Version: 1.3.0
+Version: 1.4.0
 Summary: A script to run docker-compose.yml using podman
 Home-page: https://github.com/containers/podman-compose
 Author: Muayyad Alsadi

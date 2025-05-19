@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: pywikibot
-Version: 10.0.0
+Version: 10.1.0
 Summary: Python MediaWiki Bot Framework
 Author-email: xqt <info@gno.de>
 Maintainer-email: The Pywikibot team <pywikibot@lists.wikimedia.org>
@@ -99,7 +99,7 @@ Requires-Dist: python-stdnum>=1.20; extra == "isbn"
 Provides-Extra: graphviz
 Requires-Dist: pydot>=3.0.2; extra == "graphviz"
 Provides-Extra: google
-Requires-Dist: google>=1.7; extra == "google"
+Requires-Dist: googlesearch-python>=1.3.0; extra == "google"
 Provides-Extra: memento
 Requires-Dist: memento_client==0.6.1; extra == "memento"
 Provides-Extra: wikitextparser
@@ -128,6 +128,7 @@ Requires-Dist: unidecode; extra == "scripts"
 Requires-Dist: memento_client==0.6.1; extra == "scripts"
 Dynamic: description
 Dynamic: description-content-type
+Dynamic: license-file
 Dynamic: provides-extra
 Dynamic: requires-dist
 
@@ -276,84 +277,20 @@ Roadmap
 Current Release Changes
 =======================
 
-**Improvements**
-
-* Add *sort* parameter to pagegenerators.SearchPageGeneratorand APISite.search()
-  T386594).
-* Add support for sylwiki (T386466).
-* Update Family.cross_allowedlists in family files.
-* Ignore empty message warning in EventStreams
-  (T383035).
-* A *timeout* parameter was added to data.memento.get_closest_memento_url
-  and the default timeout was increased to 30 s (T382943).
-* bot.calledModuleNamereturns either 'unittest' or 'pytest' during test run (T382797).
-* tools.threading.BoundedPoolExecutorwas added (T333741).
-* *args* parameter for loggingfunctions can be used as formatting arguments
-* .login.OauthLoginManager.access_tokenwas added.
-* Representation string for login.LoginManagerwas added.
-* i18n updates.
-
-**Bugfixes**
-
-* Allow url without api path, requests path or script path in pywikibot.Siteconstuctor  (T386665).
-* Appended <<default>> color tag before the last linefeed in
-  UI(T382884).
-* Remove unintentional *args* parameter in tools.threading.ThreadList(T382787).
-
-**Code cleanups**
-
-* Remove Structured Discussions/Flow support (T381551, T371180)
-* Remove old and deprecated variables in config.
-* Remove unintentional ``pywikibot.warn()``.
-* Unused *get_redirect* parameter of BasePage.getOldVersion()was removed.
-* *baserevid* parameter of DataSitemethods
-  editSource(),
-  editQualifier(),
-  removeClaims(),
-  removeSources(),
-  remove_qualifiers()were be removed.
-* ``linktrail`` methods of family.Familyand BaseSite
-  were removed; use APISite.linktrail()instead.
-* Positional arguments *decoder*, *layer* and *newline* for loggingfunctions are invalid;
-  keyword arguments must be used instead.
-* *tb* parameter of exception()function was dropped;
-  use *exc_info* instead.
-* The positional arguments of page.BasePage.linkedPageswere removed.
-* ``FilePage.usingPages()`` was renamed to using_pages().
-* ``APISite.article_path`` was removed. APISite.articlepath
-  can be used instead.
-* ``fix_digits`` method of textlib.TimeStripperwas removed;
-  textlib.to_latin_digitscan be used instead.
-* textlib.tzoneFixedOffset class was removed in favour of
-  time.TZoneFixedOffse.
-* A boolean *watch* parameter in page.BasePage.saveis desupported.
-* ``XMLDumpOldPageGenerator`` was removed in favour of a ``content`` parameter of
-  pagegenerators.XMLDumpPageGenerator(T306134).
-* pywikibot.User.is_blockedmethod was renamed from ``isBlocked`` for consistency.
-* Values of APISite.allpages()
-  parameter filterredir must be True, False or None.
-* tools.threadingclasses no longer can be imported from tools.
-* tools.itertoolsdatatypes no longer can be imported from tools.
-* tools.collectionsdatatypes no longer can be imported from tools.
-* ``svn_rev_info`` and ``getversion_svn`` of versionmodule were be removed.
-  SVN repository is no longer supported. (T362484).
-* Old color escape sequences like ``\03{color}`` were dropped in favour of new color format like ``<<color>>``.
-* ``tools.formatter.color_format()`` was removed; the new color literals can be used instead.
-* RedirectPageBot and NoRedirectPageBot bot classes were removed in favour of
-  use_redirectsattribute.
-
-**Other breaking changes**
-
-* Package requirements were updated (wikitextparser, pydot, python-stdnum, Pillow, PyMySQL,
-  fake-useragent)
-* Use requests_sse instead of unsupported sseclient for comms.eventstreams(T309380).
-* backportsmodule is no longer a public API.
-* Drop support for MediaWiki < 1.31 (T378984).
-* Require ``requests >= 2.31.0`` (T347031).
-* Python 3.7 support was dropped (T378893), including *importlib_metadata* of
-  backports.
-* See also Current Deprecations below.
-
+* Use WikiHistory instead of XTools to implement Page.authorship()
+  (T392345)
+* Correct comms.eventstreams.EventStreamskwarg name
+  from *last_event_id* to *latest_event_id* (T394570)
+* Retieve charset from accept-charset header entry in comms.http._decide_encoding(T392345)
+* Skip CosmeticChangesToolkit.removeEmptySections()
+  if section length is too less  (T391776)
+* Add support for nupwiki (T390713)
+* i18n updates
+* No longer follow redirects in bot.open_webbrowser(T390447)
+* Update closed and removed wikis (T390732)
+* *page* parameter was added to site.recentchanges()
+  
+* googlesearch-python package is required for pagegenerators.GoogleSearchPageGenerator
 
 Current Deprecations
 ====================
@@ -389,7 +326,7 @@ Current Deprecations
 * 9.0.0: ``iteritems`` method of data.api.Requestwill be removed in favour of ``items``
 * 9.0.0: ``SequenceOutputter.output()`` is deprecated in favour of tools.formatter.SequenceOutputter.out
   property
-* 9.0.0: *nullcontext* context manager and *SimpleQueue* queue of backportsare deprecated
+
 
 Pending removal in Pywikibot 11
 -------------------------------

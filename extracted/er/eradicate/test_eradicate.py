@@ -2,18 +2,13 @@
 
 """Test suite for eradicate."""
 
-from __future__ import unicode_literals
-
 import contextlib
 import io
 import subprocess
 import sys
 import tempfile
 import unittest
-try:  # pragma: no cover
-    import mock
-except ModuleNotFoundError:  # pragma: no cover
-    import unittest.mock as mock
+import unittest.mock as mock
 import re
 
 import eradicate
@@ -445,6 +440,42 @@ y = 1  # x = 3
         eradicator.update_whitelist(["foo"], False)
         self.assertTrue(eradicator.WHITELIST_REGEX == re.compile("foo", flags=re.IGNORECASE))
 
+    def test_inline_script_metadata(self):
+        self.assertEqual(
+            """\
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "requests<3",
+#   "rich",
+# ]
+# ///
+
+import requests
+from rich.pretty import pprint
+
+resp = requests.get("https://peps.python.org/api/peps.json")
+data = resp.json()
+pprint([(k, v["title"]) for k, v in data.items()][:10])
+""",
+            ''.join(eradicate.Eradicator().filter_commented_out_code(
+                """\
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "requests<3",
+#   "rich",
+# ]
+# ///
+
+import requests
+from rich.pretty import pprint
+
+resp = requests.get("https://peps.python.org/api/peps.json")
+data = resp.json()
+pprint([(k, v["title"]) for k, v in data.items()][:10])
+""")))
+
 
 class SystemTests(unittest.TestCase):
 
@@ -611,11 +642,11 @@ def temporary_directory(directory='.', prefix=''):
         shutil.rmtree(temp_directory)
 
 
-class StubFile(object):
+class StubFile:
 
     """Fake file that ignores everything."""
 
-    def write(*_):
+    def write(self, *_args):
         """Ignore."""
 
 

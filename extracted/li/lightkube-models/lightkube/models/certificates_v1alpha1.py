@@ -45,6 +45,10 @@ class ClusterTrustBundle(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'certificates.k8s.io/v1alpha1'
+        self.kind = 'ClusterTrustBundle'
+
 
 @dataclass
 class ClusterTrustBundleList(DictMixin):
@@ -67,6 +71,10 @@ class ClusterTrustBundleList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'certificates.k8s.io/v1alpha1'
+        self.kind = 'ClusterTrustBundleList'
 
 
 @dataclass

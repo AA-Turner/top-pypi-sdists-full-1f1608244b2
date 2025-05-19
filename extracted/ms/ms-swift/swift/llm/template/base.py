@@ -295,6 +295,13 @@ class Template(ProcessorMixin):
     def compute_loss_context(self, model, inputs):
         return nullcontext()
 
+    @staticmethod
+    def get_base_model(model):
+        if isinstance(model, PeftModel):
+            return model.model
+        else:
+            return model
+
     def _rlhf_encode(self, inputs: StdTemplateInputs) -> Dict[str, Any]:
         chosen_inputs, rejected_inputs = inputs, deepcopy(inputs)
         assert chosen_inputs.rejected_response is not None, f'inputs: {inputs}'
@@ -516,10 +523,8 @@ class Template(ProcessorMixin):
         raise NotImplementedError
 
     def generate(self, model, *args, **kwargs):
-        if isinstance(model, PeftModel):
-            signature = inspect.signature(model.model.generate)
-        else:
-            signature = inspect.signature(model.generate)
+        base_model = self.get_base_model(model)
+        signature = inspect.signature(base_model.generate)
         if 'use_model_defaults' in signature.parameters and 'use_model_defaults' not in kwargs:
             kwargs['use_model_defaults'] = False
         return model.generate(*args, **kwargs)
@@ -819,7 +824,7 @@ class Template(ProcessorMixin):
         tokenizer_kwargs = {}
         if loss_scale_list is None:
             loss_scale_list = [0.] * len(context_list)
-        if self.loss_scale.keep_loss_scale and self._packing:
+        if self.loss_scale.keep_loss_scale:
             ignore_loss_scale = False
         else:
             ignore_loss_scale = all(loss_scale in {0, 1} for loss_scale in loss_scale_list)
@@ -1030,7 +1035,13 @@ class Template(ProcessorMixin):
                 if loss_scale is not None:
                     loss_scale = loss_scale[-self.max_length:]
             elif self.truncation_strategy == 'raise':
-                length = len(input_ids or labels or [])
+                # input_ids might be a tensor.
+                if input_ids is not None:
+                    length = len(input_ids)
+                elif labels is not None:
+                    length = len(labels)
+                else:
+                    length = 0
                 if length > self.max_length:
                     raise MaxLengthError(f'Current length of row({length}) is larger'
                                          f' than the max_length({self.max_length}).')
@@ -1152,10 +1163,8 @@ class Template(ProcessorMixin):
         if 'inputs_embeds' in kwargs:
             kwargs.pop('input_ids', None)
 
-        if isinstance(model, PeftModel):
-            parameters = inspect.signature(model.model.forward).parameters
-        else:
-            parameters = inspect.signature(model.forward).parameters
+        base_model = self.get_base_model(model)
+        parameters = inspect.signature(base_model.forward).parameters
         if 'position_ids' not in parameters:
             kwargs.pop('position_ids', None)
         return args, kwargs

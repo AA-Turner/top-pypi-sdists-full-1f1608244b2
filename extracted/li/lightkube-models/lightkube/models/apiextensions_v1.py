@@ -6,8 +6,8 @@ from ._schema import dataclass, field, DictMixin
 if TYPE_CHECKING:   # Fix for pycharm autocompletion https://youtrack.jetbrains.com/issue/PY-54560
     from dataclasses import dataclass, field
 
-from . import meta_v1
 from typing import Any
+from . import meta_v1
 from typing import Dict
 
 
@@ -88,6 +88,10 @@ class CustomResourceDefinition(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     status: 'Optional[CustomResourceDefinitionStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'apiextensions.k8s.io/v1'
+        self.kind = 'CustomResourceDefinition'
+
 
 @dataclass
 class CustomResourceDefinitionCondition(DictMixin):
@@ -134,6 +138,10 @@ class CustomResourceDefinitionList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'apiextensions.k8s.io/v1'
+        self.kind = 'CustomResourceDefinitionList'
 
 
 @dataclass

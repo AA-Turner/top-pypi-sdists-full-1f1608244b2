@@ -1,11 +1,11 @@
 from __future__ import annotations
 from .general import BaseGeneralExpandedTypes
-from .query import ExpandedQueryTypes
+from .repository import ExpandedRepositoryTypes
 from .service import ExpandedServiceTypes
 from .client import ExpandedClientTypes
 
 class BaseExpandedTypes:
     General = BaseGeneralExpandedTypes
-    Query = ExpandedQueryTypes
+    Repository = ExpandedRepositoryTypes
     Service = ExpandedServiceTypes
     Client = ExpandedClientTypes

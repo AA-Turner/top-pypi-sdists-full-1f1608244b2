@@ -35,6 +35,10 @@ class APIService(DictMixin):
     spec: 'Optional[APIServiceSpec]' = None
     status: 'Optional[APIServiceStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'apiregistration.k8s.io/v1'
+        self.kind = 'APIService'
+
 
 @dataclass
 class APIServiceCondition(DictMixin):
@@ -77,6 +81,10 @@ class APIServiceList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'apiregistration.k8s.io/v1'
+        self.kind = 'APIServiceList'
 
 
 @dataclass

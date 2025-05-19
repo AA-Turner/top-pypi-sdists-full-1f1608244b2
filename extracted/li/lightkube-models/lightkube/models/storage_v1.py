@@ -6,9 +6,9 @@ from ._schema import dataclass, field, DictMixin
 if TYPE_CHECKING:   # Fix for pycharm autocompletion https://youtrack.jetbrains.com/issue/PY-54560
     from dataclasses import dataclass, field
 
-from . import core_v1
-from . import resource
 from . import meta_v1
+from . import resource
+from . import core_v1
 
 
 @dataclass
@@ -42,6 +42,10 @@ class CSIDriver(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'storage.k8s.io/v1'
+        self.kind = 'CSIDriver'
+
 
 @dataclass
 class CSIDriverList(DictMixin):
@@ -65,6 +69,10 @@ class CSIDriverList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'storage.k8s.io/v1'
+        self.kind = 'CSIDriverList'
 
 
 @dataclass
@@ -91,6 +99,15 @@ class CSIDriverSpec(DictMixin):
         determine if Kubernetes should modify ownership and permissions of the volume.
         With the default policy the defined fsGroup will only be applied if a fstype
         is defined and the volume's access mode contains ReadWriteOnce.
+      * **nodeAllocatableUpdatePeriodSeconds** ``Optional[int]`` - nodeAllocatableUpdatePeriodSeconds specifies the interval between periodic
+        updates of the CSINode allocatable capacity for this driver. When set, both
+        periodic updates and updates triggered by capacity-related failures are
+        enabled. If not set, no updates occur (neither periodic nor upon detecting
+        capacity-related failures), and the allocatable.count remains static. The
+        minimum allowed value for this field is 10 seconds.
+        This is an alpha feature and requires the MutableCSINodeAllocatableCount
+        feature gate to be enabled.
+        This field is mutable.
       * **podInfoOnMount** ``Optional[bool]`` - podInfoOnMount indicates this CSI volume driver requires additional pod
         information (like podName, podUID, etc.) during mount operations, if set to
         true. If set to false, pod information will not be passed on mount. Default is
@@ -173,6 +190,7 @@ class CSIDriverSpec(DictMixin):
     """
     attachRequired: 'Optional[bool]' = None
     fsGroupPolicy: 'Optional[str]' = None
+    nodeAllocatableUpdatePeriodSeconds: 'Optional[int]' = None
     podInfoOnMount: 'Optional[bool]' = None
     requiresRepublish: 'Optional[bool]' = None
     seLinuxMount: 'Optional[bool]' = None
@@ -209,6 +227,10 @@ class CSINode(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'storage.k8s.io/v1'
+        self.kind = 'CSINode'
 
 
 @dataclass
@@ -269,6 +291,10 @@ class CSINodeList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'storage.k8s.io/v1'
+        self.kind = 'CSINodeList'
 
 
 @dataclass
@@ -359,6 +385,10 @@ class CSIStorageCapacity(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     nodeTopology: 'Optional[meta_v1.LabelSelector]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'storage.k8s.io/v1'
+        self.kind = 'CSIStorageCapacity'
+
 
 @dataclass
 class CSIStorageCapacityList(DictMixin):
@@ -382,6 +412,10 @@ class CSIStorageCapacityList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'storage.k8s.io/v1'
+        self.kind = 'CSIStorageCapacityList'
 
 
 @dataclass
@@ -433,6 +467,10 @@ class StorageClass(DictMixin):
     reclaimPolicy: 'Optional[str]' = None
     volumeBindingMode: 'Optional[str]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'storage.k8s.io/v1'
+        self.kind = 'StorageClass'
+
 
 @dataclass
 class StorageClassList(DictMixin):
@@ -456,6 +494,10 @@ class StorageClassList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'storage.k8s.io/v1'
+        self.kind = 'StorageClassList'
 
 
 @dataclass
@@ -504,6 +546,10 @@ class VolumeAttachment(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     status: 'Optional[VolumeAttachmentStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'storage.k8s.io/v1'
+        self.kind = 'VolumeAttachment'
+
 
 @dataclass
 class VolumeAttachmentList(DictMixin):
@@ -527,6 +573,10 @@ class VolumeAttachmentList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'storage.k8s.io/v1'
+        self.kind = 'VolumeAttachmentList'
 
 
 @dataclass
@@ -596,10 +646,15 @@ class VolumeError(DictMixin):
 
       **parameters**
 
+      * **errorCode** ``Optional[int]`` - errorCode is a numeric gRPC code representing the error encountered during
+        Attach or Detach operations.
+        This is an optional, alpha field that requires the
+        MutableCSINodeAllocatableCount feature gate being enabled to be set.
       * **message** ``Optional[str]`` - message represents the error encountered during Attach or Detach operation.
         This string may be logged, so it should not contain sensitive information.
       * **time** ``Optional[meta_v1.Time]`` - time represents the time the error was encountered.
     """
+    errorCode: 'Optional[int]' = None
     message: 'Optional[str]' = None
     time: 'Optional[meta_v1.Time]' = None
 

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: devpi-common
-Version: 4.0.4
+Version: 4.1.0
 Summary: Utilities jointly used by devpi-server, devpi-client and others.
 Maintainer-email: Florian Schulze <mail@pyfidelity.com>
 License: 
@@ -39,9 +39,6 @@ Classifier: Programming Language :: Python :: 3.12
 Requires-Python: >=3.7
 Description-Content-Type: text/x-rst
 License-File: LICENSE
-Requires-Dist: lazy
-Requires-Dist: packaging-legacy
-Requires-Dist: requests>=2.3.0
 
 
 This package contains utility functions used by devpi-server and devpi-client.
@@ -58,6 +55,16 @@ Changelog
 
 
 .. towncrier release notes start
+
+4.1.0 (2025-05-18)
+==================
+
+Other Changes
+-------------
+
+- Use ``__slots__`` to reduce memory usage of ``Version``.
+
+
 
 4.0.4 (2024-04-20)
 ==================
@@ -96,33 +103,4 @@ Bug Fixes
 ---------
 
 - Restore flushing after each written line in new TerminalWriter.
-
-
-4.0.0 (2023-10-11)
-==================
-
-Deprecations and Removals
--------------------------
-
-- Removed ``HTMLPage`` class originally vendored from pip.
-
-- Dropped support for Python <= 3.6.
-
-
-
-Features
---------
-
-- Add ``chdir`` context handler in devpi_common.contextlib. Starting with Python 3.11 the original from ``contextlib`` is used.
-
-- Hide username from URL representation.
-
-- Added stripped down TerminalWriter from ``py`` library which only supports coloring.
-
-
-
-Bug Fixes
----------
-
-- Fix #939: custom legacy version parsing (non PEP 440) after packaging >= 22.0 removed support.
 

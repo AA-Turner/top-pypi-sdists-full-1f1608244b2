@@ -1,15 +1,34 @@
-import posixpath
-import re
+from __future__ import annotations
+
+from .types import CompareMixin
+from .validation import normalize_name
 from packaging.requirements import Requirement as BaseRequirement
 from packaging_legacy.version import parse as parse_version
-from .types import CompareMixin
-from .types import cached_property
-from .validation import normalize_name
+from typing import TYPE_CHECKING
+import posixpath
+import re
 
 
-ALLOWED_ARCHIVE_EXTS = set(
-    ".dmg .deb .msi .rpm .exe .egg .whl .tar.gz "
-    ".tar.bz2 .tar .tgz .zip .doc.zip".split())
+if TYPE_CHECKING:
+    from packaging_legacy.version import LegacyVersion
+    from packaging_legacy.version import Version as PackagingVersion
+
+
+ALLOWED_ARCHIVE_EXTS = {
+    ".deb",
+    ".dmg",
+    ".doc.zip",
+    ".egg",
+    ".exe",
+    ".msi",
+    ".rpm",
+    ".tar",
+    ".tar.bz2",
+    ".tar.gz",
+    ".tgz",
+    ".whl",
+    ".zip",
+}
 
 
 _releasefile_suffix_rx = re.compile(
@@ -129,28 +148,58 @@ def splitext_archive(basename):
     return base, ext
 
 
-class Version(CompareMixin):
-    def __init__(self, versionstring):
-        self.string = versionstring
+class Version(str):
+    __slots__ = ('_cmpstr', '_cmpval')
+    _cmpstr: str
+    _cmpval: LegacyVersion | PackagingVersion
 
-    @cached_property
-    def cmpval(self):
-        return parse_version(self.string)
+    def __eq__(self, other):
+        if not isinstance(other, Version):
+            raise NotImplementedError
+        return self.cmpval == other.cmpval
 
-    def __str__(self):
-        return self.string
+    def __ge__(self, other):
+        if not isinstance(other, Version):
+            raise NotImplementedError
+        return self.cmpval >= other.cmpval
+
+    def __gt__(self, other):
+        if not isinstance(other, Version):
+            raise NotImplementedError
+        return self.cmpval > other.cmpval
+
+    def __le__(self, other):
+        if not isinstance(other, Version):
+            raise NotImplementedError
+        return self.cmpval <= other.cmpval
+
+    def __lt__(self, other):
+        if not isinstance(other, Version):
+            raise NotImplementedError
+        return self.cmpval < other.cmpval
+
+    def __ne__(self, other):
+        if not isinstance(other, Version):
+            raise NotImplementedError
+        return self.cmpval != other.cmpval
 
     def __repr__(self):
-        return f"{self.__class__.__name__}({self.string!r})"
+        orig = super().__repr__()
+        return f"{self.__class__.__name__}({orig})"
+
+    @property
+    def cmpval(self):
+        _cmpval = getattr(self, '_cmpval', None)
+        if _cmpval is None:
+            self._cmpval = _cmpval = parse_version(self)
+        return _cmpval
 
     def is_prerelease(self):
-        if hasattr(self.cmpval, 'is_prerelease'):
-            return self.cmpval.is_prerelease
-        # backward compatibility
-        for x in self.cmpval:
-            if x.startswith('*') and x < '*final':
-                return True
-        return False
+        return self.cmpval.is_prerelease
+
+    @property
+    def string(self):
+        return str(self)
 
 
 class BasenameMeta(CompareMixin):
@@ -176,13 +225,11 @@ class BasenameMeta(CompareMixin):
 
 
 def get_latest_version(seq, stable=False):
-    if not seq:
-        return
-    versions = map(Version, seq)
+    versions = [Version(x) for x in seq]
     if stable:
         versions = [x for x in versions if not x.is_prerelease()]
-        if not versions:
-            return
+    if not versions:
+        return None
     return max(versions).string
 
 
@@ -199,9 +246,7 @@ def is_archive_of_project(basename, targetname):
     # shows "x-docs-1.0.tar.gz" for targetname "x" (however it was uploaded)
     if not normalize_name(nameversion).startswith(targetname):
         return False
-    if ext.lower() not in ALLOWED_ARCHIVE_EXTS:
-        return False
-    return True
+    return ext.lower() in ALLOWED_ARCHIVE_EXTS
 
 
 class Requirement(BaseRequirement):

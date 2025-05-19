@@ -11,16 +11,23 @@ from betterproto.lib.std.google.protobuf import FieldMask
 from fireworks.control_plane.generated.protos.gateway import (
     AcceleratorType,
     AutoscalingPolicy,
+    CreateDatasetRequest,
     CreateDeploymentRequest,
+    Dataset,
+    DeleteDatasetRequest,
     Deployment,
     GatewayStub,
+    GetDatasetUploadEndpointRequest,
     GetDeploymentRequest,
+    ListDatasetsRequest,
     ListDeploymentsRequest,
     ListModelsRequest,
     ListModelsResponse,
     Model,
     ScaleDeploymentRequest,
     UpdateDeploymentRequest,
+    CreateDatasetValidationJobRequest,
+    ValidateDatasetUploadRequest,
 )
 from asyncstdlib.functools import cache
 from openai import NOT_GIVEN, NotGiven
@@ -80,6 +87,46 @@ class Gateway:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         self._channel.close()
 
+    async def list_datasets(
+        self,
+        request: ListDatasetsRequest,
+    ) -> List[Dataset]:
+        account_id = await self.account_id()
+        request.parent = f"accounts/{account_id}"
+        response = await self._stub.list_datasets(request)
+        return response.datasets
+
+    async def delete_dataset(self, name: str) -> None:
+        account_id = await self.account_id()
+        await self._stub.delete_dataset(DeleteDatasetRequest(name=f"accounts/{account_id}/datasets/{name}"))
+
+    async def validate_dataset(self, name: str) -> None:
+        account_id = await self.account_id()
+        await self._stub.validate_dataset_upload(
+            ValidateDatasetUploadRequest(name=f"accounts/{account_id}/datasets/{name}")
+        )
+
+    async def create_dataset(
+        self,
+        request: CreateDatasetRequest,
+    ) -> Dataset:
+        account_id = await self.account_id()
+        request.parent = f"accounts/{account_id}"
+        response = await self._stub.create_dataset(request)
+        return response
+
+    async def get_dataset_upload_endpoint(
+        self,
+        name: str,
+        filename_to_size: dict[str, int],
+    ) -> dict[str, str]:
+        account_id = await self.account_id()
+        name = f"accounts/{account_id}/datasets/{name}"
+        response = await self._stub.get_dataset_upload_endpoint(
+            GetDatasetUploadEndpointRequest(name=name, filename_to_size=filename_to_size)
+        )
+        return response.filename_to_signed_urls
+
     async def list_models(
         self,
         *,
@@ -134,6 +181,7 @@ class Gateway:
 
     async def create_deployment(
         self,
+        display_name: str,
         model: str,
         autoscaling_policy: Optional[AutoscalingPolicy] = None,
         accelerator_type: Union[AcceleratorType, NotGiven] = NOT_GIVEN,
@@ -143,7 +191,8 @@ class Gateway:
             deployment.autoscaling_policy = autoscaling_policy
         if not isinstance(accelerator_type, NotGiven):
             deployment.accelerator_type = accelerator_type
-
+        if display_name is not None:
+            deployment.display_name = display_name
         account_id = await self.account_id()
         request = CreateDeploymentRequest(parent=f"accounts/{account_id}", deployment=deployment)
         deployment = await self._stub.create_deployment(request)

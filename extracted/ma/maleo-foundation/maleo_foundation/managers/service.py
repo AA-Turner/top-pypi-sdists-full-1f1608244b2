@@ -4,6 +4,7 @@ from google.oauth2.service_account import Credentials
 from pathlib import Path
 from pydantic_settings import BaseSettings
 from pydantic import BaseModel, Field
+from redis.asyncio.client import Redis
 from starlette.exceptions import HTTPException
 from starlette.types import Lifespan, AppType
 from sqlalchemy import MetaData
@@ -15,6 +16,11 @@ from maleo_foundation.models.transfers.general.token \
     import MaleoFoundationTokenGeneralTransfers
 from maleo_foundation.models.transfers.parameters.token \
     import MaleoFoundationTokenParametersTransfers
+from maleo_foundation.managers.cache import CacheConfigurations, CacheManagers
+from maleo_foundation.managers.cache.redis import (
+    RedisCacheNamespaces,
+    RedisCacheConfigurations
+)
 from maleo_foundation.managers.db import DatabaseConfigurations, DatabaseManager
 from maleo_foundation.managers.client.google.secret import GoogleSecretManager
 from maleo_foundation.managers.client.google.storage import GoogleCloudStorage
@@ -114,6 +120,7 @@ class StaticConfigurations(BaseModel):
 class Configurations(BaseModel):
     service:ServiceConfigurations = Field(..., description="Service's configurations")
     middleware:MiddlewareConfigurations = Field(..., description="Middleware's configurations")
+    cache:CacheConfigurations = Field(..., description="Cache's configurations")
     database:DatabaseConfigurations = Field(..., description="Database's configurations")
     client:ClientConfigurations = Field(..., description="Client's configurations")
 
@@ -122,6 +129,7 @@ class Configurations(BaseModel):
 
 class Loggers(BaseModel):
     application:ServiceLogger = Field(..., description="Application logger")
+    repository:ServiceLogger = Field(..., description="Repository logger")
     database:ServiceLogger = Field(..., description="Database logger")
     middleware:MiddlewareLoggers = Field(..., description="Middleware logger")
 
@@ -148,6 +156,7 @@ class ServiceManager:
         self._load_configs()
         self._load_keys()
         self._initialize_loggers()
+        self._initialize_cache()
         self._initialize_db()
         self._initialize_foundation()
 
@@ -234,6 +243,13 @@ class ServiceManager:
             runtime_configurations = YAMLLoader.load_from_string(data)
         runtime_configs = RuntimeConfigurations.model_validate(runtime_configurations)
 
+        #* Load redis cache configurations
+        namespaces = RedisCacheNamespaces(base=self._settings.SERVICE_KEY)
+        host = self._secret_manager.get(name=f"maleo-redis-host-{self._settings.ENVIRONMENT}")
+        password = self._secret_manager.get(name=f"maleo-redis-password-{self._settings.ENVIRONMENT}")
+        redis = RedisCacheConfigurations(namespaces=namespaces, host=host, password=password)
+        cache = CacheConfigurations(redis=redis)
+
         #* Load database configurations
         password = self._secret_manager.get(name=f"maleo-db-password-{self._settings.ENVIRONMENT}")
         host = self._secret_manager.get(name=f"maleo-db-host-{self._settings.ENVIRONMENT}")
@@ -247,6 +263,7 @@ class ServiceManager:
         merged_configs = BaseMergers.deep_merge(
             static_configs.model_dump(),
             runtime_configs.model_dump(exclude={"database"}),
+            {"cache": cache.model_dump()},
             {"database": database.model_dump()}
         )
         self._configs = Configurations.model_validate(merged_configs)
@@ -281,6 +298,11 @@ class ServiceManager:
             service_key=self._configs.service.key,
             **self._log_config.model_dump()
         )
+        repository = ServiceLogger(
+            type=BaseEnums.LoggerType.REPOSITORY,
+            service_key=self._configs.service.key,
+            **self._log_config.model_dump()
+        )
         #* Middleware's loggers
         base = MiddlewareLogger(
             middleware_type=BaseEnums.MiddlewareLoggerType.BASE,
@@ -295,6 +317,7 @@ class ServiceManager:
         middleware = MiddlewareLoggers(base=base, authentication=authentication)
         self._loggers = Loggers(
             application=application,
+            repository=repository,
             database=database,
             middleware=middleware
         )
@@ -302,6 +325,25 @@ class ServiceManager:
     @property
     def loggers(self) -> Loggers:
         return self._loggers
+
+    def _initialize_cache(self) -> None:
+        self._redis = Redis(
+            host=self._configs.cache.redis.host,
+            port=self._configs.cache.redis.port,
+            db=self._configs.cache.redis.db,
+            password=self._configs.cache.redis.password,
+            decode_responses=self._configs.cache.redis.decode_responses,
+            health_check_interval=self._configs.cache.redis.health_check_interval
+        )
+        self._cache = CacheManagers(redis=self._redis)
+
+    @property
+    def redis(self) -> Redis:
+        return self._redis
+
+    @property
+    def cache(self) -> CacheManagers:
+        return self._cache
 
     def _initialize_db(self) -> None:
         self._database = DatabaseManager(
@@ -394,6 +436,9 @@ class ServiceManager:
 
     async def dispose(self) -> None:
         self._loggers.application.info("Disposing service manager")
+        if self._redis is not None:
+            await self._redis.close()
+            self._redis = None
         if self._database is not None:
             self._database.dispose()
             self._database = None

@@ -29,7 +29,7 @@ def get_dict_from_instruction(instructions):
         elif isinstance(instructions, dict):
             for key, value in instructions.items():
                 new_instruction = {"instruction": "", "example": "", "default": True}
-                new_instruction.update(instructions[key])
+                new_instruction.update({key:instructions[key]})
                 new_instructions[key] = new_instruction
     return new_instructions
 

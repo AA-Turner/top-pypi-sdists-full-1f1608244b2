@@ -82,6 +82,10 @@ class FlowSchema(DictMixin):
     spec: 'Optional[FlowSchemaSpec]' = None
     status: 'Optional[FlowSchemaStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'flowcontrol.apiserver.k8s.io/v1'
+        self.kind = 'FlowSchema'
+
 
 @dataclass
 class FlowSchemaCondition(DictMixin):
@@ -128,6 +132,10 @@ class FlowSchemaList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'flowcontrol.apiserver.k8s.io/v1'
+        self.kind = 'FlowSchemaList'
 
 
 @dataclass
@@ -330,6 +338,10 @@ class PriorityLevelConfiguration(DictMixin):
     spec: 'Optional[PriorityLevelConfigurationSpec]' = None
     status: 'Optional[PriorityLevelConfigurationStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'flowcontrol.apiserver.k8s.io/v1'
+        self.kind = 'PriorityLevelConfiguration'
+
 
 @dataclass
 class PriorityLevelConfigurationCondition(DictMixin):
@@ -377,6 +389,10 @@ class PriorityLevelConfigurationList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'flowcontrol.apiserver.k8s.io/v1'
+        self.kind = 'PriorityLevelConfigurationList'
 
 
 @dataclass

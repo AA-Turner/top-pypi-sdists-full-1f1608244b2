@@ -7,6 +7,7 @@ redis server.
 from __future__ import annotations
 
 import collections
+import copy
 import inspect
 import itertools
 import queue
@@ -142,25 +143,32 @@ def validate_endpoint(endpoint_arg_name: str):
         @wraps(func)
         def wrapper(*args, **kwargs):
             try:
-                endpoint = args[argument_index]
-                arg = list(args)
-            except IndexError:
-                endpoint = kwargs[endpoint_arg_name]
-                arg = kwargs
+                try:
+                    endpoint = args[argument_index]
+                    arg = list(args)
+                except IndexError:
+                    endpoint = kwargs[endpoint_arg_name]
+                    arg = kwargs
 
-            if not _check_endpoint_type(endpoint):
-                return func(*args, **kwargs)
-            if func.__name__ not in endpoint.message_op:
-                raise IncompatibleRedisOperation(
-                    f"Endpoint {endpoint} is not compatible with {func.__name__} method"
-                )
-            _validate_all_bec_messages(list(args) + list(kwargs.values()), endpoint)
+                if not _check_endpoint_type(endpoint):
+                    return func(*args, **kwargs)
+                if func.__name__ not in endpoint.message_op:
+                    raise IncompatibleRedisOperation(
+                        f"Endpoint {endpoint} is not compatible with {func.__name__} method"
+                    )
+                _validate_all_bec_messages(list(args) + list(kwargs.values()), endpoint)
 
-            if isinstance(arg, list):
-                arg[argument_index] = endpoint.endpoint
-                return func(*tuple(arg), **kwargs)
-            arg[endpoint_arg_name] = endpoint.endpoint
-            return func(*args, **arg)
+                if isinstance(arg, list):
+                    arg[argument_index] = endpoint.endpoint
+                    return func(*tuple(arg), **kwargs)
+                arg[endpoint_arg_name] = endpoint.endpoint
+                return func(*args, **arg)
+            except redis.exceptions.NoPermissionError as exc:
+                # the default NoPermissionError message is not very informative as it does not
+                # contain any information about the endpoint that caused the error
+                raise redis.exceptions.NoPermissionError(
+                    f"Permission denied for endpoint {endpoint.endpoint}"
+                ) from exc
 
         _fix_docstring_for_ipython(wrapper, endpoint_arg_name)
         return wrapper
@@ -246,16 +254,50 @@ class RedisConnector:
 
         self._generator_executor = ThreadPoolExecutor()
 
-    def authenticate(self, password: str, username: str = "user"):
+    def authenticate(self, *, username: str = "default", password: str | None = "null"):
         """
-        Authenticate to the redis server
+        Authenticate to the redis server.
+        Please note that the arguments are keyword-only. This is to avoid confusion as the
+        underlying redis library accepts the password as the first argument.
 
         Args:
-            password (str): password
             username (str, optional): username. Defaults to "default".
+            password (str, optional): password. Defaults to "null".
         """
-        self._redis_conn.connection_pool.connection_kwargs["username"] = username
-        self._redis_conn.connection_pool.connection_kwargs["password"] = password
+        if password is None:
+            password = "null"
+        old_kwargs = copy.deepcopy(self._redis_conn.connection_pool.connection_kwargs)
+        try:
+            self._close_pubsub()
+            self._redis_conn.connection_pool.reset()
+            self._redis_conn.connection_pool.connection_kwargs["username"] = username
+            self._redis_conn.connection_pool.connection_kwargs["password"] = password
+            self._redis_conn.auth(password, username=username)
+            self._restart_pubsub()
+        except redis.exceptions.RedisError as exc:
+            self._redis_conn.connection_pool.reset()
+            self._redis_conn.connection_pool.connection_kwargs = old_kwargs
+            raise exc
+
+    def _close_pubsub(self):
+        if self._events_listener_thread:
+            self._stop_events_listener_thread.set()
+            self._events_listener_thread.join()
+            self._events_listener_thread = None
+        self._pubsub_conn.close()
+
+    def _restart_pubsub(self):
+        self._pubsub_conn = self._redis_conn.pubsub()
+        self._pubsub_conn.ignore_subscribe_messages = True
+        for topic in self._topics_cb.keys():
+            if "*" in topic:
+                self._pubsub_conn.psubscribe(topic)
+            else:
+                self._pubsub_conn.subscribe(topic)
+        self._stop_events_listener_thread.clear()
+        if self._events_listener_thread is None:
+            self._events_listener_thread = threading.Thread(target=self._get_messages_loop)
+            self._events_listener_thread.start()
 
     def shutdown(self):
         """
@@ -636,6 +678,13 @@ class RedisConnector:
                 if not error:
                     error = True
                     bec_logger.logger.error("Failed to connect to redis. Is the server running?")
+                self._stop_stream_events_listener_thread.wait(timeout=1)
+            except redis.exceptions.NoPermissionError:
+                bec_logger.logger.error(
+                    f"Permission denied for stream topics: \n Topics id: {from_start_stream_topics_id}, Stream topics id: {stream_topics_id}"
+                )
+                if not error:
+                    error = True
                 self._stop_stream_events_listener_thread.wait(timeout=1)
             # pylint: disable=broad-except
             except Exception:
@@ -1249,6 +1298,24 @@ class RedisConnector:
             )
         self._redis_conn.sadd(set_endpoint.endpoint, raw_msg[1])
         return decoded_msg
+
+    def can_connect(self) -> bool:
+        """Check if the connector needs authentication"""
+        try:
+            self._redis_conn.ping()
+        except redis.exceptions.AuthenticationError:
+            return False
+        return True
+
+    def redis_server_is_running(self) -> bool:
+        """Check if the redis server is running"""
+        try:
+            self._redis_conn.ping()
+        except (redis.exceptions.AuthenticationError, redis.exceptions.ResponseError):
+            return True
+        except redis.exceptions.ConnectionError:
+            return False
+        return True
 
     def producer(self):
         """Return itself as a producer, to be compatible with old code"""

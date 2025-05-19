@@ -11,6 +11,7 @@ from rich.prompt import Prompt
 from rich.box import DOUBLE_EDGE
 import glob
 import platform
+import re
 
 console = Console()
 
@@ -377,6 +378,7 @@ def read_note(folder, name):
   word_count = 0
 
   if not os.path.exists(note_path):
+    list_notes(folder)
     console.print(f"\n[bold red]Note '{name}' not found in '{folder}'.[/bold red]\n")
     return
 

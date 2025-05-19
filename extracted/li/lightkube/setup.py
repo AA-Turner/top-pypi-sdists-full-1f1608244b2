@@ -3,7 +3,7 @@ from pathlib import Path
 
 setup(
     name='lightkube',
-    version="0.17.1",
+    version="0.17.2",
     description='Lightweight kubernetes client library',
     long_description=Path("README.md").read_text(),
     long_description_content_type="text/markdown",
@@ -15,7 +15,7 @@ setup(
     package_data={'lightkube': ['py.typed']},
     install_requires=[
         'lightkube-models >= 1.15.12.0',
-        'httpx >= 0.24.0, < 1.0.0',
+        'httpx >= 0.28.1, < 1.0.0',
         'PyYAML'
     ],
     extras_require={

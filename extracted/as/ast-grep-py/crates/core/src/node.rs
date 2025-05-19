@@ -33,13 +33,14 @@ impl Position {
   pub fn line(&self) -> usize {
     self.line
   }
-  /// TODO: return unicode character offset
+  /// Returns the column in terms of characters.
+  /// Note: node does not have to be a node of matching position.
   pub fn column<D: Doc>(&self, node: &Node<'_, D>) -> usize {
     let source = node.get_doc().get_source();
     source.get_char_column(self.byte_column, self.byte_offset)
   }
-  pub fn byte_point(&self) -> (u32, u32) {
-    (self.line as u32, self.byte_column as u32)
+  pub fn byte_point(&self) -> (usize, usize) {
+    (self.line, self.byte_column)
   }
 }
 

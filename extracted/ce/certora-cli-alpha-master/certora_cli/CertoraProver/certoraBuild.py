@@ -2794,7 +2794,10 @@ class CertoraBuildGenerator:
                         continue
 
                     # Now that we have all the storage layout information, extract it once
-                    slayouts[(imported_file, def_node.get("name"))] = self.extract_slayout(imported_file, ns_storage)
+                    slayouts[key] = self.extract_slayout(imported_file, ns_storage)
+
+        if self.context.test == str(Util.TestValue.STORAGE_EXTENSION_LAYOUT):
+            raise Util.TestResultsReady(slayouts)
 
         if not slayouts:
             # No contracts with namespaced storage found

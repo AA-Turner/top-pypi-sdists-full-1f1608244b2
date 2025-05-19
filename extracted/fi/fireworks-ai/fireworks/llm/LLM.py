@@ -1,10 +1,12 @@
 from collections import defaultdict, deque
 from datetime import timedelta
+import inspect
 import time
 from fireworks.client.api_client import FireworksClient
 from fireworks.client.chat import Chat as FireworksChat
 from fireworks.client.chat_completion import ChatCompletionV2 as FireworksChatCompletion
 from asyncstdlib.functools import cache
+from functools import cache as sync_cache
 from typing import (
     AsyncGenerator,
     Generator,
@@ -34,6 +36,7 @@ from openai.types.chat.chat_completion_message_param import ChatCompletionMessag
 from openai.types.chat.completion_create_params import ResponseFormat
 from openai import NOT_GIVEN, NotGiven
 from fireworks._util import run_coroutine_in_appropriate_loop
+import sysconfig
 
 # Configure logger with a consistent format for better debugging
 logger = logging.getLogger(__name__)
@@ -62,6 +65,7 @@ class ChatCompletion:
         stream: Literal[False] = False,
         response_format: Optional[ResponseFormat] = None,
         reasoning_effort: Optional[ReasoningEffort] = None,
+        max_tokens: Optional[int] = None,
         extra_headers=None,
         **kwargs,
     ) -> OpenAIChatCompletion:
@@ -74,6 +78,7 @@ class ChatCompletion:
         stream: Literal[True] = True,
         response_format: Optional[ResponseFormat] = None,
         reasoning_effort: Optional[ReasoningEffort] = None,
+        max_tokens: Optional[int] = None,
         extra_headers=None,
         **kwargs,
     ) -> Generator[ChatCompletionChunk, None, None]:
@@ -85,6 +90,7 @@ class ChatCompletion:
         stream: bool = False,
         response_format: Optional[ResponseFormat] = None,
         reasoning_effort: Optional[ReasoningEffort] = None,
+        max_tokens: Optional[int] = None,
         extra_headers=None,
         **kwargs,
     ) -> Union[OpenAIChatCompletion, Generator[ChatCompletionChunk, None, None]]:
@@ -107,6 +113,7 @@ class ChatCompletion:
                     extra_headers=extra_headers,
                     response_format=response_format,
                     reasoning_effort=reasoning_effort,
+                    max_tokens=max_tokens,
                     **kwargs,
                 )
                 if self._llm.enable_metrics:
@@ -126,6 +133,7 @@ class ChatCompletion:
         stream: Literal[False] = False,
         response_format: Optional[ResponseFormat] = None,
         reasoning_effort: Optional[ReasoningEffort] = None,
+        max_tokens: Optional[int] = None,
         extra_headers=None,
         **kwargs,
     ) -> OpenAIChatCompletion: ...
@@ -137,6 +145,7 @@ class ChatCompletion:
         stream: Literal[True] = True,
         response_format: Optional[ResponseFormat] = None,
         reasoning_effort: Optional[ReasoningEffort] = None,
+        max_tokens: Optional[int] = None,
         extra_headers=None,
         **kwargs,
     ) -> AsyncGenerator[ChatCompletionChunk, None]:
@@ -148,6 +157,7 @@ class ChatCompletion:
         stream: bool = False,
         response_format: Optional[ResponseFormat] = None,
         reasoning_effort: Optional[ReasoningEffort] = None,
+        max_tokens: Optional[int] = None,
         extra_headers=None,
         **kwargs,
     ) -> Union[OpenAIChatCompletion, AsyncGenerator[ChatCompletionChunk, None]]:
@@ -163,6 +173,7 @@ class ChatCompletion:
                     extra_headers=extra_headers,
                     response_format=response_format,
                     reasoning_effort=reasoning_effort,
+                    max_tokens=max_tokens,
                     **kwargs,
                 )
                 if stream:
@@ -312,10 +323,18 @@ class Metrics:
         return max(self._metrics[metric_name])
 
 
+class DeploymentWithIdAndName(Deployment):
+    def __init__(self, deployment: Deployment, gateway: Gateway):
+        self.id = deployment.name
+        self.name = deployment.display_name
+        self._gateway = gateway
+
+
 class LLM:
     def __init__(
         self,
         model: str,
+        name: Optional[str] = None,
         api_key: Optional[str] = None,
         base_url: str = "https://api.fireworks.ai/inference/v1",
         deployment_type: Literal["serverless", "on-demand"] = "serverless",
@@ -343,22 +362,26 @@ class LLM:
                 TODO: add support for more metrics (TTFT, Tokens/second)
             max_retries: The maximum number of retries to use.
         """
+        if not model:
+            raise ValueError("model is required")
         self._client = FireworksClient(api_key=api_key, base_url=base_url)
-        if not model.startswith("accounts/fireworks/models/"):
-            self._model = f"accounts/fireworks/models/{model}"
-        else:
-            self._model = model
-        self.chat = Chat(self, self._model)
+        if name is not None and name == "":
+            raise ValueError("name must be non-empty")
+        self._name = name
+        self._model = model
+        self.chat = Chat(self, self.model)
         self.deployment_type = deployment_type
         self.max_retries = max_retries
         self.enable_metrics = enable_metrics
         self._gateway = Gateway(api_key=api_key)
         self._metrics = Metrics()
+        # Add a lock to prevent concurrent calls to _ensure_deployment_ready
+        self._deployment_lock = asyncio.Lock()
         atexit.register(self._gateway._channel.close)
 
         if isinstance(accelerator_type, str):
             self._accelerator_type = AcceleratorTypeEnum.from_string(accelerator_type)
-            self._validate_model_for_gpu(self._model, self._accelerator_type)
+            self._validate_model_for_gpu(self.model, self._accelerator_type)
         else:
             self._accelerator_type = accelerator_type
 
@@ -368,6 +391,12 @@ class LLM:
             scale_down_window=scale_down_window,
             scale_to_zero_window=scale_to_zero_window,
         )
+
+    @property
+    def model(self):
+        if not self._model.startswith("accounts/fireworks/models/"):
+            return f"accounts/fireworks/models/{self._model}"
+        return self._model
 
     @staticmethod
     def _validate_model_for_gpu(model: str, accelerator_type: AcceleratorTypeEnum):
@@ -398,8 +427,33 @@ class LLM:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self._gateway.__aexit__(exc_type, exc_val, exc_tb)
 
-    async def is_serverless(self):
-        return await self._is_available_on_serverless()
+    @property
+    def name(self) -> str:
+        return self._get_deployment_name()
+
+    @sync_cache
+    def _get_deployment_name(self):
+        if self._name is None:
+            # Get fireworks package path and Python stdlib path
+            import fireworks
+
+            package_path = os.path.dirname(fireworks.__file__)
+            stdlib_path = sysconfig.get_path("stdlib")
+
+            stack = inspect.stack()
+            for frame_info in stack:
+                filename = frame_info.filename
+                # Skip frames from our package, Python stdlib, other libraries, and internal Python
+                if (
+                    not filename.startswith(package_path)
+                    and not filename.startswith(stdlib_path)
+                    and not "/site-packages/" in filename
+                    and not filename.startswith("<")
+                ):
+                    logger.debug(f"Found caller outside of library code to generate name: {filename}")
+                    return os.path.basename(filename)
+            raise ValueError("No caller found outside of library code")
+        return self._name
 
     async def apply(self):
         """
@@ -416,20 +470,53 @@ class LLM:
             raise ValueError("Metrics are not enabled for this LLM")
         return self._metrics.get_metric_mean("time_to_last_token")
 
+    async def is_available_on_serverless(self):
+        """
+        Checks if the model is available on serverless.
+        """
+        return await self._is_available_on_serverless()
+
+    async def deployment_strategy(self) -> Literal["serverless", "on-demand"]:
+        return await self._deployment_strategy()
+
+    @cache
+    async def _deployment_strategy(self) -> Literal["serverless", "on-demand"]:
+        """
+        Determines whether to use serverless or dedicated deployment based on model availability
+        and configured deployment type.
+
+        Returns:
+            bool: True if a dedicated deployment is needed, False if serverless can be used.
+        """
+        if await self.is_available_on_serverless():
+            if self.deployment_type == "serverless":
+                logger.debug(f"Model {self.model} is available on serverless, using serverless deployment")
+                return "serverless"
+            else:
+                logger.debug(
+                    f"Model {self.model} is available on serverless, but deployment_type is on-demand, continuing to ensure deployment is ready"
+                )
+                return "on-demand"
+        else:
+            logger.debug(
+                f"Model {self.model} is not available on serverless, continuing to check for existing deployment"
+            )
+            return "on-demand"
+
     @cache
     async def _is_available_on_serverless(self):
-        logger.debug(f"Checking if {self._model} is available on serverless")
+        logger.debug(f"Checking if {self.model} is available on serverless")
         models = await self._gateway.list_models(parent="accounts/fireworks", include_deployed_model_refs=True)
 
         # find model in models
-        model = next((m for m in models if m.name == self._model), None)
+        model = next((m for m in models if m.name == self.model), None)
         if model is None:
             raise ValueError(
-                f"Model {self._model} not available on Fireworks. See https://fireworks.ai/models for available models."
+                f"Model {self.model} not available on Fireworks. See https://fireworks.ai/models for available models."
             )
-        logger.debug(f"Found model {self._model} on under fireworks account")
+        logger.debug(f"Found model {self.model} on under fireworks account")
         is_serverless = self._is_model_on_serverless_account(model)
-        logger.debug(f"Model {self._model} is {'serverless' if is_serverless else 'not serverless'}")
+        logger.debug(f"Model {self.model} is {'serverless' if is_serverless else 'not serverless'}")
         return is_serverless
 
     @staticmethod
@@ -464,12 +551,10 @@ class LLM:
         """
         Queries all deployments for the same model and accelerator type (if given) and returns the first one.
         """
-        deployments = await self._gateway.list_deployments(filter=f'base_model="{self._model}"')
-        if self._accelerator_type is not NOT_GIVEN:
-            # filter for deployment with the same accelerator type
-            deployment = next((d for d in deployments if d.accelerator_type == self._accelerator_type), None)
-        else:
-            deployment = next(iter(deployments), None)
+        deployments = await self._gateway.list_deployments(
+            filter=f'display_name="{self.name}" AND base_model="{self.model}"'
+        )
+        deployment = next(iter(deployments), None)
         return deployment
 
     async def _ensure_deployment_ready(self) -> None:
@@ -477,96 +562,100 @@ class LLM:
         If a deployment is inferred for this LLM, ensure it's deployed and
         ready. A deployment is required if the model is not available on
         serverless or this LLM has deployment_type="on-demand".
+
+        This method uses a lock to prevent concurrent calls from multiple coroutines.
         """
-
-        if await self._is_available_on_serverless():
-            if self.deployment_type == "serverless":
-                logger.debug(f"Model {self._model} is available on serverless, using serverless deployment")
+        # Use the lock to prevent concurrent calls to this method
+        async with self._deployment_lock:
+            deployment_strategy = await self.deployment_strategy()
+            if deployment_strategy == "serverless":
                 return
-            else:
-                logger.debug(
-                    f"Model {self._model} is available on serverless, but deployment_type is on-demand, continuing to ensure deployment is ready"
+
+            deployment = await self._query_existing_deployment()
+
+            if deployment is None:
+                logger.debug(f"No existing deployment found, creating deployment for {self.model}")
+                deployment = await self._gateway.create_deployment(
+                    self.name, self.model, self._autoscaling_policy, self._accelerator_type
                 )
-        else:
-            logger.debug(f"Model {self._model} is not available on serverless, checking for existing deployment")
+                logger.debug(f"Deployment {deployment.name} created, waiting for it to be ready")
 
-        deployment = await self._query_existing_deployment()
-
-        if deployment is None:
-            logger.debug(f"No existing deployment found, creating deployment for {self._model}")
-            deployment = await self._gateway.create_deployment(
-                self._model, self._autoscaling_policy, self._accelerator_type
-            )
-            logger.debug(f"Deployment {deployment.name} created, waiting for it to be ready")
-
-            # poll deployment status until it's ready
-            start_time = asyncio.get_event_loop().time()
-            last_log_time = 0
-            while deployment.state != DeploymentState.READY:
-                current_time = asyncio.get_event_loop().time()
-                # wait for 1 second
-                await asyncio.sleep(1)
-                deployment = await self._gateway.get_deployment(deployment.name)
-                if current_time - last_log_time >= 10:
-                    elapsed_so_far = current_time - start_time
-                    logger.debug(
-                        f"Waiting for deployment {deployment.name} to be ready, current state: {deployment.state}, elapsed time: {elapsed_so_far:.2f}s"
-                    )
-                    last_log_time = current_time
-
-            total_time = asyncio.get_event_loop().time() - start_time
-            logger.debug(
-                f"Deployment {deployment.name} is ready, using deployment (ready in {total_time:.2f} seconds)"
-            )
-        else:
-            logger.debug(f"Deployment {deployment.name} already exists, checking if it needs to be scaled up")
-
-            updates = {}
-
-            # if autoscaling policy is not equal, update it
-            if not self._is_autoscaling_policy_equal(deployment):
-                logger.debug(
-                    f"Updating autoscaling policy for {deployment.name} to "
-                    f"{self._autoscaling_policy.scale_up_window.total_seconds()}s up, "
-                    f"{self._autoscaling_policy.scale_down_window.total_seconds()}s down, "
-                    f"{self._autoscaling_policy.scale_to_zero_window.total_seconds()}s to zero"
-                )
-                updates["autoscaling_policy"] = self._autoscaling_policy
-
-            if len(updates) > 0:
-                logger.debug(f"Updating deployment {deployment.name} with {updates}")
+                # poll deployment status until it's ready
                 start_time = asyncio.get_event_loop().time()
-                await self._gateway.update_deployment(deployment.name, **updates)
-
-                # poll until deployment is ready
-                while deployment.state != DeploymentState.READY:
-                    await asyncio.sleep(1)
-                    deployment = await self._gateway.get_deployment(deployment.name)
-
-                elapsed_time = asyncio.get_event_loop().time() - start_time
-                logger.debug(f"Deployment update completed in {elapsed_time:.2f} seconds")
-
-            if deployment.replica_count == 0:
-                logger.debug(f"Deployment {deployment.name} is not ready, scaling to 1 replica")
-                start_time = asyncio.get_event_loop().time()
-                await self._gateway.scale_deployment(deployment.name, 1)
-
-                # Poll until deployment has at least one replica
                 last_log_time = 0
-                while deployment.replica_count == 0:
+                while deployment.state != DeploymentState.READY:
                     current_time = asyncio.get_event_loop().time()
+                    # wait for 1 second
                     await asyncio.sleep(1)
                     deployment = await self._gateway.get_deployment(deployment.name)
                     if current_time - last_log_time >= 10:
                         elapsed_so_far = current_time - start_time
                         logger.debug(
-                            f"Waiting for deployment {deployment.name} to scale up, current replicas: {deployment.replica_count}, elapsed time: {elapsed_so_far:.2f}s"
+                            f"Waiting for deployment {deployment.name} to be ready, current state: {deployment.state}, elapsed time: {elapsed_so_far:.2f}s"
                         )
                         last_log_time = current_time
 
-                total_scale_time = asyncio.get_event_loop().time() - start_time
-                logger.debug(f"Deployment {deployment.name} scaled up in {total_scale_time:.2f} seconds")
-            logger.debug(f"Deployment {deployment.name} is ready, using deployment")
+                total_time = asyncio.get_event_loop().time() - start_time
+                logger.debug(
+                    f"Deployment {deployment.name} is ready, using deployment (ready in {total_time:.2f} seconds)"
+                )
+            else:
+                logger.debug(f"Deployment {deployment.name} already exists, checking if it needs to be scaled up")
+
+                updates = {}
+
+                # if autoscaling policy is not equal, update it
+                if not self._is_autoscaling_policy_equal(deployment):
+                    logger.debug(
+                        f"Updating autoscaling policy for {deployment.name} to "
+                        f"{self._autoscaling_policy.scale_up_window.total_seconds()}s up, "
+                        f"{self._autoscaling_policy.scale_down_window.total_seconds()}s down, "
+                        f"{self._autoscaling_policy.scale_to_zero_window.total_seconds()}s to zero"
+                    )
+                    updates["autoscaling_policy"] = self._autoscaling_policy
+
+                if deployment.accelerator_type != self._accelerator_type and self._accelerator_type is not NOT_GIVEN:
+                    raise ValueError(
+                        f'Deployment with name "{deployment.name}" has accelerator type {deployment.accelerator_type}, ',
+                        f"but the LLM has accelerator type {self._accelerator_type}. You must specify a different name ",
+                        f"for this LLM to use a different accelerator type since it is not possible to change the accelerator ",
+                        f"type of an existing deployment.",
+                    )
+
+                if len(updates) > 0:
+                    logger.debug(f"Updating deployment {deployment.name} with {updates}")
+                    start_time = asyncio.get_event_loop().time()
+                    await self._gateway.update_deployment(deployment.name, **updates)
+
+                    # poll until deployment is ready
+                    while deployment.state != DeploymentState.READY:
+                        await asyncio.sleep(1)
+                        deployment = await self._gateway.get_deployment(deployment.name)
+
+                    elapsed_time = asyncio.get_event_loop().time() - start_time
+                    logger.debug(f"Deployment update completed in {elapsed_time:.2f} seconds")
+
+                if deployment.replica_count == 0:
+                    logger.debug(f"Deployment {deployment.name} is not ready, scaling to 1 replica")
+                    start_time = asyncio.get_event_loop().time()
+                    await self._gateway.scale_deployment(deployment.name, 1)
+
+                    # Poll until deployment has at least one replica
+                    last_log_time = 0
+                    while deployment.replica_count == 0:
+                        current_time = asyncio.get_event_loop().time()
+                        await asyncio.sleep(1)
+                        deployment = await self._gateway.get_deployment(deployment.name)
+                        if current_time - last_log_time >= 10:
+                            elapsed_so_far = current_time - start_time
+                            logger.debug(
+                                f"Waiting for deployment {deployment.name} to scale up, current replicas: {deployment.replica_count}, elapsed time: {elapsed_so_far:.2f}s"
+                            )
+                            last_log_time = current_time
+
+                    total_scale_time = asyncio.get_event_loop().time() - start_time
+                    logger.debug(f"Deployment {deployment.name} scaled up in {total_scale_time:.2f} seconds")
+                logger.debug(f"Deployment {deployment.name} is ready, using deployment")
 
     async def scale_to_zero(self) -> Optional[Deployment]:
         """
@@ -594,8 +683,11 @@ class LLM:
             and deployment.autoscaling_policy.scale_to_zero_window == self._autoscaling_policy.scale_to_zero_window
         )
 
+    async def deployment(self) -> Optional[DeploymentWithIdAndName]:
+        return await self._deployment()
+
     @cache
-    async def deployment(self) -> Optional[Deployment]:
+    async def _deployment(self) -> Optional[DeploymentWithIdAndName]:
         """
         Queries for any deployment that should exist for this LLM under this
         Fireworks account. If no deployment is found, but should exist, it will
@@ -604,31 +696,22 @@ class LLM:
         """
         await self._ensure_deployment_ready()
         deployment = await self._query_existing_deployment()
-        return deployment
-
-    @property
-    def model(self):
-        return self._model
+        return DeploymentWithIdAndName(deployment, self._gateway) if deployment else None
 
     async def model_id(self):
         """
         Returns the model ID, which is the model name plus the deployment name
         if it exists. This is used for the "model" arg when calling the model.
         """
-        if await self.is_serverless():
+        if await self.is_available_on_serverless():
             return self.model
         deployment = await self.deployment()
         if deployment is None:
             return self.model
-        return f"{self.model}#{deployment.name}"
+        return f"{self.model}#{deployment.id}"
 
     def __str__(self):
         return self.__repr__()
 
     def __repr__(self):
         return f"LLM(model={self.model})"
-
-
-class LLMConfig:
-    model: str
-    autoscaling_policy: Optional[AutoscalingPolicy] = None

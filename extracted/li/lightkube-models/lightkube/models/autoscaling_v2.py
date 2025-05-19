@@ -6,8 +6,8 @@ from ._schema import dataclass, field, DictMixin
 if TYPE_CHECKING:   # Fix for pycharm autocompletion https://youtrack.jetbrains.com/issue/PY-54560
     from dataclasses import dataclass, field
 
-from . import resource
 from . import meta_v1
+from . import resource
 
 
 @dataclass
@@ -118,18 +118,25 @@ class HPAScalingPolicy(DictMixin):
 
 @dataclass
 class HPAScalingRules(DictMixin):
-    r"""HPAScalingRules configures the scaling behavior for one direction. These Rules
-      are applied after calculating DesiredReplicas from metrics for the HPA. They
-      can limit the scaling velocity by specifying scaling policies. They can
-      prevent flapping by specifying the stabilization window, so that the number of
-      replicas is not set instantly, instead, the safest value from the
-      stabilization window is chosen.
+    r"""HPAScalingRules configures the scaling behavior for one direction via scaling
+      Policy Rules and a configurable metric tolerance.
+      
+      Scaling Policy Rules are applied after calculating DesiredReplicas from
+      metrics for the HPA. They can limit the scaling velocity by specifying scaling
+      policies. They can prevent flapping by specifying the stabilization window, so
+      that the number of replicas is not set instantly, instead, the safest value
+      from the stabilization window is chosen.
+      
+      The tolerance is applied to the metric values and prevents scaling too eagerly
+      for small metric variations. (Note that setting a tolerance requires enabling
+      the alpha HPAConfigurableTolerance feature gate.)
 
       **parameters**
 
       * **policies** ``Optional[List[HPAScalingPolicy]]`` - policies is a list of potential scaling polices which can be used during
-        scaling. At least one policy must be specified, otherwise the HPAScalingRules
-        will be discarded as invalid
+        scaling. If not set, use the default values: - For scale up: allow doubling
+        the number of pods, or an absolute change of 4 pods in a 15s window. - For
+        scale down: allow all pods to be removed in a 15s window.
       * **selectPolicy** ``Optional[str]`` - selectPolicy is used to specify which policy should be used. If not set, the
         default value Max is used.
       * **stabilizationWindowSeconds** ``Optional[int]`` - stabilizationWindowSeconds is the number of seconds for which past
@@ -138,10 +145,21 @@ class HPAScalingRules(DictMixin):
         or equal to 3600 (one hour). If not set, use the default values: - For scale
         up: 0 (i.e. no stabilization is done). - For scale down: 300 (i.e. the
         stabilization window is 300 seconds long).
+      * **tolerance** ``Optional[resource.Quantity]`` - tolerance is the tolerance on the ratio between the current and desired metric
+        value under which no updates are made to the desired number of replicas (e.g.
+        0.01 for 1%). Must be greater than or equal to zero. If not set, the default
+        cluster-wide tolerance is applied (by default 10%).
+        For example, if autoscaling is configured with a memory consumption target of
+        100Mi, and scale-down and scale-up tolerances of 5% and 1% respectively,
+        scaling will be triggered when the actual consumption falls below 95Mi or
+        exceeds 101Mi.
+        This is an alpha field and requires enabling the HPAConfigurableTolerance
+        feature gate.
     """
     policies: 'Optional[List[HPAScalingPolicy]]' = None
     selectPolicy: 'Optional[str]' = None
     stabilizationWindowSeconds: 'Optional[int]' = None
+    tolerance: 'Optional[resource.Quantity]' = None
 
 
 @dataclass
@@ -171,6 +189,10 @@ class HorizontalPodAutoscaler(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     spec: 'Optional[HorizontalPodAutoscalerSpec]' = None
     status: 'Optional[HorizontalPodAutoscalerStatus]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'autoscaling/v2'
+        self.kind = 'HorizontalPodAutoscaler'
 
 
 @dataclass
@@ -236,6 +258,10 @@ class HorizontalPodAutoscalerList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'autoscaling/v2'
+        self.kind = 'HorizontalPodAutoscalerList'
 
 
 @dataclass

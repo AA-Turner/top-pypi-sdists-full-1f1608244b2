@@ -5,9 +5,11 @@ from maleo_foundation.managers.client.base import (
     ClientControllerManagers,
     ClientHTTPController,
     ClientServiceControllers,
+    ClientService,
     ClientControllers
 )
 from maleo_foundation.managers.service import ServiceManager
+from maleo_foundation.utils.logging import ClientLogger
 
 class MaleoClientHTTPController(ClientHTTPController):
     def __init__(
@@ -15,8 +17,8 @@ class MaleoClientHTTPController(ClientHTTPController):
         service_manager:ServiceManager,
         manager:ClientHTTPControllerManager
     ):
-        self._service_manager = service_manager
         super().__init__(manager)
+        self._service_manager = service_manager
 
     @property
     def service_manager(self) -> ServiceManager:
@@ -27,6 +29,25 @@ class MaleoClientServiceControllers(ClientServiceControllers):
 
     class Config:
         arbitrary_types_allowed=True
+
+class MaleoClientService(ClientService):
+    def __init__(
+        self,
+        key:str,
+        logger:ClientLogger,
+        service_manager:ServiceManager
+    ):
+        super().__init__(logger)
+        self._key = key
+        self._service_manager = service_manager
+
+    @property
+    def key(self) -> str:
+        return self._key
+
+    @property
+    def service_manager(self) -> ServiceManager:
+        return self._service_manager
 
 class MaleoClientManager(ClientManager):
     def __init__(

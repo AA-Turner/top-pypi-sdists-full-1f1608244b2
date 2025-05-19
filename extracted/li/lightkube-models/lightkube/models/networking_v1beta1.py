@@ -40,6 +40,10 @@ class IPAddress(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     spec: 'Optional[IPAddressSpec]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'networking.k8s.io/v1beta1'
+        self.kind = 'IPAddress'
+
 
 @dataclass
 class IPAddressList(DictMixin):
@@ -63,6 +67,10 @@ class IPAddressList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'networking.k8s.io/v1beta1'
+        self.kind = 'IPAddressList'
 
 
 @dataclass
@@ -123,6 +131,10 @@ class ServiceCIDR(DictMixin):
     spec: 'Optional[ServiceCIDRSpec]' = None
     status: 'Optional[ServiceCIDRStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'networking.k8s.io/v1beta1'
+        self.kind = 'ServiceCIDR'
+
 
 @dataclass
 class ServiceCIDRList(DictMixin):
@@ -146,6 +158,10 @@ class ServiceCIDRList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'networking.k8s.io/v1beta1'
+        self.kind = 'ServiceCIDRList'
 
 
 @dataclass

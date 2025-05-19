@@ -6,8 +6,8 @@ from ._schema import dataclass, field, DictMixin
 if TYPE_CHECKING:   # Fix for pycharm autocompletion https://youtrack.jetbrains.com/issue/PY-54560
     from dataclasses import dataclass, field
 
-from . import core_v1
 from . import meta_v1
+from . import core_v1
 
 
 @dataclass
@@ -82,6 +82,10 @@ class Event(DictMixin):
     series: 'Optional[EventSeries]' = None
     type: 'Optional[str]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'events.k8s.io/v1'
+        self.kind = 'Event'
+
 
 @dataclass
 class EventList(DictMixin):
@@ -105,6 +109,10 @@ class EventList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'events.k8s.io/v1'
+        self.kind = 'EventList'
 
 
 @dataclass

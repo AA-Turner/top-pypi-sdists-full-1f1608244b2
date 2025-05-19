@@ -6,8 +6,8 @@ from ._schema import dataclass, field, DictMixin
 if TYPE_CHECKING:   # Fix for pycharm autocompletion https://youtrack.jetbrains.com/issue/PY-54560
     from dataclasses import dataclass, field
 
-from typing import Dict
 from . import meta_v1
+from typing import Dict
 
 
 @dataclass
@@ -56,6 +56,10 @@ class StorageVersion(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'internal.apiserver.k8s.io/v1alpha1'
+        self.kind = 'StorageVersion'
+
 
 @dataclass
 class StorageVersionCondition(DictMixin):
@@ -101,6 +105,10 @@ class StorageVersionList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'internal.apiserver.k8s.io/v1alpha1'
+        self.kind = 'StorageVersionList'
 
 
 StorageVersionSpec = Dict

@@ -21,9 +21,15 @@ class Info(DictMixin):
       * **gitTreeState** ``str`` - 
       * **gitVersion** ``str`` - 
       * **goVersion** ``str`` - 
-      * **major** ``str`` - 
-      * **minor** ``str`` - 
+      * **major** ``str`` - Major is the major version of the binary version
+      * **minor** ``str`` - Minor is the minor version of the binary version
       * **platform** ``str`` - 
+      * **emulationMajor** ``Optional[str]`` - EmulationMajor is the major version of the emulation version
+      * **emulationMinor** ``Optional[str]`` - EmulationMinor is the minor version of the emulation version
+      * **minCompatibilityMajor** ``Optional[str]`` - MinCompatibilityMajor is the major version of the minimum compatibility
+        version
+      * **minCompatibilityMinor** ``Optional[str]`` - MinCompatibilityMinor is the minor version of the minimum compatibility
+        version
     """
     buildDate: 'str'
     compiler: 'str'
@@ -34,5 +40,9 @@ class Info(DictMixin):
     major: 'str'
     minor: 'str'
     platform: 'str'
+    emulationMajor: 'Optional[str]' = None
+    emulationMinor: 'Optional[str]' = None
+    minCompatibilityMajor: 'Optional[str]' = None
+    minCompatibilityMinor: 'Optional[str]' = None
 
 

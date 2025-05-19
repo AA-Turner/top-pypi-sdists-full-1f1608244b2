@@ -170,7 +170,7 @@ class SwiftMixin:
     def _save_model(self, output_dir: Optional[str] = None, state_dict=None):
         # model
         supported_classes = (SwiftModel, PreTrainedModel, PeftModel)
-        supported_names = ('SentenceTransformer')
+        supported_names = ('SentenceTransformer', )
         if AutoModelForCausalLMWithValueHead is not None:
             supported_classes = supported_classes + (AutoModelForCausalLMWithValueHead, )
         save_safetensors = self.args.save_safetensors
@@ -493,13 +493,13 @@ class DataLoaderMixin:
             if hasattr(train_dataset, '__len__'):
                 batch_sampler = BatchSamplerShard(
                     len(train_dataset), batch_size=self._train_batch_size, **batch_sampler_params)
-                dataloader = DataLoaderShard(train_dataset, batch_sampler, **dataloader_params)
+                dataloader = DataLoaderShard(train_dataset, batch_sampler, self.accelerator.device, **dataloader_params)
             else:
                 # IterableDataset
                 if dist.is_initialized() and dataloader_params['prefetch_factor']:
                     dataloader_params['prefetch_factor'] = dataloader_params['prefetch_factor'] * dist.get_world_size()
                 dataloader = DataLoader(train_dataset, batch_size=self._train_batch_size, **dataloader_params)
-                dataloader = DataLoaderDispatcher(dataloader)
+                dataloader = DataLoaderDispatcher(dataloader, self.accelerator.device)
 
         return dataloader
 

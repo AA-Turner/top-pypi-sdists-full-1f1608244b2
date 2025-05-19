@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: cdk-common
-Version: 2.0.1180
+Version: 2.0.1183
 Summary: Common AWS CDK librarys.
 Home-page: https://github.com/neilkuan/cdk-common.git
 Author: Neil Kuan<guan840912@gmail.com>
@@ -21,7 +21,7 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: aws-cdk-lib<3.0.0,>=2.188.0
 Requires-Dist: constructs<11.0.0,>=10.0.5
-Requires-Dist: jsii<2.0.0,>=1.111.0
+Requires-Dist: jsii<2.0.0,>=1.112.0
 Requires-Dist: publication>=0.0.3
 Requires-Dist: typeguard<4.3.0,>=2.13.3
 
@@ -44,14 +44,7 @@ Use the npm dist tag to opt in CDKv1 or CDKv2:
 
 // for CDKv2
 npm install cdk-common
-or
-npm install cdk-common@latest
-
-// for CDKv1
-npm install cdk-common@cdkv1
 ```
-
-💡💡💡 please click [here](https://github.com/neilkuan/cdk-common/tree/cdkv1#readme), if you are using aws-cdk v1.x.x version.💡💡💡
 
 ### AWS Managed Policies `enum`
 

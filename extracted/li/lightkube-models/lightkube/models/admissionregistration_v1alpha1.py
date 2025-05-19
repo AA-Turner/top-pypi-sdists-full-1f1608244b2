@@ -181,21 +181,22 @@ class MatchResources(DictMixin):
       **parameters**
 
       * **excludeResourceRules** ``Optional[List[NamedRuleWithOperations]]`` - ExcludeResourceRules describes what operations on what resources/subresources
-        the ValidatingAdmissionPolicy should not care about. The exclude rules take
-        precedence over include rules (if a resource matches both, it is excluded)
+        the policy should not care about. The exclude rules take precedence over
+        include rules (if a resource matches both, it is excluded)
       * **matchPolicy** ``Optional[str]`` - matchPolicy defines how the "MatchResources" list is used to match incoming
         requests. Allowed values are "Exact" or "Equivalent".
         - Exact: match a request only if it exactly matches a specified rule. For
         example, if deployments can be modified via apps/v1, apps/v1beta1, and
         extensions/v1beta1, but "rules" only included `apiGroups:["apps"],
-        apiVersions:["v1"], resources: ["deployments"]`, a request to apps/v1beta1 or
-        extensions/v1beta1 would not be sent to the ValidatingAdmissionPolicy.
+        apiVersions:["v1"], resources: ["deployments"]`, the admission policy does not
+        consider requests to apps/v1beta1 or extensions/v1beta1 API groups.
         - Equivalent: match a request if modifies a resource listed in rules, even via
         another API group or version. For example, if deployments can be modified via
         apps/v1, apps/v1beta1, and extensions/v1beta1, and "rules" only included
-        `apiGroups:["apps"], apiVersions:["v1"], resources: ["deployments"]`, a
-        request to apps/v1beta1 or extensions/v1beta1 would be converted to apps/v1
-        and sent to the ValidatingAdmissionPolicy.
+        `apiGroups:["apps"], apiVersions:["v1"], resources: ["deployments"]`, the
+        admission policy **does** consider requests made to apps/v1beta1 or
+        extensions/v1beta1 API groups. The API server translates the request to a
+        matched resource API if necessary.
         Defaults to "Equivalent"
       * **namespaceSelector** ``Optional[meta_v1.LabelSelector]`` - NamespaceSelector decides whether to run the admission control policy on an
         object based on whether the namespace for that object matches the selector. If
@@ -233,18 +234,18 @@ class MatchResources(DictMixin):
         See https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
         for more examples of label selectors.
         Default to the empty LabelSelector, which matches everything.
-      * **objectSelector** ``Optional[meta_v1.LabelSelector]`` - ObjectSelector decides whether to run the validation based on if the object
-        has matching labels. objectSelector is evaluated against both the oldObject
-        and newObject that would be sent to the cel validation, and is considered to
-        match if either object matches the selector. A null object (oldObject in the
-        case of create, or newObject in the case of delete) or an object that cannot
-        have labels (like a DeploymentRollback or a PodProxyOptions object) is not
-        considered to match. Use the object selector only if the webhook is opt-in,
-        because end users may skip the admission webhook by setting the labels.
-        Default to the empty LabelSelector, which matches everything.
+      * **objectSelector** ``Optional[meta_v1.LabelSelector]`` - ObjectSelector decides whether to run the policy based on if the object has
+        matching labels. objectSelector is evaluated against both the oldObject and
+        newObject that would be sent to the policy's expression (CEL), and is
+        considered to match if either object matches the selector. A null object
+        (oldObject in the case of create, or newObject in the case of delete) or an
+        object that cannot have labels (like a DeploymentRollback or a PodProxyOptions
+        object) is not considered to match. Use the object selector only if the
+        webhook is opt-in, because end users may skip the admission webhook by setting
+        the labels. Default to the empty LabelSelector, which matches everything.
       * **resourceRules** ``Optional[List[NamedRuleWithOperations]]`` - ResourceRules describes what operations on what resources/subresources the
-        ValidatingAdmissionPolicy matches. The policy cares about an operation if it
-        matches _any_ Rule.
+        admission policy matches. The policy cares about an operation if it matches
+        _any_ Rule.
     """
     excludeResourceRules: 'Optional[List[NamedRuleWithOperations]]' = None
     matchPolicy: 'Optional[str]' = None
@@ -276,6 +277,10 @@ class MutatingAdmissionPolicy(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     spec: 'Optional[MutatingAdmissionPolicySpec]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'admissionregistration.k8s.io/v1alpha1'
+        self.kind = 'MutatingAdmissionPolicy'
 
 
 @dataclass
@@ -313,6 +318,10 @@ class MutatingAdmissionPolicyBinding(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     spec: 'Optional[MutatingAdmissionPolicyBindingSpec]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'admissionregistration.k8s.io/v1alpha1'
+        self.kind = 'MutatingAdmissionPolicyBinding'
+
 
 @dataclass
 class MutatingAdmissionPolicyBindingList(DictMixin):
@@ -337,6 +346,10 @@ class MutatingAdmissionPolicyBindingList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'admissionregistration.k8s.io/v1alpha1'
+        self.kind = 'MutatingAdmissionPolicyBindingList'
 
 
 @dataclass
@@ -395,6 +408,10 @@ class MutatingAdmissionPolicyList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'admissionregistration.k8s.io/v1alpha1'
+        self.kind = 'MutatingAdmissionPolicyList'
 
 
 @dataclass

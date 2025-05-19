@@ -318,6 +318,10 @@ class ValidatingAdmissionPolicy(DictMixin):
     spec: 'Optional[ValidatingAdmissionPolicySpec]' = None
     status: 'Optional[ValidatingAdmissionPolicyStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'admissionregistration.k8s.io/v1beta1'
+        self.kind = 'ValidatingAdmissionPolicy'
+
 
 @dataclass
 class ValidatingAdmissionPolicyBinding(DictMixin):
@@ -354,6 +358,10 @@ class ValidatingAdmissionPolicyBinding(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     spec: 'Optional[ValidatingAdmissionPolicyBindingSpec]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'admissionregistration.k8s.io/v1beta1'
+        self.kind = 'ValidatingAdmissionPolicyBinding'
+
 
 @dataclass
 class ValidatingAdmissionPolicyBindingList(DictMixin):
@@ -378,6 +386,10 @@ class ValidatingAdmissionPolicyBindingList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'admissionregistration.k8s.io/v1beta1'
+        self.kind = 'ValidatingAdmissionPolicyBindingList'
 
 
 @dataclass
@@ -468,6 +480,10 @@ class ValidatingAdmissionPolicyList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'admissionregistration.k8s.io/v1beta1'
+        self.kind = 'ValidatingAdmissionPolicyList'
 
 
 @dataclass

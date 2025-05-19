@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: apache-airflow-providers-arangodb
-Version: 2.7.4
+Version: 2.8.0
 Summary: Provider package apache-airflow-providers-arangodb for Apache Airflow
 Keywords: airflow-provider,arangodb,airflow,integration
 Author-email: Apache Software Foundation <dev@airflow.apache.org>
@@ -20,11 +20,11 @@ Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Topic :: System :: Monitoring
-Requires-Dist: apache-airflow>=2.9.0
+Requires-Dist: apache-airflow>=2.10.0
 Requires-Dist: python-arango>=7.3.2
 Project-URL: Bug Tracker, https://github.com/apache/airflow/issues
-Project-URL: Changelog, https://airflow.apache.org/docs/apache-airflow-providers-arangodb/2.7.4/changelog.html
-Project-URL: Documentation, https://airflow.apache.org/docs/apache-airflow-providers-arangodb/2.7.4
+Project-URL: Changelog, https://airflow.apache.org/docs/apache-airflow-providers-arangodb/2.8.0/changelog.html
+Project-URL: Documentation, https://airflow.apache.org/docs/apache-airflow-providers-arangodb/2.8.0
 Project-URL: Mastodon, https://fosstodon.org/@airflow
 Project-URL: Slack Chat, https://s.apache.org/airflow-slack
 Project-URL: Source Code, https://github.com/apache/airflow
@@ -55,7 +55,7 @@ Project-URL: YouTube, https://www.youtube.com/channel/UCSXwxpWZQ7XZ1WL3wqevChA/
 
 Package ``apache-airflow-providers-arangodb``
 
-Release: ``2.7.4``
+Release: ``2.8.0``
 
 
 `ArangoDB <https://www.arangodb.com/>`__
@@ -68,7 +68,7 @@ This is a provider package for ``arangodb`` provider. All classes for this provi
 are in ``airflow.providers.arangodb`` python package.
 
 You can find package information and changelog for the provider
-in the `documentation <https://airflow.apache.org/docs/apache-airflow-providers-arangodb/2.7.4/>`_.
+in the `documentation <https://airflow.apache.org/docs/apache-airflow-providers-arangodb/2.8.0/>`_.
 
 Installation
 ------------
@@ -85,10 +85,10 @@ Requirements
 ==================  ==================
 PIP package         Version required
 ==================  ==================
-``apache-airflow``  ``>=2.9.0``
+``apache-airflow``  ``>=2.10.0``
 ``python-arango``   ``>=7.3.2``
 ==================  ==================
 
 The changelog for the provider package can be found in the
-`changelog <https://airflow.apache.org/docs/apache-airflow-providers-arangodb/2.7.4/changelog.html>`_.
+`changelog <https://airflow.apache.org/docs/apache-airflow-providers-arangodb/2.8.0/changelog.html>`_.
 

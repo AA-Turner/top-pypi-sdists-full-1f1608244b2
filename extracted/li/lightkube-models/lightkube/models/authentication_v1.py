@@ -53,6 +53,10 @@ class SelfSubjectReview(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     status: 'Optional[SelfSubjectReviewStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'authentication.k8s.io/v1'
+        self.kind = 'SelfSubjectReview'
+
 
 @dataclass
 class SelfSubjectReviewStatus(DictMixin):
@@ -91,6 +95,10 @@ class TokenRequest(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     status: 'Optional[TokenRequestStatus]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'authentication.k8s.io/v1'
+        self.kind = 'TokenRequest'
 
 
 @dataclass
@@ -157,6 +165,10 @@ class TokenReview(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     status: 'Optional[TokenReviewStatus]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'authentication.k8s.io/v1'
+        self.kind = 'TokenReview'
 
 
 @dataclass

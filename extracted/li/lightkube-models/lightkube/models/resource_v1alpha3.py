@@ -6,9 +6,10 @@ from ._schema import dataclass, field, DictMixin
 if TYPE_CHECKING:   # Fix for pycharm autocompletion https://youtrack.jetbrains.com/issue/PY-54560
     from dataclasses import dataclass, field
 
+from . import resource
 from . import core_v1
-from . import meta_v1
 from . import runtime
+from . import meta_v1
 
 
 @dataclass
@@ -31,6 +32,7 @@ class AllocatedDeviceStatus(DictMixin):
       * **conditions** ``Optional[List[meta_v1.Condition]]`` - Conditions contains the latest observation of the device's state. If the
         device has been configured according to the class and claim config references,
         the `Ready` condition should be True.
+        Must not contain more than 8 entries.
       * **data** ``Optional[runtime.RawExtension]`` - Data contains arbitrary driver-specific data.
         The length of the raw data must be smaller or equal to 10 Ki.
       * **networkData** ``Optional[NetworkDeviceData]`` - NetworkData contains network-related information specific to the device.
@@ -63,15 +65,38 @@ class BasicDevice(DictMixin):
 
       **parameters**
 
+      * **allNodes** ``Optional[bool]`` - AllNodes indicates that all nodes have access to the device.
+        Must only be set if Spec.PerDeviceNodeSelection is set to true. At most one of
+        NodeName, NodeSelector and AllNodes can be set.
       * **attributes** ``Optional[dict]`` - Attributes defines the set of attributes for this device. The name of each
         attribute must be unique in that set.
         The maximum number of attributes and capacities combined is 32.
       * **capacity** ``Optional[dict]`` - Capacity defines the set of capacities for this device. The name of each
         capacity must be unique in that set.
         The maximum number of attributes and capacities combined is 32.
+      * **consumesCounters** ``Optional[List[DeviceCounterConsumption]]`` - ConsumesCounters defines a list of references to sharedCounters and the set of
+        counters that the device will consume from those counter sets.
+        There can only be a single entry per counterSet.
+        The total number of device counter consumption entries must be <= 32. In
+        addition, the total number in the entire ResourceSlice must be <= 1024 (for
+        example, 64 devices with 16 counters each).
+      * **nodeName** ``Optional[str]`` - NodeName identifies the node where the device is available.
+        Must only be set if Spec.PerDeviceNodeSelection is set to true. At most one of
+        NodeName, NodeSelector and AllNodes can be set.
+      * **nodeSelector** ``Optional[core_v1.NodeSelector]`` - NodeSelector defines the nodes where the device is available.
+        Must only be set if Spec.PerDeviceNodeSelection is set to true. At most one of
+        NodeName, NodeSelector and AllNodes can be set.
+      * **taints** ``Optional[List[DeviceTaint]]`` - If specified, these are the driver-defined taints.
+        The maximum number of taints is 4.
+        This is an alpha field and requires enabling the DRADeviceTaints feature gate.
     """
+    allNodes: 'Optional[bool]' = None
     attributes: 'Optional[dict]' = None
     capacity: 'Optional[dict]' = None
+    consumesCounters: 'Optional[List[DeviceCounterConsumption]]' = None
+    nodeName: 'Optional[str]' = None
+    nodeSelector: 'Optional[core_v1.NodeSelector]' = None
+    taints: 'Optional[List[DeviceTaint]]' = None
 
 
 @dataclass
@@ -123,6 +148,41 @@ class CELDeviceSelector(DictMixin):
 
 
 @dataclass
+class Counter(DictMixin):
+    r"""Counter describes a quantity associated with a device.
+
+      **parameters**
+
+      * **value** ``resource.Quantity`` - Value defines how much of a certain device counter is available.
+    """
+    value: 'resource.Quantity'
+
+
+@dataclass
+class CounterSet(DictMixin):
+    r"""CounterSet defines a named set of counters that are available to be used by
+      devices defined in the ResourceSlice.
+      
+      The counters are not allocatable by themselves, but can be referenced by
+      devices. When a device is allocated, the portion of counters it uses will no
+      longer be available for use by other devices.
+
+      **parameters**
+
+      * **counters** ``dict`` - Counters defines the counters that will be consumed by the device. The name of
+        each counter must be unique in that set and must be a DNS label.
+        To ensure this uniqueness, capacities defined by the vendor must be listed
+        without the driver name as domain prefix in their name. All others must be
+        listed with their domain prefix.
+        The maximum number of counters is 32.
+      * **name** ``str`` - CounterSet is the name of the set from which the counters defined will be
+        consumed.
+    """
+    counters: 'dict'
+    name: 'str'
+
+
+@dataclass
 class Device(DictMixin):
     r"""Device represents one individual hardware instance that can be selected based
       on its attributes. Besides the name, exactly one field must be set.
@@ -148,6 +208,9 @@ class DeviceAllocationConfiguration(DictMixin):
       * **opaque** ``Optional[OpaqueDeviceConfiguration]`` - Opaque provides driver-specific configuration parameters.
       * **requests** ``Optional[List[str]]`` - Requests lists the names of requests where the configuration applies. If
         empty, its applies to all requests.
+        References to subrequests must include the name of the main request and may
+        include the subrequest using the format <main request>[/<subrequest>]. If just
+        the main request is given, the configuration applies to all subrequests.
     """
     source: 'str'
     opaque: 'Optional[OpaqueDeviceConfiguration]' = None
@@ -217,6 +280,9 @@ class DeviceClaimConfiguration(DictMixin):
       * **opaque** ``Optional[OpaqueDeviceConfiguration]`` - Opaque provides driver-specific configuration parameters.
       * **requests** ``Optional[List[str]]`` - Requests lists the names of requests where the configuration applies. If
         empty, it applies to all requests.
+        References to subrequests must include the name of the main request and may
+        include the subrequest using the format <main request>[/<subrequest>]. If just
+        the main request is given, the configuration applies to all subrequests.
     """
     opaque: 'Optional[OpaqueDeviceConfiguration]' = None
     requests: 'Optional[List[str]]' = None
@@ -253,6 +319,10 @@ class DeviceClass(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'resource.k8s.io/v1alpha3'
+        self.kind = 'DeviceClass'
+
 
 @dataclass
 class DeviceClassConfiguration(DictMixin):
@@ -286,6 +356,10 @@ class DeviceClassList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'resource.k8s.io/v1alpha3'
+        self.kind = 'DeviceClassList'
 
 
 @dataclass
@@ -325,9 +399,29 @@ class DeviceConstraint(DictMixin):
         co-satisfy this constraint. If a request is fulfilled by multiple devices,
         then all of the devices must satisfy the constraint. If this is not specified,
         this constraint applies to all requests in this claim.
+        References to subrequests must include the name of the main request and may
+        include the subrequest using the format <main request>[/<subrequest>]. If just
+        the main request is given, the constraint applies to all subrequests.
     """
     matchAttribute: 'Optional[str]' = None
     requests: 'Optional[List[str]]' = None
+
+
+@dataclass
+class DeviceCounterConsumption(DictMixin):
+    r"""DeviceCounterConsumption defines a set of counters that a device will consume
+      from a CounterSet.
+
+      **parameters**
+
+      * **counterSet** ``str`` - CounterSet defines the set from which the counters defined will be consumed.
+      * **counters** ``dict`` - Counters defines the Counter that will be consumed by the device.
+        The maximum number counters in a device is 32. In addition, the maximum number
+        of all counters in all devices is 1024 (for example, 64 devices with 16
+        counters each).
+    """
+    counterSet: 'str'
+    counters: 'dict'
 
 
 @dataclass
@@ -335,21 +429,9 @@ class DeviceRequest(DictMixin):
     r"""DeviceRequest is a request for devices required for a claim. This is typically
       a request for a single resource like a device, but can also ask for several
       identical devices.
-      
-      A DeviceClassName is currently required. Clients must check that it is indeed
-      set. It's absence indicates that something changed in a way that is not
-      supported by the client yet, in which case it must refuse to handle the
-      request.
 
       **parameters**
 
-      * **deviceClassName** ``str`` - DeviceClassName references a specific DeviceClass, which can define additional
-        configuration and selectors to be inherited by this request.
-        A class is required. Which classes are available depends on the cluster.
-        Administrators may use this to restrict which devices may get requested by
-        only installing classes with selectors for permitted devices. If users are
-        free to request anything without restrictions, then administrators can create
-        an empty DeviceClass for users to reference.
       * **name** ``str`` - Name can be used to reference this request in a
         pod.spec.containers[].resources.claims entry and in a constraint of the claim.
         Must be a DNS label.
@@ -357,6 +439,8 @@ class DeviceRequest(DictMixin):
         device(s). Claims with AdminAccess are expected to be used for monitoring or
         other management services for a device.  They ignore all ordinary claims to
         the device with respect to access modes and any resource allocations.
+        This field can only be set when deviceClassName is set and no subrequests are
+        specified in the firstAvailable list.
         This is an alpha field and requires enabling the DRAAdminAccess feature gate.
         Admin access is disabled if this field is unset or set to false, otherwise it
         is enabled.
@@ -366,26 +450,68 @@ class DeviceRequest(DictMixin):
           This is the default. The exact number is provided in the
           count field.
         - All: This request is for all of the matching devices in a pool.
+          At least one device must exist on the node for the allocation to succeed.
           Allocation will fail if some devices are already allocated,
           unless adminAccess is requested.
-        If AlloctionMode is not specified, the default mode is ExactCount. If the mode
-        is ExactCount and count is not specified, the default count is one. Any other
-        requests must specify this field.
+        If AllocationMode is not specified, the default mode is ExactCount. If the
+        mode is ExactCount and count is not specified, the default count is one. Any
+        other requests must specify this field.
+        This field can only be set when deviceClassName is set and no subrequests are
+        specified in the firstAvailable list.
         More modes may get added in the future. Clients must refuse to handle requests
         with unknown modes.
       * **count** ``Optional[int]`` - Count is used only when the count mode is "ExactCount". Must be greater than
         zero. If AllocationMode is ExactCount and this field is not specified, the
         default is one.
+        This field can only be set when deviceClassName is set and no subrequests are
+        specified in the firstAvailable list.
+      * **deviceClassName** ``Optional[str]`` - DeviceClassName references a specific DeviceClass, which can define additional
+        configuration and selectors to be inherited by this request.
+        A class is required if no subrequests are specified in the firstAvailable list
+        and no class can be set if subrequests are specified in the firstAvailable
+        list. Which classes are available depends on the cluster.
+        Administrators may use this to restrict which devices may get requested by
+        only installing classes with selectors for permitted devices. If users are
+        free to request anything without restrictions, then administrators can create
+        an empty DeviceClass for users to reference.
+      * **firstAvailable** ``Optional[List[DeviceSubRequest]]`` - FirstAvailable contains subrequests, of which exactly one will be satisfied by
+        the scheduler to satisfy this request. It tries to satisfy them in the order
+        in which they are listed here. So if there are two entries in the list, the
+        scheduler will only check the second one if it determines that the first one
+        cannot be used.
+        This field may only be set in the entries of DeviceClaim.Requests.
+        DRA does not yet implement scoring, so the scheduler will select the first set
+        of devices that satisfies all the requests in the claim. And if the
+        requirements can be satisfied on more than one node, other scheduling features
+        will determine which node is chosen. This means that the set of devices
+        allocated to a claim might not be the optimal set available to the cluster.
+        Scoring will be implemented later.
       * **selectors** ``Optional[List[DeviceSelector]]`` - Selectors define criteria which must be satisfied by a specific device in
         order for that device to be considered for this request. All selectors must be
         satisfied for a device to be considered.
+        This field can only be set when deviceClassName is set and no subrequests are
+        specified in the firstAvailable list.
+      * **tolerations** ``Optional[List[DeviceToleration]]`` - If specified, the request's tolerations.
+        Tolerations for NoSchedule are required to allocate a device which has a taint
+        with that effect. The same applies to NoExecute.
+        In addition, should any of the allocated devices get tainted with NoExecute
+        after allocation and that effect is not tolerated, then all pods consuming the
+        ResourceClaim get deleted to evict them. The scheduler will not let new pods
+        reserve the claim while it has these tainted devices. Once all pods are
+        evicted, the claim will get deallocated.
+        The maximum number of tolerations is 16.
+        This field can only be set when deviceClassName is set and no subrequests are
+        specified in the firstAvailable list.
+        This is an alpha field and requires enabling the DRADeviceTaints feature gate.
     """
-    deviceClassName: 'str'
     name: 'str'
     adminAccess: 'Optional[bool]' = None
     allocationMode: 'Optional[str]' = None
     count: 'Optional[int]' = None
+    deviceClassName: 'Optional[str]' = None
+    firstAvailable: 'Optional[List[DeviceSubRequest]]' = None
     selectors: 'Optional[List[DeviceSelector]]' = None
+    tolerations: 'Optional[List[DeviceToleration]]' = None
 
 
 @dataclass
@@ -405,18 +531,26 @@ class DeviceRequestAllocationResult(DictMixin):
         Must not be longer than 253 characters and may contain one or more DNS
         sub-domains separated by slashes.
       * **request** ``str`` - Request is the name of the request in the claim which caused this device to be
-        allocated. Multiple devices may have been allocated per request.
+        allocated. If it references a subrequest in the firstAvailable list on a
+        DeviceRequest, this field must include both the name of the main request and
+        the subrequest using the format <main request>/<subrequest>.
+        Multiple devices may have been allocated per request.
       * **adminAccess** ``Optional[bool]`` - AdminAccess indicates that this device was allocated for administrative
         access. See the corresponding request field for a definition of mode.
         This is an alpha field and requires enabling the DRAAdminAccess feature gate.
         Admin access is disabled if this field is unset or set to false, otherwise it
         is enabled.
+      * **tolerations** ``Optional[List[DeviceToleration]]`` - A copy of all tolerations specified in the request at the time when the device
+        got allocated.
+        The maximum number of tolerations is 16.
+        This is an alpha field and requires enabling the DRADeviceTaints feature gate.
     """
     device: 'str'
     driver: 'str'
     pool: 'str'
     request: 'str'
     adminAccess: 'Optional[bool]' = None
+    tolerations: 'Optional[List[DeviceToleration]]' = None
 
 
 @dataclass
@@ -428,6 +562,227 @@ class DeviceSelector(DictMixin):
       * **cel** ``Optional[CELDeviceSelector]`` - CEL contains a CEL expression for selecting a device.
     """
     cel: 'Optional[CELDeviceSelector]' = None
+
+
+@dataclass
+class DeviceSubRequest(DictMixin):
+    r"""DeviceSubRequest describes a request for device provided in the
+      claim.spec.devices.requests[].firstAvailable array. Each is typically a
+      request for a single resource like a device, but can also ask for several
+      identical devices.
+      
+      DeviceSubRequest is similar to Request, but doesn't expose the AdminAccess or
+      FirstAvailable fields, as those can only be set on the top-level request.
+      AdminAccess is not supported for requests with a prioritized list, and
+      recursive FirstAvailable fields are not supported.
+
+      **parameters**
+
+      * **deviceClassName** ``str`` - DeviceClassName references a specific DeviceClass, which can define additional
+        configuration and selectors to be inherited by this subrequest.
+        A class is required. Which classes are available depends on the cluster.
+        Administrators may use this to restrict which devices may get requested by
+        only installing classes with selectors for permitted devices. If users are
+        free to request anything without restrictions, then administrators can create
+        an empty DeviceClass for users to reference.
+      * **name** ``str`` - Name can be used to reference this subrequest in the list of constraints or
+        the list of configurations for the claim. References must use the format <main
+        request>/<subrequest>.
+        Must be a DNS label.
+      * **allocationMode** ``Optional[str]`` - AllocationMode and its related fields define how devices are allocated to
+        satisfy this request. Supported values are:
+        - ExactCount: This request is for a specific number of devices.
+          This is the default. The exact number is provided in the
+          count field.
+        - All: This request is for all of the matching devices in a pool.
+          Allocation will fail if some devices are already allocated,
+          unless adminAccess is requested.
+        If AllocationMode is not specified, the default mode is ExactCount. If the
+        mode is ExactCount and count is not specified, the default count is one. Any
+        other requests must specify this field.
+        More modes may get added in the future. Clients must refuse to handle requests
+        with unknown modes.
+      * **count** ``Optional[int]`` - Count is used only when the count mode is "ExactCount". Must be greater than
+        zero. If AllocationMode is ExactCount and this field is not specified, the
+        default is one.
+      * **selectors** ``Optional[List[DeviceSelector]]`` - Selectors define criteria which must be satisfied by a specific device in
+        order for that device to be considered for this request. All selectors must be
+        satisfied for a device to be considered.
+      * **tolerations** ``Optional[List[DeviceToleration]]`` - If specified, the request's tolerations.
+        Tolerations for NoSchedule are required to allocate a device which has a taint
+        with that effect. The same applies to NoExecute.
+        In addition, should any of the allocated devices get tainted with NoExecute
+        after allocation and that effect is not tolerated, then all pods consuming the
+        ResourceClaim get deleted to evict them. The scheduler will not let new pods
+        reserve the claim while it has these tainted devices. Once all pods are
+        evicted, the claim will get deallocated.
+        The maximum number of tolerations is 16.
+        This is an alpha field and requires enabling the DRADeviceTaints feature gate.
+    """
+    deviceClassName: 'str'
+    name: 'str'
+    allocationMode: 'Optional[str]' = None
+    count: 'Optional[int]' = None
+    selectors: 'Optional[List[DeviceSelector]]' = None
+    tolerations: 'Optional[List[DeviceToleration]]' = None
+
+
+@dataclass
+class DeviceTaint(DictMixin):
+    r"""The device this taint is attached to has the "effect" on any claim which does
+      not tolerate the taint and, through the claim, to pods using the claim.
+
+      **parameters**
+
+      * **effect** ``str`` - The effect of the taint on claims that do not tolerate the taint and through
+        such claims on the pods using them. Valid effects are NoSchedule and
+        NoExecute. PreferNoSchedule as used for nodes is not valid here.
+      * **key** ``str`` - The taint key to be applied to a device. Must be a label name.
+      * **timeAdded** ``Optional[meta_v1.Time]`` - TimeAdded represents the time at which the taint was added. Added
+        automatically during create or update if not set.
+      * **value** ``Optional[str]`` - The taint value corresponding to the taint key. Must be a label value.
+    """
+    effect: 'str'
+    key: 'str'
+    timeAdded: 'Optional[meta_v1.Time]' = None
+    value: 'Optional[str]' = None
+
+
+@dataclass
+class DeviceTaintRule(DictMixin):
+    r"""DeviceTaintRule adds one taint to all devices which match the selector. This
+      has the same effect as if the taint was specified directly in the
+      ResourceSlice by the DRA driver.
+
+      **parameters**
+
+      * **spec** ``DeviceTaintRuleSpec`` - Spec specifies the selector and one taint.
+        Changing the spec automatically increments the metadata.generation number.
+      * **apiVersion** ``Optional[str]`` - APIVersion defines the versioned schema of this representation of an object.
+        Servers should convert recognized schemas to the latest internal value, and
+        may reject unrecognized values. More info:
+        https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+      * **kind** ``Optional[str]`` - Kind is a string value representing the REST resource this object represents.
+        Servers may infer this from the endpoint the client submits requests to.
+        Cannot be updated. In CamelCase. More info:
+        https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+      * **metadata** ``Optional[meta_v1.ObjectMeta]`` - Standard object metadata
+    """
+    spec: 'DeviceTaintRuleSpec'
+    apiVersion: 'Optional[str]' = None
+    kind: 'Optional[str]' = None
+    metadata: 'Optional[meta_v1.ObjectMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'resource.k8s.io/v1alpha3'
+        self.kind = 'DeviceTaintRule'
+
+
+@dataclass
+class DeviceTaintRuleList(DictMixin):
+    r"""DeviceTaintRuleList is a collection of DeviceTaintRules.
+
+      **parameters**
+
+      * **items** ``List[DeviceTaintRule]`` - Items is the list of DeviceTaintRules.
+      * **apiVersion** ``Optional[str]`` - APIVersion defines the versioned schema of this representation of an object.
+        Servers should convert recognized schemas to the latest internal value, and
+        may reject unrecognized values. More info:
+        https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+      * **kind** ``Optional[str]`` - Kind is a string value representing the REST resource this object represents.
+        Servers may infer this from the endpoint the client submits requests to.
+        Cannot be updated. In CamelCase. More info:
+        https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+      * **metadata** ``Optional[meta_v1.ListMeta]`` - Standard list metadata
+    """
+    items: 'List[DeviceTaintRule]'
+    apiVersion: 'Optional[str]' = None
+    kind: 'Optional[str]' = None
+    metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'resource.k8s.io/v1alpha3'
+        self.kind = 'DeviceTaintRuleList'
+
+
+@dataclass
+class DeviceTaintRuleSpec(DictMixin):
+    r"""DeviceTaintRuleSpec specifies the selector and one taint.
+
+      **parameters**
+
+      * **taint** ``DeviceTaint`` - The taint that gets applied to matching devices.
+      * **deviceSelector** ``Optional[DeviceTaintSelector]`` - DeviceSelector defines which device(s) the taint is applied to. All selector
+        criteria must be satified for a device to match. The empty selector matches
+        all devices. Without a selector, no devices are matches.
+    """
+    taint: 'DeviceTaint'
+    deviceSelector: 'Optional[DeviceTaintSelector]' = None
+
+
+@dataclass
+class DeviceTaintSelector(DictMixin):
+    r"""DeviceTaintSelector defines which device(s) a DeviceTaintRule applies to. The
+      empty selector matches all devices. Without a selector, no devices are
+      matched.
+
+      **parameters**
+
+      * **device** ``Optional[str]`` - If device is set, only devices with that name are selected. This field
+        corresponds to slice.spec.devices[].name.
+        Setting also driver and pool may be required to avoid ambiguity, but is not
+        required.
+      * **deviceClassName** ``Optional[str]`` - If DeviceClassName is set, the selectors defined there must be satisfied by a
+        device to be selected. This field corresponds to class.metadata.name.
+      * **driver** ``Optional[str]`` - If driver is set, only devices from that driver are selected. This fields
+        corresponds to slice.spec.driver.
+      * **pool** ``Optional[str]`` - If pool is set, only devices in that pool are selected.
+        Also setting the driver name may be useful to avoid ambiguity when different
+        drivers use the same pool name, but this is not required because selecting
+        pools from different drivers may also be useful, for example when drivers with
+        node-local devices use the node name as their pool name.
+      * **selectors** ``Optional[List[DeviceSelector]]`` - Selectors contains the same selection criteria as a ResourceClaim. Currently,
+        CEL expressions are supported. All of these selectors must be satisfied.
+    """
+    device: 'Optional[str]' = None
+    deviceClassName: 'Optional[str]' = None
+    driver: 'Optional[str]' = None
+    pool: 'Optional[str]' = None
+    selectors: 'Optional[List[DeviceSelector]]' = None
+
+
+@dataclass
+class DeviceToleration(DictMixin):
+    r"""The ResourceClaim this DeviceToleration is attached to tolerates any taint
+      that matches the triple <key,value,effect> using the matching operator
+      <operator>.
+
+      **parameters**
+
+      * **effect** ``Optional[str]`` - Effect indicates the taint effect to match. Empty means match all taint
+        effects. When specified, allowed values are NoSchedule and NoExecute.
+      * **key** ``Optional[str]`` - Key is the taint key that the toleration applies to. Empty means match all
+        taint keys. If the key is empty, operator must be Exists; this combination
+        means to match all values and all keys. Must be a label name.
+      * **operator** ``Optional[str]`` - Operator represents a key's relationship to the value. Valid operators are
+        Exists and Equal. Defaults to Equal. Exists is equivalent to wildcard for
+        value, so that a ResourceClaim can tolerate all taints of a particular
+        category.
+      * **tolerationSeconds** ``Optional[int]`` - TolerationSeconds represents the period of time the toleration (which must be
+        of effect NoExecute, otherwise this field is ignored) tolerates the taint. By
+        default, it is not set, which means tolerate the taint forever (do not evict).
+        Zero and negative values will be treated as 0 (evict immediately) by the
+        system. If larger than zero, the time when the pod needs to be evicted is
+        calculated as <time when taint was adedd> + <toleration seconds>.
+      * **value** ``Optional[str]`` - Value is the taint value the toleration matches to. If the operator is Exists,
+        the value must be empty, otherwise just a regular string. Must be a label
+        value.
+    """
+    effect: 'Optional[str]' = None
+    key: 'Optional[str]' = None
+    operator: 'Optional[str]' = None
+    tolerationSeconds: 'Optional[int]' = None
+    value: 'Optional[str]' = None
 
 
 @dataclass
@@ -449,6 +804,7 @@ class NetworkDeviceData(DictMixin):
         This can include both IPv4 and IPv6 addresses. The IPs are in the CIDR
         notation, which includes both the address and the associated subnet mask.
         e.g.: "192.0.2.5/24" for IPv4 and "2001:db8::5/64" for IPv6.
+        Must not contain more than 16 entries.
     """
     hardwareAddress: 'Optional[str]' = None
     interfaceName: 'Optional[str]' = None
@@ -511,6 +867,10 @@ class ResourceClaim(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     status: 'Optional[ResourceClaimStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'resource.k8s.io/v1alpha3'
+        self.kind = 'ResourceClaim'
+
 
 @dataclass
 class ResourceClaimConsumerReference(DictMixin):
@@ -555,6 +915,10 @@ class ResourceClaimList(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'resource.k8s.io/v1alpha3'
+        self.kind = 'ResourceClaimList'
+
 
 @dataclass
 class ResourceClaimSpec(DictMixin):
@@ -592,7 +956,7 @@ class ResourceClaimStatus(DictMixin):
         one fails with an error and the scheduler which issued it knows that it must
         put the pod back into the queue, waiting for the ResourceClaim to become
         usable again.
-        There can be at most 32 such reservations. This may get increased in the
+        There can be at most 256 such reservations. This may get increased in the
         future, but not reduced.
     """
     allocation: 'Optional[AllocationResult]' = None
@@ -627,6 +991,10 @@ class ResourceClaimTemplate(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'resource.k8s.io/v1alpha3'
+        self.kind = 'ResourceClaimTemplate'
+
 
 @dataclass
 class ResourceClaimTemplateList(DictMixin):
@@ -649,6 +1017,10 @@ class ResourceClaimTemplateList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'resource.k8s.io/v1alpha3'
+        self.kind = 'ResourceClaimTemplateList'
 
 
 @dataclass
@@ -747,6 +1119,10 @@ class ResourceSlice(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'resource.k8s.io/v1alpha3'
+        self.kind = 'ResourceSlice'
+
 
 @dataclass
 class ResourceSliceList(DictMixin):
@@ -770,6 +1146,10 @@ class ResourceSliceList(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'resource.k8s.io/v1alpha3'
+        self.kind = 'ResourceSliceList'
+
 
 @dataclass
 class ResourceSliceSpec(DictMixin):
@@ -785,7 +1165,8 @@ class ResourceSliceSpec(DictMixin):
         of the driver. This field is immutable.
       * **pool** ``ResourcePool`` - Pool describes the pool that this ResourceSlice belongs to.
       * **allNodes** ``Optional[bool]`` - AllNodes indicates that all nodes have access to the resources in the pool.
-        Exactly one of NodeName, NodeSelector and AllNodes must be set.
+        Exactly one of NodeName, NodeSelector, AllNodes, and PerDeviceNodeSelection
+        must be set.
       * **devices** ``Optional[List[Device]]`` - Devices lists some or all of the devices in this pool.
         Must not have more than 128 entries.
       * **nodeName** ``Optional[str]`` - NodeName identifies the node which provides the resources in this pool. A
@@ -794,12 +1175,22 @@ class ResourceSliceSpec(DictMixin):
         This field can be used to limit access from nodes to ResourceSlices with the
         same node name. It also indicates to autoscalers that adding new nodes of the
         same type as some old node might also make new resources available.
-        Exactly one of NodeName, NodeSelector and AllNodes must be set. This field is
-        immutable.
+        Exactly one of NodeName, NodeSelector, AllNodes, and PerDeviceNodeSelection
+        must be set. This field is immutable.
       * **nodeSelector** ``Optional[core_v1.NodeSelector]`` - NodeSelector defines which nodes have access to the resources in the pool,
         when that pool is not limited to a single node.
         Must use exactly one term.
-        Exactly one of NodeName, NodeSelector and AllNodes must be set.
+        Exactly one of NodeName, NodeSelector, AllNodes, and PerDeviceNodeSelection
+        must be set.
+      * **perDeviceNodeSelection** ``Optional[bool]`` - PerDeviceNodeSelection defines whether the access from nodes to resources in
+        the pool is set on the ResourceSlice level or on each device. If it is set to
+        true, every device defined the ResourceSlice must specify this individually.
+        Exactly one of NodeName, NodeSelector, AllNodes, and PerDeviceNodeSelection
+        must be set.
+      * **sharedCounters** ``Optional[List[CounterSet]]`` - SharedCounters defines a list of counter sets, each of which has a name and a
+        list of counters available.
+        The names of the SharedCounters must be unique in the ResourceSlice.
+        The maximum number of SharedCounters is 32.
     """
     driver: 'str'
     pool: 'ResourcePool'
@@ -807,5 +1198,7 @@ class ResourceSliceSpec(DictMixin):
     devices: 'Optional[List[Device]]' = None
     nodeName: 'Optional[str]' = None
     nodeSelector: 'Optional[core_v1.NodeSelector]' = None
+    perDeviceNodeSelection: 'Optional[bool]' = None
+    sharedCounters: 'Optional[List[CounterSet]]' = None
 
 

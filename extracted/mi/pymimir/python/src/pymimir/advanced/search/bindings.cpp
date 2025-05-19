@@ -301,6 +301,8 @@ void bind_module_definitions(nb::module_& m)
                                          self.get_atoms<DerivedTag>().end());
             },
             nb::keep_alive<0, 1>())
+        .def("get_numeric_variables",
+             [](const StateImpl& self) { return std::vector<double>(self.get_numeric_variables().begin(), self.get_numeric_variables().end()); })
         .def(
             "to_string",
             [](const StateImpl& self, const ProblemImpl& problem)
@@ -492,13 +494,19 @@ void bind_module_definitions(nb::module_& m)
     nb::class_<StateRepositoryImpl>(m, "StateRepository")  //
         .def(nb::init<AxiomEvaluator>(), "axiom_evaluator"_a)
         .def("get_or_create_initial_state", &StateRepositoryImpl::get_or_create_initial_state, nb::rv_policy::reference_internal)
-        .def("get_or_create_state", &StateRepositoryImpl::get_or_create_state, "atoms"_a, "numeric_variables"_a, nb::rv_policy::reference_internal)
+        .def(
+            "get_or_create_state",
+            [](StateRepositoryImpl& self, const GroundAtomList<FluentTag>& fluent_atoms, const ContinuousCostList& numeric_variables)
+            { return self.get_or_create_state(fluent_atoms, FlatDoubleList(numeric_variables.begin(), numeric_variables.end())); },
+            "fluent_atoms"_a,
+            "numeric_variables"_a,
+            nb::rv_policy::reference_internal)
         .def("get_or_create_successor_state",
              nb::overload_cast<State, GroundAction, ContinuousCost>(&StateRepositoryImpl::get_or_create_successor_state),
              "state"_a,
              "action"_a,
              "state_metric_value"_a,
-             nb::rv_policy::copy)
+             nb::rv_policy::reference_internal)
         .def("get_state_count", &StateRepositoryImpl::get_state_count, nb::rv_policy::copy)
         .def("get_reached_fluent_ground_atoms_bitset", &StateRepositoryImpl::get_reached_fluent_ground_atoms_bitset, nb::rv_policy::copy)
         .def("get_reached_derived_ground_atoms_bitset", &StateRepositoryImpl::get_reached_derived_ground_atoms_bitset, nb::rv_policy::copy);
@@ -530,7 +538,11 @@ void bind_module_definitions(nb::module_& m)
         .def(nb::init<>())
         .def("compute_heuristic", &IHeuristic::compute_heuristic, "state"_a, "is_goal_state"_a);
 
-    nb::class_<BlindHeuristicImpl, IHeuristic>(m, "BlindHeuristic").def(nb::init<Problem>());
+    nb::class_<BlindHeuristicImpl, IHeuristic>(m, "BlindHeuristic")  //
+        .def(nb::init<Problem>(), "problem"_a);
+
+    nb::class_<HStarHeuristicImpl, IHeuristic>(m, "HStarHeuristic")  //
+        .def(nb::init<SearchContext>(), "search_context"_a);
 
     /* Algorithms */
 

@@ -1,5 +1,6 @@
 """ SpellChecker Module; simple, intuitive spell checker based on the post by
     Peter Norvig. See: https://norvig.com/spell-correct.html """
+
 import gzip
 import json
 import pkgutil
@@ -18,8 +19,8 @@ class SpellChecker:
 
     Args:
         language (str): The language of the dictionary to load or None for no dictionary. Supported languages are \
-            `en`, `es`, `it`, `de`, `fr`, `pt`, `ru`, `lv`, `eu`, and `nl`. Defaults to `en`. A list of languages \
-            may be provided and all languages will be loaded.
+            `en`, `es`, `it`, `de`, `fr`, `pt`, `ru`, `lv`, `eu`, `nl` and `fa`. Defaults to `en`. A list of \
+            languages may be provided and all languages will be loaded.
         local_dictionary (str): The path to a locally stored word frequency dictionary; if provided, no language \
             will be loaded
         distance (int): The edit distance to use. Defaults to 2.
@@ -82,7 +83,7 @@ class SpellChecker:
     @classmethod
     def languages(cls) -> typing.Iterable[str]:
         """list: A list of all official languages supported by the library"""
-        return ["en", "es", "fr", "it", "pt", "de", "ru", "ar", "lv", "eu", "nl"]
+        return ["en", "es", "fr", "it", "pt", "de", "ru", "ar", "lv", "eu", "nl", "fa"]
 
     @property
     def word_frequency(self) -> "WordFrequency":
@@ -508,11 +509,14 @@ class WordFrequency:
 
     def _update_dictionary(self) -> None:
         """Update the word frequency object"""
-        self._longest_word_length = 0
+        if not self._dictionary:
+            self._longest_word_length = 0
+            self._total_words = 0
+            self._unique_words = 0
+            self._letters = set()
+            return
+        keys = self._dictionary.keys()
+        self._longest_word_length = max(map(len, keys))
         self._total_words = sum(self._dictionary.values())
-        self._unique_words = len(self._dictionary.keys())
-        self._letters = set()
-        for key in self._dictionary:
-            if len(key) > self._longest_word_length:
-                self._longest_word_length = len(key)
-            self._letters.update(key)
+        self._unique_words = len(keys)
+        self._letters = set().union(*keys)

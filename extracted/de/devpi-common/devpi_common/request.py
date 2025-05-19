@@ -1,8 +1,8 @@
-import sys
 from requests import Session
 from requests.adapters import HTTPAdapter
-from requests.exceptions import ConnectionError, RequestException, SSLError
 from urllib3.exceptions import HTTPError as BaseHTTPError
+import requests.exceptions as request_exceptions
+import sys
 
 
 class RetrySession(Session):
@@ -21,8 +21,8 @@ def new_requests_session(agent=None, max_retries=None):
     agent += " (py%s; %s)" % (sys.version.split()[0], sys.platform)
     session = RetrySession(max_retries)
     session.headers["user-agent"] = agent
-    session.ConnectionError = ConnectionError
-    session.RequestException = RequestException
-    session.Errors = (RequestException, BaseHTTPError)
-    session.SSLError = SSLError
+    session.ConnectionError = ConnectionError  # type: ignore[attr-defined]
+    session.RequestException = request_exceptions.RequestException  # type: ignore[attr-defined]
+    session.Errors = (request_exceptions.RequestException, BaseHTTPError)  # type: ignore[attr-defined]
+    session.SSLError = request_exceptions.SSLError  # type: ignore[attr-defined]
     return session

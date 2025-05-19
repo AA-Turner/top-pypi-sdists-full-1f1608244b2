@@ -47,6 +47,9 @@ pub struct ScanArg {
   #[clap(long, default_value = "rich", conflicts_with = "json")]
   report_style: ReportStyle,
 
+  #[clap(long, requires = "json")]
+  include_metadata: bool,
+
   /// severity related options
   #[clap(flatten)]
   overwrite: OverwriteArgs,
@@ -78,7 +81,7 @@ pub fn run_with_config(arg: ScanArg, project: Result<ProjectConfig>) -> Result<(
     return run_scan(arg, printer, project);
   }
   if let Some(json) = arg.output.json {
-    let printer = JSONPrinter::stdout(json);
+    let printer = JSONPrinter::stdout(json).include_metadata(arg.include_metadata);
     return run_scan(arg, printer, project);
   }
   let printer = ColoredPrinter::stdout(arg.output.color)
@@ -200,7 +203,7 @@ impl PathWorker for ScanWithConfig {
     let mut error_count = 0usize;
     let mut ret = vec![];
     for grep in items {
-      let file_content = grep.source().to_string();
+      let file_content = grep.source();
       let rules = self.configs.get_rule_from_lang(path, *grep.lang());
       let mut combined = CombinedScan::new(rules);
       combined.set_unused_suppression_rule(&self.unused_suppression_rule);
@@ -216,7 +219,7 @@ impl PathWorker for ScanWithConfig {
         if matches!(rule.severity, Severity::Error) {
           error_count = error_count.saturating_add(matches.len());
         }
-        let processed = match_rule_on_file(path, matches, rule, &file_content, processor)?;
+        let processed = match_rule_on_file(path, matches, rule, file_content, processor)?;
         ret.push(processed);
       }
     }
@@ -274,7 +277,7 @@ impl StdInWorker for ScanStdin {
     let combined = CombinedScan::new(self.rules.iter().collect());
     let grep = lang.ast_grep(src);
     let path = Path::new("STDIN");
-    let file_content = grep.source().to_string();
+    let file_content = grep.source();
     // do not separate_fix rule in stdin mode
     let scanned = combined.scan(&grep, false);
     let mut error_count = 0usize;
@@ -283,7 +286,7 @@ impl StdInWorker for ScanStdin {
       if matches!(rule.severity, Severity::Error) {
         error_count = error_count.saturating_add(matches.len());
       }
-      let processed = match_rule_on_file(path, matches, rule, &file_content, processor)?;
+      let processed = match_rule_on_file(path, matches, rule, file_content, processor)?;
       ret.push(processed);
     }
     self.error_count.fetch_add(error_count, Ordering::AcqRel);
@@ -311,7 +314,7 @@ fn match_rule_on_file<T>(
   path: &Path,
   matches: Vec<NodeMatch<StrDoc<SgLang>>>,
   rule: &RuleConfig<SgLang>,
-  file_content: &String,
+  file_content: &str,
   processor: &impl PrintProcessor<T>,
 ) -> Result<T> {
   let file = SimpleFile::new(path.to_string_lossy(), file_content);
@@ -363,6 +366,7 @@ rule:
       rule: None,
       inline_rules: None,
       report_style: ReportStyle::Rich,
+      include_metadata: false,
       input: InputArgs {
         no_ignore: vec![],
         paths: vec![PathBuf::from(".")],

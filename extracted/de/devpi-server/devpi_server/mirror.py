@@ -120,9 +120,9 @@ class IndexParser:
         appear later are ignored.
         """
         entry = self.basename2link.get(newlink.basename)
-        if entry is None or not entry.hash_spec and (newlink.hash_spec or (
+        if entry is None or (not entry.hash_spec and (newlink.hash_spec or (
             not entry.requires_python and newlink.requires_python
-        )):
+        ))):
             self.basename2link[newlink.basename] = newlink
             threadlog.debug("indexparser: adding link %s", newlink)
         else:
@@ -324,9 +324,9 @@ class MirrorStage(BaseStage):
         if key == "mirror_cache_expiry":
             try:
                 value = int(value)
-            except (TypeError, ValueError):
+            except (TypeError, ValueError) as e:
                 raise self.InvalidIndexconfig([
-                    "'mirror_cache_expiry' option must be an integer"])
+                    "'mirror_cache_expiry' option must be an integer"]) from e
             return value
         if key == "mirror_no_project_list":
             return ensure_boolean(value)
@@ -334,6 +334,7 @@ class MirrorStage(BaseStage):
             return ensure_boolean(value)
         if key in ("custom_data", "description", "mirror_web_url_fmt", "title"):
             return value
+        return None
 
     def delete(self):
         # delete all projects on this index

@@ -1,6 +1,6 @@
 [project]
 name = "MyLLM"
-version = "4.19.10"
+version = "4.19.11"
 description = "A python package to interact with llm model supported by g4f and langchain."
 authors = [
   { name = "mraniki", email = "8766259+mraniki@users.noreply.github.com" },
@@ -24,7 +24,7 @@ dependencies = [
   "dynaconf>=3.2.0",
   "loguru>=0.6.0",
   "httpx>=0.24.1",
-  "g4f==0.5.2.4", # Pinned version, keep as is
+  "g4f==0.5.2.8", # Pinned version, keep as is
   "js2py~=0.74",
   "PyExecJS2==1.6.1", # Pinned version
   "curl_cffi==0.11.1", # Pinned version

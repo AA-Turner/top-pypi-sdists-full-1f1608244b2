@@ -265,7 +265,7 @@ def is_file(instance) -> bool:
     raise ValueError(f'`{instance}` does not exist')
 
 
-@format_checker.checks('path', raises=ValueError)
+@format_checker.checks('path')
 def is_path(instance) -> bool:
     if not isinstance(instance, str):
         return True
@@ -274,9 +274,10 @@ def is_path(instance) -> bool:
     result = pat.search(instance)
     if result:
         instance = os.path.dirname(instance[0 : result.start()])
-    if os.path.isdir(os.path.expanduser(instance)):
-        return True
-    raise ValueError(f'`{instance}` does not exist')
+    if not os.path.isdir(os.path.expanduser(instance)):
+        error: str = f'`{instance}` does not exist'
+        logger.warning(error)
+    return True
 
 
 # TODO: jsonschema has a format checker for uri if rfc3987 is installed, perhaps we should use that
