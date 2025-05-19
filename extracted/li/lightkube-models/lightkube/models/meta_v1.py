@@ -6,8 +6,8 @@ from ._schema import dataclass, field, DictMixin
 if TYPE_CHECKING:   # Fix for pycharm autocompletion https://youtrack.jetbrains.com/issue/PY-54560
     from dataclasses import dataclass, field
 
-from . import runtime
 from datetime import datetime
+from . import runtime
 from typing import Dict
 
 
@@ -47,6 +47,10 @@ class APIGroup(DictMixin):
     preferredVersion: 'Optional[GroupVersionForDiscovery]' = None
     serverAddressByClientCIDRs: 'Optional[List[ServerAddressByClientCIDR]]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'APIGroup'
+
 
 @dataclass
 class APIGroupList(DictMixin):
@@ -68,6 +72,10 @@ class APIGroupList(DictMixin):
     groups: 'List[APIGroup]'
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'APIGroupList'
 
 
 @dataclass
@@ -139,6 +147,10 @@ class APIResourceList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'APIResourceList'
+
 
 @dataclass
 class APIVersions(DictMixin):
@@ -170,6 +182,10 @@ class APIVersions(DictMixin):
     versions: 'List[str]'
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'APIVersions'
 
 
 @dataclass
@@ -259,6 +275,9 @@ class DeleteOptions(DictMixin):
     orphanDependents: 'Optional[bool]' = None
     preconditions: 'Optional[Preconditions]' = None
     propagationPolicy: 'Optional[str]' = None
+
+    def __post_init__(self):
+        self.kind = 'DeleteOptions'
 
 
 @dataclass
@@ -645,6 +664,10 @@ class Status(DictMixin):
     reason: 'Optional[str]' = None
     status: 'Optional[str]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'Status'
+
 
 @dataclass
 class StatusCause(DictMixin):
@@ -722,5 +745,8 @@ class WatchEvent(DictMixin):
     """
     object: 'runtime.RawExtension'
     type: 'str'
+
+    def __post_init__(self):
+        self.kind = 'WatchEvent'
 
 

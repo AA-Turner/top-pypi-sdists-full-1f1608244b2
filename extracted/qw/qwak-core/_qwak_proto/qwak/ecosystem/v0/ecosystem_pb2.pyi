@@ -280,6 +280,7 @@ class EnvironmentDetails(google.protobuf.message.Message):
     ID_FIELD_NUMBER: builtins.int
     NAME_FIELD_NUMBER: builtins.int
     CONFIGURATION_FIELD_NUMBER: builtins.int
+    CLUSTER_ID_FIELD_NUMBER: builtins.int
     id: builtins.str
     """Environment id"""
     name: builtins.str
@@ -287,15 +288,17 @@ class EnvironmentDetails(google.protobuf.message.Message):
     @property
     def configuration(self) -> qwak.administration.v0.environments.configuration_pb2.QwakEnvironmentConfiguration:
         """Environment configuration"""
+    cluster_id: builtins.str
     def __init__(
         self,
         *,
         id: builtins.str = ...,
         name: builtins.str = ...,
         configuration: qwak.administration.v0.environments.configuration_pb2.QwakEnvironmentConfiguration | None = ...,
+        cluster_id: builtins.str = ...,
     ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["configuration", b"configuration"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["configuration", b"configuration", "id", b"id", "name", b"name"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["cluster_id", b"cluster_id", "configuration", b"configuration", "id", b"id", "name", b"name"]) -> None: ...
 
 global___EnvironmentDetails = EnvironmentDetails
 

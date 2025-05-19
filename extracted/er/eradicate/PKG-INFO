@@ -1,8 +1,8 @@
 Metadata-Version: 2.1
 Name: eradicate
-Version: 2.3.0
+Version: 3.0.0
 Summary: Removes commented-out code.
-Home-page: https://github.com/myint/eradicate
+Home-page: https://github.com/pycqa/eradicate
 Author: Steven Myint
 Maintainer: Nikita Sobolev <mail@sobolevn.me>
 License: Expat License
@@ -10,8 +10,8 @@ Keywords: clean,format,commented-out code
 Classifier: Environment :: Console
 Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: MIT License
-Classifier: Programming Language :: Python :: 2.7
 Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
 Classifier: Topic :: Software Development :: Quality Assurance
 
 =========
@@ -93,3 +93,4 @@ Related
 There are different tools, plugins, and integrations for ``eradicate`` users:
 
 - `flake8-eradicate <https://github.com/sobolevn/flake8-eradicate>`_ - Flake8 plugin to find commented out or dead code.
+- `databricks-labs-pylint <https://github.com/databrickslabs/pylint-plugin#eradicate-checker>`_ - Databricks-specific PyLint plugin, that can also find commented out code.

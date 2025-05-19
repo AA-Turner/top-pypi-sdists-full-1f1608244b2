@@ -33,6 +33,10 @@ class Lease(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     spec: 'Optional[LeaseSpec]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'coordination.k8s.io/v1'
+        self.kind = 'Lease'
+
 
 @dataclass
 class LeaseList(DictMixin):
@@ -56,6 +60,10 @@ class LeaseList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'coordination.k8s.io/v1'
+        self.kind = 'LeaseList'
 
 
 @dataclass

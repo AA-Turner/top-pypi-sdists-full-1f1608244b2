@@ -1277,6 +1277,7 @@ class TestValue(NoValEnum):
     AFTER_RULE_SPLIT = auto()
     SOLANA_BUILD_CMD = auto()
     CHECK_ZIP = auto()
+    STORAGE_EXTENSION_LAYOUT = auto()
 
 class FeValue(NoValEnum):
     PRODUCTION = auto()

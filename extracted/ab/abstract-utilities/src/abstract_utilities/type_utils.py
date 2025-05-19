@@ -143,7 +143,7 @@ def get_media_exts(types=None):
     types = make_list(types or [])
     for typ in types:
         exts = MEDIA_TYPES.get(str(typ)) or []
-        if ext:
+        if exts:
             all_exts+=list(exts)
     return all_exts
 def confirm_type(file_path=None,media_types=None,ext=None):

@@ -69,6 +69,10 @@ class StorageVersionMigration(DictMixin):
     spec: 'Optional[StorageVersionMigrationSpec]' = None
     status: 'Optional[StorageVersionMigrationStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'storagemigration.k8s.io/v1alpha1'
+        self.kind = 'StorageVersionMigration'
+
 
 @dataclass
 class StorageVersionMigrationList(DictMixin):
@@ -92,6 +96,10 @@ class StorageVersionMigrationList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'storagemigration.k8s.io/v1alpha1'
+        self.kind = 'StorageVersionMigrationList'
 
 
 @dataclass

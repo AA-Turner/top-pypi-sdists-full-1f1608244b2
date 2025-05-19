@@ -2,6 +2,7 @@ use crate::GlobalRules;
 
 use crate::check_var::{check_rewriters_in_transform, CheckHint};
 use crate::fixer::Fixer;
+use crate::label::{get_default_labels, get_labels_from_config, Label, LabelConfig};
 use crate::rule::DeserializeEnv;
 use crate::rule_core::{RuleCore, RuleCoreError, SerializableRuleCore};
 
@@ -48,6 +49,8 @@ pub enum RuleConfigError {
   UndefinedRewriter(String),
   #[error("Rewriter rule `{0}` should have `fix`.")]
   NoFixInRewriter(String),
+  #[error("Label meta-variable `{0}` must be defined in `rule` or `constraints`.")]
+  LabelVariable(String),
   #[error("Rule must specify a set of AST kinds to match. Try adding `kind` rule.")]
   MissingPotentialKinds,
 }
@@ -79,6 +82,9 @@ pub struct SerializableRuleConfig<L: Language> {
   /// One of: hint, info, warning, or error
   #[serde(default)]
   pub severity: Severity,
+  /// Custom label dictionary to configure reporting. Key is the meta-variable name and
+  /// value is the label message and label style.
+  pub labels: Option<HashMap<String, LabelConfig>>,
   /// Glob patterns to specify that the rule only applies to matching files
   pub files: Option<Vec<String>>,
   /// Glob patterns that exclude rules from applying to files
@@ -124,7 +130,22 @@ impl<L: Language> SerializableRuleConfig<L> {
     let env = DeserializeEnv::new(self.language.clone()).with_globals(globals);
     let rule = self.core.get_matcher(env.clone())?;
     self.register_rewriters(&rule, env)?;
+    self.check_labels(&rule)?;
     Ok(rule)
+  }
+
+  fn check_labels(&self, rule: &RuleCore) -> Result<(), RuleConfigError> {
+    let Some(labels) = &self.labels else {
+      return Ok(());
+    };
+    // labels var must be vars with node, transform var cannot be used
+    let vars = rule.defined_node_vars();
+    for var in labels.keys() {
+      if !vars.contains(var.as_str()) {
+        return Err(RuleConfigError::LabelVariable(var.clone()));
+      }
+    }
+    Ok(())
   }
 
   fn register_rewriters(
@@ -211,6 +232,13 @@ impl<L: Language> RuleConfig<L> {
       Ok(None)
     }
   }
+  pub fn get_labels<'t, D: Doc>(&self, node: &NodeMatch<'t, D>) -> Vec<Label<'_, 't, D>> {
+    if let Some(labels_config) = &self.labels {
+      get_labels_from_config(labels_config, node)
+    } else {
+      get_default_labels(node)
+    }
+  }
 }
 impl<L: Language> Deref for RuleConfig<L> {
   type Target = SerializableRuleConfig<L>;
@@ -249,6 +277,7 @@ mod test {
       message: "".into(),
       note: None,
       severity: Severity::Hint,
+      labels: None,
       files: None,
       ignores: None,
       url: None,
@@ -700,5 +729,29 @@ metadata:
     let grep = TypeScript::Tsx.ast_grep("a = '123'");
     let nm = grep.root().find(&rule.matcher);
     assert!(nm.is_some());
+  }
+
+  #[test]
+  fn test_label() {
+    let src = r"
+id: test-rule
+language: Tsx
+rule: { pattern: Some($A) }
+labels:
+  A: { style: primary, message: 'var label' }
+  ";
+    let rule: SerializableRuleConfig<TypeScript> = from_str(src).expect("should parse");
+    let ret = RuleConfig::try_from(rule, &Default::default());
+    assert!(ret.is_ok());
+    let src = r"
+id: test-rule
+language: Tsx
+rule: { pattern: Some($A) }
+labels:
+  B: { style: primary, message: 'var label' }
+  ";
+    let rule: SerializableRuleConfig<TypeScript> = from_str(src).expect("should parse");
+    let ret = RuleConfig::try_from(rule, &Default::default());
+    assert!(matches!(ret, Err(RuleConfigError::LabelVariable(_))));
   }
 }

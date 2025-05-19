@@ -1,20 +1,23 @@
-from typing import Any, Optional
-
 import pandas as pd
+from typing import List, Union, Optional, Dict
 import statsmodels.api as sm
 import sklearn
 import factor_analyzer
+import numpy as np
 from ..dataframe.utils import send_thinking_step
 from .base_stats import _prepare_dataset, _test_a_model
 
-def linear_regression(df: pd.DataFrame, feature_columns: str, formula: str, target_column: str, model=None):
+def linear_regression(df: pd.DataFrame, feature_columns: List[str], formula: str, target_column: str, model=None) -> tuple:
     """ Build model to predict a dependent variable using two or more predictor variables
     Args:
         df (pd.DataFrame): DataFrame to operate on
-        feature_columns (str): "Column names for linear regression | . Should be full list of colums used withing R formula"
+        feature_columns (List[str]): Column names for linear regression. Should be full list of columns used within R formula
         formula (str): "R formula for representing relationship between dependent and independent variables"
         target_column (str): "target column we will be predicting"
         model: Optional model object where the trained model will be stored
+        
+    Returns:
+        tuple: (accuracy, summary) - Model accuracy and summary
     """
     
     _df, feature_columns, target_column = _prepare_dataset(df, feature_columns, target_column)
@@ -27,17 +30,20 @@ def linear_regression(df: pd.DataFrame, feature_columns: str, formula: str, targ
     message += "\n\n```\n\n"""
     
     send_thinking_step(func="linear_regression", content=message)
-    return f"{accuracy}\n\n{trained_model.summary().as_text()}"
+    return accuracy, trained_model.summary()
 
 
-def logistic_regression(df: pd.DataFrame, feature_columns: str, formula: str, target_column: str, model=None):
+def logistic_regression(df: pd.DataFrame, feature_columns: List[str], formula: str, target_column: str, model=None) -> tuple:
     """ Build model to predict of probability of occurrence of an event
     Args:
         df (pd.DataFrame): DataFrame to operate on
-        feature_columns (str): "Column names for logistic regression | . Should be full list of colums used withing R formula"
+        feature_columns (List[str]): Column names for logistic regression. Should be full list of columns used within R formula
         formula (str): "R formula for representing relationship between dependent and independent variables"
         target_column (str): "target column we will be predicting"
         model: Optional model object where the trained model will be stored
+        
+    Returns:
+        tuple: (accuracy, summary) - Model accuracy and summary
     """
     
     _df, feature_columns, target_column = _prepare_dataset(df, feature_columns, target_column)
@@ -50,21 +56,25 @@ def logistic_regression(df: pd.DataFrame, feature_columns: str, formula: str, ta
     message += "\n\n```\n\n"""
     
     send_thinking_step(func="logistic_regression", content=message)
-    return f"{accuracy}\n\n{trained_model.summary().as_text()}"
+    return accuracy, trained_model.summary()
 
 
-def mixed_effect_lm(df: pd.DataFrame, feature_columns:str, formula: str, group_column:str, target_column:str, model=None):
-    """ Build a mixed effect model for regresion analysis involving dependent data, random effects must be independently-realized for responses in different groups
+def mixed_effect_lm(df: pd.DataFrame, feature_columns: List[str], formula: str, group_column: str, target_column: str, model=None) -> tuple:
+    """ Build a mixed effect model for regression analysis involving dependent data, random effects must be independently-realized for responses in different groups
     Args:
         df (pd.DataFrame): DataFrame to operate on
-        feature_columns (str): "Column names with one sample per column separated by | . Should be full list of colums used withing R formula"
+        feature_columns (List[str]): Column names for mixed effect model. Should be full list of columns used within R formula
         formula (str): "R formula for representing relationship between variables"
         group_column (str): "column name with group values"
         target_column (str): "target column, to be used in testing of model"
         model: Optional model object where the trained model will be stored
+        
+    Returns:
+        tuple: (accuracy, summary) - Model accuracy and summary
     """
-    _df, feature_columns, target_column = _prepare_dataset(df, f'{feature_columns}|{group_column}', target_column)
-    feature_columns = feature_columns[:-1] # remove group column from feature columns
+    all_columns = feature_columns + [group_column]
+    _df = df[all_columns + [target_column]].dropna()
+    
     trained_model = sm.formula.api.mixedlm(formula, _df, groups=_df[group_column]).fit()
     if model is not None:
         model = trained_model
@@ -74,20 +84,21 @@ def mixed_effect_lm(df: pd.DataFrame, feature_columns:str, formula: str, group_c
     message += "\n\n```\n\n"""
     
     send_thinking_step(func="mixed_effect_lm", content=message)
-    return f"{accuracy}\n\n{trained_model.summary().as_text()}"
+    return accuracy, trained_model.summary()
     
 
 
-def predict(df: pd.DataFrame, feature_columns: str, feature_values: str, model=None):
+def predict(df: pd.DataFrame, feature_columns: List[str], feature_values: List[float], model=None) -> Union[np.ndarray, str]:
     """ Predict target column values using trained model
     Args:
         df (pd.DataFrame): DataFrame to operate on
-        feature_columns (str): "one or more feature columns separated by |"
-        feature_values (str): "one or more int or float feature values separated by |"
+        feature_columns (List[str]): List of feature column names
+        feature_values (List[float]): List of feature values for prediction
         model: Trained model object to use for prediction
+        
+    Returns:
+        numpy.ndarray or str: Prediction results or error message if model is not trained
     """
-    feature_columns = [x.strip() for x in feature_columns.split("|")]
-    feature_values = [float(x.strip()) for x in feature_values.split("|")]
     predict_ds = pd.DataFrame([feature_values], columns=feature_columns)
     if model is None:
         return "ERROR: Model is not trained yet. Please use one of the model training actions first"
@@ -97,22 +108,25 @@ def predict(df: pd.DataFrame, feature_columns: str, feature_values: str, model=N
     message += f"""##### Results:\n\n {', '.join([str(round(x, 4)) for x in predictions])}"""
     
     send_thinking_step(func="predict", content=message)
-    return f"Predictions: {', '.join([str(round(x, 4)) for x in predictions])}"
+    return predictions
 
 
 
-def factorAnalysis(df: pd.DataFrame, columns:str):
+def factorAnalysis(df: pd.DataFrame, columns: List[str]) -> tuple:
     """ Factor analysis used to describe variability among observed, correlated variables in terms of a potentially lower number of unobserved variables called factors; KMO calculation included and score less than 0.6 is considered inadequate
     Args:
         df (pd.DataFrame): DataFrame to operate on
-        columns (str): "Columns names separated by | "
+        columns (List[str]): List of column names for factor analysis
+        
+    Returns:
+        tuple: (eigenvalues, factor_variance, kmo) - Analysis results
     """
     _df, _, _ = _prepare_dataset(df, columns)
     _, kmo_model = factor_analyzer.factor_analyzer.calculate_kmo(_df)
     if kmo_model < 0.6:
         result = f"WARNING: KMO score is {kmo_model}, which is less than 0.6, so factor analysis is not recommended"
         send_thinking_step(func="factorAnalysis", content=result)
-        return result
+        return None, None, kmo_model
         
     fa = factor_analyzer.FactorAnalyzer()
     # Identify number of factors using eigenvalues
@@ -138,27 +152,36 @@ def factorAnalysis(df: pd.DataFrame, columns:str):
     message = f"""#### Factor analysis results:\n\n{result}"""
     
     send_thinking_step(func="factorAnalysis", content=message)
-    return result
+    return ev, statistics, kmo_model
 
 
-def principal_component_analysis_2D(df: pd.DataFrame, feature_columns: str, target_column: str):
+def principal_component_analysis_2D(df: pd.DataFrame, feature_columns: List[str], target_column: str, 
+                               pc_x_column: str, pc_y_column: str) -> Dict[str, str]:
     """ Principal component analysis (PCA) to decreases dementiality of data to 2 dimentions, very usefull in 2D data visualization. Adds new columns to dataset.
     Args:
         df (pd.DataFrame): DataFrame to operate on
-        feature_columns (str): "Column names contains features separated by |"
-        target_column (str): "Column name with target values"
+        feature_columns (List[str]): List of column names containing features
+        target_column (str): Column name with target values
+        pc_x_column (str): Name for the first principal component column
+        pc_y_column (str): Name for the second principal component column
+        
+    Returns:
+        Dict[str, str]: Dictionary with keys 'pc_x' and 'pc_y' containing the names of the created principal component columns
     """
-    feature_columns = [x.strip() for x in feature_columns.split("|")]
-    
     _df = df.loc[:, feature_columns].values
     _df = sklearn.preprocessing.StandardScaler().fit_transform(_df)
     
     pca = sklearn.decomposition.PCA(n_components=2)
 
     principalComponents = pca.fit_transform(_df)
-    df[f"pc_x"] = principalComponents[:, 0]
-    df[f"pc_y"] = principalComponents[:, 1]
     
-    result = f"Added new columns with principal components values: pc_x, pc_y from features columns {', '.join(feature_columns)}. Data sample: {df[['pc_x', 'pc_y', target_column]].head(5).to_string()}"
+    df[pc_x_column] = principalComponents[:, 0]
+    df[pc_y_column] = principalComponents[:, 1]
+    
+    result = f"Added new columns with principal components values: {pc_x_column}, {pc_y_column} from features columns {', '.join(feature_columns)}. Data sample: {df[[pc_x_column, pc_y_column, target_column]].head(5).to_string()}"
     send_thinking_step(func="principal_component_analysis_2D", content=result)
-    return result
+    
+    return {
+        "pc_x": pc_x_column,
+        "pc_y": pc_y_column
+    }

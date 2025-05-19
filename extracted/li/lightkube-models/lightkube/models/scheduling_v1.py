@@ -48,6 +48,10 @@ class PriorityClass(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     preemptionPolicy: 'Optional[str]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'scheduling.k8s.io/v1'
+        self.kind = 'PriorityClass'
+
 
 @dataclass
 class PriorityClassList(DictMixin):
@@ -71,5 +75,9 @@ class PriorityClassList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'scheduling.k8s.io/v1'
+        self.kind = 'PriorityClassList'
 
 

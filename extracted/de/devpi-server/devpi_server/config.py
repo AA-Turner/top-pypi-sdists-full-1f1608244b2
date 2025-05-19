@@ -56,6 +56,24 @@ def get_pluginmanager(load_entrypoints=True):
     return pm
 
 
+def traced_pluggy_call(hook, **caller_kwargs):
+    firstresult = hook.spec.opts.get("firstresult", False) if hook.spec else False
+    results = []
+    plugin_names = []
+    hookimpls = hook._hookimpls if hasattr(hook, '_hookimpls') else hook.get_hookimpls()
+    for hook_impl in reversed(hookimpls):
+        args = [caller_kwargs[argname] for argname in hook_impl.argnames]
+        res = hook_impl.function(*args)
+        if res is not None:
+            results.append(res)
+            plugin_names.append(hook_impl.plugin_name)
+            if firstresult:
+                break
+    if firstresult:
+        results = results[0] if results else None
+    return (results, plugin_names)
+
+
 def add_help_option(parser, pluginmanager):
     parser.addoption(
         "-h", "--help",
@@ -154,6 +172,11 @@ def add_web_options(parser, pluginmanager):
         "--threads", type=int,
         default=50,
         help="number of threads to start for serving clients.")
+
+    parser.addoption(
+        "--connection-limit", type=int,
+        default=100,
+        help="maximum number of simultaneous client connections.")
 
     parser.addoption(
         "--trusted-proxy", type=str,
@@ -446,8 +469,9 @@ def find_config_file():
             config_files.append(config_file)
     if len(config_files) > 1:
         log.warning("Multiple configuration files found:\n%s", "\n".join(config_files))
-    if len(config_files):
-        return config_files[-1]
+    if not config_files:
+        return None
+    return config_files[-1]
 
 
 class InvalidConfigError(ValueError):
@@ -680,6 +704,8 @@ class Config(object):
             kwargs["trusted_proxy_count"] = self.args.trusted_proxy_count
         if self.args.trusted_proxy_headers is not None:
             kwargs["trusted_proxy_headers"] = self.args.trusted_proxy_headers
+        if self.args.connection_limit is not None:
+            kwargs["connection_limit"] = self.args.connection_limit
         return dict(kwargs=kwargs, addresses=addresses)
 
     @cached_property

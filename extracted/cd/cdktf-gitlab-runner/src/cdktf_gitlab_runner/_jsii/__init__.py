@@ -34,9 +34,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "cdktf-gitlab-runner",
-    "0.0.1268",
+    "0.0.1269",
     __name__[0:-6],
-    "cdktf-gitlab-runner@0.0.1268.jsii.tgz",
+    "cdktf-gitlab-runner@0.0.1269.jsii.tgz",
 )
 
 __all__ = [

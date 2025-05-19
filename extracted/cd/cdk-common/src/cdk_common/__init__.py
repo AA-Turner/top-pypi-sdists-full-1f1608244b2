@@ -18,14 +18,7 @@ Use the npm dist tag to opt in CDKv1 or CDKv2:
 
 // for CDKv2
 npm install cdk-common
-or
-npm install cdk-common@latest
-
-// for CDKv1
-npm install cdk-common@cdkv1
 ```
-
-💡💡💡 please click [here](https://github.com/neilkuan/cdk-common/tree/cdkv1#readme), if you are using aws-cdk v1.x.x version.💡💡💡
 
 ### AWS Managed Policies `enum`
 
@@ -5484,6 +5477,26 @@ class AWSManagedPolicies(enum.Enum):
     :stability: experimental
     '''
     AWSSYSTEMS_MANAGER_JUST_IN_TIME_NODE_ACCESS_ROLE_PROPAGATION_POLICY = "AWSSYSTEMS_MANAGER_JUST_IN_TIME_NODE_ACCESS_ROLE_PROPAGATION_POLICY"
+    '''
+    :stability: experimental
+    '''
+    AMAZON_EKS_DASHBOARD_SERVICE_ROLE_POLICY = "AMAZON_EKS_DASHBOARD_SERVICE_ROLE_POLICY"
+    '''
+    :stability: experimental
+    '''
+    AWSQUICK_SIGHT_SECRETS_MANAGER_WRITE_POLICY = "AWSQUICK_SIGHT_SECRETS_MANAGER_WRITE_POLICY"
+    '''
+    :stability: experimental
+    '''
+    AWSSERVICE_ROLE_FOR_AWS_TRANSFORM = "AWSSERVICE_ROLE_FOR_AWS_TRANSFORM"
+    '''
+    :stability: experimental
+    '''
+    CLOUD_TRAIL_EVENT_CONTEXT = "CLOUD_TRAIL_EVENT_CONTEXT"
+    '''
+    :stability: experimental
+    '''
+    AMAZON_EVS_SERVICE_ROLE_POLICY = "AMAZON_EVS_SERVICE_ROLE_POLICY"
     '''
     :stability: experimental
     '''

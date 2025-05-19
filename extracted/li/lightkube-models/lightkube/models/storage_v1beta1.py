@@ -48,6 +48,10 @@ class VolumeAttributesClass(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     parameters: 'Optional[dict]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'storage.k8s.io/v1beta1'
+        self.kind = 'VolumeAttributesClass'
+
 
 @dataclass
 class VolumeAttributesClassList(DictMixin):
@@ -71,5 +75,9 @@ class VolumeAttributesClassList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'storage.k8s.io/v1beta1'
+        self.kind = 'VolumeAttributesClassList'
 
 

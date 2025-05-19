@@ -6,9 +6,9 @@ from ._schema import dataclass, field, DictMixin
 if TYPE_CHECKING:   # Fix for pycharm autocompletion https://youtrack.jetbrains.com/issue/PY-54560
     from dataclasses import dataclass, field
 
-from . import meta_v1
 from . import core_v1
 from . import runtime
+from . import meta_v1
 from . import util_intstr
 
 
@@ -46,6 +46,10 @@ class ControllerRevision(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'apps/v1'
+        self.kind = 'ControllerRevision'
+
 
 @dataclass
 class ControllerRevisionList(DictMixin):
@@ -70,6 +74,10 @@ class ControllerRevisionList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'apps/v1'
+        self.kind = 'ControllerRevisionList'
 
 
 @dataclass
@@ -99,6 +107,10 @@ class DaemonSet(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     spec: 'Optional[DaemonSetSpec]' = None
     status: 'Optional[DaemonSetStatus]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'apps/v1'
+        self.kind = 'DaemonSet'
 
 
 @dataclass
@@ -142,6 +154,10 @@ class DaemonSetList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'apps/v1'
+        self.kind = 'DaemonSetList'
 
 
 @dataclass
@@ -254,6 +270,10 @@ class Deployment(DictMixin):
     spec: 'Optional[DeploymentSpec]' = None
     status: 'Optional[DeploymentStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'apps/v1'
+        self.kind = 'Deployment'
+
 
 @dataclass
 class DeploymentCondition(DictMixin):
@@ -298,6 +318,10 @@ class DeploymentList(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'apps/v1'
+        self.kind = 'DeploymentList'
+
 
 @dataclass
 class DeploymentSpec(DictMixin):
@@ -341,22 +365,27 @@ class DeploymentStatus(DictMixin):
 
       **parameters**
 
-      * **availableReplicas** ``Optional[int]`` - Total number of available pods (ready for at least minReadySeconds) targeted
-        by this deployment.
+      * **availableReplicas** ``Optional[int]`` - Total number of available non-terminating pods (ready for at least
+        minReadySeconds) targeted by this deployment.
       * **collisionCount** ``Optional[int]`` - Count of hash collisions for the Deployment. The Deployment controller uses
         this field as a collision avoidance mechanism when it needs to create the name
         for the newest ReplicaSet.
       * **conditions** ``Optional[List[DeploymentCondition]]`` - Represents the latest available observations of a deployment's current state.
       * **observedGeneration** ``Optional[int]`` - The generation observed by the deployment controller.
-      * **readyReplicas** ``Optional[int]`` - readyReplicas is the number of pods targeted by this Deployment with a Ready
+      * **readyReplicas** ``Optional[int]`` - Total number of non-terminating pods targeted by this Deployment with a Ready
         Condition.
-      * **replicas** ``Optional[int]`` - Total number of non-terminated pods targeted by this deployment (their labels
+      * **replicas** ``Optional[int]`` - Total number of non-terminating pods targeted by this deployment (their labels
         match the selector).
+      * **terminatingReplicas** ``Optional[int]`` - Total number of terminating pods targeted by this deployment. Terminating pods
+        have a non-null .metadata.deletionTimestamp and have not yet reached the
+        Failed or Succeeded .status.phase.
+        This is an alpha field. Enable DeploymentReplicaSetTerminatingReplicas to be
+        able to use this field.
       * **unavailableReplicas** ``Optional[int]`` - Total number of unavailable pods targeted by this deployment. This is the
         total number of pods that are still required for the deployment to have 100%
         available capacity. They may either be pods that are running but not yet
         available or pods that still have not been created.
-      * **updatedReplicas** ``Optional[int]`` - Total number of non-terminated pods targeted by this deployment that have the
+      * **updatedReplicas** ``Optional[int]`` - Total number of non-terminating pods targeted by this deployment that have the
         desired template spec.
     """
     availableReplicas: 'Optional[int]' = None
@@ -365,6 +394,7 @@ class DeploymentStatus(DictMixin):
     observedGeneration: 'Optional[int]' = None
     readyReplicas: 'Optional[int]' = None
     replicas: 'Optional[int]' = None
+    terminatingReplicas: 'Optional[int]' = None
     unavailableReplicas: 'Optional[int]' = None
     updatedReplicas: 'Optional[int]' = None
 
@@ -416,6 +446,10 @@ class ReplicaSet(DictMixin):
     spec: 'Optional[ReplicaSetSpec]' = None
     status: 'Optional[ReplicaSetStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'apps/v1'
+        self.kind = 'ReplicaSet'
+
 
 @dataclass
 class ReplicaSetCondition(DictMixin):
@@ -443,7 +477,7 @@ class ReplicaSetList(DictMixin):
       **parameters**
 
       * **items** ``List[ReplicaSet]`` - List of ReplicaSets. More info:
-        https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller
+        https://kubernetes.io/docs/concepts/workloads/controllers/replicaset
       * **apiVersion** ``Optional[str]`` - APIVersion defines the versioned schema of this representation of an object.
         Servers should convert recognized schemas to the latest internal value, and
         may reject unrecognized values. More info:
@@ -460,6 +494,10 @@ class ReplicaSetList(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'apps/v1'
+        self.kind = 'ReplicaSetList'
+
 
 @dataclass
 class ReplicaSetSpec(DictMixin):
@@ -474,12 +512,12 @@ class ReplicaSetSpec(DictMixin):
       * **minReadySeconds** ``Optional[int]`` - Minimum number of seconds for which a newly created pod should be ready
         without any of its container crashing, for it to be considered available.
         Defaults to 0 (pod will be considered available as soon as it is ready)
-      * **replicas** ``Optional[int]`` - Replicas is the number of desired replicas. This is a pointer to distinguish
+      * **replicas** ``Optional[int]`` - Replicas is the number of desired pods. This is a pointer to distinguish
         between explicit zero and unspecified. Defaults to 1. More info:
-        https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/#what-is-a-replicationcontroller
+        https://kubernetes.io/docs/concepts/workloads/controllers/replicaset
       * **template** ``Optional[core_v1.PodTemplateSpec]`` - Template is the object that describes the pod that will be created if
         insufficient replicas are detected. More info:
-        https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
+        https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/#pod-template
     """
     selector: 'meta_v1.LabelSelector'
     minReadySeconds: 'Optional[int]' = None
@@ -493,17 +531,22 @@ class ReplicaSetStatus(DictMixin):
 
       **parameters**
 
-      * **replicas** ``int`` - Replicas is the most recently observed number of replicas. More info:
-        https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/#what-is-a-replicationcontroller
-      * **availableReplicas** ``Optional[int]`` - The number of available replicas (ready for at least minReadySeconds) for this
-        replica set.
+      * **replicas** ``int`` - Replicas is the most recently observed number of non-terminating pods. More
+        info: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset
+      * **availableReplicas** ``Optional[int]`` - The number of available non-terminating pods (ready for at least
+        minReadySeconds) for this replica set.
       * **conditions** ``Optional[List[ReplicaSetCondition]]`` - Represents the latest available observations of a replica set's current state.
-      * **fullyLabeledReplicas** ``Optional[int]`` - The number of pods that have labels matching the labels of the pod template of
-        the replicaset.
+      * **fullyLabeledReplicas** ``Optional[int]`` - The number of non-terminating pods that have labels matching the labels of the
+        pod template of the replicaset.
       * **observedGeneration** ``Optional[int]`` - ObservedGeneration reflects the generation of the most recently observed
         ReplicaSet.
-      * **readyReplicas** ``Optional[int]`` - readyReplicas is the number of pods targeted by this ReplicaSet with a Ready
+      * **readyReplicas** ``Optional[int]`` - The number of non-terminating pods targeted by this ReplicaSet with a Ready
         Condition.
+      * **terminatingReplicas** ``Optional[int]`` - The number of terminating pods for this replica set. Terminating pods have a
+        non-null .metadata.deletionTimestamp and have not yet reached the Failed or
+        Succeeded .status.phase.
+        This is an alpha field. Enable DeploymentReplicaSetTerminatingReplicas to be
+        able to use this field.
     """
     replicas: 'int'
     availableReplicas: 'Optional[int]' = None
@@ -511,6 +554,7 @@ class ReplicaSetStatus(DictMixin):
     fullyLabeledReplicas: 'Optional[int]' = None
     observedGeneration: 'Optional[int]' = None
     readyReplicas: 'Optional[int]' = None
+    terminatingReplicas: 'Optional[int]' = None
 
 
 @dataclass
@@ -637,6 +681,10 @@ class StatefulSet(DictMixin):
     spec: 'Optional[StatefulSetSpec]' = None
     status: 'Optional[StatefulSetStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'apps/v1'
+        self.kind = 'StatefulSet'
+
 
 @dataclass
 class StatefulSetCondition(DictMixin):
@@ -679,6 +727,10 @@ class StatefulSetList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'apps/v1'
+        self.kind = 'StatefulSetList'
 
 
 @dataclass
@@ -729,11 +781,6 @@ class StatefulSetSpec(DictMixin):
       * **selector** ``meta_v1.LabelSelector`` - selector is a label query over pods that should match the replica count. It
         must match the pod template's labels. More info:
         https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
-      * **serviceName** ``str`` - serviceName is the name of the service that governs this StatefulSet. This
-        service must exist before the StatefulSet, and is responsible for the network
-        identity of the set. Pods get DNS/hostnames that follow the pattern:
-        pod-specific-string.serviceName.default.svc.cluster.local where
-        "pod-specific-string" is managed by the StatefulSet controller.
       * **template** ``core_v1.PodTemplateSpec`` - template is the object that describes the pod that will be created if
         insufficient replicas are detected. Each pod stamped out by the StatefulSet
         will fulfill this Template, but have a unique identity from the rest of the
@@ -768,6 +815,11 @@ class StatefulSetSpec(DictMixin):
         maintained in the StatefulSet's revision history. The revision history
         consists of all revisions not represented by a currently applied
         StatefulSetSpec version. The default value is 10.
+      * **serviceName** ``Optional[str]`` - serviceName is the name of the service that governs this StatefulSet. This
+        service must exist before the StatefulSet, and is responsible for the network
+        identity of the set. Pods get DNS/hostnames that follow the pattern:
+        pod-specific-string.serviceName.default.svc.cluster.local where
+        "pod-specific-string" is managed by the StatefulSet controller.
       * **updateStrategy** ``Optional[StatefulSetUpdateStrategy]`` - updateStrategy indicates the StatefulSetUpdateStrategy that will be employed
         to update Pods in the StatefulSet when a revision is made to Template.
       * **volumeClaimTemplates** ``Optional[List[core_v1.PersistentVolumeClaim]]`` - volumeClaimTemplates is a list of claims that pods are allowed to reference.
@@ -778,7 +830,6 @@ class StatefulSetSpec(DictMixin):
         template, with the same name.
     """
     selector: 'meta_v1.LabelSelector'
-    serviceName: 'str'
     template: 'core_v1.PodTemplateSpec'
     minReadySeconds: 'Optional[int]' = None
     ordinals: 'Optional[StatefulSetOrdinals]' = None
@@ -786,6 +837,7 @@ class StatefulSetSpec(DictMixin):
     podManagementPolicy: 'Optional[str]' = None
     replicas: 'Optional[int]' = None
     revisionHistoryLimit: 'Optional[int]' = None
+    serviceName: 'Optional[str]' = None
     updateStrategy: 'Optional[StatefulSetUpdateStrategy]' = None
     volumeClaimTemplates: 'Optional[List[core_v1.PersistentVolumeClaim]]' = None
 

@@ -50,6 +50,10 @@ class ClusterRole(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     rules: 'Optional[List[PolicyRule]]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'rbac.authorization.k8s.io/v1'
+        self.kind = 'ClusterRole'
+
 
 @dataclass
 class ClusterRoleBinding(DictMixin):
@@ -79,6 +83,10 @@ class ClusterRoleBinding(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     subjects: 'Optional[List[Subject]]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'rbac.authorization.k8s.io/v1'
+        self.kind = 'ClusterRoleBinding'
+
 
 @dataclass
 class ClusterRoleBindingList(DictMixin):
@@ -102,6 +110,10 @@ class ClusterRoleBindingList(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'rbac.authorization.k8s.io/v1'
+        self.kind = 'ClusterRoleBindingList'
+
 
 @dataclass
 class ClusterRoleList(DictMixin):
@@ -124,6 +136,10 @@ class ClusterRoleList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'rbac.authorization.k8s.io/v1'
+        self.kind = 'ClusterRoleList'
 
 
 @dataclass
@@ -181,6 +197,10 @@ class Role(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     rules: 'Optional[List[PolicyRule]]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'rbac.authorization.k8s.io/v1'
+        self.kind = 'Role'
+
 
 @dataclass
 class RoleBinding(DictMixin):
@@ -212,6 +232,10 @@ class RoleBinding(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     subjects: 'Optional[List[Subject]]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'rbac.authorization.k8s.io/v1'
+        self.kind = 'RoleBinding'
+
 
 @dataclass
 class RoleBindingList(DictMixin):
@@ -235,6 +259,10 @@ class RoleBindingList(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'rbac.authorization.k8s.io/v1'
+        self.kind = 'RoleBindingList'
+
 
 @dataclass
 class RoleList(DictMixin):
@@ -257,6 +285,10 @@ class RoleList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'rbac.authorization.k8s.io/v1'
+        self.kind = 'RoleList'
 
 
 @dataclass

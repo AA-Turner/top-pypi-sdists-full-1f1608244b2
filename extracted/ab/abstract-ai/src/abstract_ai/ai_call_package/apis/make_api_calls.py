@@ -9,6 +9,39 @@ URL_SELECT_JS={"openai":OPENAI_URL,"grok":GROK_URL,"gemini":GEMINI_URL}
 DEFAULT_HEADERS = {
         "Content-Type": "application/json",
     }
+def extract_content(data):
+    """
+    Extracts the 'content' field from the provided data structure and returns it as a Python dictionary.
+    
+    Args:
+        data (list): The input data structure containing the response with the content field.
+        
+    Returns:
+        dict: The parsed Python dictionary from the content field.
+        
+    Raises:
+        KeyError: If expected keys are missing in the data structure.
+        json.JSONDecodeError: If the content field is not valid JSON.
+    """
+    try:
+        # Navigate to the content field
+        content = data[0]['response']['choices'][0]['message']['content']
+        content = content.replace('\n','')        
+        # Parse the content string into a Python dictionary
+        content_dict = json.loads(content)
+        
+        # Ensure the result is a dictionary
+        if not isinstance(content_dict, dict):
+            raise ValueError("Content is not a dictionary")
+        
+        return content_dict
+    
+    except KeyError as e:
+        raise KeyError(f"Missing expected key in data structure: {e}")
+    except json.JSONDecodeError as e:
+        raise json.JSONDecodeError(f"Invalid JSON in content field: {e}")
+    except ValueError as e:
+        raise ValueError(e)
 def get_gemini_model(version,typ=None):
     version_types_js={"1.5":["flash"],"2":["flash"],"2.5":['flash','pro']}
     version = str(version or "1.5")
@@ -76,6 +109,7 @@ def make_ai_api_call(ai=None,
                      prompt_data=None,
                      completion_percentage=None,
                      env_path=None,
+                     response_only=True,
                      *args,
                      **kwargs):
     ai = get_correct_ai_key(ai)
@@ -91,9 +125,10 @@ def make_ai_api_call(ai=None,
                            instructions=instructions,
                            instruction_bools=instruction_bools,
                            data=prompt_data)
-        
-        result = get_api_response_value(response)
-        
+        result = extract_content(response)
+        if response_only:
+            result = result.get('api_response')
+
     else:
         headers = get_api_header(ai=ai,typ=typ,api_key=api_key)
         
@@ -106,8 +141,10 @@ def make_ai_api_call(ai=None,
         response = get_response(response)
         
         if ai in ['gemini','GEMINI']:
-            #result = response.get('candidates',[{}])[0].get('content',{}).get('parts',[{}])[0].get('text')
-            result = make_list(get_any_value(response,'text'))[-1]
+            if response_only:
+                result = make_list(get_any_value(response,'text'))[-1]
+            else:
+                result = response
         else:
             result = make_list(get_any_value(response,'content'))[-1]
     return result

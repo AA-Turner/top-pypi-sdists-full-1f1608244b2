@@ -49,6 +49,18 @@ class Ingress(res.NamespacedResourceG, m_networking_v1.Ingress):
     Status: ClassVar = IngressStatus
 
 
+class IPAddress(res.GlobalResource, m_networking_v1.IPAddress):
+    """* **Extends**: ``models.networking_v1.IPAddress``
+       * **Type**: Global Resource
+       * **Accepted client methods**: `delete`, `deletecollection`, `get`, `list`, `patch`, `create`, `replace`, `watch`
+    """
+    _api_info = res.ApiInfo(
+        resource=res.ResourceDef('networking.k8s.io', 'v1', 'IPAddress'),
+        plural='ipaddresses',
+        verbs=['delete', 'deletecollection', 'get', 'list', 'patch', 'post', 'put', 'watch'],
+    )
+
+
 class NetworkPolicy(res.NamespacedResourceG, m_networking_v1.NetworkPolicy):
     """* **Extends**: ``models.networking_v1.NetworkPolicy``
        * **Type**: Namespaced Resource
@@ -59,4 +71,36 @@ class NetworkPolicy(res.NamespacedResourceG, m_networking_v1.NetworkPolicy):
         plural='networkpolicies',
         verbs=['delete', 'deletecollection', 'get', 'global_list', 'global_watch', 'list', 'patch', 'post', 'put', 'watch'],
     )
+
+
+class ServiceCIDRStatus(res.GlobalSubResource, m_networking_v1.ServiceCIDR):
+    """* **Extends**: ``models.networking_v1.ServiceCIDR``
+       * **Type**: Global Resource
+       * **Accepted client methods**: `get`, `patch`, `replace`
+    """
+    _api_info = res.ApiInfo(
+        resource=res.ResourceDef('networking.k8s.io', 'v1', 'ServiceCIDR'),
+        parent=res.ResourceDef('networking.k8s.io', 'v1', 'ServiceCIDR'),
+        plural='servicecidrs',
+        verbs=['get', 'patch', 'put'],
+        action='status',
+    )
+
+
+class ServiceCIDR(res.GlobalResource, m_networking_v1.ServiceCIDR):
+    """* **Extends**: ``models.networking_v1.ServiceCIDR``
+       * **Type**: Global Resource
+       * **Accepted client methods**: `delete`, `deletecollection`, `get`, `list`, `patch`, `create`, `replace`, `watch`
+
+       **Subresources**:
+
+       * **Status**: ``ServiceCIDRStatus``
+    """
+    _api_info = res.ApiInfo(
+        resource=res.ResourceDef('networking.k8s.io', 'v1', 'ServiceCIDR'),
+        plural='servicecidrs',
+        verbs=['delete', 'deletecollection', 'get', 'list', 'patch', 'post', 'put', 'watch'],
+    )
+
+    Status: ClassVar = ServiceCIDRStatus
 

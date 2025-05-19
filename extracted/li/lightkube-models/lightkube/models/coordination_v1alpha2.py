@@ -35,6 +35,10 @@ class LeaseCandidate(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     spec: 'Optional[LeaseCandidateSpec]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'coordination.k8s.io/v1alpha2'
+        self.kind = 'LeaseCandidate'
+
 
 @dataclass
 class LeaseCandidateList(DictMixin):
@@ -59,6 +63,10 @@ class LeaseCandidateList(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'coordination.k8s.io/v1alpha2'
+        self.kind = 'LeaseCandidateList'
+
 
 @dataclass
 class LeaseCandidateSpec(DictMixin):
@@ -75,8 +83,6 @@ class LeaseCandidateSpec(DictMixin):
         strategies, the strategy provided by the candidate with the latest
         BinaryVersion will be used. If there is still conflict, this is a user error
         and coordinated leader election will not operate the Lease until resolved.
-        (Alpha) Using this field requires the CoordinatedLeaderElection feature gate
-        to be enabled.
       * **emulationVersion** ``Optional[str]`` - EmulationVersion is the emulation version. It must be in a semver format
         without leading `v`. EmulationVersion must be less than or equal to
         BinaryVersion. This field is required when strategy is

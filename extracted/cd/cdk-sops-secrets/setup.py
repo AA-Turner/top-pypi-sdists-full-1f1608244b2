@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdk-sops-secrets",
-    "version": "2.1.8",
+    "version": "2.1.9",
     "description": "CDK Constructs that syncs your sops secrets into AWS SecretsManager secrets.",
     "license": "Apache-2.0",
     "url": "https://constructs.dev/packages/cdk-sops-secrets",
@@ -26,7 +26,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdk_sops_secrets._jsii": [
-            "cdk-sops-secrets@2.1.8.jsii.tgz"
+            "cdk-sops-secrets@2.1.9.jsii.tgz"
         ],
         "cdk_sops_secrets": [
             "py.typed"

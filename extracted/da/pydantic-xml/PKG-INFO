@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: pydantic-xml
-Version: 2.16.0
+Version: 2.17.0
 Summary: pydantic xml extension
 License: Unlicense
 Keywords: pydantic,xml,serialization,deserialization,lxml

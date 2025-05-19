@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: apache-airflow-providers-apache-hive
-Version: 9.0.6
+Version: 9.1.0
 Summary: Provider package apache-airflow-providers-apache-hive for Apache Airflow
 Keywords: airflow-provider,apache.hive,airflow,integration
 Author-email: Apache Software Foundation <dev@airflow.apache.org>
@@ -20,10 +20,9 @@ Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Topic :: System :: Monitoring
-Requires-Dist: apache-airflow>=2.9.0
-Requires-Dist: apache-airflow-providers-common-sql>=1.20.0
+Requires-Dist: apache-airflow>=2.10.0
+Requires-Dist: apache-airflow-providers-common-sql>=1.26.0
 Requires-Dist: hmsclient>=0.1.0
-Requires-Dist: pandas>=2.1.2,<2.2
 Requires-Dist: pyhive[hive-pure-sasl]>=0.7.0
 Requires-Dist: thrift>=0.11.0
 Requires-Dist: jmespath>=0.7.0
@@ -35,8 +34,8 @@ Requires-Dist: apache-airflow-providers-presto ; extra == "presto"
 Requires-Dist: apache-airflow-providers-samba ; extra == "samba"
 Requires-Dist: apache-airflow-providers-vertica ; extra == "vertica"
 Project-URL: Bug Tracker, https://github.com/apache/airflow/issues
-Project-URL: Changelog, https://airflow.apache.org/docs/apache-airflow-providers-apache-hive/9.0.6/changelog.html
-Project-URL: Documentation, https://airflow.apache.org/docs/apache-airflow-providers-apache-hive/9.0.6
+Project-URL: Changelog, https://airflow.apache.org/docs/apache-airflow-providers-apache-hive/9.1.0/changelog.html
+Project-URL: Documentation, https://airflow.apache.org/docs/apache-airflow-providers-apache-hive/9.1.0
 Project-URL: Mastodon, https://fosstodon.org/@airflow
 Project-URL: Slack Chat, https://s.apache.org/airflow-slack
 Project-URL: Source Code, https://github.com/apache/airflow
@@ -74,7 +73,7 @@ Provides-Extra: vertica
 
 Package ``apache-airflow-providers-apache-hive``
 
-Release: ``9.0.6``
+Release: ``9.1.0``
 
 
 `Apache Hive <https://hive.apache.org/>`__
@@ -87,7 +86,7 @@ This is a provider package for ``apache.hive`` provider. All classes for this pr
 are in ``airflow.providers.apache.hive`` python package.
 
 You can find package information and changelog for the provider
-in the `documentation <https://airflow.apache.org/docs/apache-airflow-providers-apache-hive/9.0.6/>`_.
+in the `documentation <https://airflow.apache.org/docs/apache-airflow-providers-apache-hive/9.1.0/>`_.
 
 Installation
 ------------
@@ -104,10 +103,9 @@ Requirements
 =======================================  ==================
 PIP package                              Version required
 =======================================  ==================
-``apache-airflow``                       ``>=2.9.0``
-``apache-airflow-providers-common-sql``  ``>=1.20.0``
+``apache-airflow``                       ``>=2.10.0``
+``apache-airflow-providers-common-sql``  ``>=1.26.0``
 ``hmsclient``                            ``>=0.1.0``
-``pandas``                               ``>=2.1.2,<2.2``
 ``pyhive[hive_pure_sasl]``               ``>=0.7.0``
 ``thrift``                               ``>=0.11.0``
 ``jmespath``                             ``>=0.7.0``
@@ -140,5 +138,5 @@ Dependent package                                                               
 ======================================================================================================================  ===================
 
 The changelog for the provider package can be found in the
-`changelog <https://airflow.apache.org/docs/apache-airflow-providers-apache-hive/9.0.6/changelog.html>`_.
+`changelog <https://airflow.apache.org/docs/apache-airflow-providers-apache-hive/9.1.0/changelog.html>`_.
 

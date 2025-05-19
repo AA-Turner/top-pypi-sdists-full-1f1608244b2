@@ -390,8 +390,8 @@ def respond(req, heads, bdy):
 
 # %% ../nbs/api/00_core.ipynb
 def is_full_page(req, resp):
-    is_frag = 'hx-request' in req.headers and 'hx-history-restore-request' not in req.headers
-    return (resp and not is_frag and not any(getattr(o, 'tag', '')=='html' for o in resp))
+    if resp and any(getattr(o, 'tag', '')=='html' for o in resp): return True
+    return 'hx-request' in req.headers and 'hx-history-restore-request' not in req.headers
 
 # %% ../nbs/api/00_core.ipynb
 def _part_resp(req, resp):
@@ -414,9 +414,10 @@ def _xt_cts(req, resp):
     hdr_tags = 'title','meta','link','style','base'
     resp = tuplify(resp)
     heads,bdy = partition(resp, lambda o: getattr(o, 'tag', '') in hdr_tags)
-    if is_full_page(req, resp):
+    if not is_full_page(req, resp):
         title = [] if any(getattr(o, 'tag', '')=='title' for o in heads) else [Title(req.app.title)]
-        resp = respond(req, [*heads, *title], bdy)
+        canonical = [Link(rel="canonical", href=getattr(req, 'canonical', req.url))] if req.app.canonical else []
+        resp = respond(req, [*heads, *title, *canonical], bdy)
     return _to_xml(req, resp, indent=fh_cfg.indent)
 
 # %% ../nbs/api/00_core.ipynb
@@ -424,7 +425,7 @@ def _is_ft_resp(resp): return isinstance(resp, _iter_typs+(HttpHeader,FT)) or ha
 
 # %% ../nbs/api/00_core.ipynb
 def _resp(req, resp, cls=empty, status_code=200):
-    if not resp: resp=()
+    if not resp: resp=''
     if hasattr(resp, '__response__'): resp = resp.__response__(req)
     if cls in (Any,FT): cls=empty
     if isinstance(resp, FileResponse) and not os.path.exists(resp.path): raise HTTPException(404, resp.path)
@@ -538,9 +539,9 @@ class FastHTML(Starlette):
                  before=None, after=None, surreal=True, htmx=True, default_hdrs=True, sess_cls=SessionMiddleware,
                  secret_key=None, session_cookie='session_', max_age=365*24*3600, sess_path='/',
                  same_site='lax', sess_https_only=False, sess_domain=None, key_fname='.sesskey',
-                 body_wrap=noop_body, htmlkw=None, nb_hdrs=False, **bodykw):
+                 body_wrap=noop_body, htmlkw=None, nb_hdrs=False, canonical=True, **bodykw):
         middleware,before,after = map(_list, (middleware,before,after))
-        self.title = title
+        self.title,self.canonical = title,canonical
         hdrs,ftrs,exts = map(listify, (hdrs,ftrs,exts))
         exts = {k:htmx_exts[k] for k in exts}
         htmlkw = htmlkw or {}

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: mutmut
-Version: 3.2.3
+Version: 3.3.0
 Summary: mutation testing for Python 3
 Home-page: https://github.com/boxed/mutmut
 Author: Anders Hovmöller
@@ -15,12 +15,12 @@ Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.7
 License-File: LICENSE
 License-File: AUTHORS.rst
-Requires-Dist: parso
+Requires-Dist: libcst~=1.7.0
 Requires-Dist: click
-Requires-Dist: junit-xml==1.8
 Requires-Dist: setproctitle
 Requires-Dist: textual
 Requires-Dist: toml>=0.10.2; python_version < "3.11"
+Requires-Dist: pytest
 
 mutmut - python mutation tester
 ===============================
@@ -98,6 +98,14 @@ In `setup.cfg` in the root of your project you can configure mutmut if you need 
     [mutmut]
     paths_to_mutate=src/
     tests_dir=tests/
+
+If you use `pyproject.toml`, you must specify the paths as array in a `tool.mutmut` section:
+
+.. code-block:: toml
+
+    [tool.mutmut]
+    paths_to_mutate = [ "src/" ]
+    tests_dir = [ "tests/" ]
 
 See below for more options for configuring mutmut.
 
@@ -190,7 +198,7 @@ Example mutations
 - break is changed to continue and vice versa
 
 In general the idea is that the mutations should be as subtle as possible.
-See `__init__.py` for the full list.
+See `node_mutation.py` for the full list and `test_mutation.py` for tests describing them.
 
 
 Workflow

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: ascii_colors
-Version: 0.11.2
+Version: 0.11.3
 Summary: A Python library for rich terminal output with advanced logging features.
 Author-email: ParisNeo <parisneo_ai@gmail.com>
 License-Expression: Apache-2.0
@@ -9,7 +9,7 @@ Project-URL: Repository, https://github.com/ParisNeo/ascii_colors
 Project-URL: Issues, https://github.com/ParisNeo/ascii_colors/issues
 Project-URL: Documentation, https://parisneo.github.io/ascii_colors/
 Keywords: ansi,color,colors,style,terminal,console,cli,rich text,logging,logger,log,structured logging,log formatting,json logging,file logging,log rotation,python logging,context logging,progress bar,progress,tqdm,indicator,menu,cli menu,interactive menu,terminal menu,navigation,prompt,confirm,input,user interaction,animation,spinner,utility
-Classifier: Development Status :: 4 - Beta
+Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
 Classifier: Environment :: Console
 Classifier: Operating System :: OS Independent
@@ -27,6 +27,7 @@ Classifier: Topic :: System :: Shells
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: wcwidth
 Provides-Extra: dev
 Requires-Dist: sphinx>=4.0; extra == "dev"
 Requires-Dist: sphinx-rtd-theme; extra == "dev"

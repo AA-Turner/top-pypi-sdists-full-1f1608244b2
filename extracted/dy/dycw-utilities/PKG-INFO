@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: dycw-utilities
-Version: 0.116.3
+Version: 0.116.5
 Author-email: Derek Wan <d.wan@icloud.com>
 License-File: LICENSE
 Requires-Python: >=3.12
@@ -43,7 +43,7 @@ Requires-Dist: whenever<0.8,>=0.7.3; extra == 'zzz-test-click'
 Provides-Extra: zzz-test-contextlib
 Provides-Extra: zzz-test-contextvars
 Provides-Extra: zzz-test-cryptography
-Requires-Dist: cryptography<44.1,>=44.0.2; extra == 'zzz-test-cryptography'
+Requires-Dist: cryptography<46.0,>=45.0.2; extra == 'zzz-test-cryptography'
 Provides-Extra: zzz-test-cvxpy
 Requires-Dist: cvxpy<1.7,>=1.6.5; extra == 'zzz-test-cvxpy'
 Provides-Extra: zzz-test-dataclasses

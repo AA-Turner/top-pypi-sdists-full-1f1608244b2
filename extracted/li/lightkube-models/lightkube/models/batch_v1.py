@@ -6,8 +6,8 @@ from ._schema import dataclass, field, DictMixin
 if TYPE_CHECKING:   # Fix for pycharm autocompletion https://youtrack.jetbrains.com/issue/PY-54560
     from dataclasses import dataclass, field
 
-from . import core_v1
 from . import meta_v1
+from . import core_v1
 
 
 @dataclass
@@ -38,6 +38,10 @@ class CronJob(DictMixin):
     spec: 'Optional[CronJobSpec]' = None
     status: 'Optional[CronJobStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'batch/v1'
+        self.kind = 'CronJob'
+
 
 @dataclass
 class CronJobList(DictMixin):
@@ -61,6 +65,10 @@ class CronJobList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'batch/v1'
+        self.kind = 'CronJobList'
 
 
 @dataclass
@@ -149,6 +157,10 @@ class Job(DictMixin):
     spec: 'Optional[JobSpec]' = None
     status: 'Optional[JobStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'batch/v1'
+        self.kind = 'Job'
+
 
 @dataclass
 class JobCondition(DictMixin):
@@ -194,6 +206,10 @@ class JobList(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'batch/v1'
+        self.kind = 'JobList'
+
 
 @dataclass
 class JobSpec(DictMixin):
@@ -214,8 +230,7 @@ class JobSpec(DictMixin):
         this index as failed. When enabled the number of failures per index is kept in
         the pod's batch.kubernetes.io/job-index-failure-count annotation. It can only
         be set when Job's completionMode=Indexed, and the Pod's restart policy is
-        Never. The field is immutable. This field is beta-level. It can be used when
-        the `JobBackoffLimitPerIndex` feature gate is enabled (enabled by default).
+        Never. The field is immutable.
       * **completionMode** ``Optional[str]`` - completionMode specifies how Pod completions are tracked. It can be
         `NonIndexed` (default) or `Indexed`.
         `NonIndexed` means that the Job is considered complete when there have been
@@ -264,8 +279,7 @@ class JobSpec(DictMixin):
         indexes and is marked with the `Complete` Job condition. It can only be
         specified when backoffLimitPerIndex is set. It can be null or up to
         completions. It is required and must be less than or equal to 10^4 when is
-        completions greater than 10^5. This field is beta-level. It can be used when
-        the `JobBackoffLimitPerIndex` feature gate is enabled (enabled by default).
+        completions greater than 10^5.
       * **parallelism** ``Optional[int]`` - Specifies the maximum desired number of pods the job should run at any given
         time. The actual number of pods running in steady state will be less than this
         number when ((.spec.completions - .status.successful) < .spec.parallelism),
@@ -295,8 +309,6 @@ class JobSpec(DictMixin):
         when the number of succeeded pods equals to the completions. When the field is
         specified, it must be immutable and works only for the Indexed Jobs. Once the
         Job meets the SuccessPolicy, the lingering pods are terminated.
-        This field is beta-level. To use this field, you must enable the
-        `JobSuccessPolicy` feature gate (enabled by default).
       * **suspend** ``Optional[bool]`` - suspend specifies whether the Job controller should create Pods or not. If a
         Job is created with suspend set to true, no Pods are created by the Job
         controller. If a Job is suspended after creation (i.e. the flag goes from
@@ -372,8 +384,6 @@ class JobStatus(DictMixin):
         series, separated by a hyphen. For example, if the failed indexes are 1, 3, 4,
         5 and 7, they are represented as "1,3-5,7". The set of failed indexes cannot
         overlap with the set of completed indexes.
-        This field is beta-level. It can be used when the `JobBackoffLimitPerIndex`
-        feature gate is enabled (enabled by default).
       * **ready** ``Optional[int]`` - The number of active pods which have a Ready condition and are not terminating
         (without a deletionTimestamp).
       * **startTime** ``Optional[meta_v1.Time]`` - Represents time when the job controller started processing a job. When a Job
@@ -511,8 +521,6 @@ class PodFailurePolicyRule(DictMixin):
           running pods are terminated.
         - FailIndex: indicates that the pod's index is marked as Failed and will
           not be restarted.
-          This value is beta-level. It can be used when the
-          `JobBackoffLimitPerIndex` feature gate is enabled (enabled by default).
         - Ignore: indicates that the counter towards the .backoffLimit is not
           incremented and a replacement pod is created.
         - Count: indicates that the pod is handled in the default way - the

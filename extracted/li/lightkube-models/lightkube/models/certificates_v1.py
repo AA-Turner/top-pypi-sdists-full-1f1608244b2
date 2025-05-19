@@ -50,6 +50,10 @@ class CertificateSigningRequest(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     status: 'Optional[CertificateSigningRequestStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'certificates.k8s.io/v1'
+        self.kind = 'CertificateSigningRequest'
+
 
 @dataclass
 class CertificateSigningRequestCondition(DictMixin):
@@ -108,6 +112,10 @@ class CertificateSigningRequestList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'certificates.k8s.io/v1'
+        self.kind = 'CertificateSigningRequestList'
 
 
 @dataclass

@@ -103,6 +103,10 @@ class LocalSubjectAccessReview(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     status: 'Optional[SubjectAccessReviewStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'authorization.k8s.io/v1'
+        self.kind = 'LocalSubjectAccessReview'
+
 
 @dataclass
 class NonResourceAttributes(DictMixin):
@@ -229,6 +233,10 @@ class SelfSubjectAccessReview(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     status: 'Optional[SubjectAccessReviewStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'authorization.k8s.io/v1'
+        self.kind = 'SelfSubjectAccessReview'
+
 
 @dataclass
 class SelfSubjectAccessReviewSpec(DictMixin):
@@ -280,6 +288,10 @@ class SelfSubjectRulesReview(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     status: 'Optional[SubjectRulesReviewStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'authorization.k8s.io/v1'
+        self.kind = 'SelfSubjectRulesReview'
+
 
 @dataclass
 class SelfSubjectRulesReviewSpec(DictMixin):
@@ -319,6 +331,10 @@ class SubjectAccessReview(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     status: 'Optional[SubjectAccessReviewStatus]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'authorization.k8s.io/v1'
+        self.kind = 'SubjectAccessReview'
 
 
 @dataclass

@@ -738,9 +738,7 @@ void bind_module_definitions(nb::module_& m)
     nb::class_<DomainImpl>(m, "Domain")  //
         .def("__str__", [](const DomainImpl& self) { return to_string(self); })
         .def("get_repositories", &DomainImpl::get_repositories, nb::rv_policy::reference_internal)
-        .def("get_filepath",
-             [](const DomainImpl& self)
-             { return (self.get_filepath().has_value()) ? std::optional<std::string>(self.get_filepath()->string()) : std::nullopt; })
+        .def("get_filepath", &DomainImpl::get_filepath, nb::rv_policy::copy)
         .def("get_name", &DomainImpl::get_name, nb::rv_policy::copy)
         .def("get_constants", &DomainImpl::get_constants, nb::rv_policy::copy)
         .def("get_static_predicates", &DomainImpl::get_predicates<StaticTag>, nb::rv_policy::copy)
@@ -751,31 +749,36 @@ void bind_module_definitions(nb::module_& m)
         .def("get_auxiliary_function", &DomainImpl::get_auxiliary_function_skeleton, nb::rv_policy::copy)
         .def("get_actions", &DomainImpl::get_actions, nb::rv_policy::copy)
         .def("get_requirements", &DomainImpl::get_requirements, nb::rv_policy::reference_internal)
+        .def("get_constant", &DomainImpl::get_constant, nb::rv_policy::reference_internal)
+        .def("get_name_to_constant", &DomainImpl::get_name_to_constant, nb::rv_policy::copy)
+        .def("get_static_predicate", &DomainImpl::get_predicate<StaticTag>, nb::rv_policy::reference_internal)
+        .def("get_fluent_predicate", &DomainImpl::get_predicate<FluentTag>, nb::rv_policy::reference_internal)
+        .def("get_derived_predicate", &DomainImpl::get_predicate<DerivedTag>, nb::rv_policy::reference_internal)
         .def("get_name_to_static_predicate", &DomainImpl::get_name_to_predicate<StaticTag>, nb::rv_policy::copy)
         .def("get_name_to_fluent_predicate", &DomainImpl::get_name_to_predicate<FluentTag>, nb::rv_policy::copy)
         .def("get_name_to_derived_predicate", &DomainImpl::get_name_to_predicate<DerivedTag>, nb::rv_policy::copy);
 
     /* Problem */
     nb::class_<ProblemImpl>(m, "Problem")  //
-        .def_static(
-            "create",
-            [](const std::string& domain_filepath, const std::string& problem_filepath, const loki::Options& options)
-            { return ProblemImpl::create(domain_filepath, problem_filepath, options); },
-            "domain_filepath"_a,
-            "problem_filepath"_a,
-            "options"_a)
+        .def_static("create", &ProblemImpl::create, "domain_filepath"_a, "problem_filepath"_a, "options"_a)
         .def("__str__", [](const ProblemImpl& self) { return to_string(self); })
         .def("get_index", &ProblemImpl::get_index, nb::rv_policy::copy)
         .def("get_repositories", &ProblemImpl::get_repositories, nb::rv_policy::reference_internal)
-        .def("get_filepath",
-             [](const ProblemImpl& self)
-             { return (self.get_filepath().has_value()) ? std::optional<std::string>(self.get_filepath()->string()) : std::nullopt; })
+        .def("get_filepath", &ProblemImpl::get_filepath, nb::rv_policy::copy)
         .def("get_name", &ProblemImpl::get_name, nb::rv_policy::copy)
         .def("get_domain", &ProblemImpl::get_domain, nb::rv_policy::copy)
         .def("get_requirements", &ProblemImpl::get_requirements, nb::rv_policy::reference_internal)
         .def("get_objects", &ProblemImpl::get_objects, nb::rv_policy::copy)
         .def("get_problem_and_domain_objects", &ProblemImpl::get_problem_and_domain_objects, nb::rv_policy::copy)
         .def("get_problem_and_domain_derived_predicates", &ProblemImpl::get_problem_and_domain_derived_predicates, nb::rv_policy::copy)
+        .def("get_object", &ProblemImpl::get_object, nb::rv_policy::reference_internal)
+        .def("get_problem_or_domain_object", &ProblemImpl::get_problem_or_domain_object, nb::rv_policy::reference_internal)
+        .def("get_name_to_object", &ProblemImpl::get_name_to_object, nb::rv_policy::copy)
+        .def("get_name_to_object", &ProblemImpl::get_name_to_problem_or_domain_object, nb::rv_policy::copy)
+        .def("get_derived_predicate", &ProblemImpl::get_derived_predicate, nb::rv_policy::reference_internal)
+        .def("get_problem_or_domain_derived_predicate", &ProblemImpl::get_problem_or_domain_derived_predicate, nb::rv_policy::reference_internal)
+        .def("get_name_to_derived_predicate", &ProblemImpl::get_name_to_derived_predicate, nb::rv_policy::copy)
+        .def("get_name_to_problem_or_domain_derived_predicate", &ProblemImpl::get_name_to_problem_or_domain_derived_predicate, nb::rv_policy::copy)
         .def("get_static_initial_literals", &ProblemImpl::get_initial_literals<StaticTag>, nb::rv_policy::copy)
         .def("get_fluent_initial_literals", &ProblemImpl::get_initial_literals<FluentTag>, nb::rv_policy::copy)
         .def("get_static_function_values", &ProblemImpl::get_initial_function_values<StaticTag>, nb::rv_policy::copy)

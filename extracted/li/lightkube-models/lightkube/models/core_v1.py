@@ -6,9 +6,9 @@ from ._schema import dataclass, field, DictMixin
 if TYPE_CHECKING:   # Fix for pycharm autocompletion https://youtrack.jetbrains.com/issue/PY-54560
     from dataclasses import dataclass, field
 
+from . import meta_v1
 from . import resource
 from . import util_intstr
-from . import meta_v1
 
 
 @dataclass
@@ -181,6 +181,10 @@ class Binding(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'Binding'
 
 
 @dataclass
@@ -478,6 +482,10 @@ class ComponentStatus(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'ComponentStatus'
+
 
 @dataclass
 class ComponentStatusList(DictMixin):
@@ -502,6 +510,10 @@ class ComponentStatusList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'ComponentStatusList'
 
 
 @dataclass
@@ -539,6 +551,10 @@ class ConfigMap(DictMixin):
     immutable: 'Optional[bool]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'ConfigMap'
 
 
 @dataclass
@@ -601,6 +617,10 @@ class ConfigMapList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'ConfigMapList'
 
 
 @dataclass
@@ -1003,6 +1023,7 @@ class ContainerStatus(DictMixin):
         container is running and has passed the postStart lifecycle hook. The null
         value must be treated the same as false.
       * **state** ``Optional[ContainerState]`` - State holds details about the container's current condition.
+      * **stopSignal** ``Optional[str]`` - StopSignal reports the effective stop signal for this container
       * **user** ``Optional[ContainerUser]`` - User represents user identity information initially attached to the first
         process of the container
       * **volumeMounts** ``Optional[List[VolumeMountStatus]]`` - Status of volume mounts.
@@ -1019,6 +1040,7 @@ class ContainerStatus(DictMixin):
     resources: 'Optional[ResourceRequirements]' = None
     started: 'Optional[bool]' = None
     state: 'Optional[ContainerState]' = None
+    stopSignal: 'Optional[str]' = None
     user: 'Optional[ContainerUser]' = None
     volumeMounts: 'Optional[List[VolumeMountStatus]]' = None
 
@@ -1131,7 +1153,8 @@ class EmptyDirVolumeSource(DictMixin):
 
 @dataclass
 class EndpointAddress(DictMixin):
-    r"""EndpointAddress is a tuple that describes single IP address.
+    r"""EndpointAddress is a tuple that describes single IP address. Deprecated: This
+      API is deprecated in v1.33+.
 
       **parameters**
 
@@ -1151,7 +1174,8 @@ class EndpointAddress(DictMixin):
 
 @dataclass
 class EndpointPort(DictMixin):
-    r"""EndpointPort is a tuple that describes a single port.
+    r"""EndpointPort is a tuple that describes a single port. Deprecated: This API is
+      deprecated in v1.33+.
 
       **parameters**
 
@@ -1196,6 +1220,8 @@ class EndpointSubset(DictMixin):
       
       	a: [ 10.10.1.1:8675, 10.10.2.2:8675 ],
       	b: [ 10.10.1.1:309, 10.10.2.2:309 ]
+      
+      Deprecated: This API is deprecated in v1.33+.
 
       **parameters**
 
@@ -1227,6 +1253,12 @@ class Endpoints(DictMixin):
       	     Ports: [{"name": "a", "port": 93}, {"name": "b", "port": 76}]
       	   },
       	]
+      
+      Endpoints is a legacy API and does not contain information about all Service
+      features. Use discoveryv1.EndpointSlice for complete information about Service
+      endpoints.
+      
+      Deprecated: This API is deprecated in v1.33+. Use discoveryv1.EndpointSlice.
 
       **parameters**
 
@@ -1253,10 +1285,15 @@ class Endpoints(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     subsets: 'Optional[List[EndpointSubset]]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'Endpoints'
+
 
 @dataclass
 class EndpointsList(DictMixin):
-    r"""EndpointsList is a list of endpoints.
+    r"""EndpointsList is a list of endpoints. Deprecated: This API is deprecated in
+      v1.33+.
 
       **parameters**
 
@@ -1277,15 +1314,19 @@ class EndpointsList(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'EndpointsList'
+
 
 @dataclass
 class EnvFromSource(DictMixin):
-    r"""EnvFromSource represents the source of a set of ConfigMaps
+    r"""EnvFromSource represents the source of a set of ConfigMaps or Secrets
 
       **parameters**
 
       * **configMapRef** ``Optional[ConfigMapEnvSource]`` - The ConfigMap to select from
-      * **prefix** ``Optional[str]`` - An optional identifier to prepend to each key in the ConfigMap. Must be a
+      * **prefix** ``Optional[str]`` - Optional text to prepend to the name of each environment variable. Must be a
         C_IDENTIFIER.
       * **secretRef** ``Optional[SecretEnvSource]`` - The Secret to select from
     """
@@ -1545,6 +1586,10 @@ class Event(DictMixin):
     source: 'Optional[EventSource]' = None
     type: 'Optional[str]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'Event'
+
 
 @dataclass
 class EventList(DictMixin):
@@ -1568,6 +1613,10 @@ class EventList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'EventList'
 
 
 @dataclass
@@ -2062,9 +2111,13 @@ class Lifecycle(DictMixin):
         blocks until the hook completes or until the termination grace period is
         reached. More info:
         https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+      * **stopSignal** ``Optional[str]`` - StopSignal defines which signal will be sent to a container when it is being
+        stopped. If not specified, the default is defined by the container runtime in
+        use. StopSignal can only be set for Pods with a non-empty .spec.os.name
     """
     postStart: 'Optional[LifecycleHandler]' = None
     preStop: 'Optional[LifecycleHandler]' = None
+    stopSignal: 'Optional[str]' = None
 
 
 @dataclass
@@ -2111,6 +2164,10 @@ class LimitRange(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     spec: 'Optional[LimitRangeSpec]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'LimitRange'
 
 
 @dataclass
@@ -2163,6 +2220,10 @@ class LimitRangeList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'LimitRangeList'
 
 
 @dataclass
@@ -2340,6 +2401,10 @@ class Namespace(DictMixin):
     spec: 'Optional[NamespaceSpec]' = None
     status: 'Optional[NamespaceStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'Namespace'
+
 
 @dataclass
 class NamespaceCondition(DictMixin):
@@ -2383,6 +2448,10 @@ class NamespaceList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'NamespaceList'
 
 
 @dataclass
@@ -2440,6 +2509,10 @@ class Node(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     spec: 'Optional[NodeSpec]' = None
     status: 'Optional[NodeStatus]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'Node'
 
 
 @dataclass
@@ -2613,6 +2686,10 @@ class NodeList(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'NodeList'
+
 
 @dataclass
 class NodeRuntimeHandler(DictMixin):
@@ -2774,6 +2851,17 @@ class NodeStatus(DictMixin):
 
 
 @dataclass
+class NodeSwapStatus(DictMixin):
+    r"""NodeSwapStatus represents swap memory information.
+
+      **parameters**
+
+      * **capacity** ``Optional[int]`` - Total amount of swap memory in bytes.
+    """
+    capacity: 'Optional[int]' = None
+
+
+@dataclass
 class NodeSystemInfo(DictMixin):
     r"""NodeSystemInfo is a set of ids/uuids to uniquely identify the node.
 
@@ -2796,6 +2884,7 @@ class NodeSystemInfo(DictMixin):
       * **systemUUID** ``str`` - SystemUUID reported by the node. For unique machine identification MachineID
         is preferred. This field is specific to Red Hat hosts
         https://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/rhsm/uuid
+      * **swap** ``Optional[NodeSwapStatus]`` - Swap Info reported by the node.
     """
     architecture: 'str'
     bootID: 'str'
@@ -2807,6 +2896,7 @@ class NodeSystemInfo(DictMixin):
     operatingSystem: 'str'
     osImage: 'str'
     systemUUID: 'str'
+    swap: 'Optional[NodeSwapStatus]' = None
 
 
 @dataclass
@@ -2889,6 +2979,10 @@ class PersistentVolume(DictMixin):
     spec: 'Optional[PersistentVolumeSpec]' = None
     status: 'Optional[PersistentVolumeStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'PersistentVolume'
+
 
 @dataclass
 class PersistentVolumeClaim(DictMixin):
@@ -2918,6 +3012,10 @@ class PersistentVolumeClaim(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     spec: 'Optional[PersistentVolumeClaimSpec]' = None
     status: 'Optional[PersistentVolumeClaimStatus]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'PersistentVolumeClaim'
 
 
 @dataclass
@@ -2970,6 +3068,10 @@ class PersistentVolumeClaimList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'PersistentVolumeClaimList'
 
 
 @dataclass
@@ -3212,6 +3314,10 @@ class PersistentVolumeList(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'PersistentVolumeList'
+
 
 @dataclass
 class PersistentVolumeSpec(DictMixin):
@@ -3426,6 +3532,10 @@ class Pod(DictMixin):
     spec: 'Optional[PodSpec]' = None
     status: 'Optional[PodStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'Pod'
+
 
 @dataclass
 class PodAffinity(DictMixin):
@@ -3478,9 +3588,7 @@ class PodAffinityTerm(DictMixin):
         consideration for the incoming pod's pod (anti) affinity. Keys that don't
         exist in the incoming pod labels will be ignored. The default value is empty.
         The same key is forbidden to exist in both matchLabelKeys and labelSelector.
-        Also, matchLabelKeys cannot be set when labelSelector isn't set. This is a
-        beta field and requires enabling MatchLabelKeysInPodAffinity feature gate
-        (enabled by default).
+        Also, matchLabelKeys cannot be set when labelSelector isn't set.
       * **mismatchLabelKeys** ``Optional[List[str]]`` - MismatchLabelKeys is a set of pod label keys to select which pods will be
         taken into consideration. The keys are used to lookup values from the incoming
         pod labels, those key-value labels are merged with `labelSelector` as `key
@@ -3489,8 +3597,7 @@ class PodAffinityTerm(DictMixin):
         exist in the incoming pod labels will be ignored. The default value is empty.
         The same key is forbidden to exist in both mismatchLabelKeys and
         labelSelector. Also, mismatchLabelKeys cannot be set when labelSelector isn't
-        set. This is a beta field and requires enabling MatchLabelKeysInPodAffinity
-        feature gate (enabled by default).
+        set.
       * **namespaceSelector** ``Optional[meta_v1.LabelSelector]`` - A label query over the set of namespaces that the term applies to. The term is
         applied to the union of the namespaces selected by this field and the ones
         listed in the namespaces field. null selector and null or empty namespaces
@@ -3549,6 +3656,9 @@ class PodCondition(DictMixin):
       * **lastProbeTime** ``Optional[meta_v1.Time]`` - Last time we probed the condition.
       * **lastTransitionTime** ``Optional[meta_v1.Time]`` - Last time the condition transitioned from one status to another.
       * **message** ``Optional[str]`` - Human-readable message indicating details about last transition.
+      * **observedGeneration** ``Optional[int]`` - If set, this represents the .metadata.generation that the pod condition was
+        set based upon. This is an alpha field. Enable PodObservedGenerationTracking
+        to be able to use this field.
       * **reason** ``Optional[str]`` - Unique, one-word, CamelCase reason for the condition's last transition.
     """
     status: 'str'
@@ -3556,6 +3666,7 @@ class PodCondition(DictMixin):
     lastProbeTime: 'Optional[meta_v1.Time]' = None
     lastTransitionTime: 'Optional[meta_v1.Time]' = None
     message: 'Optional[str]' = None
+    observedGeneration: 'Optional[int]' = None
     reason: 'Optional[str]' = None
 
 
@@ -3628,6 +3739,10 @@ class PodList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'PodList'
 
 
 @dataclass
@@ -3892,8 +4007,8 @@ class PodSpec(DictMixin):
         unique among all containers. Init containers may not have Lifecycle actions,
         Readiness probes, Liveness probes, or Startup probes. The resourceRequirements
         of an init container are taken into account during scheduling by finding the
-        highest request/limit for each resource type, and then using the max of of
-        that value or the sum of the normal containers. Limits are applied to init
+        highest request/limit for each resource type, and then using the max of that
+        value or the sum of the normal containers. Limits are applied to init
         containers in a similar fashion. Init containers cannot currently be added or
         removed. Cannot be updated. More info:
         https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
@@ -4116,6 +4231,9 @@ class PodStatus(DictMixin):
         resources on this node to a higher priority pod that is created after
         preemption. As a result, this field may be different than PodSpec.nodeName
         when the pod is scheduled.
+      * **observedGeneration** ``Optional[int]`` - If set, this represents the .metadata.generation that the pod status was set
+        based upon. This is an alpha field. Enable PodObservedGenerationTracking to be
+        able to use this field.
       * **phase** ``Optional[str]`` - The phase of a Pod is a simple, high-level summary of where the Pod is in its
         lifecycle. The conditions array, the reason and message fields, and the
         individual container status arrays contain more detail about the pod's status.
@@ -4147,7 +4265,11 @@ class PodStatus(DictMixin):
         state. e.g. 'Evicted'
       * **resize** ``Optional[str]`` - Status of resources resize desired for pod's containers. It is empty if no
         resources resize is pending. Any changes to container resources will
-        automatically set this to "Proposed"
+        automatically set this to "Proposed" Deprecated: Resize status is moved to two
+        pod conditions PodResizePending and PodResizeInProgress. PodResizePending will
+        track states where the spec has been resized, but the Kubelet has not yet
+        allocated the resources. PodResizeInProgress will track in-progress resizes,
+        and should be present whenever allocated resources != acknowledged resources.
       * **resourceClaimStatuses** ``Optional[List[PodResourceClaimStatus]]`` - Status of resource claims.
       * **startTime** ``Optional[meta_v1.Time]`` - RFC 3339 date and time at which the object was acknowledged by the Kubelet.
         This is before the Kubelet pulled the container image(s) for the pod.
@@ -4160,6 +4282,7 @@ class PodStatus(DictMixin):
     initContainerStatuses: 'Optional[List[ContainerStatus]]' = None
     message: 'Optional[str]' = None
     nominatedNodeName: 'Optional[str]' = None
+    observedGeneration: 'Optional[int]' = None
     phase: 'Optional[str]' = None
     podIP: 'Optional[str]' = None
     podIPs: 'Optional[List[PodIP]]' = None
@@ -4194,6 +4317,10 @@ class PodTemplate(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     template: 'Optional[PodTemplateSpec]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'PodTemplate'
+
 
 @dataclass
 class PodTemplateList(DictMixin):
@@ -4217,6 +4344,10 @@ class PodTemplateList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'PodTemplateList'
 
 
 @dataclass
@@ -4492,6 +4623,10 @@ class ReplicationController(DictMixin):
     spec: 'Optional[ReplicationControllerSpec]' = None
     status: 'Optional[ReplicationControllerStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'ReplicationController'
+
 
 @dataclass
 class ReplicationControllerCondition(DictMixin):
@@ -4536,6 +4671,10 @@ class ReplicationControllerList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'ReplicationControllerList'
 
 
 @dataclass
@@ -4676,6 +4815,10 @@ class ResourceQuota(DictMixin):
     spec: 'Optional[ResourceQuotaSpec]' = None
     status: 'Optional[ResourceQuotaStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'ResourceQuota'
+
 
 @dataclass
 class ResourceQuotaList(DictMixin):
@@ -4700,6 +4843,10 @@ class ResourceQuotaList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'ResourceQuotaList'
 
 
 @dataclass
@@ -4962,6 +5109,10 @@ class Secret(DictMixin):
     stringData: 'Optional[dict]' = None
     type: 'Optional[str]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'Secret'
+
 
 @dataclass
 class SecretEnvSource(DictMixin):
@@ -5023,6 +5174,10 @@ class SecretList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'SecretList'
 
 
 @dataclass
@@ -5207,6 +5362,10 @@ class Service(DictMixin):
     spec: 'Optional[ServiceSpec]' = None
     status: 'Optional[ServiceStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'Service'
+
 
 @dataclass
 class ServiceAccount(DictMixin):
@@ -5252,6 +5411,10 @@ class ServiceAccount(DictMixin):
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
     secrets: 'Optional[List[ObjectReference]]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'ServiceAccount'
+
 
 @dataclass
 class ServiceAccountList(DictMixin):
@@ -5276,6 +5439,10 @@ class ServiceAccountList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'ServiceAccountList'
 
 
 @dataclass
@@ -5327,6 +5494,10 @@ class ServiceList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'v1'
+        self.kind = 'ServiceList'
 
 
 @dataclass
@@ -5542,9 +5713,8 @@ class ServiceSpec(DictMixin):
         distributed to Service endpoints. Implementations can use this field as a
         hint, but are not required to guarantee strict adherence. If the field is not
         set, the implementation will apply its default routing strategy. If set to
-        "PreferClose", implementations should prioritize endpoints that are
-        topologically close (e.g., same zone). This is a beta field and requires
-        enabling ServiceTrafficDistribution feature.
+        "PreferClose", implementations should prioritize endpoints that are in the
+        same zone.
       * **type** ``Optional[str]`` - type determines how the Service is exposed. Defaults to ClusterIP. Valid
         options are ExternalName, ClusterIP, NodePort, and LoadBalancer. "ClusterIP"
         allocates a cluster-internal IP address for load-balancing to endpoints.
@@ -5862,16 +6032,12 @@ class TopologySpreadConstraint(DictMixin):
         matching nodeAffinity/nodeSelector are included in the calculations. - Ignore:
         nodeAffinity/nodeSelector are ignored. All nodes are included in the
         calculations.
-        If this value is nil, the behavior is equivalent to the Honor policy. This is
-        a beta-level feature default enabled by the
-        NodeInclusionPolicyInPodTopologySpread feature flag.
+        If this value is nil, the behavior is equivalent to the Honor policy.
       * **nodeTaintsPolicy** ``Optional[str]`` - NodeTaintsPolicy indicates how we will treat node taints when calculating pod
         topology spread skew. Options are: - Honor: nodes without taints, along with
         tainted nodes for which the incoming pod has a toleration, are included. -
         Ignore: node taints are ignored. All nodes are included.
-        If this value is nil, the behavior is equivalent to the Ignore policy. This is
-        a beta-level feature default enabled by the
-        NodeInclusionPolicyInPodTopologySpread feature flag.
+        If this value is nil, the behavior is equivalent to the Ignore policy.
     """
     maxSkew: 'int'
     topologyKey: 'str'
@@ -6025,7 +6191,7 @@ class Volume(DictMixin):
         merging the manifest layers in the same way as for container images. The
         volume will be mounted read-only (ro) and non-executable files (noexec). Sub
         path mounts for containers are not supported
-        (spec.containers[*].volumeMounts.subpath). The field
+        (spec.containers[*].volumeMounts.subpath) before 1.33. The field
         spec.securityContext.fsGroupChangePolicy has no effect on this volume type.
       * **iscsi** ``Optional[ISCSIVolumeSource]`` - iscsi represents an ISCSI Disk resource that is attached to a kubelet's host
         machine and then exposed to the pod. More info:

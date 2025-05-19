@@ -34,6 +34,10 @@ class Eviction(DictMixin):
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ObjectMeta]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'policy/v1'
+        self.kind = 'Eviction'
+
 
 @dataclass
 class PodDisruptionBudget(DictMixin):
@@ -61,6 +65,10 @@ class PodDisruptionBudget(DictMixin):
     spec: 'Optional[PodDisruptionBudgetSpec]' = None
     status: 'Optional[PodDisruptionBudgetStatus]' = None
 
+    def __post_init__(self):
+        self.apiVersion = 'policy/v1'
+        self.kind = 'PodDisruptionBudget'
+
 
 @dataclass
 class PodDisruptionBudgetList(DictMixin):
@@ -84,6 +92,10 @@ class PodDisruptionBudgetList(DictMixin):
     apiVersion: 'Optional[str]' = None
     kind: 'Optional[str]' = None
     metadata: 'Optional[meta_v1.ListMeta]' = None
+
+    def __post_init__(self):
+        self.apiVersion = 'policy/v1'
+        self.kind = 'PodDisruptionBudgetList'
 
 
 @dataclass
@@ -121,8 +133,6 @@ class PodDisruptionBudgetSpec(DictMixin):
         Additional policies may be added in the future. Clients making eviction
         decisions should disallow eviction of unhealthy pods if they encounter an
         unrecognized policy in this field.
-        This field is beta-level. The eviction API uses this field when the feature
-        gate PDBUnhealthyPodEvictionPolicy is enabled (enabled by default).
     """
     maxUnavailable: 'Optional[util_intstr.IntOrString]' = None
     minAvailable: 'Optional[util_intstr.IntOrString]' = None

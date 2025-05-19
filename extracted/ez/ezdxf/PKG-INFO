@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: ezdxf
-Version: 1.4.1
+Version: 1.4.2
 Summary: A Python package to create/manipulate DXF drawings.
 Author-email: Manfred Moitzi <me@mozman.at>
 Project-URL: Repository, https://github.com/mozman/ezdxf

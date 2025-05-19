@@ -1,6 +1,7 @@
 mod check_var;
 mod combined;
 mod fixer;
+mod label;
 mod maybe;
 mod rule;
 mod rule_collection;
@@ -15,11 +16,12 @@ use ast_grep_core::language::Language;
 
 pub use combined::CombinedScan;
 pub use fixer::Fixer;
+pub use label::{Label, LabelStyle};
 pub use rule::referent_rule::GlobalRules;
 pub use rule::DeserializeEnv;
 pub use rule::{Rule, RuleSerializeError, SerializableRule};
 pub use rule_collection::RuleCollection;
-pub use rule_config::{RuleConfig, RuleConfigError, SerializableRuleConfig, Severity};
+pub use rule_config::{Metadata, RuleConfig, RuleConfigError, SerializableRuleConfig, Severity};
 pub use rule_core::{RuleCore, RuleCoreError, SerializableRuleCore};
 pub use transform::Transformation;
 
@@ -56,7 +58,9 @@ mod test {
       TSLanguage::from(tree_sitter_typescript::LANGUAGE_TSX).id_for_node_kind(kind, true)
     }
     fn field_to_id(&self, field: &str) -> Option<u16> {
-      TSLanguage::from(tree_sitter_typescript::LANGUAGE_TSX).field_id_for_name(field)
+      TSLanguage::from(tree_sitter_typescript::LANGUAGE_TSX)
+        .field_id_for_name(field)
+        .map(|f| f.get())
     }
     fn from_path<P: AsRef<Path>>(_path: P) -> Option<Self> {
       Some(TypeScript::Tsx)

@@ -39,6 +39,7 @@ import pyrogram
 from pyrogram import __version__, __license__
 from pyrogram import enums
 from pyrogram import raw
+from pyrogram import types
 from pyrogram import utils
 from pyrogram.crypto import aes
 from pyrogram.errors import CDNFileHashMismatch
@@ -51,7 +52,7 @@ from pyrogram.handlers.handler import Handler
 from pyrogram.methods import Methods
 from pyrogram.session import Auth, Session
 from pyrogram.storage import FileStorage, MemoryStorage, Storage
-from pyrogram.types import User, TermsOfService
+from pyrogram.types import User
 from pyrogram.utils import ainput
 from .connection import Connection
 from .connection.transport import TCPAbridged
@@ -272,7 +273,7 @@ class Client(Methods):
         skip_updates: bool = True,
         takeout: bool = None,
         sleep_threshold: int = Session.SLEEP_THRESHOLD,
-        hide_password: Optional[bool] = False,
+        hide_password: Optional[bool] = True,
         max_concurrent_transmissions: int = MAX_CONCURRENT_TRANSMISSIONS,
         client_platform: "enums.ClientPlatform" = enums.ClientPlatform.OTHER,
         max_message_cache_size: int = MAX_CACHE_SIZE,
@@ -510,40 +511,17 @@ class Client(Methods):
                         print(e.MESSAGE)
                         self.password = None
             else:
-                if self.use_qrcode and isinstance(signed_in, raw.types.auth.LoginToken):
+                if self.use_qrcode and isinstance(signed_in, types.LoginToken):
                     time_out = signed_in.expires - datetime.timestamp(datetime.now())
                     try:
                         await asyncio.wait_for(self._wait_for_update_login_token(), timeout=time_out)
                     except asyncio.TimeoutError:
                         print("QR code expired, Requesting new Qr code...")
                     continue
-                else:
-                    break
+                break
 
         if isinstance(signed_in, User):
             return signed_in
-
-        while True:
-            first_name = await ainput("Enter first name: ")
-            last_name = await ainput("Enter last name (empty to skip): ")
-
-            try:
-                signed_up = await self.sign_up(
-                    self.phone_number,
-                    sent_code.phone_code_hash,
-                    first_name,
-                    last_name
-                )
-            except BadRequest as e:
-                print(e.MESSAGE)
-            else:
-                break
-
-        if isinstance(signed_in, TermsOfService):
-            print("\n" + signed_in.text + "\n")
-            await self.accept_terms_of_service(signed_in.id)
-
-        return signed_up
 
     def set_parse_mode(self, parse_mode: Optional["enums.ParseMode"]):
         """Set the parse mode to be used globally by the client.
