@@ -98,6 +98,9 @@ class TestGridProjectArgs:
 
 
 class TestGridProject(pulumi.CustomResource):
+
+    pulumi_type = "aws-native:devicefarm:TestGridProject"
+
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -108,7 +111,7 @@ class TestGridProject(pulumi.CustomResource):
                  vpc_config: Optional[pulumi.Input[Union['TestGridProjectVpcConfigArgs', 'TestGridProjectVpcConfigArgsDict']]] = None,
                  __props__=None):
         """
-        AWS::DeviceFarm::TestGridProject creates a new TestGrid Project
+        Resource Type definition for a Device Farm TestGrid Project
 
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
@@ -126,7 +129,7 @@ class TestGridProject(pulumi.CustomResource):
                  args: Optional[TestGridProjectArgs] = None,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        AWS::DeviceFarm::TestGridProject creates a new TestGrid Project
+        Resource Type definition for a Device Farm TestGrid Project
 
         :param str resource_name: The name of the resource.
         :param TestGridProjectArgs args: The arguments to use to populate this resource's properties.

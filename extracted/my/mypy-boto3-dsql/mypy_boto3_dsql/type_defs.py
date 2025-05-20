@@ -38,11 +38,8 @@ __all__ = (
     "ClusterSummaryTypeDef",
     "CreateClusterInputTypeDef",
     "CreateClusterOutputTypeDef",
-    "CreateMultiRegionClustersInputTypeDef",
-    "CreateMultiRegionClustersOutputTypeDef",
     "DeleteClusterInputTypeDef",
     "DeleteClusterOutputTypeDef",
-    "DeleteMultiRegionClustersInputTypeDef",
     "EmptyResponseMetadataTypeDef",
     "GetClusterInputTypeDef",
     "GetClusterInputWaitExtraTypeDef",
@@ -50,7 +47,6 @@ __all__ = (
     "GetClusterOutputTypeDef",
     "GetVpcEndpointServiceNameInputTypeDef",
     "GetVpcEndpointServiceNameOutputTypeDef",
-    "LinkedClusterPropertiesTypeDef",
     "ListClustersInputPaginateTypeDef",
     "ListClustersInputTypeDef",
     "ListClustersOutputTypeDef",
@@ -87,18 +83,8 @@ class ResponseMetadataTypeDef(TypedDict):
     HostId: NotRequired[str]
 
 
-class LinkedClusterPropertiesTypeDef(TypedDict):
-    deletionProtectionEnabled: NotRequired[bool]
-    tags: NotRequired[Mapping[str, str]]
-
-
 class DeleteClusterInputTypeDef(TypedDict):
     identifier: str
-    clientToken: NotRequired[str]
-
-
-class DeleteMultiRegionClustersInputTypeDef(TypedDict):
-    linkedClusterArns: Sequence[str]
     clientToken: NotRequired[str]
 
 
@@ -155,17 +141,11 @@ class CreateClusterOutputTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
 
 
-class CreateMultiRegionClustersOutputTypeDef(TypedDict):
-    linkedClusterArns: List[str]
-    ResponseMetadata: ResponseMetadataTypeDef
-
-
 class DeleteClusterOutputTypeDef(TypedDict):
     identifier: str
     arn: str
     status: ClusterStatusType
     creationTime: datetime
-    deletionProtectionEnabled: bool
     ResponseMetadata: ResponseMetadataTypeDef
 
 
@@ -178,8 +158,6 @@ class GetClusterOutputTypeDef(TypedDict):
     arn: str
     status: ClusterStatusType
     creationTime: datetime
-    witnessRegion: str
-    linkedClusterArns: List[str]
     deletionProtectionEnabled: bool
     multiRegionProperties: MultiRegionPropertiesOutputTypeDef
     tags: Dict[str, str]
@@ -207,17 +185,7 @@ class UpdateClusterOutputTypeDef(TypedDict):
     arn: str
     status: ClusterStatusType
     creationTime: datetime
-    witnessRegion: str
-    linkedClusterArns: List[str]
-    deletionProtectionEnabled: bool
     ResponseMetadata: ResponseMetadataTypeDef
-
-
-class CreateMultiRegionClustersInputTypeDef(TypedDict):
-    linkedRegionList: Sequence[str]
-    witnessRegion: str
-    clusterProperties: NotRequired[Mapping[str, LinkedClusterPropertiesTypeDef]]
-    clientToken: NotRequired[str]
 
 
 class GetClusterInputWaitExtraTypeDef(TypedDict):

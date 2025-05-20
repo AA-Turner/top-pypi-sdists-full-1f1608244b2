@@ -1161,6 +1161,7 @@ def translate(
     release_confirm: bool | None = False,
     use_accurate: bool | None = False,
     use_automerge_and_split: bool | None = False,
+    translate_origin: bool | None = False,
 ):
     """Move selected items
 
@@ -1228,6 +1229,8 @@ def translate(
     :type use_accurate: bool | None
     :param use_automerge_and_split: Auto Merge & Split, Forces the use of Auto Merge and Split
     :type use_automerge_and_split: bool | None
+    :param translate_origin: Translate Origin, Translate origin instead of selection
+    :type translate_origin: bool | None
     """
 
 def vert_crease(

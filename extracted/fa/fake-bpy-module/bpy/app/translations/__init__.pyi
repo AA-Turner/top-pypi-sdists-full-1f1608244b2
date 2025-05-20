@@ -16,7 +16,7 @@ To add translations to your Python script, you must define a dictionary formatte
 
  where:
 
-* locale is either a lang iso code (e.g. fr
+* locale is either a lang ISO code (e.g. fr
 
 ), a lang+country code (e.g. pt_BR
 

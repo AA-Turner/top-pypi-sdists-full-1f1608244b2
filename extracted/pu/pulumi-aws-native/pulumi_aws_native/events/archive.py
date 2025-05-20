@@ -24,6 +24,7 @@ class ArchiveArgs:
                  archive_name: Optional[pulumi.Input[builtins.str]] = None,
                  description: Optional[pulumi.Input[builtins.str]] = None,
                  event_pattern: Optional[Any] = None,
+                 kms_key_identifier: Optional[pulumi.Input[builtins.str]] = None,
                  retention_days: Optional[pulumi.Input[builtins.int]] = None):
         """
         The set of arguments for constructing a Archive resource.
@@ -33,6 +34,15 @@ class ArchiveArgs:
         :param Any event_pattern: An event pattern to use to filter events sent to the archive.
                
                Search the [CloudFormation User Guide](https://docs.aws.amazon.com/cloudformation/) for `AWS::Events::Archive` for more information about the expected schema for this property.
+        :param pulumi.Input[builtins.str] kms_key_identifier: The identifier of the AWS KMS customer managed key for EventBridge to use, if you choose to use a customer managed key to encrypt this archive. The identifier can be the key Amazon Resource Name (ARN), KeyId, key alias, or key alias ARN.
+               
+               If you do not specify a customer managed key identifier, EventBridge uses an AWS owned key to encrypt the archive.
+               
+               For more information, see [Identify and view keys](https://docs.aws.amazon.com/kms/latest/developerguide/viewing-keys.html) in the *AWS Key Management Service Developer Guide* .
+               
+               > If you have specified that EventBridge use a customer managed key for encrypting the source event bus, we strongly recommend you also specify a customer managed key for any archives for the event bus as well.
+               > 
+               > For more information, see [Encrypting archives](https://docs.aws.amazon.com/eventbridge/latest/userguide/encryption-archives.html) in the *Amazon EventBridge User Guide* .
         :param pulumi.Input[builtins.int] retention_days: The number of days to retain events for. Default value is 0. If set to 0, events are retained indefinitely
         """
         pulumi.set(__self__, "source_arn", source_arn)
@@ -42,6 +52,8 @@ class ArchiveArgs:
             pulumi.set(__self__, "description", description)
         if event_pattern is not None:
             pulumi.set(__self__, "event_pattern", event_pattern)
+        if kms_key_identifier is not None:
+            pulumi.set(__self__, "kms_key_identifier", kms_key_identifier)
         if retention_days is not None:
             pulumi.set(__self__, "retention_days", retention_days)
 
@@ -96,6 +108,26 @@ class ArchiveArgs:
         pulumi.set(self, "event_pattern", value)
 
     @property
+    @pulumi.getter(name="kmsKeyIdentifier")
+    def kms_key_identifier(self) -> Optional[pulumi.Input[builtins.str]]:
+        """
+        The identifier of the AWS KMS customer managed key for EventBridge to use, if you choose to use a customer managed key to encrypt this archive. The identifier can be the key Amazon Resource Name (ARN), KeyId, key alias, or key alias ARN.
+
+        If you do not specify a customer managed key identifier, EventBridge uses an AWS owned key to encrypt the archive.
+
+        For more information, see [Identify and view keys](https://docs.aws.amazon.com/kms/latest/developerguide/viewing-keys.html) in the *AWS Key Management Service Developer Guide* .
+
+        > If you have specified that EventBridge use a customer managed key for encrypting the source event bus, we strongly recommend you also specify a customer managed key for any archives for the event bus as well.
+        > 
+        > For more information, see [Encrypting archives](https://docs.aws.amazon.com/eventbridge/latest/userguide/encryption-archives.html) in the *Amazon EventBridge User Guide* .
+        """
+        return pulumi.get(self, "kms_key_identifier")
+
+    @kms_key_identifier.setter
+    def kms_key_identifier(self, value: Optional[pulumi.Input[builtins.str]]):
+        pulumi.set(self, "kms_key_identifier", value)
+
+    @property
     @pulumi.getter(name="retentionDays")
     def retention_days(self) -> Optional[pulumi.Input[builtins.int]]:
         """
@@ -109,6 +141,9 @@ class ArchiveArgs:
 
 
 class Archive(pulumi.CustomResource):
+
+    pulumi_type = "aws-native:events:Archive"
+
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -116,6 +151,7 @@ class Archive(pulumi.CustomResource):
                  archive_name: Optional[pulumi.Input[builtins.str]] = None,
                  description: Optional[pulumi.Input[builtins.str]] = None,
                  event_pattern: Optional[Any] = None,
+                 kms_key_identifier: Optional[pulumi.Input[builtins.str]] = None,
                  retention_days: Optional[pulumi.Input[builtins.int]] = None,
                  source_arn: Optional[pulumi.Input[builtins.str]] = None,
                  __props__=None):
@@ -129,6 +165,15 @@ class Archive(pulumi.CustomResource):
         :param Any event_pattern: An event pattern to use to filter events sent to the archive.
                
                Search the [CloudFormation User Guide](https://docs.aws.amazon.com/cloudformation/) for `AWS::Events::Archive` for more information about the expected schema for this property.
+        :param pulumi.Input[builtins.str] kms_key_identifier: The identifier of the AWS KMS customer managed key for EventBridge to use, if you choose to use a customer managed key to encrypt this archive. The identifier can be the key Amazon Resource Name (ARN), KeyId, key alias, or key alias ARN.
+               
+               If you do not specify a customer managed key identifier, EventBridge uses an AWS owned key to encrypt the archive.
+               
+               For more information, see [Identify and view keys](https://docs.aws.amazon.com/kms/latest/developerguide/viewing-keys.html) in the *AWS Key Management Service Developer Guide* .
+               
+               > If you have specified that EventBridge use a customer managed key for encrypting the source event bus, we strongly recommend you also specify a customer managed key for any archives for the event bus as well.
+               > 
+               > For more information, see [Encrypting archives](https://docs.aws.amazon.com/eventbridge/latest/userguide/encryption-archives.html) in the *Amazon EventBridge User Guide* .
         :param pulumi.Input[builtins.int] retention_days: The number of days to retain events for. Default value is 0. If set to 0, events are retained indefinitely
         :param pulumi.Input[builtins.str] source_arn: The ARN of the event bus that sends events to the archive.
         """
@@ -159,6 +204,7 @@ class Archive(pulumi.CustomResource):
                  archive_name: Optional[pulumi.Input[builtins.str]] = None,
                  description: Optional[pulumi.Input[builtins.str]] = None,
                  event_pattern: Optional[Any] = None,
+                 kms_key_identifier: Optional[pulumi.Input[builtins.str]] = None,
                  retention_days: Optional[pulumi.Input[builtins.int]] = None,
                  source_arn: Optional[pulumi.Input[builtins.str]] = None,
                  __props__=None):
@@ -173,6 +219,7 @@ class Archive(pulumi.CustomResource):
             __props__.__dict__["archive_name"] = archive_name
             __props__.__dict__["description"] = description
             __props__.__dict__["event_pattern"] = event_pattern
+            __props__.__dict__["kms_key_identifier"] = kms_key_identifier
             __props__.__dict__["retention_days"] = retention_days
             if source_arn is None and not opts.urn:
                 raise TypeError("Missing required property 'source_arn'")
@@ -206,6 +253,7 @@ class Archive(pulumi.CustomResource):
         __props__.__dict__["arn"] = None
         __props__.__dict__["description"] = None
         __props__.__dict__["event_pattern"] = None
+        __props__.__dict__["kms_key_identifier"] = None
         __props__.__dict__["retention_days"] = None
         __props__.__dict__["source_arn"] = None
         return Archive(resource_name, opts=opts, __props__=__props__)
@@ -243,6 +291,22 @@ class Archive(pulumi.CustomResource):
         Search the [CloudFormation User Guide](https://docs.aws.amazon.com/cloudformation/) for `AWS::Events::Archive` for more information about the expected schema for this property.
         """
         return pulumi.get(self, "event_pattern")
+
+    @property
+    @pulumi.getter(name="kmsKeyIdentifier")
+    def kms_key_identifier(self) -> pulumi.Output[Optional[builtins.str]]:
+        """
+        The identifier of the AWS KMS customer managed key for EventBridge to use, if you choose to use a customer managed key to encrypt this archive. The identifier can be the key Amazon Resource Name (ARN), KeyId, key alias, or key alias ARN.
+
+        If you do not specify a customer managed key identifier, EventBridge uses an AWS owned key to encrypt the archive.
+
+        For more information, see [Identify and view keys](https://docs.aws.amazon.com/kms/latest/developerguide/viewing-keys.html) in the *AWS Key Management Service Developer Guide* .
+
+        > If you have specified that EventBridge use a customer managed key for encrypting the source event bus, we strongly recommend you also specify a customer managed key for any archives for the event bus as well.
+        > 
+        > For more information, see [Encrypting archives](https://docs.aws.amazon.com/eventbridge/latest/userguide/encryption-archives.html) in the *Amazon EventBridge User Guide* .
+        """
+        return pulumi.get(self, "kms_key_identifier")
 
     @property
     @pulumi.getter(name="retentionDays")

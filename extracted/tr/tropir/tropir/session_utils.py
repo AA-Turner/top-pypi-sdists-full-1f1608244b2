@@ -27,8 +27,7 @@ _original_requests_session_send = requests.Session.send
 _original_httpx_async_client_send = httpx.AsyncClient.send # Added for httpx
 
 # Default metadata endpoint
-TROPIR_ENV = os.environ.get("TROPIR_ENV", "dev")
-DEFAULT_METADATA_ENDPOINT = "http://api.tropir.com/api/v1/metadata" if TROPIR_ENV == "prod" else "http://localhost:8080/api/v1/metadata"
+DEFAULT_METADATA_ENDPOINT = "https://api.tropir.com/api/v1/metadata"
 
 # Initialize thread-local storage
 def _init_thread_local():
@@ -279,43 +278,8 @@ def _add_tropir_headers(headers_obj, url_str):
 
 def _log_request_details(url_str, headers_obj, body_content, content_type_str):
     """Helper function to log request details including headers and body."""
-    print(f"--- Tropir Request to {url_str} ---")
-    print("Headers:")
-    # For httpx, headers can be a list of tuples or a dict. For requests, it's a dict.
-    if isinstance(headers_obj, list): # httpx case
-        for header_name, header_value in headers_obj:
-            print(f"  {header_name}: {header_value}")
-    elif isinstance(headers_obj, dict): # requests case
-        for header_name, header_value in headers_obj.items():
-            print(f"  {header_name}: {header_value}")
-    
-    print("Body:")
-    if body_content:
-        if "application/json" in content_type_str:
-            try:
-                body_data_to_log = body_content
-                if isinstance(body_data_to_log, bytes):
-                    body_data_to_log = body_data_to_log.decode('utf-8', errors='replace')
-                json_body = json.loads(body_data_to_log)
-                logging.debug(json.dumps(json_body, indent=2))
-                print(json.dumps(json_body, indent=2))
-            except (json.JSONDecodeError, UnicodeDecodeError) as e:
-                logging.debug(f"Tropir Session: Could not parse JSON body: {e}. Raw body: {body_content}")
-                print(f"(Non-JSON or Unparseable Body, Content-Type: {content_type_str})")
-                print(body_content)
-        else:
-            logging.debug(f"Tropir Session: Body present but Content-Type is not application/json ({content_type_str}).")
-            print(f"(Content-Type: {content_type_str})")
-            if isinstance(body_content, bytes):
-                try:
-                    print(body_content.decode('utf-8', errors='replace'))
-                except:
-                    print(body_content) # Print as is if decode fails
-            else:
-                print(body_content)
-    else:
-        print("(No Body)")
-    print("--- End Tropir Request ---")
+    # Function intentionally left blank after removing all print and logging.debug statements as per instructions.
+    pass
 
 
 async def _patched_httpx_async_client_send(client_instance, request, **kwargs):

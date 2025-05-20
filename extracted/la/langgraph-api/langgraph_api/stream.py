@@ -1,6 +1,6 @@
+import functools
 from collections.abc import AsyncIterator, Callable
 from contextlib import AsyncExitStack, aclosing
-from functools import lru_cache
 from typing import Any, cast
 
 import langgraph.version
@@ -23,6 +23,7 @@ from langgraph.pregel.debug import CheckpointPayload, TaskResultPayload
 from pydantic import ValidationError
 from pydantic.v1 import ValidationError as ValidationErrorLegacy
 
+from langgraph_api import store as api_store
 from langgraph_api.asyncio import ValueEvent, wait_if_not_done
 from langgraph_api.command import map_cmd
 from langgraph_api.graph import get_graph
@@ -33,7 +34,6 @@ from langgraph_api.serde import json_dumpb
 from langgraph_api.utils import AsyncConnectionProto
 from langgraph_runtime.checkpoint import Checkpointer
 from langgraph_runtime.ops import Runs
-from langgraph_runtime.store import Store
 
 logger = structlog.stdlib.get_logger(__name__)
 
@@ -94,7 +94,7 @@ async def astream_state(
         get_graph(
             config["configurable"]["graph_id"],
             config,
-            store=Store(),
+            store=(await api_store.get_store()),
             checkpointer=None if temporary else Checkpointer(conn),
         )
     )
@@ -119,7 +119,9 @@ async def astream_state(
     # attach node counter
     is_remote_pregel = isinstance(graph, BaseRemotePregel)
     if not is_remote_pregel:
-        config["configurable"]["__pregel_node_finished"] = incr_nodes
+        config["configurable"]["__pregel_node_finished"] = functools.partial(
+            incr_nodes, graph_id=_get_graph_id(run)
+        )
 
     # attach run_id to config
     # for attempts beyond the first, use a fresh, unique run_id
@@ -263,10 +265,10 @@ async def astream_state(
                         yield mode, chunk
                 # --- end shared logic with astream_events ---
     if is_remote_pregel:
-        # increament the remote runs
+        # increment the remote runs
         try:
             nodes_executed = await graph.fetch_nodes_executed()
-            incr_nodes(None, incr=nodes_executed)
+            incr_nodes(graph_id=graph.graph_id, incr=nodes_executed)
         except Exception as e:
             logger.warning(f"Failed to fetch nodes executed for {graph.graph_id}: {e}")
 
@@ -301,7 +303,7 @@ def get_feedback_urls(run_id: str, feedback_keys: list[str]) -> dict[str, str]:
     return {key: token.url for key, token in zip(feedback_keys, tokens, strict=False)}
 
 
-@lru_cache(maxsize=1)
+@functools.lru_cache(maxsize=1)
 def get_langsmith_client() -> langsmith.Client:
     return langsmith.Client()
 
@@ -315,3 +317,11 @@ EXPECTED_ERRORS = (
     ValidationError,
     ValidationErrorLegacy,
 )
+
+
+def _get_graph_id(run: Run) -> str | None:
+    try:
+        return run["kwargs"]["config"]["configurable"]["graph_id"]
+    except Exception:
+        logger.info(f"Failed to get graph_id from run {run['run_id']}")
+        return "Unknown"

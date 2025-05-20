@@ -1,13 +1,13 @@
 [project]
 name = "fdasrsf"
-version = "2.6.1"
+version = "2.6.2"
 description = "functional data analysis using the square root slope framework"
 authors = [
 	{name = "J. Derek Tucker", email = "jdtuck@sandia.gov"}
 ]
 license = {text = "BSD 3-Clause"}
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 keywords = ["functional data analysis"]
 
@@ -15,7 +15,7 @@ dependencies=[
         "Cython",
         "matplotlib",
         "numpy>=1.25",
-        "scipy",
+        "scipy>=1.14",
         "joblib",
         "patsy",
         "tqdm",
@@ -77,12 +77,12 @@ select = "*-win_amd64"
 environment = { PKG_CONFIG_PATH = "c:/opt/64/lib/pkgconfig" }
 
 [build-system]
-requires = ["setuptools>=46.0", "wheel", "cffi>=1.0.0", "Cython", "findblas", "numpy"]  # PEP 518 - what is required to build
+requires = ["setuptools<=73.0.1", "wheel", "cffi>=1.0.0", "Cython", "findblas", "numpy"]  # PEP 518 - what is required to build
 build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra -q"
+addopts = "--import-mode=importlib"
 testpaths = [
     "tests",
 ]

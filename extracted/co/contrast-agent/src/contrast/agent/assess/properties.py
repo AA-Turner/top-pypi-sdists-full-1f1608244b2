@@ -344,6 +344,9 @@ class Properties:
         if not context:
             return
 
+        if not event.source_name:
+            event.source_name = ""
+
         # ignore if the source already exists
         any_source_name_and_type_match = any(
             [
@@ -356,7 +359,7 @@ class Properties:
             return
 
         context.observed_route.sources.append(
-            event.build_route_source(event.source_name or "")
+            event.build_route_source(event.source_name)
         )
 
     def remove_tag(self, tag_range):

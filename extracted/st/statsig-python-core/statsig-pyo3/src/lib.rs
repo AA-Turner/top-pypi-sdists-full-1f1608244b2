@@ -1,6 +1,7 @@
 mod data_store_base_py;
 mod net_provider_py;
 mod observability_client_base_py;
+mod output_logger_provider_base_py;
 mod pyo_utils;
 mod statsig_base_py;
 mod statsig_metadata_py;
@@ -18,6 +19,7 @@ fn statsig_python_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<statsig_base_py::StatsigBasePy>()?;
     m.add_class::<statsig_user_py::StatsigUserPy>()?;
     m.add_class::<statsig_options_py::StatsigOptionsPy>()?;
+    m.add_class::<statsig_options_py::ProxyConfigPy>()?;
     m.add_class::<statsig_types_py::FeatureGatePy>()?;
     m.add_class::<statsig_types_py::DynamicConfigPy>()?;
     m.add_class::<statsig_types_py::ExperimentPy>()?;
@@ -32,6 +34,7 @@ fn statsig_python_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<observability_client_base_py::ObservabilityClientBasePy>()?;
     m.add_class::<data_store_base_py::DataStoreBasePy>()?;
     m.add_class::<statsig_persistent_storage_override_adapter_py::PersistentStorageBasePy>()?;
+    m.add_class::<output_logger_provider_base_py::OutputLoggerProviderBasePy>()?;
     Ok(())
 }
 

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: fastled
-Version: 1.3.11
+Version: 1.3.13
 Summary: FastLED Wasm Compiler
 Home-page: https://github.com/zackees/fastled-wasm
 Maintainer: Zachary Vorhies
@@ -20,7 +20,7 @@ Requires-Dist: progress>=1.6
 Requires-Dist: watchfiles>=1.0.5
 Requires-Dist: Flask>=3.0.0
 Requires-Dist: livereload
-Requires-Dist: fastled-wasm-server>=1.0.27
+Requires-Dist: disklru>=2.0.4
 Dynamic: home-page
 Dynamic: license-file
 Dynamic: maintainer
@@ -389,10 +389,12 @@ A: A big chunk of space is being used by unnecessary javascript `emscripten` bun
 
 
 
+
   live-server --https --port=8416 --host=localhost .  --cert=C:/Users/niteris/dev/fastled-wasm/src/fastled/assets/localhost-key.pem --key=C:/Users/niteris/dev/fastled-wasm/src/fastled/assets/localhost.pem --no-browser
 
 
   live-server --https --cert=src/fastled/assets/localhost.pem --key=src/fastled/assets/localhost-key.pem --port=5500
+
 
 
 ## Performance

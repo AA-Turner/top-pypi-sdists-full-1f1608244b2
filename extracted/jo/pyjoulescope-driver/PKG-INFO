@@ -1,11 +1,11 @@
 Metadata-Version: 2.4
 Name: pyjoulescope_driver
-Version: 1.9.2
+Version: 1.9.3
 Summary: Joulescope™ driver
 Home-page: https://joulescope-driver.readthedocs.io/en/latest/
 Author: Jetperch LLC
 Author-email: joulescope-dev@jetperch.com
-License: Apache 2.0
+License: Apache-2.0
 Project-URL: Bug Reports, https://github.com/jetperch/joulescope_driver/issues
 Project-URL: Funding, https://www.joulescope.com
 Project-URL: Twitter, https://twitter.com/joulescope

@@ -1,7 +1,13 @@
 # ruff: noqa: E402
-import truststore  # noqa: F401
+import os
 
-truststore.inject_into_ssl()  # noqa: F401
+if not (
+    (disable_truststore := os.getenv("DISABLE_TRUSTSTORE"))
+    and disable_truststore.lower() == "true"
+):
+    import truststore  # noqa: F401
+
+    truststore.inject_into_ssl()  # noqa: F401
 
 import asyncio
 import http.server

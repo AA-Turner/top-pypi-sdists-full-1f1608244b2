@@ -4,20 +4,20 @@ from typing import Optional, Tuple, Union
 from anyscale.authenticate import get_auth_api_client
 from anyscale.cli_logger import BlockLogger
 from anyscale.client.openapi_client.api.default_api import DefaultApi
+from anyscale.client.openapi_client.models import (
+    ComputeTemplateQuery,
+    CreateComputeTemplate,
+)
 from anyscale.cloud_utils import get_cloud_id_and_name, get_last_used_cloud
 from anyscale.sdk.anyscale_client import (
     ArchiveStatus,
     ComputeTemplateConfig,
-    CreateComputeTemplate,
 )
 from anyscale.sdk.anyscale_client.api.default_api import DefaultApi as SDKDefaultApi
 from anyscale.sdk.anyscale_client.models.cluster_compute_config import (
     ClusterComputeConfig,
 )
 from anyscale.sdk.anyscale_client.models.compute_template import ComputeTemplate
-from anyscale.sdk.anyscale_client.models.compute_template_query import (
-    ComputeTemplateQuery,
-)
 from anyscale.utils.cloud_utils import get_organization_default_cloud
 
 

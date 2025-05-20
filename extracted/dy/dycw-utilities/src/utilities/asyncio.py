@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+import datetime as dt
 from abc import ABC, abstractmethod
 from asyncio import (
-    CancelledError,
     Event,
     PriorityQueue,
     Queue,
@@ -12,17 +12,11 @@ from asyncio import (
     Task,
     TaskGroup,
     create_subprocess_shell,
-    create_task,
     sleep,
     timeout,
 )
 from collections.abc import Callable, Hashable, Iterable, Iterator, Mapping
-from contextlib import (
-    AsyncExitStack,
-    _AsyncGeneratorContextManager,
-    asynccontextmanager,
-    suppress,
-)
+from contextlib import _AsyncGeneratorContextManager, asynccontextmanager
 from dataclasses import dataclass, field
 from io import StringIO
 from logging import getLogger
@@ -32,8 +26,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Generic,
+    Literal,
     NoReturn,
-    Self,
     TextIO,
     TypeVar,
     assert_never,
@@ -41,8 +35,15 @@ from typing import (
     override,
 )
 
-from utilities.datetime import MILLISECOND, MINUTE, SECOND, datetime_duration_to_float
-from utilities.errors import ImpossibleCaseError, repr_error
+from utilities.datetime import (
+    MINUTE,
+    SECOND,
+    datetime_duration_to_float,
+    datetime_duration_to_timedelta,
+    get_now,
+    round_datetime,
+)
+from utilities.errors import repr_error
 from utilities.functions import ensure_int, ensure_not_none, get_class_name
 from utilities.reprlib import get_repr
 from utilities.sentinel import Sentinel, sentinel
@@ -59,126 +60,11 @@ if TYPE_CHECKING:
     from asyncio.subprocess import Process
     from collections.abc import AsyncIterator, Sequence
     from contextvars import Context
-    from types import TracebackType
 
     from utilities.types import Duration
 
 
 _T = TypeVar("_T")
-
-
-##
-
-
-@dataclass(kw_only=True)
-class AsyncService(ABC):
-    """A long-running, asynchronous service."""
-
-    duration: Duration | None = None
-    _await_upon_aenter: bool = field(default=True, init=False, repr=False)
-    _event: Event = field(default_factory=Event, init=False, repr=False)
-    _stack: AsyncExitStack = field(
-        default_factory=AsyncExitStack, init=False, repr=False
-    )
-    _state: bool = field(default=False, init=False, repr=False)
-    _task: Task[None] | None = field(default=None, init=False, repr=False)
-    _depth: int = field(default=0, init=False, repr=False)
-
-    async def __aenter__(self) -> Self:
-        """Context manager entry."""
-        if (self._task is None) and (self._depth == 0):
-            _ = await self._stack.__aenter__()
-            self._task = create_task(self._start_runner())
-            if self._await_upon_aenter:
-                with suppress(CancelledError):
-                    await self._task
-        elif (self._task is not None) and (self._depth >= 1):
-            ...
-        else:
-            raise ImpossibleCaseError(  # pragma: no cover
-                case=[f"{self._task=}", f"{self._depth=}"]
-            )
-        self._depth += 1
-        return self
-
-    async def __aexit__(
-        self,
-        exc_type: type[BaseException] | None = None,
-        exc_value: BaseException | None = None,
-        traceback: TracebackType | None = None,
-    ) -> None:
-        """Context manager exit."""
-        _ = (exc_type, exc_value, traceback)
-        if (self._task is None) or (self._depth == 0):
-            raise ImpossibleCaseError(  # pragma: no cover
-                case=[f"{self._task=}", f"{self._depth=}"]
-            )
-        self._state = False
-        self._depth -= 1
-        if self._depth == 0:
-            _ = await self._stack.__aexit__(exc_type, exc_value, traceback)
-            await self.stop()
-            with suppress(CancelledError):
-                await self._task
-            self._task = None
-
-    @abstractmethod
-    async def _start(self) -> None:
-        """Start the service."""
-
-    async def _start_runner(self) -> None:
-        """Coroutine to start the service."""
-        if self.duration is None:
-            _ = await self._start()
-            _ = await self._event.wait()
-        else:
-            try:
-                async with timeout_dur(duration=self.duration):
-                    _ = await self._start()
-            except TimeoutError:
-                await self.stop()
-
-    async def stop(self) -> None:
-        """Stop the service."""
-        if self._task is None:
-            raise ImpossibleCaseError(case=[f"{self._task=}"])  # pragma: no cover
-        with suppress(CancelledError):
-            _ = self._task.cancel()
-
-
-##
-
-
-@dataclass(kw_only=True)
-class AsyncLoopingService(AsyncService):
-    """A long-running, asynchronous service which loops a core function."""
-
-    sleep: Duration = MILLISECOND
-    _await_upon_aenter: bool = field(default=True, init=False, repr=False)
-
-    @abstractmethod
-    async def _run(self) -> None:
-        """Run the core function once."""
-        raise NotImplementedError  # pragma: no cover
-
-    async def _run_failure(self, error: Exception, /) -> None:
-        """Process the failure."""
-        raise error
-
-    @override
-    async def _start(self) -> None:
-        """Start the service, assuming no task is present."""
-        while True:
-            try:
-                await self._run()
-            except CancelledError:
-                await self.stop()
-                break
-            except Exception as error:  # noqa: BLE001
-                await self._run_failure(error)
-                await sleep_dur(duration=self.sleep)
-            else:
-                await sleep_dur(duration=self.sleep)
 
 
 ##
@@ -235,106 +121,15 @@ class EnhancedTaskGroup(TaskGroup):
 ##
 
 
-@dataclass(kw_only=True)
-class QueueProcessor(AsyncService, Generic[_T]):
-    """Process a set of items in a queue."""
-
-    queue_type: type[Queue[_T]] = field(default=Queue, repr=False)
-    queue_max_size: int | None = field(default=None, repr=False)
-    sleep: Duration = MILLISECOND
-    _await_upon_aenter: bool = field(default=False, init=False, repr=False)
-    _queue: Queue[_T] = field(init=False, repr=False)
-
-    def __post_init__(self) -> None:
-        self._queue = self.queue_type(
-            maxsize=0 if self.queue_max_size is None else self.queue_max_size
-        )
-
-    def __len__(self) -> int:
-        return self._queue.qsize()
-
-    def empty(self) -> bool:
-        """Check if the queue is empty."""
-        return self._queue.empty()
-
-    def enqueue(self, *items: _T) -> None:
-        """Enqueue a set items."""
-        for item in items:
-            self._queue.put_nowait(item)
-
-    async def run_until_empty(self) -> None:
-        """Run the processor until the queue is empty."""
-        while not self.empty():
-            await self._run()
-            await sleep_dur(duration=self.sleep)
-
-    def _get_items_nowait(self, *, max_size: int | None = None) -> Sequence[_T]:
-        """Get items from the queue; no waiting."""
-        return get_items_nowait(self._queue, max_size=max_size)
-
-    @abstractmethod
-    async def _process_item(self, item: _T, /) -> None:
-        """Process the first item."""
-        raise NotImplementedError(item)  # pragma: no cover
-
-    async def _process_item_failure(self, item: _T, error: Exception, /) -> None:
-        """Process the failure."""
-        _ = item
-        raise error
-
-    async def _run(self) -> None:
-        """Run the processer."""
-        try:
-            (item,) = self._get_items_nowait(max_size=1)
-        except ValueError:
-            raise QueueEmpty from None
-        try:
-            await self._process_item(item)
-        except Exception as error:  # noqa: BLE001
-            await self._process_item_failure(item, error)
-
-    @override
-    async def _start(self) -> None:
-        """Start the processor."""
-        while True:
-            try:
-                await self._run()
-            except QueueEmpty:
-                await sleep_dur(duration=self.sleep)
-            except CancelledError:
-                await self.stop()
-                break
-            else:
-                await sleep_dur(duration=self.sleep)
-
-    @override
-    async def stop(self) -> None:
-        """Stop the processor."""
-        await self.run_until_empty()
-        await super().stop()
-
-
-@dataclass(kw_only=True)
-class ExceptionProcessor(QueueProcessor[Exception | type[Exception]]):
-    """Raise an exception in a queue."""
-
-    queue_max_size: int | None = field(default=1, repr=False)
-
-    @override
-    async def _process_item(self, item: Exception | type[Exception], /) -> None:
-        """Run the processor on the first item."""
-        raise item
-
-
-##
+type _DurationOrEvery = Duration | tuple[Literal["every"], Duration]
 
 
 @dataclass(kw_only=True, unsafe_hash=True)
 class InfiniteLooper(ABC, Generic[THashable]):
     """An infinite loop which can throw exceptions by setting events."""
 
-    sleep_core: Duration = SECOND
-    sleep_restart: Duration = MINUTE
+    sleep_core: _DurationOrEvery = SECOND
+    sleep_restart: _DurationOrEvery = MINUTE
     logger: str | None = None
     _events: Mapping[THashable, Event] = field(
         default_factory=dict, init=False, repr=False, hash=False
@@ -361,7 +156,7 @@ class InfiniteLooper(ABC, Generic[THashable]):
                     await self._initialize()
                 except Exception as error:  # noqa: BLE001
                     self._error_upon_initialize(error)
-                    await sleep_dur(duration=self.sleep_restart)
+                    await self._run_sleep(self.sleep_restart)
                 else:
                     while True:
                         try:
@@ -372,14 +167,14 @@ class InfiniteLooper(ABC, Generic[THashable]):
                             )
                         except StopIteration:
                             await self._core()
-                            await sleep_dur(duration=self.sleep_core)
+                            await self._run_sleep(self.sleep_core)
                         else:
                             self._raise_error(event)
             except InfiniteLooperError:
                 raise
             except Exception as error:  # noqa: BLE001
                 self._error_upon_core(error)
-                await sleep_dur(duration=self.sleep_restart)
+                await self._run_sleep(self.sleep_restart)
 
     async def _run_looper_with_coroutines(
         self, *coroutines: Callable[[], Coroutine1[None]]
@@ -393,7 +188,7 @@ class InfiniteLooper(ABC, Generic[THashable]):
                     _ = [tg.create_task(c()) for c in coroutines]
             except ExceptionGroup as error:
                 self._error_group_upon_coroutines(error)
-                await sleep_dur(duration=self.sleep_restart)
+                await self._run_sleep(self.sleep_restart)
 
     async def _initialize(self) -> None:
         """Initialize the loop."""
@@ -405,20 +200,20 @@ class InfiniteLooper(ABC, Generic[THashable]):
         """Handle any errors upon initializing the looper."""
         if self.logger is not None:
             getLogger(name=self.logger).error(
-                "%r encountered %r whilst initializing; sleeping for %s...",
+                "%r encountered %r whilst initializing; sleeping %s...",
                 get_class_name(self),
                 repr_error(error),
-                self.sleep_restart,
+                self._sleep_restart_desc,
             )
 
     def _error_upon_core(self, error: Exception, /) -> None:
         """Handle any errors upon running the core function."""
         if self.logger is not None:
             getLogger(name=self.logger).error(
-                "%r encountered %r; sleeping for %s...",
+                "%r encountered %r; sleeping %s...",
                 get_class_name(self),
                 repr_error(error),
-                self.sleep_restart,
+                self._sleep_restart_desc,
             )
 
     def _error_group_upon_coroutines(self, group: ExceptionGroup, /) -> None:
@@ -431,7 +226,7 @@ class InfiniteLooper(ABC, Generic[THashable]):
                 f"- Error #{i}/{n}: {repr_error(e)}"
                 for i, e in enumerate(errors, start=1)
             )
-            msgs.append(f"Sleeping for {self.sleep_restart}...")
+            msgs.append(f"Sleeping {self._sleep_restart_desc}...")
             getLogger(name=self.logger).error("\n".join(msgs))
 
     def _raise_error(self, event: THashable, /) -> NoReturn:
@@ -445,6 +240,29 @@ class InfiniteLooper(ABC, Generic[THashable]):
         self._events = {
             event: Event() for event, _ in self._yield_events_and_exceptions()
         }
+
+    async def _run_sleep(self, sleep: _DurationOrEvery, /) -> None:
+        """Sleep until the next part of the loop."""
+        match sleep:
+            case int() | float() | dt.timedelta() as duration:
+                await sleep_dur(duration=duration)
+            case "every", (int() | float() | dt.timedelta()) as duration:
+                await sleep_until_rounded(duration)
+            case _ as never:
+                assert_never(never)
+
+    @property
+    def _sleep_restart_desc(self) -> str:
+        """Get a description of the sleep until restart."""
+        match self.sleep_restart:
+            case int() | float() | dt.timedelta() as duration:
+                timedelta = datetime_duration_to_timedelta(duration)
+                return f"for {timedelta}"
+            case "every", (int() | float() | dt.timedelta()) as duration:
+                timedelta = datetime_duration_to_timedelta(duration)
+                return f"until next {timedelta}"
+            case _ as never:
+                assert_never(never)
 
     def _set_event(self, event: THashable, /) -> None:
         """Set the given event."""
@@ -490,6 +308,9 @@ class InfiniteQueueLooper(InfiniteLooper[THashable], Generic[THashable, _T]):
         super().__post_init__()
         self._queue = self.queue_type()
 
+    def __len__(self) -> int:
+        return self._queue.qsize()
+
     @override
     async def _core(self) -> None:
         """Run the core part of the loop."""
@@ -505,9 +326,18 @@ class InfiniteQueueLooper(InfiniteLooper[THashable], Generic[THashable, _T]):
     async def _process_items(self, *items: _T) -> None:
         """Process the items."""
 
+    def empty(self) -> bool:
+        """Check if the queue is empty."""
+        return self._queue.empty()
+
     def put_items_nowait(self, *items: _T) -> None:
         """Put items into the queue."""
         put_items_nowait(items, self._queue)
+
+    async def run_until_empty(self) -> None:
+        """Run until the queue is empty."""
+        while not self.empty():
+            await self._process_items(*get_items_nowait(self._queue))
 
     @override
     def _error_upon_core(self, error: Exception, /) -> None:
@@ -674,6 +504,27 @@ async def sleep_dur(*, duration: Duration | None = None) -> None:
 ##
 
 
+async def sleep_until(datetime: dt.datetime, /) -> None:
+    """Sleep until a given time."""
+    await sleep_dur(duration=datetime - get_now())
+
+
+##
+
+
+async def sleep_until_rounded(
+    duration: Duration, /, *, rel_tol: float | None = None, abs_tol: float | None = None
+) -> None:
+    """Sleep until a rounded time; accepts durations."""
+    datetime = round_datetime(
+        get_now(), duration, mode="ceil", rel_tol=rel_tol, abs_tol=abs_tol
+    )
+    await sleep_until(datetime)
+
+
+##
+
+
 @dataclass(kw_only=True, slots=True)
 class StreamCommandOutput:
     process: Process
@@ -738,15 +589,11 @@ async def timeout_dur(
 
 
 __all__ = [
-    "AsyncLoopingService",
-    "AsyncService",
     "EnhancedTaskGroup",
-    "ExceptionProcessor",
     "InfiniteLooper",
     "InfiniteLooperError",
     "InfiniteQueueLooper",
     "InfiniteQueueLooperError",
-    "QueueProcessor",
     "StreamCommandOutput",
     "UniquePriorityQueue",
     "UniqueQueue",
@@ -756,6 +603,8 @@ __all__ = [
     "put_items",
     "put_items_nowait",
     "sleep_dur",
+    "sleep_until",
+    "sleep_until_rounded",
     "stream_command",
     "timeout_dur",
 ]

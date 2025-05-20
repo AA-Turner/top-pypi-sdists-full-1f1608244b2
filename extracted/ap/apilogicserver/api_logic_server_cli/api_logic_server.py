@@ -12,9 +12,10 @@ ApiLogicServer CLI: given a database url, create [and run] customizable ApiLogic
 Called from api_logic_server_cli.py, by instantiating the ProjectRun object.
 '''
 
-__version__ = "14.05.00"  # last public release: 14.04.00
+__version__ = "14.05.03"  # last public release: 14.04.00
 recent_changes = \
     f'\n\nRecent Changes:\n' +\
+    "\t05/19/2024 - 14.05.03: mcp filters with working date range (AND), email stub, use basic_demo custs for genai_demo \n"\
     "\t05/16/2024 - 14.05.00: safrs 3.1.7, running mcp preview \n"\
     "\t04/27/2024 - 14.04.00: Graphics preview, Vibe install fix, Improved IDE Chat Logic, MCP Exploration \n"\
     "\t03/30/2024 - 14.03.25: WebGenAI fixes for Kafka and Keycloak \n"\
@@ -417,7 +418,8 @@ def create_project_and_overlay_prototypes(project: 'ProjectRun', msg: str) -> st
             # readme now opens automatically, so use that...
             shutil.move(project.project_directory_path.joinpath('readme.md'), 
                         project.project_directory_path.joinpath('readme_standard.md'))   
-            create_utils.copy_md(project = project, from_doc_file = "Sample-Genai.md", to_project_file='readme.md')
+            # create_utils.copy_md(project = project, from_doc_file = "Sample-Genai.md", to_project_file='readme.md')
+            create_utils.copy_md(project = project, from_doc_file = "Sample-Basic-Demo.md", to_project_file='readme.md')
 
         if "postgres" or "mysql" in project.db_url:
             fixup_devops_for_postgres_mysql(project)

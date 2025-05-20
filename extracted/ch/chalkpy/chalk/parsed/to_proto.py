@@ -1140,6 +1140,8 @@ class ToProtoConverter:
             parse_function_output_type=maybe_output_type,
             parse_function=ToProtoConverter.create_function_reference(info.fn),
             is_parse_function_output_optional=info.output_is_optional,
+            parse_function_input_type_name=info.input_type.__name__,
+            parse_function_output_type_name=info.output_type.__name__,
         )
 
     @classmethod

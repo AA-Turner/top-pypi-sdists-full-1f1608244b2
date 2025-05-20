@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: ledgered
-Version: 0.10.1
+Version: 0.11.0
 Summary: Python tools, utils, libraries, to be used with Ledger cryptodevices
 Author-email: Ledger <hello@ledger.fr>
 License: MIT License

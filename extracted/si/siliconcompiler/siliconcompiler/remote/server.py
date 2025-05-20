@@ -21,7 +21,7 @@ from siliconcompiler.schema import SCHEMA_VERSION as sc_schema_version
 from siliconcompiler.remote.schema import ServerSchema
 from siliconcompiler.remote import banner, JobStatus
 from siliconcompiler.scheduler.slurm import get_configuration_directory
-from siliconcompiler.flowgraph import nodes_to_execute
+from siliconcompiler.utils.flowgraph import nodes_to_execute
 
 
 # Compile validation code for API request bodies.
@@ -78,7 +78,7 @@ class Server:
         self.logger.addHandler(handler)
         self.logger.setLevel(schema_utils.translate_loglevel(loglevel))
 
-        self.schema = ServerSchema(logger=self.logger)
+        self.schema = ServerSchema()
 
         # Set up a dictionary to track running jobs.
         self.sc_jobs = {}
@@ -146,7 +146,6 @@ class Server:
             progname=progname,
             description=description,
             switchlist=switchlist,
-            input_map=None,
             additional_args=additional_args,
             version=Server.__version__,
             print_banner=print_banner,
@@ -508,5 +507,4 @@ class Server:
         self.schema.set(*keypath, value, field=field, clobber=clobber)
 
     def write_configuration(self, filepath):
-        with open(filepath, 'w') as f:
-            self.schema.write_json(f)
+        self.schema.write_manifest(filepath)

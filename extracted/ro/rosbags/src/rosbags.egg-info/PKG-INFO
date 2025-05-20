@@ -1,9 +1,9 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: rosbags
-Version: 0.10.9
+Version: 0.10.10
 Summary: Pure Python library to read, modify, convert, and write rosbag files.
 Author-email: Ternaris <team@ternaris.com>
-License: Apache-2.0
+License-Expression: Apache-2.0
 Project-URL: Homepage, https://gitlab.com/ternaris/rosbags
 Project-URL: Documentation, https://ternaris.gitlab.io/rosbags
 Project-URL: Source, https://gitlab.com/ternaris/rosbags
@@ -11,7 +11,6 @@ Project-URL: Issues, https://gitlab.com/ternaris/rosbags/issues
 Project-URL: Changelog, https://gitlab.com/ternaris/rosbags/-/blob/master/CHANGES.rst
 Keywords: cdr,conversion,deserialization,idl,mcap,message,msg,reader,ros,ros2,rosbag,rosbag2,serialization,writer
 Classifier: Development Status :: 4 - Beta
-Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3 :: Only
 Classifier: Programming Language :: Python :: 3.10
@@ -28,6 +27,7 @@ Requires-Dist: numpy
 Requires-Dist: ruamel.yaml
 Requires-Dist: typing_extensions>=4.5
 Requires-Dist: zstandard
+Dynamic: license-file
 
 .. image:: https://gitlab.com/ternaris/rosbags/badges/master/pipeline.svg
    :target: https://gitlab.com/ternaris/rosbags/-/commits/master

@@ -2,6 +2,7 @@ from collections import defaultdict, deque
 from datetime import timedelta
 import inspect
 import time
+from ._list_fireworks_models_response_cached import models
 from fireworks.client.api_client import FireworksClient
 from fireworks.client.chat import Chat as FireworksChat
 from fireworks.client.chat_completion import ChatCompletionV2 as FireworksChatCompletion
@@ -11,20 +12,32 @@ from typing import (
     AsyncGenerator,
     Generator,
     Iterable,
+    List,
     Literal,
     Optional,
     Union,
     overload,
 )
 from fireworks.client.error import BadGatewayError, ServiceUnavailableError
+from fireworks.dataset import Dataset
+from fireworks.supervised_fine_tuning_job import SupervisedFineTuningJob
 from fireworks.gateway import Gateway
 from fireworks.control_plane.generated.protos.gateway import (
     AcceleratorType as AcceleratorTypeEnum,
+    AutoTune,
     AutoscalingPolicy,
+    CreateSupervisedFineTuningJobRequest,
     DeployedModelState,
     Deployment,
+    DeploymentPrecision,
     DeploymentState,
+    DirectRouteType,
+    JobState,
+    ListSupervisedFineTuningJobsRequest,
     Model,
+    Region,
+    SupervisedFineTuningJobWeightPrecision,
+    WandbConfig,
 )
 import asyncio
 import logging
@@ -94,11 +107,6 @@ class ChatCompletion:
         extra_headers=None,
         **kwargs,
     ) -> Union[OpenAIChatCompletion, Generator[ChatCompletionChunk, None, None]]:
-        """
-        WARNING: Due to the need to run a coroutine in an event loop, only use
-        this method in a sync context. In general, we recommend using the async
-        version of this method, acreate.
-        """
         run_coroutine_in_appropriate_loop(self._llm._ensure_deployment_ready())
         model_id = run_coroutine_in_appropriate_loop(self._llm.model_id())
         retries = 0
@@ -344,6 +352,65 @@ class LLM:
         scale_to_zero_window: timedelta = timedelta(minutes=5),
         enable_metrics: bool = False,
         max_retries: int = DEFAULT_MAX_RETRIES,
+        region: Optional[
+            Literal[
+                "US-IOWA-1",
+                "US-VIRGINIA-1",
+                "US-VIRGINIA-2",
+                "US-ILLINOIS-1",
+                "AP-TOKYO-1",
+                "EU-LONDON-1",
+                "US-ARIZONA-1",
+                "US-TEXAS-1",
+                "US-ILLINOIS-2",
+                "EU-FRANKFURT-1",
+                "US-TEXAS-2",
+                "EU-PARIS-1",
+                "EU-HELSINKI-1",
+                "US-NEVADA-1",
+                "EU-ICELAND-1",
+                "EU-ICELAND-2",
+            ]
+        ] = None,
+        description: Optional[str] = None,
+        annotations: Optional[dict[str, str]] = None,
+        min_replica_count: Optional[int] = None,
+        max_replica_count: Optional[int] = None,
+        replica_count: Optional[int] = None,
+        accelerator_count: Optional[int] = None,
+        precision: Optional[
+            Literal[
+                "FP16",
+                "FP8",
+                "FP8_MM",
+                "FP8_AR",
+                "FP8_MM_KV_ATTN",
+                "FP8_KV",
+                "FP8_MM_V2",
+                "FP8_V2",
+                "FP8_MM_KV_ATTN_V2",
+                "NF4",
+            ]
+        ] = None,
+        world_size: Optional[int] = None,
+        generator_count: Optional[int] = None,
+        disaggregated_prefill_count: Optional[int] = None,
+        disaggregated_prefill_world_size: Optional[int] = None,
+        max_batch_size: Optional[int] = None,
+        cluster: Optional[str] = None,
+        enable_addons: Optional[bool] = None,
+        live_merge: Optional[bool] = None,
+        draft_token_count: Optional[int] = None,
+        draft_model: Optional[str] = None,
+        ngram_speculation_length: Optional[int] = None,
+        max_peft_batch_size: Optional[int] = None,
+        kv_cache_memory_pct: Optional[int] = None,
+        enable_session_affinity: Optional[bool] = None,
+        direct_route_api_keys: Optional[list[str]] = None,
+        num_peft_device_cached: Optional[int] = None,
+        direct_route_type: Optional[Literal["INTERNET", "GCP_PRIVATE_SERVICE_CONNECT", "AWS_PRIVATELINK"]] = None,
+        direct_route_handle: Optional[str] = None,
+        long_prompt_optimized: Optional[bool] = None,
     ):
         """
         Initialize the LLM.
@@ -391,10 +458,39 @@ class LLM:
             scale_down_window=scale_down_window,
             scale_to_zero_window=scale_to_zero_window,
         )
+        self._region = region
+        self._description = description
+        self._annotations = annotations
+        self._min_replica_count = min_replica_count
+        self._max_replica_count = max_replica_count
+        self._replica_count = replica_count
+        self._accelerator_count = accelerator_count
+        self._precision = precision
+        self._world_size = world_size
+        self._generator_count = generator_count
+        self._disaggregated_prefill_count = disaggregated_prefill_count
+        self._disaggregated_prefill_world_size = disaggregated_prefill_world_size
+        self._max_batch_size = max_batch_size
+        self._cluster = cluster
+        self._enable_addons = enable_addons
+        self._live_merge = live_merge
+        self._draft_token_count = draft_token_count
+        self._draft_model = draft_model
+        self._ngram_speculation_length = ngram_speculation_length
+        self._max_peft_batch_size = max_peft_batch_size
+        self._kv_cache_memory_pct = kv_cache_memory_pct
+        self._enable_session_affinity = enable_session_affinity
+        self._direct_route_api_keys = direct_route_api_keys
+        self._num_peft_device_cached = num_peft_device_cached
+        self._direct_route_type = direct_route_type
+        self._direct_route_handle = direct_route_handle
+        self._auto_tune = AutoTune()
+        if long_prompt_optimized is not None:
+            self._auto_tune.long_prompt_optimized = long_prompt_optimized
 
     @property
     def model(self):
-        if not self._model.startswith("accounts/fireworks/models/"):
+        if not self._model.startswith("accounts/fireworks/models/") and "/" not in self._model:
             return f"accounts/fireworks/models/{self._model}"
         return self._model
 
@@ -433,27 +529,31 @@ class LLM:
 
     @sync_cache
     def _get_deployment_name(self):
-        if self._name is None:
-            # Get fireworks package path and Python stdlib path
-            import fireworks
+        """
+        If a name was specified, deployment name will be the specified name.
+        Otherwise, the deployment name will be generated from the filename of the caller where this LLM was instantiated.
+        """
+        if self._name is not None:
+            return self._name
+        # Get fireworks package path and Python stdlib path
+        import fireworks
 
-            package_path = os.path.dirname(fireworks.__file__)
-            stdlib_path = sysconfig.get_path("stdlib")
+        package_path = os.path.dirname(fireworks.__file__)
+        stdlib_path = sysconfig.get_path("stdlib")
 
-            stack = inspect.stack()
-            for frame_info in stack:
-                filename = frame_info.filename
-                # Skip frames from our package, Python stdlib, other libraries, and internal Python
-                if (
-                    not filename.startswith(package_path)
-                    and not filename.startswith(stdlib_path)
-                    and not "/site-packages/" in filename
-                    and not filename.startswith("<")
-                ):
-                    logger.debug(f"Found caller outside of library code to generate name: {filename}")
-                    return os.path.basename(filename)
-            raise ValueError("No caller found outside of library code")
-        return self._name
+        stack = inspect.stack()
+        for frame_info in stack:
+            filename = frame_info.filename
+            # Skip frames from our package, Python stdlib, other libraries, and internal Python
+            if (
+                not filename.startswith(package_path)
+                and not filename.startswith(stdlib_path)
+                and not "/site-packages/" in filename
+                and not filename.startswith("<")
+            ):
+                logger.debug(f"Found caller outside of library code to generate name: {filename}")
+                return os.path.basename(filename)
+        raise ValueError("No caller found outside of library code")
 
     async def apply(self):
         """
@@ -506,18 +606,23 @@ class LLM:
     @cache
     async def _is_available_on_serverless(self):
         logger.debug(f"Checking if {self.model} is available on serverless")
-        models = await self._gateway.list_models(parent="accounts/fireworks", include_deployed_model_refs=True)
+        models = await self._list_fireworks_models()
 
         # find model in models
         model = next((m for m in models if m.name == self.model), None)
         if model is None:
-            raise ValueError(
-                f"Model {self.model} not available on Fireworks. See https://fireworks.ai/models for available models."
-            )
+            return False
         logger.debug(f"Found model {self.model} on under fireworks account")
         is_serverless = self._is_model_on_serverless_account(model)
         logger.debug(f"Model {self.model} is {'serverless' if is_serverless else 'not serverless'}")
         return is_serverless
+
+    async def _list_fireworks_models(self) -> List[Model]:
+        """
+        Find all models on the fireworks account
+        """
+        # models = await self._gateway.list_models(parent="accounts/fireworks", include_deployed_model_refs=True)
+        return models
 
     @staticmethod
     def _is_model_on_serverless_account(model: Model) -> bool:
@@ -575,29 +680,88 @@ class LLM:
 
             if deployment is None:
                 logger.debug(f"No existing deployment found, creating deployment for {self.model}")
-                deployment = await self._gateway.create_deployment(
-                    self.name, self.model, self._autoscaling_policy, self._accelerator_type
+                deployment = Deployment(
+                    display_name=self.name,
+                    base_model=self.model,
+                    autoscaling_policy=self._autoscaling_policy,
                 )
-                logger.debug(f"Deployment {deployment.name} created, waiting for it to be ready")
+                if not isinstance(self._accelerator_type, NotGiven):
+                    deployment.accelerator_type = self._accelerator_type
+                if self._accelerator_count is not None:
+                    deployment.accelerator_count = self._accelerator_count
+                if self._precision is not None:
+                    deployment.precision = DeploymentPrecision.from_string(self._precision)
+                if self._world_size is not None:
+                    deployment.world_size = self._world_size
+                if self._generator_count is not None:
+                    deployment.generator_count = self._generator_count
+                if self._region is not None:
+                    deployment.region = Region.from_string(self._region)
+                if self._description is not None:
+                    deployment.description = self._description
+                if self._annotations is not None:
+                    deployment.annotations = self._annotations
+                if self._min_replica_count is not None:
+                    deployment.min_replica_count = self._min_replica_count
+                if self._max_replica_count is not None:
+                    deployment.max_replica_count = self._max_replica_count
+                if self._replica_count is not None:
+                    deployment.replica_count = self._replica_count
+                if self._disaggregated_prefill_count is not None:
+                    deployment.disaggregated_prefill_count = self._disaggregated_prefill_count
+                if self._disaggregated_prefill_world_size is not None:
+                    deployment.disaggregated_prefill_world_size = self._disaggregated_prefill_world_size
+                if self._max_batch_size is not None:
+                    deployment.max_batch_size = self._max_batch_size
+                if self._cluster is not None:
+                    deployment.cluster = self._cluster
+                if self._enable_addons is not None:
+                    deployment.enable_addons = self._enable_addons
+                if self._live_merge is not None:
+                    deployment.live_merge = self._live_merge
+                if self._draft_token_count is not None:
+                    deployment.draft_token_count = self._draft_token_count
+                if self._draft_model is not None:
+                    deployment.draft_model = self._draft_model
+                if self._ngram_speculation_length is not None:
+                    deployment.ngram_speculation_length = self._ngram_speculation_length
+                if self._max_peft_batch_size is not None:
+                    deployment.max_peft_batch_size = self._max_peft_batch_size
+                if self._kv_cache_memory_pct is not None:
+                    deployment.kv_cache_memory_pct = self._kv_cache_memory_pct
+                if self._enable_session_affinity is not None:
+                    deployment.enable_session_affinity = self._enable_session_affinity
+                if self._direct_route_api_keys is not None:
+                    deployment.direct_route_api_keys = self._direct_route_api_keys
+                if self._num_peft_device_cached is not None:
+                    deployment.num_peft_device_cached = self._num_peft_device_cached
+                if self._direct_route_type is not None:
+                    deployment.direct_route_type = DirectRouteType.from_string(self._direct_route_type)
+                if self._direct_route_handle is not None:
+                    deployment.direct_route_handle = self._direct_route_handle
+                if self._auto_tune is not None:
+                    deployment.auto_tune = self._auto_tune
+                created_deployment = await self._gateway.create_deployment(deployment)
+                logger.debug(f"Deployment {created_deployment.name} created, waiting for it to be ready")
 
                 # poll deployment status until it's ready
                 start_time = asyncio.get_event_loop().time()
                 last_log_time = 0
-                while deployment.state != DeploymentState.READY:
+                while created_deployment.state != DeploymentState.READY:
                     current_time = asyncio.get_event_loop().time()
                     # wait for 1 second
                     await asyncio.sleep(1)
-                    deployment = await self._gateway.get_deployment(deployment.name)
+                    created_deployment = await self._gateway.get_deployment(created_deployment.name)
                     if current_time - last_log_time >= 10:
                         elapsed_so_far = current_time - start_time
                         logger.debug(
-                            f"Waiting for deployment {deployment.name} to be ready, current state: {deployment.state}, elapsed time: {elapsed_so_far:.2f}s"
+                            f"Waiting for deployment {created_deployment.name} to be ready, current state: {created_deployment.state}, elapsed time: {elapsed_so_far:.2f}s"
                         )
                         last_log_time = current_time
 
                 total_time = asyncio.get_event_loop().time() - start_time
                 logger.debug(
-                    f"Deployment {deployment.name} is ready, using deployment (ready in {total_time:.2f} seconds)"
+                    f"Deployment {created_deployment.name} is ready, using deployment (ready in {total_time:.2f} seconds)"
                 )
             else:
                 logger.debug(f"Deployment {deployment.name} already exists, checking if it needs to be scaled up")
@@ -715,3 +879,79 @@ class LLM:
 
     def __repr__(self):
         return f"LLM(model={self.model})"
+
+    async def fine_tune(
+        self,
+        name: str,
+        dataset: Dataset,
+        epochs: Optional[int] = None,
+        learning_rate: Optional[float] = None,
+        lora_rank: Optional[int] = None,
+        jinja_template: Optional[str] = None,
+        early_stop: Optional[bool] = None,
+        max_context_length: Optional[int] = None,
+        base_model_weight_precision: Optional[SupervisedFineTuningJobWeightPrecision] = None,
+        wandb_config: Optional[WandbConfig] = None,
+        evaluation_dataset: Optional[str] = None,
+        accelerator_type: Optional[AcceleratorTypeEnum] = None,
+        accelerator_count: Optional[int] = None,
+        is_turbo: Optional[bool] = None,
+        eval_auto_carveout: Optional[bool] = None,
+        region: Optional[Region] = None,
+        nodes: Optional[int] = None,
+        batch_size: Optional[int] = None,
+    ):
+        """
+        Creates a fine-tuning job for this dataset. If the fine-tuning job already exists, it will block until the job is ready.
+
+        Args:
+            dataset: The dataset to fine-tune on.
+            output_model_name: The name of the output model.
+            epochs: The number of epochs to fine-tune for.
+            learning_rate: The learning rate to use for fine-tuning.
+        """
+        if name is None:
+            raise ValueError("name is required")
+        job = SupervisedFineTuningJob(
+            name=name,
+            dataset=dataset,
+            llm=self,
+            epochs=epochs,
+            learning_rate=learning_rate,
+            lora_rank=lora_rank,
+            jinja_template=jinja_template,
+            early_stop=early_stop,
+            max_context_length=max_context_length,
+            base_model_weight_precision=base_model_weight_precision,
+            wandb_config=wandb_config,
+            evaluation_dataset=evaluation_dataset,
+            accelerator_type=accelerator_type,
+            accelerator_count=accelerator_count,
+            is_turbo=is_turbo,
+            eval_auto_carveout=eval_auto_carveout,
+            region=region,
+            nodes=nodes,
+            batch_size=batch_size,
+        )
+        job = await job.sync()
+        logger.info(f'Fine-tuning job "{name}" running. See https://fireworks.ai/dashboard/fine-tuning/{job.name}.')
+        # poll until job is COMPLETED
+        while job.state != JobState.COMPLETED:
+            if job.state == JobState.FAILED:
+                raise ValueError(f'Fine-tuning job "{name}" failed')
+            if job.create_time is not None:
+                curr_time = time.time()
+                create_time = job.create_time.timestamp()
+                delta_seconds = int(curr_time - create_time)
+                minutes = delta_seconds // 60
+                seconds = delta_seconds % 60
+                time_str = f"{seconds}s" if minutes == 0 else f"{minutes}m{seconds}s"
+                logger.info(f'Fine-tuning job "{name}" is in state {job.state}. Job has been running for {time_str}.')
+            await asyncio.sleep(5)
+            job = await job.get()
+            if job is None:
+                raise ValueError(f'Fine-tuning job "{name}" not found')
+        logger.info(f'Fine-tuning job "{name}" completed')
+        if job.output_model is None:
+            raise ValueError(f'Fine-tuning job "{name}" did not create an output model')
+        return LLM(model=job.output_model)

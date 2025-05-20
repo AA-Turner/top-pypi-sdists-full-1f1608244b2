@@ -17,20 +17,66 @@ from rfc3161_client.verify import Verifier, VerifierBuilder
 _HERE = Path(__file__).parent.resolve()
 _FIXTURE = _HERE / "fixtures"
 
+# List of TSA authorities to test against
+TSA_AUTHORITIES = [
+    "test_tsa",
+    "sigstage",
+]
+
+
+@pytest.fixture(params=TSA_AUTHORITIES)
+def tsa_path(request) -> Path:
+    """
+    Fixture that returns the path to the fixtures for a specific TSA provider.
+    """
+    return _FIXTURE / request.param
+
 
 @pytest.fixture
-def certificates() -> list[cryptography.x509.Certificate]:
-    return cryptography.x509.load_pem_x509_certificates((_FIXTURE / "ts_chain.pem").read_bytes())
+def certificates(tsa_path: Path) -> list[cryptography.x509.Certificate]:
+    """
+    Load certificates for the current TSA provider.
+    """
+    cert_path = tsa_path / "ts_chain.pem"
+    if not cert_path.exists():
+        pytest.skip(f"Certificates not found for {tsa_path}")
+    return cryptography.x509.load_pem_x509_certificates(cert_path.read_bytes())
 
 
 @pytest.fixture
-def ts_request() -> TimeStampRequest:
-    return parse_timestamp_request((_FIXTURE / "request.der").read_bytes())
+def ts_request(tsa_path: Path) -> TimeStampRequest:
+    """
+    Load timestamp request for the current TSA provider.
+    """
+    request_path = tsa_path / "request.der"
+    if not request_path.exists():
+        pytest.skip(f"Request file not found for {tsa_path}")
+    return parse_timestamp_request(request_path.read_bytes())
 
 
 @pytest.fixture
-def ts_response() -> TimeStampResponse:
-    return decode_timestamp_response((_FIXTURE / "response.tsr").read_bytes())
+def ts_response(tsa_path: Path) -> TimeStampResponse:
+    """
+    Load timestamp response for the current TSA provider.
+    """
+    response_path = tsa_path / "response.tsr"
+    if not response_path.exists():
+        pytest.skip(f"Response file not found for {tsa_path}")
+    return decode_timestamp_response(response_path.read_bytes())
+
+
+@pytest.fixture
+def ts_response_by_filename(request, tsa_path: Path) -> TimeStampResponse:
+    """
+    Load a specific timestamp response file from a TSA provider.
+    """
+    filename = request.param
+
+    response_path = tsa_path / filename
+    if not response_path.exists():
+        pytest.skip(f"Response file not found: {response_path}")
+
+    return decode_timestamp_response(response_path.read_bytes())
 
 
 @pytest.fixture
@@ -304,6 +350,33 @@ class TestVerifier:
             is True
         )
 
+    ts_response_files = ["response-sha256.tsr", "response-sha384.tsr", "response-sha512.tsr"]
+
+    @pytest.mark.parametrize("ts_response_by_filename", ts_response_files, indirect=True)
+    def test_verify_message_with_algo(
+        self, ts_response_by_filename: TimeStampResponse, certificates
+    ) -> None:
+        verifier = (
+            VerifierBuilder()
+            .add_root_certificate(certificates[-1])
+            .tsa_certificate(certificates[0])
+            .build()
+        )
+
+        assert verifier.verify_message(ts_response_by_filename, b"hello") is True
+
+    def test_verify_message_with_unsupported_algo(
+        self, ts_response: TimeStampResponse, verifier: Verifier, monkeypatch: MonkeyPatch
+    ) -> None:
+        # tweak OID so the timestamp response hash algorithm won't match it
+        monkeypatch.setattr(rfc3161_client.verify, "SHA512_OID", rfc3161_client.verify.SHA384_OID)
+
+        with pytest.raises(VerificationError, match="Unsupported hash"):
+            verifier.verify_message(
+                timestamp_response=ts_response,
+                message=b"hello",
+            )
+
 
 def test_verify_succeeds_when_leaf_cert_is_not_first():
     """This is a regression test for a bug where the leaf certificate was not
@@ -311,15 +384,13 @@ def test_verify_succeeds_when_leaf_cert_is_not_first():
 
     https://github.com/trailofbits/rfc3161-client/issues/104#issuecomment-2711244010
     """
+    root_path = _FIXTURE / "identrust" / "ts_chain.pem"
+    tsr_path = _FIXTURE / "identrust" / "issue-104.tsr"
 
-    root = cryptography.x509.load_der_x509_certificate(
-        (_FIXTURE / "regressions" / "issue-104.root.pem").read_bytes()
-    )
+    root = cryptography.x509.load_der_x509_certificate(root_path.read_bytes())
     verifier = VerifierBuilder().add_root_certificate(root).build()
 
-    ts_response = decode_timestamp_response(
-        (_FIXTURE / "regressions" / "issue-104.tsr").read_bytes()
-    )
+    ts_response = decode_timestamp_response(tsr_path.read_bytes())
 
     digest = hashes.Hash(hashes.SHA512())
     digest.update(b"hello")

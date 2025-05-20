@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pepperize.cdk-security-group
-Version: 0.0.649
+Version: 0.0.650
 Summary: This project provides a CDK construct to create an EC2 SecurityGroup, which property `securityGroupName` returns the GroupName.
 Home-page: https://github.com/pepperize/cdk-security-group.git
 Author: Ivan Ovdiienko<info@pepperize.com>

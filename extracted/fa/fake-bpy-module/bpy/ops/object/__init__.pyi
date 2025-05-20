@@ -2442,6 +2442,15 @@ def material_slot_remove(
     :type undo: bool | None
     """
 
+def material_slot_remove_all(
+    execution_context: int | str | None = None, undo: bool | None = None
+):
+    """Remove all materials
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
+    """
+
 def material_slot_remove_unused(
     execution_context: int | str | None = None, undo: bool | None = None
 ):
@@ -3267,7 +3276,7 @@ def paths_update_visible(
     :type undo: bool | None
     """
 
-def pointcloud_add(
+def pointcloud_random_add(
     execution_context: int | str | None = None,
     undo: bool | None = None,
     /,

@@ -1035,30 +1035,6 @@ def face_make_planar(
     :type repeat: int | None
     """
 
-def face_set_extract(
-    execution_context: int | str | None = None,
-    undo: bool | None = None,
-    /,
-    *,
-    add_boundary_loop: bool | None = True,
-    smooth_iterations: int | None = 4,
-    apply_shrinkwrap: bool | None = True,
-    add_solidify: bool | None = True,
-):
-    """Create a new mesh object from the selected Face Set
-
-    :type execution_context: int | str | None
-    :type undo: bool | None
-    :param add_boundary_loop: Add Boundary Loop, Add an extra edge loop to better preserve the shape when applying a subdivision surface modifier
-    :type add_boundary_loop: bool | None
-    :param smooth_iterations: Smooth Iterations, Smooth iterations applied to the extracted mesh
-    :type smooth_iterations: int | None
-    :param apply_shrinkwrap: Project to Sculpt, Project the extracted mesh into the original sculpt
-    :type apply_shrinkwrap: bool | None
-    :param add_solidify: Extract as Solid, Extract the mask as a solid object with a solidify modifier
-    :type add_solidify: bool | None
-    """
-
 def face_split_by_edges(
     execution_context: int | str | None = None, undo: bool | None = None
 ):
@@ -1694,54 +1670,6 @@ def offset_edge_loops_slide(
     :type MESH_OT_offset_edge_loops: offset_edge_loops | None
     :param TRANSFORM_OT_edge_slide: Edge Slide, Slide an edge loop along a mesh
     :type TRANSFORM_OT_edge_slide: bpy.ops.transform.edge_slide | None
-    """
-
-def paint_mask_extract(
-    execution_context: int | str | None = None,
-    undo: bool | None = None,
-    /,
-    *,
-    mask_threshold: float | None = 0.5,
-    add_boundary_loop: bool | None = True,
-    smooth_iterations: int | None = 4,
-    apply_shrinkwrap: bool | None = True,
-    add_solidify: bool | None = True,
-):
-    """Create a new mesh object from the current paint mask
-
-    :type execution_context: int | str | None
-    :type undo: bool | None
-    :param mask_threshold: Threshold, Minimum mask value to consider the vertex valid to extract a face from the original mesh
-    :type mask_threshold: float | None
-    :param add_boundary_loop: Add Boundary Loop, Add an extra edge loop to better preserve the shape when applying a subdivision surface modifier
-    :type add_boundary_loop: bool | None
-    :param smooth_iterations: Smooth Iterations, Smooth iterations applied to the extracted mesh
-    :type smooth_iterations: int | None
-    :param apply_shrinkwrap: Project to Sculpt, Project the extracted mesh into the original sculpt
-    :type apply_shrinkwrap: bool | None
-    :param add_solidify: Extract as Solid, Extract the mask as a solid object with a solidify modifier
-    :type add_solidify: bool | None
-    """
-
-def paint_mask_slice(
-    execution_context: int | str | None = None,
-    undo: bool | None = None,
-    /,
-    *,
-    mask_threshold: float | None = 0.5,
-    fill_holes: bool | None = True,
-    new_object: bool | None = True,
-):
-    """Slices the paint mask from the mesh
-
-    :type execution_context: int | str | None
-    :type undo: bool | None
-    :param mask_threshold: Threshold, Minimum mask value to consider the vertex valid to extract a face from the original mesh
-    :type mask_threshold: float | None
-    :param fill_holes: Fill Holes, Fill holes after slicing the mask
-    :type fill_holes: bool | None
-    :param new_object: Slice to New Object, Create a new object from the sliced mask
-    :type new_object: bool | None
     """
 
 def point_normals(

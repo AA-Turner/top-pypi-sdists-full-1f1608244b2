@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: fireworks-ai
-Version: 0.17.0
+Version: 0.17.4
 Summary: Python client library for the Fireworks AI Platform
 Author-Email: Fireworks AI <info@fireworks.ai>
 License: MIT
@@ -18,9 +18,10 @@ Requires-Dist: pydantic
 Requires-Dist: Pillow
 Requires-Dist: openai
 Requires-Dist: typing_extensions
-Requires-Dist: asyncstdlib>=3.12.0
 Requires-Dist: mmh3>=4.1.0
 Requires-Dist: betterproto-fw[compiler]>=2.0.3
+Requires-Dist: asyncstdlib-fw>=3.13.2
+Requires-Dist: nest-asyncio>=1.6.0
 Provides-Extra: flumina
 Requires-Dist: fastapi; extra == "flumina"
 Requires-Dist: tabulate; extra == "flumina"

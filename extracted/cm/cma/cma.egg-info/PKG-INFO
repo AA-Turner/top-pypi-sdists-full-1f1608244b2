@@ -1,35 +1,36 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: cma
-Version: 4.0.0
+Version: 4.2.0
 Summary: CMA-ES, Covariance Matrix Adaptation Evolution Strategy for non-linear numerical optimization in Python
-Home-page: https://github.com/CMA-ES/pycma
-Author: Nikolaus Hansen
-Author-email: authors_firstname.lastname@inria.fr
-Maintainer: Nikolaus Hansen
-Maintainer-email: authors_firstname.lastname@inria.fr
-License: BSD
+Author: Youhei Akimoto, Petr Baudis
+Author-email: Nikolaus Hansen <authors_firstname.lastname@inria.fr>
+Maintainer-email: Nikolaus Hansen <authors_firstname.lastname@inria.fr>
+License-Expression: BSD-3-Clause
+Project-URL: Homepage, https://github.com/CMA-ES/pycma
+Project-URL: Repository, https://github.com/CMA-ES/pycma.git
+Project-URL: Bug Tracker, https://github.com/CMA-ES/pycma/issues
 Keywords: optimization,CMA-ES,cmaes
-Classifier: Intended Audience :: Science/Research
-Classifier: Intended Audience :: Education
-Classifier: Intended Audience :: Other Audience
-Classifier: Topic :: Scientific/Engineering
-Classifier: Topic :: Scientific/Engineering :: Mathematics
-Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
-Classifier: Operating System :: OS Independent
-Classifier: Programming Language :: Python :: 2.7
-Classifier: Programming Language :: Python :: 3
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Environment :: Console
 Classifier: Framework :: IPython
 Classifier: Framework :: Jupyter
-Classifier: License :: OSI Approved :: BSD License
-Description-Content-Type: text/x-rst
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: Other Audience
+Classifier: Intended Audience :: Science/Research
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Description-Content-Type: text/plain
 License-File: LICENSE
 Requires-Dist: numpy
 Provides-Extra: plotting
 Requires-Dist: matplotlib; extra == "plotting"
 Provides-Extra: constrained-solution-tracking
 Requires-Dist: moarchiving; extra == "constrained-solution-tracking"
+Dynamic: license-file
 
 CMA-ES Covariance Matrix Adaptation Evolution Strategy
 ======================================================
@@ -57,38 +58,20 @@ CMA-ES algorithm in the classes ``cma.CMAEvolutionStrategy`` and
 
 Installation
 ------------
-There are several ways of installation:
-
-* In the terminal command line type::
+In the terminal command line type::
 
       python -m pip install cma
 
-  Typing just ``pip`` instead of ``python -m pip`` may be sufficient.
-  The package will be downloaded and installed automatically. To
-  **upgrade** an existing installation, '``pip``' must be replaced by 
-  '``pip -U``' in both cases. For the documentation of ``pip``, `see here`_.
+The package will be downloaded and installed automatically. To **upgrade**
+an existing installation, '``pip``' must be replaced by '``pip -U``'. For
+the documentation of ``pip``, `see here`_.
 
 .. _`see here`: http://www.pip-installer.org
 
-* Download and unpack the ``cma-...tar.gz`` file and type::
-
-      pip install -e cma
-    
-  or::
-
-      python setup.py install
-
-  in the ``cma-...`` folder (under Windows just
-  "``setup.py install``").
-
-* Under Windows one may also download the MS Windows installer.
-
-
-Installation **might require root privileges**. In this case, try 
-the ``--user`` option of pip or prepended with ``sudo``.
-
-The folder ``cma`` from the ``tar`` archive can also be used without
-any installation (for ``import`` to find it, it must be in the current folder or the Python search paths).
+Alternatively, download and unpack the ``cma-...tar.gz``. The folder
+``cma`` from the ``tar`` archive can used without any installation
+(for ``import`` to find it, it must be in the current folder or the Python
+search paths) or can be installed by ``pip install -e .``.
 
 Usage Example
 -------------

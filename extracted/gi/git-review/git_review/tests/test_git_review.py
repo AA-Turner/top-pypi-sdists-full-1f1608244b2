@@ -18,9 +18,10 @@
 import json
 import os
 import shutil
+import stat
 import tempfile
-import testtools
 
+from git_review.hooks import COMMIT_MSG
 from git_review import tests
 from git_review.tests import utils
 
@@ -93,8 +94,18 @@ class GitReviewTestCase(tests.BaseGitReviewTestCase):
 
     def test_git_review_s_with_outdated_repo(self):
         """Test git-review -s with a outdated repo."""
+        # Push simple change to gerrit and submit it
+        hook_file = self._dir('test', '.git/hooks/commit-msg')
+        utils.write_to_file(hook_file, COMMIT_MSG.encode())
+        os.chmod(hook_file, os.stat(hook_file).st_mode | stat.S_IEXEC)
         self._simple_change('test file to outdate', 'test commit message 1')
-        self._run_git('push', 'origin', 'master')
+        self._run_git('push', 'origin', 'HEAD:refs/for/master')
+        # Cleanup the hook file so that setup below rewrites it
+        os.unlink(hook_file)
+        # Submit the proposed change
+        head = self._run_git('rev-parse', 'HEAD')
+        self._run_gerrit_cli('review', head, '--code-review=+2', '--submit')
+        # Reset so that the local repo is behind the upstream repo in Gerrit.
         self._run_git('reset', '--hard', 'HEAD^')
 
         # Review setup with an outdated repo
@@ -316,6 +327,36 @@ class GitReviewTestCase(tests.BaseGitReviewTestCase):
 
         self.assertEqual(set(['reviewer1', 'reviewer2']), reviewers)
 
+    def test_git_review_cc(self):
+        """Test git-review adding CC to changes."""
+        self._run_git_review('-s')
+
+        # Create users to add as CC
+        self._run_gerrit_cli('create-account', '--email',
+                             'cc1@example.com', 'cc1')
+        self._run_gerrit_cli('create-account', '--email',
+                             'cc2@example.com', 'cc2')
+
+        self._simple_change('test file', 'test commit message')
+
+        review_ccs = self._run_git_review('--cc', 'cc1', 'cc2')
+        self.assertIn("new: 1", review_ccs)
+
+        # verify both CCs are on patchset
+        head = self._run_git('rev-parse', 'HEAD')
+        change = self._run_gerrit_cli('query', '--format=JSON',
+                                      '--all-reviewers', head)
+        # The first result should be the one we want
+        change = json.loads(change.split('\n')[0])
+
+        self.assertEqual(2, len(change['allReviewers']))
+
+        ccs = set()
+        for cc in change['allReviewers']:
+            ccs.add(cc['username'])
+
+        self.assertEqual(set(['cc1', 'cc2']), ccs)
+
     def test_rebase_unstaged_changes_msg(self):
         """Test message displayed when unstaged changes are present."""
         self._run_git_review('-s')
@@ -415,6 +456,9 @@ class GitReviewTestCase(tests.BaseGitReviewTestCase):
     def test_uploads_with_nondefault_rebase(self):
         """Test changes rebase against correct branches."""
         # prepare maintenance branch that is behind master
+        hook_file = self._dir('test', '.git/hooks/commit-msg')
+        utils.write_to_file(hook_file, COMMIT_MSG.encode())
+        os.chmod(hook_file, os.stat(hook_file).st_mode | stat.S_IEXEC)
         self._create_gitreview_file(track='true',
                                     defaultremote='origin')
         self._run_git('add', '.gitreview')
@@ -422,8 +466,15 @@ class GitReviewTestCase(tests.BaseGitReviewTestCase):
         self._simple_change('diverge master from maint',
                             'no conflict',
                             self._dir('test', 'test_file_to_diverge.txt'))
-        self._run_git('push', 'origin', 'master')
-        self._run_git('push', 'origin', 'master', 'master:other')
+        self._run_git('push', 'origin', 'HEAD:refs/for/master')
+        os.unlink(hook_file)
+        head_1 = self._run_git('rev-parse', 'HEAD^1')
+        head = self._run_git('rev-parse', 'HEAD')
+        self._run_gerrit_cli('review', head_1, '--code-review=+2', '--submit')
+        self._run_gerrit_cli('review', head, '--code-review=+2', '--submit')
+        self._run_gerrit_cli('create-branch',
+                             'test/test_project',
+                             'other', head)
         self._run_git_review('-s')
         head_1 = self._run_git('rev-parse', 'HEAD^1')
         self._run_gerrit_cli('create-branch',
@@ -431,12 +482,7 @@ class GitReviewTestCase(tests.BaseGitReviewTestCase):
                              'maint', head_1)
         self._run_git('fetch')
 
-        br_out = self._run_git('checkout',
-                               '-b', 'test_branch', 'origin/maint')
-        expected_track = (".*\nBranch '?test_branch'? set up to track remote "
-                          "branch '?maint'? from '?origin'?.")
-        track_matcher = testtools.matchers.MatchesRegex(expected_track)
-        self.assertThat(br_out, track_matcher)
+        self._run_git('checkout', '-b', 'test_branch', 'origin/maint')
         branches = self._run_git('branch', '-a')
         expected_branch = '* test_branch'
         observed = branches.split('\n')
@@ -560,18 +606,19 @@ class GitReviewTestCase(tests.BaseGitReviewTestCase):
                                      extra_args=['-t', 'zat'])
 
     def test_git_review_T(self):
+        # This option is deprecated and kept for compatibility; the
+        # only behavior now is "notopic".
         self._run_git_review('-s')
         self._run_git('checkout', '-b', 'bug/456')
         self._simple_change('test file modified', 'commit message for bug 456')
-        self._assert_branch_would_be('master%topic=bug/456')
+        self._assert_branch_would_be('master')
         self._assert_branch_would_be('master', extra_args=['-T'])
 
         self._run_git('config', 'gitreview.notopic', 'true')
         self._assert_branch_would_be('master')
         self._run_git('config', 'gitreview.notopic', 'false')
-        self._assert_branch_would_be('master%topic=bug/456')
+        self._assert_branch_would_be('master')
 
-        # -T takes precedence over notopic=false
         self._assert_branch_would_be('master', extra_args=['-T'])
 
     def test_git_review_T_t(self):

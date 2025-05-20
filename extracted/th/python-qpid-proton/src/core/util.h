@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <proton/codec.h>
 #include <proton/types.h>
 
 #include "object_private.h"
@@ -46,18 +47,111 @@ bool pn_env_bool(const char *name);
 pn_timestamp_t pn_timestamp_min(pn_timestamp_t a, pn_timestamp_t b);
 
 extern const pn_class_t PN_CLASSCLASS(pn_strdup)[];
-char *pn_strdup(const char *src);
-char *pn_strndup(const char *src, size_t n);
-
-int pn_strcasecmp(const char* a, const char* b);
-int pn_strncasecmp(const char* a, const char* b, size_t len);
 
 static inline bool pn_bytes_equal(const pn_bytes_t a, const pn_bytes_t b) {
   return (a.size == b.size && !memcmp(a.start, b.start, a.size));
 }
 
-static inline pn_bytes_t pn_string_bytes(struct pn_string_t *s) {
-  return pn_bytes(pn_string_size(s), pn_string_get(s));
+static inline pn_bytes_t pn_bytes_dup(pn_bytes_t in) {
+  if (in.size) {
+    char* rbytes = malloc(in.size);
+    memcpy(rbytes, in.start, in.size);
+    return (pn_bytes_t){in.size, rbytes};
+  } else {
+    return (pn_bytes_t){0, NULL};
+  }
+}
+
+static inline void pn_bytes_free(pn_bytes_t in) {
+  free((void*)in.start);
+}
+
+static inline void pni_switch_to_data(pn_bytes_t *bytes, pn_data_t **data) {
+  if (*data == NULL) {
+    *data = pn_data(0);
+  }
+  if (bytes->start) {
+    pn_data_clear(*data);
+    pn_data_decode(*data, bytes->start, bytes->size);
+    pn_data_rewind(*data);
+
+    pn_bytes_free(*bytes);
+    *bytes = (pn_bytes_t){0, NULL};
+  }
+}
+
+static inline pn_rwbytes_t pn_rwbytes_alloc(size_t size) {
+  char* space = malloc(size);
+  size_t s = space ? size : 0;
+  return (pn_rwbytes_t){.size=s, .start=space};
+}
+
+static inline pn_rwbytes_t pn_rwbytes_realloc(pn_rwbytes_t *in, size_t size) {
+  char* space = realloc(in->start, size);
+  size_t s = space ? size : 0;
+  *in = (pn_rwbytes_t){.size=s, .start=space};
+  return *in;
+}
+
+static inline void pn_rwbytes_free(pn_rwbytes_t in) {
+  free((void*)in.start);
+}
+
+static inline bool pni_switch_to_raw_bytes(pn_rwbytes_t scratch, pn_data_t **data, pn_bytes_t *bytes)
+{
+  if (pn_data_size(*data)) {
+    pn_data_rewind(*data);
+    ssize_t size = pn_data_encode(*data, scratch.start, scratch.size);
+    if (size == PN_OVERFLOW) return false;
+
+    pn_bytes_free(*bytes);
+    *bytes = pn_bytes_dup((pn_bytes_t){.size=size, .start=scratch.start});
+    pn_data_clear(*data);
+  }
+  return true;
+}
+
+static inline void pni_switch_to_raw(pn_rwbytes_t *scratch, pn_data_t **data, pn_bytes_t *bytes) {
+  if (*data == NULL || pn_data_size(*data)==0) {
+    return;
+  }
+  ssize_t data_size = 0;
+  if (PN_OVERFLOW == (data_size = pn_data_encode(*data, scratch->start, scratch->size))) {
+    pn_rwbytes_realloc(scratch, pn_data_encoded_size(*data));
+    data_size = pn_data_encode(*data, scratch->start, scratch->size);
+  }
+
+  pn_bytes_free(*bytes);
+  *bytes = pn_bytes_dup((pn_bytes_t){.size=data_size, .start=scratch->start});
+  pn_data_clear(*data);
+}
+
+static inline void pni_switch_to_raw_multiple(pn_rwbytes_t *scratch, pn_data_t **data, pn_bytes_t *bytes) {
+  if (!*data || pn_data_size(*data) == 0) {
+    return;
+  }
+  pn_data_rewind(*data);
+  // Rewind and position to first node so data type is defined.
+  pn_data_next(*data);
+
+  if (pn_data_type(*data) == PN_ARRAY) {
+    switch (pn_data_get_array(*data)) {
+      case 0:
+        pn_bytes_free(*bytes);
+        *bytes = (pn_bytes_t){0, NULL};
+        pn_data_clear(*data);
+        break;
+      case 1:
+        pn_data_enter(*data);
+        pn_data_narrow(*data);
+        pni_switch_to_raw(scratch, data, bytes);
+        break;
+      default:
+        pni_switch_to_raw(scratch, data, bytes);
+    }
+  } else {
+    pni_switch_to_raw(scratch, data, bytes);
+  }
 }
 
 static inline void pni_write16(char *bytes, uint16_t value)

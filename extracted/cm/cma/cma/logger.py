@@ -142,6 +142,9 @@ class CMADataLogger(interfaces.BaseDataLogger):
         self.file_names = ('axlen', 'axlencorr', 'axlenprec', 'fit', 'stddev', 'sigvec',
                            'xmean', 'xrecentbest')
         """used in load, however hard-coded in add, because data must agree with name"""
+        self.file_stoppings = 'stoppings.json2'
+        self.stoppings = None
+        """content of stoppings.json2 file as a `str`"""
         self.key_names = ('D', 'corrspec', 'precspec', 'f', 'std', 'sigvec', 'xmean', 'xrecent')
         """used in load, however hard-coded in plot"""
         self._key_names_with_annotation = ('std', 'sigvec', 'xmean', 'xrecent')
@@ -336,6 +339,22 @@ class CMADataLogger(interfaces.BaseDataLogger):
         if not filenameprefix:
             filenameprefix = self.name_prefix
         assert len(self.file_names) == len(self.key_names)
+        self.stoppings = None  # don't keep previous condition
+        fn = filenameprefix + self.file_stoppings
+        try:
+            if os.path.isfile(fn):
+                with open(fn, 'r') as f:
+                    self.stoppings = f.read().strip()
+        except Exception as e:
+            warnings.warn('reading from {0} failed with Exception {1}'.format(fn, e))
+        fn = filenameprefix + 'version.txt'
+        try:
+            if os.path.isfile(fn):
+                with open(fn, 'r') as f:
+                    self.data_version = f.read().strip()
+        except Exception as e:
+            warnings.warn('reading from {0} failed with Exception {1}'.format(fn, e))
+
         for i in range(len(self.file_names)):
             fn = filenameprefix + self.file_names[i] + '.dat'
             try:
@@ -347,7 +366,7 @@ class CMADataLogger(interfaces.BaseDataLogger):
                     try:
                         self.__dict__[self.key_names[i]] = list(
                                 np.loadtxt(fn, comments=['%', '#'], ndmin=2))
-                    except:
+                    except Exception:
                         try:
                             self.__dict__[self.key_names[i]] = list(
                                 np.loadtxt(fn, comments='%'))
@@ -382,7 +401,7 @@ class CMADataLogger(interfaces.BaseDataLogger):
                         self.__dict__[self.key_names[i]][-1])
                 self.__dict__[self.key_names[i]] = \
                     np.asarray(self.__dict__[self.key_names[i]])
-            except:
+            except Exception:
                 if self.file_names[i] != 'sigvec':
                     utils.print_warning('no data for %s' % fn, 'load',
                                 'CMADataLogger')
@@ -434,7 +453,7 @@ class CMADataLogger(interfaces.BaseDataLogger):
         evals = es.countevals
         iteration = es.countiter
         try: eigen_decompositions = es.sm.count_eigen
-        except: eigen_decompositions = 0  # no correlations will be plotted
+        except Exception: eigen_decompositions = 0  # no correlations will be plotted
         sigma = es.sigma
         if es.opts['CMA_diagonal'] is True or es.countiter <= es.opts['CMA_diagonal']:
             stds = es.sigma_vec.scaling * es.sm.variances**0.5
@@ -452,12 +471,12 @@ class CMADataLogger(interfaces.BaseDataLogger):
             medianf = es.fit.fit[len(es.fit.fit) // 2]
             iqrangef = np.diff(_mathutils.Mh.prctile(
                 es.fit.fit, [25, 75], sorted_=True))[0]
-        except:
+        except Exception:
             if iteration > 0:  # first call without f-values is OK
                 raise
         try:
             xrecent = es.best.last.x
-        except:
+        except Exception:
             xrecent = None
         diagC = es.sigma * es.sigma_vec.scaling * es.sm.variances**0.5
         if es.opts['CMA_diagonal'] is True or es.countiter <= es.opts['CMA_diagonal']:
@@ -479,13 +498,15 @@ class CMADataLogger(interfaces.BaseDataLogger):
         else:
             try:
                 diagD = es.sm.eigenspectrum**0.5
-            except:
+            except Exception:
                 diagD = [1]
             maxD = max(diagD)
             minD = min(diagD)
         diagonal_scaling = es.sigma_vec.scaling
-        try: diagonal_scaling_beta = es.sm._beta_diagonal_acceleration  # is for free
-        except: diagonal_scaling_beta = 1
+        try:
+            diagonal_scaling_beta = es.sm._beta_diagonal_acceleration  # is for free
+        except Exception:
+            diagonal_scaling_beta = 1
         correlation_matrix = None
         if not hasattr(self, 'last_precision_matrix'):
             self.last_precision_matrix = None
@@ -497,8 +518,9 @@ class CMADataLogger(interfaces.BaseDataLogger):
                     try:
                         self.last_precision_matrix = np.linalg.inv(correlation_matrix)
                         self.last_precision_matrix = _mathutils.to_correlation_matrix(self.last_precision_matrix)
-                    except:  # diagonal case
-                        warnings.warn("CMADataLogger failed to compute precision matrix")
+                    except Exception:  # diagonal case
+                        if iteration < 2 or not np.remainder(np.log10(iteration), 1):
+                            warnings.warn("CMADataLogger failed to compute precision matrix (iteration {0})".format(iteration))
             except (AttributeError, NotImplementedError):
                 pass
             # TODO: write also np.linalg.eigvalsh(sigma_vec.transform_covariance_matrix(es.C))
@@ -627,6 +649,25 @@ class CMADataLogger(interfaces.BaseDataLogger):
                             + str(float(bestf)) + ' '  # float converts Fraction
                             + ' '.join(map(str, xrecent))
                             + '\n')
+            fn = self.name_prefix + self.file_stoppings
+            with open(fn, 'w') as f:
+                try:
+                    f.write(repr(es.stop(check=False)))
+                except Exception:
+                    pass
+            try:  # experimental, WIP
+                from . import evolution_strategy
+                if hasattr(evolution_strategy, 'all_stoppings'):
+                    with open(self.name_prefix + 'all_stoppings.json2', 'w') as f:
+                        f.write(repr(evolution_strategy.all_stoppings))
+            except Exception:
+                pass
+            try:  # experimental, WIP
+                from . import __version__
+                with open(self.name_prefix + 'version.txt', 'w') as f:
+                    f.write(__version__)
+            except Exception:
+                pass
         except (IOError, OSError):
             if iteration <= 1:
                 utils.print_warning(('could not open/write file %s: ' % fn,
@@ -720,7 +761,7 @@ class CMADataLogger(interfaces.BaseDataLogger):
         try:
             iteridx = list(iteridx)
             iteridx.append(iteridx[-1])  # last entry is artificial
-        except:
+        except Exception:
             pass
         dat.std = dat.std[_where([x in iteridx
                                     for x in dat.std[:, 0]])[0], :]
@@ -750,65 +791,105 @@ class CMADataLogger(interfaces.BaseDataLogger):
              downsample_to=1e7,
              xsemilog=False,
              xnormalize=False,
+             xtransform=None,
              fshift=0,
              addcols=None,
              load=True,
-             message=None):
-        """plot data from a `CMADataLogger` (using the files written
-        by the logger).
+             message='',
+             **kwargs):
+        """plot data from a `CMADataLogger` using files written by the logger.
 
         Arguments
         ---------
-        `fig`
-            figure number, by default starting from 325
-        `iabscissa`
-            ``0==plot`` versus iteration count,
-            ``1==plot`` versus function evaluation number
-        `iteridx`
-            iteration indices to plot, e.g. ``range(100)`` for the first 100 evaluations.
-        `x_opt`
-            If `isscalar(x_opt)` it is interpreted as iteration number and the
-            difference of ``x`` to the respective iteration is plotted. If it is
-            a negative scalar the respective index rather than the iteration is used.
-            Namely in particular, ``x_opt=0`` subtracts the initial solution ``X0``
-            and ``x_opt=-1`` subtracts the final solution of the data.
-            If ``len(x_opt) == dimension``, the difference to `x_opt` is
-            plotted, otherwise the first row of ``x_opt`` are the indices of
-            the variables to be plotted and the second row, if present, is used
-            to take the difference.
-        `fshift`
-            is added to all displayed fitness values
+        `fig`: figure number, by default starting from 325
+
+        `iabscissa` or `abscissa`: ``0 ==>`` plot versus iteration count,
+        ``1 ==>`` plot versus function evaluation number
+
+        `iteridx`: the iteration indices to plot, e.g. ``range(100)`` for
+        the first 100 evaluations.
+
+        `plot_mean:bool` indicates whether to plot the current best x or the
+        mean.
+
+        `foffset:float` a small value added to f values to improve log-plot
+        appearance.
+
+        `downsample_to`: number of data lines to use at most
+
+        `x_opt`: plot x-values as a difference to another solution and/or
+        select a subset of variables to plot.
+            
+        If `x_opt` is a nonnegative `int`, it is interpreted as
+        iteration number and the difference of ``x`` to the respective
+        (closest but not larger) iteration is plotted.
+
+        If `x_opt` is a negative `int` the respective index rather than
+        the iteration is used. Namely and in particular, ``x_opt=0``
+        subtracts the initial solution ``X0`` and ``x_opt=-1``
+        subtracts the final solution of the data.
+
+        If ``len(x_opt) == dimension`` or `x_opt` is a float, the
+        difference to `x_opt` is plotted.
+
+        Otherwise: ``x_opt[0]`` defines the indices of the variables to
+        be plotted where ``x_opt[1]``, if present, is subtracted.
+
+        `xsemilog:bool`: customized semilog plot for x-values
+
+        `xnormalize:bool`: divide x-values by standard deviations, may show stationary
+            behavior when the optimum is in zero
+
+        `xtransform:callable` is a function that returns transformed x-values,
+        applied before `x_opt` is subtracted and `xnormalize` is done.
+
+        `fshift:float` is added to all displayed fitness values
+
+        `addcols:int` is the number of added columns for additional subplots
+
+        `load:bool=True`: load/reload data before to try plotting. Useful
+        as a `CMADataLogger` instance itself does not load data by default.
+
+        `message:str`: a message text appearing in the plot
 
         Return `CMADataLogger` itself.
 
-        Examples
-        --------
+        Example
+        -------
         ::
 
             import cma
             logger = cma.CMADataLogger()  # with default name
-            # try to plot the "default logging" data (e.g.
-            #   from previous fmin calls, which is essentially what
-            #   also cma.plot() does)
             logger.plot()
             cma.s.figsave('fig325.png')  # save current figure
-            logger.figclose()
+            logger.figclose()  # or cma.s.figclose()
+
+        Details
+        -------
+        Data from codes in other languages (C, Java, Matlab, Scilab) have the same
+        format and can be plotted just the same.
 
         Dependencies: matlabplotlib.pyplot
 
+        :See: `cma.plot` alias `cma.logger.plot`
     """
+        global last_plot_arguments
+        last_plot_arguments = dict(locals())  # avoid passing new arguments all the way
         try:
             from matplotlib import pyplot
             from matplotlib.pyplot import figure, subplot, gcf
         except ImportError:
             ImportError('could not find matplotlib.pyplot module, function plot() is not available')
             return self
+        iabscissa = kwargs.pop('abscissa', iabscissa)  # accept abscissa as keyword too
+        if kwargs:
+            warnings.warn("unrecognised kwargs={0}".format(kwargs))
+        if message is None:
+            message = ''
         if hasattr(self, 'es') and self.es is not None:
             if fig is self.es:      # in case of usage in a callback
                 fig = gcf().number  # plot in current figure
-            if message is None:
-                message = ''
-            if not 'stop()' in message:
+            if message is not False and 'stop(' not in message:
                 if not message.endswith('\n'):
                     message += '\n'
                 message += "stop()={0}".format(self.es.stop())
@@ -838,6 +919,10 @@ class CMADataLogger(interfaces.BaseDataLogger):
         if self.f.shape[0] > downsample_to:
             self.downsampling(1 + self.f.shape[0] // downsample_to)
             self.load()
+        if message is not False and 'stop(' not in message and self.stoppings:
+            if not message.endswith('\n'):  # copy-paste from above
+                message += '\n'
+            message += "stop()={0}".format(self.stoppings)
 
         dat = self
         dat.x = dat.xmean  # this is the genotyp
@@ -913,49 +998,17 @@ class CMADataLogger(interfaces.BaseDataLogger):
 
     def plot_all(self, fig=None, iabscissa=0, iteridx=None,
              foffset=1e-19, x_opt=None, fontsize=7):
-        """
-        plot data from a `CMADataLogger` (using the files written by the logger).
+        """Obsolete: plot data from a `CMADataLogger` (using the files written by the logger).
 
-        Superseded by `plot`?
+        Superseded by `CMADataLogger.plot`
 
         Arguments
         ---------
-        `fig`
-            figure number, by default 425
-        `iabscissa`
-            ``0==plot`` versus iteration count,
-            ``1==plot`` versus function evaluation number
-        `iteridx`
-            iteration indices to plot
-        `x_opt`
-            If `isscalar(x_opt)` it is interpreted as iteration number and the
-            difference of ``x`` to the respective iteration is plotted. If it is
-            a negative scalar the respective index rather than the iteration is used.
-            Namely in particular, ``x_opt=0`` subtracts the initial solution ``X0``
-            and ``x_opt=-1`` subtracts the final solution of the data.
-            If ``len(x_opt) == dimension``, the difference to `x_opt` is
-            plotted, otherwise the first row of ``x_opt`` are the indices of
-            the variables to be plotted and the second row, if present, is used
-            to take the difference.
+        See `CMADataLogger.plot`
 
         Return `CMADataLogger` itself.
-
-        Examples
-        --------
-        ::
-
-            import cma
-            logger = cma.CMADataLogger()  # with default name
-            # try to plot the "default logging" data (e.g.
-            #   from previous fmin calls, which is essentially what
-            #   also cma.plot() does)
-            logger.plot_all()
-            cma.s.figsave('fig425.png')  # save current figure
-            logger.s.figclose()
-
-        Dependencies: matlabplotlib/pyplot.
-
         """
+        warnings.warn('please use `plot` instead of `plot_all`')
         try:
             # pyplot: prodedural interface for matplotlib
             from matplotlib import pyplot
@@ -1045,6 +1098,7 @@ class CMADataLogger(interfaces.BaseDataLogger):
             self.plot_mean(iabscissa, x_opt)
 
         self._finalize_plotting()
+        warnings.warn('please use `plot` instead of `plot_all`')
         return self
     def plot_axes_scaling(self, iabscissa=0):
         from matplotlib import pyplot
@@ -1085,11 +1139,12 @@ class CMADataLogger(interfaces.BaseDataLogger):
         dat.std = np.array(self.std, copy=True)
         self._enter_plotting()
         try:
-            if len(np.shape(idx)) > 1:
-                idx = idx[0]  # take only first row
+            if not np.isscalar(idx[0]):
+                idx = idx[0]  # take the first entry (from x_opt argument)
             if len(idx) < dat.std.shape[1] - 5:  # idx reduces the displayed variables
                 dat.std = dat.std[:, list(range(5)) + [5 + i for i in idx]]
-        except TypeError: pass  # idx has no len
+        except TypeError:
+            pass  # idx was not an array
         # remove sigma from stds (graphs become much better readible)
         dat.std[:, 5:] = np.transpose(dat.std[:, 5:].T / dat.std[:, 2].T)
         # ax = array(pyplot.axis())
@@ -1319,7 +1374,7 @@ class CMADataLogger(interfaces.BaseDataLogger):
         if dat.f.shape[1] > 8:  # interquartile f-range
             # semilogy(dat.f[:, iabscissa], abs(dat.f[:,[6, 7, 10, 12]])+foffset,'-k')
             semilogy(_x, abs(dat.f[:, [8]]) + foffset, 'grey', linewidth=0.7)  # darkorange is nice
-
+            text(_x[-2], abs(dat.f[-2, 8]) + foffset, 'IQR(f)', fontsize=fontsize)
         # (larger indices): additional fitness data, for example constraints values
         if dat.f.shape[1] > 9:
             # dd = abs(dat.f[:,7:]) + 10*foffset
@@ -1440,14 +1495,17 @@ class CMADataLogger(interfaces.BaseDataLogger):
         ax = array(axis())
         # ax[1] = max(minxend, ax[1])
         axis(ax)
-        text(ax[0] + 0.003 * (ax[1] - ax[0]), ax[2] * (ax[3]/ax[2])**0.002,
+        text(ax[0] + 0.003 * (ax[1] - ax[0]), ax[2] * (ax[3]/ax[2])**0.01,
                     # 10**(log10(ax[2])+0.05*(log10(ax[3])-log10(ax[2]))),
              (message + '\n' if message else '') +
              'evals/iter={0}/{1} min($f$)={2}'.format(
                  int(dat.f[-1, 1]), int(dat.f[-1, 0]), repr(minfit))
             )
              #'.f_recent=' + repr(dat.f[-1, 5]))
-
+        try:
+            text(ax[1], ax[3], 'v' + self.data_version, fontsize=5)
+        except Exception:
+            pass
         self.f[:, 5:8] -= fshift
 
         # AR and damping of diagonal decoding
@@ -1498,7 +1556,10 @@ class CMADataLogger(interfaces.BaseDataLogger):
         # pyplot.tight_layout(rect=(0, 0, 0.96, 1))
         pyplot.gcf().canvas.draw()  # update figure immediately
         pyplot.ion()  # prevents that the execution blocks after plotting
-        # pyplot.show()  # in non-interactive mode: block until the figures have been closed
+        try:
+            pyplot.show()  # in non-interactive mode: block until the figures have been closed
+        except Exception:
+            pass
         # https://github.com/efiring/matplotlib/commit/94c5e161d1f3306d90092c986694d3f611cc5609
         # https://stackoverflow.com/questions/6130341/exact-semantics-of-matplotlibs-interactive-mode-ion-ioff
         pyplot.rcParams['font.size'] = self.original_fontsize  # changes font size in current figure which defeats the original purpose
@@ -1521,9 +1582,17 @@ class CMADataLogger(interfaces.BaseDataLogger):
         import matplotlib
         from matplotlib.pyplot import plot, yscale, text, grid, axis, title
         dat = self  # for convenience and historical reasons
+        if callable(last_plot_arguments.get('xtransform', None)):
+            dat_x = dat.x[:,:]
+            tf = last_plot_arguments.get('xtransform')
+            for i in range(len(dat_x)):
+                dat_x[i,5:] = tf(dat_x[i,5:])
+        elif xnormalize or x_opt is not None:
+            dat_x = dat.x[:,:]
+        else:
+            dat_x = dat.x
         # interpret x_opt
-        dat_x = dat.x
-        if np.isscalar(x_opt):  # interpret as iteration number or negative index
+        if isinstance(x_opt, int):  # interpret as iteration number or negative index
             if x_opt == 0:  # subtract X0
                 import ast
                 fn = self.name_prefix + 'x0.dat'
@@ -1547,17 +1616,15 @@ class CMADataLogger(interfaces.BaseDataLogger):
                                   " of iteration {3} from `x_opt` argument"
                                   .format(self.x[_i, 0], _i, _m, x_opt))
                 x_opt = self.x[_i, 5:]
-            dat_x = dat.x[:,:]
             dat_x[:, 5:] -= x_opt
         elif x_opt is not None:  # x_opt is a vector or an index array to reduce dimension or both
-            dat_x = dat.x[:,:]
             try:
                 dat_x[:, 5:] -= x_opt
             except ValueError:  # interpret x_opt as index
                 def apply_xopt(dat_x, x_opt_idx):
                     """first row of `x_opt_idx` are indices, second (optional) row are values"""
                     x_opt_vals = None
-                    if len(np.shape(x_opt_idx)) > 1:
+                    if not np.isscalar(x_opt_idx[0]):
                         x_opt_vals = x_opt_idx[1]
                         x_opt_idx = np.asarray(x_opt_idx[0])
                     dat_x = dat_x[:, list(range(5)) + [5 + i for i in x_opt_idx]]
@@ -1592,11 +1659,11 @@ class CMADataLogger(interfaces.BaseDataLogger):
             _d = dat_x[:, 5:]
             _d_pos = np.abs(_d[_d != 0])
             if len(_d_pos):
-                if matplotlib.__version__[:3] < '3.3':
+                if utils.version_diff(matplotlib.__version__, '3.3') >= 0:
                     # a terrible interface change that swallows the new/old parameter and breaks code
-                    yscale('symlog', linthreshy=np.min(_d_pos))  # see matplotlib.scale.SymmetricalLogScale
-                else:
-                    yscale('symlog', linthresh=np.min(_d_pos))
+                    yscale('symlog', linthresh=np.min(_d_pos))  # see matplotlib.scale.SymmetricalLogScale
+                else:  # old kwarg
+                    yscale('symlog', linthreshy=np.min(_d_pos))
             smartlogygrid(linthresh=np.min(_d_pos))
         if dat_x.shape[1] < 100:  # annotations
             ax = array(axis())
@@ -1783,62 +1850,25 @@ class CMADataLogger(interfaces.BaseDataLogger):
     # end class CMADataLogger
 
 last_figure_number = 324
-def plot(name=None, fig=None, abscissa=0, iteridx=None,
-         plot_mean=False,
-         foffset=1e-19, x_opt=None, fontsize=7, downsample_to=3e3,
-         xsemilog=None, xnormalize=None, fshift=0, addcols=None, **kwargs):
-    """
-    plot data from files written by a `CMADataLogger`,
-    the call ``cma.plot(name, **argsdict)`` is a shortcut for
-    ``cma.CMADataLogger(name).plot(**argsdict)``
+last_plot_arguments = {}
+def plot(name=None, fig=None, abscissa=0,
+         downsample_to=3e3,
+         xsemilog=None,
+         xnormalize=None,
+         **kwargs):
+    """plot data from files written by a `CMADataLogger`, see `CMADataLogger.plot`.
 
-    Arguments
-    ---------
-    `name`
-        name of the logger, filename prefix, None evaluates to
-        the default 'outcmaes/'
-    `fig`
-        filename or figure number, or both as a tuple (any order)
-    `abscissa`
-        0==plot versus iteration count,
-        1==plot versus function evaluation number
-    `iteridx`
-        iteration indices to plot
-    `x_opt`
-        If `isscalar(x_opt)` it is interpreted as iteration number and the
-        difference of ``x`` to the respective iteration is plotted. If it is
-        a negative scalar the respective index rather than the iteration is used.
-        Namely in particular, ``x_opt=0`` subtracts the initial solution ``X0``
-        and ``x_opt=-1`` subtracts the final solution of the data.
-        If ``len(x_opt) == dimension``, the difference to `x_opt` is
-        plotted, otherwise the first row of ``x_opt`` are the indices of
-        the variables to be plotted and the second row, if present, is used
-        to take the difference.
-    `xsemilog`
-        customized semilog plot for x-values
-    `fshift`
-        is added to plotted and shown f-values
+    ``cma.plot()`` plots the data from the default output folder (which is
+    by default always overwritten). ``cma.plot(name, **argsdict)`` is a
+    shortcut for ``cma.CMADataLogger(name).plot(**argsdict)``.
 
-    Return `None`
+    `name` is the filename prefix of the logger, `None` evaluates to the
+    default ``'outcmaes/'`` (hence writing in a subfolder).
 
-    Examples
-    --------
-    ::
+    The explictly given arguments are for backwards compatibility of their
+    default setting and may disappear. All arguments are documented in
+    `CMADataLogger.plot`.
 
-       cma.plot()  # the optimization might be still
-                   # running in a different shell
-       cma.s.figsave('fig325.png')
-       cma.s.figclose()
-
-       cdl = cma.CMADataLogger().downsampling().plot()
-       # in case the file sizes are large
-
-    Details
-    -------
-    Data from codes in other languages (C, Java, Matlab, Scilab) have the same
-    format and can be plotted just the same.
-
-    :See also: `CMADataLogger`, `CMADataLogger.plot`
 
     """
     global last_figure_number
@@ -1847,9 +1877,12 @@ def plot(name=None, fig=None, abscissa=0, iteridx=None,
         fig = last_figure_number
     if isinstance(fig, (int, float)):
         last_figure_number = fig
-    return CMADataLogger(name).plot(fig, abscissa, iteridx, plot_mean, foffset,
-                             x_opt, fontsize, downsample_to, xsemilog, xnormalize,
-                             fshift, addcols, **kwargs)
+    return CMADataLogger(name).plot(fig, kwargs.pop('iabscissa', abscissa),
+                                    downsample_to=downsample_to,
+                                    xsemilog=xsemilog,
+                                    xnormalize=xnormalize,
+                                    **kwargs)
+plot.__doc__ = plot.__doc__ + CMADataLogger.plot.__doc__.split('\n', 1)[1]
 
 def plot_zip(name=None, filename=None, unique=True):
     """create tar file ``filename [+ ...] + '.tar.gz'`` of folder `name`.
@@ -1906,7 +1939,7 @@ def disp(name=None, idx=None):
        cma.disp(idx=r_[0, -10:0]) # first and ten last
        cma.disp(idx=r_[0:int(1e9):1000, -10:0])
 
-    :See also: `CMADataLogger.disp`
+    :See: `CMADataLogger.disp`
 
     """
     return CMADataLogger(name if name else CMADataLogger.default_prefix

@@ -109,6 +109,7 @@ class TTLConfig(TypedDict, total=False):
 
 
 class StoreConfig(TypedDict, total=False):
+    path: str
     index: IndexConfig
     ttl: TTLConfig
 

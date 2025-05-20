@@ -25,28 +25,12 @@ Note: many require: rebuild-from-database --project_name=./ --db_url=sqlite:///d
 '''
 
 def add_genai_customizations(project: Project, do_show_messages: bool = True, do_security: bool = True):
-    """ Add customizations to genai (default creation)
+    """ Add customizations `prototypes/genai_demo` to genai (default creation)
 
     0. Initial: create_project_and_overlay_prototypes() -- minor: just creates the readme
             * When done with genai logic prompt, logic is pre-created (in logic/declare_logic.py)
     1. Deep copy prototypes/genai_demo (adds logic and security, and custom end point)
 
-    WebGenAI DX:
-
-    0. Convention: click the Blue Button
-            * Home/Create Project
-            * Home/Open App
-            * Landing
-            * Overview[Manager]/Open
-            * Overview/GitHub
-            * App Home / Develop --> GitHub
-    0. demo --> codespaces.  Where are instructions (what is CS, how do I load/run)?
-    1. Name can be any, iff created with APILOGICPROJECT_IS_GENAI_DEMO
-    2. Bypass duplicate discovery logic iff created with APILOGICPROJECT_IS_GENAI_DEMO
-    3. TODO:
-            * cd project
-            * als add-cust  # add customizations
-            * run, and use place b2b order service - end point is not activated.
 
     Args:
     """
@@ -251,7 +235,9 @@ def add_cust(project: Project, models_py_path: Path, project_name: str):
     if not models_py_path.exists():
         raise Exception("Customizations are northwind/genai-specific - models.py does not exist")
 
-    project_is_genai_demo = False  # can't use project.is_genai_demo because this is not the create command...
+    project_is_genai_demo = False
+    ''' can't use project.is_genai_demo because this is not the create command...'''
+    
     if project.project_directory_path.joinpath('docs/project_is_genai_demo.txt').exists():
         project_is_genai_demo = True
     
@@ -260,8 +246,8 @@ def add_cust(project: Project, models_py_path: Path, project_name: str):
         add_nw_customizations(project=project, do_security=False)
         log.info("\nNext step - add authentication:\n  $ ApiLogicServer add-auth --db_url=auth\n\n")
 
-    elif project_is_genai_demo and create_utils.does_file_contain(search_for="Customer", in_file=models_py_path):
-        add_genai_customizations(project=project, do_security=False)
+    # elif project_is_genai_demo and create_utils.does_file_contain(search_for="Customer", in_file=models_py_path):
+    #    add_genai_customizations(project=project, do_security=False)
 
     elif project_name == 'sample_ai' and create_utils.does_file_contain(search_for="CustomerName = Column(Text", in_file=models_py_path):
         cocktail_napkin_path = project.project_directory_path.joinpath('logic/cocktail-napkin.jpg')
@@ -271,7 +257,7 @@ def add_cust(project: Project, models_py_path: Path, project_name: str):
         else:
             add_sample_ai_iteration(project=project)
 
-    elif project_name == 'basic_demo' and create_utils.does_file_contain(search_for="Customer", in_file=models_py_path):
+    elif (project_is_genai_demo or project_name == 'basic_demo') and create_utils.does_file_contain(search_for="Customer", in_file=models_py_path):
         cocktail_napkin_path = project.project_directory_path.joinpath('logic/cocktail-napkin.jpg')
         is_customized = cocktail_napkin_path.exists()
         if not is_customized:

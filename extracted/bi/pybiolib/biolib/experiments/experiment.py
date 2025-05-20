@@ -4,11 +4,14 @@ from collections import OrderedDict
 from biolib import api
 from biolib._internal.types.experiment import DeprecatedExperimentDict, ExperimentDict
 from biolib._internal.types.resource import ResourceDetailedDict
+from biolib._internal.utils import open_browser_window_from_notebook
+from biolib.biolib_api_client import BiolibApiClient
 from biolib.biolib_errors import BioLibError
 from biolib.jobs.job import Job
 from biolib.jobs.types import JobsPaginatedResponse
 from biolib.tables import BioLibTable
 from biolib.typing_utils import Dict, List, Optional, Union
+from biolib.utils import IS_RUNNING_IN_NOTEBOOK
 
 
 class Experiment:
@@ -41,6 +44,10 @@ class Experiment:
     @property
     def uuid(self) -> str:
         return self._resource_dict['uuid']
+
+    @property
+    def id(self) -> str:
+        return self.uuid
 
     @property
     def name(self) -> str:
@@ -235,3 +242,20 @@ class Experiment:
 
     def _refetch(self) -> None:
         self._resource_dict = self._get_resource_dict_by_uuid(uuid=self._resource_dict['uuid'])
+
+    def open_browser(self) -> None:
+        """Open a browser window to view this experiment.
+
+        If running in a notebook, this will attempt to open a new browser window.
+        Otherwise, it will print a URL that you can copy and paste.
+        """
+        api_client = BiolibApiClient.get()
+        url_to_open = f'{api_client.base_url}/experiments/{self.id}/'
+
+        if IS_RUNNING_IN_NOTEBOOK:
+            print(f'Opening experiment page at: {url_to_open}')
+            print('If your browser does not open automatically, click on the link above.')
+            open_browser_window_from_notebook(url_to_open)
+        else:
+            print('Please copy and paste the following link into your browser:')
+            print(url_to_open)

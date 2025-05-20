@@ -436,7 +436,7 @@ def cloud_config_update(
     "--provider",
     help="The cloud provider type.",
     required=True,
-    type=click.Choice(["aws", "gcp", "generic"], case_sensitive=False),
+    type=click.Choice(["aws", "gcp", "azure", "generic"], case_sensitive=False),
 )
 @click.option(
     "--region",
@@ -861,18 +861,19 @@ def register_cloud(  # noqa: PLR0913, PLR0912, C901
             skip_verifications=skip_verifications,
             auto_add_user=enable_auto_add_user,
         )
-    elif provider == "generic":
+    elif provider in ("azure", "generic"):
         # For the 'generic' provider type, for the time being, most fields are optional; only 'name', 'provider', and 'compute-stack' are required.
         if not name:
             raise click.ClickException("Please provide a value for --name.")
 
         if compute_stack != ComputeStack.K8S:
             raise click.ClickException(
-                "--compute-stack=k8s must be passed for registering generic Anyscale clouds."
+                "--compute-stack=k8s must be passed to register this Anyscale cloud."
             )
 
-        CloudController().register_generic_cloud(
+        CloudController().register_azure_or_generic_cloud(
             name=name,
+            provider=provider,
             auto_add_user=enable_auto_add_user,
             region=region,
             cloud_storage_bucket_name=cloud_storage_bucket_name,

@@ -16,6 +16,7 @@ from . import (
     operator,
     os_patch,
     jinja2_patch,
+    # graphene_patch,  # TODO: PYT-3819 uncomment when ready
 )
 
 from .databases import (
@@ -77,6 +78,7 @@ ASSESS_PATCH_MODULES = (
     str_new,
     os_patch,
     jinja2_patch,
+    # graphene_patch,  # TODO: PYT-3819 uncomment when ready
 )
 
 

@@ -17,6 +17,7 @@ from .. import _utilities
 from . import outputs
 from .. import _inputs as _root_inputs
 from .. import outputs as _root_outputs
+from ._enums import *
 from ._inputs import *
 
 __all__ = ['DomainNameArgs', 'DomainName']
@@ -30,6 +31,7 @@ class DomainNameArgs:
                  mutual_tls_authentication: Optional[pulumi.Input['DomainNameMutualTlsAuthenticationArgs']] = None,
                  ownership_verification_certificate_arn: Optional[pulumi.Input[builtins.str]] = None,
                  regional_certificate_arn: Optional[pulumi.Input[builtins.str]] = None,
+                 routing_mode: Optional[pulumi.Input['DomainNameRoutingMode']] = None,
                  security_policy: Optional[pulumi.Input[builtins.str]] = None,
                  tags: Optional[pulumi.Input[Sequence[pulumi.Input['_root_inputs.TagArgs']]]] = None):
         """
@@ -55,6 +57,8 @@ class DomainNameArgs:
             pulumi.set(__self__, "ownership_verification_certificate_arn", ownership_verification_certificate_arn)
         if regional_certificate_arn is not None:
             pulumi.set(__self__, "regional_certificate_arn", regional_certificate_arn)
+        if routing_mode is not None:
+            pulumi.set(__self__, "routing_mode", routing_mode)
         if security_policy is not None:
             pulumi.set(__self__, "security_policy", security_policy)
         if tags is not None:
@@ -133,6 +137,15 @@ class DomainNameArgs:
         pulumi.set(self, "regional_certificate_arn", value)
 
     @property
+    @pulumi.getter(name="routingMode")
+    def routing_mode(self) -> Optional[pulumi.Input['DomainNameRoutingMode']]:
+        return pulumi.get(self, "routing_mode")
+
+    @routing_mode.setter
+    def routing_mode(self, value: Optional[pulumi.Input['DomainNameRoutingMode']]):
+        pulumi.set(self, "routing_mode", value)
+
+    @property
     @pulumi.getter(name="securityPolicy")
     def security_policy(self) -> Optional[pulumi.Input[builtins.str]]:
         """
@@ -158,6 +171,9 @@ class DomainNameArgs:
 
 
 class DomainName(pulumi.CustomResource):
+
+    pulumi_type = "aws-native:apigateway:DomainName"
+
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -168,11 +184,13 @@ class DomainName(pulumi.CustomResource):
                  mutual_tls_authentication: Optional[pulumi.Input[Union['DomainNameMutualTlsAuthenticationArgs', 'DomainNameMutualTlsAuthenticationArgsDict']]] = None,
                  ownership_verification_certificate_arn: Optional[pulumi.Input[builtins.str]] = None,
                  regional_certificate_arn: Optional[pulumi.Input[builtins.str]] = None,
+                 routing_mode: Optional[pulumi.Input['DomainNameRoutingMode']] = None,
                  security_policy: Optional[pulumi.Input[builtins.str]] = None,
                  tags: Optional[pulumi.Input[Sequence[pulumi.Input[Union['_root_inputs.TagArgs', '_root_inputs.TagArgsDict']]]]] = None,
                  __props__=None):
         """
-        Resource Type definition for AWS::ApiGateway::DomainName.
+        The ``AWS::ApiGateway::DomainName`` resource specifies a custom domain name for your API in API Gateway.
+         You can use a custom domain name to provide a URL that's more intuitive and easier to recall. For more information about using custom domain names, see [Set up Custom Domain Name for an API in API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-custom-domains.html) in the *API Gateway Developer Guide*.
 
         ## Example Usage
         ### Example
@@ -234,7 +252,8 @@ class DomainName(pulumi.CustomResource):
                  args: Optional[DomainNameArgs] = None,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Resource Type definition for AWS::ApiGateway::DomainName.
+        The ``AWS::ApiGateway::DomainName`` resource specifies a custom domain name for your API in API Gateway.
+         You can use a custom domain name to provide a URL that's more intuitive and easier to recall. For more information about using custom domain names, see [Set up Custom Domain Name for an API in API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-custom-domains.html) in the *API Gateway Developer Guide*.
 
         ## Example Usage
         ### Example
@@ -299,6 +318,7 @@ class DomainName(pulumi.CustomResource):
                  mutual_tls_authentication: Optional[pulumi.Input[Union['DomainNameMutualTlsAuthenticationArgs', 'DomainNameMutualTlsAuthenticationArgsDict']]] = None,
                  ownership_verification_certificate_arn: Optional[pulumi.Input[builtins.str]] = None,
                  regional_certificate_arn: Optional[pulumi.Input[builtins.str]] = None,
+                 routing_mode: Optional[pulumi.Input['DomainNameRoutingMode']] = None,
                  security_policy: Optional[pulumi.Input[builtins.str]] = None,
                  tags: Optional[pulumi.Input[Sequence[pulumi.Input[Union['_root_inputs.TagArgs', '_root_inputs.TagArgsDict']]]]] = None,
                  __props__=None):
@@ -316,10 +336,12 @@ class DomainName(pulumi.CustomResource):
             __props__.__dict__["mutual_tls_authentication"] = mutual_tls_authentication
             __props__.__dict__["ownership_verification_certificate_arn"] = ownership_verification_certificate_arn
             __props__.__dict__["regional_certificate_arn"] = regional_certificate_arn
+            __props__.__dict__["routing_mode"] = routing_mode
             __props__.__dict__["security_policy"] = security_policy
             __props__.__dict__["tags"] = tags
             __props__.__dict__["distribution_domain_name"] = None
             __props__.__dict__["distribution_hosted_zone_id"] = None
+            __props__.__dict__["domain_name_arn"] = None
             __props__.__dict__["regional_domain_name"] = None
             __props__.__dict__["regional_hosted_zone_id"] = None
         replace_on_changes = pulumi.ResourceOptions(replace_on_changes=["domainName"])
@@ -350,12 +372,14 @@ class DomainName(pulumi.CustomResource):
         __props__.__dict__["distribution_domain_name"] = None
         __props__.__dict__["distribution_hosted_zone_id"] = None
         __props__.__dict__["domain_name"] = None
+        __props__.__dict__["domain_name_arn"] = None
         __props__.__dict__["endpoint_configuration"] = None
         __props__.__dict__["mutual_tls_authentication"] = None
         __props__.__dict__["ownership_verification_certificate_arn"] = None
         __props__.__dict__["regional_certificate_arn"] = None
         __props__.__dict__["regional_domain_name"] = None
         __props__.__dict__["regional_hosted_zone_id"] = None
+        __props__.__dict__["routing_mode"] = None
         __props__.__dict__["security_policy"] = None
         __props__.__dict__["tags"] = None
         return DomainName(resource_name, opts=opts, __props__=__props__)
@@ -393,6 +417,14 @@ class DomainName(pulumi.CustomResource):
         The custom domain name as an API host name, for example, `my-api.example.com` .
         """
         return pulumi.get(self, "domain_name")
+
+    @property
+    @pulumi.getter(name="domainNameArn")
+    def domain_name_arn(self) -> pulumi.Output[builtins.str]:
+        """
+        The ARN of the domain name. Supported only for private custom domain names.
+        """
+        return pulumi.get(self, "domain_name_arn")
 
     @property
     @pulumi.getter(name="endpointConfiguration")
@@ -441,6 +473,11 @@ class DomainName(pulumi.CustomResource):
         The region-specific Amazon Route 53 Hosted Zone ID of the regional endpoint.
         """
         return pulumi.get(self, "regional_hosted_zone_id")
+
+    @property
+    @pulumi.getter(name="routingMode")
+    def routing_mode(self) -> pulumi.Output[Optional['DomainNameRoutingMode']]:
+        return pulumi.get(self, "routing_mode")
 
     @property
     @pulumi.getter(name="securityPolicy")

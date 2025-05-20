@@ -7,6 +7,7 @@ __all__ = [
     "HTTPError",
     "BeakerClientError",
     "BeakerServerError",
+    "BeakerStreamConnectionClosedError",
     "BeakerServerUnavailableError",
     "RequestException",
     "BeakerConfigurationError",
@@ -19,6 +20,8 @@ __all__ = [
     "BeakerBudgetNotFound",
     "BeakerGroupNotFound",
     "BeakerQueueNotFound",
+    "BeakerQueueEntryNotFound",
+    "BeakerQueueWorkerNotFound",
     "BeakerImageNotFound",
     "BeakerDatasetNotFound",
     "BeakerSecretNotFound",
@@ -39,6 +42,8 @@ __all__ = [
     "BeakerUnexpectedEOFError",
     "BeakerChecksumFailedError",
     "BeakerDockerError",
+    "BeakerWorkerThreadError",
+    "BeakerCreateQueueEntryFailedError",
 ]
 
 
@@ -52,6 +57,13 @@ class BeakerClientError(BeakerError):
 
 class BeakerServerError(BeakerError):
     pass
+
+
+class BeakerStreamConnectionClosedError(BeakerServerError):
+    """
+    Raised when the server closes a long-running streaming connection prematurely.
+    See https://github.com/allenai/beaker/issues/6532.
+    """
 
 
 class BeakerServerUnavailableError(BeakerServerError):
@@ -96,6 +108,14 @@ class BeakerGroupNotFound(BeakerNotFoundError):
 
 class BeakerQueueNotFound(BeakerNotFoundError):
     """Raised when a specified queue doesn't exist."""
+
+
+class BeakerQueueEntryNotFound(BeakerNotFoundError):
+    """Raised when a specified queue entry doesn't exist."""
+
+
+class BeakerQueueWorkerNotFound(BeakerNotFoundError):
+    """Raised when a specified queue worker doesn't exist."""
 
 
 class BeakerJobNotFound(BeakerNotFoundError):
@@ -176,3 +196,15 @@ class BeakerChecksumFailedError(BeakerError):
 
 class BeakerDockerError(BeakerError):
     pass
+
+
+class BeakerWorkerThreadError(BeakerError):
+    """
+    Raised when a worker thread dies.
+    """
+
+
+class BeakerCreateQueueEntryFailedError(BeakerError):
+    """
+    Raised when creating a new queue entry fails.
+    """

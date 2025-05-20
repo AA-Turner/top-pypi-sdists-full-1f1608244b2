@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: codeforlife-portal
-Version: 8.6.10
+Version: 8.6.11
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Framework :: Django
@@ -8,7 +8,7 @@ Description-Content-Type: text/markdown
 License-File: LICENSE.md
 Requires-Dist: asgiref==3.8.1; python_version >= "3.8"
 Requires-Dist: certifi==2025.4.26; python_version >= "3.6"
-Requires-Dist: cfl-common==8.6.10
+Requires-Dist: cfl-common==8.6.11
 Requires-Dist: chardet==5.2.0; python_version >= "3.7"
 Requires-Dist: charset-normalizer==3.4.2; python_version >= "3.7"
 Requires-Dist: diff-match-patch==20241021; python_version >= "3.7"
@@ -60,7 +60,7 @@ Requires-Dist: asttokens==3.0.0; python_version >= "3.8" and extra == "dev"
 Requires-Dist: attrs==25.3.0; python_version >= "3.8" and extra == "dev"
 Requires-Dist: black==25.1.0; python_version >= "3.9" and extra == "dev"
 Requires-Dist: certifi==2025.4.26; python_version >= "3.6" and extra == "dev"
-Requires-Dist: cfl-common==8.6.10; extra == "dev"
+Requires-Dist: cfl-common==8.6.11; extra == "dev"
 Requires-Dist: charset-normalizer==3.4.2; python_version >= "3.7" and extra == "dev"
 Requires-Dist: click==8.1.8; python_version >= "3.7" and extra == "dev"
 Requires-Dist: coverage[toml]==7.8.0; python_version >= "3.9" and extra == "dev"

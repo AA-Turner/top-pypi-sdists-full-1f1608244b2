@@ -155,6 +155,7 @@ THIRD_PARTY_SUPPORTED_VERSIONS = {
     "fastapi": ((0, 71), (0, 115)),
     "flask": ((1, 1), (3, 1)),
     "genshi": ((0, 7), (0, 7)),
+    "graphene": ((3, 4), (3, 4)),
     "httpx": ((0,), (0,)),
     "jinja2": ((2, 10), (3, 1)),  # min version required by our min version of flask
     "loguru": ((0, 7), (0, 7)),

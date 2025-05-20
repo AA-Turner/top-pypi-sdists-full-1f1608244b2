@@ -7,12 +7,8 @@ from typing import Optional
 import click
 
 from anyscale.authenticate import get_auth_api_client
+from anyscale.client.openapi_client.models import StartSessionOptions
 from anyscale.formatters import common_formatter
-from anyscale.sdk.anyscale_client import (
-    StartSessionOptions,
-    TerminateSessionOptions,
-    UpdateSession,
-)
 
 
 @click.group(
@@ -56,29 +52,6 @@ def get_session(session_id: str) -> None:
     print(common_formatter.prettify_json(response.to_dict()))
 
 
-@sessions.command(name="update", short_help="Updates a Session.")
-@click.argument("session_id", required=True)
-@click.argument("cluster_config", required=False)
-@click.option(
-    "--idle-timeout", required=False, help="Idle timeout (in minutes)", type=int,
-)
-def update_session(
-    session_id: str, cluster_config: Optional[str], idle_timeout: Optional[int]
-) -> None:
-    """
-    Updates Session SESSION_ID with CLUSTER_CONFIG and/or idle-timeout.
-    """
-
-    api_client = get_auth_api_client().anyscale_api_client
-    update_data = UpdateSession(
-        cluster_config=cluster_config, idle_timeout=idle_timeout
-    )
-    response = api_client.update_session(session_id, update_data)
-    print(response)
-
-    print(common_formatter.prettify_json(response.to_dict()))
-
-
 @sessions.command(name="delete", short_help="Deletes a Session.")
 @click.argument("session_id", required=True)
 def delete_session(session_id: str) -> None:
@@ -107,46 +80,4 @@ def start_session(session_id: str, cluster_config: Optional[str]) -> None:
     api_client = get_auth_api_client().anyscale_api_client
     start_session_options = StartSessionOptions(cluster_config=cluster_config)
     response = api_client.start_session(session_id, start_session_options)
-    print(common_formatter.prettify_json(response.to_dict()))
-
-
-@sessions.command(name="terminate", short_help="Sets session goal state to Terminated.")
-@click.argument("session_id", required=True)
-@click.argument("workers_only", required=False, default=False)
-@click.argument("keep_min_workers", required=False, default=False)
-@click.argument("delete", required=False, default=False)
-@click.argument("take_snapshot", required=False, default=True)
-def terminate_session(
-    session_id: str,
-    workers_only: bool,
-    keep_min_workers: bool,
-    delete: bool,
-    take_snapshot: bool,
-) -> None:
-    """Sets session goal state to Terminated.
-    A session with goal state Terminated will eventually
-    transition from its current state to Terminated, or
-    remain Terminated if its current state is already Terminated.
-    Retrieves the corresponding session operation.
-
-    workers_only: Default False. Only destroy the workers when stopping.
-
-    keep_min_workers: Default False. Retain the minimal amount of workers
-    specified in the config when stopping.
-
-    delete: Default False. Delete the session after terminating.
-
-    take_snapshot: Default True. Takes a snapshot to preserve the state of
-    the session before terminating. The state will be restored
-    the next time the session is started.
-    """
-
-    api_client = get_auth_api_client().anyscale_api_client
-    terminate_session_options = TerminateSessionOptions(
-        workers_only=workers_only,
-        keep_min_workers=keep_min_workers,
-        delete=delete,
-        take_snapshot=take_snapshot,
-    )
-    response = api_client.terminate_session(session_id, terminate_session_options)
     print(common_formatter.prettify_json(response.to_dict()))

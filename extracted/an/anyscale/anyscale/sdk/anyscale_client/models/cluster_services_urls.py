@@ -39,6 +39,7 @@ class ClusterServicesUrls(object):
         'train_metrics_dashboard_url': 'str',
         'serve_metrics_dashboard_url': 'str',
         'serve_deployment_metrics_dashboard_url': 'str',
+        'serve_llm_metrics_dashboard_url': 'str',
         'persistent_metrics_url': 'str',
         'connect_url': 'str',
         'jupyter_notebook_url': 'str',
@@ -54,6 +55,7 @@ class ClusterServicesUrls(object):
         'train_metrics_dashboard_url': 'train_metrics_dashboard_url',
         'serve_metrics_dashboard_url': 'serve_metrics_dashboard_url',
         'serve_deployment_metrics_dashboard_url': 'serve_deployment_metrics_dashboard_url',
+        'serve_llm_metrics_dashboard_url': 'serve_llm_metrics_dashboard_url',
         'persistent_metrics_url': 'persistent_metrics_url',
         'connect_url': 'connect_url',
         'jupyter_notebook_url': 'jupyter_notebook_url',
@@ -62,7 +64,7 @@ class ClusterServicesUrls(object):
         'user_service_url': 'user_service_url'
     }
 
-    def __init__(self, webterminal_auth_url=None, metrics_dashboard_url=None, data_metrics_dashboard_url=None, train_metrics_dashboard_url=None, serve_metrics_dashboard_url=None, serve_deployment_metrics_dashboard_url=None, persistent_metrics_url=None, connect_url=None, jupyter_notebook_url=None, ray_dashboard_url=None, service_proxy_url=None, user_service_url=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, webterminal_auth_url=None, metrics_dashboard_url=None, data_metrics_dashboard_url=None, train_metrics_dashboard_url=None, serve_metrics_dashboard_url=None, serve_deployment_metrics_dashboard_url=None, serve_llm_metrics_dashboard_url=None, persistent_metrics_url=None, connect_url=None, jupyter_notebook_url=None, ray_dashboard_url=None, service_proxy_url=None, user_service_url=None, local_vars_configuration=None):  # noqa: E501
         """ClusterServicesUrls - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -74,6 +76,7 @@ class ClusterServicesUrls(object):
         self._train_metrics_dashboard_url = None
         self._serve_metrics_dashboard_url = None
         self._serve_deployment_metrics_dashboard_url = None
+        self._serve_llm_metrics_dashboard_url = None
         self._persistent_metrics_url = None
         self._connect_url = None
         self._jupyter_notebook_url = None
@@ -94,6 +97,8 @@ class ClusterServicesUrls(object):
             self.serve_metrics_dashboard_url = serve_metrics_dashboard_url
         if serve_deployment_metrics_dashboard_url is not None:
             self.serve_deployment_metrics_dashboard_url = serve_deployment_metrics_dashboard_url
+        if serve_llm_metrics_dashboard_url is not None:
+            self.serve_llm_metrics_dashboard_url = serve_llm_metrics_dashboard_url
         if persistent_metrics_url is not None:
             self.persistent_metrics_url = persistent_metrics_url
         if connect_url is not None:
@@ -244,6 +249,29 @@ class ClusterServicesUrls(object):
         """
 
         self._serve_deployment_metrics_dashboard_url = serve_deployment_metrics_dashboard_url
+
+    @property
+    def serve_llm_metrics_dashboard_url(self):
+        """Gets the serve_llm_metrics_dashboard_url of this ClusterServicesUrls.  # noqa: E501
+
+        URL for the serve LLM Grafana dashboard.  # noqa: E501
+
+        :return: The serve_llm_metrics_dashboard_url of this ClusterServicesUrls.  # noqa: E501
+        :rtype: str
+        """
+        return self._serve_llm_metrics_dashboard_url
+
+    @serve_llm_metrics_dashboard_url.setter
+    def serve_llm_metrics_dashboard_url(self, serve_llm_metrics_dashboard_url):
+        """Sets the serve_llm_metrics_dashboard_url of this ClusterServicesUrls.
+
+        URL for the serve LLM Grafana dashboard.  # noqa: E501
+
+        :param serve_llm_metrics_dashboard_url: The serve_llm_metrics_dashboard_url of this ClusterServicesUrls.  # noqa: E501
+        :type: str
+        """
+
+        self._serve_llm_metrics_dashboard_url = serve_llm_metrics_dashboard_url
 
     @property
     def persistent_metrics_url(self):

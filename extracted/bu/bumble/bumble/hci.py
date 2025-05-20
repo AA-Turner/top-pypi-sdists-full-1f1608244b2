@@ -29,13 +29,12 @@ from typing_extensions import Self
 from bumble import crypto
 from bumble.colors import color
 from bumble.core import (
-    PhysicalTransport,
     AdvertisingData,
     DeviceClass,
     InvalidArgumentError,
     InvalidPacketError,
-    ProtocolError,
     PhysicalTransport,
+    ProtocolError,
     bit_flags_to_strings,
     name_or_number,
     padded_bytes,
@@ -225,6 +224,7 @@ HCI_CONNECTIONLESS_PERIPHERAL_BROADCAST_CHANNEL_MAP_CHANGE_EVENT = 0X55
 HCI_INQUIRY_RESPONSE_NOTIFICATION_EVENT                          = 0X56
 HCI_AUTHENTICATED_PAYLOAD_TIMEOUT_EXPIRED_EVENT                  = 0X57
 HCI_SAM_STATUS_CHANGE_EVENT                                      = 0X58
+HCI_ENCRYPTION_CHANGE_V2_EVENT                                   = 0x59
 
 HCI_VENDOR_EVENT = 0xFF
 
@@ -3364,6 +3364,20 @@ class HCI_Set_Event_Mask_Page_2_Command(HCI_Command):
     See Bluetooth spec @ 7.3.69 Set Event Mask Page 2 Command
     '''
 
+    @staticmethod
+    def mask(event_codes: Iterable[int]) -> bytes:
+        '''
+        Compute the event mask value for a list of events.
+        '''
+        # NOTE: this implementation takes advantage of the fact that as of version 6.0
+        # of the core specification, the bit number for each event code is equal to 64
+        # less than the event code.
+        # If future versions of the specification deviate from that, a different
+        # implementation would be needed.
+        return sum((1 << event_code - 64) for event_code in event_codes).to_bytes(
+            8, 'little'
+        )
+
 
 # -----------------------------------------------------------------------------
 @HCI_Command.command(
@@ -5976,6 +5990,33 @@ class HCI_LE_Enhanced_Connection_Complete_Event(HCI_LE_Meta_Event):
     [
         ('status', STATUS_SPEC),
         ('connection_handle', 2),
+        (
+            'role',
+            {'size': 1, 'mapper': lambda x: 'CENTRAL' if x == 0 else 'PERIPHERAL'},
+        ),
+        ('peer_address_type', Address.ADDRESS_TYPE_SPEC),
+        ('peer_address', Address.parse_address_preceded_by_type),
+        ('local_resolvable_private_address', Address.parse_random_address),
+        ('peer_resolvable_private_address', Address.parse_random_address),
+        ('connection_interval', 2),
+        ('peripheral_latency', 2),
+        ('supervision_timeout', 2),
+        ('central_clock_accuracy', 1),
+        ('advertising_handle', 1),
+        ('sync_handle', 2),
+    ]
+)
+class HCI_LE_Enhanced_Connection_Complete_V2_Event(HCI_LE_Meta_Event):
+    '''
+    See Bluetooth spec @ 7.7.65.10 LE Enhanced Connection Complete Event
+    '''
+
+
+# -----------------------------------------------------------------------------
+@HCI_LE_Meta_Event.event(
+    [
+        ('status', STATUS_SPEC),
+        ('connection_handle', 2),
         ('tx_phy', {'size': 1, 'mapper': HCI_Constant.le_phy_name}),
         ('rx_phy', {'size': 1, 'mapper': HCI_Constant.le_phy_name}),
     ]
@@ -6948,6 +6989,30 @@ class HCI_Encryption_Change_Event(HCI_Event):
         return name_or_number(
             HCI_Encryption_Change_Event.ENCRYPTION_ENABLED_NAMES, encryption_enabled
         )
+
+
+# -----------------------------------------------------------------------------
+@HCI_Event.event(
+    [
+        ('status', STATUS_SPEC),
+        ('connection_handle', 2),
+        (
+            'encryption_enabled',
+            {
+                'size': 1,
+                # pylint: disable-next=unnecessary-lambda
+                'mapper': lambda x: HCI_Encryption_Change_Event.encryption_enabled_name(
+                    x
+                ),
+            },
+        ),
+        ('encryption_key_size', 1),
+    ]
+)
+class HCI_Encryption_Change_V2_Event(HCI_Event):
+    '''
+    See Bluetooth spec @ 7.7.8 Encryption Change Event
+    '''
 
 
 # -----------------------------------------------------------------------------

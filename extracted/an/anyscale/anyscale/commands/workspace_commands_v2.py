@@ -86,7 +86,7 @@ def workspace_cli() -> None:
     required=False,
     default=None,
     type=str,
-    help="The Ray version (X.Y.Z) to the image specified by --image-uri. This is only used when --image-uri is provided. If not provided, the latest Ray version will be used.",
+    help="The Ray version (X.Y.Z) to the image specified by --image-uri. This is only used when --image-uri is provided. If you don't specify a Ray version, Anyscale defaults to the latest Ray version available at the time of the Anyscale CLI/SDK release.",
 )
 @click.option(
     "--compute-config",

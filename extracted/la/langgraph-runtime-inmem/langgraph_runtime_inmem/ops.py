@@ -26,7 +26,6 @@ from starlette.exceptions import HTTPException
 from langgraph_runtime_inmem.checkpoint import Checkpointer
 from langgraph_runtime_inmem.database import InMemConnectionProto, connect
 from langgraph_runtime_inmem.inmem_stream import Message, get_stream_manager
-from langgraph_runtime_inmem.store import Store
 
 if typing.TYPE_CHECKING:
     from langgraph_api.asyncio import ValueEvent
@@ -51,6 +50,7 @@ if typing.TYPE_CHECKING:
     )
     from langgraph_api.serde import Fragment
 
+
 logger = structlog.stdlib.get_logger(__name__)
 
 
@@ -60,6 +60,13 @@ def _ensure_uuid(id_: str | uuid.UUID | None) -> uuid.UUID:
     if id_ is None:
         return uuid4()
     return id_
+
+
+def _snapshot_defaults():
+    # Support older versions of langgraph
+    if not hasattr(StateSnapshot, "interrupts"):
+        return {}
+    return {"interrupts": tuple()}
 
 
 class WrappedHTTPException(Exception):
@@ -157,9 +164,9 @@ class Assistants(Authenticated):
             # Use case-insensitive sorting for string fields
             if sort_by in ["name", "graph_id"]:
                 filtered_assistants.sort(
-                    key=lambda x: str(x.get(sort_by, "")).lower()
-                    if x.get(sort_by)
-                    else "",
+                    key=lambda x: (
+                        str(x.get(sort_by, "")).lower() if x.get(sort_by) else ""
+                    ),
                     reverse=reverse,
                 )
             else:
@@ -1050,6 +1057,7 @@ class Threads(Authenticated):
         ) -> StateSnapshot:
             """Get state for a thread."""
             from langgraph_api.graph import get_graph
+            from langgraph_api.store import get_store
 
             checkpointer = await asyncio.to_thread(
                 Checkpointer, conn, unpack_hook=_msgpack_ext_hook_to_json
@@ -1069,7 +1077,7 @@ class Threads(Authenticated):
                     created_at=None,
                     parent_config=None,
                     tasks=tuple(),
-                    interrupts=tuple(),
+                    **_snapshot_defaults(),
                 )
 
             metadata = thread.get("metadata", {})
@@ -1079,7 +1087,10 @@ class Threads(Authenticated):
                 # format latest checkpoint for response
                 checkpointer.latest_iter = checkpoint
                 async with get_graph(
-                    graph_id, thread_config, checkpointer=checkpointer, store=Store()
+                    graph_id,
+                    thread_config,
+                    checkpointer=checkpointer,
+                    store=(await get_store()),
                 ) as graph:
                     result = await graph.aget_state(config, subgraphs=subgraphs)
                     if (
@@ -1098,7 +1109,7 @@ class Threads(Authenticated):
                     created_at=None,
                     parent_config=None,
                     tasks=tuple(),
-                    interrupts=tuple(),
+                    **_snapshot_defaults(),
                 )
 
         @staticmethod
@@ -1112,6 +1123,7 @@ class Threads(Authenticated):
             """Add state to a thread."""
             from langgraph_api.graph import get_graph
             from langgraph_api.schema import ThreadUpdateResponse
+            from langgraph_api.store import get_store
             from langgraph_api.utils import fetchone
 
             thread_id = _ensure_uuid(config["configurable"]["thread_id"])
@@ -1154,7 +1166,10 @@ class Threads(Authenticated):
 
                 checkpointer.latest_iter = checkpoint
                 async with get_graph(
-                    graph_id, thread_config, checkpointer=checkpointer, store=Store()
+                    graph_id,
+                    thread_config,
+                    checkpointer=checkpointer,
+                    store=(await get_store()),
                 ) as graph:
                     update_config = config.copy()
                     update_config["configurable"] = {
@@ -1200,6 +1215,7 @@ class Threads(Authenticated):
             from langgraph_api.command import map_cmd
             from langgraph_api.graph import get_graph
             from langgraph_api.schema import ThreadUpdateResponse
+            from langgraph_api.store import get_store
             from langgraph_api.utils import fetchone
 
             thread_id = _ensure_uuid(config["configurable"]["thread_id"])
@@ -1231,7 +1247,7 @@ class Threads(Authenticated):
                     graph_id,
                     thread_config,
                     checkpointer=Checkpointer(conn),
-                    store=Store(),
+                    store=(await get_store()),
                 ) as graph:
                     next_config = await graph.abulk_update_state(
                         config,
@@ -1279,6 +1295,7 @@ class Threads(Authenticated):
         ) -> list[StateSnapshot]:
             """Get the history of a thread."""
             from langgraph_api.graph import get_graph
+            from langgraph_api.store import get_store
             from langgraph_api.utils import fetchone
 
             thread_id = _ensure_uuid(config["configurable"]["thread_id"])
@@ -1306,7 +1323,7 @@ class Threads(Authenticated):
                     checkpointer=await asyncio.to_thread(
                         Checkpointer, conn, unpack_hook=_msgpack_ext_hook_to_json
                     ),
-                    store=Store(),
+                    store=(await get_store()),
                 ) as graph:
                     # Convert before parameter if it's a string
                     before_param = (

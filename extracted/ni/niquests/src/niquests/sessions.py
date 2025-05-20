@@ -547,10 +547,12 @@ class Session:
             base_url=self.base_url,
         )
 
-        prep: PreparedRequest = dispatch_hook(
+        prep: PreparedRequest = self.prepare_request(req)
+
+        prep = dispatch_hook(
             "pre_request",
-            hooks,  # type: ignore[arg-type]
-            self.prepare_request(req),
+            prep.hooks,  # type: ignore[arg-type]
+            prep,
         )
 
         assert prep.url is not None
@@ -1266,7 +1268,7 @@ class Session:
         request.conn_info = _deepcopy_ci(request.conn_info)
 
         # We are leveraging a multiplexed connection
-        if r.lazy is True:
+        if hasattr(r, "lazy") and r.lazy is True:
             r._resolve_redirect = lambda x, y: next(
                 self.resolve_redirects(x, y, yield_requests=True, **kwargs),  # type: ignore
                 None,
@@ -1690,7 +1692,7 @@ class Session:
                 # If the initial request was intended to be lazy but didn't meet required criteria
                 # e.g. Setting multiplexed=True, requesting HTTP/1.1 only capable and getting redirected
                 # to an HTTP/2+ endpoint.
-                if resp.lazy:
+                if hasattr(resp, "lazy") and resp.lazy:
                     resp.status_code
 
                 extract_cookies_to_jar(self.cookies, prepared_request, resp.raw)

@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from enum import Enum
 
-from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast
+from transformers.tokenization_utils import PreTrainedTokenizer
+from transformers.tokenization_utils_fast import PreTrainedTokenizerFast
 
 from llm_guard.model import Model
 from llm_guard.transformers_helpers import get_tokenizer_and_model_for_classification, pipeline
@@ -167,7 +168,7 @@ class PromptInjection(Scanner):
 
     def scan(self, prompt: str) -> tuple[str, bool, float]:
         if prompt.strip() == "":
-            return prompt, True, 0.0
+            return prompt, True, -1.0
 
         highest_score = 0.0
         results_all = self._pipeline(self._match_type.get_inputs(prompt))
@@ -187,4 +188,4 @@ class PromptInjection(Scanner):
 
         LOGGER.debug("No prompt injection detected", highest_score=highest_score)
 
-        return prompt, True, 0.0
+        return prompt, True, calculate_risk_score(highest_score, self._threshold)

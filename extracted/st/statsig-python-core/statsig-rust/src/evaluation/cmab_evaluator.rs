@@ -4,6 +4,7 @@ use crate::evaluation::evaluation_types::SecondaryExposure;
 use crate::evaluation::evaluator::SpecType;
 use crate::evaluation::evaluator_context::EvaluatorContext;
 use crate::evaluation::get_unit_id::get_unit_id;
+use crate::event_logging::exposable_string::ExposableString;
 use crate::specs_response::cmab_types::{CMABConfig, CMABGroup, CMABGroupConfig};
 use crate::unwrap_or_return;
 use lazy_static::lazy_static;
@@ -14,17 +15,19 @@ use serde_json::Value;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 
+const EXPLORE_RULE_ID_SUFFIX: &str = "explore";
+
 lazy_static! {
-    static ref EMPTY_STR: String = String::new();
-    static ref NOT_STARTED_RULE: String = "prestart".to_string();
-    static ref FAILS_TARGETING: String = "inlineTargetingRules".to_string();
+    static ref NOT_STARTED_RULE: ExposableString = ExposableString::new("prestart".to_string());
+    static ref FAILS_TARGETING: ExposableString =
+        ExposableString::new("inlineTargetingRules".to_string());
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct CMABRankedGroup {
     pub score: f64,
     pub variant_name: String,
-    pub rule_id: String,
+    pub rule_id: ExposableString,
     pub value: Option<HashMap<String, Value>>,
     pub cmab_name: String,
 }
@@ -74,7 +77,7 @@ pub fn get_cmab_ranked_list(ctx: &mut EvaluatorContext, name: &str) -> Vec<CMABR
             .map(|group| CMABRankedGroup {
                 score: 0.0001,
                 variant_name: group.name.clone(),
-                rule_id: group.id.clone() + ":explore",
+                rule_id: ExposableString::new(format!("{}:explore", group.id.as_str())),
                 value: group.parameter_values.get_json(),
                 cmab_name: name.to_string(),
             })
@@ -185,7 +188,7 @@ fn get_passes_targeting<'a>(ctx: &mut EvaluatorContext<'a>, cmab: &'a CMABConfig
     let expo = SecondaryExposure {
         gate: targeting_gate_name.clone(),
         gate_value: result.to_string(),
-        rule_id: ctx.result.rule_id.unwrap_or(&EMPTY_STR).clone(),
+        rule_id: ctx.result.rule_id.cloned().unwrap_or_default(),
     };
 
     ctx.result.secondary_exposures.push(expo);
@@ -227,7 +230,7 @@ fn apply_sampling_group<'a>(
 ) -> bool {
     let mut total_records: f64 = 0.0;
     for group in &cmab.groups {
-        let cur_count = match config.get(&group.id) {
+        let cur_count = match config.get(group.id.as_str()) {
             Some(config_for_group) => config_for_group.records + 1,
             None => 1,
         };
@@ -238,14 +241,14 @@ fn apply_sampling_group<'a>(
     let mut rng = rand::thread_rng();
     let value: f64 = rng.gen::<f64>();
     for group in &cmab.groups {
-        let cur_count = match config.get(&group.id) {
+        let cur_count = match config.get(group.id.as_str()) {
             Some(config_for_group) => config_for_group.records + 1,
             None => 1,
         };
         sum += 1.0 / (cur_count as f64) / total_records;
         if value < sum {
             ctx.result.rule_id = Some(&group.id);
-            ctx.result.rule_id_suffix = Some("explore".to_string());
+            ctx.result.rule_id_suffix = Some(EXPLORE_RULE_ID_SUFFIX);
             ctx.result.bool_value = true;
             ctx.result.group_name = Some(&group.name);
             ctx.result.json_value = group.parameter_values.get_json();
@@ -298,7 +301,7 @@ fn get_cmab_score_for_group(
     config: &HashMap<String, CMABGroupConfig>,
 ) -> Option<f64> {
     let mut score = 0.0;
-    let config_for_group = config.get(&group.id)?;
+    let config_for_group = config.get(group.id.as_str())?;
     let weights_numerical = &config_for_group.weights_numerical;
     let weights_categorical = &config_for_group.weights_categorical;
     if weights_numerical.is_empty() && weights_categorical.is_empty() {

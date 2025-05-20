@@ -4,11 +4,19 @@ import logging
 import time
 import urllib.parse
 from functools import cached_property, wraps
-from typing import TYPE_CHECKING, Any, Callable, Generator, Generic, Type, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Generator,
+    Generic,
+    Iterable,
+    Type,
+    TypeVar,
+)
 
 import grpc
 import requests
-from google.protobuf.json_format import MessageToDict
 from google.protobuf.message import Message
 
 from . import beaker_pb2 as pb2
@@ -16,6 +24,7 @@ from . import beaker_pb2_grpc
 from .config import Config
 from .exceptions import *
 from .exceptions import BeakerQueueNotFound
+from .utils import pb2_to_dict
 
 if TYPE_CHECKING:
     from .client import Beaker
@@ -39,6 +48,10 @@ class RpcMethod(Generic[T]):
         except RpcError as e:
             raise coerce_rpc_error(e, exceptions_for_status)
 
+    @property
+    def name(self) -> str:
+        return self.method._method.decode()  # type: ignore
+
 
 class RpcStreamingMethod(Generic[T]):
     def __init__(self, method: grpc.UnaryStreamMultiCallable):
@@ -54,6 +67,30 @@ class RpcStreamingMethod(Generic[T]):
             yield from self.method(request, **kwargs)
         except RpcError as e:
             raise coerce_rpc_error(e, exceptions_for_status)
+
+    @property
+    def name(self) -> str:
+        return self.method._method.decode()  # type: ignore
+
+
+class RpcBidirectionalStreamingMethod(Generic[T]):
+    def __init__(self, method: grpc.StreamStreamMultiCallable):
+        self.method = method
+
+    def __call__(
+        self,
+        request: Iterable[Message],
+        exceptions_for_status: dict[grpc.StatusCode, Exception] | None = None,
+        **kwargs,
+    ) -> Generator[T, None, None]:
+        try:
+            yield from self.method(request, **kwargs)
+        except RpcError as e:
+            raise coerce_rpc_error(e, exceptions_for_status)
+
+    @property
+    def name(self) -> str:
+        return self.method._method.decode()  # type: ignore
 
 
 def coerce_rpc_error(
@@ -72,7 +109,10 @@ def coerce_rpc_error(
         elif status == grpc.StatusCode.INVALID_ARGUMENT:
             return BeakerClientError(e.details())
         elif status == grpc.StatusCode.INTERNAL:
-            return BeakerServerError(e.details())
+            if "RST_STREAM" in e.details():
+                return BeakerStreamConnectionClosedError(e.details())
+            else:
+                return BeakerServerError(e.details())
         elif status == grpc.StatusCode.UNAVAILABLE:
             return BeakerServerUnavailableError(e.details())
     return e
@@ -128,7 +168,7 @@ class ServiceClient:
             # Validate request data.
             request_data: str | bytes | io.BufferedReader | io.BytesIO | None = None
             if isinstance(data, Message):
-                request_data = json.dumps(MessageToDict(data))
+                request_data = json.dumps(pb2_to_dict(data))
             elif isinstance(data, dict):
                 request_data = json.dumps(data)
             elif isinstance(data, (str, bytes, io.BufferedReader, io.BytesIO)):
@@ -217,7 +257,7 @@ class ServiceClient:
         exceptions_for_status: dict[grpc.StatusCode, Exception] | None = None,
         retriable: bool | None = None,
     ) -> T:
-        self.logger.debug(f"Sending RPC request '{request.__class__.__name__}'...")
+        self.logger.debug("Calling unary-unary RPC method '%s'", method.name)
 
         if retriable is None:
             request_name = request.__class__.__name__
@@ -241,7 +281,7 @@ class ServiceClient:
         exceptions_for_status: dict[grpc.StatusCode, Exception] | None = None,
         retriable: bool = True,
     ) -> Generator[T, None, None]:
-        self.logger.debug(f"Sending paged RPC request '{request.__class__.__name__}'...")
+        self.logger.debug("Calling paged unary-unary RPC method '%s'", method.name)
 
         method_to_call = self._retriable()(method) if retriable else method
         response = method_to_call(
@@ -266,7 +306,20 @@ class ServiceClient:
         request: Message,
         exceptions_for_status: dict[grpc.StatusCode, Exception] | None = None,
     ) -> Generator[T, None, None]:
-        self.logger.debug(f"Sending streaming RPC request '{request.__class__.__name__}'...")
+        self.logger.debug("Calling unary-streaming RPC method '%s'", method.name)
+        yield from method(
+            request,
+            exceptions_for_status=exceptions_for_status,
+            metadata=self._rpc_call_metadata,
+        )
+
+    def rpc_bidirectional_streaming_request(
+        self,
+        method: RpcBidirectionalStreamingMethod[T],
+        request: Iterable[Message],
+        exceptions_for_status: dict[grpc.StatusCode, Exception] | None = None,
+    ) -> Generator[T, None, None]:
+        self.logger.debug("Calling bidirectional-streaming RPC method '%s'", method.name)
         yield from method(
             request,
             exceptions_for_status=exceptions_for_status,
@@ -482,9 +535,12 @@ class ServiceClient:
     def _url_quote(self, id: str) -> str:
         return urllib.parse.quote(id, safe="")
 
-    def _log_and_wait(self, retries_so_far: int, err: Exception) -> None:
+    def _log_and_wait(
+        self, retries_so_far: int, err: Exception, log_level: int = logging.WARNING
+    ) -> None:
         retry_in = min(self.beaker.BACKOFF_FACTOR * (2**retries_so_far), self.beaker.BACKOFF_MAX)
-        self.logger.warning(
+        self.logger.log(
+            log_level,
             "Request failed with retriable error: %s: %s\nRetrying in %d second(s)...",
             err.__class__.__name__,
             err,

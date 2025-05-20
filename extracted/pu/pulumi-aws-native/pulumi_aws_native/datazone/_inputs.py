@@ -121,6 +121,8 @@ __all__ = [
     'EnvironmentParameterArgsDict',
     'EnvironmentProfileEnvironmentParameterArgs',
     'EnvironmentProfileEnvironmentParameterArgsDict',
+    'OwnerPropertiesArgs',
+    'OwnerPropertiesArgsDict',
     'ProjectMembershipMember0PropertiesArgs',
     'ProjectMembershipMember0PropertiesArgsDict',
     'ProjectMembershipMember1PropertiesArgs',
@@ -2435,6 +2437,10 @@ if not MYPY:
         """
         The single-sign on configuration of the Amazon DataZone domain.
         """
+        idc_instance_arn: NotRequired[pulumi.Input[builtins.str]]
+        """
+        The ARN of the IDC instance.
+        """
         type: NotRequired[pulumi.Input['DomainAuthType']]
         """
         The type of single sign-on in Amazon DataZone.
@@ -2449,17 +2455,33 @@ elif False:
 @pulumi.input_type
 class DomainSingleSignOnArgs:
     def __init__(__self__, *,
+                 idc_instance_arn: Optional[pulumi.Input[builtins.str]] = None,
                  type: Optional[pulumi.Input['DomainAuthType']] = None,
                  user_assignment: Optional[pulumi.Input['DomainUserAssignment']] = None):
         """
         The single-sign on configuration of the Amazon DataZone domain.
+        :param pulumi.Input[builtins.str] idc_instance_arn: The ARN of the IDC instance.
         :param pulumi.Input['DomainAuthType'] type: The type of single sign-on in Amazon DataZone.
         :param pulumi.Input['DomainUserAssignment'] user_assignment: The single sign-on user assignment in Amazon DataZone.
         """
+        if idc_instance_arn is not None:
+            pulumi.set(__self__, "idc_instance_arn", idc_instance_arn)
         if type is not None:
             pulumi.set(__self__, "type", type)
         if user_assignment is not None:
             pulumi.set(__self__, "user_assignment", user_assignment)
+
+    @property
+    @pulumi.getter(name="idcInstanceArn")
+    def idc_instance_arn(self) -> Optional[pulumi.Input[builtins.str]]:
+        """
+        The ARN of the IDC instance.
+        """
+        return pulumi.get(self, "idc_instance_arn")
+
+    @idc_instance_arn.setter
+    def idc_instance_arn(self, value: Optional[pulumi.Input[builtins.str]]):
+        pulumi.set(self, "idc_instance_arn", value)
 
     @property
     @pulumi.getter
@@ -2684,6 +2706,24 @@ class EnvironmentProfileEnvironmentParameterArgs:
     @value.setter
     def value(self, value: Optional[pulumi.Input[builtins.str]]):
         pulumi.set(self, "value", value)
+
+
+if not MYPY:
+    class OwnerPropertiesArgsDict(TypedDict):
+        """
+        The properties of a domain unit's owner.
+        """
+        pass
+elif False:
+    OwnerPropertiesArgsDict: TypeAlias = Mapping[str, Any]
+
+@pulumi.input_type
+class OwnerPropertiesArgs:
+    def __init__(__self__):
+        """
+        The properties of a domain unit's owner.
+        """
+        pass
 
 
 if not MYPY:

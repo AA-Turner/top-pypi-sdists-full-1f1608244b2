@@ -2,24 +2,21 @@ import setuptools
 import numpy
 import sys, os
 import platform
-from distutils.core import setup
-from distutils.core import Command
+from setuptools import setup
+from setuptools import Command
 from findblas.distutils import build_ext_with_blas
-from distutils.extension import Extension
+from setuptools.extension import Extension
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize
 from setuptools import dist
-from distutils.sysconfig import get_config_var, get_python_inc
-from distutils.version import LooseVersion
-
-sys.path.insert(1, "src/")
-import dp_build
+from sysconfig import get_config_var
+from packaging.version import parse as LooseVersion
 
 # Make sure I have the right Python version.
-if sys.version_info[:2] < (3, 9):
+if sys.version_info[:2] < (3, 10):
     print(
         (
-            "fdasrsf requires Python 3.9 or newer. Python %d.%d detected"
+            "fdasrsf requires Python 3.10 or newer. Python %d.%d detected"
             % sys.version_info[:2]
         )
     )
@@ -118,15 +115,15 @@ extensions = [
         include_dirs=[numpy.get_include()],
         language="c++",
     ),
-    dp_build.ffibuilder.distutils_extension(),
 ]
 
 
 setup(
     cmdclass={"build_ext": build_ext_with_blas, "build_docs": build_docs},
     ext_modules=extensions,
+    cffi_modules=["src/dp_build.py:ffibuilder"],
     name="fdasrsf",
-    version="2.6.1",
+    version="2.6.2",
     packages=["fdasrsf"],
     url="http://research.tetonedge.net",
     license="LICENSE.txt",
@@ -143,6 +140,6 @@ setup(
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Mathematics",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
 )

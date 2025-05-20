@@ -6621,6 +6621,7 @@ def nasa_opera_gui(
     position: Optional[str] = "topright",
     opened: Optional[bool] = True,
     default_dataset: Optional[str] = "OPERA_L3_DSWX-HLS_V1",
+    backend: Optional[str] = "ipyleaflet",
     **kwargs,
 ):
     """Search NASA Earth data interactive
@@ -6630,6 +6631,7 @@ def nasa_opera_gui(
         position (str, optional): The position of the widget. Defaults to "topright".
         opened (bool, optional): Whether to open the widget. Defaults to True.
         default_dataset (str, optional): The default dataset. Defaults to "OPERA_L3_DSWX-HLS_V1".
+        backend (str, optional): The backend to use. Defaults to "ipyleaflet".
 
     Returns:
         ipywidgets: The tool GUI widget.
@@ -6642,6 +6644,9 @@ def nasa_opera_gui(
     from rasterio.session import AWSSession
     import xarray as xr
     import matplotlib.pyplot as plt
+    from pathlib import Path
+    from opera_utils.disp._remote import open_file
+    import netrc
 
     widget_width = "400px"
     padding = "0px 0px 0px 5px"  # upper, right, bottom, left
@@ -6706,6 +6711,11 @@ def nasa_opera_gui(
         GDAL_HTTP_COOKIEJAR=os.path.expanduser("~/cookies.txt"),
     )
     rio_env.__enter__()
+
+    # Parse credentials from the netrc file for ASF access
+    netrc_file = Path.home() / ".netrc"
+    auths = netrc.netrc(netrc_file)
+    username, _, password = auths.authenticators("urs.earthdata.nasa.gov")
 
     default_title = m._NASA_DATA[m._NASA_DATA["ShortName"] == default_dataset][
         "EntryTitle"
@@ -6913,12 +6923,16 @@ def nasa_opera_gui(
 
                         if len(results) > 0:
                             if "Footprints" in m.get_layer_names():
-                                m.remove(m.find_layer("Footprints"))
-                            if (
-                                hasattr(m, "_NASA_DATA_CTRL")
-                                and m._NASA_DATA_CTRL in m.controls
-                            ):
-                                m.remove(m._NASA_DATA_CTRL)
+                                if backend == "ipyleaflet":
+                                    m.remove(m.find_layer("Footprints"))
+                                # else:
+                                #     m.remove_layer("Footprints")
+                            if backend == "ipyleaflet":
+                                if (
+                                    hasattr(m, "_NASA_DATA_CTRL")
+                                    and m._NASA_DATA_CTRL in m.controls
+                                ):
+                                    m.remove(m._NASA_DATA_CTRL)
 
                             style = {
                                 # "stroke": True,
@@ -6936,15 +6950,27 @@ def nasa_opera_gui(
                                 "color": "yellow",
                             }
 
-                            m.add_gdf(
-                                gdf,
-                                layer_name="Footprints",
-                                info_mode="on_click",
-                                zoom_to_layer=False,
-                                style=style,
-                                hover_style=hover_style,
-                            )
-                            setattr(m, "_NASA_DATA_CTRL", m.controls[-1])
+                            if backend == "ipyleaflet":
+                                m.add_gdf(
+                                    gdf,
+                                    layer_name="Footprints",
+                                    info_mode="on_click",
+                                    zoom_to_layer=False,
+                                    style=style,
+                                    hover_style=hover_style,
+                                )
+                            else:
+                                layer_name = get_unique_name(
+                                    "Footprints", m.get_layer_names()
+                                )
+                                m.add_gdf(
+                                    gdf,
+                                    name=layer_name,
+                                )
+                                m.set_opacity(layer_name, 0.2)
+                                m.layer_manager.refresh()
+                            if backend == "ipyleaflet":
+                                setattr(m, "_NASA_DATA_CTRL", m.controls[-1])
 
                             dataset.options = gdf["native-id"].values.tolist()
                             dataset.value = dataset.options[0]
@@ -6953,7 +6979,18 @@ def nasa_opera_gui(
                             setattr(m, "_NASA_DATA_RESULTS", results)
 
                             if len(m._NASA_DATA_RESULTS) > 0:
-                                links = m._NASA_DATA_RESULTS[0].data_links()
+                                all_links = m._NASA_DATA_RESULTS[0].data_links()
+                                tif_links = [
+                                    link for link in all_links if link.endswith(".tif")
+                                ]
+                                if tif_links:
+                                    links = tif_links
+                                else:
+                                    links = [
+                                        link
+                                        for link in all_links
+                                        if link.endswith(".h5")
+                                    ]
                                 layer.options = [link.split("_")[-1] for link in links]
                                 layer.value = layer.options[0]
                             else:
@@ -6969,16 +7006,29 @@ def nasa_opera_gui(
             output.clear_output()
             with output:
                 print("Loading...")
-                links = m._NASA_DATA_RESULTS[
+                all_links = m._NASA_DATA_RESULTS[
                     dataset.options.index(dataset.value)
                 ].data_links()
+                tif_links = [link for link in all_links if link.endswith(".tif")]
+                if tif_links:
+                    links = tif_links
+                else:
+                    links = [link for link in all_links if link.endswith(".h5")]
                 link = links[layer.index]
                 try:
                     if link.endswith(".tif"):
-                        ds = xr.open_dataset(link, engine="rasterio")
+                        try:
+                            ds = xr.open_dataset(link, engine="rasterio")
+                        except Exception as e:
+                            f = open_file(
+                                link,
+                                earthdata_username=username,
+                                earthdata_password=password,
+                            )
+                            ds = xr.open_dataset(f, engine="rasterio")
                         setattr(m, "_NASA_DATA_DS", ds)
                         da = ds["band_data"]
-                        nodata = os.environ.get("NODATA", 0)
+                        nodata = da.rio.encoded_nodata
                         da = da.fillna(nodata)
                         try:
                             colormap = get_image_colormap(ds)
@@ -6997,6 +7047,44 @@ def nasa_opera_gui(
                             nodata=nodata,
                             layer_name=layer_name,
                         )
+
+                        output.clear_output()
+                    elif link.endswith(".h5"):
+                        os.makedirs("data", exist_ok=True)
+                        file_path = os.path.join("data", os.path.basename(link))
+                        if not os.path.exists(file_path):
+                            with output:
+                                output.clear_output()
+                                print("Downloading data...")
+                                nasa_data_download(link, out_dir="data")
+                        output.clear_output()
+
+                        ds = xr.open_dataset(file_path, group="data")
+                        setattr(m, "_NASA_DATA_DS", ds)
+                        da = ds["VV"]
+                        nodata = os.environ.get("NODATA", np.nan)
+                        crs = f"EPSG:{ds['projection'].attrs['epsg_code']}"
+                        try:
+                            colormap = get_image_colormap(ds)
+                        except Exception as e:
+                            colormap = None
+                        with output:
+                            print("Loading data...")
+                        image = array_to_image(da, crs=crs, colormap=colormap)
+                        output.clear_output()
+                        setattr(m, "_NASA_DATA_IMAGE", image)
+                        name_prefix = layer.value.split(".")[0]
+                        items = dataset.value.split("_")
+                        name_suffix = items[3] + "_" + items[4][:8] + "_" + items[6]
+                        layer_name = f"{name_prefix}_{name_suffix}"
+                        m.add_raster(
+                            image,
+                            zoom_to_layer=True,
+                            colormap=palette.value,
+                            nodata=nodata,
+                            layer_name=layer_name,
+                        )
+
                         output.clear_output()
                     else:
                         output.clear_output()
@@ -7028,10 +7116,13 @@ def nasa_opera_gui(
 
         elif change["new"] == "Close":
             if m is not None:
-                m.toolbar_reset()
-                if m.tool_control is not None and m.tool_control in m.controls:
-                    m.remove_control(m.tool_control)
-                    m.tool_control = None
+                if backend == "ipyleaflet":
+                    m.toolbar_reset()
+                    if m.tool_control is not None and m.tool_control in m.controls:
+                        m.remove_control(m.tool_control)
+                        m.tool_control = None
+                else:
+                    m.remove_from_sidebar(name="NASA OPERA")
             toolbar_widget.close()
 
         buttons.value = None
@@ -7039,7 +7130,7 @@ def nasa_opera_gui(
     buttons.observe(button_clicked, "value")
 
     toolbar_button.value = opened
-    if m is not None and hasattr(m, "controls"):
+    if m is not None and hasattr(m, "controls") and backend == "ipyleaflet":
         toolbar_control = ipyleaflet.WidgetControl(
             widget=toolbar_widget, position=position
         )
@@ -7047,6 +7138,8 @@ def nasa_opera_gui(
         if toolbar_control not in m.controls:
             m.add(toolbar_control)
             m.tool_control = toolbar_control
+    elif backend == "maplibre":
+        return toolbar_footer
     else:
         return toolbar_widget
 

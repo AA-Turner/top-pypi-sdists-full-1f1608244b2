@@ -135,10 +135,8 @@ class NspLinkArgs:
         pulumi.set(self, "remote_inbound_profiles", value)
 
 
+@pulumi.type_token("azure-native:network:NspLink")
 class NspLink(pulumi.CustomResource):
-
-    pulumi_type = "azure-native:network:NspLink"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -233,7 +231,7 @@ class NspLink(pulumi.CustomResource):
             __props__.__dict__["remote_perimeter_location"] = None
             __props__.__dict__["status"] = None
             __props__.__dict__["type"] = None
-        alias_opts = pulumi.ResourceOptions(aliases=[pulumi.Alias(type_="azure-native:network/v20210201preview:NspLink"), pulumi.Alias(type_="azure-native:network/v20230701preview:NspLink"), pulumi.Alias(type_="azure-native:network/v20230801preview:NspLink"), pulumi.Alias(type_="azure-native:network/v20240601preview:NspLink")])
+        alias_opts = pulumi.ResourceOptions(aliases=[pulumi.Alias(type_="azure-native:network/v20210201preview:NspLink"), pulumi.Alias(type_="azure-native:network/v20230701preview:NspLink"), pulumi.Alias(type_="azure-native:network/v20230801preview:NspLink"), pulumi.Alias(type_="azure-native:network/v20240601preview:NspLink"), pulumi.Alias(type_="azure-native:network/v20240701:NspLink")])
         opts = pulumi.ResourceOptions.merge(opts, alias_opts)
         super(NspLink, __self__).__init__(
             'azure-native:network:NspLink',

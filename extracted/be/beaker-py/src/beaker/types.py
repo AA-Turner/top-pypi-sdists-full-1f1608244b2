@@ -46,6 +46,9 @@ __all__ = [
     "BeakerUser",
     "BeakerEnvironment",
     "BeakerWorkspace",
+    "BeakerQueue",
+    "BeakerQueueWorker",
+    "BeakerQueueEntry",
 ]
 
 
@@ -65,6 +68,9 @@ BeakerOrganization = pb2.Organization
 BeakerUser = pb2.User
 BeakerEnvironment = pb2.Environment
 BeakerWorkspace = pb2.Workspace
+BeakerQueue = pb2.Queue
+BeakerQueueWorker = pb2.QueueWorker
+BeakerQueueEntry = pb2.QueueEntry
 
 
 class BaseEnum(Enum):

@@ -9,13 +9,21 @@ import numpy as np
 import numpy.typing as npt
 from typing_extensions import deprecated
 
-from zarr.core.array import Array, AsyncArray, create_array, from_array, get_array_metadata
+from zarr.core.array import (
+    Array,
+    AsyncArray,
+    CompressorLike,
+    create_array,
+    from_array,
+    get_array_metadata,
+)
 from zarr.core.array_spec import ArrayConfig, ArrayConfigLike, ArrayConfigParams
 from zarr.core.buffer import NDArrayLike
 from zarr.core.common import (
     JSON,
     AccessModeLiteral,
     ChunkCoords,
+    DimensionNames,
     MemoryOrder,
     ZarrFormat,
     _default_zarr_format,
@@ -80,7 +88,7 @@ __all__ = [
 
 _READ_MODES: tuple[AccessModeLiteral, ...] = ("r", "r+", "a")
 _CREATE_MODES: tuple[AccessModeLiteral, ...] = ("a", "w", "w-")
-_OVERWRITE_MODES: tuple[AccessModeLiteral, ...] = ("a", "r+", "w")
+_OVERWRITE_MODES: tuple[AccessModeLiteral, ...] = ("w",)
 
 
 def _infer_overwrite(mode: AccessModeLiteral) -> bool:
@@ -809,7 +817,6 @@ async def open_group(
         warnings.warn("chunk_store is not yet implemented", RuntimeWarning, stacklevel=2)
 
     store_path = await make_store_path(store, mode=mode, storage_options=storage_options, path=path)
-
     if attributes is None:
         attributes = {}
 
@@ -837,7 +844,7 @@ async def create(
     *,  # Note: this is a change from v2
     chunks: ChunkCoords | int | None = None,  # TODO: v2 allowed chunks=True
     dtype: npt.DTypeLike | None = None,
-    compressor: dict[str, JSON] | None = None,  # TODO: default and type change
+    compressor: CompressorLike = "auto",
     fill_value: Any | None = 0,  # TODO: need type
     order: MemoryOrder | None = None,
     store: str | StoreLike | None = None,
@@ -865,7 +872,7 @@ async def create(
         | None
     ) = None,
     codecs: Iterable[Codec | dict[str, JSON]] | None = None,
-    dimension_names: Iterable[str] | None = None,
+    dimension_names: DimensionNames = None,
     storage_options: dict[str, Any] | None = None,
     config: ArrayConfigLike | None = None,
     **kwargs: Any,
@@ -990,7 +997,7 @@ async def create(
         dtype = parse_dtype(dtype, zarr_format)
         if not filters:
             filters = _default_filters(dtype)
-        if not compressor:
+        if compressor == "auto":
             compressor = _default_compressor(dtype)
     elif zarr_format == 3 and chunk_shape is None:  # type: ignore[redundant-expr]
         if chunks is not None:
@@ -1011,11 +1018,6 @@ async def create(
         warnings.warn("object_codec is not yet implemented", RuntimeWarning, stacklevel=2)
     if read_only is not None:
         warnings.warn("read_only is not yet implemented", RuntimeWarning, stacklevel=2)
-    if dimension_separator is not None and zarr_format == 3:
-        raise ValueError(
-            "dimension_separator is not supported for zarr format 3, use chunk_key_encoding instead"
-        )
-
     if order is not None:
         _warn_order_kwarg()
     if write_empty_chunks is not None:
@@ -1040,15 +1042,13 @@ async def create(
             )
             warnings.warn(UserWarning(msg), stacklevel=1)
         config_dict["write_empty_chunks"] = write_empty_chunks
-    if order is not None:
-        if config is not None:
-            msg = (
-                "Both order and config keyword arguments are set. "
-                "This is redundant. When both are set, order will be ignored and "
-                "config will be used."
-            )
-            warnings.warn(UserWarning(msg), stacklevel=1)
-        config_dict["order"] = order
+    if order is not None and config is not None:
+        msg = (
+            "Both order and config keyword arguments are set. "
+            "This is redundant. When both are set, order will be ignored and "
+            "config will be used."
+        )
+        warnings.warn(UserWarning(msg), stacklevel=1)
 
     config_parsed = ArrayConfig.from_dict(config_dict)
 
@@ -1062,6 +1062,7 @@ async def create(
         overwrite=overwrite,
         filters=filters,
         dimension_separator=dimension_separator,
+        order=order,
         zarr_format=zarr_format,
         chunk_shape=chunk_shape,
         chunk_key_encoding=chunk_key_encoding,

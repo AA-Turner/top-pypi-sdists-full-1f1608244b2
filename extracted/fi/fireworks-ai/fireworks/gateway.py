@@ -5,6 +5,7 @@
 import os
 from typing import List, Optional, TypeVar, Union
 
+import grpclib
 from grpclib.client import Channel
 import httpx
 from betterproto.lib.std.google.protobuf import FieldMask
@@ -13,18 +14,24 @@ from fireworks.control_plane.generated.protos.gateway import (
     AutoscalingPolicy,
     CreateDatasetRequest,
     CreateDeploymentRequest,
+    CreateSupervisedFineTuningJobRequest,
     Dataset,
     DeleteDatasetRequest,
+    DeleteSupervisedFineTuningJobRequest,
     Deployment,
     GatewayStub,
     GetDatasetUploadEndpointRequest,
     GetDeploymentRequest,
+    GetSupervisedFineTuningJobRequest,
     ListDatasetsRequest,
     ListDeploymentsRequest,
     ListModelsRequest,
     ListModelsResponse,
+    ListSupervisedFineTuningJobsRequest,
+    ListSupervisedFineTuningJobsResponse,
     Model,
     ScaleDeploymentRequest,
+    SupervisedFineTuningJob,
     UpdateDeploymentRequest,
     CreateDatasetValidationJobRequest,
     ValidateDatasetUploadRequest,
@@ -86,6 +93,46 @@ class Gateway:
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         self._channel.close()
+
+    async def create_supervised_fine_tuning_job(
+        self, request: CreateSupervisedFineTuningJobRequest
+    ) -> SupervisedFineTuningJob:
+        account_id = await self.account_id()
+        request.parent = f"accounts/{account_id}"
+        response = await self._stub.create_supervised_fine_tuning_job(request)
+        return response
+
+    async def delete_supervised_fine_tuning_job(self, name: str) -> None:
+        account_id = await self.account_id()
+        try:
+            await self._stub.delete_supervised_fine_tuning_job(
+                DeleteSupervisedFineTuningJobRequest(name=f"accounts/{account_id}/supervisedFineTuningJobs/{name}")
+            )
+        except grpclib.exceptions.GRPCError as e:
+            if e.status == grpclib.Status.NOT_FOUND:
+                return
+            raise e
+
+    async def list_supervised_fine_tuning_jobs(
+        self, request: ListSupervisedFineTuningJobsRequest
+    ) -> ListSupervisedFineTuningJobsResponse:
+        account_id = await self.account_id()
+        request.parent = f"accounts/{account_id}"
+        request.page_size = 200
+        response = await self._stub.list_supervised_fine_tuning_jobs(request)
+        return response
+
+    async def get_supervised_fine_tuning_job(self, name: str) -> Optional[SupervisedFineTuningJob]:
+        account_id = await self.account_id()
+        try:
+            response = await self._stub.get_supervised_fine_tuning_job(
+                GetSupervisedFineTuningJobRequest(name=f"accounts/{account_id}/supervisedFineTuningJobs/{name}")
+            )
+            return response
+        except grpclib.exceptions.GRPCError as e:
+            if e.status == grpclib.Status.NOT_FOUND:
+                return None
+            raise e
 
     async def list_datasets(
         self,
@@ -181,22 +228,12 @@ class Gateway:
 
     async def create_deployment(
         self,
-        display_name: str,
-        model: str,
-        autoscaling_policy: Optional[AutoscalingPolicy] = None,
-        accelerator_type: Union[AcceleratorType, NotGiven] = NOT_GIVEN,
+        deployment: Deployment,
     ):
-        deployment = Deployment(base_model=model)
-        if autoscaling_policy is not None:
-            deployment.autoscaling_policy = autoscaling_policy
-        if not isinstance(accelerator_type, NotGiven):
-            deployment.accelerator_type = accelerator_type
-        if display_name is not None:
-            deployment.display_name = display_name
         account_id = await self.account_id()
         request = CreateDeploymentRequest(parent=f"accounts/{account_id}", deployment=deployment)
-        deployment = await self._stub.create_deployment(request)
-        return deployment
+        created_deployment = await self._stub.create_deployment(request)
+        return created_deployment
 
     async def scale_deployment(self, name: str, replicas: int):
         await self._stub.scale_deployment(ScaleDeploymentRequest(name=name, replica_count=replicas))

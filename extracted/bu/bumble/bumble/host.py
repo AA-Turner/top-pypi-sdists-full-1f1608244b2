@@ -435,6 +435,14 @@ class Host(utils.EventEmitter):
                 )
             )
         )
+        if self.supports_command(hci.HCI_SET_EVENT_MASK_PAGE_2_COMMAND):
+            await self.send_command(
+                hci.HCI_Set_Event_Mask_Page_2_Command(
+                    event_mask_page_2=hci.HCI_Set_Event_Mask_Page_2_Command.mask(
+                        [hci.HCI_ENCRYPTION_CHANGE_V2_EVENT]
+                    )
+                )
+            )
 
         if (
             self.local_version is not None
@@ -456,6 +464,7 @@ class Host(utils.EventEmitter):
                     hci.HCI_LE_READ_LOCAL_P_256_PUBLIC_KEY_COMPLETE_EVENT,
                     hci.HCI_LE_GENERATE_DHKEY_COMPLETE_EVENT,
                     hci.HCI_LE_ENHANCED_CONNECTION_COMPLETE_EVENT,
+                    hci.HCI_LE_ENHANCED_CONNECTION_COMPLETE_V2_EVENT,
                     hci.HCI_LE_DIRECTED_ADVERTISING_REPORT_EVENT,
                     hci.HCI_LE_PHY_UPDATE_COMPLETE_EVENT,
                     hci.HCI_LE_EXTENDED_ADVERTISING_REPORT_EVENT,
@@ -1383,6 +1392,21 @@ class Host(utils.EventEmitter):
                 'connection_encryption_change',
                 event.connection_handle,
                 event.encryption_enabled,
+                0,
+            )
+        else:
+            self.emit(
+                'connection_encryption_failure', event.connection_handle, event.status
+            )
+
+    def on_hci_encryption_change_v2_event(self, event):
+        # Notify the client
+        if event.status == hci.HCI_SUCCESS:
+            self.emit(
+                'connection_encryption_change',
+                event.connection_handle,
+                event.encryption_enabled,
+                event.encryption_key_size,
             )
         else:
             self.emit(

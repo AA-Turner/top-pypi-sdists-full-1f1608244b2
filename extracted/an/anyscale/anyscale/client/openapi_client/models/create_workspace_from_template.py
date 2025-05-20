@@ -65,8 +65,7 @@ class CreateWorkspaceFromTemplate(object):
         self.discriminator = None
 
         self.template_id = template_id
-        if cloud_id is not None:
-            self.cloud_id = cloud_id
+        self.cloud_id = cloud_id
         if project_id is not None:
             self.project_id = project_id
         if skip_start is not None:
@@ -121,6 +120,8 @@ class CreateWorkspaceFromTemplate(object):
         :param cloud_id: The cloud_id of this CreateWorkspaceFromTemplate.  # noqa: E501
         :type: str
         """
+        if self.local_vars_configuration.client_side_validation and cloud_id is None:  # noqa: E501
+            raise ValueError("Invalid value for `cloud_id`, must not be `None`")  # noqa: E501
 
         self._cloud_id = cloud_id
 

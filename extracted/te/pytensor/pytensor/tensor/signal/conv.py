@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from pytensor.tensor import TensorLike
 
 
-class Conv1d(Op):
+class Convolve1d(Op):
     __props__ = ("mode",)
     gufunc_signature = "(n),(k)->(o)"
 
@@ -75,13 +75,14 @@ class Conv1d(Op):
             n = in1.shape[0]
             k = in2.shape[0]
             kmn = maximum(0, k - n)
-            nkm = maximum(0, n - k)
+            nmk = maximum(0, n - k)
             # We need mode="full" if k >= n else "valid" for `in1_bar` (opposite for `in2_bar`), but mode is not symbolic.
             # Instead, we always use mode="full" and slice the result so it behaves like "valid" for the input that's shorter.
+            # There is a rewrite that optimizes this case when n, k are static
             in1_bar = full_conv(grad, in2[::-1])
             in1_bar = in1_bar[kmn : in1_bar.shape[0] - kmn]
             in2_bar = full_conv(grad, in1[::-1])
-            in2_bar = in2_bar[nkm : in2_bar.shape[0] - nkm]
+            in2_bar = in2_bar[nmk : in2_bar.shape[0] - nmk]
 
         return [in1_bar, in2_bar]
 
@@ -129,4 +130,4 @@ def convolve1d(
         )
         mode = "valid"
 
-    return cast(TensorVariable, Blockwise(Conv1d(mode=mode))(in1, in2))
+    return cast(TensorVariable, Blockwise(Convolve1d(mode=mode))(in1, in2))

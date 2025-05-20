@@ -232,10 +232,10 @@ class NODE_MT_category_GEO_UTILITIES_MATH(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, context):
         """
 
-        :param _context:
+        :param context:
         """
 
 class NODE_MT_category_GEO_UTILITIES_ROTATION(bpy.types.Menu):
@@ -310,10 +310,10 @@ class NODE_MT_category_GEO_VECTOR(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, context):
         """
 
-        :param _context:
+        :param context:
         """
 
 class NODE_MT_category_GEO_VOLUME(bpy.types.Menu):
@@ -493,10 +493,10 @@ class NODE_MT_geometry_node_GEO_COLOR(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, context):
         """
 
-        :param _context:
+        :param context:
         """
 
 class NODE_MT_geometry_node_GEO_CURVE(bpy.types.Menu):

@@ -32,8 +32,9 @@ class CloudDataBucketFileType(object):
     DATASETS = "datasets"
     AUDIT_LOGS = "audit_logs"
     SYSTEM_STORAGE_WORKSPACE_TRACKING_DEPENDENCIES = "system_storage/workspace_tracking_dependencies"
+    SYSTEM_STORAGE_WORKSPACES = "system_storage/workspaces"
 
-    allowable_values = [RUNTIME_ENV_PACKAGES, DATASETS, AUDIT_LOGS, SYSTEM_STORAGE_WORKSPACE_TRACKING_DEPENDENCIES]  # noqa: E501
+    allowable_values = [RUNTIME_ENV_PACKAGES, DATASETS, AUDIT_LOGS, SYSTEM_STORAGE_WORKSPACE_TRACKING_DEPENDENCIES, SYSTEM_STORAGE_WORKSPACES]  # noqa: E501
 
     """
     Attributes:

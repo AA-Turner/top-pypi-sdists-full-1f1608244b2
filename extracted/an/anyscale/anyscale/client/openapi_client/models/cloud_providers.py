@@ -33,8 +33,9 @@ class CloudProviders(object):
     CLOUDGATEWAY = "CLOUDGATEWAY"
     PCP = "PCP"
     GENERIC = "GENERIC"
+    AZURE = "AZURE"
 
-    allowable_values = [AWS, GCP, CLOUDGATEWAY, PCP, GENERIC]  # noqa: E501
+    allowable_values = [AWS, GCP, CLOUDGATEWAY, PCP, GENERIC, AZURE]  # noqa: E501
 
     """
     Attributes:

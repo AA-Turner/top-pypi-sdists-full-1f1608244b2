@@ -1101,7 +1101,9 @@ def _get_sql_glot(
         message = (
             f"SQL file resolver refers to unrecognized source '{source_name}'. "
             f"Please refer to your source via its name on your Chalk dashboard, "
-            f"and make sure the driver, e.g. chalkpy[snowflake], is installed"
+            f"and make sure the driver, e.g. chalkpy[snowflake], is installed. "
+            f"You will need to instantiate your source somewhere in Python, e.g. "
+            f"`source = SnowflakeSource(name='{source_name}')` if it's a Snowflake source."
         )
         error_builder.add_diagnostic(
             message=message,

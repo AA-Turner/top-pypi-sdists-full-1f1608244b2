@@ -79,7 +79,7 @@ async def exportacao_docs_portal_b2b(task: RpaProcessoEntradaDTO) -> RpaRetornoP
             logger.info(f"\nError Message: {return_login.retorno}")
             console.print(f"\nError Message: {return_login.retorno}", style="bold red")
             return return_login
-        
+        await worker_sleep(5)
         # # Identificando jenela principal
         app = Application().connect(class_name="TFrmEnviaEmailBoletaTitulo", backend="uia")
         main_window_envia_boletos = app["TFrmEnviaEmailBoletaTitulo"]
@@ -317,4 +317,3 @@ async def exportacao_docs_portal_b2b(task: RpaProcessoEntradaDTO) -> RpaRetornoP
         console.print(log_msg, style="bold red")
         return RpaRetornoProcessoDTO(
         sucesso=False, retorno=log_msg, status=RpaHistoricoStatusEnum.Falha, tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)])
-    

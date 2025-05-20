@@ -54,7 +54,7 @@ GLOBAL_CONFIG = "/etc/git-review/git-review.conf"
 USER_CONFIG = os.path.join(CONFIGDIR, "git-review.conf")
 DEFAULTS = dict(scheme='ssh', hostname=False, port=None, project=False,
                 branch='master', remote="gerrit", rebase="1",
-                track="0", usepushurl="0", notopic=False, branchauthor="name")
+                track="0", usepushurl="0", notopic=True, branchauthor="name")
 LOCAL_GIT_VERSION = (0, 0, 0)
 COPYRIGHT = """\
 Copyright OpenStack Foundation and OpenDev Contributors
@@ -255,9 +255,9 @@ def get_git_version():
             printwrap("Could not determine git version!")
             sys.exit(1)
     if LOCAL_GIT_VERSION < MINIMUM_GIT_VERSION:
-        printwrap("Local git version %s < required git version %s" %
+        printwrap("Local git version %s < required git version %s" % (
                   '.'.join(map(str, LOCAL_GIT_VERSION)),
-                  '.'.join(map(str, MINIMUM_GIT_VERSION)))
+                  '.'.join(map(str, MINIMUM_GIT_VERSION))))
         sys.exit(1)
 
 
@@ -653,7 +653,7 @@ def parse_gerrit_ssh_params_from_git_url(git_url):
     return (hostname, username, port, project_name)
 
 
-def query_reviews(remote_url, project=None, change=None,
+def query_reviews(remote_url, project=None, branch=None, change=None,
                   current_patch_set=True, exception=CommandFailed,
                   parse_exc=Exception):
     if remote_url.startswith('http://') or remote_url.startswith('https://'):
@@ -662,13 +662,14 @@ def query_reviews(remote_url, project=None, change=None,
         query = query_reviews_over_ssh
     return query(remote_url,
                  project=project,
+                 branch=branch,
                  change=change,
                  current_patch_set=current_patch_set,
                  exception=exception,
                  parse_exc=parse_exc)
 
 
-def query_reviews_over_http(remote_url, project=None, change=None,
+def query_reviews_over_http(remote_url, project=None, branch=None, change=None,
                             current_patch_set=True, exception=CommandFailed,
                             parse_exc=Exception):
     if project:
@@ -696,7 +697,10 @@ def query_reviews_over_http(remote_url, project=None, change=None,
         else:
             project_name = re.sub(r"^/|(\.git$)", "",
                                   urlparse(remote_url).path)
-        params = urlencode({'q': 'project:%s status:open' % project_name})
+        query = 'project:%s status:open' % project_name
+        if branch:
+            query += ' branch:%s' % branch
+        params = urlencode({'q': query})
         url += '?' + params
 
     if VERBOSE:
@@ -726,7 +730,7 @@ def query_reviews_over_http(remote_url, project=None, change=None,
     return reviews
 
 
-def query_reviews_over_ssh(remote_url, project=None, change=None,
+def query_reviews_over_ssh(remote_url, project=None, branch=None, change=None,
                            current_patch_set=True, exception=CommandFailed,
                            parse_exc=Exception):
     (hostname, username, port, project_name) = \
@@ -739,6 +743,8 @@ def query_reviews_over_ssh(remote_url, project=None, change=None,
             query = "--patch-sets change:%s" % change
     else:
         query = "project:%s status:open" % project_name
+        if branch:
+            query += ' branch:%s' % branch
 
     port_data = "p%s" % port if port is not None else ""
     if username is None:
@@ -1099,27 +1105,6 @@ def assert_one_change(remote, branch, yes, have_hook):
                 sys.exit(1)
 
 
-def get_topic(target_branch):
-    branch_name = get_branch_name(target_branch)
-
-    branch_parts = branch_name.split("/")
-    if len(branch_parts) >= 3 and branch_parts[0] == "review":
-        # We don't want to set the review number as the topic
-        if branch_parts[2].isdigit():
-            return
-
-        topic = "/".join(branch_parts[2:])
-        if VERBOSE:
-            print("Using change number %s for the topic of the change "
-                  "submitted" % topic)
-        return topic
-
-    if VERBOSE:
-        print("Using local branch name %s for the topic of the change "
-              "submitted" % branch_name)
-    return branch_name
-
-
 class CannotQueryOpenChangesets(CommandFailed):
     "Cannot fetch review information from gerrit"
     EXIT_CODE = 32
@@ -1209,12 +1194,13 @@ class ReviewsPrinter(object):
         print("Found %d items for review" % total_reviews)
 
 
-def list_reviews(remote, project, with_topic=False):
+def list_reviews(remote, project, branch=None, with_topic=False):
     remote_url = get_remote_url(remote)
 
     reviews = []
     for r in query_reviews(remote_url,
                            project=project,
+                           branch=branch,
                            exception=CannotQueryOpenChangesets,
                            parse_exc=CannotParseOpenChangesets):
         reviews.append(Review(r))
@@ -1337,23 +1323,14 @@ def fetch_review(review, masterbranch, remote, project):
     except KeyError:
         raise ReviewNotFound(review)
 
-    try:
-        topic = review_info['topic']
-        if topic == masterbranch:
-            topic = review
-    except KeyError:
-        topic = review
-    try:
-        author = re.sub(r'\W+', '_',
-                        review_info['owner'][BRANCHAUTHOR]).lower()
-    except KeyError:
-        author = 'unknown'
+    change_number = review_info.get('number',
+                                    review_info.get('_number', review))
     remote_branch = review_info['branch']
 
     if patchset_number is None:
-        branch_name = "review/%s/%s" % (author, topic)
+        branch_name = "review/%s" % (change_number,)
     else:
-        branch_name = "review/%s/%s-patch%s" % (author, topic, patchset_number)
+        branch_name = "review/%s-patch%s" % (change_number, patchset_number)
 
     print("Downloading %s from gerrit" % refspec)
     run_command_exc(PatchSetGitFetchFailed,
@@ -1591,12 +1568,15 @@ additional information:
                                  help="Topic to submit branch to")
     topic_arg_group.add_argument("-T", "--no-topic", dest="notopic",
                                  action="store_true",
-                                 help="No topic except if explicitly provided")
+                                 help="No topic except if explicitly provided"
+                                 " (deprecated)")
 
     parser.add_argument("--hashtags", nargs="+",
                         help="Hashtags to submit branch to")
     parser.add_argument("--reviewers", nargs="+",
                         help="Add reviewers to uploaded patchsets.")
+    parser.add_argument("--cc", nargs="+",
+                        help="Add CC to uploaded patchsets.")
     parser.add_argument("-n", "--dry-run", dest="dry", action="store_true",
                         help="Don't actually submit the branch for review")
     parser.add_argument("-i", "--new-changeid", dest="regenerate",
@@ -1834,7 +1814,9 @@ additional information:
         return
     elif options.list:
         with_topic = options.list > 1
-        list_reviews(remote, config['project'], with_topic=with_topic)
+        list_reviews(remote, config['project'],
+                     branch if options.branch or options.track else None,
+                     with_topic=with_topic)
         return
 
     if options.custom_script:
@@ -1868,15 +1850,19 @@ additional information:
     if options.no_thin:
         no_thin = '--no-thin'
 
+    color_remote = ''
+    if not options.dry and check_use_color_output():
+        color_remote = '-c color.remote=always'
+
     ref = "for"
 
-    cmd = ("git push --no-follow-tags %s %s HEAD:refs/%s/%s" %
-           (no_thin, remote, ref, branch))
+    cmd = ("git %s push --no-follow-tags %s %s HEAD:refs/%s/%s" %
+           (color_remote, no_thin, remote, ref, branch))
     push_options = []
     if options.topic is not None:
         topic = options.topic
     else:
-        topic = None if options.notopic else get_topic(branch)
+        topic = None
 
     if topic and topic != branch:
         push_options.append("topic=%s" % topic)
@@ -1888,6 +1874,10 @@ additional information:
     if options.reviewers:
         assert_valid_reviewers(options.reviewers)
         push_options += ["r=%s" % r for r in options.reviewers]
+
+    if options.cc:
+        assert_valid_reviewers(options.cc)
+        push_options += ["cc=%s" % cc for cc in options.cc]
 
     if options.regenerate:
         print("Amending the commit to regenerate the change id\n")
@@ -1928,6 +1918,8 @@ additional information:
     else:
         (status, output) = run_command_status(cmd)
         print(output)
+        if status == 1 and 'Missing tree' in output and not options.no_thin:
+            print('Consider trying again with --no-thin')
 
     if options.finish and not options.dry and status == 0:
         finish_branch(branch)

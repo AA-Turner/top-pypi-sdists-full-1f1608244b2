@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: tapo
-Version: 0.8.1
+Version: 0.8.2
 Classifier: Development Status :: 4 - Beta
 Classifier: Topic :: Software Development :: Embedded Systems
 Classifier: Environment :: Console
@@ -8,7 +8,6 @@ Classifier: Operating System :: OS Independent
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Intended Audience :: Developers
 Classifier: Topic :: Home Automation
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
@@ -19,7 +18,7 @@ Summary: Unofficial Tapo API Client. Works with TP-Link Tapo smart devices. Test
 Keywords: Tapo,TP-Link,Smart Home,Home Automation,IoT
 Author-email: Mihai Dinculescu <mihai.dinculescu@outlook.com>
 Maintainer-email: Mihai Dinculescu <mihai.dinculescu@outlook.com>
-Requires-Python: >=3.8
+Requires-Python: >=3.9
 Description-Content-Type: text/markdown; charset=UTF-8; variant=GFM
 Project-URL: Changelog, https://github.com/mihai-dinculescu/tapo/blob/main/CHANGELOG.md
 Project-URL: Funding, https://github.com/mihai-dinculescu

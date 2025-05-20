@@ -92,6 +92,7 @@ from .StepperCompleted import StepperCompleted
 from .StepperStep import StepperStep
 from .Table import Table
 from .TableCaption import TableCaption
+from .TableScrollContainer import TableScrollContainer
 from .TableTbody import TableTbody
 from .TableTd import TableTd
 from .TableTfoot import TableTfoot
@@ -272,6 +273,7 @@ __all__ = [
     "StepperStep",
     "Table",
     "TableCaption",
+    "TableScrollContainer",
     "TableTbody",
     "TableTd",
     "TableTfoot",

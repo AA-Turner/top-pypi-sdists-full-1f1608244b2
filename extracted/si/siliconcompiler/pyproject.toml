@@ -33,7 +33,7 @@ classifiers = [
 requires-python = ">= 3.8"
 dependencies = [
     "aiohttp == 3.10.11; python_version <= '3.8'",
-    "aiohttp == 3.11.16; python_version >= '3.9'",
+    "aiohttp >= 3.10.11, <3.12.0; python_version >= '3.9'",
     "requests == 2.32.3",
     "PyYAML == 6.0.2",
     "pandas >= 1.1.5",
@@ -43,7 +43,7 @@ dependencies = [
     "packaging >= 21.3, < 25",
     "psutil >= 5.8.0",
     "Pillow == 10.4.0; python_version <= '3.8'",
-    "Pillow == 11.1.0; python_version >= '3.9'",
+    "Pillow == 11.2.1; python_version >= '3.9'",
     "GitPython == 3.1.44",
     "lambdapdk >= 0.1.47",
     "PyGithub == 2.6.1",
@@ -53,19 +53,20 @@ dependencies = [
     "docker == 7.1.0",
     "importlib_metadata; python_version < '3.10'",
     "orjson == 3.10.15; python_version <= '3.8'",
-    "orjson == 3.10.16; python_version >= '3.9'",
+    "orjson == 3.10.18; python_version >= '3.9'",
     "pyslang == 8.0.0",
 
     # dashboard, streamlit does not support 3.9.7
     "streamlit == 1.40.1; python_version <= '3.8'",
-    "streamlit == 1.44.1; python_version >= '3.9' and python_full_version != '3.9.7'",
+    "streamlit == 1.45.0; python_version >= '3.9' and python_full_version != '3.9.7'",
     "streamlit_agraph == 0.0.45; python_full_version != '3.9.7'",
     "streamlit-antd-components == 0.3.2; python_full_version != '3.9.7'",
     "streamlit_javascript == 0.1.5; python_full_version != '3.9.7'",
     "streamlit-autorefresh == 1.0.1; python_full_version != '3.9.7'",
 
     # CLI dashboard
-    "rich == 13.9.4"
+    "rich == 13.9.4; python_version <= '3.8'",
+    "rich >= 14.0.0, < 15.0.0; python_version >= '3.9'"
 ]
 license = {text = "Apache License 2.0"}
 dynamic = ["version"]
@@ -100,20 +101,20 @@ git = "siliconcompiler.package.git:get_resolver"
 github = "siliconcompiler.package.github:get_resolver"
 
 [project.entry-points."siliconcompiler.docs"]
-linkcode = "siliconcompiler.sphinx_ext:get_codeurl"
-targets = "siliconcompiler.sphinx_ext:targets"
-flows = "siliconcompiler.sphinx_ext:flows"
-libs = "siliconcompiler.sphinx_ext:libraries"
-pdks = "siliconcompiler.sphinx_ext:pdks"
-tools = "siliconcompiler.sphinx_ext:tools"
-apps = "siliconcompiler.sphinx_ext:apps"
-checklists = "siliconcompiler.sphinx_ext:checklists"
+linkcode = "siliconcompiler.schema.docs:get_codeurl"
+targets = "siliconcompiler.schema.docs:targets"
+flows = "siliconcompiler.schema.docs:flows"
+libs = "siliconcompiler.schema.docs:libraries"
+pdks = "siliconcompiler.schema.docs:pdks"
+tools = "siliconcompiler.schema.docs:tools"
+apps = "siliconcompiler.schema.docs:apps"
+checklists = "siliconcompiler.schema.docs:checklists"
 
 [project.optional-dependencies]
 test = [
     "pytest == 8.3.5",
     "pytest-xdist == 3.6.1",
-    "pytest-timeout == 2.3.1",
+    "pytest-timeout == 2.4.0",
     "pytest-asyncio == 0.24.0; python_version <= '3.8'",
     "pytest-asyncio == 0.26.0; python_version >= '3.9'",
     "pytest-cov == 5.0.0; python_version <= '3.8'",
@@ -134,7 +135,7 @@ docs = [
     "sc-leflib >= 0.2.0"
 ]
 profile = [
-    "gprof2dot == 2024.6.6"
+    "gprof2dot == 2025.4.14"
 ]
 optimizer = [
     "google-vizier[jax] == 0.1.21; python_version >= '3.10'"
@@ -183,7 +184,7 @@ max-blank-lines = 1
 spaces-in-braces = true
 
 [tool.codespell]
-skip = './build/*,*.json,*.xml,./siliconcompiler/templates/report/bootstrap.min.js,./tests/utils/test_utils.py,./tests/tools/data/klayout_pdk/interposer.drc'
+skip = '*/build/*,./docs/_build/*,*.json,*.xml,./siliconcompiler/data/templates/report/bootstrap.min.js,./tests/utils/test_utils.py,./tests/tools/data/klayout_pdk/interposer.drc'
 count = true
 quiet-level = 3
 ignore-words-list = 'synopsys,inout,subtile,FRAM,dffer,dffers'

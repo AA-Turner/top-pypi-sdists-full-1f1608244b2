@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: beaker-py
-Version: 2.3.0
+Version: 2.4.0
 Summary: A Python Beaker client
 Author-email: Allen Institute for Artificial Intelligence <contact@allenai.org>, Pete Walsh <petew@allenai.org>
 Project-URL: Homepage, https://github.com/allenai/beaker
@@ -131,6 +131,12 @@ With the Python client, you can:
   beaker.job.logs(job, follow=True)
   ```
 
+- Create and process [**Queues**](https://beaker-docs.apps.allenai.org/concept/queues.html) with `beaker.queue.*` methods. For example:
+
+  ```python
+  beaker.queue.create("my-work-queue", batch_size=4)
+  ```
+
 If you're coming from [v1 of beaker-py](https://github.com/allenai/beaker-py), consider reading the [migration guide](https://github.com/allenai/beaker/blob/main/bindings/python/MIGRATION_GUIDE.md).
 
 ### Example workflow
@@ -164,6 +170,8 @@ with Beaker.from_env() as beaker:
     for job_log in beaker.job.logs(job, follow=True):
         print(job_log.message.decode())
 ```
+
+See the [integration tests](https://github.com/allenai/beaker/tree/main/bindings/python/src/integration_tests) for more examples.
 
 ## Development
 

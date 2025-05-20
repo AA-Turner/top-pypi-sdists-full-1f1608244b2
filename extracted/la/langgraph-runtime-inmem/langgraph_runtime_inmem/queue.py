@@ -168,9 +168,6 @@ def _enable_blockbuster():
         bb.functions["io.TextIOWrapper.read"].can_block_in(module, func)
 
     bb.functions["os.path.abspath"].can_block_in("inspect.py", "getmodule")
-    bb.functions["os.remove"].can_block_in(
-        "langgraph/checkpoint/memory/__init__.py", "__init__"
-    )
 
     for module, func in (
         ("memory/__init__.py", "sync"),
@@ -202,6 +199,7 @@ def _enable_blockbuster():
         # This is used by tiktoken for get_encoding_for_model
         # as well as importlib.metadata.
         "os.listdir",
+        "os.remove",
         # If people are using threadpoolexecutor, etc. they'd be using this.
         "lock.acquire",
     ]

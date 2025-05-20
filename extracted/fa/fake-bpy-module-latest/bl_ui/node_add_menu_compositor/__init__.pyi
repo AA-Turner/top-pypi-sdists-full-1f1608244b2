@@ -76,10 +76,10 @@ class NODE_MT_category_compositor_color_mix(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, context):
         """
 
-        :param _context:
+        :param context:
         """
 
 class NODE_MT_category_compositor_filter(bpy.types.Menu):
@@ -102,10 +102,10 @@ class NODE_MT_category_compositor_filter(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, context):
         """
 
-        :param _context:
+        :param context:
         """
 
 class NODE_MT_category_compositor_filter_blur(bpy.types.Menu):
@@ -232,10 +232,10 @@ class NODE_MT_category_compositor_input_scene(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, context):
         """
 
-        :param _context:
+        :param context:
         """
 
 class NODE_MT_category_compositor_keying(bpy.types.Menu):
@@ -415,10 +415,10 @@ class NODE_MT_category_compositor_utilities(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, context):
         """
 
-        :param _context:
+        :param context:
         """
 
 class NODE_MT_category_compositor_vector(bpy.types.Menu):
@@ -441,10 +441,10 @@ class NODE_MT_category_compositor_vector(bpy.types.Menu):
         :rtype: typing.Any
         """
 
-    def draw(self, _context):
+    def draw(self, context):
         """
 
-        :param _context:
+        :param context:
         """
 
 class NODE_MT_compositor_node_add_all(bpy.types.Menu):

@@ -14,7 +14,10 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 from application_properties import ApplicationProperties, ApplicationPropertiesFacade
 from columnar import columnar
 
-from pymarkdown.extensions.pragma_token import PragmaExtension
+from pymarkdown.extensions.pragma_token import (
+    GeneralPragmaDisableStart,
+    PragmaExtension,
+)
 from pymarkdown.general.main_presentation import MainPresentation
 from pymarkdown.general.parser_helper import ParserHelper
 from pymarkdown.plugin_manager.bad_plugin_error import BadPluginError
@@ -65,6 +68,7 @@ class PluginManager:
 
         self.__document_pragmas: Dict[int, Set[str]] = {}
         self.__document_pragma_ranges: List[Tuple[int, int, Set[str]]]
+        self.__general_pragma_ranges: List[Tuple[int, int, str]]
 
         self.__registered_plugins: List[FoundPlugin] = []
         self.__enabled_plugins: List[FoundPlugin] = []
@@ -393,6 +397,11 @@ class PluginManager:
                 if i <= scan_failure.line_number <= j and rule_id in k:
                     return
 
+        if self.__general_pragma_ranges:
+            for i, j, m in self.__general_pragma_ranges:
+                if i <= scan_failure.line_number <= j and rule_id == m:
+                    return
+
         extra_info = (
             f" [{scan_failure.extra_error_information}]"
             if scan_failure.extra_error_information
@@ -426,6 +435,8 @@ class PluginManager:
         Go through the list of extracted pragmas and compile them.
         """
 
+        active_general_pragmas: Dict[str, GeneralPragmaDisableStart] = {}
+
         for next_line_number in pragma_lines:
             PragmaExtension.compile_single_pragma(
                 scan_file,
@@ -434,8 +445,11 @@ class PluginManager:
                 self.__all_ids,
                 self.__document_pragmas,
                 self.__document_pragma_ranges,
+                self.__general_pragma_ranges,
+                active_general_pragmas,
                 self.log_pragma_failure,
             )
+        PragmaExtension.end(active_general_pragmas, self.__general_pragma_ranges)
 
     @property
     def enabled_plugins(self) -> List[FoundPlugin]:
@@ -525,6 +539,19 @@ class PluginManager:
         new_value = self.__handle_command_line_settings(
             plugin_object, command_line_disabled_rules, command_line_enabled_rules
         )
+
+        default_value = plugin_object.plugin_enabled_by_default
+        if new_value is None:
+            disable_all_plugins_value = properties.get_boolean_property(
+                f"{PluginManager.__plugin_prefix}{properties.separator}selectively_enable_rules",
+                default_value=None,
+            )
+            if disable_all_plugins_value is not None and disable_all_plugins_value:
+                default_value = False
+                LOGGER.debug(
+                    "Plugin '%s' is disabled by the global setting.",
+                    plugin_object.plugin_id,
+                )
         if new_value is None:
             if plugin_specific_facade := self.__find_configuration_for_plugin(
                 plugin_object, properties
@@ -543,12 +570,10 @@ class PluginManager:
         if new_value is None:
             LOGGER.debug(
                 "No other enable state found, setting to default of '%s'.",
-                str(plugin_object.plugin_enabled_by_default),
+                str(default_value),
             )
 
-        return (
-            plugin_object.plugin_enabled_by_default if new_value is None else new_value
-        )
+        return default_value if new_value is None else new_value
 
     @classmethod
     def __handle_command_line_settings(
@@ -558,19 +583,21 @@ class PluginManager:
         command_line_enabled_rules: Set[str],
     ) -> Optional[bool]:
         new_value = None
+        was_wildcarded = False
         if command_line_disabled_rules:
             LOGGER.debug(
                 "Disabled on command line: %s", str(command_line_disabled_rules)
             )
             if PluginManager.__disable_rules_wildcard in command_line_disabled_rules:
                 new_value = False
+                was_wildcarded = True
             else:
                 for next_identifier in plugin_object.plugin_identifiers:
                     if next_identifier in command_line_disabled_rules:
                         new_value = False
                         LOGGER.debug("Plugin is disabled from command line.")
                         break
-        if new_value is None and command_line_enabled_rules:
+        if (new_value is None or was_wildcarded) and command_line_enabled_rules:
             LOGGER.debug("Enabled on command line: %s", str(command_line_enabled_rules))
             for next_identifier in plugin_object.plugin_identifiers:
                 if next_identifier in command_line_enabled_rules:
@@ -974,6 +1001,7 @@ class PluginManager:
         """
         self.__document_pragmas = {}
         self.__document_pragma_ranges = []
+        self.__general_pragma_ranges = []
 
         for next_plugin in self.__enabled_plugins_for_starting_new_file:
             if constraint_id_list and next_plugin.plugin_id not in constraint_id_list:

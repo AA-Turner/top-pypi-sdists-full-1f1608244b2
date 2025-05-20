@@ -9,7 +9,7 @@ from langgraph_runtime_inmem import (
     store,
 )
 
-__version__ = "0.0.11"
+__version__ = "0.1.0"
 __all__ = [
     "ops",
     "database",

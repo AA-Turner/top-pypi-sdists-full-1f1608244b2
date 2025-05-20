@@ -49,9 +49,10 @@ dependencies = [
     "Pillow",
     "openai",
     "typing_extensions",
-    "asyncstdlib>=3.12.0",
     "mmh3>=4.1.0",
     "betterproto-fw[compiler]>=2.0.3",
+    "asyncstdlib-fw>=3.13.2",
+    "nest-asyncio>=1.6.0",
 ]
 name = "fireworks-ai"
 dynamic = []
@@ -64,7 +65,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Development Status :: 3 - Alpha",
 ]
-version = "0.17.0"
+version = "0.17.4"
 
 [project.license]
 text = "MIT"
@@ -95,4 +96,5 @@ dev = [
     "backoff",
     "grpcio-tools",
     "pytest-asyncio>=0.21.2",
+    "ipykernel>=6.29.5",
 ]

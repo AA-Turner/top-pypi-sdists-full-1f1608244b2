@@ -12,6 +12,7 @@ from .._impl import (
     scout_integrations_api_IntegrationRid as IntegrationRid,
     scout_integrations_api_IntegrationsService as IntegrationsService,
     scout_integrations_api_NotificationConfiguration as NotificationConfiguration,
+    scout_integrations_api_NotificationFilter as NotificationFilter,
     scout_integrations_api_OpsgenieIntegration as OpsgenieIntegration,
     scout_integrations_api_OpsgenieRegion as OpsgenieRegion,
     scout_integrations_api_SendMessageRequest as SendMessageRequest,

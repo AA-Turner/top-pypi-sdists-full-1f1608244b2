@@ -23,7 +23,12 @@ SCOPE_SOURCES = {
     "cookie": "COOKIE",  # not an actual scope element; we use this for headers[cookie]
 }
 
-SOURCE_DICT = {"module": "ASGI.scope", "instance_method": False, "target": "RETURN"}
+SOURCE_DICT = {
+    "module": "ASGI.scope",
+    "instance_method": False,
+    "target": "RETURN",
+    "policy_patch": False,
+}
 
 
 class ASGIRequest:

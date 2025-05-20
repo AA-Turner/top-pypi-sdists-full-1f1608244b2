@@ -146,7 +146,7 @@ class FitnessFunctions(object):  # TODO: this class is not necessary anymore? Bu
         dim = len(x)
         x = array([x[i % dim] for i in range(2 * dim)])
         N = 8
-        i = self.evaluations % dim
+        # i = self.evaluations % dim
         # f = sum(x[i:i + N]**2)
         f = sum(x[np.random.randint(dim, size=N)]**2)
         return f
@@ -343,7 +343,24 @@ class FitnessFunctions(object):  # TODO: this class is not necessary anymore? Bu
         x = [x] if isscalar(x[0]) else x  # scalar into list
         f = [(1. - x[0])**2 + sum(alpha * (x[:-1]**2 - x[1:])**2) for x in x]
         return f if len(f) > 1 else f[0]  # 1-element-list into scalar
+    def dixonprice(self, x):
+        """Dixon-Price function.
 
+        The function has a local attractor at ``[1/3, 0, ..., 0]`` which
+        starts to dominate for dimensions larger than about five. The
+        global optimum is ``[1, 0.70710678, ...]`` with the limit of 1/2
+        for increasing index.
+
+        >>> import cma
+        >>> def xstar(n):
+        ...     return [2**-((2**i - 2) / 2**i) for i in range(1, n + 1)]
+        >>> assert cma.ff.dixonprice(xstar(4)) < 1e-11, cma.ff.dixonprice(xstar(4))
+
+        see https://al-roomi.org/benchmarks/unconstrained/n-dimensions/236-dixon-price-s-function
+        """
+        x = np.asarray(x)
+        idx = np.arange(1, len(x))
+        return (x[0] - 1)**2 + np.dot(idx + 1, (2 * x[idx]**2 - x[idx-1])**2)
     def diffpow(self, x, rot=0):
         """Diffpow test objective function"""
         N = len(x)
@@ -577,7 +594,7 @@ class FitnessFunctions(object):  # TODO: this class is not necessary anymore? Bu
         return s if s else foffset
 
 
-class _F_0(object):
+class _coco_F_0(object):
     """return a "normalized" BBOB function, funID=1..24 when suite='bbob'.
 
     The `fun` attribute is the original function which also provides the
@@ -604,6 +621,10 @@ class _F_0(object):
         self.set_opt()
         self.fun = self.suite.get_problem_by_function_dimension_instance(
             funID, dimension, instance)  # reset final_target_hit
+    def __getattr__(self, name):
+        if name == '_best_parameter':
+            raise AttributeError("_coco_F_0 has not attribute _best_parameter")
+        return getattr(self.fun, name)
     def set_opt(self):
         self.fun._best_parameter('print')
         self.x_opt = np.loadtxt('._bbob_problem_best_parameter.txt')

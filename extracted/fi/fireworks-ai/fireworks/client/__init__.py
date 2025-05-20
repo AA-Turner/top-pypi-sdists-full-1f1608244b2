@@ -9,9 +9,12 @@ from .api_client_v2 import (
     Fireworks,
     AsyncFireworks,
 )
-from . import _version
+import importlib.metadata
 
-__version__ = _version.get_versions()["version"]
+try:
+    __version__ = importlib.metadata.version("fireworks")
+except importlib.metadata.PackageNotFoundError:
+    __version__ = "0.0.0"  # Fallback for development mode
 
 api_key = os.environ.get("FIREWORKS_API_KEY")
 base_url = os.environ.get("FIREWORKS_API_BASE", "https://api.fireworks.ai/inference/v1")

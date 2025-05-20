@@ -28,6 +28,9 @@ class _AutoScalingMetricTypeEnumTypeWrapper(google.protobuf.internal.enum_type_w
     METRIC_TYPE_CPU: _AutoScalingMetricType.ValueType  # 1
     METRIC_TYPE_MEMORY: _AutoScalingMetricType.ValueType  # 2
     METRIC_TYPE_LATENCY: _AutoScalingMetricType.ValueType  # 3
+    METRIC_TYPE_GPU: _AutoScalingMetricType.ValueType  # 4
+    METRIC_TYPE_ERROR_RATE: _AutoScalingMetricType.ValueType  # 5
+    METRIC_TYPE_THROUGHPUT: _AutoScalingMetricType.ValueType  # 6
 
 class AutoScalingMetricType(_AutoScalingMetricType, metaclass=_AutoScalingMetricTypeEnumTypeWrapper): ...
 
@@ -35,6 +38,9 @@ METRIC_TYPE_NOT_VALID: AutoScalingMetricType.ValueType  # 0
 METRIC_TYPE_CPU: AutoScalingMetricType.ValueType  # 1
 METRIC_TYPE_MEMORY: AutoScalingMetricType.ValueType  # 2
 METRIC_TYPE_LATENCY: AutoScalingMetricType.ValueType  # 3
+METRIC_TYPE_GPU: AutoScalingMetricType.ValueType  # 4
+METRIC_TYPE_ERROR_RATE: AutoScalingMetricType.ValueType  # 5
+METRIC_TYPE_THROUGHPUT: AutoScalingMetricType.ValueType  # 6
 global___AutoScalingMetricType = AutoScalingMetricType
 
 class _AutoScalingAggregationType:

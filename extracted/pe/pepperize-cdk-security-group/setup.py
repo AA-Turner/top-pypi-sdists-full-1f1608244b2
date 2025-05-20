@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "pepperize.cdk-security-group",
-    "version": "0.0.649",
+    "version": "0.0.650",
     "description": "This project provides a CDK construct to create an EC2 SecurityGroup, which property `securityGroupName` returns the GroupName.",
     "license": "MIT",
     "url": "https://github.com/pepperize/cdk-security-group.git",
@@ -26,7 +26,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "pepperize_cdk_security_group._jsii": [
-            "cdk-security-group@0.0.649.jsii.tgz"
+            "cdk-security-group@0.0.650.jsii.tgz"
         ],
         "pepperize_cdk_security_group": [
             "py.typed"

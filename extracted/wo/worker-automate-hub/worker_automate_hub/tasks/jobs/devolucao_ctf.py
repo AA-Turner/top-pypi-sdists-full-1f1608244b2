@@ -1418,7 +1418,12 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                 console.print(f"\nPesquisa: 'Cadastro Pré venda' realizada com sucesso",style="bold green")
                 await worker_sleep(2)
                 cadastro_pre_venda = await is_window_open_by_class("TFrmPreVenda", "TFrmPreVenda")
-                preenchimento_header_pre_venda = await cadastro_pre_venda_header("5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC", cod_cliente_correto, "A VISTA", "5656 - VENDA DE COMB OU LUB ADQ DE TERCEIRO C/ FIN S/ ESTOQUE")
+                #preenchimento_header_pre_venda = await cadastro_pre_venda_header("5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC", cod_cliente_correto, "A VISTA", "5656 - VENDA DE COMB OU LUB ADQ DE TERCEIRO C/ FIN S/ ESTOQUE")
+                if not item_arla:
+                        preenchimento_header_pre_venda = await cadastro_pre_venda_header("5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC", cod_cliente_correto, "A VISTA", "5656 - VENDA DE COMB OU LUB ADQ DE TERCEIRO C/ FIN S/ ESTOQUE")
+                else:
+                    #PRECISA DO ESPAÇO NO FINAL!!!
+                    preenchimento_header_pre_venda = await cadastro_pre_venda_header("5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ ESTOQ C/ FINAN ", cod_cliente_correto, "A VISTA", "5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ESTOQ C/ FINAN FE")
 
                 if preenchimento_header_pre_venda.sucesso:
                     try:

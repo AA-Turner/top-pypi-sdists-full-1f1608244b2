@@ -16,6 +16,7 @@ else:
 from .. import _utilities
 from . import outputs
 from .. import outputs as _root_outputs
+from ._enums import *
 
 __all__ = [
     'GetDomainNameResult',
@@ -26,7 +27,7 @@ __all__ = [
 
 @pulumi.output_type
 class GetDomainNameResult:
-    def __init__(__self__, certificate_arn=None, distribution_domain_name=None, distribution_hosted_zone_id=None, endpoint_configuration=None, mutual_tls_authentication=None, ownership_verification_certificate_arn=None, regional_certificate_arn=None, regional_domain_name=None, regional_hosted_zone_id=None, security_policy=None, tags=None):
+    def __init__(__self__, certificate_arn=None, distribution_domain_name=None, distribution_hosted_zone_id=None, domain_name_arn=None, endpoint_configuration=None, mutual_tls_authentication=None, ownership_verification_certificate_arn=None, regional_certificate_arn=None, regional_domain_name=None, regional_hosted_zone_id=None, routing_mode=None, security_policy=None, tags=None):
         if certificate_arn and not isinstance(certificate_arn, str):
             raise TypeError("Expected argument 'certificate_arn' to be a str")
         pulumi.set(__self__, "certificate_arn", certificate_arn)
@@ -36,6 +37,9 @@ class GetDomainNameResult:
         if distribution_hosted_zone_id and not isinstance(distribution_hosted_zone_id, str):
             raise TypeError("Expected argument 'distribution_hosted_zone_id' to be a str")
         pulumi.set(__self__, "distribution_hosted_zone_id", distribution_hosted_zone_id)
+        if domain_name_arn and not isinstance(domain_name_arn, str):
+            raise TypeError("Expected argument 'domain_name_arn' to be a str")
+        pulumi.set(__self__, "domain_name_arn", domain_name_arn)
         if endpoint_configuration and not isinstance(endpoint_configuration, dict):
             raise TypeError("Expected argument 'endpoint_configuration' to be a dict")
         pulumi.set(__self__, "endpoint_configuration", endpoint_configuration)
@@ -54,6 +58,9 @@ class GetDomainNameResult:
         if regional_hosted_zone_id and not isinstance(regional_hosted_zone_id, str):
             raise TypeError("Expected argument 'regional_hosted_zone_id' to be a str")
         pulumi.set(__self__, "regional_hosted_zone_id", regional_hosted_zone_id)
+        if routing_mode and not isinstance(routing_mode, str):
+            raise TypeError("Expected argument 'routing_mode' to be a str")
+        pulumi.set(__self__, "routing_mode", routing_mode)
         if security_policy and not isinstance(security_policy, str):
             raise TypeError("Expected argument 'security_policy' to be a str")
         pulumi.set(__self__, "security_policy", security_policy)
@@ -86,6 +93,14 @@ class GetDomainNameResult:
         The region-agnostic Amazon Route 53 Hosted Zone ID of the edge-optimized endpoint. The only valid value is `Z2FDTNDATAQYW2` for all regions.
         """
         return pulumi.get(self, "distribution_hosted_zone_id")
+
+    @property
+    @pulumi.getter(name="domainNameArn")
+    def domain_name_arn(self) -> Optional[builtins.str]:
+        """
+        The ARN of the domain name. Supported only for private custom domain names.
+        """
+        return pulumi.get(self, "domain_name_arn")
 
     @property
     @pulumi.getter(name="endpointConfiguration")
@@ -136,6 +151,11 @@ class GetDomainNameResult:
         return pulumi.get(self, "regional_hosted_zone_id")
 
     @property
+    @pulumi.getter(name="routingMode")
+    def routing_mode(self) -> Optional['DomainNameRoutingMode']:
+        return pulumi.get(self, "routing_mode")
+
+    @property
     @pulumi.getter(name="securityPolicy")
     def security_policy(self) -> Optional[builtins.str]:
         """
@@ -161,12 +181,14 @@ class AwaitableGetDomainNameResult(GetDomainNameResult):
             certificate_arn=self.certificate_arn,
             distribution_domain_name=self.distribution_domain_name,
             distribution_hosted_zone_id=self.distribution_hosted_zone_id,
+            domain_name_arn=self.domain_name_arn,
             endpoint_configuration=self.endpoint_configuration,
             mutual_tls_authentication=self.mutual_tls_authentication,
             ownership_verification_certificate_arn=self.ownership_verification_certificate_arn,
             regional_certificate_arn=self.regional_certificate_arn,
             regional_domain_name=self.regional_domain_name,
             regional_hosted_zone_id=self.regional_hosted_zone_id,
+            routing_mode=self.routing_mode,
             security_policy=self.security_policy,
             tags=self.tags)
 
@@ -174,7 +196,8 @@ class AwaitableGetDomainNameResult(GetDomainNameResult):
 def get_domain_name(domain_name: Optional[builtins.str] = None,
                     opts: Optional[pulumi.InvokeOptions] = None) -> AwaitableGetDomainNameResult:
     """
-    Resource Type definition for AWS::ApiGateway::DomainName.
+    The ``AWS::ApiGateway::DomainName`` resource specifies a custom domain name for your API in API Gateway.
+     You can use a custom domain name to provide a URL that's more intuitive and easier to recall. For more information about using custom domain names, see [Set up Custom Domain Name for an API in API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-custom-domains.html) in the *API Gateway Developer Guide*.
 
 
     :param builtins.str domain_name: The custom domain name as an API host name, for example, `my-api.example.com` .
@@ -188,18 +211,21 @@ def get_domain_name(domain_name: Optional[builtins.str] = None,
         certificate_arn=pulumi.get(__ret__, 'certificate_arn'),
         distribution_domain_name=pulumi.get(__ret__, 'distribution_domain_name'),
         distribution_hosted_zone_id=pulumi.get(__ret__, 'distribution_hosted_zone_id'),
+        domain_name_arn=pulumi.get(__ret__, 'domain_name_arn'),
         endpoint_configuration=pulumi.get(__ret__, 'endpoint_configuration'),
         mutual_tls_authentication=pulumi.get(__ret__, 'mutual_tls_authentication'),
         ownership_verification_certificate_arn=pulumi.get(__ret__, 'ownership_verification_certificate_arn'),
         regional_certificate_arn=pulumi.get(__ret__, 'regional_certificate_arn'),
         regional_domain_name=pulumi.get(__ret__, 'regional_domain_name'),
         regional_hosted_zone_id=pulumi.get(__ret__, 'regional_hosted_zone_id'),
+        routing_mode=pulumi.get(__ret__, 'routing_mode'),
         security_policy=pulumi.get(__ret__, 'security_policy'),
         tags=pulumi.get(__ret__, 'tags'))
 def get_domain_name_output(domain_name: Optional[pulumi.Input[builtins.str]] = None,
                            opts: Optional[Union[pulumi.InvokeOptions, pulumi.InvokeOutputOptions]] = None) -> pulumi.Output[GetDomainNameResult]:
     """
-    Resource Type definition for AWS::ApiGateway::DomainName.
+    The ``AWS::ApiGateway::DomainName`` resource specifies a custom domain name for your API in API Gateway.
+     You can use a custom domain name to provide a URL that's more intuitive and easier to recall. For more information about using custom domain names, see [Set up Custom Domain Name for an API in API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-custom-domains.html) in the *API Gateway Developer Guide*.
 
 
     :param builtins.str domain_name: The custom domain name as an API host name, for example, `my-api.example.com` .
@@ -212,11 +238,13 @@ def get_domain_name_output(domain_name: Optional[pulumi.Input[builtins.str]] = N
         certificate_arn=pulumi.get(__response__, 'certificate_arn'),
         distribution_domain_name=pulumi.get(__response__, 'distribution_domain_name'),
         distribution_hosted_zone_id=pulumi.get(__response__, 'distribution_hosted_zone_id'),
+        domain_name_arn=pulumi.get(__response__, 'domain_name_arn'),
         endpoint_configuration=pulumi.get(__response__, 'endpoint_configuration'),
         mutual_tls_authentication=pulumi.get(__response__, 'mutual_tls_authentication'),
         ownership_verification_certificate_arn=pulumi.get(__response__, 'ownership_verification_certificate_arn'),
         regional_certificate_arn=pulumi.get(__response__, 'regional_certificate_arn'),
         regional_domain_name=pulumi.get(__response__, 'regional_domain_name'),
         regional_hosted_zone_id=pulumi.get(__response__, 'regional_hosted_zone_id'),
+        routing_mode=pulumi.get(__response__, 'routing_mode'),
         security_policy=pulumi.get(__response__, 'security_policy'),
         tags=pulumi.get(__response__, 'tags')))

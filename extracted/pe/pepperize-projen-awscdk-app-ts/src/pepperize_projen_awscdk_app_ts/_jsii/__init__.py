@@ -32,9 +32,9 @@ import projen._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@pepperize/projen-awscdk-app-ts",
-    "0.0.707",
+    "0.0.708",
     __name__[0:-6],
-    "projen-awscdk-app-ts@0.0.707.jsii.tgz",
+    "projen-awscdk-app-ts@0.0.708.jsii.tgz",
 )
 
 __all__ = [

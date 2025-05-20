@@ -1,21 +1,24 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: python-qpid-proton
-Version: 0.39.0
+Version: 0.40.0
 Summary: An AMQP based messaging library.
-Home-page: http://qpid.apache.org/proton/
-Author: Apache Qpid
-Author-email: users@qpid.apache.org
+Author-email: Apache Qpid <users@qpid.apache.org>
 License: Apache Software License
+Project-URL: homepage, http://qpid.apache.org/proton/
 Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Intended Audience :: Developers
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3 :: Only
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Description-Content-Type: text/x-rst
+Requires-Dist: cffi>=1.0.0
 Provides-Extra: opentracing
+Requires-Dist: opentracing; extra == "opentracing"
+Requires-Dist: jaeger_client; extra == "opentracing"
 
 Python bindings for Qpid Proton
 ===============================

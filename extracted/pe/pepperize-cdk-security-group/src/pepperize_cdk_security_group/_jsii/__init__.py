@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@pepperize/cdk-security-group",
-    "0.0.649",
+    "0.0.650",
     __name__[0:-6],
-    "cdk-security-group@0.0.649.jsii.tgz",
+    "cdk-security-group@0.0.650.jsii.tgz",
 )
 
 __all__ = [

@@ -12,6 +12,7 @@ def asset_activate(
     asset_library_type: bpy._typing.rna_enums.AssetLibraryTypeItems | None = "LOCAL",
     asset_library_identifier: str = "",
     relative_asset_identifier: str = "",
+    use_toggle: bool | None = False,
 ):
     """Activate a brush asset as current sculpt and paint tool
 
@@ -23,6 +24,8 @@ def asset_activate(
     :type asset_library_identifier: str
     :param relative_asset_identifier: Relative Asset Identifier
     :type relative_asset_identifier: str
+    :param use_toggle: Toggle, Switch between the current and assigned brushes on consecutive uses.
+    :type use_toggle: bool | None
     """
 
 def asset_delete(execution_context: int | str | None = None, undo: bool | None = None):

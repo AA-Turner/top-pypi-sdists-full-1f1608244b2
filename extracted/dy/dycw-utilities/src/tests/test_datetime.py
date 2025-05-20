@@ -88,6 +88,8 @@ from utilities.datetime import (
     date_to_datetime,
     date_to_month,
     datetime_duration_to_float,
+    datetime_duration_to_microseconds,
+    datetime_duration_to_milliseconds,
     datetime_duration_to_timedelta,
     datetime_utc,
     days_since_epoch,
@@ -104,7 +106,7 @@ from utilities.datetime import (
     get_today,
     get_years,
     is_integral_timedelta,
-    is_local_datetime,
+    is_plain_datetime,
     is_weekday,
     is_zero_time,
     is_zoned_datetime,
@@ -128,8 +130,6 @@ from utilities.datetime import (
     serialize_month,
     sub_duration,
     timedelta_since_epoch,
-    timedelta_to_microseconds,
-    timedelta_to_milliseconds,
     yield_days,
     yield_weekdays,
 )
@@ -520,6 +520,60 @@ class TestDateTimeDurationToFloat:
         assert result == timedelta.total_seconds()
 
 
+class TestDateTimeDurationToMicrosecondsOrMilliseconds:
+    @given(timedelta=timedeltas())
+    def test_timedelta_to_microseconds(self, *, timedelta: dt.timedelta) -> None:
+        microseconds = datetime_duration_to_microseconds(timedelta)
+        result = microseconds_to_timedelta(microseconds)
+        assert result == timedelta
+
+    @given(microseconds=integers())
+    def test_microseconds_to_timedelta(self, *, microseconds: int) -> None:
+        with assume_does_not_raise(OverflowError):
+            timedelta = microseconds_to_timedelta(microseconds)
+        result = datetime_duration_to_microseconds(timedelta)
+        assert result == microseconds
+
+    @given(timedelta=timedeltas(), strict=booleans())
+    @settings(suppress_health_check={HealthCheck.filter_too_much})
+    def test_timedelta_to_milliseconds_exact(
+        self, *, timedelta: dt.timedelta, strict: bool
+    ) -> None:
+        _, remainder = divmod(timedelta.microseconds, _MICROSECONDS_PER_MILLISECOND)
+        _ = assume(remainder == 0)
+        milliseconds = datetime_duration_to_milliseconds(timedelta, strict=strict)
+        assert isinstance(milliseconds, int)
+        result = milliseconds_to_timedelta(milliseconds)
+        assert result == timedelta
+
+    @given(timedelta=timedeltas())
+    def test_timedelta_to_milliseconds_inexact(
+        self, *, timedelta: dt.timedelta
+    ) -> None:
+        _, remainder = divmod(timedelta.microseconds, _MICROSECONDS_PER_MILLISECOND)
+        _ = assume(remainder != 0)
+        milliseconds = datetime_duration_to_milliseconds(timedelta)
+        result = milliseconds_to_timedelta(round(milliseconds))
+        assert abs(result - timedelta) <= SECOND
+
+    @given(timedelta=timedeltas())
+    def test_timedelta_to_milliseconds_error(self, *, timedelta: dt.timedelta) -> None:
+        _, microseconds = divmod(timedelta.microseconds, _MICROSECONDS_PER_MILLISECOND)
+        _ = assume(microseconds != 0)
+        with raises(
+            TimedeltaToMillisecondsError,
+            match=r"Unable to convert .* to milliseconds; got .* microsecond\(s\)",
+        ):
+            _ = datetime_duration_to_milliseconds(timedelta, strict=True)
+
+    @given(milliseconds=int32s())
+    def test_milliseconds_to_timedelta(self, *, milliseconds: int) -> None:
+        with assume_does_not_raise(OverflowError):
+            timedelta = milliseconds_to_timedelta(milliseconds)
+        result = datetime_duration_to_milliseconds(timedelta)
+        assert result == milliseconds
+
+
 class TestDateTimeDurationToTimeDelta:
     @given(n=int32s())
     def test_int(self, *, n: int) -> None:
@@ -819,7 +873,7 @@ class TestIsIntegralTimeDelta:
         assert not is_integral_timedelta(timedelta)
 
 
-class TestIsLocalDateTime:
+class TestIsPlainDateTime:
     @mark.parametrize(
         ("obj", "expected"),
         [
@@ -829,7 +883,7 @@ class TestIsLocalDateTime:
         ],
     )
     def test_main(self, *, obj: Any, expected: bool) -> None:
-        result = is_local_datetime(obj)
+        result = is_plain_datetime(obj)
         assert result is expected
 
 
@@ -1134,7 +1188,7 @@ class TestSerializeAndParseCompact:
     @given(datetime=datetimes())
     def test_error_serialize(self, *, datetime: dt.datetime) -> None:
         with raises(
-            SerializeCompactError, match="Unable to serialize local datetime .*"
+            SerializeCompactError, match="Unable to serialize plain datetime .*"
         ):
             _ = serialize_compact(datetime)
 
@@ -1203,60 +1257,6 @@ class TestTimedeltaSinceEpoch:
             datetime2 = datetime.astimezone(time_zone2)
         result1, result2 = [timedelta_since_epoch(dt) for dt in [datetime1, datetime2]]
         assert result1 == result2
-
-
-class TestTimedeltaToMicrosecondsOrMilliseconds:
-    @given(timedelta=timedeltas())
-    def test_timedelta_to_microseconds(self, *, timedelta: dt.timedelta) -> None:
-        microseconds = timedelta_to_microseconds(timedelta)
-        result = microseconds_to_timedelta(microseconds)
-        assert result == timedelta
-
-    @given(microseconds=integers())
-    def test_microseconds_to_timedelta(self, *, microseconds: int) -> None:
-        with assume_does_not_raise(OverflowError):
-            timedelta = microseconds_to_timedelta(microseconds)
-        result = timedelta_to_microseconds(timedelta)
-        assert result == microseconds
-
-    @given(timedelta=timedeltas(), strict=booleans())
-    @settings(suppress_health_check={HealthCheck.filter_too_much})
-    def test_timedelta_to_milliseconds_exact(
-        self, *, timedelta: dt.timedelta, strict: bool
-    ) -> None:
-        _, remainder = divmod(timedelta.microseconds, _MICROSECONDS_PER_MILLISECOND)
-        _ = assume(remainder == 0)
-        milliseconds = timedelta_to_milliseconds(timedelta, strict=strict)
-        assert isinstance(milliseconds, int)
-        result = milliseconds_to_timedelta(milliseconds)
-        assert result == timedelta
-
-    @given(timedelta=timedeltas())
-    def test_timedelta_to_milliseconds_inexact(
-        self, *, timedelta: dt.timedelta
-    ) -> None:
-        _, remainder = divmod(timedelta.microseconds, _MICROSECONDS_PER_MILLISECOND)
-        _ = assume(remainder != 0)
-        milliseconds = timedelta_to_milliseconds(timedelta)
-        result = milliseconds_to_timedelta(round(milliseconds))
-        assert abs(result - timedelta) <= SECOND
-
-    @given(timedelta=timedeltas())
-    def test_timedelta_to_milliseconds_error(self, *, timedelta: dt.timedelta) -> None:
-        _, microseconds = divmod(timedelta.microseconds, _MICROSECONDS_PER_MILLISECOND)
-        _ = assume(microseconds != 0)
-        with raises(
-            TimedeltaToMillisecondsError,
-            match=r"Unable to convert .* to milliseconds; got .* microsecond\(s\)",
-        ):
-            _ = timedelta_to_milliseconds(timedelta, strict=True)
-
-    @given(milliseconds=int32s())
-    def test_milliseconds_to_timedelta(self, *, milliseconds: int) -> None:
-        with assume_does_not_raise(OverflowError):
-            timedelta = milliseconds_to_timedelta(milliseconds)
-        result = timedelta_to_milliseconds(timedelta)
-        assert result == milliseconds
 
 
 class TestTimedeltas:

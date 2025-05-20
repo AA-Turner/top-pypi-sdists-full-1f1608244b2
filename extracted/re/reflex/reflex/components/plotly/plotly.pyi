@@ -66,6 +66,7 @@ class Plotly(NoSSRComponent):
         | None = None,
         key: Any | None = None,
         id: Any | None = None,
+        ref: Var | None = None,
         class_name: Any | None = None,
         autofocus: bool | None = None,
         custom_attrs: dict[str, Var | Any] | None = None,
@@ -136,6 +137,7 @@ class Plotly(NoSSRComponent):
             style: The style of the component.
             key: A unique key for the component.
             id: The id for the component.
+            ref: The Var to pass as the ref to the component.
             class_name: The class name for the component.
             autofocus: Whether the component should take the focus once the page is loaded
             custom_attrs: custom attribute
@@ -169,6 +171,7 @@ class PlotlyBasic(Plotly):
         | None = None,
         key: Any | None = None,
         id: Any | None = None,
+        ref: Var | None = None,
         class_name: Any | None = None,
         autofocus: bool | None = None,
         custom_attrs: dict[str, Var | Any] | None = None,
@@ -239,6 +242,7 @@ class PlotlyBasic(Plotly):
             style: The style of the component.
             key: A unique key for the component.
             id: The id for the component.
+            ref: The Var to pass as the ref to the component.
             class_name: The class name for the component.
             autofocus: Whether the component should take the focus once the page is loaded
             custom_attrs: custom attribute
@@ -268,6 +272,7 @@ class PlotlyCartesian(Plotly):
         | None = None,
         key: Any | None = None,
         id: Any | None = None,
+        ref: Var | None = None,
         class_name: Any | None = None,
         autofocus: bool | None = None,
         custom_attrs: dict[str, Var | Any] | None = None,
@@ -338,6 +343,7 @@ class PlotlyCartesian(Plotly):
             style: The style of the component.
             key: A unique key for the component.
             id: The id for the component.
+            ref: The Var to pass as the ref to the component.
             class_name: The class name for the component.
             autofocus: Whether the component should take the focus once the page is loaded
             custom_attrs: custom attribute
@@ -367,6 +373,7 @@ class PlotlyGeo(Plotly):
         | None = None,
         key: Any | None = None,
         id: Any | None = None,
+        ref: Var | None = None,
         class_name: Any | None = None,
         autofocus: bool | None = None,
         custom_attrs: dict[str, Var | Any] | None = None,
@@ -437,6 +444,7 @@ class PlotlyGeo(Plotly):
             style: The style of the component.
             key: A unique key for the component.
             id: The id for the component.
+            ref: The Var to pass as the ref to the component.
             class_name: The class name for the component.
             autofocus: Whether the component should take the focus once the page is loaded
             custom_attrs: custom attribute
@@ -466,6 +474,7 @@ class PlotlyGl3d(Plotly):
         | None = None,
         key: Any | None = None,
         id: Any | None = None,
+        ref: Var | None = None,
         class_name: Any | None = None,
         autofocus: bool | None = None,
         custom_attrs: dict[str, Var | Any] | None = None,
@@ -536,6 +545,7 @@ class PlotlyGl3d(Plotly):
             style: The style of the component.
             key: A unique key for the component.
             id: The id for the component.
+            ref: The Var to pass as the ref to the component.
             class_name: The class name for the component.
             autofocus: Whether the component should take the focus once the page is loaded
             custom_attrs: custom attribute
@@ -565,6 +575,7 @@ class PlotlyGl2d(Plotly):
         | None = None,
         key: Any | None = None,
         id: Any | None = None,
+        ref: Var | None = None,
         class_name: Any | None = None,
         autofocus: bool | None = None,
         custom_attrs: dict[str, Var | Any] | None = None,
@@ -635,6 +646,7 @@ class PlotlyGl2d(Plotly):
             style: The style of the component.
             key: A unique key for the component.
             id: The id for the component.
+            ref: The Var to pass as the ref to the component.
             class_name: The class name for the component.
             autofocus: Whether the component should take the focus once the page is loaded
             custom_attrs: custom attribute
@@ -664,6 +676,7 @@ class PlotlyMapbox(Plotly):
         | None = None,
         key: Any | None = None,
         id: Any | None = None,
+        ref: Var | None = None,
         class_name: Any | None = None,
         autofocus: bool | None = None,
         custom_attrs: dict[str, Var | Any] | None = None,
@@ -734,6 +747,7 @@ class PlotlyMapbox(Plotly):
             style: The style of the component.
             key: A unique key for the component.
             id: The id for the component.
+            ref: The Var to pass as the ref to the component.
             class_name: The class name for the component.
             autofocus: Whether the component should take the focus once the page is loaded
             custom_attrs: custom attribute
@@ -763,6 +777,7 @@ class PlotlyFinance(Plotly):
         | None = None,
         key: Any | None = None,
         id: Any | None = None,
+        ref: Var | None = None,
         class_name: Any | None = None,
         autofocus: bool | None = None,
         custom_attrs: dict[str, Var | Any] | None = None,
@@ -833,6 +848,7 @@ class PlotlyFinance(Plotly):
             style: The style of the component.
             key: A unique key for the component.
             id: The id for the component.
+            ref: The Var to pass as the ref to the component.
             class_name: The class name for the component.
             autofocus: Whether the component should take the focus once the page is loaded
             custom_attrs: custom attribute
@@ -862,6 +878,7 @@ class PlotlyStrict(Plotly):
         | None = None,
         key: Any | None = None,
         id: Any | None = None,
+        ref: Var | None = None,
         class_name: Any | None = None,
         autofocus: bool | None = None,
         custom_attrs: dict[str, Var | Any] | None = None,
@@ -932,6 +949,7 @@ class PlotlyStrict(Plotly):
             style: The style of the component.
             key: A unique key for the component.
             id: The id for the component.
+            ref: The Var to pass as the ref to the component.
             class_name: The class name for the component.
             autofocus: Whether the component should take the focus once the page is loaded
             custom_attrs: custom attribute

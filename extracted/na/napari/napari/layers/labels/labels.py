@@ -410,6 +410,12 @@ class Labels(ScalarFieldBase):
         self._status = self.mode
         self._preserve_labels = False
 
+    def _slice_dtype(self):
+        """Calculate dtype of data view based on data dtype and current colormap"""
+        return self.colormap._data_to_texture(
+            np.zeros(0, dtype=normalize_dtype(self.dtype))
+        ).dtype
+
     def _post_init(self):
         self._reset_history()
         # Trigger generation of view slice and thumbnail
@@ -517,7 +523,7 @@ class Labels(ScalarFieldBase):
 
     def new_colormap(self, seed: int | None = None):
         if seed is None:
-            seed = np.random.default_rng().integers(2**32 - 1)
+            seed = int(np.random.default_rng().integers(2**32 - 1))
 
         orig = self._original_random_colormap
         self.colormap = shuffle_and_extend_colormap(

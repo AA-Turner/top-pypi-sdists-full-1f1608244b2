@@ -75,5 +75,5 @@ __all__ = [
 
 __conjure_generator_version__ = "4.9.0"
 
-__version__ = "0.683.0"
+__version__ = "0.684.2"
 

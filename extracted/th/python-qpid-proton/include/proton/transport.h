@@ -22,6 +22,7 @@
  *
  */
 
+#include <proton/annotations.h>
 #include <proton/import_export.h>
 #include <proton/type_compat.h>
 #include <proton/condition.h>
@@ -370,7 +371,8 @@ PN_EXTERN void pn_transport_vlogf(pn_transport_t *transport, const char *fmt, va
  *
  * @internal XXX Deprecate when logging is made independent
  */
-PN_EXTERN void pn_transport_logf(pn_transport_t *transport, const char *fmt, ...);
+PN_EXTERN void pn_transport_logf(pn_transport_t *transport, PN_PRINTF_FORMAT const char *fmt, ...)
+        PN_PRINTF_FORMAT_ATTR(2, 3);
 
 /**
  * Get the maximum allowed channel for a transport.
@@ -430,10 +432,16 @@ PN_EXTERN uint32_t pn_transport_get_max_frame(pn_transport_t *transport);
 /**
  * Set the maximum frame size of a transport.
  *
+ * The negotiated frame size cannot change over the life of the transport.  After
+ * the transport has started sending AMQP frames to the peer, this function call
+ * has no effect.  Typically, the maximum frame size is set when the transport is
+ * created.
+ *
  * @param[in] transport a transport object
  * @param[in] size the maximum frame size for the transport object
  *
- * @internal XXX Deprecate when moved to connection
+ * @internal XXX Deprecate when moved to connection, note size can change on
+ * reconnect with new transport, consider status return on new API.
  */
 PN_EXTERN void pn_transport_set_max_frame(pn_transport_t *transport, uint32_t size);
 

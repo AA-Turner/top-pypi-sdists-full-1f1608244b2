@@ -22,11 +22,13 @@ class Application(ConfigBuilder):
                 canonical_name="application.sensitive_data_masking_policy",
                 default_value=None,
                 type_cast=dict,
+                log_effective_config=False,
             ),
             ConfigOption(
                 canonical_name="application.input_exclusions",
                 default_value=[],
                 type_cast=list,
+                log_effective_config=False,
             ),
             ConfigOption(
                 canonical_name="application.metadata", default_value="", type_cast=str
@@ -58,5 +60,6 @@ class Application(ConfigBuilder):
                 canonical_name="application.url_exclusions",
                 default_value=[],
                 type_cast=list,
+                log_effective_config=False,
             ),
         ]

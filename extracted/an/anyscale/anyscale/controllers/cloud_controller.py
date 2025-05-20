@@ -2184,9 +2184,10 @@ class CloudController(BaseController):
                 f"{quota_error_str}\n\nFor instructions on how to increase quotas, visit this link: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html#request-increase"
             )
 
-    def register_generic_cloud(  # noqa: PLR0913
+    def register_azure_or_generic_cloud(  # noqa: PLR0913
         self,
         name: str,
+        provider: str,
         auto_add_user: bool = False,
         # Optional cloud-resource-scoped parameters.
         # Some of these are conditionally required.
@@ -2198,8 +2199,11 @@ class CloudController(BaseController):
         nfs_mount_path: Optional[str] = None,
         kubernetes_zones: Optional[List[str]] = None,
     ) -> None:
+        cloud_provider = (
+            CloudProviders.AZURE if provider == "azure" else CloudProviders.GENERIC
+        )
         self.cloud_event_producer.init_trace_context(
-            CloudAnalyticsEventCommandName.REGISTER, CloudProviders.GENERIC
+            CloudAnalyticsEventCommandName.REGISTER, cloud_provider,
         )
         self.cloud_event_producer.produce(
             CloudAnalyticsEventName.COMMAND_START, succeeded=True
@@ -2228,7 +2232,7 @@ class CloudController(BaseController):
                 write_cloud=WriteCloud(
                     name=name,
                     region=region,
-                    provider="GENERIC",
+                    provider=cloud_provider,
                     is_bring_your_own_resource=True,
                     cluster_management_stack_version=ClusterManagementStackVersions.V2,
                     auto_add_user=auto_add_user,
@@ -2984,6 +2988,7 @@ class CloudController(BaseController):
         assert cloud_provider in (
             CloudProviders.AWS,
             CloudProviders.GCP,
+            CloudProviders.AZURE,
             CloudProviders.GENERIC,
         ), f"Cloud provider {cloud_provider} not supported yet"
 
@@ -3018,9 +3023,10 @@ class CloudController(BaseController):
 
         # set cloud state to DELETING
         try:
-            if (
-                cloud_provider == CloudProviders.GENERIC
-                or cloud_provider == CloudProviders.AWS
+            if cloud_provider in (
+                CloudProviders.AWS,
+                CloudProviders.AZURE,
+                CloudProviders.GENERIC,
             ):
                 with self.log.spinner("Preparing to delete Anyscale cloud..."):
                     response = self.api_client.update_cloud_with_cloud_resource_api_v2_clouds_with_cloud_resource_router_cloud_id_put(

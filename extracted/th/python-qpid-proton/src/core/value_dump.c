@@ -94,7 +94,7 @@ static inline bool type_isunsigned_ifsimpleint(uint8_t type) {
 }
 
 static inline bool type_isulong(uint8_t type) {
-  return type==PNE_ULONG0 || type==PNE_SMALLULONG || type==PNE_ULONG0;
+  return type==PNE_ULONG0 || type==PNE_SMALLULONG || type==PNE_ULONG;
 }
 
 static inline bool type_iscompund(uint8_t type) {
@@ -284,7 +284,7 @@ void pn_value_dump_scalar(uint8_t type, pn_bytes_t value, pn_fixed_string_t *out
         break;
       case 3: {
         bool quote = false;
-        if (!isalpha(value.start[0])) {
+        if (value.size==0 || !isalpha(value.start[0])) {
           quote = true;
         } else {
           for (size_t i = 1; i < value.size; i++) {
@@ -346,6 +346,14 @@ void pn_value_dump_list(uint32_t count, pn_bytes_t value, pn_fixed_string_t *out
 
 void pn_value_dump_described_list(uint32_t count, pn_bytes_t value, uint64_t dcode, pn_fixed_string_t *output) {
   uint32_t elements = 0;
+  uint8_t field_count;
+  uint8_t first_field_index;
+  bool known_descriptor = dcode>=FIELD_MIN && dcode<=FIELD_MAX;
+  if (known_descriptor) {
+    const pn_fields_t *fields = &FIELDS[dcode-FIELD_MIN];
+    field_count = fields->field_count;
+    first_field_index = fields->first_field_index;
+  }
   bool output_element = false;
   pn_fixed_string_addf(output, "[");
   while (value.size) {
@@ -356,10 +364,11 @@ void pn_value_dump_described_list(uint32_t count, pn_bytes_t value, uint64_t dco
       if (output_element) {
         pn_fixed_string_addf(output, ", ");
       }
-      const pn_fields_t *fields = &FIELDS[dcode-FIELD_MIN];
-      if (elements < fields->field_count) {
-        pn_fixed_string_addf(output, "%s=",
-                      (const char*)FIELD_STRINGPOOL.STRING0+FIELD_FIELDS[fields->first_field_index+elements]);
+      if (known_descriptor) {
+        if (elements < field_count) {
+          pn_fixed_string_addf(output, "%s=",
+                        (const char*)FIELD_STRINGPOOL.STRING0+FIELD_FIELDS[first_field_index+elements]);
+        }
       }
       size_t size = pni_value_dump(value, output);
       value = pn_bytes_advance(value, size);
@@ -467,7 +476,7 @@ void pn_value_dump_array(uint32_t count, pn_bytes_t value, pn_fixed_string_t *ou
   pn_value_dump_nondescribed_value(type, evalue, output);
   if (type_isspecial(type)) {
     if (count>1) {
-      pn_fixed_string_addf(output, ", ...(%d more)]", count-1);
+      pn_fixed_string_addf(output, ", ...(%u more)]", count-1);
     } else {
       pn_fixed_string_addf(output, "]");
     }
@@ -598,6 +607,7 @@ size_t pni_value_dump(pn_bytes_t frame, pn_fixed_string_t *output)
       fsize += pn_value_dump_described(frame, dcode, output);
     } else {
       pn_value_dump_nondescribed_value(type, value, output);
+      pn_fixed_string_addf(output, " ");
       fsize += pn_value_dump_nondescribed(frame, output);
     }
     return fsize;

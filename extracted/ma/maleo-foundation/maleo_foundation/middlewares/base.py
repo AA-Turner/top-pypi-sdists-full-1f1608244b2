@@ -115,21 +115,6 @@ class BaseMiddleware(BaseHTTPMiddleware):
             self._requests[client_ip].append(now)
             return False
 
-    def _append_cors_headers(
-        self,
-        request:Request,
-        response:Response
-    ) -> Response:
-        origin = request.headers.get("Origin")
-
-        if origin in self._allow_origins:
-            response.headers["Access-Control-Allow-Origin"] = origin
-            response.headers["Access-Control-Allow-Methods"] = ", ".join(self._allow_methods)
-            response.headers["Access-Control-Allow-Headers"] = ", ".join(self._allow_headers)
-            response.headers["Access-Control-Allow-Credentials"] = "true" if self._allow_credentials else "false"
-
-        return response
-
     def _add_response_headers(
         self,
         request:Request,
@@ -151,7 +136,6 @@ class BaseMiddleware(BaseHTTPMiddleware):
         sign_result = self._maleo_foundation.services.signature.sign(parameters=sign_parameters)
         if sign_result.success:
             response.headers["X-Signature"] = sign_result.data.signature
-        response = self._append_cors_headers(request=request, response=response) #* Re-append CORS headers
         if (authentication.user.is_authenticated
             and authentication.credentials.token_type == BaseEnums.TokenType.REFRESH
             and authentication.credentials.payload is not None

@@ -738,10 +738,7 @@ class _Sandbox(_Object, type_prefix="sb"):
         recursive: Optional[bool] = None,
         timeout: Optional[int] = None,
     ) -> AsyncIterator[FileWatchEvent]:
-        """Watch a file or directory in the Sandbox for changes.
-
-        See the [guide](/docs/guide/sandbox-files#file-watching) for usage information.
-        """
+        """Watch a file or directory in the Sandbox for changes."""
         task_id = await self._get_task_id()
         async for event in _FileIO.watch(path, self._client, task_id, filter, recursive, timeout):
             yield event
@@ -775,9 +772,9 @@ class _Sandbox(_Object, type_prefix="sb"):
     @property
     def returncode(self) -> Optional[int]:
         """Return code of the Sandbox process if it has finished running, else `None`."""
-
-        if self._result is None:
+        if self._result is None or self._result.status == api_pb2.GenericResult.GENERIC_STATUS_UNSPECIFIED:
             return None
+
         # Statuses are converted to exitcodes so we can conform to subprocess API.
         # TODO: perhaps there should be a separate property that returns an enum directly?
         elif self._result.status == api_pb2.GenericResult.GENERIC_STATUS_TIMEOUT:
@@ -819,8 +816,9 @@ class _Sandbox(_Object, type_prefix="sb"):
                 return
 
             for sandbox_info in resp.sandboxes:
+                sandbox_info: api_pb2.SandboxInfo
                 obj = _Sandbox._new_hydrated(sandbox_info.id, client, None)
-                obj._result = sandbox_info.task_info.result
+                obj._result = sandbox_info.task_info.result  # TODO: send SandboxInfo as metadata to _new_hydrated?
                 yield obj
 
             # Fetch the next batch starting from the end of the current one.

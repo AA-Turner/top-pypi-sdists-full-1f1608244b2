@@ -25,7 +25,6 @@ from ads.aqua.common.utils import (
     build_pydantic_error_message,
     get_combined_params,
     get_container_params_type,
-    get_model_by_reference_paths,
     get_ocid_substring,
     get_params_dict,
     get_params_list,
@@ -46,9 +45,12 @@ from ads.aqua.constants import (
     UNKNOWN_DICT,
 )
 from ads.aqua.data import AquaResourceIdentifier
-from ads.aqua.finetuning.finetuning import FineTuneCustomMetadata
 from ads.aqua.model import AquaModelApp
 from ads.aqua.model.constants import AquaModelMetadataKeys, ModelCustomMetadataFields
+from ads.aqua.model.utils import (
+    extract_base_model_from_ft,
+    extract_fine_tune_artifacts_path,
+)
 from ads.aqua.modeldeployment.entities import (
     AquaDeployment,
     AquaDeploymentConfig,
@@ -178,9 +180,7 @@ class AquaDeploymentApp(AquaApp):
         # validate instance shape availability in compartment
         available_shapes = [
             shape.name.lower()
-            for shape in self.list_shapes(
-                compartment_id=compartment_id
-            )
+            for shape in self.list_shapes(compartment_id=compartment_id)
         ]
 
         if create_deployment_details.instance_shape.lower() not in available_shapes:
@@ -213,6 +213,7 @@ class AquaDeploymentApp(AquaApp):
             )
         else:
             model_ids = [model.model_id for model in create_deployment_details.models]
+
             try:
                 model_config_summary = self.get_multimodel_deployment_config(
                     model_ids=model_ids, compartment_id=compartment_id
@@ -345,22 +346,6 @@ class AquaDeploymentApp(AquaApp):
         config_source_id = create_deployment_details.model_id
         model_name = aqua_model.display_name
 
-        is_fine_tuned_model = Tags.AQUA_FINE_TUNED_MODEL_TAG in aqua_model.freeform_tags
-
-        if is_fine_tuned_model:
-            try:
-                config_source_id = aqua_model.custom_metadata_list.get(
-                    FineTuneCustomMetadata.FINE_TUNE_SOURCE
-                ).value
-                model_name = aqua_model.custom_metadata_list.get(
-                    FineTuneCustomMetadata.FINE_TUNE_SOURCE_NAME
-                ).value
-            except ValueError as err:
-                raise AquaValueError(
-                    f"Either {FineTuneCustomMetadata.FINE_TUNE_SOURCE} or {FineTuneCustomMetadata.FINE_TUNE_SOURCE_NAME} is missing "
-                    f"from custom metadata for the model {config_source_id}"
-                ) from err
-
         # set up env and cmd var
         env_var = create_deployment_details.env_var or {}
         cmd_var = create_deployment_details.cmd_var or []
@@ -380,19 +365,11 @@ class AquaDeploymentApp(AquaApp):
 
         env_var.update({"BASE_MODEL": f"{model_path_prefix}"})
 
+        is_fine_tuned_model = Tags.AQUA_FINE_TUNED_MODEL_TAG in aqua_model.freeform_tags
+
         if is_fine_tuned_model:
-            _, fine_tune_output_path = get_model_by_reference_paths(
-                aqua_model.model_file_description
-            )
-
-            if not fine_tune_output_path:
-                raise AquaValueError(
-                    "Fine tuned output path is not available in the model artifact."
-                )
-
-            os_path = ObjectStorageDetails.from_path(fine_tune_output_path)
-            fine_tune_output_path = os_path.filepath.rstrip("/")
-
+            config_source_id, model_name = extract_base_model_from_ft(aqua_model)
+            _, fine_tune_output_path = extract_fine_tune_artifacts_path(aqua_model)
             env_var.update({"FT_MODEL": f"{fine_tune_output_path}"})
 
         container_type_key = self._get_container_type_key(
@@ -645,7 +622,15 @@ class AquaDeploymentApp(AquaApp):
                 os_path = ObjectStorageDetails.from_path(artifact_path_prefix)
                 artifact_path_prefix = os_path.filepath.rstrip("/")
 
-            model_config.append({"params": params, "model_path": artifact_path_prefix})
+            # override by-default completion/ chat endpoint with other endpoint (embedding)
+            config_data = {"params": params, "model_path": artifact_path_prefix}
+            if model.model_task:
+                config_data["model_task"] = model.model_task
+
+            if model.fine_tune_weights_location:
+                config_data["fine_tune_weights_location"] = model.fine_tune_weights_location
+
+            model_config.append(config_data)
             model_name_list.append(model.model_name)
 
         env_var.update({AQUA_MULTI_MODEL_CONFIG: json.dumps({"models": model_config})})
@@ -802,6 +787,9 @@ class AquaDeploymentApp(AquaApp):
 
         # we arbitrarily choose last 8 characters of OCID to identify MD in telemetry
         telemetry_kwargs = {"ocid": get_ocid_substring(deployment_id, key_len=8)}
+
+        if Tags.BASE_MODEL_CUSTOM in tags:
+            telemetry_kwargs[ "custom_base_model"] = True
 
         # tracks unique deployments that were created in the user compartment
         self.telemetry.record_event_async(

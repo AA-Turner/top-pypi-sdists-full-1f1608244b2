@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: dify_plugin
-Version: 0.2.4
+Version: 0.3.0
 Summary: Dify Plugin SDK
 Keywords: dify,plugin,sdk
 Author-Email: langgenius <hello@dify.ai>
@@ -20,6 +20,7 @@ Requires-Dist: requests~=2.32.3
 Requires-Dist: socksio==1.0.0
 Requires-Dist: tiktoken~=0.8.0
 Requires-Dist: yarl<2.0,>=1.9.4
+Requires-Dist: packaging>=25.0
 Description-Content-Type: text/markdown
 
 # Dify Plugin SDK

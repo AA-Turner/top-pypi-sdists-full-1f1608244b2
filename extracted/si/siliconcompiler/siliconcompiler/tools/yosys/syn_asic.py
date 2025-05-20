@@ -36,6 +36,8 @@ def setup(chip):
     # Input/output requirements.
     if f'{design}.v' in input_provides(chip, step, index):
         chip.set('tool', tool, 'task', task, 'input', design + '.v', step=step, index=index)
+    elif f'{design}.sv' in input_provides(chip, step, index):
+        chip.set('tool', tool, 'task', task, 'input', design + '.sv', step=step, index=index)
     else:
         added = False
         added |= add_require_input(chip, 'input', 'rtl', 'systemverilog',
@@ -565,8 +567,6 @@ def _generate_cell_area_report(chip):
             area = info["area"]
 
         for cell, inst_count in info["num_cells_by_type"].items():
-            # print(module, cell, inst_count)
-
             cell_area, cell_count = get_area_count(cell)
 
             count += cell_count * inst_count

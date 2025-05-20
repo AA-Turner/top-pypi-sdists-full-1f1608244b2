@@ -1,12 +1,11 @@
 use std::fmt;
 
 use async_trait::async_trait;
-use base64::{engine::general_purpose, Engine as _};
+use base64::{Engine as _, engine::general_purpose};
 use log::{debug, trace};
-use rand::rngs::StdRng;
-use rand::SeedableRng;
-use reqwest::header::COOKIE;
 use reqwest::Client;
+use reqwest::header::COOKIE;
+use rsa::rand_core::OsRng;
 use serde::de::DeserializeOwned;
 
 use crate::api::protocol::TapoProtocol;
@@ -14,7 +13,7 @@ use crate::requests::{
     HandshakeParams, LoginDeviceParams, SecurePassthroughParams, TapoParams, TapoRequest,
 };
 use crate::responses::{
-    validate_response, HandshakeResult, TapoResponse, TapoResponseExt, TapoResult, TokenResult,
+    HandshakeResult, TapoResponse, TapoResponseExt, TapoResult, TokenResult, validate_response,
 };
 
 use crate::{Error, TapoResponseError};
@@ -134,7 +133,7 @@ impl PassthroughProtocol {
     pub fn new(client: Client) -> Result<Self, Error> {
         Ok(Self {
             client,
-            key_pair: PassthroughKeyPair::new(StdRng::from_entropy())?,
+            key_pair: PassthroughKeyPair::new(OsRng)?,
             session: None,
         })
     }

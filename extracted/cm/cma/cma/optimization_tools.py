@@ -3,6 +3,7 @@
 from __future__ import absolute_import, division, print_function  #, unicode_literals
 import sys
 import warnings
+import math
 import numpy as np
 from multiprocessing import Pool as ProcessingPool
 # from pathos.multiprocessing import ProcessingPool
@@ -321,14 +322,14 @@ class BestSolution(object):
 
     Keeps also track of the genotype, if available.
     """
-    def __init__(self, x=None, f=np.inf, evals=None):
+    def __init__(self, x=None, f=math.inf, evals=None):
         """initialize the best solution with ``x``, ``f``, and ``evals``.
 
         Better solutions have smaller ``f``-values.
         """
         self.x = x
         self.x_geno = None
-        self.f = f if f is not None and f is not np.nan else np.inf
+        self.f = f if f is not None and f is not np.nan else math.inf
         self.evals = evals
         self.evalsall = evals
         self.compared = 0
@@ -351,7 +352,7 @@ class BestSolution(object):
                 self.evalsall = arx.evalsall
             elif arx.evalsall is not None:
                 self.evalsall = max((self.evalsall, arx.evalsall))
-            if arx.f is not None and arx.f < np.inf:
+            if arx.f is not None and arx.f < math.inf:
                 self.update([arx.x], xarchive, [arx.f], arx.evals)
             self.compared += arx.compared
             return self
@@ -364,16 +365,17 @@ class BestSolution(object):
             return
         if minidx is np.nan:
             return
-        minarf = arf[minidx]
+        minarf = arf[minidx] if isinstance(arf[minidx], int) else float(arf[minidx])
         # minarf = reduce(lambda x, y: y if y and y is not np.nan
-        #                   and y < x else x, arf, np.inf)
-        if minarf < np.inf and (minarf < self.f or self.f is None):
-            self.x, self.f = arx[minidx], arf[minidx]
+        #                   and y < x else x, arf, math.inf)
+        if minarf < math.inf and (minarf < self.f or self.f is None):
+            self.x = arx[minidx]
+            self.f = minarf
             if xarchive is not None and xarchive.get(self.x) is not None:
                 self.x_geno = xarchive[self.x].get('geno')
             else:
                 self.x_geno = None
-            self.evals = None if not evals else evals - len(arf) + minidx + 1
+            self.evals = None if not evals else evals - len(arf) + int(minidx) + 1  # minidx was np.int
             self.evalsall = evals
         elif evals:
             self.evalsall = evals
@@ -386,7 +388,7 @@ class BestSolution(object):
 class BestSolution2(object):
     """minimal tracker of a smallest f-value with variable meta-info"""
     def __init__(self):
-        self.f = np.inf
+        self.f = math.inf
         self.x = None
         self.info = None
         self.count_saved = None
@@ -811,9 +813,10 @@ class NoiseHandler(object):
 class Sections(object):
     """plot sections through an objective function.
 
-    A first rational thing to do, when facing an (expensive)
-    application. By default 6 points in each coordinate are evaluated.
-    This class is still experimental.
+    A first rational thing to do, when facing an (expensive) application.
+    By default 6 points in each coordinate are evaluated. The data is saved
+    and reloaded by default. A change of basis will invalide the loaded
+    result. This class is still experimental.
 
     Examples
     --------
@@ -833,7 +836,7 @@ class Sections(object):
     is attribute ``name`` and by default ``str(func)``, see `__init__`.
 
     A random (orthogonal) basis can be generated with
-    ``cma.Rotation()(np.eye(3))``.
+    ``cma.transformations.Rotation()(np.eye(3))``.
 
     CAVEAT: The default name is unique in the function name, but it
     should be unique in all parameters of `__init__` but `plot_cmd`
@@ -897,7 +900,7 @@ class Sections(object):
             self.res = {}
             self.res['x'] = x
 
-    def do(self, repetitions=1, locations=np.arange(-0.5, 0.6, 0.2), plot=True):
+    def do(self, repetitions=1, locations=tuple((i - 2.5) / 3 for i in range(6)), plot=True):
         """generates, plots and saves function values ``func(y)``,
         where ``y`` is 'close' to `x` (see `__init__()`). The data are stored in
         the ``res`` attribute and the class instance is saved in a file
@@ -947,7 +950,7 @@ class Sections(object):
         res = self.res
 
         flatx, flatf = self.flattened()
-        minf = np.inf
+        minf = math.inf
         for i in flatf:
             minf = min((minf, min(flatf[i])))
         addf = 1e-9 - minf if minf <= 1e-9 else 0
@@ -956,8 +959,8 @@ class Sections(object):
             arx = sorted(res[i].keys())
             plot_cmd(arx, [tf(np.median(res[i][x]) + addf) for x in arx], color + '-')
             pyplot.text(arx[-1], tf(np.median(res[i][arx[-1]])), i)
-            if len(flatx[i]) < 11:
-                plot_cmd(flatx[i], tf(np.array(flatf[i]) + addf), color + 'o')
+            if len(flatx[i]) < 33:
+                plot_cmd(flatx[i], tf(np.array(flatf[i]) + addf), color + ('o' if len(flatx[i]) < 11 else '.'))
         pyplot.ylabel('f + ' + str(addf))
         pyplot.draw()
         pyplot.ion()

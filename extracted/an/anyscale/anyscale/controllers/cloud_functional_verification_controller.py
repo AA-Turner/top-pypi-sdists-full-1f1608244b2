@@ -25,6 +25,7 @@ from anyscale.client.openapi_client.models import (
     ApplyProductionServiceV2Model,
     CloudAnalyticsEventName,
     CloudProviders,
+    ComputeTemplateQuery,
     CreateExperimentalWorkspace,
     ServiceEventCurrentState,
     SessionState,
@@ -33,7 +34,6 @@ from anyscale.controllers.base_controller import BaseController
 from anyscale.project_utils import get_default_project
 from anyscale.sdk.anyscale_client.models import (
     ComputeNodeType,
-    ComputeTemplateQuery,
     CreateClusterCompute,
     CreateClusterComputeConfig,
     ServiceConfig,
@@ -50,7 +50,7 @@ SERVICE_VERIFICATION_TIMEOUT_MINUTES = 30  # for a single rollout
 MAXIMUM_UPTIME_MINUTES = 15
 IDLE_TERMINATION_MINUTES = 5
 HEAD_NODE_TYPE_AWS = "m5.xlarge"  # on demand price ~$0.20 per hour
-HEAD_NODE_TYPE_GCP = "n1-standard-2"  # on demand price ~$0.11 per hour
+HEAD_NODE_TYPE_GCP = "n2-highmem-2"  # on demand price ~$0.13 per hour
 CREATE_COMPUTE_CONFIG_TIMEOUT_SECONDS = 600  # 10 minutes
 
 # Workspace verification will fail fast if any of the following logs are found

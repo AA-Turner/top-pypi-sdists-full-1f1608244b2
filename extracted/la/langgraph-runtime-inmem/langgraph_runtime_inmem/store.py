@@ -88,10 +88,13 @@ def set_store_config(config: dict) -> None:
     from langgraph_api.graph import resolve_embeddings
 
     _STORE_CONFIG = config.copy()
-    _STORE_CONFIG["index"]["embed"] = resolve_embeddings(_STORE_CONFIG.get("index", {}))
+    index_config = _STORE_CONFIG.get("index", {})
+    if index_config:
+        _STORE_CONFIG["index"]["embed"] = resolve_embeddings(index_config)
+        index_config["embed"] = _STORE_CONFIG["index"]["embed"]
     # Re-create the store
     STORE.close()
-    STORE = DiskBackedInMemStore(index=_STORE_CONFIG.get("index", {}))
+    STORE = DiskBackedInMemStore(index=index_config)
 
 
 def Store(*args: Any, **kwargs: Any) -> DiskBackedInMemStore:

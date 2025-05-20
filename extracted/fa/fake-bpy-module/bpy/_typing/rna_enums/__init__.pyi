@@ -532,6 +532,8 @@ type EventTypeItems = typing.Literal[
     "WHEELDOWNMOUSE",  # Wheel Down.WhDown.
     "WHEELINMOUSE",  # Wheel In.WhIn.
     "WHEELOUTMOUSE",  # Wheel Out.WhOut.
+    "WHEELLEFTMOUSE",  # Wheel Left.WhLeft.
+    "WHEELRIGHTMOUSE",  # Wheel Right.WhRight.
     "A",
     "B",  # <string>:4: (INFO/1) Enumerated list start value not ordinal-1: "B" (ordinal 2)
     "C",  # <string>:4: (INFO/1) Enumerated list start value not ordinal-1: "C" (ordinal 3)
@@ -1522,6 +1524,9 @@ type IconItems = typing.Literal[
     "KEY_TAB",  # KEY_TAB.
     "KEY_WINDOWS_FILLED",  # KEY_WINDOWS_FILLED.
     "KEY_WINDOWS",  # KEY_WINDOWS.
+    "GESTURE_PAN",  # GESTURE_PAN.
+    "GESTURE_ROTATE",  # GESTURE_ROTATE.
+    "GESTURE_ZOOM",  # GESTURE_ZOOM.
     "FUND",  # FUND.
     "HEART",  # HEART.
     "INTERNET_OFFLINE",  # INTERNET_OFFLINE.
@@ -1713,6 +1718,9 @@ type IconItems = typing.Literal[
     "EVENT_EQUAL",  # EVENT_EQUAL.
     "EVENT_LEFTBRACKET",  # EVENT_LEFTBRACKET.
     "EVENT_RIGHTBRACKET",  # EVENT_RIGHTBRACKET.
+    "EVENT_PAD_PAN",  # EVENT_PAD_PAN.
+    "EVENT_PAD_ROTATE",  # EVENT_PAD_ROTATE.
+    "EVENT_PAD_ZOOM",  # EVENT_PAD_ZOOM.
     "EVENT_NDOF_BUTTON_V1",  # EVENT_NDOF_BUTTON_V1.
     "EVENT_NDOF_BUTTON_V2",  # EVENT_NDOF_BUTTON_V2.
     "EVENT_NDOF_BUTTON_V3",  # EVENT_NDOF_BUTTON_V3.
@@ -2523,6 +2531,7 @@ type PropertyFlagItems = typing.Literal[
     "TEXTEDIT_UPDATE",  # Update on every keystroke in textedit 'mode'.
     "OUTPUT_PATH",  # Output Path.
     "PATH_SUPPORTS_BLEND_RELATIVE",  # Relative Path Support.This path supports relative prefix "//" which is expanded the the directory where the current ".blend" file is located..
+    "SUPPORTS_TEMPLATES",  # Variable expression support.This path supports the "{variable_name}" template syntax, which substitutes the value of the referenced variable in place of the template expression.
 ]
 type PropertyOverrideFlagCollectionItems = typing.Literal[
     "LIBRARY_OVERRIDABLE",  # Library Overridable.Make that property editable in library overrides of linked data-blocks.NOTE: For a property to be overridable, its whole chain of parent properties must also be defined as overridable.

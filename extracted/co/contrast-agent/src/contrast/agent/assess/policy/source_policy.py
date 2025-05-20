@@ -3,7 +3,6 @@
 from collections.abc import Mapping
 import functools
 
-
 import contrast
 from contrast.agent.assess.adjusted_span import AdjustedSpan
 from contrast.agent.assess.policy.source_node import SourceNode
@@ -320,6 +319,12 @@ def _cs__apply_source(
             source_type=source_type,
             source_name=source_name,
         )
+
+        # Only report the source if we have written policy for it.
+        # If we were to report all sources, then events such as pre-tracking
+        # the WSGI environ would result in a lot of noise. (PYT-825)
+        if node.policy_patch:
+            target_properties.report_source(target_properties.event)
 
         context.source_created()
 

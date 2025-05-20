@@ -4,9 +4,7 @@ use std::sync::Arc;
 
 use anyhow::Result;
 #[cfg(feature = "artifact-graph")]
-pub use artifact::{
-    Artifact, ArtifactCommand, ArtifactGraph, ArtifactId, CodeRef, StartSketchOnFace, StartSketchOnPlane,
-};
+pub use artifact::{Artifact, ArtifactCommand, ArtifactGraph, CodeRef, StartSketchOnFace, StartSketchOnPlane};
 use cache::OldAstState;
 pub use cache::{bust_cache, clear_mem_cache};
 #[cfg(feature = "artifact-graph")]
@@ -22,11 +20,12 @@ use kcmc::{
     websocket::{ModelingSessionData, OkWebSocketResponseData},
     ImageFormat, ModelingCmd,
 };
-use kittycad_modeling_cmds as kcmc;
+use kittycad_modeling_cmds::{self as kcmc, id::ModelingCmdId};
 pub use memory::EnvironmentRef;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 pub use state::{ExecState, MetaSettings};
+use uuid::Uuid;
 
 #[cfg(feature = "artifact-graph")]
 use crate::execution::artifact::build_artifact_graph;
@@ -51,9 +50,9 @@ pub(crate) mod annotations;
 #[cfg(feature = "artifact-graph")]
 mod artifact;
 pub(crate) mod cache;
-#[cfg(feature = "artifact-graph")]
 mod cad_op;
 mod exec_ast;
+pub mod fn_call;
 mod geometry;
 mod id_generator;
 mod import;
@@ -62,6 +61,11 @@ mod memory;
 mod state;
 pub mod typed_path;
 pub(crate) mod types;
+
+enum StatementKind<'a> {
+    Declaration { name: &'a str },
+    Expression,
+}
 
 /// Outcome of executing a program.  This is used in TS.
 #[derive(Debug, Clone, Serialize, ts_rs::TS, PartialEq)]
@@ -854,10 +858,9 @@ impl ExecutorContext {
 
             for module in modules {
                 let Some((import_stmt, module_id, module_path, repr)) = universe.get(&module) else {
-                    return Err(KclErrorWithOutputs::no_outputs(KclError::Internal(KclErrorDetails {
-                        message: format!("Module {module} not found in universe"),
-                        source_ranges: Default::default(),
-                    })));
+                    return Err(KclErrorWithOutputs::no_outputs(KclError::Internal(
+                        KclErrorDetails::new(format!("Module {module} not found in universe"), Default::default()),
+                    )));
                 };
                 let module_id = *module_id;
                 let module_path = module_path.clone();
@@ -917,10 +920,10 @@ impl ExecutorContext {
 
                             result.map(|val| ModuleRepr::Foreign(geom.clone(), val))
                         }
-                        ModuleRepr::Dummy | ModuleRepr::Root => Err(KclError::Internal(KclErrorDetails {
-                            message: format!("Module {module_path} not found in universe"),
-                            source_ranges: vec![source_range],
-                        })),
+                        ModuleRepr::Dummy | ModuleRepr::Root => Err(KclError::Internal(KclErrorDetails::new(
+                            format!("Module {module_path} not found in universe"),
+                            vec![source_range],
+                        ))),
                     }
                 };
 
@@ -1284,10 +1287,10 @@ impl ExecutorContext {
             .await?;
 
         let kittycad_modeling_cmds::websocket::OkWebSocketResponseData::Export { files } = resp else {
-            return Err(KclError::Internal(crate::errors::KclErrorDetails {
-                message: format!("Expected Export response, got {resp:?}",),
-                source_ranges: vec![SourceRange::default()],
-            }));
+            return Err(KclError::Internal(crate::errors::KclErrorDetails::new(
+                format!("Expected Export response, got {resp:?}",),
+                vec![SourceRange::default()],
+            )));
         };
 
         Ok(files)
@@ -1304,10 +1307,10 @@ impl ExecutorContext {
                     coords: *kittycad_modeling_cmds::coord::KITTYCAD,
                     created: if deterministic_time {
                         Some("2021-01-01T00:00:00Z".parse().map_err(|e| {
-                            KclError::Internal(crate::errors::KclErrorDetails {
-                                message: format!("Failed to parse date: {}", e),
-                                source_ranges: vec![SourceRange::default()],
-                            })
+                            KclError::Internal(crate::errors::KclErrorDetails::new(
+                                format!("Failed to parse date: {}", e),
+                                vec![SourceRange::default()],
+                            ))
                         })?)
                     } else {
                         None
@@ -1321,6 +1324,51 @@ impl ExecutorContext {
 
     pub async fn close(&self) {
         self.engine.close().await;
+    }
+}
+
+#[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq, Ord, PartialOrd, Hash, ts_rs::TS, JsonSchema)]
+pub struct ArtifactId(Uuid);
+
+impl ArtifactId {
+    pub fn new(uuid: Uuid) -> Self {
+        Self(uuid)
+    }
+}
+
+impl From<Uuid> for ArtifactId {
+    fn from(uuid: Uuid) -> Self {
+        Self::new(uuid)
+    }
+}
+
+impl From<&Uuid> for ArtifactId {
+    fn from(uuid: &Uuid) -> Self {
+        Self::new(*uuid)
+    }
+}
+
+impl From<ArtifactId> for Uuid {
+    fn from(id: ArtifactId) -> Self {
+        id.0
+    }
+}
+
+impl From<&ArtifactId> for Uuid {
+    fn from(id: &ArtifactId) -> Self {
+        id.0
+    }
+}
+
+impl From<ModelingCmdId> for ArtifactId {
+    fn from(id: ModelingCmdId) -> Self {
+        Self::new(*id.as_ref())
+    }
+}
+
+impl From<&ModelingCmdId> for ArtifactId {
+    fn from(id: &ModelingCmdId) -> Self {
+        Self::new(*id.as_ref())
     }
 }
 
@@ -1339,10 +1387,10 @@ pub(crate) async fn parse_execute_with_project_dir(
     let exec_ctxt = ExecutorContext {
         engine: Arc::new(Box::new(
             crate::engine::conn_mock::EngineConnection::new().await.map_err(|err| {
-                KclError::Internal(crate::errors::KclErrorDetails {
-                    message: format!("Failed to create mock engine connection: {}", err),
-                    source_ranges: vec![SourceRange::default()],
-                })
+                KclError::Internal(crate::errors::KclErrorDetails::new(
+                    format!("Failed to create mock engine connection: {}", err),
+                    vec![SourceRange::default()],
+                ))
             })?,
         )),
         fs: Arc::new(crate::fs::FileManager::new()),
@@ -1755,10 +1803,10 @@ foo
         let err = result.unwrap_err();
         assert_eq!(
             err,
-            KclError::Syntax(KclErrorDetails {
-                message: "Unexpected token: #".to_owned(),
-                source_ranges: vec![SourceRange::new(14, 15, ModuleId::default())],
-            }),
+            KclError::Syntax(KclErrorDetails::new(
+                "Unexpected token: #".to_owned(),
+                vec![SourceRange::new(14, 15, ModuleId::default())],
+            )),
         );
     }
 
@@ -2014,10 +2062,10 @@ notTagIdentifier = !myTag";
             // TODO: We don't currently parse this, but we should.  It should be
             // a runtime error instead.
             parse_execute(code10).await.unwrap_err(),
-            KclError::Syntax(KclErrorDetails {
-                message: "Unexpected token: !".to_owned(),
-                source_ranges: vec![SourceRange::new(10, 11, ModuleId::default())],
-            })
+            KclError::Syntax(KclErrorDetails::new(
+                "Unexpected token: !".to_owned(),
+                vec![SourceRange::new(10, 11, ModuleId::default())],
+            ))
         );
 
         let code11 = "
@@ -2027,10 +2075,10 @@ notPipeSub = 1 |> identity(!%))";
             // TODO: We don't currently parse this, but we should.  It should be
             // a runtime error instead.
             parse_execute(code11).await.unwrap_err(),
-            KclError::Syntax(KclErrorDetails {
-                message: "Unexpected token: |>".to_owned(),
-                source_ranges: vec![SourceRange::new(44, 46, ModuleId::default())],
-            })
+            KclError::Syntax(KclErrorDetails::new(
+                "Unexpected token: |>".to_owned(),
+                vec![SourceRange::new(44, 46, ModuleId::default())],
+            ))
         );
 
         // TODO: Add these tests when we support these types.

@@ -966,7 +966,7 @@ class TransactionalClientHandler(MessagingHandler, TransactionHandler):
     a transactional acceptance of received messages.
 
     :param prefetch: Initial flow credit for receiving messages, defaults to 10.
-    :param auto_accept: If ``True``, accept all messages (default). Otherwise
+    :param auto_accept: If ``True``, accept all messages. Otherwise (default),
         messages must be individually accepted or rejected.
     :param auto_settle: If ``True`` (default), automatically settle messages
         upon receiving a settled disposition for that delivery. Otherwise
@@ -1164,10 +1164,10 @@ class IOHandler(Handler):
         if not r.quiesced:
             return
 
-        d = r.timer_deadline
+        r.timer_deadline
         readable, writable, expired = self._selector.select(r.timeout)
 
-        now = r.mark()
+        r.mark()
 
         for s in readable:
             s.readable()
@@ -1192,7 +1192,7 @@ class IOHandler(Handler):
             try:
                 b = s.recv(capacity)
                 if len(b) > 0:
-                    n = t.push(b)
+                    t.push(b)
                 else:
                     # EOF handling
                     self.on_selectable_error(event)
@@ -1305,7 +1305,7 @@ class IOHandler(Handler):
         try:
             capacity = transport.capacity()
             selectable.reading = capacity > 0
-        except:
+        except ProtonException:
             if transport.closed:
                 selectable.terminate()
                 selectable._transport = None
@@ -1313,7 +1313,7 @@ class IOHandler(Handler):
         try:
             pending = transport.pending()
             selectable.writing = pending > 0
-        except:
+        except ProtonException:
             if transport.closed:
                 selectable.terminate()
                 selectable._transport = None

@@ -981,10 +981,10 @@ class AnyscaleClient(AnyscaleClientInterface):
         )
         for build in self.list_cluster_env_builds(cluster_env.id):
             if (
+                # NOTE: Ignore ray version mismatch for now. We plan to eventually remove ray version from the API model.
                 build.docker_image_name == image_uri_str
                 and build.registry_login_secret == registry_login_secret
                 and build.status == ClusterEnvironmentBuildStatus.SUCCEEDED
-                and (ray_version is None or build.ray_version == ray_version)
             ):
                 return build.id
 

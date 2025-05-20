@@ -3,7 +3,6 @@ import functools
 import glob
 import importlib.util
 import inspect
-import json
 import os
 import sys
 import warnings
@@ -14,6 +13,7 @@ from random import choice
 from typing import TYPE_CHECKING, Any, NamedTuple
 from uuid import UUID, uuid5
 
+import orjson
 import structlog
 from langchain_core.runnables.config import run_in_executor, var_child_runnable_config
 from langgraph.checkpoint.base import BaseCheckpointSaver
@@ -60,6 +60,12 @@ async def register_graph(
     if callable(graph):
         FACTORY_ACCEPTS_CONFIG[graph_id] = len(inspect.signature(graph).parameters) > 0
     async with connect() as conn:
+        graph_name = getattr(graph, "name", None) if isinstance(graph, Pregel) else None
+        assistant_name = (
+            graph_name
+            if graph_name is not None and graph_name != "LangGraph"
+            else graph_id
+        )
         await Assistants.put(
             conn,
             str(uuid5(NAMESPACE_GRAPH, graph_id)),
@@ -67,7 +73,7 @@ async def register_graph(
             metadata={"created_by": "system"},
             config=config or {},
             if_exists="do_nothing",
-            name=graph_id,
+            name=assistant_name,
             description=description,
         )
 
@@ -200,10 +206,19 @@ def _load_graph_config_from_env() -> dict | None:
     config_str = os.getenv("LANGGRAPH_CONFIG")
     if not config_str:
         return None
+    try:
+        config_per_id = orjson.loads(config_str)
+    except orjson.JSONDecodeError as e:
+        raise ValueError(
+            "Provided environment variable LANGGRAPH_CONFIG must be a valid JSON object"
+            f"\nFound: {config_str}"
+        ) from e
 
-    config_per_id = json.loads(config_str)
     if not isinstance(config_per_id, dict):
-        raise ValueError("LANGGRAPH_CONFIG must be a JSON object")
+        raise ValueError(
+            "Provided environment variable LANGGRAPH_CONFIG must be a JSON object"
+            f"\nFound: {config_str}"
+        )
 
     return config_per_id
 
@@ -218,7 +233,15 @@ async def collect_graphs_from_env(register: bool = False) -> None:
         specs = []
         # graphs-config can be either a mapping from graph id to path where the graph
         # is defined or graph id to a dictionary containing information about the graph.
-        graphs_config = json.loads(paths_str)
+        try:
+            graphs_config = orjson.loads(paths_str)
+        except orjson.JSONDecodeError as e:
+            raise ValueError(
+                "LANGSERVE_GRAPHS must be a valid JSON object."
+                f"\nFound: {paths_str}"
+                "\n The LANGSERVE_GRAPHS environment variable is typically set"
+                'from the "graphs" field in your configuration (langgraph.json) file.'
+            ) from e
 
         for key, value in graphs_config.items():
             if isinstance(value, dict) and "path" in value:
