@@ -1,12 +1,15 @@
 use crate::evaluation::evaluation_types::{
-    BaseEvaluation, DynamicConfigEvaluation, ExperimentEvaluation, ExposureSamplingInfo,
-    GateEvaluation, LayerEvaluation, SecondaryExposure,
+    BaseEvaluation, DynamicConfigEvaluation, ExperimentEvaluation, GateEvaluation, LayerEvaluation,
+    SecondaryExposure,
 };
+use crate::event_logging::exposable_string::ExposableString;
 use crate::hashing::{HashAlgorithm, HashUtil};
 use crate::specs_response::spec_types::Spec;
 use serde_json::Value;
 use std::collections::HashMap;
+use std::sync::Arc;
 
+use super::evaluation_types::ExtraExposureInfo;
 use super::evaluation_types_v2::{
     BaseEvaluationV2, DynamicConfigEvaluationV2, ExperimentEvaluationV2, GateEvaluationV2,
     LayerEvaluationV2,
@@ -22,8 +25,8 @@ pub struct EvaluatorResult<'a> {
     pub is_in_experiment: bool,
     pub id_type: Option<&'a String>,
     pub json_value: Option<HashMap<String, Value>>,
-    pub rule_id: Option<&'a String>,
-    pub rule_id_suffix: Option<String>,
+    pub rule_id: Option<&'a ExposableString>,
+    pub rule_id_suffix: Option<&'static str>,
     pub group_name: Option<&'a String>,
     pub explicit_parameters: Option<&'a Vec<String>>,
     pub config_delegate: Option<&'a String>,
@@ -33,7 +36,7 @@ pub struct EvaluatorResult<'a> {
     pub version: Option<u32>,
     pub sampling_rate: Option<u64>,
     pub forward_all_exposures: Option<bool>,
-    pub override_config_name: Option<String>,
+    pub override_config_name: Option<&'a str>,
     pub has_seen_analytical_gates: Option<bool>,
 }
 
@@ -163,7 +166,10 @@ pub fn result_to_layer_eval(layer_name: &str, result: &mut EvaluatorResult) -> L
 
     LayerEvaluation {
         base: result_to_base_eval(layer_name, result),
-        group: result.rule_id.cloned().unwrap_or_default(),
+        group: result
+            .rule_id
+            .map(|r| r.unperformant_to_string())
+            .unwrap_or_default(),
         value: get_json_value(result),
         is_device_based,
         group_name: result.group_name.cloned(),
@@ -187,7 +193,9 @@ pub fn result_to_layer_eval_v2(
         for exposure in u {
             let key = format!(
                 "{}:{}:{}",
-                exposure.gate, exposure.gate_value, exposure.rule_id
+                exposure.gate,
+                exposure.gate_value,
+                exposure.rule_id.as_str()
             );
             let hash = hashing.hash(&key, &HashAlgorithm::Djb2);
             undelegated_secondary_exposures.push(hash.clone());
@@ -267,27 +275,21 @@ fn get_json_value(result: &EvaluatorResult) -> HashMap<String, Value> {
 }
 
 fn result_to_base_eval(spec_name: &str, result: &mut EvaluatorResult) -> BaseEvaluation {
-    let rule_id = match result.rule_id {
-        Some(rule_id) => rule_id.clone(),
-        None => String::new(),
-    };
+    let rule_id = create_suffixed_rule_id(result.rule_id, result.rule_id_suffix);
 
-    let result_rule_id = match &result.rule_id_suffix {
-        Some(suffix) => format!("{rule_id}:{suffix}"),
-        None => rule_id.clone(),
-    };
-
-    let sampling_info = ExposureSamplingInfo {
+    let exposure_info = ExtraExposureInfo {
         sampling_rate: result.sampling_rate,
         forward_all_exposures: result.forward_all_exposures,
         has_seen_analytical_gates: result.has_seen_analytical_gates,
+        override_config_name: result.override_config_name.map(|s| s.to_string()),
+        version: result.version,
     };
 
     BaseEvaluation {
         name: spec_name.to_string(),
-        rule_id: result_rule_id.clone(),
+        rule_id,
         secondary_exposures: std::mem::take(&mut result.secondary_exposures),
-        sampling_info: Some(sampling_info),
+        exposure_info: Some(exposure_info),
     }
 }
 
@@ -301,25 +303,34 @@ fn result_to_base_eval_v2(
     for exposure in &result.secondary_exposures {
         let key = format!(
             "{}:{}:{}",
-            exposure.gate, exposure.gate_value, exposure.rule_id
+            exposure.gate,
+            exposure.gate_value,
+            exposure.rule_id.as_str()
         );
         let hash = hashing.hash(&key, &HashAlgorithm::Djb2);
         exposures.push(hash.clone());
     }
 
-    let rule_id = match result.rule_id {
-        Some(rule_id) => rule_id.clone(),
-        None => String::new(),
-    };
-
-    let result_rule_id = match &result.rule_id_suffix {
-        Some(suffix) => format!("{rule_id}:{suffix}"),
-        None => rule_id.clone(),
-    };
+    let rule_id = create_suffixed_rule_id(result.rule_id, result.rule_id_suffix);
 
     BaseEvaluationV2 {
         name: spec_name.to_string(),
-        rule_id: result_rule_id.clone(),
+        rule_id,
         secondary_exposures: exposures,
+    }
+}
+
+fn create_suffixed_rule_id(
+    rule_id: Option<&ExposableString>,
+    suffix: Option<&str>,
+) -> ExposableString {
+    let id_arc = match &rule_id {
+        Some(rule_id) => rule_id.clone_inner(),
+        None => Arc::new(String::new()),
+    };
+
+    match &suffix {
+        Some(suffix) => ExposableString::new(format!("{id_arc}:{suffix}")),
+        None => rule_id.cloned().unwrap_or_default(),
     }
 }

@@ -114,6 +114,9 @@ class VpceConfigurationArgs:
 
 
 class VpceConfiguration(pulumi.CustomResource):
+
+    pulumi_type = "aws-native:devicefarm:VpceConfiguration"
+
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -125,7 +128,7 @@ class VpceConfiguration(pulumi.CustomResource):
                  vpce_service_name: Optional[pulumi.Input[builtins.str]] = None,
                  __props__=None):
         """
-        AWS::DeviceFarm::VPCEConfiguration creates a new Device Farm VPCE Configuration
+        Resource Type definition for a Device Farm VPCE Configuration
 
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
@@ -146,7 +149,7 @@ class VpceConfiguration(pulumi.CustomResource):
                  args: VpceConfigurationArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        AWS::DeviceFarm::VPCEConfiguration creates a new Device Farm VPCE Configuration
+        Resource Type definition for a Device Farm VPCE Configuration
 
         :param str resource_name: The name of the resource.
         :param VpceConfigurationArgs args: The arguments to use to populate this resource's properties.

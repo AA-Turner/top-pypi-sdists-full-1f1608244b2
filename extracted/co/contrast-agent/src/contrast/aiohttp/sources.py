@@ -39,6 +39,7 @@ SOURCE_DICT = {
     "module": "aiohttp.web.BaseRequest",
     "instance_method": False,
     "target": "RETURN",
+    "policy_patch": False,
 }
 
 

@@ -94,7 +94,7 @@ class SqlAlchemyConnector(CredentialsBlock, DatabaseBlock):
 
     _block_type_name = "SQLAlchemy Connector"
     _logo_url = "https://cdn.sanity.io/images/3ugk85nk/production/3c7dff04f70aaf4528e184a3b028f9e40b98d68c-250x250.png"  # type: ignore
-    _documentation_url = "https://prefecthq.github.io/prefect-sqlalchemy/database/#prefect_sqlalchemy.database.SqlAlchemyConnector"  # type: ignore
+    _documentation_url = "https://docs.prefect.io/integrations/prefect-sqlalchemy"  # type: ignore
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     connection_info: Union[ConnectionComponents, DBUrl] = Field(
@@ -316,6 +316,7 @@ class SqlAlchemyConnector(CredentialsBlock, DatabaseBlock):
         self,
         connection: Union[Connection, AsyncConnection],
         *execute_args: Tuple[Any],
+        execute_commit: bool = True,
         **execute_kwargs: Dict[str, Any],
     ) -> CursorResult:
         """
@@ -328,8 +329,9 @@ class SqlAlchemyConnector(CredentialsBlock, DatabaseBlock):
 
         if self._driver_is_async:
             result_set = await result_set
-            await connection.commit()  # very important
-        elif SQLALCHEMY_VERSION.startswith("2."):
+            if execute_commit:
+                await connection.commit()  # very important
+        elif SQLALCHEMY_VERSION.startswith("2.") and execute_commit:
             connection.commit()
         return result_set
 
@@ -371,7 +373,7 @@ class SqlAlchemyConnector(CredentialsBlock, DatabaseBlock):
             else:
                 connection = self._exit_stack.enter_context(self.get_connection())
             result_set = await self._async_sync_execute(
-                connection, *execute_args, **execute_kwargs
+                connection, *execute_args, execute_commit=False, **execute_kwargs
             )
             # implicitly store the connection by storing the result set
             # which points to its parent connection

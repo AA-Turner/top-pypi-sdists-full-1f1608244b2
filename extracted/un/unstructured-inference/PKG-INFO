@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: unstructured_inference
-Version: 0.8.10
+Version: 1.0.2
 Summary: A library for performing inference using trained models.
 Home-page: https://github.com/Unstructured-IO/unstructured-inference
 Author: Unstructured Technologies

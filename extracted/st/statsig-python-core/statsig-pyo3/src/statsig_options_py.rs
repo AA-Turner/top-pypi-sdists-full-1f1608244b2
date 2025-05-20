@@ -1,3 +1,4 @@
+use crate::output_logger_provider_base_py::OutputLoggerProviderBasePy;
 use crate::pyo_utils::py_dict_to_map;
 use crate::statsig_persistent_storage_override_adapter_py::{
     PersistentStorageBasePy, StatsigPersistentStorageOverrideAdapter,
@@ -9,11 +10,47 @@ use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use pyo3_stub_gen::derive::*;
 use statsig_rust::data_store_interface::DataStoreTrait;
-use statsig_rust::{log_w, PersistentStorage};
+use statsig_rust::networking::proxy_config::ProxyConfig;
+use statsig_rust::output_logger::OutputLogProvider;
+use statsig_rust::{log_w, ConfigCompressionMode, PersistentStorage};
 use statsig_rust::{output_logger::LogLevel, ObservabilityClient, StatsigOptions};
 use std::sync::{Arc, Weak};
 
 const TAG: &str = stringify!(StatsigOptionsPy);
+
+#[gen_stub_pyclass]
+#[pyclass(name = "ProxyConfig")]
+#[derive(Clone)]
+pub struct ProxyConfigPy {
+    #[pyo3(get, set)]
+    pub proxy_host: Option<String>,
+    #[pyo3(get, set)]
+    pub proxy_port: Option<u16>,
+    #[pyo3(get, set)]
+    pub proxy_auth: Option<String>,
+    #[pyo3(get, set)]
+    pub proxy_protocol: Option<String>,
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl ProxyConfigPy {
+    #[new]
+    #[pyo3(signature = (proxy_host=None, proxy_port=None, proxy_auth=None, proxy_protocol=None))]
+    fn new(
+        proxy_host: Option<String>,
+        proxy_port: Option<u16>,
+        proxy_auth: Option<String>,
+        proxy_protocol: Option<String>,
+    ) -> Self {
+        ProxyConfigPy {
+            proxy_host,
+            proxy_port,
+            proxy_auth,
+            proxy_protocol,
+        }
+    }
+}
 
 #[gen_stub_pyclass]
 #[pyclass(name = "StatsigOptions")]
@@ -62,9 +99,15 @@ pub struct StatsigOptionsPy {
     #[pyo3(get, set)]
     pub observability_client: Option<Py<ObservabilityClientBasePy>>,
     #[pyo3(get, set)]
+    pub output_logger_provider: Option<Py<OutputLoggerProviderBasePy>>,
+    #[pyo3(get, set)]
     pub data_store: Option<Py<DataStoreBasePy>>,
     #[pyo3(get, set)]
     pub persistent_storage: Option<Py<PersistentStorageBasePy>>,
+    #[pyo3(get, set)]
+    pub config_compression_mode: Option<String>,
+    #[pyo3(get, set)]
+    pub proxy_config: Option<Py<ProxyConfigPy>>,
 }
 
 #[gen_stub_pymethods]
@@ -95,6 +138,9 @@ impl StatsigOptionsPy {
         observability_client=None,
         data_store=None,
         persistent_storage=None,
+        config_compression_mode=None,
+        proxy_config=None,
+        output_logger_provider=None,
     ))]
     #[allow(clippy::too_many_arguments)]
     pub fn new(
@@ -121,6 +167,9 @@ impl StatsigOptionsPy {
         observability_client: Option<Py<ObservabilityClientBasePy>>,
         data_store: Option<Py<DataStoreBasePy>>,
         persistent_storage: Option<Py<PersistentStorageBasePy>>,
+        config_compression_mode: Option<String>,
+        proxy_config: Option<Py<ProxyConfigPy>>,
+        output_logger_provider: Option<Py<OutputLoggerProviderBasePy>>,
     ) -> Self {
         Self {
             specs_url,
@@ -146,6 +195,9 @@ impl StatsigOptionsPy {
             data_store,
             disable_network,
             persistent_storage,
+            config_compression_mode,
+            proxy_config,
+            output_logger_provider,
         }
     }
 }
@@ -204,7 +256,6 @@ fn create_inner_statsig_options(
         environment: opts.environment.clone(),
         id_lists_adapter: None,
         override_adapter: None,
-        proxy_config: None,
         output_log_level: opts
             .output_log_level
             .as_ref()
@@ -224,6 +275,31 @@ fn create_inner_statsig_options(
             Arc::new(StatsigPersistentStorageOverrideAdapter::new(
                 s.extract(py).unwrap_or_default(),
             )) as Arc<dyn PersistentStorage>
+        }),
+        config_compression_mode: opts
+            .config_compression_mode
+            .as_ref()
+            .map(|mode| ConfigCompressionMode::from(mode.as_str())),
+        proxy_config: opts.proxy_config.and_then(|py_val| {
+            match py_val.extract::<ProxyConfigPy>(py) {
+                Ok(cfg) => Some(ProxyConfig {
+                    proxy_host: cfg.proxy_host,
+                    proxy_port: cfg.proxy_port,
+                    proxy_auth: cfg.proxy_auth,
+                    proxy_protocol: cfg.proxy_protocol,
+                }),
+                Err(_) => {
+                    log_w!(TAG, "Failed to convert proxy config");
+                    None
+                }
+            }
+        }),
+        output_logger_provider: opts.output_logger_provider.as_ref().map(|provider| {
+            Arc::new(
+                provider
+                    .extract::<OutputLoggerProviderBasePy>(py)
+                    .unwrap_or_default(),
+            ) as Arc<dyn OutputLogProvider>
         }),
     }
 }

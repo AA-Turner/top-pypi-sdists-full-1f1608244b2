@@ -12598,17 +12598,23 @@ class ingest_workflow_api_GetExtractorJobStateResponse(ConjureBeanType):
     @builtins.classmethod
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
-            'state': ConjureFieldDefinition('state', ingest_workflow_api_ExtractorJobState)
+            'state': ConjureFieldDefinition('state', ingest_workflow_api_ExtractorJobState),
+            'message': ConjureFieldDefinition('message', OptionalTypeWrapper[str])
         }
 
-    __slots__: List[str] = ['_state']
+    __slots__: List[str] = ['_state', '_message']
 
-    def __init__(self, state: "ingest_workflow_api_ExtractorJobState") -> None:
+    def __init__(self, state: "ingest_workflow_api_ExtractorJobState", message: Optional[str] = None) -> None:
         self._state = state
+        self._message = message
 
     @builtins.property
     def state(self) -> "ingest_workflow_api_ExtractorJobState":
         return self._state
+
+    @builtins.property
+    def message(self) -> Optional[str]:
+        return self._message
 
 
 ingest_workflow_api_GetExtractorJobStateResponse.__name__ = "GetExtractorJobStateResponse"
@@ -25206,7 +25212,7 @@ class scout_chartdefinition_api_TimeSeriesChartDefinitionV1(ConjureBeanType):
         return {
             'rows': ConjureFieldDefinition('rows', List[scout_chartdefinition_api_TimeSeriesRow]),
             'comparison_run_groups': ConjureFieldDefinition('comparisonRunGroups', List[scout_comparisonrun_api_ComparisonRunGroup]),
-            'events': ConjureFieldDefinition('events', List[scout_chartdefinition_api_Event]),
+            'events': ConjureFieldDefinition('events', OptionalTypeWrapper[List[scout_chartdefinition_api_Event]]),
             'title': ConjureFieldDefinition('title', OptionalTypeWrapper[str]),
             'value_axes': ConjureFieldDefinition('valueAxes', List[scout_chartdefinition_api_ValueAxis]),
             'thresholds': ConjureFieldDefinition('thresholds', OptionalTypeWrapper[List[scout_chartdefinition_api_AxisThresholdVisualization]])
@@ -25214,7 +25220,7 @@ class scout_chartdefinition_api_TimeSeriesChartDefinitionV1(ConjureBeanType):
 
     __slots__: List[str] = ['_rows', '_comparison_run_groups', '_events', '_title', '_value_axes', '_thresholds']
 
-    def __init__(self, comparison_run_groups: List["scout_comparisonrun_api_ComparisonRunGroup"], events: List["scout_chartdefinition_api_Event"], rows: List["scout_chartdefinition_api_TimeSeriesRow"], value_axes: List["scout_chartdefinition_api_ValueAxis"], thresholds: Optional[List["scout_chartdefinition_api_AxisThresholdVisualization"]] = None, title: Optional[str] = None) -> None:
+    def __init__(self, comparison_run_groups: List["scout_comparisonrun_api_ComparisonRunGroup"], rows: List["scout_chartdefinition_api_TimeSeriesRow"], value_axes: List["scout_chartdefinition_api_ValueAxis"], events: Optional[List["scout_chartdefinition_api_Event"]] = None, thresholds: Optional[List["scout_chartdefinition_api_AxisThresholdVisualization"]] = None, title: Optional[str] = None) -> None:
         self._rows = rows
         self._comparison_run_groups = comparison_run_groups
         self._events = events
@@ -25231,7 +25237,7 @@ class scout_chartdefinition_api_TimeSeriesChartDefinitionV1(ConjureBeanType):
         return self._comparison_run_groups
 
     @builtins.property
-    def events(self) -> List["scout_chartdefinition_api_Event"]:
+    def events(self) -> Optional[List["scout_chartdefinition_api_Event"]]:
         return self._events
 
     @builtins.property
@@ -63598,7 +63604,7 @@ class scout_integrations_api_IntegrationsService(Service):
     Service for managing integrations with external services.
     """
 
-    def generate_slack_webhook_link(self, auth_header: str, workspace: Optional[str] = None) -> "scout_integrations_api_GenerateSlackWebhookResponse":
+    def generate_slack_webhook_link(self, auth_header: str, is_gov_slack: Optional[bool] = None, workspace: Optional[str] = None) -> "scout_integrations_api_GenerateSlackWebhookResponse":
         """
         Generates link to request permissions for Slack bot to join workspaces and use a webhook.
         """
@@ -63610,6 +63616,7 @@ class scout_integrations_api_IntegrationsService(Service):
 
         _params: Dict[str, Any] = {
             'workspace': workspace,
+            'isGovSlack': is_gov_slack,
         }
 
         _path_params: Dict[str, Any] = {
@@ -63869,20 +63876,29 @@ class scout_integrations_api_NotificationConfiguration(ConjureBeanType):
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
             'integration_rid': ConjureFieldDefinition('integrationRid', scout_integrations_api_IntegrationRid),
+            'notification_filters': ConjureFieldDefinition('notificationFilters', OptionalTypeWrapper[List[scout_integrations_api_NotificationFilter]]),
             'appended_workbook_rid': ConjureFieldDefinition('appendedWorkbookRid', OptionalTypeWrapper[scout_rids_api_NotebookRid]),
             'tags': ConjureFieldDefinition('tags', List[str])
         }
 
-    __slots__: List[str] = ['_integration_rid', '_appended_workbook_rid', '_tags']
+    __slots__: List[str] = ['_integration_rid', '_notification_filters', '_appended_workbook_rid', '_tags']
 
-    def __init__(self, integration_rid: str, tags: List[str], appended_workbook_rid: Optional[str] = None) -> None:
+    def __init__(self, integration_rid: str, tags: List[str], appended_workbook_rid: Optional[str] = None, notification_filters: Optional[List["scout_integrations_api_NotificationFilter"]] = None) -> None:
         self._integration_rid = integration_rid
+        self._notification_filters = notification_filters
         self._appended_workbook_rid = appended_workbook_rid
         self._tags = tags
 
     @builtins.property
     def integration_rid(self) -> str:
         return self._integration_rid
+
+    @builtins.property
+    def notification_filters(self) -> Optional[List["scout_integrations_api_NotificationFilter"]]:
+        """
+        Specifies the type of notifications to filter. If not provided, all notifications are sent.
+        """
+        return self._notification_filters
 
     @builtins.property
     def appended_workbook_rid(self) -> Optional[str]:
@@ -63902,6 +63918,25 @@ class scout_integrations_api_NotificationConfiguration(ConjureBeanType):
 scout_integrations_api_NotificationConfiguration.__name__ = "NotificationConfiguration"
 scout_integrations_api_NotificationConfiguration.__qualname__ = "NotificationConfiguration"
 scout_integrations_api_NotificationConfiguration.__module__ = "nominal_api.scout_integrations_api"
+
+
+class scout_integrations_api_NotificationFilter(ConjureEnumType):
+    """
+    Specifies a type of notification to filter.
+    """
+
+    EXECUTION_ERROR = 'EXECUTION_ERROR'
+    '''EXECUTION_ERROR'''
+    UNKNOWN = 'UNKNOWN'
+    '''UNKNOWN'''
+
+    def __reduce_ex__(self, proto):
+        return self.__class__, (self.name,)
+
+
+scout_integrations_api_NotificationFilter.__name__ = "NotificationFilter"
+scout_integrations_api_NotificationFilter.__qualname__ = "NotificationFilter"
+scout_integrations_api_NotificationFilter.__module__ = "nominal_api.scout_integrations_api"
 
 
 class scout_integrations_api_OpsgenieIntegration(ConjureBeanType):
@@ -65642,6 +65677,8 @@ class scout_metadata_ResourceType(ConjureEnumType):
     '''VIDEO'''
     ASSET = 'ASSET'
     '''ASSET'''
+    EVENT = 'EVENT'
+    '''EVENT'''
     UNKNOWN = 'UNKNOWN'
     '''UNKNOWN'''
 
@@ -74206,12 +74243,12 @@ class scout_workbookcommon_api_EventReference(ConjureBeanType):
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
             'event_uuid': ConjureFieldDefinition('eventUuid', OptionalTypeWrapper[str]),
-            'rid': ConjureFieldDefinition('rid', api_rids_EventRid)
+            'rid': ConjureFieldDefinition('rid', OptionalTypeWrapper[api_rids_EventRid])
         }
 
     __slots__: List[str] = ['_event_uuid', '_rid']
 
-    def __init__(self, rid: str, event_uuid: Optional[str] = None) -> None:
+    def __init__(self, event_uuid: Optional[str] = None, rid: Optional[str] = None) -> None:
         self._event_uuid = event_uuid
         self._rid = rid
 
@@ -74220,7 +74257,7 @@ class scout_workbookcommon_api_EventReference(ConjureBeanType):
         return self._event_uuid
 
     @builtins.property
-    def rid(self) -> str:
+    def rid(self) -> Optional[str]:
         """
         The event's unique identifier. This will soon be a required field.
         """

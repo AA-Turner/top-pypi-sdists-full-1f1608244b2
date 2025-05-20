@@ -9,6 +9,7 @@ from starlette.exceptions import HTTPException
 from starlette.responses import Response
 from starlette.routing import BaseRoute
 
+from langgraph_api import store as api_store
 from langgraph_api.graph import get_assistant_id, get_graph
 from langgraph_api.js.base import BaseRemotePregel
 from langgraph_api.route import ApiRequest, ApiResponse, ApiRoute
@@ -25,7 +26,6 @@ from langgraph_runtime.checkpoint import Checkpointer
 from langgraph_runtime.database import connect
 from langgraph_runtime.ops import Assistants
 from langgraph_runtime.retry import retry_db
-from langgraph_runtime.store import Store
 
 logger = structlog.stdlib.get_logger(__name__)
 
@@ -194,7 +194,7 @@ async def get_assistant_graph(
             assistant["graph_id"],
             config,
             checkpointer=Checkpointer(conn),
-            store=Store(),
+            store=(await api_store.get_store()),
         ) as graph:
             xray: bool | int = False
             xray_query = request.query_params.get("xray")
@@ -240,7 +240,7 @@ async def get_assistant_subgraphs(
             assistant["graph_id"],
             config,
             checkpointer=Checkpointer(conn),
-            store=Store(),
+            store=(await api_store.get_store()),
         ) as graph:
             namespace = request.path_params.get("namespace")
 
@@ -286,7 +286,7 @@ async def get_assistant_schemas(
             assistant["graph_id"],
             config,
             checkpointer=Checkpointer(conn),
-            store=Store(),
+            store=(await api_store.get_store()),
         ) as graph:
             if isinstance(graph, BaseRemotePregel):
                 schemas = await graph.fetch_state_schema()

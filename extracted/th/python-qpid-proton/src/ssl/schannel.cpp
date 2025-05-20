@@ -35,10 +35,11 @@
 #include "core/autodetect.h"
 #include "core/engine-internal.h"
 #include "core/logger_private.h"
-#include "core/util.h"
+#include "core/util_str.h"
 
 #include "platform/platform.h"
 
+#include <proton/annotations.h>
 #include <proton/ssl.h>
 #include <proton/engine.h>
 
@@ -58,12 +59,12 @@ extern "C" {
 /** @file
  * SSL/TLS support API.
  *
- * This file contains an SChannel-based implemention of the SSL/TLS API for Windows platforms.
+ * This file contains an SChannel-based implementation of the SSL/TLS API for Windows platforms.
  */
 
-static void ssl_log(pn_transport_t *transport, pn_log_level_t sev, const char *fmt, ...);
-static void ssl_log_error(const char *fmt, ...);
-static void ssl_log_error_status(HRESULT status, const char *fmt, ...);
+static void ssl_log(pn_transport_t *transport, pn_log_level_t sev, PN_PRINTF_FORMAT const char *fmt, ...) PN_PRINTF_FORMAT_ATTR(3, 4);
+static void ssl_log_error(PN_PRINTF_FORMAT const char *fmt, ...) PN_PRINTF_FORMAT_ATTR(1, 2);
+static void ssl_log_error_status(HRESULT status, PN_PRINTF_FORMAT const char *fmt, ...) PN_PRINTF_FORMAT_ATTR(2, 3);
 static HCERTSTORE open_cert_db(const char *store_name, const char *passwd, int *error);
 
 // Thread support.  Some SChannel objects are shared or ref-counted.
@@ -373,7 +374,8 @@ static void ssl_vlog(pn_transport_t *transport, pn_log_level_t sev, const char *
   }
 }
 
-static void ssl_log(pn_transport_t *transport, pn_log_level_t sev, const char *fmt, ...)
+PN_PRINTF_FORMAT_ATTR(3, 4)
+static void ssl_log(pn_transport_t *transport, pn_log_level_t sev, PN_PRINTF_FORMAT const char *fmt, ...)
 {
   va_list ap;
   va_start(ap, fmt);
@@ -382,7 +384,8 @@ static void ssl_log(pn_transport_t *transport, pn_log_level_t sev, const char *f
 }
 
 // @todo: used to avoid littering the code with calls to printf...
-static void ssl_log_error(const char *fmt, ...)
+PN_PRINTF_FORMAT_ATTR(1, 2)
+static void ssl_log_error(PN_PRINTF_FORMAT const char *fmt, ...)
 {
   va_list ap;
   va_start(ap, fmt);
@@ -390,7 +393,8 @@ static void ssl_log_error(const char *fmt, ...)
   va_end(ap);
 }
 
-static void ssl_log_error_status(HRESULT status, const char *fmt, ...)
+PN_PRINTF_FORMAT_ATTR(2, 3)
+static void ssl_log_error_status(HRESULT status, PN_PRINTF_FORMAT const char *fmt, ...)
 {
   char buf[512];
   va_list ap;
@@ -993,7 +997,7 @@ static void ssl_encrypt(pn_transport_t *transport, char *app_data, size_t count)
   ssl->sc_out_count = buffs[0].cbBuffer + buffs[1].cbBuffer + buffs[2].cbBuffer;
   ssl->network_outp = ssl->sc_outbuf;
   ssl->network_out_pending = ssl->sc_out_count;
-  ssl_log(transport, PN_LEVEL_TRACE, "ssl_encrypt %d network bytes", ssl->network_out_pending);
+  ssl_log(transport, PN_LEVEL_TRACE, "ssl_encrypt %zu network bytes", ssl->network_out_pending);
 }
 
 // Returns true if decryption succeeded (even for empty content)
@@ -1096,7 +1100,7 @@ static void client_handshake_init(pn_transport_t *transport)
     ssl->network_out_pending = ssl->sc_out_count;
     // the token is the whole quantity to send
     ssl->network_outp = ssl->sc_outbuf;
-    ssl_log(transport, PN_LEVEL_TRACE, "Sending client hello %d bytes", ssl->network_out_pending);
+    ssl_log(transport, PN_LEVEL_TRACE, "Sending client hello %zu bytes", ssl->network_out_pending);
   } else {
     ssl_log_error_status(status, "InitializeSecurityContext failed");
     ssl_failed(transport, 0);
@@ -1162,7 +1166,7 @@ static void client_handshake( pn_transport_t* transport) {
     // the token is the whole quantity to send
     ssl->network_out_pending = ssl->sc_out_count;
     ssl->network_outp = ssl->sc_outbuf;
-    ssl_log(transport, PN_LEVEL_DEBUG, "client handshake token %d bytes", ssl->network_out_pending);
+    ssl_log(transport, PN_LEVEL_DEBUG, "client handshake token %zu bytes", ssl->network_out_pending);
     break;
 
   case SEC_E_OK:
@@ -1173,7 +1177,7 @@ static void client_handshake( pn_transport_t* transport) {
         // the token is the whole quantity to send
         ssl->network_out_pending = ssl->sc_out_count;
         ssl->network_outp = ssl->sc_outbuf;
-        ssl_log(transport, PN_LEVEL_DEBUG, "client shutdown token %d bytes", ssl->network_out_pending);
+        ssl_log(transport, PN_LEVEL_DEBUG, "client shutdown token %zu bytes", ssl->network_out_pending);
       } else {
         ssl->state = SSL_CLOSED;
       }
@@ -1222,7 +1226,7 @@ static void client_handshake( pn_transport_t* transport) {
 
     ssl->state = RUNNING;
     ssl->max_data_size = max - ssl->sc_sizes.cbHeader - ssl->sc_sizes.cbTrailer;
-    ssl_log(transport, PN_LEVEL_DEBUG, "client handshake successful %d max record size", max);
+    ssl_log(transport, PN_LEVEL_DEBUG, "client handshake successful %zu max record size", max);
     break;
 
   case SEC_I_CONTEXT_EXPIRED:
@@ -1331,7 +1335,7 @@ static void server_handshake(pn_transport_t* transport)
         // the token is the whole quantity to send
         ssl->network_out_pending = ssl->sc_out_count;
         ssl->network_outp = ssl->sc_outbuf;
-        ssl_log(transport, PN_LEVEL_DEBUG, "server shutdown token %d bytes", ssl->network_out_pending);
+        ssl_log(transport, PN_LEVEL_DEBUG, "server shutdown token %zu bytes", ssl->network_out_pending);
       } else {
         ssl->state = SSL_CLOSED;
       }
@@ -1371,7 +1375,7 @@ static void server_handshake(pn_transport_t* transport)
 
     ssl->state = RUNNING;
     ssl->max_data_size = max - ssl->sc_sizes.cbHeader - ssl->sc_sizes.cbTrailer;
-    ssl_log(transport, PN_LEVEL_DEBUG, "server handshake successful %d max record size", max);
+    ssl_log(transport, PN_LEVEL_DEBUG, "server handshake successful %zu max record size", max);
     break;
 
   case SEC_E_ALGORITHM_MISMATCH:
@@ -1394,7 +1398,7 @@ static void server_handshake(pn_transport_t* transport)
     // the token is the whole quantity to send
     ssl->network_out_pending = ssl->sc_out_count;
     ssl->network_outp = ssl->sc_outbuf;
-    ssl_log(transport, PN_LEVEL_DEBUG, "server handshake token %d bytes", ssl->network_out_pending);
+    ssl_log(transport, PN_LEVEL_DEBUG, "server handshake token %zu bytes", ssl->network_out_pending);
   }
 
   if (token_buffs[1].BufferType == SECBUFFER_EXTRA && token_buffs[1].cbBuffer > 0 &&
@@ -1428,7 +1432,7 @@ static bool grow_inbuf2(pn_transport_t *transport, size_t minimum_size) {
   if (max_frame != 0) {
     if (old_capacity >= max_frame) {
       //  already big enough
-      ssl_log(transport, PN_LEVEL_ERROR, "Application expecting %d bytes (> negotiated maximum frame)", new_capacity);
+      ssl_log(transport, PN_LEVEL_ERROR, "Application expecting %zu bytes (> negotiated maximum frame)", new_capacity);
       ssl_failed(transport, "TLS: transport maximum frame size error");
       return false;
     }
@@ -1437,7 +1441,7 @@ static bool grow_inbuf2(pn_transport_t *transport, size_t minimum_size) {
   size_t extra_bytes = new_capacity - pn_buffer_size(ssl->inbuf2);
   int err = pn_buffer_ensure(ssl->inbuf2, extra_bytes);
   if (err) {
-    ssl_log(transport, PN_LEVEL_ERROR, "TLS memory allocation failed for %d bytes", max_frame);
+    ssl_log(transport, PN_LEVEL_ERROR, "TLS memory allocation failed for %u bytes", max_frame);
     ssl_failed(transport, "TLS memory allocation failed");
     return false;
   }
@@ -1623,7 +1627,7 @@ static void read_closed(pn_transport_t *transport, unsigned int layer, ssize_t e
 static ssize_t process_input_ssl(pn_transport_t *transport, unsigned int layer, const char *input_data, size_t available)
 {
   pni_ssl_t *ssl = transport->ssl;
-  ssl_log( transport, PN_LEVEL_TRACE, "process_input_ssl( data size=%d )",available );
+  ssl_log( transport, PN_LEVEL_TRACE, "process_input_ssl( data size=%zu )",available );
   ssize_t consumed = 0;
   ssize_t forwarded = 0;
   bool new_app_input;
@@ -1700,7 +1704,7 @@ static ssize_t process_input_ssl(pn_transport_t *transport, unsigned int layer, 
             rewind_sc_inbuf(ssl);
           }
         }
-        ssl_log(transport, PN_LEVEL_TRACE, "Next decryption, %d left over", available);
+        ssl_log(transport, PN_LEVEL_TRACE, "Next decryption, %zu left over", available);
       }
     }
 
@@ -1765,7 +1769,7 @@ static ssize_t process_output_ssl( pn_transport_t *transport, unsigned int layer
 {
   pni_ssl_t *ssl = transport->ssl;
   if (!ssl) return PN_EOS;
-  ssl_log( transport, PN_LEVEL_TRACE, "process_output_ssl( max_len=%d )",max_len );
+  ssl_log( transport, PN_LEVEL_TRACE, "process_output_ssl( max_len=%zu )",max_len );
 
   ssize_t written = 0;
   ssize_t total_app_bytes = 0;
@@ -1804,7 +1808,7 @@ static ssize_t process_output_ssl( pn_transport_t *transport, unsigned int layer
         if (app_bytes > 0) {
           app_outp += app_bytes;
           remaining -= app_bytes;
-          ssl_log( transport, PN_LEVEL_TRACE, "Gathered %d bytes from app to send to peer", app_bytes );
+          ssl_log( transport, PN_LEVEL_TRACE, "Gathered %zd bytes from app to send to peer", app_bytes );
         } else {
           if (app_bytes < 0) {
             ssl_log(transport, PN_LEVEL_WARNING, "Application layer closed its output, error=%d (%d bytes pending send)",
@@ -2222,15 +2226,16 @@ static HRESULT verify_peer(pni_ssl_t *ssl, HCERTSTORE root_store, const char *se
     if (!trust_anchor) {
       // We don't trust any of the certs in the chain, see if the last cert
       // is issued by a Proton trusted CA.
-      DWORD flags = CERT_STORE_NO_ISSUER_FLAG || CERT_STORE_SIGNATURE_FLAG ||
-        CERT_STORE_TIME_VALIDITY_FLAG;
+      DWORD flags = CERT_STORE_SIGNATURE_FLAG | CERT_STORE_TIME_VALIDITY_FLAG;
       trust_anchor = CertGetIssuerCertificateFromStore(root_store, trunk_cert, 0, &flags);
       if (trust_anchor) {
         if (tracing) {
+          if (flags & CERT_STORE_NO_ISSUER_FLAG)
+            ssl_log_error("certificate no issuer");
           if (flags & CERT_STORE_SIGNATURE_FLAG)
-            ssl_log_error("root certificate signature failure");
+            ssl_log_error("certificate signature failure");
           if (flags & CERT_STORE_TIME_VALIDITY_FLAG)
-            ssl_log_error("root certificate time validity failure");
+            ssl_log_error("certificate time validity failure");
         }
         if (flags) {
           CertFreeCertificateContext(trust_anchor);

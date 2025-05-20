@@ -507,7 +507,7 @@ class Settings(Singleton):
         In some cases this wasn't immediately feasible due to when and how we reload those settings
         """
         status = self.contrast_ui_status or self.config.config_status or "Success"
-        report_creation_time = datetime.now(timezone.utc).isoformat()
+        report_creation_time = datetime.now(timezone.utc).strftime(RFC3339_FORMAT)
         config = {
             "report_create": report_creation_time,
             "config": {
@@ -585,6 +585,11 @@ class Settings(Singleton):
             for filename, values in user_config.items()
         ]
 
+        # PYT-3808: Don't send properties that are null or empty lists
+        config["config"] = {
+            k: v for k, v in config["config"].items() if v not in ([], None)
+        }
+
         return config
 
     @fail_quietly("Failed to export effective config")
@@ -613,3 +618,6 @@ class Settings(Singleton):
                 error=str(perm_error),
             )
             return
+
+
+RFC3339_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"

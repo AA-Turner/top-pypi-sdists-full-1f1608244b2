@@ -29,11 +29,8 @@ from .paginator import ListClustersPaginator
 from .type_defs import (
     CreateClusterInputTypeDef,
     CreateClusterOutputTypeDef,
-    CreateMultiRegionClustersInputTypeDef,
-    CreateMultiRegionClustersOutputTypeDef,
     DeleteClusterInputTypeDef,
     DeleteClusterOutputTypeDef,
-    DeleteMultiRegionClustersInputTypeDef,
     EmptyResponseMetadataTypeDef,
     GetClusterInputTypeDef,
     GetClusterOutputTypeDef,
@@ -111,20 +108,11 @@ class AuroraDSQLClient(BaseClient):
         self, **kwargs: Unpack[CreateClusterInputTypeDef]
     ) -> CreateClusterOutputTypeDef:
         """
-        This operation creates a cluster in Amazon Aurora DSQL.
+        The CreateCluster API allows you to create both single-region clusters and
+        multi-Region clusters.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dsql/client/create_cluster.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_dsql/client/#create_cluster)
-        """
-
-    def create_multi_region_clusters(
-        self, **kwargs: Unpack[CreateMultiRegionClustersInputTypeDef]
-    ) -> CreateMultiRegionClustersOutputTypeDef:
-        """
-        Creates multi-Region clusters in Amazon Aurora DSQL.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dsql/client/create_multi_region_clusters.html)
-        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_dsql/client/#create_multi_region_clusters)
         """
 
     def delete_cluster(
@@ -135,16 +123,6 @@ class AuroraDSQLClient(BaseClient):
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dsql/client/delete_cluster.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_dsql/client/#delete_cluster)
-        """
-
-    def delete_multi_region_clusters(
-        self, **kwargs: Unpack[DeleteMultiRegionClustersInputTypeDef]
-    ) -> EmptyResponseMetadataTypeDef:
-        """
-        Deletes a multi-Region cluster in Amazon Aurora DSQL.
-
-        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dsql/client/delete_multi_region_clusters.html)
-        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_dsql/client/#delete_multi_region_clusters)
         """
 
     def get_cluster(self, **kwargs: Unpack[GetClusterInputTypeDef]) -> GetClusterOutputTypeDef:
@@ -209,7 +187,8 @@ class AuroraDSQLClient(BaseClient):
         self, **kwargs: Unpack[UpdateClusterInputTypeDef]
     ) -> UpdateClusterOutputTypeDef:
         """
-        Updates a cluster.
+        The <i>UpdateCluster</i> API allows you to modify both single-Region and
+        multi-Region cluster configurations.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dsql/client/update_cluster.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_dsql/client/#update_cluster)

@@ -30,6 +30,13 @@ def change_spreadsheet_data_source(
     :type attribute_domain_type: int | None
     """
 
+def fit_column(execution_context: int | str | None = None, undo: bool | None = None):
+    """Resize a spreadsheet column to the width of the data
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
+    """
+
 def remove_row_filter_rule(
     execution_context: int | str | None = None,
     undo: bool | None = None,
@@ -43,6 +50,13 @@ def remove_row_filter_rule(
     :type undo: bool | None
     :param index: Index
     :type index: int | None
+    """
+
+def resize_column(execution_context: int | str | None = None, undo: bool | None = None):
+    """Resize a spreadsheet column
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
     """
 
 def toggle_pin(execution_context: int | str | None = None, undo: bool | None = None):

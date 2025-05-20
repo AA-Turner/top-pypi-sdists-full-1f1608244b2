@@ -193,10 +193,10 @@ async fn inner_sweep(
         Some("sketchPlane") => RelativeTo::SketchPlane,
         Some("trajectoryCurve") | None => RelativeTo::TrajectoryCurve,
         Some(_) => {
-            return Err(KclError::Syntax(crate::errors::KclErrorDetails {
-                source_ranges: vec![args.source_range],
-                message: "If you provide relativeTo, it must either be 'sketchPlane' or 'trajectoryCurve'".to_owned(),
-            }))
+            return Err(KclError::Syntax(crate::errors::KclErrorDetails::new(
+                "If you provide relativeTo, it must either be 'sketchPlane' or 'trajectoryCurve'".to_owned(),
+                vec![args.source_range],
+            )))
         }
     };
 
@@ -218,7 +218,6 @@ async fn inner_sweep(
         solids.push(
             do_post_extrude(
                 sketch,
-                #[cfg(feature = "artifact-graph")]
                 id.into(),
                 TyF64::new(0.0, NumericType::mm()),
                 sectional.unwrap_or(false),

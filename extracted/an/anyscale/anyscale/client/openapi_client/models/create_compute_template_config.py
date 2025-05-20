@@ -34,6 +34,8 @@ class CreateComputeTemplateConfig(object):
     """
     openapi_types = {
         'cloud_id': 'str',
+        'maximum_uptime_minutes': 'int',
+        'deployment_configs': 'list[CloudDeploymentComputeConfig]',
         'max_workers': 'int',
         'region': 'str',
         'allowed_azs': 'list[str]',
@@ -42,7 +44,6 @@ class CreateComputeTemplateConfig(object):
         'aws_advanced_configurations_json': 'object',
         'gcp_advanced_configurations_json': 'object',
         'advanced_configurations_json': 'object',
-        'maximum_uptime_minutes': 'int',
         'auto_select_worker_config': 'bool',
         'flags': 'object',
         'idle_termination_minutes': 'int'
@@ -50,6 +51,8 @@ class CreateComputeTemplateConfig(object):
 
     attribute_map = {
         'cloud_id': 'cloud_id',
+        'maximum_uptime_minutes': 'maximum_uptime_minutes',
+        'deployment_configs': 'deployment_configs',
         'max_workers': 'max_workers',
         'region': 'region',
         'allowed_azs': 'allowed_azs',
@@ -58,19 +61,20 @@ class CreateComputeTemplateConfig(object):
         'aws_advanced_configurations_json': 'aws_advanced_configurations_json',
         'gcp_advanced_configurations_json': 'gcp_advanced_configurations_json',
         'advanced_configurations_json': 'advanced_configurations_json',
-        'maximum_uptime_minutes': 'maximum_uptime_minutes',
         'auto_select_worker_config': 'auto_select_worker_config',
         'flags': 'flags',
         'idle_termination_minutes': 'idle_termination_minutes'
     }
 
-    def __init__(self, cloud_id=None, max_workers=None, region=None, allowed_azs=None, head_node_type=None, worker_node_types=None, aws_advanced_configurations_json=None, gcp_advanced_configurations_json=None, advanced_configurations_json=None, maximum_uptime_minutes=None, auto_select_worker_config=False, flags=None, idle_termination_minutes=120, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, cloud_id=None, maximum_uptime_minutes=None, deployment_configs=None, max_workers=None, region=None, allowed_azs=None, head_node_type=None, worker_node_types=None, aws_advanced_configurations_json=None, gcp_advanced_configurations_json=None, advanced_configurations_json=None, auto_select_worker_config=False, flags=None, idle_termination_minutes=120, local_vars_configuration=None):  # noqa: E501
         """CreateComputeTemplateConfig - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
         self._cloud_id = None
+        self._maximum_uptime_minutes = None
+        self._deployment_configs = None
         self._max_workers = None
         self._region = None
         self._allowed_azs = None
@@ -79,16 +83,20 @@ class CreateComputeTemplateConfig(object):
         self._aws_advanced_configurations_json = None
         self._gcp_advanced_configurations_json = None
         self._advanced_configurations_json = None
-        self._maximum_uptime_minutes = None
         self._auto_select_worker_config = None
         self._flags = None
         self._idle_termination_minutes = None
         self.discriminator = None
 
         self.cloud_id = cloud_id
+        if maximum_uptime_minutes is not None:
+            self.maximum_uptime_minutes = maximum_uptime_minutes
+        if deployment_configs is not None:
+            self.deployment_configs = deployment_configs
         if max_workers is not None:
             self.max_workers = max_workers
-        self.region = region
+        if region is not None:
+            self.region = region
         if allowed_azs is not None:
             self.allowed_azs = allowed_azs
         self.head_node_type = head_node_type
@@ -100,8 +108,6 @@ class CreateComputeTemplateConfig(object):
             self.gcp_advanced_configurations_json = gcp_advanced_configurations_json
         if advanced_configurations_json is not None:
             self.advanced_configurations_json = advanced_configurations_json
-        if maximum_uptime_minutes is not None:
-            self.maximum_uptime_minutes = maximum_uptime_minutes
         if auto_select_worker_config is not None:
             self.auto_select_worker_config = auto_select_worker_config
         if flags is not None:
@@ -135,10 +141,56 @@ class CreateComputeTemplateConfig(object):
         self._cloud_id = cloud_id
 
     @property
+    def maximum_uptime_minutes(self):
+        """Gets the maximum_uptime_minutes of this CreateComputeTemplateConfig.  # noqa: E501
+
+        If set to a positive number, Anyscale will terminate the cluster this many minutes after cluster start.  # noqa: E501
+
+        :return: The maximum_uptime_minutes of this CreateComputeTemplateConfig.  # noqa: E501
+        :rtype: int
+        """
+        return self._maximum_uptime_minutes
+
+    @maximum_uptime_minutes.setter
+    def maximum_uptime_minutes(self, maximum_uptime_minutes):
+        """Sets the maximum_uptime_minutes of this CreateComputeTemplateConfig.
+
+        If set to a positive number, Anyscale will terminate the cluster this many minutes after cluster start.  # noqa: E501
+
+        :param maximum_uptime_minutes: The maximum_uptime_minutes of this CreateComputeTemplateConfig.  # noqa: E501
+        :type: int
+        """
+
+        self._maximum_uptime_minutes = maximum_uptime_minutes
+
+    @property
+    def deployment_configs(self):
+        """Gets the deployment_configs of this CreateComputeTemplateConfig.  # noqa: E501
+
+        A list of cloud deployment-specific configs to use.  # noqa: E501
+
+        :return: The deployment_configs of this CreateComputeTemplateConfig.  # noqa: E501
+        :rtype: list[CloudDeploymentComputeConfig]
+        """
+        return self._deployment_configs
+
+    @deployment_configs.setter
+    def deployment_configs(self, deployment_configs):
+        """Sets the deployment_configs of this CreateComputeTemplateConfig.
+
+        A list of cloud deployment-specific configs to use.  # noqa: E501
+
+        :param deployment_configs: The deployment_configs of this CreateComputeTemplateConfig.  # noqa: E501
+        :type: list[CloudDeploymentComputeConfig]
+        """
+
+        self._deployment_configs = deployment_configs
+
+    @property
     def max_workers(self):
         """Gets the max_workers of this CreateComputeTemplateConfig.  # noqa: E501
 
-        Desired limit on total running workers for this session.  # noqa: E501
+        DEPRECATED. This attribute will be ignored - please use the \"max_resources\" flag to configure resource limits.  # noqa: E501
 
         :return: The max_workers of this CreateComputeTemplateConfig.  # noqa: E501
         :rtype: int
@@ -149,7 +201,7 @@ class CreateComputeTemplateConfig(object):
     def max_workers(self, max_workers):
         """Sets the max_workers of this CreateComputeTemplateConfig.
 
-        Desired limit on total running workers for this session.  # noqa: E501
+        DEPRECATED. This attribute will be ignored - please use the \"max_resources\" flag to configure resource limits.  # noqa: E501
 
         :param max_workers: The max_workers of this CreateComputeTemplateConfig.  # noqa: E501
         :type: int
@@ -177,8 +229,6 @@ class CreateComputeTemplateConfig(object):
         :param region: The region of this CreateComputeTemplateConfig.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and region is None:  # noqa: E501
-            raise ValueError("Invalid value for `region`, must not be `None`")  # noqa: E501
 
         self._region = region
 
@@ -321,29 +371,6 @@ class CreateComputeTemplateConfig(object):
         """
 
         self._advanced_configurations_json = advanced_configurations_json
-
-    @property
-    def maximum_uptime_minutes(self):
-        """Gets the maximum_uptime_minutes of this CreateComputeTemplateConfig.  # noqa: E501
-
-        If set to a positive number, Anyscale will terminate the cluster this many minutes after cluster start.  # noqa: E501
-
-        :return: The maximum_uptime_minutes of this CreateComputeTemplateConfig.  # noqa: E501
-        :rtype: int
-        """
-        return self._maximum_uptime_minutes
-
-    @maximum_uptime_minutes.setter
-    def maximum_uptime_minutes(self, maximum_uptime_minutes):
-        """Sets the maximum_uptime_minutes of this CreateComputeTemplateConfig.
-
-        If set to a positive number, Anyscale will terminate the cluster this many minutes after cluster start.  # noqa: E501
-
-        :param maximum_uptime_minutes: The maximum_uptime_minutes of this CreateComputeTemplateConfig.  # noqa: E501
-        :type: int
-        """
-
-        self._maximum_uptime_minutes = maximum_uptime_minutes
 
     @property
     def auto_select_worker_config(self):

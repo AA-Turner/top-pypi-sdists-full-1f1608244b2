@@ -69,7 +69,7 @@ async def worker(
 ) -> WorkerResult:
     run_id = run["run_id"]
     if attempt == 1:
-        incr_runs()
+        incr_runs(graph_id=_get_graph_id(run))
     checkpoint: CheckpointPayload | None = None
     exception: Exception | None = None
     status: str | None = None

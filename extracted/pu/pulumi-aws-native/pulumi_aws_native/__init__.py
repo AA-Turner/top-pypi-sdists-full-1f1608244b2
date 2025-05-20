@@ -435,6 +435,8 @@ if typing.TYPE_CHECKING:
     ssm = __ssm
     import pulumi_aws_native.ssmcontacts as __ssmcontacts
     ssmcontacts = __ssmcontacts
+    import pulumi_aws_native.ssmguiconnect as __ssmguiconnect
+    ssmguiconnect = __ssmguiconnect
     import pulumi_aws_native.ssmincidents as __ssmincidents
     ssmincidents = __ssmincidents
     import pulumi_aws_native.ssmquicksetup as __ssmquicksetup
@@ -678,6 +680,7 @@ else:
     sqs = _utilities.lazy_import('pulumi_aws_native.sqs')
     ssm = _utilities.lazy_import('pulumi_aws_native.ssm')
     ssmcontacts = _utilities.lazy_import('pulumi_aws_native.ssmcontacts')
+    ssmguiconnect = _utilities.lazy_import('pulumi_aws_native.ssmguiconnect')
     ssmincidents = _utilities.lazy_import('pulumi_aws_native.ssmincidents')
     ssmquicksetup = _utilities.lazy_import('pulumi_aws_native.ssmquicksetup')
     sso = _utilities.lazy_import('pulumi_aws_native.sso')
@@ -791,6 +794,7 @@ _utilities.register(
    "aws-native:apigatewayv2:Model": "Model",
    "aws-native:apigatewayv2:Route": "Route",
    "aws-native:apigatewayv2:RouteResponse": "RouteResponse",
+   "aws-native:apigatewayv2:RoutingRule": "RoutingRule",
    "aws-native:apigatewayv2:VpcLink": "VpcLink"
   }
  },
@@ -1012,6 +1016,7 @@ _utilities.register(
    "aws-native:bedrock:FlowVersion": "FlowVersion",
    "aws-native:bedrock:Guardrail": "Guardrail",
    "aws-native:bedrock:GuardrailVersion": "GuardrailVersion",
+   "aws-native:bedrock:IntelligentPromptRouter": "IntelligentPromptRouter",
    "aws-native:bedrock:KnowledgeBase": "KnowledgeBase",
    "aws-native:bedrock:Prompt": "Prompt",
    "aws-native:bedrock:PromptVersion": "PromptVersion"
@@ -1115,8 +1120,10 @@ _utilities.register(
   "classes": {
    "aws-native:cloudfront:CachePolicy": "CachePolicy",
    "aws-native:cloudfront:CloudFrontOriginAccessIdentity": "CloudFrontOriginAccessIdentity",
+   "aws-native:cloudfront:ConnectionGroup": "ConnectionGroup",
    "aws-native:cloudfront:ContinuousDeploymentPolicy": "ContinuousDeploymentPolicy",
    "aws-native:cloudfront:Distribution": "Distribution",
+   "aws-native:cloudfront:DistributionTenant": "DistributionTenant",
    "aws-native:cloudfront:Function": "Function",
    "aws-native:cloudfront:KeyGroup": "KeyGroup",
    "aws-native:cloudfront:KeyValueStore": "KeyValueStore",
@@ -1398,11 +1405,13 @@ _utilities.register(
    "aws-native:datazone:Connection": "Connection",
    "aws-native:datazone:DataSource": "DataSource",
    "aws-native:datazone:Domain": "Domain",
+   "aws-native:datazone:DomainUnit": "DomainUnit",
    "aws-native:datazone:Environment": "Environment",
    "aws-native:datazone:EnvironmentActions": "EnvironmentActions",
    "aws-native:datazone:EnvironmentBlueprintConfiguration": "EnvironmentBlueprintConfiguration",
    "aws-native:datazone:EnvironmentProfile": "EnvironmentProfile",
    "aws-native:datazone:GroupProfile": "GroupProfile",
+   "aws-native:datazone:Owner": "Owner",
    "aws-native:datazone:Project": "Project",
    "aws-native:datazone:ProjectMembership": "ProjectMembership",
    "aws-native:datazone:SubscriptionTarget": "SubscriptionTarget",
@@ -1609,6 +1618,7 @@ _utilities.register(
   "classes": {
    "aws-native:ecr:PullThroughCacheRule": "PullThroughCacheRule",
    "aws-native:ecr:RegistryPolicy": "RegistryPolicy",
+   "aws-native:ecr:RegistryScanningConfiguration": "RegistryScanningConfiguration",
    "aws-native:ecr:ReplicationConfiguration": "ReplicationConfiguration",
    "aws-native:ecr:Repository": "Repository",
    "aws-native:ecr:RepositoryCreationTemplate": "RepositoryCreationTemplate"
@@ -1695,6 +1705,7 @@ _utilities.register(
   "fqn": "pulumi_aws_native.emr",
   "classes": {
    "aws-native:emr:SecurityConfiguration": "SecurityConfiguration",
+   "aws-native:emr:Step": "Step",
    "aws-native:emr:Studio": "Studio",
    "aws-native:emr:StudioSessionMapping": "StudioSessionMapping",
    "aws-native:emr:WalWorkspace": "WalWorkspace"
@@ -2492,6 +2503,8 @@ _utilities.register(
   "fqn": "pulumi_aws_native.neptune",
   "classes": {
    "aws-native:neptune:DbCluster": "DbCluster",
+   "aws-native:neptune:DbClusterParameterGroup": "DbClusterParameterGroup",
+   "aws-native:neptune:DbParameterGroup": "DbParameterGroup",
    "aws-native:neptune:DbSubnetGroup": "DbSubnetGroup"
   }
  },
@@ -2568,7 +2581,8 @@ _utilities.register(
    "aws-native:omics:RunGroup": "RunGroup",
    "aws-native:omics:SequenceStore": "SequenceStore",
    "aws-native:omics:VariantStore": "VariantStore",
-   "aws-native:omics:Workflow": "Workflow"
+   "aws-native:omics:Workflow": "Workflow",
+   "aws-native:omics:WorkflowVersion": "WorkflowVersion"
   }
  },
  {
@@ -3203,6 +3217,14 @@ _utilities.register(
    "aws-native:ssmcontacts:ContactChannel": "ContactChannel",
    "aws-native:ssmcontacts:Plan": "Plan",
    "aws-native:ssmcontacts:Rotation": "Rotation"
+  }
+ },
+ {
+  "pkg": "aws-native",
+  "mod": "ssmguiconnect",
+  "fqn": "pulumi_aws_native.ssmguiconnect",
+  "classes": {
+   "aws-native:ssmguiconnect:Preferences": "Preferences"
   }
  },
  {

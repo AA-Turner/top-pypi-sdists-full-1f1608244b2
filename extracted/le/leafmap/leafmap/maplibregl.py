@@ -44,6 +44,8 @@ from .common import (
     get_overture_data,
     geojson_bounds,
     geojson_to_gdf,
+    nasa_data_login,
+    nasa_data_download,
     pandas_to_geojson,
     pmtiles_metadata,
     pmtiles_style,
@@ -72,12 +74,15 @@ class Map(MapWidget):
             "navigation": "top-right",
             "fullscreen": "top-right",
             "scale": "bottom-left",
+            "globe": "top-right",
         },
         projection: str = "mercator",
         use_message_queue: bool = None,
         add_sidebar: bool = True,
         sidebar_visible: bool = False,
+        sidebar_width: int = 360,
         sidebar_args: Optional[Dict] = None,
+        layer_manager_expanded: bool = True,
         **kwargs: Any,
     ) -> None:
         """
@@ -112,11 +117,12 @@ class Map(MapWidget):
             add_sidebar (bool, optional): Whether to add a sidebar to the map.
                 Defaults to True. If True, the map will be displayed in a sidebar.
             sidebar_visible (bool, optional): Whether the sidebar is visible. Defaults to False.
+            sidebar_width (int, optional): The width of the sidebar in pixels. Defaults to 360.
             sidebar_args (dict, optional): The arguments for the sidebar. It can
                 be a dictionary with the following keys: "sidebar_visible", "min_width",
                 "max_width", and "sidebar_content". Defaults to None. If None, it will
                 use the default values for the sidebar.
-            kwargs (Any): Additional keyword arguments that are passed to the MapOptions class.
+            layer_manager_expanded (bool, optional): Whether the layer manager is expanded. Defaults to True.
             **kwargs: Additional keyword arguments that are passed to the MapOptions class.
                 See https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/MapOptions/
                 for more information.
@@ -186,8 +192,10 @@ class Map(MapWidget):
             use_message_queue = os.environ.get("USE_MESSAGE_QUEUE", False)
         self.use_message_queue(use_message_queue)
 
+        self.controls = {}
         for control, position in controls.items():
             self.add_control(control, position)
+            self.controls[control] = position
 
         self.layer_dict = {}
         self.layer_dict["background"] = {
@@ -203,7 +211,7 @@ class Map(MapWidget):
             self.style_dict[layer["id"]] = layer
         self.source_dict = {}
 
-        if projection.lower() == "globe":
+        if projection.lower() == "globe" and ("globe" not in self.controls):
             self.add_globe_control()
             self.set_projection(
                 type=[
@@ -221,6 +229,10 @@ class Map(MapWidget):
             sidebar_args = {}
         if "sidebar_visible" not in sidebar_args:
             sidebar_args["sidebar_visible"] = sidebar_visible
+        if "sidebar_width" not in sidebar_args:
+            sidebar_args["min_width"] = sidebar_width
+        if "expanded" not in sidebar_args:
+            sidebar_args["expanded"] = layer_manager_expanded
         self.sidebar_args = sidebar_args
         self.layer_manager = None
         self.container = None
@@ -291,6 +303,7 @@ class Map(MapWidget):
             **kwargs,
         )
         self.container = container
+        self.container.sidebar_widgets["Layers"] = self.layer_manager
         return container
 
     def _repr_html_(self, **kwargs: Any) -> None:
@@ -339,6 +352,7 @@ class Map(MapWidget):
                 sidebar_content=[self.layer_manager],
                 **kwargs,
             )
+            container.sidebar_widgets["Layers"] = self.layer_manager
             self.container = container
 
         display(container)
@@ -381,29 +395,33 @@ class Map(MapWidget):
             expanded (bool): Whether the panel is expanded by default. Defaults to True.
             **kwargs (Any): Additional keyword arguments for the parent class.
         """
-        if self.container is not None:
-            self.container.add_to_sidebar(
-                widget,
-                add_header=add_header,
-                widget_icon=widget_icon,
-                close_icon=close_icon,
-                label=label,
-                background_color=background_color,
-                height=height,
-                expanded=expanded,
-                host_map=self,
-                **kwargs,
-            )
+        if self.container is None:
+            self.creater_container(**self.sidebar_args)
+        self.container.add_to_sidebar(
+            widget,
+            add_header=add_header,
+            widget_icon=widget_icon,
+            close_icon=close_icon,
+            label=label,
+            background_color=background_color,
+            height=height,
+            expanded=expanded,
+            host_map=self,
+            **kwargs,
+        )
 
-    def remove_from_sidebar(self, widget: widgets.Widget) -> None:
+    def remove_from_sidebar(
+        self, widget: widgets.Widget = None, name: str = None
+    ) -> None:
         """
         Removes a widget from the sidebar content.
 
         Args:
             widget (widgets.Widget): The widget to remove from the sidebar.
+            name (str): The name of the widget to remove from the sidebar.
         """
         if self.container is not None:
-            self.container.remove_from_sidebar(widget)
+            self.container.remove_from_sidebar(widget, name)
 
     def set_sidebar_width(self, min_width: int = None, max_width: int = None) -> None:
         """
@@ -413,8 +431,42 @@ class Map(MapWidget):
             min_width (int, optional): New minimum width in pixels. If None, keep current.
             max_width (int, optional): New maximum width in pixels. If None, keep current.
         """
-        if self.container is not None:
-            self.container.set_sidebar_width(min_width, max_width)
+        if self.container is None:
+            self.creater_container()
+        self.container.set_sidebar_width(min_width, max_width)
+
+    @property
+    def sidebar_widgets(self) -> Dict[str, widgets.Widget]:
+        """
+        Returns a dictionary of widgets currently in the sidebar.
+
+        Returns:
+            Dict[str, widgets.Widget]: A dictionary where keys are the labels of the widgets and values are the widgets themselves.
+        """
+        return self.container.sidebar_widgets
+
+    def add(self, obj: Union[str, Any], **kwargs) -> None:
+        """
+        Adds a widget or layer to the map based on the type of obj.
+
+        If obj is a string and equals "NASA_OPERA", it adds a NASA OPERA data GUI widget to the sidebar.
+        Otherwise, it attempts to add obj as a layer to the map.
+
+        Args:
+            obj (Union[str, Any]): The object to add to the map. Can be a string or any other type.
+            **kwargs (Any): Additional keyword arguments to pass to the widget or layer constructor.
+
+        Returns:
+            None
+        """
+        if isinstance(obj, str):
+            if obj.upper() == "NASA_OPERA":
+                from .toolbar import nasa_opera_gui
+
+                widget = nasa_opera_gui(self, backend="maplibre", **kwargs)
+                self.add_to_sidebar(
+                    widget, widget_icon="mdi-satellite-variant", label="NASA OPERA"
+                )
 
     def add_layer(
         self,
@@ -423,6 +475,7 @@ class Map(MapWidget):
         name: Optional[str] = None,
         opacity: float = 1.0,
         visible: bool = True,
+        overwrite: bool = False,
     ) -> None:
         """
         Adds a layer to the map.
@@ -440,6 +493,8 @@ class Map(MapWidget):
                 in the layer dictionary. If None, the layer's ID is used as the key.
             opacity (float, optional): The opacity of the layer. Defaults to 1.0.
             visible (bool, optional): Whether the layer is visible by default.
+            overwrite (bool, optional): If True, the function will return the
+                original name even if it exists in the list. Defaults to False.
 
         Returns:
             None
@@ -454,6 +509,11 @@ class Map(MapWidget):
 
         if name is None:
             name = layer.id
+
+        name = common.get_unique_name(name, self.get_layer_names(), overwrite=overwrite)
+        if name in self.get_layer_names():
+            self.remove_layer(name)
+            self.layer_dict.pop(name)
 
         if (
             "paint" in layer.to_dict()
@@ -626,6 +686,9 @@ class Map(MapWidget):
 
         if isinstance(control, str):
             control = control.lower()
+            if control in self.controls:
+                return
+
             if control == "scale":
                 control = ScaleControl(**kwargs)
             elif control == "fullscreen":
@@ -656,7 +719,7 @@ class Map(MapWidget):
         self,
         options: Optional[Dict[str, Any]] = None,
         controls: Optional[Dict[str, Any]] = None,
-        position: str = "top-left",
+        position: str = "top-right",
         geojson: Optional[Dict[str, Any]] = None,
         **kwargs: Any,
     ) -> None:
@@ -675,7 +738,7 @@ class Map(MapWidget):
                 'point', 'trash', 'combine_features', 'uncombine_features'.
                 Defaults to None.
             position (str): The position of the control on the map. Defaults
-                to "top-left".
+                to "top-right".
             geojson (Optional[Dict[str, Any]]): Initial GeoJSON data to load
                 into the drawing control. Defaults to None.
             **kwargs (Any): Additional keyword arguments to be passed to the
@@ -727,7 +790,8 @@ class Map(MapWidget):
         Returns:
             None
         """
-        self.add_control(GlobeControl(), position=position, **kwargs)
+        if "globe" not in self.controls:
+            self.add_control(GlobeControl(), position=position, **kwargs)
 
     def save_draw_features(self, filepath: str, indent=4, **kwargs) -> None:
         """
@@ -955,6 +1019,7 @@ class Map(MapWidget):
         before_id: Optional[str] = None,
         source_args: Dict = {},
         fit_bounds_options: Dict = None,
+        overwrite: bool = False,
         **kwargs: Any,
     ) -> None:
         """
@@ -989,6 +1054,8 @@ class Map(MapWidget):
             fit_bounds_options (dict, optional): Additional options for fitting the bounds.
                 See https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/FitBoundsOptions
                 for more information.
+            overwrite (bool, optional): Whether to overwrite an existing layer with the same name.
+                Defaults to False.
             **kwargs: Additional keyword arguments that are passed to the Layer class.
                 See https://maplibre.org/maplibre-style-spec/layers/ for more info.
 
@@ -1063,7 +1130,9 @@ class Map(MapWidget):
             source=source,
             **kwargs,
         )
-        self.add_layer(layer, before_id=before_id, name=name, visible=visible)
+        self.add_layer(
+            layer, before_id=before_id, name=name, visible=visible, overwrite=overwrite
+        )
         self.add_popup(name)
         if fit_bounds and bounds is not None:
             self.fit_bounds(bounds, fit_bounds_options)
@@ -1084,6 +1153,7 @@ class Map(MapWidget):
         visible: bool = True,
         before_id: Optional[str] = None,
         source_args: Dict = {},
+        overwrite: bool = False,
         **kwargs: Any,
     ) -> None:
         """
@@ -1113,6 +1183,8 @@ class Map(MapWidget):
                 the new layer should be inserted.
             source_args (dict, optional): Additional keyword arguments that are
                 passed to the GeoJSONSource class.
+            overwrite (bool, optional): Whether to overwrite an existing layer with the same name.
+                Defaults to False.
             **kwargs: Additional keyword arguments that are passed to the Layer class.
 
         Returns:
@@ -1137,6 +1209,7 @@ class Map(MapWidget):
             visible=visible,
             before_id=before_id,
             source_args=source_args,
+            overwrite=overwrite,
             **kwargs,
         )
 
@@ -1151,6 +1224,7 @@ class Map(MapWidget):
         visible: bool = True,
         before_id: Optional[str] = None,
         source_args: Dict = {},
+        overwrite: bool = False,
         **kwargs: Any,
     ) -> None:
         """
@@ -1176,6 +1250,8 @@ class Map(MapWidget):
                 the new layer should be inserted.
             source_args (dict, optional): Additional keyword arguments that are
                 passed to the GeoJSONSource class.
+            overwrite (bool, optional): Whether to overwrite an existing layer with the same name.
+                Defaults to False.
             **kwargs: Additional keyword arguments that are passed to the Layer class.
 
         Returns:
@@ -1197,6 +1273,7 @@ class Map(MapWidget):
             visible=visible,
             before_id=before_id,
             source_args=source_args,
+            overwrite=overwrite,
             **kwargs,
         )
 
@@ -1210,6 +1287,7 @@ class Map(MapWidget):
         tile_size: int = 256,
         before_id: Optional[str] = None,
         source_args: Dict = {},
+        overwrite: bool = False,
         **kwargs: Any,
     ) -> None:
         """
@@ -1233,12 +1311,17 @@ class Map(MapWidget):
                 the new layer should be inserted.
             source_args (dict, optional): Additional keyword arguments that are
                 passed to the RasterTileSource class.
+            overwrite (bool, optional): Whether to overwrite an existing layer with the same name.
+                Defaults to False.
             **kwargs: Additional keyword arguments that are passed to the Layer class.
                 See https://eodagmbh.github.io/py-maplibregl/api/layer/ for more information.
 
         Returns:
             None
         """
+
+        if overwrite and name in self.get_layer_names():
+            self.remove_layer(name)
 
         raster_source = RasterTileSource(
             tiles=[url.strip()],
@@ -1247,7 +1330,7 @@ class Map(MapWidget):
             **source_args,
         )
         layer = Layer(id=name, source=raster_source, type=LayerType.RASTER, **kwargs)
-        self.add_layer(layer, before_id=before_id, name=name)
+        self.add_layer(layer, before_id=before_id, name=name, overwrite=overwrite)
         self.set_visibility(name, visible)
         self.set_opacity(name, opacity)
 
@@ -1263,6 +1346,7 @@ class Map(MapWidget):
         tile_size: int = 256,
         before_id: Optional[str] = None,
         source_args: Dict = {},
+        overwrite: bool = False,
         **kwargs: Any,
     ) -> None:
         """
@@ -1288,6 +1372,8 @@ class Map(MapWidget):
                 the new layer should be inserted.
             source_args (dict, optional): Additional keyword arguments that are
                 passed to the RasterTileSource class.
+            overwrite (bool, optional): Whether to overwrite an existing layer with the same name.
+                Defaults to False.
             **kwargs: Additional keyword arguments that are passed to the Layer class.
                 See https://eodagmbh.github.io/py-maplibregl/api/layer/ for more information.
 
@@ -1306,6 +1392,7 @@ class Map(MapWidget):
             tile_size=tile_size,
             before_id=before_id,
             source_args=source_args,
+            overwrite=overwrite,
             **kwargs,
         )
 
@@ -1320,6 +1407,7 @@ class Map(MapWidget):
         visible: bool = True,
         before_id: Optional[str] = None,
         ee_initialize: bool = False,
+        overwrite: bool = False,
         **kwargs,
     ) -> None:
         """
@@ -1341,6 +1429,9 @@ class Map(MapWidget):
             before_id (str, optional): The ID of an existing layer before which
                 the new layer should be inserted.
             ee_initialize (bool, optional): Whether to initialize the Earth Engine
+                account. Default is False.
+            overwrite (bool, optional): Whether to overwrite an existing layer with the same name.
+                Defaults to False.
             **kwargs: Additional keyword arguments to be passed to the underlying
                 `add_tile_layer` method.
 
@@ -1368,6 +1459,7 @@ class Map(MapWidget):
                     opacity=opacity,
                     visible=visible,
                     before_id=before_id,
+                    overwrite=overwrite,
                     **kwargs,
                 )
             else:
@@ -1389,6 +1481,7 @@ class Map(MapWidget):
                     opacity=opacity,
                     visible=visible,
                     before_id=before_id,
+                    overwrite=overwrite,
                     **kwargs,
                 )
             except Exception as e:
@@ -1410,6 +1503,7 @@ class Map(MapWidget):
         titiler_endpoint: str = None,
         fit_bounds: bool = True,
         before_id: Optional[str] = None,
+        overwrite: bool = False,
         **kwargs: Any,
     ) -> None:
         """
@@ -1435,6 +1529,8 @@ class Map(MapWidget):
                 Defaults to "https://titiler.xyz".
             fit_bounds (bool, optional): Whether to adjust the viewport of
                 the map to fit the bounds of the layer. Defaults to True.
+            overwrite (bool, optional): Whether to overwrite an existing layer with the same name.
+                Defaults to False.
             **kwargs: Arbitrary keyword arguments, including bidx, expression,
                 nodata, unscale, resampling, rescale, color_formula, colormap,
                     colormap_name, return_mask. See https://developmentseed.org/titiler/endpoints/cog/
@@ -1454,7 +1550,13 @@ class Map(MapWidget):
         )
         bounds = common.cog_bounds(url, titiler_endpoint)
         self.add_tile_layer(
-            tile_url, name, attribution, opacity, visible, before_id=before_id
+            tile_url,
+            name,
+            attribution,
+            opacity,
+            visible,
+            before_id=before_id,
+            overwrite=overwrite,
         )
         if fit_bounds:
             self.fit_bounds([[bounds[0], bounds[1]], [bounds[2], bounds[3]]])
@@ -1474,6 +1576,7 @@ class Map(MapWidget):
         visible: bool = True,
         fit_bounds: bool = True,
         before_id: Optional[str] = None,
+        overwrite: bool = False,
         **kwargs: Any,
     ) -> None:
         """
@@ -1508,6 +1611,8 @@ class Map(MapWidget):
                 be zoomed to the layer extent. Defaults to True.
             before_id (str, optional): The ID of an existing layer before which
                 the new layer should be inserted.
+            overwrite (bool, optional): Whether to overwrite an existing layer with the same name.
+                Defaults to False.
             **kwargs: Arbitrary keyword arguments, including bidx, expression,
                 nodata, unscale, resampling, rescale, color_formula, colormap,
                 colormap_name, return_mask. See https://developmentseed.org/titiler/endpoints/cog/
@@ -1534,7 +1639,13 @@ class Map(MapWidget):
         )
         bounds = common.stac_bounds(url, collection, item, titiler_endpoint)
         self.add_tile_layer(
-            tile_url, name, attribution, opacity, visible, before_id=before_id
+            tile_url,
+            name,
+            attribution,
+            opacity,
+            visible,
+            before_id=before_id,
+            overwrite=overwrite,
         )
         if fit_bounds:
             self.fit_bounds([[bounds[0], bounds[1]], [bounds[2], bounds[3]]])
@@ -1547,7 +1658,6 @@ class Map(MapWidget):
         vmin=None,
         vmax=None,
         nodata=None,
-        attribution="Localtileserver",
         name="Raster",
         before_id=None,
         fit_bounds=True,
@@ -1555,6 +1665,7 @@ class Map(MapWidget):
         opacity=1.0,
         array_args={},
         client_args={"cors_all": True},
+        overwrite: bool = True,
         **kwargs,
     ):
         """Add a local raster dataset to the map.
@@ -1594,14 +1705,24 @@ class Map(MapWidget):
                 `array_to_memory_file` when reading the raster. Defaults to {}.
             client_args (dict, optional): Additional arguments to pass to
                 localtileserver.TileClient. Defaults to { "cors_all": False }.
+            overwrite (bool, optional): Whether to overwrite an existing layer with the same name.
+                Defaults to True.
+            **kwargs: Additional keyword arguments to be passed to the underlying
+                `add_tile_layer` method.
         """
         import numpy as np
         import xarray as xr
 
+        if "zoom_to_layer" in kwargs:
+            fit_bounds = kwargs.pop("zoom_to_layer")
+
+        if "layer_name" in kwargs:
+            name = kwargs.pop("layer_name")
+
         if isinstance(source, np.ndarray) or isinstance(source, xr.DataArray):
             source = common.array_to_image(source, **array_args)
 
-        tile_layer, tile_client = common.get_local_tile_layer(
+        url, tile_client = common.get_local_tile_url(
             source,
             indexes=indexes,
             colormap=colormap,
@@ -1609,20 +1730,21 @@ class Map(MapWidget):
             vmax=vmax,
             nodata=nodata,
             opacity=opacity,
-            attribution=attribution,
-            layer_name=name,
             client_args=client_args,
             return_client=True,
             **kwargs,
         )
 
+        if overwrite and name in self.get_layer_names():
+            self.remove_layer(name)
+
         self.add_tile_layer(
-            tile_layer.url,
+            url,
             name=name,
             opacity=opacity,
             visible=visible,
-            attribution=attribution,
             before_id=before_id,
+            overwrite=overwrite,
         )
 
         bounds = tile_client.bounds()  # [ymin, ymax, xmin, xmax]
@@ -1809,6 +1931,8 @@ class Map(MapWidget):
             if "paint" in layer:
                 layer["paint"][prop_name] = opacity
         super().set_paint_property(name, prop_name, opacity)
+        # if self.layer_manager is not None:
+        #     self.layer_manager.refresh()
 
     def set_visibility(self, name: str, visible: bool) -> None:
         """
@@ -1825,6 +1949,8 @@ class Map(MapWidget):
         """
         super().set_visibility(name, visible)
         self.layer_dict[name]["visible"] = visible
+        # if self.layer_manager is not None:
+        #     self.layer_manager.refresh()
 
     def layer_interact(self, name=None):
         """Create a layer widget for changing the visibility and opacity of a layer.
@@ -2498,21 +2624,22 @@ class Map(MapWidget):
 
     def add_symbol(
         self,
-        source: str,
+        source: Union[str, Dict],
         image: str,
         icon_size: int = 1,
         symbol_placement: str = "line",
         minzoom: Optional[float] = None,
         maxzoom: Optional[float] = None,
         filter: Optional[Any] = None,
-        name: Optional[str] = None,
+        name: Optional[str] = "symbol",
+        overwrite: bool = False,
         **kwargs: Any,
     ) -> None:
         """
         Adds a symbol to the map.
 
         Args:
-            source (str): The source of the symbol.
+            source (Union[str, Dict]): The source of the symbol.
             image (str): The URL or local file path to the image. Default to the arrow image.
                 at https://assets.gishub.org/images/arrow.png.
             icon_size (int, optional): The size of the symbol. Defaults to 1.
@@ -2531,13 +2658,21 @@ class Map(MapWidget):
         id = f"image_{common.random_string(3)}"
         self.add_image(id, image)
 
-        if name is None:
-            name = f"symbol_{common.random_string(3)}"
+        name = common.get_unique_name(name, self.get_layer_names(), overwrite)
+
+        if isinstance(source, str):
+            geojson = gpd.read_file(source).__geo_interface__
+            geojson_source = {"type": "geojson", "data": geojson}
+            self.add_source(name, geojson_source)
+        elif isinstance(source, dict):
+            self.add_source(name, source)
+        else:
+            raise ValueError("The source must be a string or a dictionary.")
 
         layer = {
             "id": name,
             "type": "symbol",
-            "source": source,
+            "source": name,
             "layout": {
                 "icon-image": id,
                 "icon-size": icon_size,
@@ -2563,6 +2698,8 @@ class Map(MapWidget):
         image: Optional[str] = None,
         icon_size: int = 0.1,
         minzoom: Optional[float] = 19,
+        name: Optional[str] = "arrow",
+        overwrite: bool = False,
         **kwargs: Any,
     ) -> None:
         """
@@ -2583,7 +2720,15 @@ class Map(MapWidget):
         if image is None:
             image = "https://assets.gishub.org/images/arrow.png"
 
-        self.add_symbol(source, image, icon_size, minzoom=minzoom, **kwargs)
+        self.add_symbol(
+            source,
+            image,
+            icon_size,
+            minzoom=minzoom,
+            name=name,
+            overwrite=overwrite,
+            **kwargs,
+        )
 
     def to_streamlit(
         self,
@@ -4847,6 +4992,143 @@ class Map(MapWidget):
             layer, before_id=before_id, name=name, opacity=opacity, visible=visible
         )
 
+    @property
+    def user_roi(self) -> Optional[dict]:
+        """Gets the first user-drawn ROI feature.
+
+        Returns:
+            Optional[dict]: The first user-drawn ROI feature or None if no features are drawn.
+        """
+        if len(self.draw_features_created) > 0:
+            return self.draw_features_created[0]
+        else:
+            return None
+
+    @property
+    def user_rois(self) -> list:
+        """Gets all user-drawn ROI features.
+
+        Returns:
+            list: A list of all user-drawn ROI features.
+        """
+        return self.draw_feature_collection_all
+
+    def user_roi_bounds(self, decimals: int = 4) -> Optional[list]:
+        """Gets the bounds of the user drawn ROI as a tuple of (minx, miny, maxx, maxy).
+
+        Args:
+            decimals (int, optional): The number of decimals to round the coordinates to. Defaults to 4.
+
+        Returns:
+            Optional[list]: The bounds of the user drawn ROI as a tuple of (minx, miny, maxx, maxy), or None if no ROI is drawn.
+        """
+        if self.user_roi is not None:
+            return common.geometry_bounds(self.user_roi, decimals=decimals)
+        else:
+            return None
+
+    @property
+    def bounds(self) -> tuple:
+        """Gets the bounds of the map view state.
+
+        Returns:
+            tuple: A tuple of two tuples, each containing (lat, lng) coordinates for the southwest and northeast corners of the map view.
+        """
+        sw = self.view_state["bounds"]["_sw"]
+        ne = self.view_state["bounds"]["_ne"]
+        coords = ((sw["lat"], sw["lng"]), (ne["lat"], ne["lng"]))
+        return coords
+
+    def get_layer_names(self) -> list:
+        """Gets layer names as a list.
+
+        Returns:
+            list: A list of layer names.
+        """
+        layer_names = list(self.layer_dict.keys())
+        return layer_names
+
+    def add_annotation_widget(
+        self,
+        properties: Optional[Dict[str, List[Any]]] = None,
+        time_format: str = "%Y%m%dT%H%M%S",
+        out_dir: Optional[str] = None,
+        filename_prefix: str = "",
+        file_ext: str = "geojson",
+        add_mapillary: bool = False,
+        style: str = "photo",
+        radius: float = 0.00005,
+        width: int = 300,
+        height: int = 420,
+        frame_border: int = 0,
+        download: bool = True,
+        name: str = None,
+        paint: Dict[str, Any] = None,
+        add_header: bool = True,
+        widget_icon: str = "mdi-drawing",
+        close_icon: str = "mdi-close",
+        label: str = "Annotation",
+        background_color: str = "#f5f5f5",
+        expanded: bool = True,
+        **kwargs: Any,
+    ) -> None:
+        """
+        Adds an annotation widget to the map.
+
+        This method creates a vector data widget for annotations and adds it to the map's sidebar.
+
+        Args:
+            properties (Optional[Dict[str, List[Any]]], optional): Properties of the annotation. Defaults to None.
+            time_format (str, optional): Format for the timestamp. Defaults to "%Y%m%dT%H%M%S".
+            out_dir (Optional[str], optional): Output directory for the annotation data. Defaults to None.
+            filename_prefix (str, optional): Prefix for the filename of the annotation data. Defaults to "".
+            file_ext (str, optional): File extension for the annotation data. Defaults to "geojson".
+            add_mapillary (bool, optional): Whether to add Mapillary data. Defaults to False.
+            style (str, optional): Style of the annotation. Defaults to "photo".
+            radius (float, optional): Radius of the annotation. Defaults to 0.00005.
+            width (int, optional): Width of the annotation widget. Defaults to 300.
+            height (int, optional): Height of the annotation widget. Defaults to 420.
+            frame_border (int, optional): Border width of the annotation widget frame. Defaults to 0.
+            download (bool, optional): Whether to allow downloading the annotation data. Defaults to True.
+            name (str, optional): Name of the annotation widget. Defaults to None.
+            paint (Dict[str, Any], optional): Paint properties for the annotation. Defaults to None.
+            add_header (bool, optional): Whether to add a header to the annotation widget. Defaults to True.
+            widget_icon (str, optional): Icon for the annotation widget. Defaults to "mdi-drawing".
+            close_icon (str, optional): Icon for closing the annotation widget. Defaults to "mdi-close".
+            label (str, optional): Label for the annotation widget. Defaults to "Annotation".
+            background_color (str, optional): Background color of the annotation widget. Defaults to "#f5f5f5".
+            expanded (bool, optional): Whether the annotation widget is expanded by default. Defaults to True.
+            **kwargs (Any, optional): Additional keyword arguments for the add_to_sidebar method.
+        """
+        widget = create_vector_data(
+            self,
+            properties=properties,
+            time_format=time_format,
+            out_dir=out_dir,
+            filename_prefix=filename_prefix,
+            file_ext=file_ext,
+            add_mapillary=add_mapillary,
+            style=style,
+            radius=radius,
+            width=width,
+            height=height,
+            frame_border=frame_border,
+            download=download,
+            name=name,
+            paint=paint,
+            return_sidebar=True,
+        )
+        self.add_to_sidebar(
+            widget,
+            add_header=add_header,
+            widget_icon=widget_icon,
+            close_icon=close_icon,
+            label=label,
+            background_color=background_color,
+            expanded=expanded,
+            **kwargs,
+        )
+
 
 class Container(v.Container):
     """
@@ -4894,6 +5176,7 @@ class Container(v.Container):
         self.min_width = min_width
         self.max_width = max_width
         self.host_map = host_map
+        self.sidebar_widgets = {}
 
         # Map display container (left column)
         self.map_container = v.Col(
@@ -4952,7 +5235,7 @@ class Container(v.Container):
         )
 
         # Sidebar (right column)
-        self.sidebar = v.Col(class_="pa-1")
+        self.sidebar = v.Col(class_="pa-1", style_="overflow-y: hidden;")
         self.update_sidebar_content()
 
         # Main layout row
@@ -5055,6 +5338,9 @@ class Container(v.Container):
             **kwargs (Any): Additional keyword arguments for the parent class.
         """
 
+        if label in self.sidebar_widgets:
+            self.remove_from_sidebar(name=label)
+
         if add_header:
             widget = CustomWidget(
                 widget,
@@ -5069,14 +5355,27 @@ class Container(v.Container):
             )
 
         self.sidebar_content_box.children += (widget,)
+        self.sidebar_widgets[label] = widget
 
-    def remove_from_sidebar(self, widget: widgets.Widget) -> None:
+    def remove_from_sidebar(
+        self, widget: widgets.Widget = None, name: str = None
+    ) -> None:
         """
         Removes a widget from the sidebar content.
 
         Args:
             widget (widgets.Widget): The widget to remove from the sidebar.
+            name (str): The name of the widget to remove from the sidebar.
         """
+        key = None
+        for key, value in self.sidebar_widgets.items():
+            if value == widget or key == name:
+                if widget is None:
+                    widget = self.sidebar_widgets[key]
+                break
+
+        if key is not None and key in self.sidebar_widgets:
+            self.sidebar_widgets.pop(key)
         self.sidebar_content_box.children = tuple(
             child for child in self.sidebar_content_box.children if child != widget
         )
@@ -6154,6 +6453,7 @@ def create_vector_data(
     download: bool = True,
     name: str = None,
     paint: Dict[str, Any] = None,
+    return_sidebar: bool = False,
     **kwargs: Any,
 ) -> widgets.VBox:
     """Generates a widget-based interface for creating and managing vector data on a map.
@@ -6196,6 +6496,8 @@ def create_vector_data(
         paint (Dict[str, Any], optional): A dictionary specifying the paint properties for the
             drawn features. This can include properties like "circle-radius", "circle-color",
             "circle-opacity", "circle-stroke-color", and "circle-stroke-width". Defaults to None.
+        return_sidebar (bool, optional): Whether to return the sidebar widget. Defaults to False.
+
         **kwargs (Any): Additional keyword arguments that may be passed to the add_geojson method.
 
     Returns:
@@ -6419,22 +6721,26 @@ def create_vector_data(
         image_widget,
     ]
 
-    left_col_layout = v.Col(
-        cols=column_widths[0],
-        children=[m],
-        class_="pa-1",  # padding for consistent spacing
-    )
-    right_col_layout = v.Col(
-        cols=column_widths[1],
-        children=[sidebar_widget],
-        class_="pa-1",  # padding for consistent spacing
-    )
-    row1 = v.Row(
-        class_="d-flex flex-wrap",
-        children=[left_col_layout, right_col_layout],
-    )
-    main_widget = v.Col(children=[row1])
-    return main_widget
+    if return_sidebar:
+        return sidebar_widget
+    else:
+
+        left_col_layout = v.Col(
+            cols=column_widths[0],
+            children=[m],
+            class_="pa-1",  # padding for consistent spacing
+        )
+        right_col_layout = v.Col(
+            cols=column_widths[1],
+            children=[sidebar_widget],
+            class_="pa-1",  # padding for consistent spacing
+        )
+        row1 = v.Row(
+            class_="d-flex flex-wrap",
+            children=[left_col_layout, right_col_layout],
+        )
+        main_widget = v.Col(children=[row1])
+        return main_widget
 
 
 def edit_vector_data(
@@ -6962,6 +7268,16 @@ class LayerManagerWidget(v.ExpansionPanels):
                         c for c in self.layers_box.children if c != row_ref
                     )
                 self.layer_items.pop(layer_name, None)
+                if f"Style {layer_name}" in self.m.sidebar_widgets:
+                    self.m.remove_from_sidebar(name=f"Style {layer_name}")
+
+            def on_settings_clicked(btn, layer_name=name):
+                style_widget = LayerStyleWidget(self.m.layer_dict[layer_name], self.m)
+                self.m.add_to_sidebar(
+                    style_widget,
+                    widget_icon="mdi-palette",
+                    label=f"Style {layer_name}",
+                )
 
             checkbox.observe(on_visibility_change, names="value")
             slider.observe(on_opacity_change, names="value")
@@ -6974,6 +7290,10 @@ class LayerManagerWidget(v.ExpansionPanels):
                 lambda btn, r=row, n=name: on_remove_clicked(
                     btn, layer_name=n, row_ref=r
                 )
+            )
+
+            settings.on_click(
+                lambda btn, n=name: on_settings_clicked(btn, layer_name=n)
             )
 
             rows.append(row)
@@ -7148,3 +7468,461 @@ class CustomWidget(v.ExpansionPanels):
             widgets_list (List[widgets.Widget]): A list of widgets to set as the content of the content box.
         """
         self.content_box.children = widgets_list
+
+
+class LayerStyleWidget(widgets.VBox):
+    """
+    A widget for styling map layers interactively.
+
+    Args:
+        layer (dict): The layer to style.
+        map_widget (ipyleaflet.Map or folium.Map): The map widget to update.
+        widget_width (str, optional): The width of the widget. Defaults to "270px".
+        label_width (str, optional): The width of the label. Defaults to "130px".
+    """
+
+    def __init__(
+        self,
+        layer: dict,
+        map_widget: Map,
+        widget_width: str = "270px",
+        label_width: str = "130px",
+    ):
+        super().__init__()
+        self.layer = layer
+        self.map = map_widget
+        self.layer_type = self._get_layer_type()
+        self.layer_id = layer["layer"].id
+        self.layer_paint = layer["layer"].paint
+        self.original_style = self._get_current_style()
+        self.widget_width = widget_width
+        self.label_width = label_width
+
+        # Create the styling widgets based on layer type
+        self.style_widgets = self._create_style_widgets()
+
+        # Create buttons
+        self.apply_btn = widgets.Button(
+            description="Apply",
+            button_style="primary",
+            tooltip="Apply style changes",
+            layout=widgets.Layout(width="auto"),
+        )
+
+        self.reset_btn = widgets.Button(
+            description="Reset",
+            button_style="warning",
+            tooltip="Reset to original style",
+            layout=widgets.Layout(width="auto"),
+        )
+
+        self.close_btn = widgets.Button(
+            description="Close",
+            button_style="",
+            tooltip="Close the widget",
+            layout=widgets.Layout(width="auto"),
+        )
+
+        self.output_widget = widgets.Output()
+
+        # Button container
+        self.button_box = widgets.HBox([self.apply_btn, self.reset_btn, self.close_btn])
+
+        # Add button callbacks
+        self.apply_btn.on_click(self._apply_style)
+        self.reset_btn.on_click(self._reset_style)
+        self.close_btn.on_click(self._close_widget)
+
+        # Layout
+        self.layout = widgets.Layout(width="300px", padding="10px")
+
+        # Combine all widgets
+        self.children = [*self.style_widgets, self.button_box, self.output_widget]
+
+    def _get_layer_type(self) -> str:
+        """Determine the layer type."""
+        return self.layer["type"]
+
+    def _get_current_style(self) -> dict:
+        """Get the current layer style."""
+        return self.layer_paint
+
+    def _create_style_widgets(self) -> List[widgets.Widget]:
+        """Create style widgets based on layer type."""
+        widgets_list = []
+
+        if self.layer_type == "circle":
+            widgets_list.extend(
+                [
+                    self._create_color_picker(
+                        "Circle Color", "circle-color", "#3388ff"
+                    ),
+                    self._create_number_slider(
+                        "Circle Radius", "circle-radius", 6, 1, 20
+                    ),
+                    self._create_number_slider(
+                        "Circle Opacity", "circle-opacity", 0.8, 0, 1, 0.05
+                    ),
+                    self._create_number_slider(
+                        "Circle Blur", "circle-blur", 0, 0, 1, 0.05
+                    ),
+                    self._create_color_picker(
+                        "Circle Stroke Color", "circle-stroke-color", "#3388ff"
+                    ),
+                    self._create_number_slider(
+                        "Circle Stroke Width", "circle-stroke-width", 1, 0, 5
+                    ),
+                    self._create_number_slider(
+                        "Circle Stroke Opacity",
+                        "circle-stroke-opacity",
+                        1.0,
+                        0,
+                        1,
+                        0.05,
+                    ),
+                ]
+            )
+
+        elif self.layer_type == "line":
+            widgets_list.extend(
+                [
+                    self._create_color_picker("Line Color", "line-color", "#3388ff"),
+                    self._create_number_slider("Line Width", "line-width", 2, 1, 10),
+                    self._create_number_slider(
+                        "Line Opacity", "line-opacity", 1.0, 0, 1, 0.05
+                    ),
+                    self._create_number_slider("Line Blur", "line-blur", 0, 0, 1, 0.05),
+                    self._create_dropdown(
+                        "Line Style",
+                        "line-dasharray",
+                        [
+                            ("Solid", [1]),
+                            ("Dashed", [2, 4]),
+                            ("Dotted", [1, 4]),
+                            ("Dash-dot", [2, 4, 8, 4]),
+                        ],
+                    ),
+                ]
+            )
+
+        elif self.layer_type == "fill":
+            widgets_list.extend(
+                [
+                    self._create_color_picker("Fill Color", "fill-color", "#3388ff"),
+                    self._create_number_slider(
+                        "Fill Opacity", "fill-opacity", 0.2, 0, 1, 0.05
+                    ),
+                    self._create_color_picker(
+                        "Fill Outline Color", "fill-outline-color", "#3388ff"
+                    ),
+                ]
+            )
+        else:
+            widgets_list.extend(
+                [widgets.HTML(value=f"Layer type {self.layer_type} is not supported.")]
+            )
+
+        return widgets_list
+
+    def _create_color_picker(
+        self, description: str, property_name: str, default_color: str
+    ) -> widgets.ColorPicker:
+        """Create a color picker widget."""
+        return widgets.ColorPicker(
+            description=description,
+            value=self.original_style.get(property_name, default_color),
+            layout=widgets.Layout(
+                width=self.widget_width, description_width=self.label_width
+            ),
+            style={"description_width": "initial"},
+        )
+
+    def _create_number_slider(
+        self,
+        description: str,
+        property_name: str,
+        default_value: float,
+        min_val: float,
+        max_val: float,
+        step: float = 1,
+    ) -> widgets.FloatSlider:
+        """Create a number slider widget."""
+        return widgets.FloatSlider(
+            description=description,
+            value=self.original_style.get(property_name, default_value),
+            min=min_val,
+            max=max_val,
+            step=step,
+            layout=widgets.Layout(
+                width=self.widget_width, description_width=self.label_width
+            ),
+            style={"description_width": "initial"},
+            continuous_update=False,
+        )
+
+    def _create_dropdown(
+        self,
+        description: str,
+        property_name: str,
+        options: List[Tuple[str, List[float]]],
+    ) -> widgets.Dropdown:
+        """Create a dropdown widget."""
+        return widgets.Dropdown(
+            description=description,
+            options=options,
+            value=self.original_style.get(property_name, options[0][1]),
+            layout=widgets.Layout(
+                width=self.widget_width, description_width=self.label_width
+            ),
+            style={"description_width": "initial"},
+        )
+
+    def _apply_style(self, _) -> None:
+        """Apply the style changes to the layer."""
+        new_style = {}
+
+        for widget in self.style_widgets:
+            if isinstance(widget, widgets.ColorPicker):
+                property_name = widget.description.lower().replace(" ", "-")
+                new_style[property_name] = widget.value
+            elif isinstance(widget, widgets.FloatSlider):
+                property_name = widget.description.lower().replace(" ", "-")
+                new_style[property_name] = widget.value
+            elif isinstance(widget, widgets.Dropdown):
+                property_name = widget.description.lower().replace(" ", "-")
+                new_style[property_name] = widget.value
+
+        with self.output_widget:
+            try:
+                for key, value in new_style.items():
+                    if key == "line-style":
+                        key = "line-dasharray"
+                    self.map.set_paint_property(self.layer["layer"].id, key, value)
+            except Exception as e:
+                print(e)
+
+        self.map.layer_manager.refresh()
+
+    def _reset_style(self, _) -> None:
+        """Reset to original style."""
+
+        # Update widgets to reflect original style
+        for widget in self.style_widgets:
+            if isinstance(
+                widget, (widgets.ColorPicker, widgets.FloatSlider, widgets.Dropdown)
+            ):
+                property_name = widget.description.lower().replace(" ", "-")
+                if property_name in self.original_style:
+                    widget.value = self.original_style[property_name]
+
+    def _close_widget(self, _) -> None:
+        """Close the widget."""
+        self.close()
+        self.map.remove_from_sidebar(name=f"Style {self.layer['layer'].id}")
+
+
+class DateFilterWidget(widgets.VBox):
+    """
+    A widget for filtering data based on time range.
+    """
+
+    def __init__(
+        self,
+        sources: List[Dict[str, Any]],
+        names: List[str] = None,
+        styles: Dict[str, Any] = None,
+        start_date_col: str = "startDate",
+        end_date_col: str = "endDate",
+        date_col: str = None,
+        date_format: str = "%Y-%m-%d",
+        min_date: str = None,
+        max_date: str = None,
+        file_index: int = 0,
+        freq: str = "D",
+        unit: str = "ms",
+        map_widget: Map = None,
+    ) -> None:
+        """
+        Initialize the DateFilterWidget.
+
+        Args:
+            sources (List[Dict[str, Any]]): List of data sources.
+            names (List[str], optional): List of names for the data sources. Defaults to None.
+            styles (Dict[str, Any], optional): Dictionary of styles for the data sources. Defaults to None.
+            start_date_col (str, optional): Name of the column containing the start date. Defaults to "startDate".
+            end_date_col (str, optional): Name of the column containing the end date. Defaults to "endDate".
+            date_col (str, optional): Name of the column containing the date. Defaults to None.
+            date_format (str, optional): Format of the date. Defaults to "%Y-%m-%d".
+            min_date (str, optional): Minimum date. Defaults to None.
+            max_date (str, optional): Maximum date. Defaults to None.
+            file_index (int, optional): Index of the main file. Defaults to 0.
+            freq (str, optional): Frequency of the date range. Defaults to "D".
+            unit (str, optional): Unit of the date. Defaults to "ms".
+            map_widget (Map, optional): Map widget. Defaults to None.
+        """
+        from datetime import datetime
+
+        super().__init__()
+
+        if names is None:
+            names = [f"layer_{i}" for i in range(len(sources))]
+
+        gdfs = []
+        if map_widget is not None:
+            for index, source in enumerate(sources):
+                gdf = gpd.read_file(source)
+                gdfs.append(gdf)
+                style = styles[names[index]]
+                layer_type = style["layer_type"]
+                paint = style["paint"]
+                map_widget.add_gdf(
+                    gdf, name=names[index], layer_type=layer_type, paint=paint
+                )
+            map_widget.add_arrow(sources[file_index])
+
+        gdf = gdfs[file_index]
+        gdf["startDatetime"] = pd.to_datetime(gdf[start_date_col], unit=unit)
+        gdf["endDatetime"] = pd.to_datetime(gdf[end_date_col], unit=unit)
+
+        if min_date is None:
+            min_date = gdf["startDatetime"].min().normalize()
+        elif isinstance(min_date, str):
+            min_date = datetime.strptime(min_date, date_format)
+        elif isinstance(min_date, pd.Timestamp):
+            pass
+        else:
+            raise ValueError("min_date must be a string, pd.Timestamp, or None")
+
+        if max_date is None:
+            max_date = gdf["endDatetime"].max().normalize()
+        elif isinstance(max_date, str):
+            max_date = datetime.strptime(max_date, date_format)
+        elif isinstance(max_date, pd.Timestamp):
+            pass
+        else:
+            raise ValueError("max_date must be a string, pd.Timestamp, or None")
+
+        date_range = pd.date_range(min_date, max_date, freq=freq)
+        if len(date_range) < 2:
+            date_range = pd.date_range(min_date, max_date, freq=freq)
+
+        slider = widgets.SelectionRangeSlider(
+            options=list(date_range),
+            index=(0, len(date_range) - 1),
+            description="Date range:",
+            orientation="horizontal",
+            continuous_update=True,
+            readout=False,
+            style={"description_width": "initial"},
+            layout=widgets.Layout(width="95%"),
+        )
+
+        range_label = widgets.Label()
+
+        date_picker = widgets.DatePicker(
+            value=min_date.date(),
+            layout=widgets.Layout(width="130px"),
+        )
+
+        # Buttons with valid FontAwesome icons
+        start_btn = widgets.Button(
+            icon="fast-backward",
+            tooltip="Go to start date",
+            layout=widgets.Layout(width="38px", height="25px"),
+        )
+        end_btn = widgets.Button(
+            icon="fast-forward",
+            tooltip="Go to end date",
+            layout=widgets.Layout(width="38px", height="25px"),
+        )
+        forward_btn = widgets.Button(
+            icon="forward",
+            tooltip="Forward one day",
+            layout=widgets.Layout(width="38px", height="25px"),
+        )
+        backward_btn = widgets.Button(
+            icon="backward",
+            tooltip="Back one day",
+            layout=widgets.Layout(width="38px", height="25px"),
+        )
+
+        nav_box = widgets.HBox(
+            [backward_btn, start_btn, date_picker, end_btn, forward_btn]
+        )
+        output = widgets.Output()
+
+        def clamp_end(start: pd.Timestamp) -> pd.Timestamp:
+            """Ensure the end is at least one day after the start."""
+            next_day = start + pd.Timedelta(days=1)
+            return next_day if next_day <= max_date else max_date
+
+        def update_date_picker():
+            start, end = slider.value
+            date_picker.value = start.date()
+
+        def on_date_picker_change(change):
+            if change["name"] == "value" and change["type"] == "change":
+                new_start = pd.Timestamp(change["new"])
+                _, end = slider.value
+                # Do not clamp unless end <= new_start
+                if new_start > end:
+                    slider.value = (new_start, new_start + pd.Timedelta(days=1))
+                else:
+                    slider.value = (new_start, end)
+
+        def on_start_btn_click(_):
+            start = min_date
+            end = clamp_end(start)
+            slider.value = (start, end)
+
+        def on_end_btn_click(_):
+            start = max_date - pd.Timedelta(days=1)
+            if start < min_date:
+                start = min_date
+            end = clamp_end(start)
+            slider.value = (start, end)
+
+        def on_forward_btn_click(_):
+            start, _ = slider.value
+            next_start = start + pd.Timedelta(days=1)
+            if next_start <= max_date - pd.Timedelta(days=1):
+                slider.value = (next_start, clamp_end(next_start))
+
+        def on_backward_btn_click(_):
+            start, _ = slider.value
+            prev_start = start - pd.Timedelta(days=1)
+            if prev_start >= min_date:
+                slider.value = (prev_start, clamp_end(prev_start))
+
+        def on_slider_change(change):
+            if slider.value:
+                start, end = slider.value
+                range_label.value = f"Selected range: {start.strftime(date_format)} to {end.strftime(date_format)}"
+                filtered_gdf = gdf[
+                    (gdf["startDatetime"] >= start) & (gdf["endDatetime"] <= end)
+                ]
+                map_widget.set_data(names[file_index], filtered_gdf.__geo_interface__)
+                if "arrow" in map_widget.get_layer_names():
+                    map_widget.set_data("arrow", filtered_gdf.__geo_interface__)
+
+                for index, point_gdf in enumerate(gdfs[file_index + 1 :]):
+                    filtered = point_gdf[
+                        (point_gdf[date_col] >= start) & (point_gdf[date_col] <= end)
+                    ]
+
+                    map_widget.set_data(
+                        names[index + file_index + 1], filtered.__geo_interface__
+                    )
+                update_date_picker()
+
+        slider.observe(on_slider_change, names="value")
+        date_picker.observe(on_date_picker_change)
+        start_btn.on_click(on_start_btn_click)
+        end_btn.on_click(on_end_btn_click)
+        forward_btn.on_click(on_forward_btn_click)
+        backward_btn.on_click(on_backward_btn_click)
+
+        # Initial trigger
+        on_slider_change(None)
+
+        self.children = [slider, range_label, nav_box, output]

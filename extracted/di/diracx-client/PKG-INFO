@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: diracx-client
-Version: 0.0.1a44
+Version: 0.0.1a45
 Summary: TODO
 License: GPL-3.0-only
 Classifier: Intended Audience :: Science/Research
@@ -13,6 +13,7 @@ Requires-Dist: azure-core
 Requires-Dist: diracx-core
 Requires-Dist: httpx
 Requires-Dist: isodate
+Requires-Dist: pyjwt
 Provides-Extra: testing
 Requires-Dist: diracx-testing; extra == 'testing'
 Provides-Extra: types

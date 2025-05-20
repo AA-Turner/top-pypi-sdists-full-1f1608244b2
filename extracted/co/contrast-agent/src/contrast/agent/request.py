@@ -1,6 +1,7 @@
 # Copyright © 2025 Contrast Security, Inc.
 # See https://www.contrastsecurity.com/enduser-terms-0317a for more details.
 import re
+from typing import Any
 
 from contrast_fireball import AssessRequest
 from contrast_vendor import webob
@@ -19,11 +20,13 @@ from contrast_vendor.webob.multidict import NestedMultiDict
 
 logger = logging.getLogger("contrast")
 
+Environ = dict[str, Any]
+
 
 class Request(webob.BaseRequest):
-    environ: dict
+    environ: Environ
 
-    def __init__(self, environ):
+    def __init__(self, environ: Environ):
         super().__init__(environ)
 
         self._document_type = None

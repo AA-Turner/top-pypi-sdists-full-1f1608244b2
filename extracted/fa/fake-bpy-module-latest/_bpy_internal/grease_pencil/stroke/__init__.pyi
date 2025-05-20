@@ -6,6 +6,19 @@ import numpy.typing as npt
 class AttributeGetterSetter:
     """Helper class to get and set attributes at an index for a domain."""
 
+class BezierHandle:
+    LEFT: typing.Any
+    RIGHT: typing.Any
+    name: typing.Any
+    value: typing.Any
+
+class GreasePencilStrokePointHandle:
+    """Proxy giving read-only/write access to Bézier handle data."""
+
+    position: typing.Any
+    select: typing.Any
+    type: typing.Any
+
 class SliceHelper:
     """Helper class to handle custom slicing."""
 
@@ -41,13 +54,13 @@ class GreasePencilStrokePoint(AttributeGetterSetter):
     """A helper class to get access to stroke point data."""
 
     delta_time: typing.Any
+    handle_left: typing.Any
+    handle_right: typing.Any
     opacity: typing.Any
     position: typing.Any
     radius: typing.Any
     rotation: typing.Any
     select: typing.Any
-    select_handle_left: typing.Any
-    select_handle_right: typing.Any
     vertex_color: typing.Any
 
 class GreasePencilStrokePointSlice(SliceHelper):

@@ -3,14 +3,15 @@ from urllib.parse import urlparse
 import importlib
 import re
 from siliconcompiler import SiliconCompilerError
-from siliconcompiler.utils import default_cache_dir, _resolve_env_vars
+from siliconcompiler.utils import default_cache_dir
 import json
 from importlib.metadata import distributions, distribution
 import functools
 import time
 from pathlib import Path
 
-from siliconcompiler.utils import get_plugins
+from siliconcompiler.utils import get_plugins, get_env_vars
+from siliconcompiler.schema.parametervalue import PathNodeValue
 
 
 def get_cache_path(chip):
@@ -46,6 +47,18 @@ def _python_path_resolver(chip, package, path, ref, url, fetch):
     return path_from_python(chip, url.netloc)
 
 
+def _key_path_resolver(chip, package, path, ref, url, fetch):
+    key = url.netloc.split(',')
+    if chip.get(*key, field='pernode').is_never():
+        paths = chip.find_files(*key)
+    else:
+        paths = chip.find_files(*key, step=chip.get('arg', 'step'), index=chip.get('arg', 'index'))
+
+    if isinstance(paths, list):
+        return paths[0]
+    return paths
+
+
 def _get_path_resolver(path):
     url = urlparse(path)
 
@@ -53,6 +66,9 @@ def _get_path_resolver(path):
         func = resolver(url)
         if func:
             return func, url
+
+    if url.scheme == "key":
+        return _key_path_resolver, url
 
     if url.scheme == "file":
         return _file_path_resolver, url
@@ -69,11 +85,15 @@ def _path(chip, package, fetch):
     data['path'] = chip.get('package', 'source', package, 'path')
     data['ref'] = chip.get('package', 'source', package, 'ref')
     if not data['path']:
-        raise SiliconCompilerError(
-            f'Could not find package source for {package} in schema. '
-            'You can use register_source() to add it.', chip=chip)
+        if package.startswith("key://"):
+            data['path'] = package
+        else:
+            raise SiliconCompilerError(
+                f'Could not find package source for {package} in schema. '
+                'You can use register_source() to add it.', chip=chip)
 
-    data['path'] = _resolve_env_vars(chip, data['path'], None, None)
+    env_vars = get_env_vars(chip, None, None)
+    data['path'] = PathNodeValue.resolve_env_vars(data['path'], envvars=env_vars)
 
     if os.path.exists(data['path']):
         # Path is already a path
@@ -101,6 +121,9 @@ def path(chip, package, fetch=True):
 
         if isinstance(data_path, tuple) and len(data_path) == 2:
             data_path, changed = data_path
+
+        if package.startswith("key://"):
+            return data_path
 
         if os.path.exists(data_path):
             if package not in chip._packages and changed:

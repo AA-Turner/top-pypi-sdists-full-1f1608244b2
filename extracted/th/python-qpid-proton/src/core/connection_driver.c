@@ -43,7 +43,7 @@ static pn_event_t *batch_next(pn_connection_driver_t *d) {
   /* Log the next event that will be processed */
   pn_event_t *next = pn_collector_next(d->collector);
   if (next && PN_SHOULD_LOG(&d->transport->logger, PN_SUBSYSTEM_EVENT, PN_LEVEL_DEBUG)) {
-    pni_logger_log_msg_inspect(&d->transport->logger, PN_SUBSYSTEM_EVENT, PN_LEVEL_DEBUG, next, "");
+    pni_logger_log_msg_inspect(&d->transport->logger, PN_SUBSYSTEM_EVENT, PN_LEVEL_DEBUG, next, "%s", "");
   }
   return next;
 }
@@ -157,7 +157,7 @@ void pn_connection_driver_verrorf(pn_connection_driver_t *d, const char *name, c
   pn_condition_vformat(cond, name, fmt, ap);
 }
 
-void pn_connection_driver_errorf(pn_connection_driver_t *d, const char *name, const char *fmt, ...) {
+void pn_connection_driver_errorf(pn_connection_driver_t *d, const char *name, PN_PRINTF_FORMAT const char *fmt, ...) {
   va_list ap;
   va_start(ap, fmt);
   pn_connection_driver_verrorf(d, name, fmt, ap);
@@ -168,7 +168,7 @@ void pn_connection_driver_log(pn_connection_driver_t *d, const char *msg) {
   pni_logger_log(&d->transport->logger, PN_SUBSYSTEM_IO, PN_LEVEL_TRACE, msg);
 }
 
-void pn_connection_driver_logf(pn_connection_driver_t *d, const char *fmt, ...) {
+void pn_connection_driver_logf(pn_connection_driver_t *d, PN_PRINTF_FORMAT const char *fmt, ...) {
   va_list ap;
   va_start(ap, fmt);
   pni_logger_vlogf(&d->transport->logger, PN_SUBSYSTEM_IO, PN_LEVEL_TRACE, fmt, ap);

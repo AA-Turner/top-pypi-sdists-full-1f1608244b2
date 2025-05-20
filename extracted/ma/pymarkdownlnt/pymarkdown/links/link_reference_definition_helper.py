@@ -138,7 +138,7 @@ class LinkReferenceDefinitionHelper:
                 lines_to_requeue,
             )
             requeue_line_info = RequeueLineInfo(
-                lines_to_requeue, force_ignore_first_as_lrd
+                lines_to_requeue, force_ignore_first_as_lrd, False
             )
         else:
             requeue_line_info = None
@@ -391,6 +391,7 @@ class LinkReferenceDefinitionHelper:
                 del parser_state.token_stack[-1]
         else:
             while len(parser_state.token_stack):
+                # assert False
                 del parser_state.token_stack[-1]
             assert (
                 lrd_stack_token.copy_of_token_stack is not None
@@ -580,7 +581,11 @@ class LinkReferenceDefinitionHelper:
             pre_tokens,
         )
 
-        if not outer_processed and not ignore_link_definition_start:
+        if (
+            not outer_processed
+            and not ignore_link_definition_start
+            and not parser_state.token_stack[-1].was_table_block_started
+        ):
             POGGER.debug(
                 "plflb-process_link_reference_definition>>outer_processed>>$",
                 position_marker.text_to_parse[position_marker.index_number :],

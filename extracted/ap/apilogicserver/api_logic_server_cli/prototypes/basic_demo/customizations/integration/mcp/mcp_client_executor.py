@@ -20,6 +20,7 @@ ToDo - email example is incomplete:
 
 import json
 import os
+import re
 import openai
 import requests
 
@@ -83,16 +84,22 @@ def discover_mcp_servers():
 
 
 def get_user_nl_query():
-    """ Get the natural language query from the user. """
+    """ Get the natural language query from the user. 
+    
+    """
 
     global test_type
-        # this doesn't work -- missing commands for mcp_server_executor....
-    default_request = "List the orders created more than 30 days ago, and post an email message to the order's customer offering a discount"
 
     default_request = "List the orders created more than 30 days ago, and send a discount email to the customer for each one."
-    # date range?  curl -X GET "http://localhost:5656/api/Order?filter=[{\’name\'}: {\’CreatedOn\’}, {\’op\’}: {\’gt\’}, {\’val\’}: {\’2022-05-14\’}]”
+    # eg, curl -qg 'http://localhost:5656/api/Order?filter=[{"name":"date_shipped","op":"gt","val":"2023-07-14"}]'
+    # eg, curl -qg 'http://localhost:5656/api/Order?filter=[{"name":"date_shipped","op":"eq","val":null}]'
+    # eg, curl -qg 'http://localhost:5656/api/Order?filter=[{"name":"date_shipped","op":"eq","val":null},{"name":"CreatedOn","op":"lt","val":"2023-07-14"}]'
+    # eg, curl -qg 'http://localhost:5656/api/Customer?filter=[{"name":"credit_limit","op":"gt","val":"1000"}]'
+
+    # curl -qg 'http://localhost:5656/api/Order?filter=[{"name":%20"date_shipped",%20"op":%20"eq",%20"val":%20null},%20{"name":%20"CreatedOn",%20"op":%20"lt",%20"val":%20"2023-07-14"}]'
 
     default_request = "List the orders for customer 5, and send a discount email to the customer for each one."
+    default_request = "List the unshipped orders created before 2023-07-14, and send a discount email to the customer for each one."
 
     if test_type != 'orchestration':
         default_request = "List customers with credit over 1000"
@@ -102,7 +109,7 @@ def get_user_nl_query():
     query += """
 Respond with a JSON array of tool context blocks using:
 - tool: 'json-api'
-- JSON:API-compliant filtering (e.g., filter[CreatedOn][lt])
+- JSON:API custom filtering (e.g., filter=[{"name":"date_shipped","op":"gt","val":"2023-07-14"}])
 - Use {{ order.customer_id }} as a placeholder in the second step.
 - Include method, url, query_params or body, headers, expected_output.
 """
@@ -138,26 +145,37 @@ def query_llm_with_nl(nl_query):
                     "method": "GET",
                     "url": "http://localhost:5656/api/Order",
                     "query_params": {
-                        "filter[customer_id]": 5
-                    },
-                    "headers": {
-                        "Content-Type": "application/vnd.api+json"
-                    },
-                    "expected_output": "JSON array of orders for customer 5"
-                },
-                {
-                    "tool": "email",
-                    "method": "POST",
-                    "url": "http://localhost:5656/api/Email",
-                    "body": {
-                        "to": "{{ order.customer_id }}",
-                        "subject": "Discount Offer",
-                        "message": "Dear Customer, We are offering a discount on your recent orders. Please check your account for more details."
+                        "filter": [
+                            {
+                                "name": "date_shipped",
+                                "op": "eq",
+                                "val": None
+                            },
+                            {
+                                "name": "date_created",
+                                "op": "lt",
+                                "val": "2023-07-14"
+                            }
+                        ]
                     },
                     "headers": {
                         "Content-Type": "application/json"
                     },
-                    "expected_output": "Email sent confirmation"
+                    "expected_output": "JSON array of unshipped orders created before 2023-07-14"
+                },
+                {
+                    "tool": "email",
+                    "method": "POST",
+                    "url": "http://localhost:5656/api/sendEmail",
+                    "body": {
+                        "customer_id": "{{ order.customer_id }}",
+                        "subject": "Discount Offer",
+                        "message": "You have a new discount offer for your unshipped order."
+                    },
+                    "headers": {
+                        "Content-Type": "application/json"
+                    },
+                    "expected_output": "Confirmation of email sent"
                 }
             ]
     else:                                   # simple get request - list customers with credit over 4000 
@@ -213,26 +231,61 @@ def process_tool_context(tool_context):
 
     def get_query_param_filter(query_params):
         """ return json:api filter
+
+        see api_logic_server_cli/prototypes/base/api/system/expression_parser.py (doc?)
+
+        eg
+            curl -qg 'http://localhost:5656/api/Order?filter=[{"name":"date_shipped","op":"eq","val":null},{"name":"CreatedOn","op":"gt","val":"2023-07-14"}]'
         
-        query_params might be:
+        query_params might be simple:
             "query_params": {
                 "filter[credit_limit][gt]": 1000 }
-        or:
+            ==> ?filter=[{"name":"credit_limit","op":"gt","val":"1000"}]
+        or a list:
             "query_params": {
-                "filter[customer_id]": 5},
-
+                        "filter": [
+                            {
+                                "name": "date_shipped",
+                                "op": "eq",
+                                "val": null
+                            },
+                            {
+                                "name": "date_created",
+                                "op": "lt",
+                                "val": "2023-07-14"
+                            }
+                        ]
+                    },
         """
+
+        added_rows = 0
+
         query_param_filter = ''
         if isinstance(query_params, dict):
-            for each_key, each_value in query_params.items():
-                if isinstance(each_value, dict):
-                    for sub_key, sub_value in each_value.items():
-                        query_param_filter += f"&{each_key}[{sub_key}]={sub_value}"
-                else:
-                    query_param_filter += f"&{each_key}={each_value}"
+            if "filter" not in query_params:    # simple - "query_params": {"filter[credit_limit][gt]": 1000 }
+                for each_key, each_value in query_params.items():
+                    assert not isinstance(each_value, dict), "Unexpected dict in simple query_params"
+                    # convert {"filter[credit_limit][gt]": 1000 } to ?filter=[{"name":"credit_limit","op":"gt","val":"1000"}]
+                    match = re.match(r"filter\[(\w+)\]\[(\w+)\]", each_key)
+                    if match:
+                        name, op = match.groups()
+                        filter_json = json.dumps([{"name": name, "op": op, "val": str(each_value)}])
+                        query_param_filter += f"&filter={filter_json}"
+                    else:
+                        query_param_filter += f"&{each_key}={each_value}"
+                    
+            else:                               # complex - "query_params": {"filter": ...
+                assert isinstance(query_params["filter"], list), "Query Params filter expected to be a list"
+                query_param_filter = 'filter=' + str(query_params["filter"])
+                # use urlencode to convert to JSON:API format...
+                # val urllib.parse.quote() or urllib.parse.urlencode()
+                # tool instructions... filtering, email etc
+                query_param_filter = query_param_filter.replace("'", '"')  # convert single quotes to double quotes
+                query_param_filter = query_param_filter.replace("None", 'null')
+                query_param_filter = query_param_filter.replace("date_created", 'CreatedOn')  # TODO - why this name?
             # query_params = ''
-        elif isinstance(query_params, dict):
-            assert False, "Query Params dict tbd"
+        else:
+            assert False, "Query Params not a dict"
         return query_param_filter
 
 
@@ -259,12 +312,12 @@ def process_tool_context(tool_context):
                         )
                         context_data = mcp_response.json()['data']  # result rows...
                 elif each_block["method"] in ["POST"]:
-                        add_rows = 0
                         for each_order in context_data:
                             url = each_block["url"]
+                            url = url.replace("sendEmail", "Email")  # TODO name fix
                             json_update_data =  { 'data': {"type": "Email", 'attributes': {} } }  
                             json_update_data_attributes = json_update_data["data"]["attributes"]
-                            json_update_data_attributes["customer_id"] = context_data[0]['attributes']["customer_id"]
+                            json_update_data_attributes["customer_id"] = context_data[0]['attributes']["customer_id"]  # TODO - fix
                             json_update_data_attributes["message"] = each_block["body"]["message"] 
                             # eg: POST http://localhost:5656/api/Email {'data': {'type': 'Email', 'attributes': {'customer_id': 5, 'message': {'to': '{{ order.customer_id }}', 'subject': 'Discount for your order', 'body': 'Dear customer, you have a discount for your recent order. Thank you for shopping with us.'}}}}
                             mcp_response = requests.post(  
@@ -272,12 +325,14 @@ def process_tool_context(tool_context):
                                 headers=each_block["headers"],
                                 json=json_update_data
                             )
-                            add_rows += 1
+                            added_rows += 1
             pass
     else:
         print("Invalid tool context format. Expected a dictionary or a list.")
         return None
     print("\n3. MCP Server (als) Response:\n", mcp_response.text)
+    if added_rows > 0:
+        print(f"...Added {added_rows} rows to the database; last row (only) shown above.")
     return mcp_response 
 
 

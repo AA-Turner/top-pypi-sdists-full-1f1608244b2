@@ -164,7 +164,7 @@ class LSPErrorBuilder:
                 return
             if node is not None:  # pyright: ignore[reportUnnecessaryComparison]
                 try:
-                    cls._node_map[(wrapper, item)] = (node, frame)
+                    cls._node_map[node_map_key] = (node, frame)
                 except:
                     pass
 

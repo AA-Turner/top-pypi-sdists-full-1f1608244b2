@@ -37,7 +37,8 @@ class WorkspaceDataplaneProxiedArtifacts(object):
         'skip_packages_tracking': 'str',
         'environment_variables': 'list[str]',
         'dockerfile': 'str',
-        'dockerfile_draft': 'str'
+        'dockerfile_draft': 'str',
+        'latest_snapshot_uri': 'str'
     }
 
     attribute_map = {
@@ -45,10 +46,11 @@ class WorkspaceDataplaneProxiedArtifacts(object):
         'skip_packages_tracking': 'skip_packages_tracking',
         'environment_variables': 'environment_variables',
         'dockerfile': 'dockerfile',
-        'dockerfile_draft': 'dockerfile_draft'
+        'dockerfile_draft': 'dockerfile_draft',
+        'latest_snapshot_uri': 'latest_snapshot_uri'
     }
 
-    def __init__(self, requirements=None, skip_packages_tracking=None, environment_variables=None, dockerfile=None, dockerfile_draft=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, requirements=None, skip_packages_tracking=None, environment_variables=None, dockerfile=None, dockerfile_draft=None, latest_snapshot_uri=None, local_vars_configuration=None):  # noqa: E501
         """WorkspaceDataplaneProxiedArtifacts - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -59,6 +61,7 @@ class WorkspaceDataplaneProxiedArtifacts(object):
         self._environment_variables = None
         self._dockerfile = None
         self._dockerfile_draft = None
+        self._latest_snapshot_uri = None
         self.discriminator = None
 
         if requirements is not None:
@@ -71,6 +74,8 @@ class WorkspaceDataplaneProxiedArtifacts(object):
             self.dockerfile = dockerfile
         if dockerfile_draft is not None:
             self.dockerfile_draft = dockerfile_draft
+        if latest_snapshot_uri is not None:
+            self.latest_snapshot_uri = latest_snapshot_uri
 
     @property
     def requirements(self):
@@ -186,6 +191,29 @@ class WorkspaceDataplaneProxiedArtifacts(object):
         """
 
         self._dockerfile_draft = dockerfile_draft
+
+    @property
+    def latest_snapshot_uri(self):
+        """Gets the latest_snapshot_uri of this WorkspaceDataplaneProxiedArtifacts.  # noqa: E501
+
+        The URI of the latest snapshot of the workspace.  # noqa: E501
+
+        :return: The latest_snapshot_uri of this WorkspaceDataplaneProxiedArtifacts.  # noqa: E501
+        :rtype: str
+        """
+        return self._latest_snapshot_uri
+
+    @latest_snapshot_uri.setter
+    def latest_snapshot_uri(self, latest_snapshot_uri):
+        """Sets the latest_snapshot_uri of this WorkspaceDataplaneProxiedArtifacts.
+
+        The URI of the latest snapshot of the workspace.  # noqa: E501
+
+        :param latest_snapshot_uri: The latest_snapshot_uri of this WorkspaceDataplaneProxiedArtifacts.  # noqa: E501
+        :type: str
+        """
+
+        self._latest_snapshot_uri = latest_snapshot_uri
 
     def to_dict(self):
         """Returns the model properties as a dict"""

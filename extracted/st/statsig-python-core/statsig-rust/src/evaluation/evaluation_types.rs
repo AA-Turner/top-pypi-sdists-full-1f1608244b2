@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::HashMap;
 
+use crate::event_logging::exposable_string::ExposableString;
+
 pub fn is_false(v: &bool) -> bool {
     !(*v)
 }
@@ -12,7 +14,7 @@ pub struct SecondaryExposure {
     pub gate: String,
     pub gate_value: String,
     #[serde(rename = "ruleID")]
-    pub rule_id: String,
+    pub rule_id: ExposableString,
 }
 
 impl SecondaryExposure {
@@ -22,26 +24,28 @@ impl SecondaryExposure {
         key += "|";
         key += &self.gate_value;
         key += "|";
-        key += &self.rule_id;
+        key += self.rule_id.as_str();
         key
     }
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default)]
-pub(crate) struct ExposureSamplingInfo {
+pub struct ExtraExposureInfo {
     pub sampling_rate: Option<u64>,
     pub forward_all_exposures: Option<bool>,
     pub has_seen_analytical_gates: Option<bool>,
+    pub override_config_name: Option<String>,
+    pub version: Option<u32>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct BaseEvaluation {
     pub name: String,
-    pub rule_id: String,
+    pub rule_id: ExposableString,
     pub secondary_exposures: Vec<SecondaryExposure>,
 
     #[serde(skip_serializing)]
-    pub(crate) sampling_info: Option<ExposureSamplingInfo>,
+    pub(crate) exposure_info: Option<ExtraExposureInfo>,
 }
 
 pub enum AnyEvaluation<'a> {
@@ -111,7 +115,7 @@ pub struct DynamicConfigEvaluation {
     pub value: HashMap<String, Value>,
 
     // The 'group' field is identical to 'rule_id'. See group_name instead.
-    pub group: String,
+    pub group: ExposableString,
     pub is_device_based: bool,
 
     pub passed: bool,
@@ -126,7 +130,7 @@ pub struct ExperimentEvaluation {
     pub value: HashMap<String, Value>,
 
     // The 'group' field is identical to 'rule_id'. See group_name instead.
-    pub group: String,
+    pub group: ExposableString,
     pub is_device_based: bool,
 
     #[serde(skip_serializing_if = "is_false")]

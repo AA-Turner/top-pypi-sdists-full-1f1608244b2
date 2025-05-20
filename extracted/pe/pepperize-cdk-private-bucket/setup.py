@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "pepperize.cdk-private-bucket",
-    "version": "0.0.589",
+    "version": "0.0.590",
     "description": "This project provides a CDK construct for creating private S3 bucket.",
     "license": "MIT",
     "url": "https://github.com/pepperize/cdk-private-bucket.git",
@@ -26,7 +26,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "pepperize_cdk_private_bucket._jsii": [
-            "cdk-private-bucket@0.0.589.jsii.tgz"
+            "cdk-private-bucket@0.0.590.jsii.tgz"
         ],
         "pepperize_cdk_private_bucket": [
             "py.typed"

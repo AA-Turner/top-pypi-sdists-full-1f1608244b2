@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: napari
-Version: 0.6.0
+Version: 0.6.1
 Summary: n-dimensional array viewer in Python
 Author-email: napari team <napari-steering-council@googlegroups.com>
 License: BSD 3-Clause
@@ -66,7 +66,7 @@ Requires-Dist: tifffile>=2022.7.28
 Requires-Dist: toolz>=0.11.0
 Requires-Dist: tqdm>=4.56.0
 Requires-Dist: typing_extensions>=4.6.1
-Requires-Dist: vispy<0.15,>=0.14.1
+Requires-Dist: vispy<0.16,>=0.15.0
 Requires-Dist: wrapt>=1.13.3
 Provides-Extra: pyside2
 Requires-Dist: PySide2>=5.15.1; (python_version < "3.11" and platform_machine != "arm64") and extra == "pyside2"

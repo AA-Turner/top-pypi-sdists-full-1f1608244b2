@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: leafmap
-Version: 0.45.0
+Version: 0.46.0
 Summary: A Python package for geospatial analysis and interactive mapping in a Jupyter environment.
 Author-email: Qiusheng Wu <giswqs@gmail.com>
 License: MIT license
@@ -26,19 +26,25 @@ Requires-Dist: duckdb
 Requires-Dist: folium
 Requires-Dist: gdown
 Requires-Dist: geojson
+Requires-Dist: geopandas
+Requires-Dist: h5netcdf
+Requires-Dist: h5py
 Requires-Dist: ipyevents
 Requires-Dist: ipyfilechooser
 Requires-Dist: ipyleaflet
 Requires-Dist: ipyvuetify
 Requires-Dist: ipywidgets
+Requires-Dist: localtileserver
 Requires-Dist: matplotlib
 Requires-Dist: numpy
+Requires-Dist: opera-utils
 Requires-Dist: pandas
 Requires-Dist: plotly
 Requires-Dist: psutil
 Requires-Dist: pyshp
 Requires-Dist: pystac-client
 Requires-Dist: python-box
+Requires-Dist: rioxarray
 Requires-Dist: scooby
 Requires-Dist: whiteboxgui
 Requires-Dist: xyzservices

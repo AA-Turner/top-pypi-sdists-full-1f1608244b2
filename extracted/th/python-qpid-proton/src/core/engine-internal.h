@@ -22,6 +22,7 @@
  *
  */
 
+#include <proton/annotations.h>
 #include <proton/object.h>
 #include <proton/engine.h>
 #include <proton/types.h>
@@ -29,7 +30,6 @@
 #include "buffer.h"
 #include "dispatcher.h"
 #include "logger_private.h"
-#include "util.h"
 
 #if __cplusplus
 extern "C" {
@@ -40,6 +40,7 @@ typedef enum pn_endpoint_type_t {CONNECTION, SESSION, SENDER, RECEIVER} pn_endpo
 typedef struct pn_endpoint_t pn_endpoint_t;
 
 struct pn_condition_t {
+  pn_bytes_t info_raw;
   pn_string_t *name;
   pn_string_t *description;
   pn_data_t *info;
@@ -136,10 +137,9 @@ struct pn_transport_t {
   pn_connection_t *connection;  // reference counted
   char *remote_container;
   char *remote_hostname;
-  pn_data_t *remote_offered_capabilities;
-  pn_data_t *remote_desired_capabilities;
-  pn_data_t *remote_properties;
-  pn_data_t *disp_data;
+  pn_bytes_t remote_offered_capabilities_raw;
+  pn_bytes_t remote_desired_capabilities_raw;
+  pn_bytes_t remote_properties_raw;
   // DEFAULT_MAX_FRAME_SIZE see PROTON-2640
 #define PN_DEFAULT_MAX_FRAME_SIZE (32*1024)
   uint32_t   local_max_frame;
@@ -166,7 +166,7 @@ struct pn_transport_t {
 
 
   /* scratch area */
-  pn_buffer_t *frame;  // frame under construction
+  pn_rwbytes_t scratch_space;
 
   // Temporary - ??
   pn_buffer_t *output_buffer;
@@ -243,9 +243,15 @@ struct pn_connection_t {
   pn_string_t *auth_user;
   pn_string_t *authzid;
   pn_string_t *auth_password;
+  pn_bytes_t offered_capabilities_raw;
+  pn_bytes_t desired_capabilities_raw;
+  pn_bytes_t properties_raw;
   pn_data_t *offered_capabilities;
   pn_data_t *desired_capabilities;
   pn_data_t *properties;
+  pn_data_t *remote_offered_capabilities;
+  pn_data_t *remote_desired_capabilities;
+  pn_data_t *remote_properties;
   pn_collector_t *collector;
   pn_record_t *context;
   pn_list_t *delivery_pool;
@@ -266,10 +272,19 @@ struct pn_session_t {
   pn_sequence_t incoming_deliveries;
   pn_sequence_t outgoing_deliveries;
   pn_sequence_t outgoing_window;
+  pn_frame_count_t incoming_window_lwm;
+  pn_frame_count_t max_incoming_window;
+  bool check_flow;
+  bool need_flow;
+  bool lwm_default;
 };
 
 struct pn_terminus_t {
   pn_string_t *address;
+  pn_bytes_t properties_raw;
+  pn_bytes_t capabilities_raw;
+  pn_bytes_t outcomes_raw;
+  pn_bytes_t filter_raw;
   pn_data_t *properties;
   pn_data_t *capabilities;
   pn_data_t *outcomes;
@@ -297,7 +312,9 @@ struct pn_link_t {
   pn_delivery_t *current;
   pn_record_t *context;
   pn_data_t *properties;
+  pn_bytes_t properties_raw;
   pn_data_t *remote_properties;
+  pn_bytes_t remote_properties_raw;
   size_t unsettled_count;
   uint64_t max_message_size;
   uint64_t remote_max_message_size;
@@ -320,7 +337,9 @@ struct pn_disposition_t {
   pn_condition_t condition;
   uint64_t type;
   pn_data_t *data;
+  pn_bytes_t data_raw;
   pn_data_t *annotations;
+  pn_bytes_t annotations_raw;
   uint64_t section_offset;
   uint32_t section_number;
   bool failed;
@@ -331,8 +350,8 @@ struct pn_disposition_t {
 struct pn_delivery_t {
   pn_disposition_t local;
   pn_disposition_t remote;
+  pn_delivery_tag_t tag;
   pn_link_t *link;  // reference counted
-  pn_buffer_t *tag;
   pn_delivery_t *unsettled_next;
   pn_delivery_t *unsettled_prev;
   pn_delivery_t *work_next;
@@ -357,6 +376,7 @@ struct pn_delivery_t {
 #define PN_SET_REMOTE(OLD, NEW)                                         \
   (OLD) = ((OLD) & PN_LOCAL_MASK) | (NEW)
 
+pn_link_t *pn_link_new(int type, pn_session_t *session, pn_string_t *name);
 void pn_link_dump(pn_link_t *link);
 
 void pn_dump(pn_connection_t *conn);
@@ -371,7 +391,8 @@ void pn_work_update(pn_connection_t *connection, pn_delivery_t *delivery);
 void pn_clear_modified(pn_connection_t *connection, pn_endpoint_t *endpoint);
 void pn_connection_bound(pn_connection_t *conn);
 void pn_connection_unbound(pn_connection_t *conn);
-int pn_do_error(pn_transport_t *transport, const char *condition, const char *fmt, ...);
+int pn_do_error(pn_transport_t *transport, const char *condition, PN_PRINTF_FORMAT const char *fmt, ...)
+        PN_PRINTF_FORMAT_ATTR(3, 4);
 void pn_set_error_layer(pn_transport_t *transport);
 void pn_session_unbound(pn_session_t* ssn);
 void pn_link_unbound(pn_link_t* link);
@@ -379,6 +400,7 @@ void pn_ep_incref(pn_endpoint_t *endpoint);
 void pn_ep_decref(pn_endpoint_t *endpoint);
 
 ssize_t pni_transport_grow_capacity(pn_transport_t *transport, size_t n);
+  void pni_session_update_incoming_lwm(pn_session_t *ssn);
 
 #if __cplusplus
 }

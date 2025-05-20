@@ -24,7 +24,7 @@
 
 #include "fixed_string.h"
 #include "memory.h"
-#include "util.h"
+#include "util_str.h"
 #include "value_dump.h"
 
 #include <assert.h>
@@ -193,15 +193,14 @@ void pni_logger_log_data(pn_logger_t *logger, pn_log_subsystem_t subsystem, pn_l
   }
 }
 
-void pni_logger_log_raw(pn_logger_t *logger, pn_log_subsystem_t subsystem, pn_log_level_t severity, pn_buffer_t *output, size_t size)
+void pni_logger_log_raw(pn_logger_t *logger, pn_log_subsystem_t subsystem, pn_log_level_t severity, pn_bytes_t bytes, size_t size, const char* msg)
 {
   char buf[256];
 
-  pn_bytes_t bytes = pn_buffer_bytes(output);
   const char *start = &bytes.start[bytes.size-size];
   for (unsigned i = 0; i < size; i+=16) {
     pn_fixed_string_t out = pn_fixed_string(buf, sizeof(buf));
-    pn_fixed_string_addf(&out, "%04x/%04x: ", i, size);
+    pn_fixed_string_addf(&out, "%s%04x/%04zx: ", msg, i, size);
     for (unsigned j = 0; j<16; j++) {
       if (i+j<size) {
         pn_fixed_string_addf(&out, "%02hhx ", start[i+j]);
@@ -210,7 +209,7 @@ void pni_logger_log_raw(pn_logger_t *logger, pn_log_subsystem_t subsystem, pn_lo
       }
     }
     for (unsigned j = 0; j<16; j++) {
-      if (i+j>size) break;
+      if (i+j>=size) break;
       char c = start[i+j];
       if (c>32) { // c is signed so the high bit set is negative
         pn_fixed_string_append(&out, pn_string_const(&c, 1));
@@ -223,7 +222,7 @@ void pni_logger_log_raw(pn_logger_t *logger, pn_log_subsystem_t subsystem, pn_lo
   }
 }
 
-void pni_logger_log_msg_inspect(pn_logger_t *logger, pn_log_subsystem_t subsystem, pn_log_level_t severity, void* object, const char *fmt, ...) {
+void pni_logger_log_msg_inspect(pn_logger_t *logger, pn_log_subsystem_t subsystem, pn_log_level_t severity, void* object, PN_PRINTF_FORMAT const char *fmt, ...) {
   va_list ap;
   char buf[1024];
   pn_fixed_string_t out = pn_fixed_string(buf, sizeof(buf));
@@ -237,7 +236,7 @@ void pni_logger_log_msg_inspect(pn_logger_t *logger, pn_log_subsystem_t subsyste
   pni_logger_log(logger, subsystem, severity, buf);
 }
 
-void pni_logger_log_msg_frame(pn_logger_t *logger, pn_log_subsystem_t subsystem, pn_log_level_t severity, pn_bytes_t frame, const char *fmt, ...) {
+void pni_logger_log_msg_frame(pn_logger_t *logger, pn_log_subsystem_t subsystem, pn_log_level_t severity, pn_bytes_t frame, PN_PRINTF_FORMAT const char *fmt, ...) {
   va_list ap;
   char buf[1024];
   pn_fixed_string_t output = pn_fixed_string(buf, sizeof(buf));
@@ -284,7 +283,7 @@ void pni_logger_vlogf(pn_logger_t *logger, pn_log_subsystem_t subsystem, pn_log_
   pni_logger_log(logger, subsystem, severity, buf);
 }
 
-void pn_logger_logf(pn_logger_t *logger, pn_log_subsystem_t subsystem, pn_log_level_t severity, const char *fmt, ...)
+void pn_logger_logf(pn_logger_t *logger, pn_log_subsystem_t subsystem, pn_log_level_t severity, PN_PRINTF_FORMAT const char *fmt, ...)
 {
   va_list ap;
 

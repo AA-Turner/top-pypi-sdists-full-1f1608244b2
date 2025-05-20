@@ -110,6 +110,8 @@ class Server(utils.EventEmitter):
     indication_semaphores: defaultdict[int, asyncio.Semaphore]
     pending_confirmations: defaultdict[int, Optional[asyncio.futures.Future]]
 
+    EVENT_CHARACTERISTIC_SUBSCRIPTION = "characteristic_subscription"
+
     def __init__(self, device: Device) -> None:
         super().__init__()
         self.device = device
@@ -313,11 +315,8 @@ class Server(utils.EventEmitter):
             self.add_service(service)
 
     def read_cccd(
-        self, connection: Optional[Connection], characteristic: Characteristic
+        self, connection: Connection, characteristic: Characteristic
     ) -> bytes:
-        if connection is None:
-            return bytes([0, 0])
-
         subscribers = self.subscribers.get(connection.handle)
         cccd = None
         if subscribers:
@@ -347,10 +346,13 @@ class Server(utils.EventEmitter):
         notify_enabled = value[0] & 0x01 != 0
         indicate_enabled = value[0] & 0x02 != 0
         characteristic.emit(
-            'subscription', connection, notify_enabled, indicate_enabled
+            characteristic.EVENT_SUBSCRIPTION,
+            connection,
+            notify_enabled,
+            indicate_enabled,
         )
         self.emit(
-            'characteristic_subscription',
+            self.EVENT_CHARACTERISTIC_SUBSCRIPTION,
             connection,
             characteristic,
             notify_enabled,

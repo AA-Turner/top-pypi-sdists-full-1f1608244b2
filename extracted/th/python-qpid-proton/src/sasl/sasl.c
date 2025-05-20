@@ -28,13 +28,16 @@
 #include "core/frame_generators.h"
 #include "core/frame_consumers.h"
 #include "core/util.h"
+#include "core/util_str.h"
 #include "platform/platform_fmt.h"
 #include "protocol.h"
 
+#include "proton/annotations.h"
 #include "proton/ssl.h"
 #include "proton/types.h"
 
 #include <assert.h>
+#include <stdlib.h>
 
 // Machinery to allow plugin SASL implementations
 // Change this to &default_sasl_impl when we change cyrus to opt in
@@ -46,7 +49,7 @@ static const char pni_excluded_mechs[] = "GSSAPI GSS-SPNEGO GS2-KRB5 GS2-IAKERB"
 //-----------------------------------------------------------------------------
 // pnx_sasl: API for SASL implementations to use
 
-void pnx_sasl_logf(pn_transport_t *logger, pn_log_level_t level, const char *fmt, ...)
+void pnx_sasl_logf(pn_transport_t *logger, pn_log_level_t level, PN_PRINTF_FORMAT const char *fmt, ...)
 {
     va_list ap;
     va_start(ap, fmt);
@@ -134,7 +137,7 @@ const char *pnx_sasl_get_remote_fqdn(pn_transport_t *transport)
 
 const char *pnx_sasl_get_selected_mechanism(pn_transport_t *transport)
 {
-  return transport->sasl ? transport->sasl->selected_mechanism : NULL;
+  return transport->sasl ? pn_string_get(transport->sasl->selected_mechanism) : NULL;
 }
 
 void  pnx_sasl_set_bytes_out(pn_transport_t *transport, pn_bytes_t bytes)
@@ -147,7 +150,7 @@ void  pnx_sasl_set_bytes_out(pn_transport_t *transport, pn_bytes_t bytes)
 void  pnx_sasl_set_selected_mechanism(pn_transport_t *transport, const char *mechanism)
 {
   if (transport->sasl) {
-    transport->sasl->selected_mechanism = pn_strdup(mechanism);
+    transport->sasl->selected_mechanism = pn_string(mechanism);
   }
 }
 
@@ -161,10 +164,10 @@ void  pnx_sasl_set_succeeded(pn_transport_t *transport, const char *username, co
 
     if (authzid) {
       PN_LOG(&transport->logger, PN_SUBSYSTEM_SASL, PN_LEVEL_INFO, "Authenticated user: %s for %s with mechanism %s",
-             username, authzid, transport->sasl->selected_mechanism);
+             username, authzid, pn_string_get(transport->sasl->selected_mechanism));
     } else {
       PN_LOG(&transport->logger, PN_SUBSYSTEM_SASL, PN_LEVEL_INFO, "Authenticated user: %s with mechanism %s",
-             username, transport->sasl->selected_mechanism);
+             username, pn_string_get(transport->sasl->selected_mechanism));
     }
   }
 }
@@ -489,7 +492,7 @@ static void pni_post_sasl_frame(pn_transport_t *transport)
     switch (desired_state) {
     case SASL_POSTED_INIT: {
       /* GENERATE_CODEC_CODE: "DL[szS]" */
-      pn_bytes_t buf = pn_amqp_encode_DLEszSe(transport->frame, SASL_INIT, sasl->selected_mechanism, out.size, out.start, sasl->local_fqdn);
+      pn_bytes_t buf = pn_amqp_encode_DLEszSe(&transport->scratch_space, SASL_INIT, pn_string_bytes(sasl->selected_mechanism), out.size, out.start, pn_string_bytes(sasl->local_fqdn));
       pn_framing_send_sasl(transport, buf);
       pni_emit(transport);
       break;
@@ -504,7 +507,7 @@ static void pni_post_sasl_frame(pn_transport_t *transport)
         pni_split_mechs(mechlist, sasl->included_mechanisms, mechs, &count);
       }
       /* GENERATE_CODEC_CODE: "DL[@T[*s]]" */
-      pn_bytes_t buf = pn_amqp_encode_DLEATEjsee(transport->frame, SASL_MECHANISMS, PN_SYMBOL, count, mechs);
+      pn_bytes_t buf = pn_amqp_encode_DLEATEjsee(&transport->scratch_space, SASL_MECHANISMS, PN_SYMBOL, count, mechs);
       free(mechlist);
       pn_framing_send_sasl(transport, buf);
       pni_emit(transport);
@@ -513,7 +516,7 @@ static void pni_post_sasl_frame(pn_transport_t *transport)
     case SASL_POSTED_RESPONSE:
       if (sasl->last_state != SASL_POSTED_RESPONSE) {
         /* "DL[Z]" */
-        pn_bytes_t buf = pn_amqp_encode_DLEZe(transport->frame, SASL_RESPONSE, out.size, out.start);
+        pn_bytes_t buf = pn_amqp_encode_DLEZe(&transport->scratch_space, SASL_RESPONSE, out.size, out.start);
         pn_framing_send_sasl(transport, buf);
         pni_emit(transport);
       }
@@ -524,7 +527,7 @@ static void pni_post_sasl_frame(pn_transport_t *transport)
         continue;
       } else if (sasl->last_state != SASL_POSTED_CHALLENGE) {
         /* "DL[Z]" */
-        pn_bytes_t buf = pn_amqp_encode_DLEZe(transport->frame, SASL_CHALLENGE, out.size, out.start);
+        pn_bytes_t buf = pn_amqp_encode_DLEZe(&transport->scratch_space, SASL_CHALLENGE, out.size, out.start);
         pn_framing_send_sasl(transport, buf);
         pni_emit(transport);
       }
@@ -535,12 +538,13 @@ static void pni_post_sasl_frame(pn_transport_t *transport)
         continue;
       }
       /* "DL[Bz]" */
-      pn_bytes_t buf = pn_amqp_encode_DLEBze(transport->frame, SASL_OUTCOME, sasl->outcome, out.size, out.start);
+      pn_bytes_t buf = pn_amqp_encode_DLEBze(&transport->scratch_space, SASL_OUTCOME, sasl->outcome, out.size, out.start);
       pn_framing_send_sasl(transport, buf);
       pni_emit(transport);
       if (sasl->outcome!=PN_SASL_OK) {
+        const char *selected_mechanism = transport->sasl->selected_mechanism ? pn_string_get(transport->sasl->selected_mechanism) : NULL;
         pn_do_error(transport, "amqp:unauthorized-access", "Failed to authenticate client [mech=%s]",
-                    transport->sasl->selected_mechanism ? transport->sasl->selected_mechanism : "none");
+                    selected_mechanism ? selected_mechanism : "none");
         desired_state = SASL_ERROR;
       }
       break;
@@ -551,11 +555,13 @@ static void pni_post_sasl_frame(pn_transport_t *transport)
         continue;
       }
       break;
-    case SASL_RECVED_FAILURE:
+    case SASL_RECVED_FAILURE: {
+      const char *selected_mechanism = transport->sasl->selected_mechanism ? pn_string_get(transport->sasl->selected_mechanism) : NULL;
       pn_do_error(transport, "amqp:unauthorized-access", "Authentication failed [mech=%s]",
-                  transport->sasl->selected_mechanism ? transport->sasl->selected_mechanism : "none");
+                  selected_mechanism ? selected_mechanism : "none");
       desired_state = SASL_ERROR;
       break;
+    }
     case SASL_ERROR:
       break;
     case SASL_NONE:
@@ -595,7 +601,7 @@ static ssize_t pn_input_read_sasl_header(pn_transport_t* transport, unsigned int
     return SASL_HEADER_LEN;
   case PNI_PROTOCOL_INSUFFICIENT:
     if (!eos) return 0;
-    /* Fallthru */
+    PN_FALLTHROUGH;
   default:
     break;
   }
@@ -791,11 +797,11 @@ void pn_sasl_free(pn_transport_t *transport)
   if (transport) {
     pni_sasl_t *sasl = transport->sasl;
     if (sasl) {
-      free(sasl->selected_mechanism);
+      pn_free(sasl->selected_mechanism);
       free(sasl->included_mechanisms);
       free(sasl->password);
       free(sasl->external_auth);
-      free(sasl->local_fqdn);
+      pn_free(sasl->local_fqdn);
 
       if (sasl->impl_context) {
         pni_sasl_impl_free(transport);
@@ -816,7 +822,7 @@ void pni_sasl_set_remote_hostname(pn_transport_t * transport, const char * fqdn)
 void pnx_sasl_set_local_hostname(pn_transport_t * transport, const char * fqdn)
 {
   pni_sasl_t *sasl = transport->sasl;
-  sasl->local_fqdn = pn_strdup(fqdn);
+  sasl->local_fqdn = pn_string(fqdn);
 }
 
 void pni_sasl_set_user_password(pn_transport_t *transport, const char *user, const char *authzid, const char *password)
@@ -851,7 +857,7 @@ const char *pn_sasl_get_authorization(pn_sasl_t *sasl0)
 const char *pn_sasl_get_mech(pn_sasl_t *sasl0)
 {
     pni_sasl_t *sasl = get_sasl_internal(sasl0);
-    return sasl->selected_mechanism;
+    return pn_string_get(sasl->selected_mechanism);
 }
 
 void pn_sasl_allowed_mechs(pn_sasl_t *sasl0, const char *mechs)
@@ -903,7 +909,7 @@ int pn_do_init(pn_transport_t *transport, uint8_t frame_type, uint16_t channel, 
   pn_bytes_t recv;
 
   pn_amqp_decode_DqEsze(payload, &mech, &recv);
-  sasl->selected_mechanism = pn_strndup(mech.start, mech.size);
+  sasl->selected_mechanism = pn_stringn(mech.start, mech.size);
 
   // We need to filter out a supplied mech in in the inclusion list
   // as the client could have used a mech that we support, but that
@@ -913,7 +919,7 @@ int pn_do_init(pn_transport_t *transport, uint8_t frame_type, uint16_t channel, 
     sasl->outcome = PN_SASL_AUTH;
     pnx_sasl_set_desired_state(transport, SASL_POSTED_OUTCOME);
   } else {
-    pni_sasl_impl_process_init(transport, sasl->selected_mechanism, &recv);
+    pni_sasl_impl_process_init(transport, pn_string_get(sasl->selected_mechanism), &recv);
   }
 
   return 0;

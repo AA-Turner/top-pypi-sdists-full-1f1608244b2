@@ -770,27 +770,25 @@ class AttributeValue(Generic[_T]):
     def __init__(
         self,
         read: Union[
-            Callable[[Optional[Connection]], _T],
-            Callable[[Optional[Connection]], Awaitable[_T]],
+            Callable[[Connection], _T],
+            Callable[[Connection], Awaitable[_T]],
             None,
         ] = None,
         write: Union[
-            Callable[[Optional[Connection], _T], None],
-            Callable[[Optional[Connection], _T], Awaitable[None]],
+            Callable[[Connection, _T], None],
+            Callable[[Connection, _T], Awaitable[None]],
             None,
         ] = None,
     ):
         self._read = read
         self._write = write
 
-    def read(self, connection: Optional[Connection]) -> Union[_T, Awaitable[_T]]:
+    def read(self, connection: Connection) -> Union[_T, Awaitable[_T]]:
         if self._read is None:
             raise InvalidOperationError('AttributeValue has no read function')
         return self._read(connection)
 
-    def write(
-        self, connection: Optional[Connection], value: _T
-    ) -> Union[Awaitable[None], None]:
+    def write(self, connection: Connection, value: _T) -> Union[Awaitable[None], None]:
         if self._write is None:
             raise InvalidOperationError('AttributeValue has no write function')
         return self._write(connection, value)
@@ -836,6 +834,9 @@ class Attribute(utils.EventEmitter, Generic[_T]):
     READ_REQUIRES_AUTHORIZATION = Permissions.READ_REQUIRES_AUTHORIZATION
     WRITE_REQUIRES_AUTHORIZATION = Permissions.WRITE_REQUIRES_AUTHORIZATION
 
+    EVENT_READ = "read"
+    EVENT_WRITE = "write"
+
     value: Union[AttributeValue[_T], _T, None]
 
     def __init__(
@@ -868,7 +869,7 @@ class Attribute(utils.EventEmitter, Generic[_T]):
     def decode_value(self, value: bytes) -> _T:
         return value  # type: ignore
 
-    async def read_value(self, connection: Optional[Connection]) -> bytes:
+    async def read_value(self, connection: Connection) -> bytes:
         if (
             (self.permissions & self.READ_REQUIRES_ENCRYPTION)
             and connection is not None
@@ -906,11 +907,11 @@ class Attribute(utils.EventEmitter, Generic[_T]):
         else:
             value = self.value
 
-        self.emit('read', connection, b'' if value is None else value)
+        self.emit(self.EVENT_READ, connection, b'' if value is None else value)
 
         return b'' if value is None else self.encode_value(value)
 
-    async def write_value(self, connection: Optional[Connection], value: bytes) -> None:
+    async def write_value(self, connection: Connection, value: bytes) -> None:
         if (
             (self.permissions & self.WRITE_REQUIRES_ENCRYPTION)
             and connection is not None
@@ -947,7 +948,7 @@ class Attribute(utils.EventEmitter, Generic[_T]):
         else:
             self.value = decoded_value
 
-        self.emit('write', connection, decoded_value)
+        self.emit(self.EVENT_WRITE, connection, decoded_value)
 
     def __repr__(self):
         if isinstance(self.value, bytes):

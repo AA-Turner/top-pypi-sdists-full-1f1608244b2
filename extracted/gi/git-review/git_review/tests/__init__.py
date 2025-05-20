@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import configparser
 import hashlib
 import os
 import shutil
@@ -25,6 +26,7 @@ import requests
 import testtools
 from testtools import content
 
+from git_review.hooks import COMMIT_MSG
 from git_review.tests import utils
 
 if sys.version < '3':
@@ -247,20 +249,31 @@ class BaseGitReviewTestCase(testtools.TestCase, GerritHelpers):
         utils.write_to_file(self._dir('test', 'test_file.txt'),
                             'test file created'.encode())
         self._create_gitreview_file()
+        hook_file = self._dir('test', '.git/hooks/commit-msg')
+        utils.write_to_file(hook_file, COMMIT_MSG.encode())
+        os.chmod(hook_file, os.stat(hook_file).st_mode | stat.S_IEXEC)
 
         # push changes to the Gerrit
         self._run_git('add', '--all')
         self._run_git('commit', '-m', 'Test file and .gitreview added.')
-        self._run_git('push', 'origin', 'master')
+        self._run_git('push', 'origin', 'HEAD:refs/for/master')
+        head = self._run_git('rev-parse', 'HEAD')
+        self._run_gerrit_cli('review', head, '--code-review=+2', '--submit')
         # push a branch to gerrit
+        self._run_gerrit_cli('create-branch', 'test/test_project',
+                             'testbranch', head)
         self._run_git('checkout', '-b', 'testbranch')
         utils.write_to_file(self._dir('test', 'test_file.txt'),
                             'test file branched'.encode())
         self._create_gitreview_file(defaultbranch='testbranch')
         self._run_git('add', '--all')
         self._run_git('commit', '-m', 'Branched.')
-        self._run_git('push', 'origin', 'testbranch')
-        # cleanup
+        self._run_git('push', 'origin', 'HEAD:refs/for/testbranch')
+        head = self._run_git('rev-parse', 'HEAD')
+        self._run_gerrit_cli('review', head, '--code-review=+2', '--submit')
+        # cleanup. This is important so our work above doesn't pollute the
+        # test cases. We need git review to set stuff up like commit message
+        # hooks.
         shutil.rmtree(self.test_dir)
 
         # go to the just cloned test Git repository
@@ -313,10 +326,19 @@ class BaseGitReviewTestCase(testtools.TestCase, GerritHelpers):
         shutil.copytree(self.gsite_dir, self.site_dir)
         self.addCleanup(shutil.rmtree, self.site_dir)
         # write config
+        old_conf = configparser.ConfigParser(strict=False)
+        old_conf.read(self._dir('site', 'etc', 'gerrit.config'))
         with open(self._dir('site', 'etc', 'gerrit.config'), 'w') as _conf:
             new_conf = utils.get_gerrit_conf(
                 ssh_addr, ssh_port, http_addr, http_port)
             _conf.write(new_conf)
+        # Preserve the preexisting javaHome configuration
+        new_conf = configparser.ConfigParser(strict=False)
+        new_conf.read(self._dir('site', 'etc', 'gerrit.config'))
+        new_conf['container'] = {}
+        new_conf['container']['javaHome'] = old_conf['container']['javaHome']
+        with open(self._dir('site', 'etc', 'gerrit.config'), 'w') as _conf:
+            new_conf.write(_conf)
 
         # If test fails, attach Gerrit config and logs to the result
         self.attach_on_exception(self._dir('site', 'etc', 'gerrit.config'))
@@ -325,7 +347,9 @@ class BaseGitReviewTestCase(testtools.TestCase, GerritHelpers):
 
         # start Gerrit
         gerrit_sh = self._dir('site', 'bin', 'gerrit.sh')
-        utils.run_cmd(gerrit_sh, 'start')
+        out = utils.run_cmd(gerrit_sh, 'start')
+        self.addDetail("gerrit-start-output",
+                       content.text_content(out))
         self.addCleanup(utils.run_cmd, gerrit_sh, 'stop')
 
     def _unstaged_change(self, change_text, file_=None):

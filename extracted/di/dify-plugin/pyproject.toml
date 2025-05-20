@@ -1,6 +1,6 @@
 [project]
 name = "dify_plugin"
-version = "0.2.4"
+version = "0.3.0"
 description = "Dify Plugin SDK"
 authors = [
     { name = "langgenius", email = "hello@dify.ai" },
@@ -19,6 +19,7 @@ dependencies = [
     "socksio==1.0.0",
     "tiktoken~=0.8.0",
     "yarl>=1.9.4,<2.0",
+    "packaging>=25.0",
 ]
 requires-python = ">=3.11"
 readme = "README.md"

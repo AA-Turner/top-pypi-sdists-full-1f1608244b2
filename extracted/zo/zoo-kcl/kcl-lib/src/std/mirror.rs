@@ -17,8 +17,6 @@ use crate::{
 };
 
 /// Mirror a sketch.
-///
-/// Only works on unclosed sketches for now.
 pub async fn mirror_2d(exec_state: &mut ExecState, args: Args) -> Result<KclValue, KclError> {
     let sketches = args.get_unlabeled_kw_arg_typed("sketches", &RuntimeType::sketches(), exec_state)?;
     let axis = args.get_kw_arg_typed(
@@ -35,8 +33,6 @@ pub async fn mirror_2d(exec_state: &mut ExecState, args: Args) -> Result<KclValu
 }
 
 /// Mirror a sketch.
-///
-/// Only works on unclosed sketches for now.
 async fn inner_mirror_2d(
     sketches: Vec<Sketch>,
     axis: Axis2dOrEdgeReference,
@@ -105,10 +101,10 @@ async fn inner_mirror_2d(
                 OkModelingCmdResponse::EntityGetAllChildUuids(EntityGetAllChildUuids { entity_ids: child_ids }),
         } = response
         else {
-            return Err(KclError::Internal(KclErrorDetails {
-                message: "Expected a successful response from EntityGetAllChildUuids".to_string(),
-                source_ranges: vec![args.source_range],
-            }));
+            return Err(KclError::Internal(KclErrorDetails::new(
+                "Expected a successful response from EntityGetAllChildUuids".to_string(),
+                vec![args.source_range],
+            )));
         };
 
         if child_ids.len() >= 2 {
@@ -116,10 +112,10 @@ async fn inner_mirror_2d(
             let child_id = child_ids[1];
             sketch.mirror = Some(child_id);
         } else {
-            return Err(KclError::Type(KclErrorDetails {
-                message: "Expected child uuids to be >= 2".to_string(),
-                source_ranges: vec![args.source_range],
-            }));
+            return Err(KclError::Type(KclErrorDetails::new(
+                "Expected child uuids to be >= 2".to_string(),
+                vec![args.source_range],
+            )));
         }
     }
 

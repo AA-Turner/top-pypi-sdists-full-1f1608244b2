@@ -469,3 +469,16 @@ class RepoUrlParsingTest(testtools.TestCase):
                 r'ssh://someone%40example.org@review.opendev.org:29418/x/y'),
             ('review.opendev.org', r'someone%40example.org', '29418',
              'x/y'))
+
+
+@mock.patch('git_review.cmd.run_command')
+class GitVersionTest(testtools.TestCase):
+    def test_version_too_low(self, mock_run_command):
+        # From an old CentOS 7 box
+        mock_run_command.return_value = 'git version 1.8.3.1'
+        self.assertRaises(SystemExit, cmd.get_git_version)
+
+    def test_version_good(self, mock_run_command):
+        mock_run_command.return_value = 'git version 2.43.0'
+        self.assertIsNone(cmd.get_git_version())
+        self.assertEqual(cmd.LOCAL_GIT_VERSION, (2, 43, 0))

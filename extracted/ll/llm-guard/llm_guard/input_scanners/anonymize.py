@@ -160,7 +160,7 @@ class Anonymize(Scanner):
                 other_elements.append(result)
                 tmp_analyzer_results.append(result)
             else:
-                LOGGER.debug(f"removing element {result} from " f"results list due to merge")
+                LOGGER.debug(f"removing element {result} from results list due to merge")
 
         unique_text_metadata_elements = []
         # This list contains all elements which we need to check a single result
@@ -310,7 +310,7 @@ class Anonymize(Scanner):
         return text_without_single_quotes
 
     def scan(self, prompt: str) -> tuple[str, bool, float]:
-        risk_score = 0.0
+        risk_score = -1.0
         if prompt.strip() == "":
             return prompt, True, risk_score
 
@@ -354,4 +354,4 @@ class Anonymize(Scanner):
 
         LOGGER.debug("Prompt does not have sensitive data to replace", risk_score=risk_score)
 
-        return prompt, True, 0.0
+        return prompt, True, -1.0

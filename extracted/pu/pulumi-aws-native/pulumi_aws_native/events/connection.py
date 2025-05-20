@@ -27,6 +27,7 @@ class ConnectionArgs:
                  authorization_type: Optional[pulumi.Input['ConnectionAuthorizationType']] = None,
                  description: Optional[pulumi.Input[builtins.str]] = None,
                  invocation_connectivity_parameters: Optional[pulumi.Input['InvocationConnectivityParametersPropertiesArgs']] = None,
+                 kms_key_identifier: Optional[pulumi.Input[builtins.str]] = None,
                  name: Optional[pulumi.Input[builtins.str]] = None):
         """
         The set of arguments for constructing a Connection resource.
@@ -38,6 +39,11 @@ class ConnectionArgs:
                > OAUTH tokens are refreshed when a 401 or 407 response is returned.
         :param pulumi.Input[builtins.str] description: Description of the connection.
         :param pulumi.Input['InvocationConnectivityParametersPropertiesArgs'] invocation_connectivity_parameters: The private resource the HTTP request will be sent to.
+        :param pulumi.Input[builtins.str] kms_key_identifier: The identifier of the AWS KMS customer managed key for EventBridge to use, if you choose to use a customer managed key to encrypt this connection. The identifier can be the key Amazon Resource Name (ARN), KeyId, key alias, or key alias ARN.
+               
+               If you do not specify a customer managed key identifier, EventBridge uses an AWS owned key to encrypt the connection.
+               
+               For more information, see [Identify and view keys](https://docs.aws.amazon.com/kms/latest/developerguide/viewing-keys.html) in the *AWS Key Management Service Developer Guide* .
         :param pulumi.Input[builtins.str] name: Name of the connection.
         """
         if auth_parameters is not None:
@@ -48,6 +54,8 @@ class ConnectionArgs:
             pulumi.set(__self__, "description", description)
         if invocation_connectivity_parameters is not None:
             pulumi.set(__self__, "invocation_connectivity_parameters", invocation_connectivity_parameters)
+        if kms_key_identifier is not None:
+            pulumi.set(__self__, "kms_key_identifier", kms_key_identifier)
         if name is not None:
             pulumi.set(__self__, "name", name)
 
@@ -104,6 +112,22 @@ class ConnectionArgs:
         pulumi.set(self, "invocation_connectivity_parameters", value)
 
     @property
+    @pulumi.getter(name="kmsKeyIdentifier")
+    def kms_key_identifier(self) -> Optional[pulumi.Input[builtins.str]]:
+        """
+        The identifier of the AWS KMS customer managed key for EventBridge to use, if you choose to use a customer managed key to encrypt this connection. The identifier can be the key Amazon Resource Name (ARN), KeyId, key alias, or key alias ARN.
+
+        If you do not specify a customer managed key identifier, EventBridge uses an AWS owned key to encrypt the connection.
+
+        For more information, see [Identify and view keys](https://docs.aws.amazon.com/kms/latest/developerguide/viewing-keys.html) in the *AWS Key Management Service Developer Guide* .
+        """
+        return pulumi.get(self, "kms_key_identifier")
+
+    @kms_key_identifier.setter
+    def kms_key_identifier(self, value: Optional[pulumi.Input[builtins.str]]):
+        pulumi.set(self, "kms_key_identifier", value)
+
+    @property
     @pulumi.getter
     def name(self) -> Optional[pulumi.Input[builtins.str]]:
         """
@@ -117,6 +141,9 @@ class ConnectionArgs:
 
 
 class Connection(pulumi.CustomResource):
+
+    pulumi_type = "aws-native:events:Connection"
+
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -125,6 +152,7 @@ class Connection(pulumi.CustomResource):
                  authorization_type: Optional[pulumi.Input['ConnectionAuthorizationType']] = None,
                  description: Optional[pulumi.Input[builtins.str]] = None,
                  invocation_connectivity_parameters: Optional[pulumi.Input[Union['InvocationConnectivityParametersPropertiesArgs', 'InvocationConnectivityParametersPropertiesArgsDict']]] = None,
+                 kms_key_identifier: Optional[pulumi.Input[builtins.str]] = None,
                  name: Optional[pulumi.Input[builtins.str]] = None,
                  __props__=None):
         """
@@ -166,6 +194,11 @@ class Connection(pulumi.CustomResource):
                > OAUTH tokens are refreshed when a 401 or 407 response is returned.
         :param pulumi.Input[builtins.str] description: Description of the connection.
         :param pulumi.Input[Union['InvocationConnectivityParametersPropertiesArgs', 'InvocationConnectivityParametersPropertiesArgsDict']] invocation_connectivity_parameters: The private resource the HTTP request will be sent to.
+        :param pulumi.Input[builtins.str] kms_key_identifier: The identifier of the AWS KMS customer managed key for EventBridge to use, if you choose to use a customer managed key to encrypt this connection. The identifier can be the key Amazon Resource Name (ARN), KeyId, key alias, or key alias ARN.
+               
+               If you do not specify a customer managed key identifier, EventBridge uses an AWS owned key to encrypt the connection.
+               
+               For more information, see [Identify and view keys](https://docs.aws.amazon.com/kms/latest/developerguide/viewing-keys.html) in the *AWS Key Management Service Developer Guide* .
         :param pulumi.Input[builtins.str] name: Name of the connection.
         """
         ...
@@ -222,6 +255,7 @@ class Connection(pulumi.CustomResource):
                  authorization_type: Optional[pulumi.Input['ConnectionAuthorizationType']] = None,
                  description: Optional[pulumi.Input[builtins.str]] = None,
                  invocation_connectivity_parameters: Optional[pulumi.Input[Union['InvocationConnectivityParametersPropertiesArgs', 'InvocationConnectivityParametersPropertiesArgsDict']]] = None,
+                 kms_key_identifier: Optional[pulumi.Input[builtins.str]] = None,
                  name: Optional[pulumi.Input[builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
@@ -236,8 +270,10 @@ class Connection(pulumi.CustomResource):
             __props__.__dict__["authorization_type"] = authorization_type
             __props__.__dict__["description"] = description
             __props__.__dict__["invocation_connectivity_parameters"] = invocation_connectivity_parameters
+            __props__.__dict__["kms_key_identifier"] = kms_key_identifier
             __props__.__dict__["name"] = name
             __props__.__dict__["arn"] = None
+            __props__.__dict__["arn_for_policy"] = None
             __props__.__dict__["secret_arn"] = None
         replace_on_changes = pulumi.ResourceOptions(replace_on_changes=["name"])
         opts = pulumi.ResourceOptions.merge(opts, replace_on_changes)
@@ -264,10 +300,12 @@ class Connection(pulumi.CustomResource):
         __props__ = ConnectionArgs.__new__(ConnectionArgs)
 
         __props__.__dict__["arn"] = None
+        __props__.__dict__["arn_for_policy"] = None
         __props__.__dict__["auth_parameters"] = None
         __props__.__dict__["authorization_type"] = None
         __props__.__dict__["description"] = None
         __props__.__dict__["invocation_connectivity_parameters"] = None
+        __props__.__dict__["kms_key_identifier"] = None
         __props__.__dict__["name"] = None
         __props__.__dict__["secret_arn"] = None
         return Connection(resource_name, opts=opts, __props__=__props__)
@@ -279,6 +317,14 @@ class Connection(pulumi.CustomResource):
         The arn of the connection resource.
         """
         return pulumi.get(self, "arn")
+
+    @property
+    @pulumi.getter(name="arnForPolicy")
+    def arn_for_policy(self) -> pulumi.Output[builtins.str]:
+        """
+        The arn of the connection resource to be used in IAM policies.
+        """
+        return pulumi.get(self, "arn_for_policy")
 
     @property
     @pulumi.getter(name="authParameters")
@@ -315,6 +361,18 @@ class Connection(pulumi.CustomResource):
         The private resource the HTTP request will be sent to.
         """
         return pulumi.get(self, "invocation_connectivity_parameters")
+
+    @property
+    @pulumi.getter(name="kmsKeyIdentifier")
+    def kms_key_identifier(self) -> pulumi.Output[Optional[builtins.str]]:
+        """
+        The identifier of the AWS KMS customer managed key for EventBridge to use, if you choose to use a customer managed key to encrypt this connection. The identifier can be the key Amazon Resource Name (ARN), KeyId, key alias, or key alias ARN.
+
+        If you do not specify a customer managed key identifier, EventBridge uses an AWS owned key to encrypt the connection.
+
+        For more information, see [Identify and view keys](https://docs.aws.amazon.com/kms/latest/developerguide/viewing-keys.html) in the *AWS Key Management Service Developer Guide* .
+        """
+        return pulumi.get(self, "kms_key_identifier")
 
     @property
     @pulumi.getter

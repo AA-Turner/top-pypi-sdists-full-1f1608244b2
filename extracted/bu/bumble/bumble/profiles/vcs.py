@@ -91,6 +91,8 @@ class VolumeState:
 class VolumeControlService(gatt.TemplateService):
     UUID = gatt.GATT_VOLUME_CONTROL_SERVICE
 
+    EVENT_VOLUME_STATE_CHANGE = "volume_state_change"
+
     volume_state: gatt.Characteristic[bytes]
     volume_control_point: gatt.Characteristic[bytes]
     volume_flags: gatt.Characteristic[bytes]
@@ -144,14 +146,12 @@ class VolumeControlService(gatt.TemplateService):
             included_services=list(included_services),
         )
 
-    def _on_read_volume_state(self, _connection: Optional[device.Connection]) -> bytes:
+    def _on_read_volume_state(self, _connection: device.Connection) -> bytes:
         return bytes(VolumeState(self.volume_setting, self.muted, self.change_counter))
 
     def _on_write_volume_control_point(
-        self, connection: Optional[device.Connection], value: bytes
+        self, connection: device.Connection, value: bytes
     ) -> None:
-        assert connection
-
         opcode = VolumeControlPointOpcode(value[0])
         change_counter = value[1]
 
@@ -166,7 +166,7 @@ class VolumeControlService(gatt.TemplateService):
                 'disconnection',
                 connection.device.notify_subscribers(attribute=self.volume_state),
             )
-            self.emit('volume_state_change')
+            self.emit(self.EVENT_VOLUME_STATE_CHANGE)
 
     def _on_relative_volume_down(self) -> bool:
         old_volume = self.volume_setting

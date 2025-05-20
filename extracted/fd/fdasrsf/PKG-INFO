@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: fdasrsf
-Version: 2.6.1
+Version: 2.6.2
 Summary: functional data analysis using the square root slope framework
 Home-page: http://research.tetonedge.net
 Author: J. Derek Tucker
@@ -17,13 +17,13 @@ Classifier: Topic :: Scientific/Engineering
 Classifier: Topic :: Scientific/Engineering :: Mathematics
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.9
-Requires-Python: >=3.9
+Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE.txt
 Requires-Dist: Cython
 Requires-Dist: matplotlib
 Requires-Dist: numpy>=1.25
-Requires-Dist: scipy
+Requires-Dist: scipy>=1.14
 Requires-Dist: joblib
 Requires-Dist: patsy
 Requires-Dist: tqdm

@@ -131,7 +131,7 @@ class Subprocess:
             filename = program
             try:
                 st = os.stat(filename)
-            except os.error:
+            except OSError:
                 self.options.usage("can't stat program %r" % program)
         else:
             path = get_path()
@@ -139,7 +139,7 @@ class Subprocess:
                 filename = os.path.join(dir, program)
                 try:
                     st = os.stat(filename)
-                except os.error:
+                except OSError:
                     continue
                 mode = st[ST_MODE]
                 if mode & 0o111:
@@ -189,7 +189,7 @@ class Subprocess:
         self.lasttime = time.time()
         try:
             pid = os.fork()
-        except os.error:
+        except OSError:
             return 0
         if pid != 0:
             # Parent
@@ -200,7 +200,7 @@ class Subprocess:
                 thread.setDaemon(True)
                 thread.start()
 
-            self.options.logger.info("spawned process pid=%d" % pid)
+            self.options.logger.info("spawned process pid=%d", pid)
             return pid
         else:  # pragma: nocover
             # Child
@@ -210,11 +210,11 @@ class Subprocess:
                 for i in range(3, 100):
                     try:
                         os.close(i)
-                    except os.error:
+                    except OSError:
                         pass
                 try:
                     os.execv(self.filename, self.args)
-                except os.error as err:
+                except OSError as err:
                     sys.stderr.write("can't exec %r: %s\n" %
                                      (self.filename, err))
                     sys.stderr.flush()  # just in case
@@ -232,7 +232,7 @@ class Subprocess:
             return "no subprocess running"
         try:
             os.kill(self.pid, sig)
-        except os.error as msg:
+        except OSError as msg:
             return str(msg)
         return None
 
@@ -268,7 +268,7 @@ class Daemonizer:
         finally:
             try:
                 os.unlink(self.options.sockname)
-            except os.error:
+            except OSError:
                 pass
 
     mastersocket = None
@@ -286,14 +286,14 @@ class Daemonizer:
                 try:
                     os.link(tempname, sockname)
                     break
-                except os.error:
+                except OSError:
                     # Lock contention, or stale socket.
                     self.checkopen()
                     # Stale socket -- delete, sleep, and try again.
                     msg = "Unlinking stale socket %s; sleep 1" % sockname
                     sys.stderr.write(msg + "\n")
                     sys.stderr.flush()  # just in case
-                    self.logger.warn(msg)
+                    self.logger.warning(msg)
                     self.unlink_quietly(sockname)
                     sock.close()
                     time.sleep(1)
@@ -311,7 +311,7 @@ class Daemonizer:
     def unlink_quietly(self, filename):
         try:
             os.unlink(filename)
-        except os.error:
+        except OSError:
             pass
 
     def checkopen(self):
@@ -339,7 +339,7 @@ class Daemonizer:
         signal.signal(signal.SIGCHLD, self.sigchild)
 
     def sigexit(self, sig, frame):
-        self.logger.critical("daemon manager killed by %s" % signame(sig))
+        self.logger.critical("daemon manager killed by %s", signame(sig))
         sys.exit(1)
 
     waitstatus = None
@@ -347,7 +347,7 @@ class Daemonizer:
     def sigchild(self, sig, frame):
         try:
             pid, sts = os.waitpid(-1, os.WNOHANG)
-        except os.error:
+        except OSError:
             return
         if pid:
             if pid == self.proc.pid:
@@ -396,12 +396,17 @@ class Daemonizer:
         if self.options.directory:
             try:
                 os.chdir(self.options.directory)
-            except os.error as err:
-                self.logger.warn("can't chdir into %r: %s"
-                                 % (self.options.directory, err))
+            except OSError as err:
+                self.logger.warning(
+                    "can't chdir into %r: %s",
+                    self.options.directory,
+                    err,
+                )
             else:
-                self.logger.info("set current directory: %r"
-                                 % self.options.directory)
+                self.logger.info(
+                    "set current directory: %r",
+                    self.options.directory,
+                )
         os.close(0)
         sys.stdin = sys.__stdin__ = open("/dev/null")
         self.transcript = Transcript(self.options.transcript)
@@ -459,15 +464,17 @@ class Daemonizer:
                 try:
                     self.dorecv()
                 except OSError as msg:
-                    self.logger.exception("socket.error in dorecv(): %s"
-                                          % str(msg))
+                    self.logger.exception(
+                        "socket.error in dorecv(): %s", str(msg)
+                    )
                     self.commandsocket = None
             if self.mastersocket in r:
                 try:
                     self.doaccept()
                 except OSError as msg:
-                    self.logger.exception("socket.error in doaccept(): %s"
-                                          % str(msg))
+                    self.logger.exception(
+                        "socket.error in doaccept(): %s", str(msg)
+                    )
                     self.commandsocket = None
             if sig_r in r:
                 os.read(sig_r, 1)  # don't let the buffer fill up
@@ -481,7 +488,7 @@ class Daemonizer:
         msg = "pid %d: " % pid + msg
         if pid != self.proc.pid:
             msg = "unknown(!=%s) " % self.proc.pid + msg
-            self.logger.warn(msg)
+            self.logger.warning(msg)
         else:
             killing = self.killing
             if killing:
@@ -512,7 +519,7 @@ class Daemonizer:
                 else:
                     self.logger.critical("restarting too frequently; quit")
                     sys.exit(1)
-            self.logger.info("sleep %s to avoid rapid restarts" % self.backoff)
+            self.logger.info("sleep %s to avoid rapid restarts", self.backoff)
             self.delay = now + self.backoff
         else:
             # Reset the backoff timer
@@ -656,7 +663,7 @@ class Daemonizer:
                     sent = self.commandsocket.send(msg)
                     msg = msg[sent:]
         except OSError as msg:
-            self.logger.warn("Error sending reply: %s" % str(msg))
+            self.logger.warning("Error sending reply: %s", str(msg))
 
 
 class Transcript:
@@ -767,6 +774,7 @@ def get_path():
 
 class _ChildExits(dict):
     """map ``pid`` to exit status or ``None``."""
+
     def fetch(self, pid):
         """fetch and reset status for *pid*."""
         st = self.get(pid)

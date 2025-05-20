@@ -78,7 +78,7 @@ static uint8_t pn_type2code(pn_encoder_t *encoder, pn_type_t type)
   case PN_MAP: return PNE_MAP32;
   case PN_DESCRIBED: return PNE_DESCRIPTOR;
   default:
-    return pn_error_format(pni_encoder_error(encoder), PN_ERR, "not a value type: %u\n", type);
+    return pn_error_format(pni_encoder_error(encoder), PN_ERR, "not a value type: %d\n", type);
   }
 }
 
@@ -362,7 +362,7 @@ static int pni_encoder_exit(void *ctx, pn_data_t *data, pni_node_t *node)
     if ((node->described && node->children == 1) || (!node->described && node->children == 0)) {
       pn_encoder_writef8(encoder, pn_type2code(encoder, node->type));
     }
-  // Fallthrough
+    PN_FALLTHROUGH;
   case PN_LIST:
   case PN_MAP:
     pos = encoder->position;

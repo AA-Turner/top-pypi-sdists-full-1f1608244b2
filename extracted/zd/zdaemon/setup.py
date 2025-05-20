@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006-2009 Zope Foundation and Contributors.
+# Copyright (c) 2006-2025 Zope Foundation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -18,7 +18,6 @@ from setuptools import setup
 
 tests_require = [
     'manuel',
-    'mock',
     'zc.customdoctests',
     'zope.testing',
     'zope.testrunner',
@@ -37,7 +36,7 @@ def read(*rnames):
 
 setup(
     name="zdaemon",
-    version='5.1',
+    version='5.2',
     url="https://github.com/zopefoundation/zdaemon",
     license="ZPL 2.1",
     description="Daemon process control library and tools for Unix-based systems",  # noqa: E501 line too long
@@ -60,12 +59,11 @@ setup(
         'License :: OSI Approved :: Zope Public License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Operating System :: POSIX',
@@ -74,7 +72,7 @@ setup(
     zip_safe=False,
     entry_points=entry_points,
     include_package_data=True,
-    python_requires='>=3.7',
+    python_requires='>=3.9',
     install_requires=[
         "ZConfig",
         "setuptools"

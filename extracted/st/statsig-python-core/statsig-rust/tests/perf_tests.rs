@@ -4,7 +4,7 @@ use crate::utils::mock_event_logging_adapter::MockEventLoggingAdapter;
 use crate::utils::mock_specs_adapter::MockSpecsAdapter;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use statsig_rust::{Statsig, StatsigOptions, StatsigUser};
+use statsig_rust::{Statsig, StatsigOptions, StatsigUser, StatsigUserBuilder};
 use std::cmp::min;
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -20,11 +20,10 @@ async fn setup() -> (StatsigUser, Statsig, Arc<MockSpecsAdapter>) {
     let custom_ids: HashMap<String, String> =
         HashMap::from([("companyID".into(), "an_employee".into())]);
 
-    let user = StatsigUser {
-        user_id: Some("user-d".into()),
-        country: Some("GB".into()),
-        ..StatsigUser::with_custom_ids(custom_ids)
-    };
+    let user = StatsigUserBuilder::new_with_user_id("user-d".to_string())
+        .country(Some("GB".into()))
+        .custom_ids(Some(custom_ids))
+        .build();
 
     let mut options = StatsigOptions::new();
     let specs_adapter = Arc::new(MockSpecsAdapter::with_data("tests/data/eval_proj_dcs.json"));
@@ -45,11 +44,11 @@ async fn setup() -> (StatsigUser, Statsig, Arc<MockSpecsAdapter>) {
 async fn test_individual_gate_checks() {
     let (user, statsig, _) = setup().await;
 
-    let gate_name = "test_many_rules";
+    let gate_name = "test_public";
     let start = Instant::now();
 
     let mut result = false;
-    for _ in 0..1000 {
+    for _ in 0..100000 {
         result = statsig.check_gate(&user, gate_name);
     }
 
@@ -72,7 +71,7 @@ async fn test_all_gate_checks() {
         .unwrap();
 
     let all_start = Instant::now();
-    for (gate_name, _) in values.feature_gates.iter() {
+    for gate_name in values.feature_gates.keys() {
         let start = Instant::now();
 
         let mut value = false;
@@ -82,7 +81,7 @@ async fn test_all_gate_checks() {
 
         let duration = start.elapsed();
         times.insert(
-            gate_name.clone(),
+            gate_name.to_string(),
             PerfEntry {
                 value,
                 duration: duration.as_secs_f64() * 1000.0,

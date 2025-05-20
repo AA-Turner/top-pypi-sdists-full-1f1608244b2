@@ -1,6 +1,6 @@
-Metadata-Version: 2.4
+Metadata-Version: 2.2
 Name: awsebcli
-Version: 3.23.3
+Version: 3.24
 Summary: Command Line Interface for AWS EB.
 Home-page: http://aws.amazon.com/elasticbeanstalk/
 Author: AWS Elastic Beanstalk
@@ -33,6 +33,7 @@ Requires-Dist: PyYAML<6.1,>=5.3.1
 Requires-Dist: urllib3<2,>=1.26.5
 Requires-Dist: packaging<25.0,>=24.2
 Requires-Dist: blessed>=1.20.0
+Requires-Dist: fabric==3.2.2
 Requires-Dist: pypiwin32==219; sys_platform == "win32" and python_version < "3.6"
 Requires-Dist: pypiwin32==223; sys_platform == "win32" and python_version >= "3.6"
 Dynamic: author
@@ -41,7 +42,6 @@ Dynamic: classifier
 Dynamic: description
 Dynamic: home-page
 Dynamic: license
-Dynamic: license-file
 Dynamic: provides-extra
 Dynamic: requires-dist
 Dynamic: summary
@@ -125,6 +125,11 @@ in the *AWS Elastic Beanstalk Developer Guide*.
 
 Changelog
 =========
+--------------------
+3.24 (2025-05-19)
+--------------------
+- Added remote execution for `eb migrate` command to support migrations of remote IIS servers to Elastic Beanstalk
+
 --------------------
 3.23.3 (2025-05-01)
 --------------------

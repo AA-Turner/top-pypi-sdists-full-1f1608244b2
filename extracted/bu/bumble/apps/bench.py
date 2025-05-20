@@ -121,9 +121,9 @@ def print_connection(connection):
 
         params.append(
             'Parameters='
-            f'{connection.parameters.connection_interval * 1.25:.2f}/'
+            f'{connection.parameters.connection_interval:.2f}/'
             f'{connection.parameters.peripheral_latency}/'
-            f'{connection.parameters.supervision_timeout * 10} '
+            f'{connection.parameters.supervision_timeout:.2f} '
         )
 
         params.append(f'MTU={connection.att_mtu}')
@@ -1256,6 +1256,7 @@ class Central(Connection.Listener):
             self.device.classic_enabled = self.classic
 
             # Set up a pairing config factory with minimal requirements.
+            self.device.config.keystore = "JsonKeyStore"
             self.device.pairing_config_factory = lambda _: PairingConfig(
                 sc=False, mitm=False, bonding=False
             )
@@ -1408,6 +1409,7 @@ class Peripheral(Device.Listener, Connection.Listener):
             self.device.classic_enabled = self.classic
 
             # Set up a pairing config factory with minimal requirements.
+            self.device.config.keystore = "JsonKeyStore"
             self.device.pairing_config_factory = lambda _: PairingConfig(
                 sc=False, mitm=False, bonding=False
             )

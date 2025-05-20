@@ -5,6 +5,7 @@ import numpy.typing as npt
 import bl_operators.node
 import bpy._typing.rna_enums
 import bpy.ops.transform
+import bpy.ops.wm
 import bpy.types
 
 def activate_viewer(
@@ -77,6 +78,25 @@ def add_color(
     :type has_alpha: bool | None
     """
 
+def add_empty_group(
+    execution_context: int | str | None = None,
+    undo: bool | None = None,
+    /,
+    *,
+    use_transform: bool | None = False,
+    settings: bpy.types.bpy_prop_collection[bl_operators.node.NodeSetting]
+    | None = None,
+):
+    """Add a group node with an empty group
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
+    :param use_transform: Use Transform, Start transform operator after inserting the node
+    :type use_transform: bool | None
+    :param settings: Settings, Settings to be applied on the newly created node
+    :type settings: bpy.types.bpy_prop_collection[bl_operators.node.NodeSetting] | None
+    """
+
 def add_foreach_geometry_element_zone(
     execution_context: int | str | None = None,
     undo: bool | None = None,
@@ -139,6 +159,24 @@ def add_group_asset(
     :type asset_library_identifier: str
     :param relative_asset_identifier: Relative Asset Identifier
     :type relative_asset_identifier: str
+    """
+
+def add_group_input_node(
+    execution_context: int | str | None = None,
+    undo: bool | None = None,
+    /,
+    *,
+    socket_identifier: str = "",
+    panel_identifier: int | None = 0,
+):
+    """Add a Group Input node with selected sockets to the current node editor
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
+    :param socket_identifier: Socket Identifier, Socket to include in the added group input/output node
+    :type socket_identifier: str
+    :param panel_identifier: Panel Identifier, Panel from which to add sockets to the added group input/output node
+    :type panel_identifier: int | None
     """
 
 def add_image(
@@ -1237,6 +1275,24 @@ def join(execution_context: int | str | None = None, undo: bool | None = None):
 
     :type execution_context: int | str | None
     :type undo: bool | None
+    """
+
+def join_named(
+    execution_context: int | str | None = None,
+    undo: bool | None = None,
+    /,
+    *,
+    NODE_OT_join: join | None = None,
+    WM_OT_call_panel: bpy.ops.wm.call_panel | None = None,
+):
+    """Create a new frame node around the selected nodes and name it immediately
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
+    :param NODE_OT_join: Join Nodes, Attach selected nodes to a new common frame
+    :type NODE_OT_join: join | None
+    :param WM_OT_call_panel: Call Panel, Open a predefined panel
+    :type WM_OT_call_panel: bpy.ops.wm.call_panel | None
     """
 
 def link(

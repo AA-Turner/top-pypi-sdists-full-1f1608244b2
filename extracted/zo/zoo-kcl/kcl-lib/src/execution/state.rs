@@ -9,11 +9,12 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 #[cfg(feature = "artifact-graph")]
-use crate::execution::{Artifact, ArtifactCommand, ArtifactGraph, ArtifactId, Operation};
+use crate::execution::{Artifact, ArtifactCommand, ArtifactGraph, ArtifactId};
 use crate::{
     errors::{KclError, KclErrorDetails, Severity},
     execution::{
         annotations,
+        cad_op::Operation,
         id_generator::IdGenerator,
         memory::{ProgramMemory, Stack},
         types,
@@ -201,6 +202,13 @@ impl ExecState {
         self.global.artifacts.insert(id, artifact);
     }
 
+    pub(crate) fn push_op(&mut self, op: Operation) {
+        #[cfg(feature = "artifact-graph")]
+        self.global.operations.push(op);
+        #[cfg(not(feature = "artifact-graph"))]
+        drop(op);
+    }
+
     pub(super) fn next_module_id(&self) -> ModuleId {
         ModuleId::from_usize(self.global.path_to_source_id.len())
     }
@@ -268,8 +276,8 @@ impl ExecState {
     }
 
     pub(super) fn circular_import_error(&self, path: &ModulePath, source_range: SourceRange) -> KclError {
-        KclError::ImportCycle(KclErrorDetails {
-            message: format!(
+        KclError::ImportCycle(KclErrorDetails::new(
+            format!(
                 "circular import of modules is not allowed: {} -> {}",
                 self.global
                     .mod_loader
@@ -280,8 +288,8 @@ impl ExecState {
                     .join(" -> "),
                 path,
             ),
-            source_ranges: vec![source_range],
-        })
+            vec![source_range],
+        ))
     }
 
     pub(crate) fn pipe_value(&self) -> Option<&KclValue> {
@@ -381,14 +389,14 @@ impl MetaSettings {
                     self.kcl_version = value;
                 }
                 name => {
-                    return Err(KclError::Semantic(KclErrorDetails {
-                        message: format!(
+                    return Err(KclError::Semantic(KclErrorDetails::new(
+                        format!(
                             "Unexpected settings key: `{name}`; expected one of `{}`, `{}`",
                             annotations::SETTINGS_UNIT_LENGTH,
                             annotations::SETTINGS_UNIT_ANGLE
                         ),
-                        source_ranges: vec![annotation.as_source_range()],
-                    }))
+                        vec![annotation.as_source_range()],
+                    )))
                 }
             }
         }

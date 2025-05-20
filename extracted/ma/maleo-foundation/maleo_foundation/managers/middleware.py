@@ -16,7 +16,7 @@ class GeneralMiddlewareConfigurations(BaseModel):
     allow_origins:List[str] = Field(default_factory=list, description="Allowed origins")
     allow_methods:List[str] = Field(_ALLOW_METHODS, description="Allowed methods")
     allow_headers:list[str] = Field(_ALLOW_HEADERS, description="Allowed headers")
-    allow_credentials:bool = Field(False, description="Allowed credentials")
+    allow_credentials:bool = Field(True, description="Allowed credentials")
 
 class CORSMiddlewareConfigurations(BaseModel):
     expose_headers:List[str] = Field(_EXPOSE_HEADERS, description="Exposed headers")

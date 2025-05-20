@@ -29,6 +29,7 @@ __all__ = [
     'DataAutomationProjectAudioExtractionCategoryType',
     'DataAutomationProjectAudioStandardGenerativeFieldType',
     'DataAutomationProjectBlueprintStage',
+    'DataAutomationProjectDesiredModality',
     'DataAutomationProjectDocumentExtractionGranularityType',
     'DataAutomationProjectDocumentOutputTextFormatType',
     'DataAutomationProjectImageExtractionCategoryType',
@@ -64,7 +65,9 @@ __all__ = [
     'FlowVersionFlowNodeType',
     'FlowVersionFlowStatus',
     'FlowVersionPromptTemplateType',
+    'GuardrailContentFilterAction',
     'GuardrailContentFilterType',
+    'GuardrailContextualGroundingAction',
     'GuardrailContextualGroundingFilterType',
     'GuardrailFilterStrength',
     'GuardrailManagedWordsType',
@@ -72,7 +75,11 @@ __all__ = [
     'GuardrailPiiEntityType',
     'GuardrailSensitiveInformationAction',
     'GuardrailStatus',
+    'GuardrailTopicAction',
     'GuardrailTopicType',
+    'GuardrailWordAction',
+    'IntelligentPromptRouterPromptRouterStatus',
+    'IntelligentPromptRouterPromptRouterType',
     'KnowledgeBaseBedrockEmbeddingModelConfigurationEmbeddingDataType',
     'KnowledgeBaseInclusionType',
     'KnowledgeBaseQueryEngineType',
@@ -257,6 +264,8 @@ class BlueprintType(builtins.str, Enum):
     """
     DOCUMENT = "DOCUMENT"
     IMAGE = "IMAGE"
+    AUDIO = "AUDIO"
+    VIDEO = "VIDEO"
 
 
 class DataAutomationProjectAudioExtractionCategoryType(builtins.str, Enum):
@@ -277,6 +286,13 @@ class DataAutomationProjectBlueprintStage(builtins.str, Enum):
     """
     DEVELOPMENT = "DEVELOPMENT"
     LIVE = "LIVE"
+
+
+class DataAutomationProjectDesiredModality(builtins.str, Enum):
+    DOCUMENT = "DOCUMENT"
+    IMAGE = "IMAGE"
+    VIDEO = "VIDEO"
+    AUDIO = "AUDIO"
 
 
 class DataAutomationProjectDocumentExtractionGranularityType(builtins.str, Enum):
@@ -573,6 +589,11 @@ class FlowVersionPromptTemplateType(builtins.str, Enum):
     TEXT = "TEXT"
 
 
+class GuardrailContentFilterAction(builtins.str, Enum):
+    BLOCK = "BLOCK"
+    NONE = "NONE"
+
+
 class GuardrailContentFilterType(builtins.str, Enum):
     """
     Type of filter in content policy
@@ -583,6 +604,11 @@ class GuardrailContentFilterType(builtins.str, Enum):
     INSULTS = "INSULTS"
     MISCONDUCT = "MISCONDUCT"
     PROMPT_ATTACK = "PROMPT_ATTACK"
+
+
+class GuardrailContextualGroundingAction(builtins.str, Enum):
+    BLOCK = "BLOCK"
+    NONE = "NONE"
 
 
 class GuardrailContextualGroundingFilterType(builtins.str, Enum):
@@ -661,6 +687,7 @@ class GuardrailSensitiveInformationAction(builtins.str, Enum):
     """
     BLOCK = "BLOCK"
     ANONYMIZE = "ANONYMIZE"
+    NONE = "NONE"
 
 
 class GuardrailStatus(builtins.str, Enum):
@@ -675,11 +702,36 @@ class GuardrailStatus(builtins.str, Enum):
     DELETING = "DELETING"
 
 
+class GuardrailTopicAction(builtins.str, Enum):
+    BLOCK = "BLOCK"
+    NONE = "NONE"
+
+
 class GuardrailTopicType(builtins.str, Enum):
     """
     Type of topic in a policy
     """
     DENY = "DENY"
+
+
+class GuardrailWordAction(builtins.str, Enum):
+    BLOCK = "BLOCK"
+    NONE = "NONE"
+
+
+class IntelligentPromptRouterPromptRouterStatus(builtins.str, Enum):
+    """
+    Status of a PromptRouter
+    """
+    AVAILABLE = "AVAILABLE"
+
+
+class IntelligentPromptRouterPromptRouterType(builtins.str, Enum):
+    """
+    Type of a Prompt Router
+    """
+    CUSTOM = "custom"
+    DEFAULT = "default"
 
 
 class KnowledgeBaseBedrockEmbeddingModelConfigurationEmbeddingDataType(builtins.str, Enum):

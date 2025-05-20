@@ -15,6 +15,7 @@ else:
     from typing_extensions import NotRequired, TypedDict, TypeAlias
 from .. import _utilities
 from . import outputs
+from ._enums import *
 
 __all__ = [
     'ApiBodyS3Location',
@@ -27,6 +28,12 @@ __all__ = [
     'IntegrationTlsConfig',
     'RouteParameterConstraints',
     'RouteResponseParameterConstraints',
+    'RoutingRuleAction',
+    'RoutingRuleActionInvokeApi',
+    'RoutingRuleCondition',
+    'RoutingRuleMatchBasePaths',
+    'RoutingRuleMatchHeaderValue',
+    'RoutingRuleMatchHeaders',
 ]
 
 @pulumi.output_type
@@ -248,6 +255,8 @@ class DomainNameConfiguration(dict):
             suggest = "certificate_name"
         elif key == "endpointType":
             suggest = "endpoint_type"
+        elif key == "ipAddressType":
+            suggest = "ip_address_type"
         elif key == "ownershipVerificationCertificateArn":
             suggest = "ownership_verification_certificate_arn"
         elif key == "securityPolicy":
@@ -268,6 +277,7 @@ class DomainNameConfiguration(dict):
                  certificate_arn: Optional[builtins.str] = None,
                  certificate_name: Optional[builtins.str] = None,
                  endpoint_type: Optional[builtins.str] = None,
+                 ip_address_type: Optional[builtins.str] = None,
                  ownership_verification_certificate_arn: Optional[builtins.str] = None,
                  security_policy: Optional[builtins.str] = None):
         """
@@ -276,6 +286,7 @@ class DomainNameConfiguration(dict):
         :param builtins.str certificate_arn: An AWS-managed certificate that will be used by the edge-optimized endpoint for this domain name. AWS Certificate Manager is the only supported source.
         :param builtins.str certificate_name: The user-friendly name of the certificate that will be used by the edge-optimized endpoint for this domain name.
         :param builtins.str endpoint_type: The endpoint type.
+        :param builtins.str ip_address_type: The IP address types that can invoke the domain name. Use `ipv4` to allow only IPv4 addresses to invoke your domain name, or use `dualstack` to allow both IPv4 and IPv6 addresses to invoke your domain name.
         :param builtins.str ownership_verification_certificate_arn: The Amazon resource name (ARN) for the public certificate issued by ACMlong. This ARN is used to validate custom domain ownership. It's required only if you configure mutual TLS and use either an ACM-imported or a private CA certificate ARN as the regionalCertificateArn.
         :param builtins.str security_policy: The Transport Layer Security (TLS) version of the security policy for this domain name. The valid values are ``TLS_1_0`` and ``TLS_1_2``.
         """
@@ -285,6 +296,8 @@ class DomainNameConfiguration(dict):
             pulumi.set(__self__, "certificate_name", certificate_name)
         if endpoint_type is not None:
             pulumi.set(__self__, "endpoint_type", endpoint_type)
+        if ip_address_type is not None:
+            pulumi.set(__self__, "ip_address_type", ip_address_type)
         if ownership_verification_certificate_arn is not None:
             pulumi.set(__self__, "ownership_verification_certificate_arn", ownership_verification_certificate_arn)
         if security_policy is not None:
@@ -313,6 +326,14 @@ class DomainNameConfiguration(dict):
         The endpoint type.
         """
         return pulumi.get(self, "endpoint_type")
+
+    @property
+    @pulumi.getter(name="ipAddressType")
+    def ip_address_type(self) -> Optional[builtins.str]:
+        """
+        The IP address types that can invoke the domain name. Use `ipv4` to allow only IPv4 addresses to invoke your domain name, or use `dualstack` to allow both IPv4 and IPv6 addresses to invoke your domain name.
+        """
+        return pulumi.get(self, "ip_address_type")
 
     @property
     @pulumi.getter(name="ownershipVerificationCertificateArn")
@@ -520,5 +541,214 @@ class RouteResponseParameterConstraints(dict):
         Specifies whether the parameter is required.
         """
         return pulumi.get(self, "required")
+
+
+@pulumi.output_type
+class RoutingRuleAction(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "invokeApi":
+            suggest = "invoke_api"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in RoutingRuleAction. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        RoutingRuleAction.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        RoutingRuleAction.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 invoke_api: 'outputs.RoutingRuleActionInvokeApi'):
+        pulumi.set(__self__, "invoke_api", invoke_api)
+
+    @property
+    @pulumi.getter(name="invokeApi")
+    def invoke_api(self) -> 'outputs.RoutingRuleActionInvokeApi':
+        return pulumi.get(self, "invoke_api")
+
+
+@pulumi.output_type
+class RoutingRuleActionInvokeApi(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "apiId":
+            suggest = "api_id"
+        elif key == "stripBasePath":
+            suggest = "strip_base_path"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in RoutingRuleActionInvokeApi. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        RoutingRuleActionInvokeApi.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        RoutingRuleActionInvokeApi.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 api_id: builtins.str,
+                 stage: builtins.str,
+                 strip_base_path: Optional[builtins.bool] = None):
+        pulumi.set(__self__, "api_id", api_id)
+        pulumi.set(__self__, "stage", stage)
+        if strip_base_path is not None:
+            pulumi.set(__self__, "strip_base_path", strip_base_path)
+
+    @property
+    @pulumi.getter(name="apiId")
+    def api_id(self) -> builtins.str:
+        return pulumi.get(self, "api_id")
+
+    @property
+    @pulumi.getter
+    def stage(self) -> builtins.str:
+        return pulumi.get(self, "stage")
+
+    @property
+    @pulumi.getter(name="stripBasePath")
+    def strip_base_path(self) -> Optional[builtins.bool]:
+        return pulumi.get(self, "strip_base_path")
+
+
+@pulumi.output_type
+class RoutingRuleCondition(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "matchBasePaths":
+            suggest = "match_base_paths"
+        elif key == "matchHeaders":
+            suggest = "match_headers"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in RoutingRuleCondition. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        RoutingRuleCondition.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        RoutingRuleCondition.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 match_base_paths: Optional['outputs.RoutingRuleMatchBasePaths'] = None,
+                 match_headers: Optional['outputs.RoutingRuleMatchHeaders'] = None):
+        if match_base_paths is not None:
+            pulumi.set(__self__, "match_base_paths", match_base_paths)
+        if match_headers is not None:
+            pulumi.set(__self__, "match_headers", match_headers)
+
+    @property
+    @pulumi.getter(name="matchBasePaths")
+    def match_base_paths(self) -> Optional['outputs.RoutingRuleMatchBasePaths']:
+        return pulumi.get(self, "match_base_paths")
+
+    @property
+    @pulumi.getter(name="matchHeaders")
+    def match_headers(self) -> Optional['outputs.RoutingRuleMatchHeaders']:
+        return pulumi.get(self, "match_headers")
+
+
+@pulumi.output_type
+class RoutingRuleMatchBasePaths(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "anyOf":
+            suggest = "any_of"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in RoutingRuleMatchBasePaths. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        RoutingRuleMatchBasePaths.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        RoutingRuleMatchBasePaths.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 any_of: Sequence[builtins.str]):
+        pulumi.set(__self__, "any_of", any_of)
+
+    @property
+    @pulumi.getter(name="anyOf")
+    def any_of(self) -> Sequence[builtins.str]:
+        return pulumi.get(self, "any_of")
+
+
+@pulumi.output_type
+class RoutingRuleMatchHeaderValue(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "valueGlob":
+            suggest = "value_glob"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in RoutingRuleMatchHeaderValue. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        RoutingRuleMatchHeaderValue.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        RoutingRuleMatchHeaderValue.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 header: builtins.str,
+                 value_glob: builtins.str):
+        pulumi.set(__self__, "header", header)
+        pulumi.set(__self__, "value_glob", value_glob)
+
+    @property
+    @pulumi.getter
+    def header(self) -> builtins.str:
+        return pulumi.get(self, "header")
+
+    @property
+    @pulumi.getter(name="valueGlob")
+    def value_glob(self) -> builtins.str:
+        return pulumi.get(self, "value_glob")
+
+
+@pulumi.output_type
+class RoutingRuleMatchHeaders(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "anyOf":
+            suggest = "any_of"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in RoutingRuleMatchHeaders. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        RoutingRuleMatchHeaders.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        RoutingRuleMatchHeaders.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 any_of: Sequence['outputs.RoutingRuleMatchHeaderValue']):
+        pulumi.set(__self__, "any_of", any_of)
+
+    @property
+    @pulumi.getter(name="anyOf")
+    def any_of(self) -> Sequence['outputs.RoutingRuleMatchHeaderValue']:
+        return pulumi.get(self, "any_of")
 
 

@@ -17,6 +17,9 @@ class SideLight(DataClassORJSONMixin):
 @dataclass
 class MowerInfo(DataClassORJSONMixin):
     blade_status: bool = False
+    rain_detection: bool = False
+    traversal_mode: int = 0
+    turning_mode: int = 0
     side_led: SideLight = field(default_factory=SideLight)
     collector_installation_status: bool = False
     model: str = ""

@@ -122,7 +122,7 @@ class CloudDeployment(object):
     def provider(self):
         """Gets the provider of this CloudDeployment.  # noqa: E501
 
-        The cloud provider type (AWS, GCP, PCP, or GENERIC).  # noqa: E501
+        The cloud provider type (AWS, GCP, PCP, AZURE, or GENERIC).  # noqa: E501
 
         :return: The provider of this CloudDeployment.  # noqa: E501
         :rtype: CloudProviders
@@ -133,7 +133,7 @@ class CloudDeployment(object):
     def provider(self, provider):
         """Sets the provider of this CloudDeployment.
 
-        The cloud provider type (AWS, GCP, PCP, or GENERIC).  # noqa: E501
+        The cloud provider type (AWS, GCP, PCP, AZURE, or GENERIC).  # noqa: E501
 
         :param provider: The provider of this CloudDeployment.  # noqa: E501
         :type: CloudProviders

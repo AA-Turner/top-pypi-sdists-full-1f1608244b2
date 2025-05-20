@@ -29,7 +29,7 @@ def to_string(
         :type precision: int | None
         :param split_unit: Whether to use several units if needed (1m1cm), or always only one (1.01m).
         :type split_unit: bool | None
-        :param compatible_unit: Whether to use keyboard-friendly units (1m2) or nicer utf-8 ones (1m²).
+        :param compatible_unit: Whether to use keyboard-friendly units (1m2) or nicer UTF8 ones (1m²).
         :type compatible_unit: bool | None
         :return: The converted string.
         :rtype: str

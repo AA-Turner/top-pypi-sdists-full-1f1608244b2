@@ -1,4 +1,4 @@
-from statsig_python_core import Statsig, StatsigOptions, StatsigUser, ObservabilityClient
+from statsig_python_core import Statsig, StatsigOptions, StatsigUser
 from pytest_httpserver import HTTPServer
 import json
 from utils import get_test_data_resource

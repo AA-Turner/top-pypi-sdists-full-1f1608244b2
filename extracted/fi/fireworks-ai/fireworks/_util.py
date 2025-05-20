@@ -1,5 +1,6 @@
 import asyncio
 from typing import Coroutine, Any, TypeVar
+import nest_asyncio
 
 T = TypeVar("T")
 
@@ -17,10 +18,15 @@ def run_coroutine_in_appropriate_loop(coro: Coroutine[Any, Any, T]) -> T:
         The result of the coroutine
     """
     # Try to run the coroutine in the current event loop if possible
-    loop = asyncio.get_event_loop()
-    if loop.is_running():
-        future = asyncio.run_coroutine_threadsafe(coro, loop)
-        return future.result()
-    else:
-        # If we're not in an async context, we can run until complete
+    try:
+        # only solution I found for running loop inside another loop:
+        # https://github.com/python/cpython/issues/66435#issuecomment-2003904906
+        nest_asyncio.apply()
+        loop = asyncio.get_event_loop()
         return loop.run_until_complete(coro)
+    except RuntimeError as e:
+        # if "There is no current event loop in thread"
+        if "There is no current event loop in thread" in str(e):
+            return asyncio.run(coro)
+        else:
+            raise e

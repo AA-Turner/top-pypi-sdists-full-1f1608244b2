@@ -265,10 +265,8 @@ class NspAccessRuleArgs:
         pulumi.set(self, "tags", value)
 
 
+@pulumi.type_token("azure-native:network:NspAccessRule")
 class NspAccessRule(pulumi.CustomResource):
-
-    pulumi_type = "azure-native:network:NspAccessRule"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -391,7 +389,7 @@ class NspAccessRule(pulumi.CustomResource):
             __props__.__dict__["network_security_perimeters"] = None
             __props__.__dict__["provisioning_state"] = None
             __props__.__dict__["type"] = None
-        alias_opts = pulumi.ResourceOptions(aliases=[pulumi.Alias(type_="azure-native:network/v20210201preview:NspAccessRule"), pulumi.Alias(type_="azure-native:network/v20230701preview:NspAccessRule"), pulumi.Alias(type_="azure-native:network/v20230801preview:NspAccessRule"), pulumi.Alias(type_="azure-native:network/v20240601preview:NspAccessRule")])
+        alias_opts = pulumi.ResourceOptions(aliases=[pulumi.Alias(type_="azure-native:network/v20210201preview:NspAccessRule"), pulumi.Alias(type_="azure-native:network/v20230701preview:NspAccessRule"), pulumi.Alias(type_="azure-native:network/v20230801preview:NspAccessRule"), pulumi.Alias(type_="azure-native:network/v20240601preview:NspAccessRule"), pulumi.Alias(type_="azure-native:network/v20240701:NspAccessRule")])
         opts = pulumi.ResourceOptions.merge(opts, alias_opts)
         super(NspAccessRule, __self__).__init__(
             'azure-native:network:NspAccessRule',

@@ -8,8 +8,7 @@ from packaging import version
 
 from anyscale.authenticate import get_auth_api_client
 from anyscale.cli_logger import BlockLogger
-from anyscale.client.openapi_client.models.build import Build
-from anyscale.client.openapi_client.models.session import Session
+from anyscale.client.openapi_client.models import Build, CreateComputeTemplate, Session
 from anyscale.cluster_compute import (
     get_cluster_compute_from_name,
     get_selected_cloud_id_or_default,
@@ -19,7 +18,6 @@ from anyscale.links import DOCS_CLUSTER
 from anyscale.sdk.anyscale_client import (
     ComputeTemplateConfig,
     CreateCluster,
-    CreateComputeTemplate,
     StartClusterOptions,
     UpdateCluster,
 )

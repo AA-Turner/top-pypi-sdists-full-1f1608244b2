@@ -15,7 +15,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n%qwak/automation/v1/auto_scaling.proto\x12\x12qwak.automation.v1\"\xad\x01\n\x11\x41utoScalingConfig\x12\x19\n\x11min_replica_count\x18\x01 \x01(\x05\x12\x19\n\x11max_replica_count\x18\x02 \x01(\x05\x12\x18\n\x10polling_interval\x18\x03 \x01(\x05\x12\x18\n\x10\x63ool_down_period\x18\x04 \x01(\x05\x12.\n\x08triggers\x18\x05 \x01(\x0b\x32\x1c.qwak.automation.v1.Triggers\">\n\x08Triggers\x12\x32\n\x08triggers\x18\x01 \x03(\x0b\x32 .qwak.automation.v1.ScaleTrigger\"n\n\x0cScaleTrigger\x12N\n\x12prometheus_trigger\x18\x01 \x01(\x0b\x32\x30.qwak.automation.v1.AutoScalingPrometheusTriggerH\x00\x42\x0e\n\x0ctrigger_type\"d\n\x1c\x41utoScalingPrometheusTrigger\x12\x31\n\nquery_spec\x18\x01 \x01(\x0b\x32\x1d.qwak.automation.v1.QuerySpec\x12\x11\n\tthreshold\x18\x02 \x01(\x05\"\xaa\x01\n\tQuerySpec\x12>\n\x0bmetric_type\x18\x01 \x01(\x0e\x32).qwak.automation.v1.AutoScalingMetricType\x12H\n\x10\x61ggregation_type\x18\x02 \x01(\x0e\x32..qwak.automation.v1.AutoScalingAggregationType\x12\x13\n\x0btime_period\x18\x03 \x01(\x05*x\n\x15\x41utoScalingMetricType\x12\x19\n\x15METRIC_TYPE_NOT_VALID\x10\x00\x12\x13\n\x0fMETRIC_TYPE_CPU\x10\x01\x12\x16\n\x12METRIC_TYPE_MEMORY\x10\x02\x12\x17\n\x13METRIC_TYPE_LATENCY\x10\x03*\x90\x02\n\x1a\x41utoScalingAggregationType\x12\x1e\n\x1a\x41GGREGATION_TYPE_NOT_VALID\x10\x00\x12\x18\n\x14\x41GGREGATION_TYPE_MIN\x10\x01\x12\x18\n\x14\x41GGREGATION_TYPE_MAX\x10\x02\x12\x1c\n\x18\x41GGREGATION_TYPE_AVERAGE\x10\x03\x12\x18\n\x14\x41GGREGATION_TYPE_SUM\x10\x04\x12\x18\n\x14\x41GGREGATION_TYPE_P50\x10\x05\x12\x18\n\x14\x41GGREGATION_TYPE_P90\x10\x06\x12\x18\n\x14\x41GGREGATION_TYPE_P95\x10\x07\x12\x18\n\x14\x41GGREGATION_TYPE_P99\x10\x08\x42!\n\x1d\x63om.qwak.ai.automation.api.v1P\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n%qwak/automation/v1/auto_scaling.proto\x12\x12qwak.automation.v1\"\xad\x01\n\x11\x41utoScalingConfig\x12\x19\n\x11min_replica_count\x18\x01 \x01(\x05\x12\x19\n\x11max_replica_count\x18\x02 \x01(\x05\x12\x18\n\x10polling_interval\x18\x03 \x01(\x05\x12\x18\n\x10\x63ool_down_period\x18\x04 \x01(\x05\x12.\n\x08triggers\x18\x05 \x01(\x0b\x32\x1c.qwak.automation.v1.Triggers\">\n\x08Triggers\x12\x32\n\x08triggers\x18\x01 \x03(\x0b\x32 .qwak.automation.v1.ScaleTrigger\"n\n\x0cScaleTrigger\x12N\n\x12prometheus_trigger\x18\x01 \x01(\x0b\x32\x30.qwak.automation.v1.AutoScalingPrometheusTriggerH\x00\x42\x0e\n\x0ctrigger_type\"d\n\x1c\x41utoScalingPrometheusTrigger\x12\x31\n\nquery_spec\x18\x01 \x01(\x0b\x32\x1d.qwak.automation.v1.QuerySpec\x12\x11\n\tthreshold\x18\x02 \x01(\x05\"\xaa\x01\n\tQuerySpec\x12>\n\x0bmetric_type\x18\x01 \x01(\x0e\x32).qwak.automation.v1.AutoScalingMetricType\x12H\n\x10\x61ggregation_type\x18\x02 \x01(\x0e\x32..qwak.automation.v1.AutoScalingAggregationType\x12\x13\n\x0btime_period\x18\x03 \x01(\x05*\xc5\x01\n\x15\x41utoScalingMetricType\x12\x19\n\x15METRIC_TYPE_NOT_VALID\x10\x00\x12\x13\n\x0fMETRIC_TYPE_CPU\x10\x01\x12\x16\n\x12METRIC_TYPE_MEMORY\x10\x02\x12\x17\n\x13METRIC_TYPE_LATENCY\x10\x03\x12\x13\n\x0fMETRIC_TYPE_GPU\x10\x04\x12\x1a\n\x16METRIC_TYPE_ERROR_RATE\x10\x05\x12\x1a\n\x16METRIC_TYPE_THROUGHPUT\x10\x06*\x90\x02\n\x1a\x41utoScalingAggregationType\x12\x1e\n\x1a\x41GGREGATION_TYPE_NOT_VALID\x10\x00\x12\x18\n\x14\x41GGREGATION_TYPE_MIN\x10\x01\x12\x18\n\x14\x41GGREGATION_TYPE_MAX\x10\x02\x12\x1c\n\x18\x41GGREGATION_TYPE_AVERAGE\x10\x03\x12\x18\n\x14\x41GGREGATION_TYPE_SUM\x10\x04\x12\x18\n\x14\x41GGREGATION_TYPE_P50\x10\x05\x12\x18\n\x14\x41GGREGATION_TYPE_P90\x10\x06\x12\x18\n\x14\x41GGREGATION_TYPE_P95\x10\x07\x12\x18\n\x14\x41GGREGATION_TYPE_P99\x10\x08\x42!\n\x1d\x63om.qwak.ai.automation.api.v1P\x01\x62\x06proto3')
 
 _AUTOSCALINGMETRICTYPE = DESCRIPTOR.enum_types_by_name['AutoScalingMetricType']
 AutoScalingMetricType = enum_type_wrapper.EnumTypeWrapper(_AUTOSCALINGMETRICTYPE)
@@ -25,6 +25,9 @@ METRIC_TYPE_NOT_VALID = 0
 METRIC_TYPE_CPU = 1
 METRIC_TYPE_MEMORY = 2
 METRIC_TYPE_LATENCY = 3
+METRIC_TYPE_GPU = 4
+METRIC_TYPE_ERROR_RATE = 5
+METRIC_TYPE_THROUGHPUT = 6
 AGGREGATION_TYPE_NOT_VALID = 0
 AGGREGATION_TYPE_MIN = 1
 AGGREGATION_TYPE_MAX = 2
@@ -80,10 +83,10 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'\n\035com.qwak.ai.automation.api.v1P\001'
-  _AUTOSCALINGMETRICTYPE._serialized_start=688
-  _AUTOSCALINGMETRICTYPE._serialized_end=808
-  _AUTOSCALINGAGGREGATIONTYPE._serialized_start=811
-  _AUTOSCALINGAGGREGATIONTYPE._serialized_end=1083
+  _AUTOSCALINGMETRICTYPE._serialized_start=689
+  _AUTOSCALINGMETRICTYPE._serialized_end=886
+  _AUTOSCALINGAGGREGATIONTYPE._serialized_start=889
+  _AUTOSCALINGAGGREGATIONTYPE._serialized_end=1161
   _AUTOSCALINGCONFIG._serialized_start=62
   _AUTOSCALINGCONFIG._serialized_end=235
   _TRIGGERS._serialized_start=237

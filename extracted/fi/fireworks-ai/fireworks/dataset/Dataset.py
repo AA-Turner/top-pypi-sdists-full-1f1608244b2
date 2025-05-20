@@ -2,6 +2,7 @@ import io
 import json
 import logging
 import os
+from asyncstdlib import cache
 import httpx
 import atexit
 from typing import Optional, Union, BinaryIO
@@ -55,6 +56,8 @@ class Dataset:
             raise ValueError("Cannot provide both path and data")
         if not path and not data:
             raise ValueError("Must provide either path or data")
+        if path and not path.endswith(".jsonl"):
+            raise ValueError("File must be a JSONL file")
 
         if path:
             self._path = path
@@ -80,7 +83,7 @@ class Dataset:
 
     async def sync(self):
         """
-        Upload this dataset to Fireworks
+        Upload this dataset to Fireworks if it doesn't already exist.
         """
         # check if dataset exists by hash
         dataset = await self.get()
@@ -144,14 +147,24 @@ class Dataset:
         """
         if self._path:
             return os.path.basename(self._path)
-        return "inmemory"
+        return "inmemory.jsonl"
 
     @property
     def name(self):
         """
         Generates a name for this dataset in the form of "dataset-{hash(self)}-{filename}"
         """
-        return f"dataset-{hash(self)}-{self.filename()}"
+        # remove ext from filename
+        file_without_ext = os.path.splitext(self.filename())[0]
+        return f"dataset-{hash(self)}-{file_without_ext}"
+
+    @cache
+    async def id(self):
+        return await self._id()
+
+    async def _id(self):
+        account_id = await self._gateway.account_id()
+        return f"accounts/{account_id}/datasets/{self.name}"
 
     @property
     def stream(self) -> BinaryIO:

@@ -24,8 +24,10 @@ from .literals import (
     AdMarkerDashType,
     CmafEncryptionMethodType,
     ContainerTypeType,
+    DashCompactnessType,
     DashDrmSignalingType,
     DashPeriodTriggerType,
+    DashTtmlProfileType,
     DashUtcTimingModeType,
     DrmSystemType,
     EndpointErrorConditionType,
@@ -63,6 +65,15 @@ __all__ = (
     "CreateLowLatencyHlsManifestConfigurationTypeDef",
     "CreateOriginEndpointRequestTypeDef",
     "CreateOriginEndpointResponseTypeDef",
+    "DashBaseUrlTypeDef",
+    "DashDvbFontDownloadTypeDef",
+    "DashDvbMetricsReportingTypeDef",
+    "DashDvbSettingsOutputTypeDef",
+    "DashDvbSettingsTypeDef",
+    "DashDvbSettingsUnionTypeDef",
+    "DashProgramInformationTypeDef",
+    "DashSubtitleConfigurationTypeDef",
+    "DashTtmlConfigurationTypeDef",
     "DashUtcTimingTypeDef",
     "DeleteChannelGroupRequestTypeDef",
     "DeleteChannelPolicyRequestTypeDef",
@@ -205,6 +216,19 @@ class IngestEndpointTypeDef(TypedDict):
     Id: NotRequired[str]
     Url: NotRequired[str]
 
+class DashBaseUrlTypeDef(TypedDict):
+    Url: str
+    ServiceLocation: NotRequired[str]
+    DvbPriority: NotRequired[int]
+    DvbWeight: NotRequired[int]
+
+class DashProgramInformationTypeDef(TypedDict):
+    Title: NotRequired[str]
+    Source: NotRequired[str]
+    Copyright: NotRequired[str]
+    LanguageCode: NotRequired[str]
+    MoreInformationUrl: NotRequired[str]
+
 class DashUtcTimingTypeDef(TypedDict):
     TimingMode: NotRequired[DashUtcTimingModeType]
     TimingSource: NotRequired[str]
@@ -225,6 +249,18 @@ class StartTagTypeDef(TypedDict):
 
 class ForceEndpointErrorConfigurationOutputTypeDef(TypedDict):
     EndpointErrorConditions: NotRequired[List[EndpointErrorConditionType]]
+
+class DashDvbFontDownloadTypeDef(TypedDict):
+    Url: NotRequired[str]
+    MimeType: NotRequired[str]
+    FontFamily: NotRequired[str]
+
+class DashDvbMetricsReportingTypeDef(TypedDict):
+    ReportingUrl: str
+    Probability: NotRequired[int]
+
+class DashTtmlConfigurationTypeDef(TypedDict):
+    TtmlProfile: DashTtmlProfileType
 
 class DeleteChannelGroupRequestTypeDef(TypedDict):
     ChannelGroupName: str
@@ -537,6 +573,17 @@ class UpdateChannelResponseTypeDef(TypedDict):
     OutputHeaderConfiguration: OutputHeaderConfigurationTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
+class DashDvbSettingsOutputTypeDef(TypedDict):
+    FontDownload: NotRequired[DashDvbFontDownloadTypeDef]
+    ErrorMetrics: NotRequired[List[DashDvbMetricsReportingTypeDef]]
+
+class DashDvbSettingsTypeDef(TypedDict):
+    FontDownload: NotRequired[DashDvbFontDownloadTypeDef]
+    ErrorMetrics: NotRequired[Sequence[DashDvbMetricsReportingTypeDef]]
+
+class DashSubtitleConfigurationTypeDef(TypedDict):
+    TtmlConfiguration: NotRequired[DashTtmlConfigurationTypeDef]
+
 class DestinationTypeDef(TypedDict):
     S3Destination: S3DestinationConfigTypeDef
 
@@ -553,20 +600,6 @@ class SpekeKeyProviderTypeDef(TypedDict):
     DrmSystems: Sequence[DrmSystemType]
     RoleArn: str
     Url: str
-
-class GetDashManifestConfigurationTypeDef(TypedDict):
-    ManifestName: str
-    Url: str
-    ManifestWindowSeconds: NotRequired[int]
-    FilterConfiguration: NotRequired[FilterConfigurationOutputTypeDef]
-    MinUpdatePeriodSeconds: NotRequired[int]
-    MinBufferTimeSeconds: NotRequired[int]
-    SuggestedPresentationDelaySeconds: NotRequired[int]
-    SegmentTemplateFormat: NotRequired[Literal["NUMBER_WITH_TIMELINE"]]
-    PeriodTriggers: NotRequired[List[DashPeriodTriggerType]]
-    ScteDash: NotRequired[ScteDashTypeDef]
-    DrmSignaling: NotRequired[DashDrmSignalingType]
-    UtcTiming: NotRequired[DashUtcTimingTypeDef]
 
 class GetHlsManifestConfigurationTypeDef(TypedDict):
     ManifestName: str
@@ -654,6 +687,28 @@ class OriginEndpointListConfigurationTypeDef(TypedDict):
     LowLatencyHlsManifests: NotRequired[List[ListLowLatencyHlsManifestConfigurationTypeDef]]
     DashManifests: NotRequired[List[ListDashManifestConfigurationTypeDef]]
     ForceEndpointErrorConfiguration: NotRequired[ForceEndpointErrorConfigurationOutputTypeDef]
+
+DashDvbSettingsUnionTypeDef = Union[DashDvbSettingsTypeDef, DashDvbSettingsOutputTypeDef]
+
+class GetDashManifestConfigurationTypeDef(TypedDict):
+    ManifestName: str
+    Url: str
+    ManifestWindowSeconds: NotRequired[int]
+    FilterConfiguration: NotRequired[FilterConfigurationOutputTypeDef]
+    MinUpdatePeriodSeconds: NotRequired[int]
+    MinBufferTimeSeconds: NotRequired[int]
+    SuggestedPresentationDelaySeconds: NotRequired[int]
+    SegmentTemplateFormat: NotRequired[Literal["NUMBER_WITH_TIMELINE"]]
+    PeriodTriggers: NotRequired[List[DashPeriodTriggerType]]
+    ScteDash: NotRequired[ScteDashTypeDef]
+    DrmSignaling: NotRequired[DashDrmSignalingType]
+    UtcTiming: NotRequired[DashUtcTimingTypeDef]
+    Profiles: NotRequired[List[Literal["DVB_DASH"]]]
+    BaseUrls: NotRequired[List[DashBaseUrlTypeDef]]
+    ProgramInformation: NotRequired[DashProgramInformationTypeDef]
+    DvbSettings: NotRequired[DashDvbSettingsOutputTypeDef]
+    Compactness: NotRequired[DashCompactnessType]
+    SubtitleConfiguration: NotRequired[DashSubtitleConfigurationTypeDef]
 
 class EncryptionOutputTypeDef(TypedDict):
     EncryptionMethod: EncryptionMethodTypeDef
@@ -763,6 +818,12 @@ class CreateDashManifestConfigurationTypeDef(TypedDict):
     ScteDash: NotRequired[ScteDashTypeDef]
     DrmSignaling: NotRequired[DashDrmSignalingType]
     UtcTiming: NotRequired[DashUtcTimingTypeDef]
+    Profiles: NotRequired[Sequence[Literal["DVB_DASH"]]]
+    BaseUrls: NotRequired[Sequence[DashBaseUrlTypeDef]]
+    ProgramInformation: NotRequired[DashProgramInformationTypeDef]
+    DvbSettings: NotRequired[DashDvbSettingsUnionTypeDef]
+    Compactness: NotRequired[DashCompactnessType]
+    SubtitleConfiguration: NotRequired[DashSubtitleConfigurationTypeDef]
 
 class CreateHlsManifestConfigurationTypeDef(TypedDict):
     ManifestName: str

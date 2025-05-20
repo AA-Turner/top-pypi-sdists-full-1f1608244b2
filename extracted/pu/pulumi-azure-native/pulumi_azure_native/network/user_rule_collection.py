@@ -119,10 +119,8 @@ class UserRuleCollectionArgs:
         pulumi.set(self, "rule_collection_name", value)
 
 
+@pulumi.type_token("azure-native:network:UserRuleCollection")
 class UserRuleCollection(pulumi.CustomResource):
-
-    pulumi_type = "azure-native:network:UserRuleCollection"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -213,7 +211,7 @@ class UserRuleCollection(pulumi.CustomResource):
             __props__.__dict__["provisioning_state"] = None
             __props__.__dict__["system_data"] = None
             __props__.__dict__["type"] = None
-        alias_opts = pulumi.ResourceOptions(aliases=[pulumi.Alias(type_="azure-native:network/v20210201preview:UserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20210501preview:UserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20220201preview:UserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20220401preview:UserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20240301:SecurityUserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20240301:UserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20240501:SecurityUserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20240501:UserRuleCollection"), pulumi.Alias(type_="azure-native:network:SecurityUserRuleCollection")])
+        alias_opts = pulumi.ResourceOptions(aliases=[pulumi.Alias(type_="azure-native:network/v20210201preview:UserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20210501preview:UserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20220201preview:UserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20220401preview:UserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20240301:SecurityUserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20240301:UserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20240501:SecurityUserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20240501:UserRuleCollection"), pulumi.Alias(type_="azure-native:network/v20240701:UserRuleCollection"), pulumi.Alias(type_="azure-native:network:SecurityUserRuleCollection")])
         opts = pulumi.ResourceOptions.merge(opts, alias_opts)
         super(UserRuleCollection, __self__).__init__(
             'azure-native:network:UserRuleCollection',

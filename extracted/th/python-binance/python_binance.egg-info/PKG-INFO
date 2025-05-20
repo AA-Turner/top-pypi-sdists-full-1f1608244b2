@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: python-binance
-Version: 1.0.28
+Version: 1.0.29
 Summary: Binance REST API python implementation
 Home-page: https://github.com/sammchardy/python-binance
 Author: Sam McHardy
@@ -31,7 +31,7 @@ Requires-Dist: websockets
 Requires-Dist: pycryptodome
 
 =================================
-Welcome to python-binance v1.0.28
+Welcome to python-binance v1.0.29
 =================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg

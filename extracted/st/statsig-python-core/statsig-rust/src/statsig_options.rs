@@ -6,10 +6,11 @@ use crate::evaluation::dynamic_value::DynamicValue;
 use crate::event_logging_adapter::EventLoggingAdapter;
 use crate::id_lists_adapter::IdListsAdapter;
 use crate::networking::proxy_config::ProxyConfig;
-use crate::output_logger::LogLevel;
+use crate::output_logger::{LogLevel, OutputLogProvider};
 use crate::persistent_storage::persistent_storage_trait::PersistentStorage;
 use crate::{
-    serialize_if_not_none, ObservabilityClient, OverrideAdapter, SpecAdapterConfig, SpecsAdapter,
+    serialize_if_not_none, ConfigCompressionMode, ObservabilityClient, OverrideAdapter,
+    SpecAdapterConfig, SpecsAdapter,
 };
 use std::collections::HashMap;
 use std::fmt;
@@ -28,6 +29,7 @@ pub struct StatsigOptions {
 
     pub enable_id_lists: Option<bool>,
     pub environment: Option<String>,
+    pub config_compression_mode: Option<ConfigCompressionMode>,
 
     pub event_logging_adapter: Option<Arc<dyn EventLoggingAdapter>>,
 
@@ -47,6 +49,7 @@ pub struct StatsigOptions {
     pub log_event_url: Option<String>,
     pub observability_client: Option<Weak<dyn ObservabilityClient>>,
     pub output_log_level: Option<LogLevel>,
+    pub output_logger_provider: Option<Arc<dyn OutputLogProvider>>,
     pub override_adapter: Option<Arc<dyn OverrideAdapter>>,
     pub persistent_storage: Option<Arc<dyn PersistentStorage>>,
     pub service_name: Option<String>,
@@ -202,10 +205,28 @@ impl StatsigOptionsBuilder {
     }
 
     #[must_use]
+    pub fn config_compression_mode(
+        mut self,
+        config_compression_mode: Option<ConfigCompressionMode>,
+    ) -> Self {
+        self.inner.config_compression_mode = config_compression_mode;
+        self
+    }
+
+    #[must_use]
     pub fn output_log_level(mut self, output_log_level: Option<u32>) -> Self {
         if let Some(level) = output_log_level {
             self.inner.output_log_level = Some(LogLevel::from(level));
         }
+        self
+    }
+
+    #[must_use]
+    pub fn output_logger_provider(
+        mut self,
+        output_logger_provider: Option<Arc<dyn OutputLogProvider>>,
+    ) -> Self {
+        self.inner.output_logger_provider = output_logger_provider;
         self
     }
 

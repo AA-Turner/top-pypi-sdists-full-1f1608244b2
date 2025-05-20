@@ -1,3 +1,4 @@
+from ._queue import BeakerEntryReceiver, BeakerEntrySender
 from .client import Beaker
 from .types import (
     BeakerAuthRole,
@@ -20,6 +21,9 @@ from .types import (
     BeakerJobPriority,
     BeakerNode,
     BeakerOrganization,
+    BeakerQueue,
+    BeakerQueueEntry,
+    BeakerQueueWorker,
     BeakerResultSpec,
     BeakerRetrySpec,
     BeakerSecret,
@@ -72,4 +76,9 @@ __all__ = [
     "BeakerUser",
     "BeakerEnvironment",
     "BeakerWorkspace",
+    "BeakerEntrySender",
+    "BeakerEntryReceiver",
+    "BeakerQueue",
+    "BeakerQueueWorker",
+    "BeakerQueueEntry",
 ]

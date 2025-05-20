@@ -1873,7 +1873,8 @@ class BccClient(bce_base_client.BceBaseClient):
                                    billing=None,
                                    related_renew_flag=None,
                                    client_token=None,
-                                   config=None):
+                                   config=None,
+                                   cds_custom_period=None):
         """
         PurchaseReserved the instance with fixed duration.
         You can not purchaseReserved the instance which is resizing.
@@ -1892,6 +1893,10 @@ class BccClient(bce_base_client.BceBaseClient):
             Detailed information see: https://cloud.baidu.com/doc/BCC/s/6jwvyo0q2#relatedrenewflag
         :type related_renew_flag: string
 
+        :param cds_custom_period:
+            Custom renew period for CDS.
+        :type cds_custom_period: list
+
         :param client_token:
             An ASCII string whose length is less than 64.
             The request will be idempotent if client token is provided.
@@ -1908,8 +1913,12 @@ class BccClient(bce_base_client.BceBaseClient):
         path = b'/instance/%s' % instance_id
         if billing is None:
             billing = default_billing_to_purchase_reserved
+        cds_custom_period_list = []
+        if cds_custom_period is not None:
+            cds_custom_period_list = [custom_period.__dict__ for custom_period in cds_custom_period]
         body = {
-            'billing': billing.__dict__
+            'billing': billing.__dict__,
+            "cdsCustomPeriod": cds_custom_period_list
         }
         params = None
         if client_token is None:
@@ -2223,6 +2232,7 @@ class BccClient(bce_base_client.BceBaseClient):
 
     def list_volumes(self, instance_id=None, zone_name=None, marker=None, max_keys=None,
                      cluster_id=None,
+                     volume_ids=None,
                      config=None):
         """
         Listing volumes owned by the authenticated user.
@@ -2251,6 +2261,9 @@ class BccClient(bce_base_client.BceBaseClient):
         :param cluster_id:
         :type cluster_id: string
 
+        :param volume_ids:
+        :type volume_ids: string
+
         :return:
         :rtype baidubce.bce_response.BceResponse
         """
@@ -2266,6 +2279,8 @@ class BccClient(bce_base_client.BceBaseClient):
             params['maxKeys'] = max_keys
         if cluster_id is not None:
             params['clusterId'] = cluster_id
+        if volume_ids is not None:
+            params['volumeIds'] = volume_ids
         return self._send_request(http_methods.GET, path, params=params, config=config)
 
     @required(volume_id=(bytes, str))  # ***Unicode***
@@ -2483,7 +2498,8 @@ class BccClient(bce_base_client.BceBaseClient):
                                  volume_id,
                                  billing=None,
                                  client_token=None,
-                                 config=None):
+                                 config=None,
+                                 instance_id=None):
         """
         PurchaseReserved the instance with fixed duration.
         You can not purchaseReserved the instance which is resizing.
@@ -2497,6 +2513,9 @@ class BccClient(bce_base_client.BceBaseClient):
         :param billing:
             Billing information.
         :type billing: bcc_model.Billing
+
+        :param instance_id:
+            The id of instance to align renew duarion.
 
         :param client_token:
             An ASCII string whose length is less than 64.
@@ -2515,7 +2534,8 @@ class BccClient(bce_base_client.BceBaseClient):
         if billing is None:
             billing = default_billing_to_purchase_reserved
         body = {
-            'billing': billing.__dict__
+            'billing': billing.__dict__,
+            'instanceId': instance_id
         }
         params = None
         if client_token is None:
@@ -2603,7 +2623,8 @@ class BccClient(bce_base_client.BceBaseClient):
                                       encrypt_key=None,
                                       relate_cds=False,
                                       client_token=None,
-                                      config=None):
+                                      config=None,
+                                      detection=None):
         """
         Creating a customized image which can be used for creating instance.
         You can create an image from an instance with this method.
@@ -2658,6 +2679,8 @@ class BccClient(bce_base_client.BceBaseClient):
             body['encryptKey'] = encrypt_key
         if relate_cds is not None:
             body['relateCds'] = relate_cds
+        if detection:
+            body['detection'] = detection
         return self._send_request(http_methods.POST, path, json.dumps(body),
                                   params=params, config=config)
 
@@ -2668,7 +2691,8 @@ class BccClient(bce_base_client.BceBaseClient):
                                       snapshot_id,
                                       encrypt_key=None,
                                       client_token=None,
-                                      config=None):
+                                      config=None,
+                                      detection=None):
         """
         Creating a customized image which can be used for creating instance.
         You can create an image from an snapshot with tihs method.
@@ -2715,6 +2739,8 @@ class BccClient(bce_base_client.BceBaseClient):
         }
         if encrypt_key is not None:
             body['encryptKey'] = encrypt_key
+        if detection:
+            body['detection'] = detection
         return self._send_request(http_methods.POST, path, json.dumps(body),
                                   params=params, config=config)
 
@@ -3950,7 +3976,7 @@ class BccClient(bce_base_client.BceBaseClient):
                                 is_open_ipv6=None, tags=None, key_pair_id=None, auto_renew_time_unit=None,
                                 auto_renew_time=0, cds_auto_renew=None, asp_id=None, bid_model=None, bid_price=None,
                                 dedicate_host_id=None, deploy_id=None, deploy_id_list=None, enable_jumbo_frame=None,
-                                cpu_thread_config=None, numa_config=None,
+                                cpu_thread_config=None, numa_config=None, eni_ids=None,
                                 client_token=None, config=None):
         """
         Create a bcc Instance with the specified options.
@@ -4162,6 +4188,12 @@ class BccClient(bce_base_client.BceBaseClient):
             Manage NPS on AMD platforms. Manage NUMA on Intel platforms.
         :type numa_config: string
 
+        :param eni_ids:
+            The optional list of eni short ids to attach.
+            The number of eniIds must be an integer multiple of the number of instances.
+            The enis must in the same vpc and available zone with instance.
+        :type eni_ids: list<string>
+
         :return:
         :rtype baidubce.bce_response.BceResponse
         """
@@ -4253,6 +4285,8 @@ class BccClient(bce_base_client.BceBaseClient):
             body['cpuThreadConfig'] = cpu_thread_config
         if numa_config is not None:
             body['numaConfig'] = numa_config
+        if eni_ids is not None:
+            body['eniIds'] = eni_ids
         body['cdsAutoRenew'] = cds_auto_renew
 
         return self._send_request(http_methods.POST, path, json.dumps(body),
@@ -6287,7 +6321,8 @@ class BccClient(bce_base_client.BceBaseClient):
         }
         return self._send_request(http_methods.PUT, path, body=json.dumps(body), params=params, config=config)
 
-    def import_custom_image(self, os_name, os_arch, os_type, os_version, name, bos_url, client_token=None, config=None):
+    def import_custom_image(self, os_name, os_arch, os_type, os_version, name, bos_url, client_token=None, config=None,
+                            detection=None, generation_type=None):
         """
         import_custom_image
 
@@ -6332,6 +6367,10 @@ class BccClient(bce_base_client.BceBaseClient):
             'name': name,
             'bosUrl': bos_url
         }
+        if detection:
+            body['detection'] = detection
+        if generation_type is not None:
+            body['generationType'] = generation_type
         return self._send_request(http_methods.POST, path, body=json.dumps(body), params=params, config=config)
 
     def create_remote_copy_snapshot(self, snapshot_id, dest_region_infos, client_token=None, config=None):
@@ -6403,9 +6442,12 @@ class BccClient(bce_base_client.BceBaseClient):
 
         return self._send_request(http_methods.POST, path, body=json.dumps(body), params=params, config=config)
 
-    def list_deploy_sets(self, client_token=None, config=None):
+    def list_deploy_sets(self, client_token=None, config=None, deployment_set_ids=None):
         """
         list_deploy_sets
+
+        :param deployment_set_ids:
+        :type deployment_set_ids: string
 
         :return:
         :rtype baidubce.bce_response.BceResponse
@@ -6416,6 +6458,8 @@ class BccClient(bce_base_client.BceBaseClient):
             params['clientToken'] = generate_client_token()
         else:
             params['clientToken'] = client_token
+        if deployment_set_ids is not None:
+            params['deploymentSetIds'] = deployment_set_ids
         return self._send_request(http_methods.GET, path, params=params, config=config)
 
     def delete_deploy_set(self, deploy_set_id, client_token=None, config=None):
@@ -6871,6 +6915,145 @@ class BccClient(bce_base_client.BceBaseClient):
             "instanceId": instance_id
         }
         return self._send_request(http_methods.POST, path, json.dumps(body),
+                                  params=params, config=config)
+
+    def enter_rescue_mode(self, instance_id, force_stop, password, client_token=None, config=None):
+        """
+                进入救援模式。
+
+                :param enter_rescue_mode_req:
+                :desc
+                :type enter_rescue_mode_req: json
+
+                :return:
+                :rtype baidubce.bce_response.BceResponse
+        """
+        path = b'/instance/rescue/mode/enter'
+
+        params = {}
+
+        if client_token is None:
+            params['clientToken'] = generate_client_token()
+        else:
+            params['clientToken'] = client_token
+
+        body = {
+            'instanceId': instance_id,
+            'forceStop': force_stop,
+            'password': password
+        }
+        return self._send_request(http_methods.PUT, path, json.dumps(body),
+                                  params=params, config=config)
+
+    def exit_rescue_mode(self, instance_id, client_token=None, config=None):
+        """
+                退出救援模式。
+
+                :param exit_rescue_mode_req:
+                :desc
+                :type exit_rescue_mode_req: json
+
+                :return:
+                :rtype baidubce.bce_response.BceResponse
+        """
+        path = b'/instance/rescue/mode/exit'
+
+        params = {}
+
+        if client_token is None:
+            params['clientToken'] = generate_client_token()
+        else:
+            params['clientToken'] = client_token
+
+        body = {
+            'instanceId': instance_id
+        }
+        return self._send_request(http_methods.PUT, path, json.dumps(body),
+                                  params=params, config=config)
+
+
+    def bind_sg(self, instance_ids, security_group_ids, security_group_type, client_token=None, config=None):
+        """
+                绑定安全组。
+
+                :param bind_sg:
+                :desc
+                :type bind_sg: json
+                :return:
+                :rtype baidubce.bce_response.BceResponse
+        """
+        path = b'/securitygroup/bind'
+
+        params = {}
+
+        if client_token is None:
+            params['clientToken'] = generate_client_token()
+        else:
+            params['clientToken'] = client_token
+
+        body = {
+            'instanceIds': instance_ids,
+            'securityGroupIds': security_group_ids,
+            'securityGroupType': security_group_type
+        }
+        return self._send_request(http_methods.PUT, path, json.dumps(body),
+                                  params=params, config=config)
+
+
+    def replace_sg(self, instance_ids, security_group_ids, security_group_type, client_token=None, config=None):
+        """
+                替换安全组。
+
+                :param replace_sg:
+                :desc
+                :type replace_sg: json
+
+                :return:
+                :rtype baidubce.bce_response.BceResponse
+        """
+        path = b'/securitygroup/replace'
+
+        params = {}
+
+        if client_token is None:
+            params['clientToken'] = generate_client_token()
+        else:
+            params['clientToken'] = client_token
+
+        body = {
+            'instanceIds': instance_ids,
+            'securityGroupIds': security_group_ids,
+            'securityGroupType': security_group_type
+        }
+        return self._send_request(http_methods.PUT, path, json.dumps(body),
+                                  params=params, config=config)
+
+    def unbind_sg(self, instance_ids, security_group_ids, security_group_type, client_token=None, config=None):
+        """
+                解绑安全组。
+
+                :param unbind_sg:
+                :desc
+                :type unbind_sg: json
+
+                :return:
+                :rtype baidubce.bce_response.BceResponse
+        """
+        path = b'/securitygroup/unbind'
+
+        params = {}
+
+        if client_token is None:
+            params['clientToken'] = generate_client_token()
+        else:
+            params['clientToken'] = client_token
+
+        body = {
+            'instanceIds': instance_ids,
+            'securityGroupIds': security_group_ids,
+            'securityGroupType': security_group_type
+        }
+        return self._send_request(http_methods.PUT, path, json.dumps(body),
                                   params=params, config=config)
 
 

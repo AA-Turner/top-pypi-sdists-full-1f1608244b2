@@ -26,9 +26,13 @@ If operator was cancelled but there wasn't any reports from it with {'ERROR'}
 it will just return {'CANCELLED'}
 
  without raising any exceptions.
-If it had error reports, then it will raise a RuntimeError
+However, if there are error reports, a RuntimeError
 
- including all report messages.
+ will be raised
+after the operator finishes execution, including all error report messages,
+regardless of the return status (even if it was {'FINISHED'}
+
+).
 
 Calling an operator in the wrong context will raise a RuntimeError
 

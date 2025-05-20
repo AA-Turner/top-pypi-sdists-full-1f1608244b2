@@ -42,7 +42,7 @@ class CollaborationArgs:
         :param pulumi.Input[builtins.str] creator_display_name: A display name of the collaboration creator.
         :param pulumi.Input[Sequence[pulumi.Input['CollaborationMemberAbility']]] creator_member_abilities: The abilities granted to the collaboration creator.
                
-               *Allowed values* `CAN_QUERY` | `CAN_RECEIVE_RESULTS`
+               *Allowed values* `CAN_QUERY` | `CAN_RECEIVE_RESULTS` | `CAN_RUN_JOB`
         :param pulumi.Input[builtins.str] description: A description of the collaboration provided by the collaboration owner.
         :param pulumi.Input[Sequence[pulumi.Input['CollaborationMemberSpecificationArgs']]] members: A list of initial members, not including the creator. This list is immutable.
         :param pulumi.Input['CollaborationQueryLogStatus'] query_log_status: An indicator as to whether query logging has been enabled or disabled for the collaboration.
@@ -96,7 +96,7 @@ class CollaborationArgs:
         """
         The abilities granted to the collaboration creator.
 
-        *Allowed values* `CAN_QUERY` | `CAN_RECEIVE_RESULTS`
+        *Allowed values* `CAN_QUERY` | `CAN_RECEIVE_RESULTS` | `CAN_RUN_JOB`
         """
         return pulumi.get(self, "creator_member_abilities")
 
@@ -230,6 +230,9 @@ class CollaborationArgs:
 
 
 class Collaboration(pulumi.CustomResource):
+
+    pulumi_type = "aws-native:cleanrooms:Collaboration"
+
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -256,7 +259,7 @@ class Collaboration(pulumi.CustomResource):
         :param pulumi.Input[builtins.str] creator_display_name: A display name of the collaboration creator.
         :param pulumi.Input[Sequence[pulumi.Input['CollaborationMemberAbility']]] creator_member_abilities: The abilities granted to the collaboration creator.
                
-               *Allowed values* `CAN_QUERY` | `CAN_RECEIVE_RESULTS`
+               *Allowed values* `CAN_QUERY` | `CAN_RECEIVE_RESULTS` | `CAN_RUN_JOB`
         :param pulumi.Input[Union['CollaborationMlMemberAbilitiesArgs', 'CollaborationMlMemberAbilitiesArgsDict']] creator_ml_member_abilities: The ML member abilities for a collaboration member.
         :param pulumi.Input[Union['CollaborationPaymentConfigurationArgs', 'CollaborationPaymentConfigurationArgsDict']] creator_payment_configuration: An object representing the collaboration member's payment responsibilities set by the collaboration creator.
         :param pulumi.Input[Union['CollaborationDataEncryptionMetadataArgs', 'CollaborationDataEncryptionMetadataArgsDict']] data_encryption_metadata: The settings for client-side encryption for cryptographic computing.
@@ -340,7 +343,7 @@ class Collaboration(pulumi.CustomResource):
             __props__.__dict__["tags"] = tags
             __props__.__dict__["arn"] = None
             __props__.__dict__["collaboration_identifier"] = None
-        replace_on_changes = pulumi.ResourceOptions(replace_on_changes=["analyticsEngine", "creatorDisplayName", "creatorMemberAbilities[*]", "creatorMlMemberAbilities", "creatorPaymentConfiguration", "dataEncryptionMetadata", "jobLogStatus", "members[*]", "queryLogStatus"])
+        replace_on_changes = pulumi.ResourceOptions(replace_on_changes=["creatorDisplayName", "creatorMemberAbilities[*]", "creatorMlMemberAbilities", "creatorPaymentConfiguration", "dataEncryptionMetadata", "jobLogStatus", "members[*]", "queryLogStatus"])
         opts = pulumi.ResourceOptions.merge(opts, replace_on_changes)
         super(Collaboration, __self__).__init__(
             'aws-native:cleanrooms:Collaboration',
@@ -422,7 +425,7 @@ class Collaboration(pulumi.CustomResource):
         """
         The abilities granted to the collaboration creator.
 
-        *Allowed values* `CAN_QUERY` | `CAN_RECEIVE_RESULTS`
+        *Allowed values* `CAN_QUERY` | `CAN_RECEIVE_RESULTS` | `CAN_RUN_JOB`
         """
         return pulumi.get(self, "creator_member_abilities")
 

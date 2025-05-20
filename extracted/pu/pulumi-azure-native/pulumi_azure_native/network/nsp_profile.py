@@ -135,10 +135,8 @@ class NspProfileArgs:
         pulumi.set(self, "tags", value)
 
 
+@pulumi.type_token("azure-native:network:NspProfile")
 class NspProfile(pulumi.CustomResource):
-
-    pulumi_type = "azure-native:network:NspProfile"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -227,7 +225,7 @@ class NspProfile(pulumi.CustomResource):
             __props__.__dict__["azure_api_version"] = None
             __props__.__dict__["diagnostic_settings_version"] = None
             __props__.__dict__["type"] = None
-        alias_opts = pulumi.ResourceOptions(aliases=[pulumi.Alias(type_="azure-native:network/v20210201preview:NspProfile"), pulumi.Alias(type_="azure-native:network/v20230701preview:NspProfile"), pulumi.Alias(type_="azure-native:network/v20230801preview:NspProfile"), pulumi.Alias(type_="azure-native:network/v20240601preview:NspProfile")])
+        alias_opts = pulumi.ResourceOptions(aliases=[pulumi.Alias(type_="azure-native:network/v20210201preview:NspProfile"), pulumi.Alias(type_="azure-native:network/v20230701preview:NspProfile"), pulumi.Alias(type_="azure-native:network/v20230801preview:NspProfile"), pulumi.Alias(type_="azure-native:network/v20240601preview:NspProfile"), pulumi.Alias(type_="azure-native:network/v20240701:NspProfile")])
         opts = pulumi.ResourceOptions.merge(opts, alias_opts)
         super(NspProfile, __self__).__init__(
             'azure-native:network:NspProfile',

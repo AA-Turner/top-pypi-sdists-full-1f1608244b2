@@ -2,14 +2,20 @@
 # ruff: noqa: E402
 import langgraph_api.patch  # noqa: F401,I001
 import sys
+import os
 
 # WARNING: Keep the import above before other code runs as it
 # patches an error in the Starlette library.
 import logging
 import typing
-import truststore  # noqa: F401
 
-truststore.inject_into_ssl()  # noqa: F401
+if not (
+    (disable_truststore := os.getenv("DISABLE_TRUSTSTORE"))
+    and disable_truststore.lower() == "true"
+):
+    import truststore  # noqa: F401
+
+    truststore.inject_into_ssl()  # noqa: F401
 
 from contextlib import asynccontextmanager
 

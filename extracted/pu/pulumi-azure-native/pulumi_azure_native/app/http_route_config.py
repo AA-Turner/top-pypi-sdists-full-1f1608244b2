@@ -90,10 +90,8 @@ class HttpRouteConfigArgs:
         pulumi.set(self, "properties", value)
 
 
+@pulumi.type_token("azure-native:app:HttpRouteConfig")
 class HttpRouteConfig(pulumi.CustomResource):
-
-    pulumi_type = "azure-native:app:HttpRouteConfig"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -107,6 +105,8 @@ class HttpRouteConfig(pulumi.CustomResource):
         Advanced Ingress routing for path/header based routing for a Container App Environment
 
         Uses Azure REST API version 2024-10-02-preview. In version 2.x of the Azure Native provider, it used API version 2024-10-02-preview.
+
+        Other available API versions: 2025-02-02-preview. These can be accessed by generating a local SDK package using the CLI command `pulumi package add azure-native app [ApiVersion]`. See the [version guide](../../../version-guide/#accessing-any-api-version-via-local-packages) for details.
 
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
@@ -125,6 +125,8 @@ class HttpRouteConfig(pulumi.CustomResource):
         Advanced Ingress routing for path/header based routing for a Container App Environment
 
         Uses Azure REST API version 2024-10-02-preview. In version 2.x of the Azure Native provider, it used API version 2024-10-02-preview.
+
+        Other available API versions: 2025-02-02-preview. These can be accessed by generating a local SDK package using the CLI command `pulumi package add azure-native app [ApiVersion]`. See the [version guide](../../../version-guide/#accessing-any-api-version-via-local-packages) for details.
 
         :param str resource_name: The name of the resource.
         :param HttpRouteConfigArgs args: The arguments to use to populate this resource's properties.
@@ -166,7 +168,7 @@ class HttpRouteConfig(pulumi.CustomResource):
             __props__.__dict__["name"] = None
             __props__.__dict__["system_data"] = None
             __props__.__dict__["type"] = None
-        alias_opts = pulumi.ResourceOptions(aliases=[pulumi.Alias(type_="azure-native:app/v20241002preview:HttpRouteConfig")])
+        alias_opts = pulumi.ResourceOptions(aliases=[pulumi.Alias(type_="azure-native:app/v20241002preview:HttpRouteConfig"), pulumi.Alias(type_="azure-native:app/v20250202preview:HttpRouteConfig")])
         opts = pulumi.ResourceOptions.merge(opts, alias_opts)
         super(HttpRouteConfig, __self__).__init__(
             'azure-native:app:HttpRouteConfig',

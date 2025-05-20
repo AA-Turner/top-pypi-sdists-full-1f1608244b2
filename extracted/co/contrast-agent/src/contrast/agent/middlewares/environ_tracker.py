@@ -1,7 +1,10 @@
 # Copyright © 2025 Contrast Security, Inc.
 # See https://www.contrastsecurity.com/enduser-terms-0317a for more details.
+from typing import Any
 from contrast.agent.assess.policy.source_node import SourceNode
 from contrast.agent.assess.policy.source_policy import cs__apply_source
+from contrast.agent.request import Environ, Request
+from contrast.agent.request_context import RequestContext
 from contrast.utils.assess.stream_utils import ContrastWsgiStreamProxy
 from contrast.utils.decorators import fail_loudly
 
@@ -25,8 +28,6 @@ ENVIRON_SOURCES = {
 
 SOURCE_TAGS = {"HEADER": ["NO_NEWLINES"], "PARAMETER": ["CROSS_SITE"]}
 
-SOURCE_DICT = {"module": "wsgi.environ", "instance_method": False, "target": "RETURN"}
-
 WEBOB_KEYS_TO_DELETE = {
     "webob._parsed_query_vars",
     "webob._parsed_post_vars",
@@ -37,30 +38,26 @@ WEBOB_KEYS_TO_DELETE = {
 
 
 @fail_loudly("Failed to track environ sources")
-def track_environ_sources(framework, context, environ):
+def track_environ_sources(framework, context: RequestContext, environ: Environ) -> None:
     """
     This method will track necessary information in the environ
 
     For wsgi frameworks, this is the one true source of (stateless) untrusted data
-
-    :param framework: current application's framework
-    :param context: current request context
-    :param environ: WSGI environ dict
-
-    :return: None
     """
     if not context.assess_enabled:
         return
 
     for key, value in environ.items():
-        _track_environ_item(framework, context, environ, key, value)
+        _track_environ_item(context, environ, key, value)
 
     _make_request_body_seekable(context.request)
     _track_wsgi_input(environ)
     _remove_webob_environ_vars(environ)
 
 
-def _build_source_node(framework, method_name, source_type, no_cross_site=False):
+def _build_source_node(
+    method_name: str, source_type: str, no_cross_site=False
+) -> SourceNode:
     """
     Builds a new SourceNode based on the method name and source type
 
@@ -74,46 +71,47 @@ def _build_source_node(framework, method_name, source_type, no_cross_site=False)
     :return: SourceNode for cs__apply_source
     """
 
-    source_dict = SOURCE_DICT.copy()
-
     tags = [] if no_cross_site else SOURCE_TAGS.get(source_type, ["CROSS_SITE"])
 
     node = SourceNode(
+        module="wsgi.environ",
         method_name=method_name,
         node_type=source_type,
         tags=tags,
-        **source_dict,
+        target="RETURN",
+        instance_method=False,
+        policy_patch=False,
     )
     node.skip_stacktrace = True
 
     return node
 
 
-def _track_environ_item(framework, context, environ, key, value):
+def _track_environ_item(
+    context: RequestContext, environ: Environ, key: str, value: Any
+) -> None:
     source_type = ""
     if key in ENVIRON_SOURCES:
         source_type = ENVIRON_SOURCES[key]
 
-        node = _build_source_node(framework, key, source_type, False)
-
+        node = _build_source_node(key, source_type, False)
         cs__apply_source(context, node, value, environ, value, (), {}, source_name=key)
     elif key.startswith("HTTP_"):
         # This is to track custom headers we may not know about
         source_type = "COOKIE" if key == "HTTP_COOKIE" else "HEADER"
 
-        node = _build_source_node(framework, key, source_type, "COOKIE" in key)
-
+        node = _build_source_node(key, source_type, no_cross_site="COOKIE" in key)
         cs__apply_source(context, node, value, environ, value, (), {}, source_name=key)
 
     # Track HTTP header keys as well
     if key.startswith("HTTP_") or source_type == "HEADER":
         no_cross_site = (source_type == "HEADER") or (key == "HTTP_COOKIE")
 
-        key_node = _build_source_node(framework, key, "HEADER_KEY", no_cross_site)
+        key_node = _build_source_node(key, "HEADER_KEY", no_cross_site)
         cs__apply_source(context, key_node, key, environ, key, (), {}, source_name=key)
 
 
-def _make_request_body_seekable(request):
+def _make_request_body_seekable(request: Request) -> None:
     """
     Before we track wsgi.input, we ask our vendored webob to manipulate the input stream
     to make it seekable. There is no security risk here, because this simply involves
@@ -134,13 +132,11 @@ def _make_request_body_seekable(request):
 
     We should only track wsgi.input after calling this method.
 
-    :param request: contrast.agent.request.Request instance
-    :return: None
     """
     request.make_body_seekable()
 
 
-def _track_wsgi_input(environ):
+def _track_wsgi_input(environ: Environ) -> None:
     wsgi_input = "wsgi.input"
 
     if wsgi_input in environ:
@@ -152,7 +148,7 @@ def _track_wsgi_input(environ):
         environ[wsgi_input].cs__source_tags = ["UNTRUSTED", "CROSS_SITE"]
 
 
-def _get_source_by_content_type(environ):
+def _get_source_by_content_type(environ: Environ) -> str:
     """
     Define the wsgi.input source type based on the request content type.
     If no specific content-type, the fault soruce type is BODY.
@@ -172,7 +168,7 @@ def _get_source_by_content_type(environ):
 
 
 @fail_loudly("Failed to remove webob environ variables")
-def _remove_webob_environ_vars(environ):
+def _remove_webob_environ_vars(environ: Environ) -> None:
     """
     webob adds several variables to the environ for efficiency. For example, if webob
     ever parses wsgi.input to extract request body parameters, it stores them in a
@@ -247,9 +243,6 @@ def _remove_webob_environ_vars(environ):
         - Used to store the string encoding of the URL. We don't delete it because it's
           easy to track directly. In the future we might want to look into whether we
           need to track this at all.
-
-    :param environ: WSGI environ dict
-    :return: None
     """
     for key in WEBOB_KEYS_TO_DELETE:
         if key in environ:

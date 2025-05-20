@@ -44,6 +44,7 @@ __all__ = [
     'ApplicationInferenceProfileInferenceProfileModel',
     'ApplicationInferenceProfileInferenceProfileModelSourceProperties',
     'DataAutomationProjectAudioExtractionCategory',
+    'DataAutomationProjectAudioOverrideConfiguration',
     'DataAutomationProjectAudioStandardExtraction',
     'DataAutomationProjectAudioStandardGenerativeField',
     'DataAutomationProjectAudioStandardOutputConfiguration',
@@ -60,14 +61,18 @@ __all__ = [
     'DataAutomationProjectDocumentStandardOutputConfiguration',
     'DataAutomationProjectImageBoundingBox',
     'DataAutomationProjectImageExtractionCategory',
+    'DataAutomationProjectImageOverrideConfiguration',
     'DataAutomationProjectImageStandardExtraction',
     'DataAutomationProjectImageStandardGenerativeField',
     'DataAutomationProjectImageStandardOutputConfiguration',
+    'DataAutomationProjectModalityProcessingConfiguration',
+    'DataAutomationProjectModalityRoutingConfiguration',
     'DataAutomationProjectOverrideConfiguration',
     'DataAutomationProjectSplitterConfiguration',
     'DataAutomationProjectStandardOutputConfiguration',
     'DataAutomationProjectVideoBoundingBox',
     'DataAutomationProjectVideoExtractionCategory',
+    'DataAutomationProjectVideoOverrideConfiguration',
     'DataAutomationProjectVideoStandardExtraction',
     'DataAutomationProjectVideoStandardGenerativeField',
     'DataAutomationProjectVideoStandardOutputConfiguration',
@@ -222,6 +227,8 @@ __all__ = [
     'GuardrailTopicPolicyConfig',
     'GuardrailWordConfig',
     'GuardrailWordPolicyConfig',
+    'IntelligentPromptRouterPromptRouterTargetModel',
+    'IntelligentPromptRouterRoutingCriteria',
     'KnowledgeBaseBedrockEmbeddingModelConfiguration',
     'KnowledgeBaseConfiguration',
     'KnowledgeBaseCuratedQuery',
@@ -1706,6 +1713,42 @@ class DataAutomationProjectAudioExtractionCategory(dict):
 
 
 @pulumi.output_type
+class DataAutomationProjectAudioOverrideConfiguration(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "modalityProcessing":
+            suggest = "modality_processing"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in DataAutomationProjectAudioOverrideConfiguration. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        DataAutomationProjectAudioOverrideConfiguration.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        DataAutomationProjectAudioOverrideConfiguration.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 modality_processing: Optional['outputs.DataAutomationProjectModalityProcessingConfiguration'] = None):
+        """
+        :param 'DataAutomationProjectModalityProcessingConfiguration' modality_processing: Sets modality processing for audio files. All modalities are enabled by default.
+        """
+        if modality_processing is not None:
+            pulumi.set(__self__, "modality_processing", modality_processing)
+
+    @property
+    @pulumi.getter(name="modalityProcessing")
+    def modality_processing(self) -> Optional['outputs.DataAutomationProjectModalityProcessingConfiguration']:
+        """
+        Sets modality processing for audio files. All modalities are enabled by default.
+        """
+        return pulumi.get(self, "modality_processing")
+
+
+@pulumi.output_type
 class DataAutomationProjectAudioStandardExtraction(dict):
     def __init__(__self__, *,
                  category: 'outputs.DataAutomationProjectAudioExtractionCategory'):
@@ -2011,13 +2054,42 @@ class DataAutomationProjectDocumentOutputTextFormat(dict):
 
 @pulumi.output_type
 class DataAutomationProjectDocumentOverrideConfiguration(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "modalityProcessing":
+            suggest = "modality_processing"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in DataAutomationProjectDocumentOverrideConfiguration. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        DataAutomationProjectDocumentOverrideConfiguration.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        DataAutomationProjectDocumentOverrideConfiguration.__key_warning(key)
+        return super().get(key, default)
+
     def __init__(__self__, *,
+                 modality_processing: Optional['outputs.DataAutomationProjectModalityProcessingConfiguration'] = None,
                  splitter: Optional['outputs.DataAutomationProjectSplitterConfiguration'] = None):
         """
+        :param 'DataAutomationProjectModalityProcessingConfiguration' modality_processing: Sets modality processing for document files. All modalities are enabled by default.
         :param 'DataAutomationProjectSplitterConfiguration' splitter: Whether document splitter is enabled for a project.
         """
+        if modality_processing is not None:
+            pulumi.set(__self__, "modality_processing", modality_processing)
         if splitter is not None:
             pulumi.set(__self__, "splitter", splitter)
+
+    @property
+    @pulumi.getter(name="modalityProcessing")
+    def modality_processing(self) -> Optional['outputs.DataAutomationProjectModalityProcessingConfiguration']:
+        """
+        Sets modality processing for document files. All modalities are enabled by default.
+        """
+        return pulumi.get(self, "modality_processing")
 
     @property
     @pulumi.getter
@@ -2203,6 +2275,42 @@ class DataAutomationProjectImageExtractionCategory(dict):
 
 
 @pulumi.output_type
+class DataAutomationProjectImageOverrideConfiguration(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "modalityProcessing":
+            suggest = "modality_processing"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in DataAutomationProjectImageOverrideConfiguration. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        DataAutomationProjectImageOverrideConfiguration.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        DataAutomationProjectImageOverrideConfiguration.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 modality_processing: Optional['outputs.DataAutomationProjectModalityProcessingConfiguration'] = None):
+        """
+        :param 'DataAutomationProjectModalityProcessingConfiguration' modality_processing: Sets modality processing for image files. All modalities are enabled by default.
+        """
+        if modality_processing is not None:
+            pulumi.set(__self__, "modality_processing", modality_processing)
+
+    @property
+    @pulumi.getter(name="modalityProcessing")
+    def modality_processing(self) -> Optional['outputs.DataAutomationProjectModalityProcessingConfiguration']:
+        """
+        Sets modality processing for image files. All modalities are enabled by default.
+        """
+        return pulumi.get(self, "modality_processing")
+
+
+@pulumi.output_type
 class DataAutomationProjectImageStandardExtraction(dict):
     @staticmethod
     def __key_warning(key: str):
@@ -2327,18 +2435,137 @@ class DataAutomationProjectImageStandardOutputConfiguration(dict):
 
 
 @pulumi.output_type
+class DataAutomationProjectModalityProcessingConfiguration(dict):
+    def __init__(__self__, *,
+                 state: Optional['DataAutomationProjectState'] = None):
+        """
+        :param 'DataAutomationProjectState' state: Stores the state of the modality for your project, set to either enabled or disabled
+        """
+        if state is not None:
+            pulumi.set(__self__, "state", state)
+
+    @property
+    @pulumi.getter
+    def state(self) -> Optional['DataAutomationProjectState']:
+        """
+        Stores the state of the modality for your project, set to either enabled or disabled
+        """
+        return pulumi.get(self, "state")
+
+
+@pulumi.output_type
+class DataAutomationProjectModalityRoutingConfiguration(dict):
+    """
+    Modality routing configuration
+    """
+    def __init__(__self__, *,
+                 jpeg: Optional['DataAutomationProjectDesiredModality'] = None,
+                 mov: Optional['DataAutomationProjectDesiredModality'] = None,
+                 mp4: Optional['DataAutomationProjectDesiredModality'] = None,
+                 png: Optional['DataAutomationProjectDesiredModality'] = None):
+        """
+        Modality routing configuration
+        :param 'DataAutomationProjectDesiredModality' jpeg: Sets whether JPEG files are routed to document or image processing.
+        :param 'DataAutomationProjectDesiredModality' mov: Sets whether MOV files are routed to audio or video processing.
+        :param 'DataAutomationProjectDesiredModality' mp4: Sets whether MP4 files are routed to audio or video processing.
+        :param 'DataAutomationProjectDesiredModality' png: Sets whether PNG files are routed to document or image processing.
+        """
+        if jpeg is not None:
+            pulumi.set(__self__, "jpeg", jpeg)
+        if mov is not None:
+            pulumi.set(__self__, "mov", mov)
+        if mp4 is not None:
+            pulumi.set(__self__, "mp4", mp4)
+        if png is not None:
+            pulumi.set(__self__, "png", png)
+
+    @property
+    @pulumi.getter
+    def jpeg(self) -> Optional['DataAutomationProjectDesiredModality']:
+        """
+        Sets whether JPEG files are routed to document or image processing.
+        """
+        return pulumi.get(self, "jpeg")
+
+    @property
+    @pulumi.getter
+    def mov(self) -> Optional['DataAutomationProjectDesiredModality']:
+        """
+        Sets whether MOV files are routed to audio or video processing.
+        """
+        return pulumi.get(self, "mov")
+
+    @property
+    @pulumi.getter
+    def mp4(self) -> Optional['DataAutomationProjectDesiredModality']:
+        """
+        Sets whether MP4 files are routed to audio or video processing.
+        """
+        return pulumi.get(self, "mp4")
+
+    @property
+    @pulumi.getter
+    def png(self) -> Optional['DataAutomationProjectDesiredModality']:
+        """
+        Sets whether PNG files are routed to document or image processing.
+        """
+        return pulumi.get(self, "png")
+
+
+@pulumi.output_type
 class DataAutomationProjectOverrideConfiguration(dict):
     """
     Override configuration
     """
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "modalityRouting":
+            suggest = "modality_routing"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in DataAutomationProjectOverrideConfiguration. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        DataAutomationProjectOverrideConfiguration.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        DataAutomationProjectOverrideConfiguration.__key_warning(key)
+        return super().get(key, default)
+
     def __init__(__self__, *,
-                 document: Optional['outputs.DataAutomationProjectDocumentOverrideConfiguration'] = None):
+                 audio: Optional['outputs.DataAutomationProjectAudioOverrideConfiguration'] = None,
+                 document: Optional['outputs.DataAutomationProjectDocumentOverrideConfiguration'] = None,
+                 image: Optional['outputs.DataAutomationProjectImageOverrideConfiguration'] = None,
+                 modality_routing: Optional['outputs.DataAutomationProjectModalityRoutingConfiguration'] = None,
+                 video: Optional['outputs.DataAutomationProjectVideoOverrideConfiguration'] = None):
         """
         Override configuration
+        :param 'DataAutomationProjectAudioOverrideConfiguration' audio: This element declares whether your project will process audio files.
         :param 'DataAutomationProjectDocumentOverrideConfiguration' document: Additional settings for a project.
+        :param 'DataAutomationProjectImageOverrideConfiguration' image: This element declares whether your project will process image files.
+        :param 'DataAutomationProjectModalityRoutingConfiguration' modality_routing: Lets you set which modalities certain file types are processed as.
+        :param 'DataAutomationProjectVideoOverrideConfiguration' video: This element declares whether your project will process video files.
         """
+        if audio is not None:
+            pulumi.set(__self__, "audio", audio)
         if document is not None:
             pulumi.set(__self__, "document", document)
+        if image is not None:
+            pulumi.set(__self__, "image", image)
+        if modality_routing is not None:
+            pulumi.set(__self__, "modality_routing", modality_routing)
+        if video is not None:
+            pulumi.set(__self__, "video", video)
+
+    @property
+    @pulumi.getter
+    def audio(self) -> Optional['outputs.DataAutomationProjectAudioOverrideConfiguration']:
+        """
+        This element declares whether your project will process audio files.
+        """
+        return pulumi.get(self, "audio")
 
     @property
     @pulumi.getter
@@ -2347,6 +2574,30 @@ class DataAutomationProjectOverrideConfiguration(dict):
         Additional settings for a project.
         """
         return pulumi.get(self, "document")
+
+    @property
+    @pulumi.getter
+    def image(self) -> Optional['outputs.DataAutomationProjectImageOverrideConfiguration']:
+        """
+        This element declares whether your project will process image files.
+        """
+        return pulumi.get(self, "image")
+
+    @property
+    @pulumi.getter(name="modalityRouting")
+    def modality_routing(self) -> Optional['outputs.DataAutomationProjectModalityRoutingConfiguration']:
+        """
+        Lets you set which modalities certain file types are processed as.
+        """
+        return pulumi.get(self, "modality_routing")
+
+    @property
+    @pulumi.getter
+    def video(self) -> Optional['outputs.DataAutomationProjectVideoOverrideConfiguration']:
+        """
+        This element declares whether your project will process video files.
+        """
+        return pulumi.get(self, "video")
 
 
 @pulumi.output_type
@@ -2473,6 +2724,42 @@ class DataAutomationProjectVideoExtractionCategory(dict):
         The types of data to generate.
         """
         return pulumi.get(self, "types")
+
+
+@pulumi.output_type
+class DataAutomationProjectVideoOverrideConfiguration(dict):
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "modalityProcessing":
+            suggest = "modality_processing"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in DataAutomationProjectVideoOverrideConfiguration. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        DataAutomationProjectVideoOverrideConfiguration.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        DataAutomationProjectVideoOverrideConfiguration.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 modality_processing: Optional['outputs.DataAutomationProjectModalityProcessingConfiguration'] = None):
+        """
+        :param 'DataAutomationProjectModalityProcessingConfiguration' modality_processing: Sets modality processing for video files. All modalities are enabled by default.
+        """
+        if modality_processing is not None:
+            pulumi.set(__self__, "modality_processing", modality_processing)
+
+    @property
+    @pulumi.getter(name="modalityProcessing")
+    def modality_processing(self) -> Optional['outputs.DataAutomationProjectModalityProcessingConfiguration']:
+        """
+        Sets modality processing for video files. All modalities are enabled by default.
+        """
+        return pulumi.get(self, "modality_processing")
 
 
 @pulumi.output_type
@@ -7928,8 +8215,16 @@ class GuardrailContentFilterConfig(dict):
             suggest = "input_strength"
         elif key == "outputStrength":
             suggest = "output_strength"
+        elif key == "inputAction":
+            suggest = "input_action"
+        elif key == "inputEnabled":
+            suggest = "input_enabled"
         elif key == "inputModalities":
             suggest = "input_modalities"
+        elif key == "outputAction":
+            suggest = "output_action"
+        elif key == "outputEnabled":
+            suggest = "output_enabled"
         elif key == "outputModalities":
             suggest = "output_modalities"
 
@@ -7948,7 +8243,11 @@ class GuardrailContentFilterConfig(dict):
                  input_strength: 'GuardrailFilterStrength',
                  output_strength: 'GuardrailFilterStrength',
                  type: 'GuardrailContentFilterType',
+                 input_action: Optional['GuardrailContentFilterAction'] = None,
+                 input_enabled: Optional[builtins.bool] = None,
                  input_modalities: Optional[Sequence['GuardrailModality']] = None,
+                 output_action: Optional['GuardrailContentFilterAction'] = None,
+                 output_enabled: Optional[builtins.bool] = None,
                  output_modalities: Optional[Sequence['GuardrailModality']] = None):
         """
         Content filter config in content policy.
@@ -7961,8 +8260,16 @@ class GuardrailContentFilterConfig(dict):
         pulumi.set(__self__, "input_strength", input_strength)
         pulumi.set(__self__, "output_strength", output_strength)
         pulumi.set(__self__, "type", type)
+        if input_action is not None:
+            pulumi.set(__self__, "input_action", input_action)
+        if input_enabled is not None:
+            pulumi.set(__self__, "input_enabled", input_enabled)
         if input_modalities is not None:
             pulumi.set(__self__, "input_modalities", input_modalities)
+        if output_action is not None:
+            pulumi.set(__self__, "output_action", output_action)
+        if output_enabled is not None:
+            pulumi.set(__self__, "output_enabled", output_enabled)
         if output_modalities is not None:
             pulumi.set(__self__, "output_modalities", output_modalities)
 
@@ -7991,12 +8298,32 @@ class GuardrailContentFilterConfig(dict):
         return pulumi.get(self, "type")
 
     @property
+    @pulumi.getter(name="inputAction")
+    def input_action(self) -> Optional['GuardrailContentFilterAction']:
+        return pulumi.get(self, "input_action")
+
+    @property
+    @pulumi.getter(name="inputEnabled")
+    def input_enabled(self) -> Optional[builtins.bool]:
+        return pulumi.get(self, "input_enabled")
+
+    @property
     @pulumi.getter(name="inputModalities")
     def input_modalities(self) -> Optional[Sequence['GuardrailModality']]:
         """
         List of modalities
         """
         return pulumi.get(self, "input_modalities")
+
+    @property
+    @pulumi.getter(name="outputAction")
+    def output_action(self) -> Optional['GuardrailContentFilterAction']:
+        return pulumi.get(self, "output_action")
+
+    @property
+    @pulumi.getter(name="outputEnabled")
+    def output_enabled(self) -> Optional[builtins.bool]:
+        return pulumi.get(self, "output_enabled")
 
     @property
     @pulumi.getter(name="outputModalities")
@@ -8053,7 +8380,9 @@ class GuardrailContextualGroundingFilterConfig(dict):
     """
     def __init__(__self__, *,
                  threshold: builtins.float,
-                 type: 'GuardrailContextualGroundingFilterType'):
+                 type: 'GuardrailContextualGroundingFilterType',
+                 action: Optional['GuardrailContextualGroundingAction'] = None,
+                 enabled: Optional[builtins.bool] = None):
         """
         A config for grounding filter.
         :param builtins.float threshold: The threshold for this filter.
@@ -8061,6 +8390,10 @@ class GuardrailContextualGroundingFilterConfig(dict):
         """
         pulumi.set(__self__, "threshold", threshold)
         pulumi.set(__self__, "type", type)
+        if action is not None:
+            pulumi.set(__self__, "action", action)
+        if enabled is not None:
+            pulumi.set(__self__, "enabled", enabled)
 
     @property
     @pulumi.getter
@@ -8077,6 +8410,16 @@ class GuardrailContextualGroundingFilterConfig(dict):
         The filter details for the guardrails contextual grounding filter.
         """
         return pulumi.get(self, "type")
+
+    @property
+    @pulumi.getter
+    def action(self) -> Optional['GuardrailContextualGroundingAction']:
+        return pulumi.get(self, "action")
+
+    @property
+    @pulumi.getter
+    def enabled(self) -> Optional[builtins.bool]:
+        return pulumi.get(self, "enabled")
 
 
 @pulumi.output_type
@@ -8123,13 +8466,48 @@ class GuardrailManagedWordsConfig(dict):
     """
     A managed words config.
     """
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "inputAction":
+            suggest = "input_action"
+        elif key == "inputEnabled":
+            suggest = "input_enabled"
+        elif key == "outputAction":
+            suggest = "output_action"
+        elif key == "outputEnabled":
+            suggest = "output_enabled"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in GuardrailManagedWordsConfig. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        GuardrailManagedWordsConfig.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        GuardrailManagedWordsConfig.__key_warning(key)
+        return super().get(key, default)
+
     def __init__(__self__, *,
-                 type: 'GuardrailManagedWordsType'):
+                 type: 'GuardrailManagedWordsType',
+                 input_action: Optional['GuardrailWordAction'] = None,
+                 input_enabled: Optional[builtins.bool] = None,
+                 output_action: Optional['GuardrailWordAction'] = None,
+                 output_enabled: Optional[builtins.bool] = None):
         """
         A managed words config.
         :param 'GuardrailManagedWordsType' type: The managed word type to configure for the guardrail.
         """
         pulumi.set(__self__, "type", type)
+        if input_action is not None:
+            pulumi.set(__self__, "input_action", input_action)
+        if input_enabled is not None:
+            pulumi.set(__self__, "input_enabled", input_enabled)
+        if output_action is not None:
+            pulumi.set(__self__, "output_action", output_action)
+        if output_enabled is not None:
+            pulumi.set(__self__, "output_enabled", output_enabled)
 
     @property
     @pulumi.getter
@@ -8139,15 +8517,62 @@ class GuardrailManagedWordsConfig(dict):
         """
         return pulumi.get(self, "type")
 
+    @property
+    @pulumi.getter(name="inputAction")
+    def input_action(self) -> Optional['GuardrailWordAction']:
+        return pulumi.get(self, "input_action")
+
+    @property
+    @pulumi.getter(name="inputEnabled")
+    def input_enabled(self) -> Optional[builtins.bool]:
+        return pulumi.get(self, "input_enabled")
+
+    @property
+    @pulumi.getter(name="outputAction")
+    def output_action(self) -> Optional['GuardrailWordAction']:
+        return pulumi.get(self, "output_action")
+
+    @property
+    @pulumi.getter(name="outputEnabled")
+    def output_enabled(self) -> Optional[builtins.bool]:
+        return pulumi.get(self, "output_enabled")
+
 
 @pulumi.output_type
 class GuardrailPiiEntityConfig(dict):
     """
     Pii entity configuration.
     """
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "inputAction":
+            suggest = "input_action"
+        elif key == "inputEnabled":
+            suggest = "input_enabled"
+        elif key == "outputAction":
+            suggest = "output_action"
+        elif key == "outputEnabled":
+            suggest = "output_enabled"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in GuardrailPiiEntityConfig. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        GuardrailPiiEntityConfig.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        GuardrailPiiEntityConfig.__key_warning(key)
+        return super().get(key, default)
+
     def __init__(__self__, *,
                  action: 'GuardrailSensitiveInformationAction',
-                 type: 'GuardrailPiiEntityType'):
+                 type: 'GuardrailPiiEntityType',
+                 input_action: Optional['GuardrailSensitiveInformationAction'] = None,
+                 input_enabled: Optional[builtins.bool] = None,
+                 output_action: Optional['GuardrailSensitiveInformationAction'] = None,
+                 output_enabled: Optional[builtins.bool] = None):
         """
         Pii entity configuration.
         :param 'GuardrailSensitiveInformationAction' action: Configure guardrail action when the PII entity is detected.
@@ -8272,6 +8697,14 @@ class GuardrailPiiEntityConfig(dict):
         """
         pulumi.set(__self__, "action", action)
         pulumi.set(__self__, "type", type)
+        if input_action is not None:
+            pulumi.set(__self__, "input_action", input_action)
+        if input_enabled is not None:
+            pulumi.set(__self__, "input_enabled", input_enabled)
+        if output_action is not None:
+            pulumi.set(__self__, "output_action", output_action)
+        if output_enabled is not None:
+            pulumi.set(__self__, "output_enabled", output_enabled)
 
     @property
     @pulumi.getter
@@ -8406,17 +8839,64 @@ class GuardrailPiiEntityConfig(dict):
         """
         return pulumi.get(self, "type")
 
+    @property
+    @pulumi.getter(name="inputAction")
+    def input_action(self) -> Optional['GuardrailSensitiveInformationAction']:
+        return pulumi.get(self, "input_action")
+
+    @property
+    @pulumi.getter(name="inputEnabled")
+    def input_enabled(self) -> Optional[builtins.bool]:
+        return pulumi.get(self, "input_enabled")
+
+    @property
+    @pulumi.getter(name="outputAction")
+    def output_action(self) -> Optional['GuardrailSensitiveInformationAction']:
+        return pulumi.get(self, "output_action")
+
+    @property
+    @pulumi.getter(name="outputEnabled")
+    def output_enabled(self) -> Optional[builtins.bool]:
+        return pulumi.get(self, "output_enabled")
+
 
 @pulumi.output_type
 class GuardrailRegexConfig(dict):
     """
     A regex configuration.
     """
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "inputAction":
+            suggest = "input_action"
+        elif key == "inputEnabled":
+            suggest = "input_enabled"
+        elif key == "outputAction":
+            suggest = "output_action"
+        elif key == "outputEnabled":
+            suggest = "output_enabled"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in GuardrailRegexConfig. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        GuardrailRegexConfig.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        GuardrailRegexConfig.__key_warning(key)
+        return super().get(key, default)
+
     def __init__(__self__, *,
                  action: 'GuardrailSensitiveInformationAction',
                  name: builtins.str,
                  pattern: builtins.str,
-                 description: Optional[builtins.str] = None):
+                 description: Optional[builtins.str] = None,
+                 input_action: Optional['GuardrailSensitiveInformationAction'] = None,
+                 input_enabled: Optional[builtins.bool] = None,
+                 output_action: Optional['GuardrailSensitiveInformationAction'] = None,
+                 output_enabled: Optional[builtins.bool] = None):
         """
         A regex configuration.
         :param 'GuardrailSensitiveInformationAction' action: The guardrail action to configure when matching regular expression is detected.
@@ -8429,6 +8909,14 @@ class GuardrailRegexConfig(dict):
         pulumi.set(__self__, "pattern", pattern)
         if description is not None:
             pulumi.set(__self__, "description", description)
+        if input_action is not None:
+            pulumi.set(__self__, "input_action", input_action)
+        if input_enabled is not None:
+            pulumi.set(__self__, "input_enabled", input_enabled)
+        if output_action is not None:
+            pulumi.set(__self__, "output_action", output_action)
+        if output_enabled is not None:
+            pulumi.set(__self__, "output_enabled", output_enabled)
 
     @property
     @pulumi.getter
@@ -8461,6 +8949,26 @@ class GuardrailRegexConfig(dict):
         The regex description.
         """
         return pulumi.get(self, "description")
+
+    @property
+    @pulumi.getter(name="inputAction")
+    def input_action(self) -> Optional['GuardrailSensitiveInformationAction']:
+        return pulumi.get(self, "input_action")
+
+    @property
+    @pulumi.getter(name="inputEnabled")
+    def input_enabled(self) -> Optional[builtins.bool]:
+        return pulumi.get(self, "input_enabled")
+
+    @property
+    @pulumi.getter(name="outputAction")
+    def output_action(self) -> Optional['GuardrailSensitiveInformationAction']:
+        return pulumi.get(self, "output_action")
+
+    @property
+    @pulumi.getter(name="outputEnabled")
+    def output_enabled(self) -> Optional[builtins.bool]:
+        return pulumi.get(self, "output_enabled")
 
 
 @pulumi.output_type
@@ -8522,11 +9030,38 @@ class GuardrailTopicConfig(dict):
     """
     Topic config in topic policy.
     """
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "inputAction":
+            suggest = "input_action"
+        elif key == "inputEnabled":
+            suggest = "input_enabled"
+        elif key == "outputAction":
+            suggest = "output_action"
+        elif key == "outputEnabled":
+            suggest = "output_enabled"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in GuardrailTopicConfig. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        GuardrailTopicConfig.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        GuardrailTopicConfig.__key_warning(key)
+        return super().get(key, default)
+
     def __init__(__self__, *,
                  definition: builtins.str,
                  name: builtins.str,
                  type: 'GuardrailTopicType',
-                 examples: Optional[Sequence[builtins.str]] = None):
+                 examples: Optional[Sequence[builtins.str]] = None,
+                 input_action: Optional['GuardrailTopicAction'] = None,
+                 input_enabled: Optional[builtins.bool] = None,
+                 output_action: Optional['GuardrailTopicAction'] = None,
+                 output_enabled: Optional[builtins.bool] = None):
         """
         Topic config in topic policy.
         :param builtins.str definition: Definition of topic in topic policy
@@ -8539,6 +9074,14 @@ class GuardrailTopicConfig(dict):
         pulumi.set(__self__, "type", type)
         if examples is not None:
             pulumi.set(__self__, "examples", examples)
+        if input_action is not None:
+            pulumi.set(__self__, "input_action", input_action)
+        if input_enabled is not None:
+            pulumi.set(__self__, "input_enabled", input_enabled)
+        if output_action is not None:
+            pulumi.set(__self__, "output_action", output_action)
+        if output_enabled is not None:
+            pulumi.set(__self__, "output_enabled", output_enabled)
 
     @property
     @pulumi.getter
@@ -8571,6 +9114,26 @@ class GuardrailTopicConfig(dict):
         List of text examples
         """
         return pulumi.get(self, "examples")
+
+    @property
+    @pulumi.getter(name="inputAction")
+    def input_action(self) -> Optional['GuardrailTopicAction']:
+        return pulumi.get(self, "input_action")
+
+    @property
+    @pulumi.getter(name="inputEnabled")
+    def input_enabled(self) -> Optional[builtins.bool]:
+        return pulumi.get(self, "input_enabled")
+
+    @property
+    @pulumi.getter(name="outputAction")
+    def output_action(self) -> Optional['GuardrailTopicAction']:
+        return pulumi.get(self, "output_action")
+
+    @property
+    @pulumi.getter(name="outputEnabled")
+    def output_enabled(self) -> Optional[builtins.bool]:
+        return pulumi.get(self, "output_enabled")
 
 
 @pulumi.output_type
@@ -8617,13 +9180,48 @@ class GuardrailWordConfig(dict):
     """
     A custom word config.
     """
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "inputAction":
+            suggest = "input_action"
+        elif key == "inputEnabled":
+            suggest = "input_enabled"
+        elif key == "outputAction":
+            suggest = "output_action"
+        elif key == "outputEnabled":
+            suggest = "output_enabled"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in GuardrailWordConfig. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        GuardrailWordConfig.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        GuardrailWordConfig.__key_warning(key)
+        return super().get(key, default)
+
     def __init__(__self__, *,
-                 text: builtins.str):
+                 text: builtins.str,
+                 input_action: Optional['GuardrailWordAction'] = None,
+                 input_enabled: Optional[builtins.bool] = None,
+                 output_action: Optional['GuardrailWordAction'] = None,
+                 output_enabled: Optional[builtins.bool] = None):
         """
         A custom word config.
         :param builtins.str text: The custom word text.
         """
         pulumi.set(__self__, "text", text)
+        if input_action is not None:
+            pulumi.set(__self__, "input_action", input_action)
+        if input_enabled is not None:
+            pulumi.set(__self__, "input_enabled", input_enabled)
+        if output_action is not None:
+            pulumi.set(__self__, "output_action", output_action)
+        if output_enabled is not None:
+            pulumi.set(__self__, "output_enabled", output_enabled)
 
     @property
     @pulumi.getter
@@ -8632,6 +9230,26 @@ class GuardrailWordConfig(dict):
         The custom word text.
         """
         return pulumi.get(self, "text")
+
+    @property
+    @pulumi.getter(name="inputAction")
+    def input_action(self) -> Optional['GuardrailWordAction']:
+        return pulumi.get(self, "input_action")
+
+    @property
+    @pulumi.getter(name="inputEnabled")
+    def input_enabled(self) -> Optional[builtins.bool]:
+        return pulumi.get(self, "input_enabled")
+
+    @property
+    @pulumi.getter(name="outputAction")
+    def output_action(self) -> Optional['GuardrailWordAction']:
+        return pulumi.get(self, "output_action")
+
+    @property
+    @pulumi.getter(name="outputEnabled")
+    def output_enabled(self) -> Optional[builtins.bool]:
+        return pulumi.get(self, "output_enabled")
 
 
 @pulumi.output_type
@@ -8686,6 +9304,84 @@ class GuardrailWordPolicyConfig(dict):
         List of custom word configs.
         """
         return pulumi.get(self, "words_config")
+
+
+@pulumi.output_type
+class IntelligentPromptRouterPromptRouterTargetModel(dict):
+    """
+    Model configuration
+    """
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "modelArn":
+            suggest = "model_arn"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in IntelligentPromptRouterPromptRouterTargetModel. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        IntelligentPromptRouterPromptRouterTargetModel.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        IntelligentPromptRouterPromptRouterTargetModel.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 model_arn: builtins.str):
+        """
+        Model configuration
+        :param builtins.str model_arn: Arn of underlying model which are added in the Prompt Router.
+        """
+        pulumi.set(__self__, "model_arn", model_arn)
+
+    @property
+    @pulumi.getter(name="modelArn")
+    def model_arn(self) -> builtins.str:
+        """
+        Arn of underlying model which are added in the Prompt Router.
+        """
+        return pulumi.get(self, "model_arn")
+
+
+@pulumi.output_type
+class IntelligentPromptRouterRoutingCriteria(dict):
+    """
+    Represents the criteria used for routing requests.
+    """
+    @staticmethod
+    def __key_warning(key: str):
+        suggest = None
+        if key == "responseQualityDifference":
+            suggest = "response_quality_difference"
+
+        if suggest:
+            pulumi.log.warn(f"Key '{key}' not found in IntelligentPromptRouterRoutingCriteria. Access the value via the '{suggest}' property getter instead.")
+
+    def __getitem__(self, key: str) -> Any:
+        IntelligentPromptRouterRoutingCriteria.__key_warning(key)
+        return super().__getitem__(key)
+
+    def get(self, key: str, default = None) -> Any:
+        IntelligentPromptRouterRoutingCriteria.__key_warning(key)
+        return super().get(key, default)
+
+    def __init__(__self__, *,
+                 response_quality_difference: builtins.float):
+        """
+        Represents the criteria used for routing requests.
+        :param builtins.float response_quality_difference: The criteria's response quality difference.
+        """
+        pulumi.set(__self__, "response_quality_difference", response_quality_difference)
+
+    @property
+    @pulumi.getter(name="responseQualityDifference")
+    def response_quality_difference(self) -> builtins.float:
+        """
+        The criteria's response quality difference.
+        """
+        return pulumi.get(self, "response_quality_difference")
 
 
 @pulumi.output_type
@@ -8960,6 +9656,8 @@ class KnowledgeBaseMongoDbAtlasConfiguration(dict):
             suggest = "vector_index_name"
         elif key == "endpointServiceName":
             suggest = "endpoint_service_name"
+        elif key == "textIndexName":
+            suggest = "text_index_name"
 
         if suggest:
             pulumi.log.warn(f"Key '{key}' not found in KnowledgeBaseMongoDbAtlasConfiguration. Access the value via the '{suggest}' property getter instead.")
@@ -8979,7 +9677,8 @@ class KnowledgeBaseMongoDbAtlasConfiguration(dict):
                  endpoint: builtins.str,
                  field_mapping: 'outputs.KnowledgeBaseMongoDbAtlasFieldMapping',
                  vector_index_name: builtins.str,
-                 endpoint_service_name: Optional[builtins.str] = None):
+                 endpoint_service_name: Optional[builtins.str] = None,
+                 text_index_name: Optional[builtins.str] = None):
         """
         Contains the storage configuration of the knowledge base in MongoDb Atlas Cloud.
         :param builtins.str collection_name: Name of the collection within MongoDB Atlas.
@@ -8989,6 +9688,7 @@ class KnowledgeBaseMongoDbAtlasConfiguration(dict):
         :param 'KnowledgeBaseMongoDbAtlasFieldMapping' field_mapping: Contains the names of the fields to which to map information about the vector store.
         :param builtins.str vector_index_name: Name of a MongoDB Atlas index.
         :param builtins.str endpoint_service_name: MongoDB Atlas endpoint service name.
+        :param builtins.str text_index_name: Name of a MongoDB Atlas text index.
         """
         pulumi.set(__self__, "collection_name", collection_name)
         pulumi.set(__self__, "credentials_secret_arn", credentials_secret_arn)
@@ -8998,6 +9698,8 @@ class KnowledgeBaseMongoDbAtlasConfiguration(dict):
         pulumi.set(__self__, "vector_index_name", vector_index_name)
         if endpoint_service_name is not None:
             pulumi.set(__self__, "endpoint_service_name", endpoint_service_name)
+        if text_index_name is not None:
+            pulumi.set(__self__, "text_index_name", text_index_name)
 
     @property
     @pulumi.getter(name="collectionName")
@@ -9054,6 +9756,14 @@ class KnowledgeBaseMongoDbAtlasConfiguration(dict):
         MongoDB Atlas endpoint service name.
         """
         return pulumi.get(self, "endpoint_service_name")
+
+    @property
+    @pulumi.getter(name="textIndexName")
+    def text_index_name(self) -> Optional[builtins.str]:
+        """
+        Name of a MongoDB Atlas text index.
+        """
+        return pulumi.get(self, "text_index_name")
 
 
 @pulumi.output_type
@@ -9917,6 +10627,8 @@ class KnowledgeBaseRdsFieldMapping(dict):
             suggest = "text_field"
         elif key == "vectorField":
             suggest = "vector_field"
+        elif key == "customMetadataField":
+            suggest = "custom_metadata_field"
 
         if suggest:
             pulumi.log.warn(f"Key '{key}' not found in KnowledgeBaseRdsFieldMapping. Access the value via the '{suggest}' property getter instead.")
@@ -9933,18 +10645,22 @@ class KnowledgeBaseRdsFieldMapping(dict):
                  metadata_field: builtins.str,
                  primary_key_field: builtins.str,
                  text_field: builtins.str,
-                 vector_field: builtins.str):
+                 vector_field: builtins.str,
+                 custom_metadata_field: Optional[builtins.str] = None):
         """
         Contains the names of the fields to which to map information about the vector store.
         :param builtins.str metadata_field: The name of the field in which Amazon Bedrock stores metadata about the vector store.
         :param builtins.str primary_key_field: The name of the field in which Amazon Bedrock stores the ID for each entry.
         :param builtins.str text_field: The name of the field in which Amazon Bedrock stores the raw text from your data. The text is split according to the chunking strategy you choose.
         :param builtins.str vector_field: The name of the field in which Amazon Bedrock stores the vector embeddings for your data sources.
+        :param builtins.str custom_metadata_field: The name of the field in which Amazon Bedrock stores custom metadata about the vector store.
         """
         pulumi.set(__self__, "metadata_field", metadata_field)
         pulumi.set(__self__, "primary_key_field", primary_key_field)
         pulumi.set(__self__, "text_field", text_field)
         pulumi.set(__self__, "vector_field", vector_field)
+        if custom_metadata_field is not None:
+            pulumi.set(__self__, "custom_metadata_field", custom_metadata_field)
 
     @property
     @pulumi.getter(name="metadataField")
@@ -9977,6 +10693,14 @@ class KnowledgeBaseRdsFieldMapping(dict):
         The name of the field in which Amazon Bedrock stores the vector embeddings for your data sources.
         """
         return pulumi.get(self, "vector_field")
+
+    @property
+    @pulumi.getter(name="customMetadataField")
+    def custom_metadata_field(self) -> Optional[builtins.str]:
+        """
+        The name of the field in which Amazon Bedrock stores custom metadata about the vector store.
+        """
+        return pulumi.get(self, "custom_metadata_field")
 
 
 @pulumi.output_type

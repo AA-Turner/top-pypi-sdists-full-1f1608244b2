@@ -1,41 +1,31 @@
 use std::collections::HashMap;
 
 use async_recursion::async_recursion;
-use indexmap::IndexMap;
 
-#[cfg(feature = "artifact-graph")]
-use crate::execution::cad_op::{Group, OpArg, OpKclValue, Operation};
 use crate::{
     errors::{KclError, KclErrorDetails},
     execution::{
         annotations,
+        fn_call::Args,
         kcl_value::{FunctionSource, TypeDef},
         memory,
         state::ModuleState,
         types::{NumericType, PrimitiveType, RuntimeType},
-        BodyType, EnvironmentRef, ExecState, ExecutorContext, KclValue, Metadata, PlaneType, TagEngineInfo,
+        BodyType, EnvironmentRef, ExecState, ExecutorContext, KclValue, Metadata, PlaneType, StatementKind,
         TagIdentifier,
     },
     fmt,
     modules::{ModuleId, ModulePath, ModuleRepr},
     parsing::ast::types::{
         Annotation, ArrayExpression, ArrayRangeExpression, AscribedExpression, BinaryExpression, BinaryOperator,
-        BinaryPart, BodyItem, CallExpressionKw, Expr, FunctionExpression, IfExpression, ImportPath, ImportSelector,
-        ItemVisibility, LiteralIdentifier, LiteralValue, MemberExpression, MemberObject, Name, Node, NodeRef,
-        ObjectExpression, PipeExpression, Program, TagDeclarator, Type, UnaryExpression, UnaryOperator,
+        BinaryPart, BodyItem, Expr, IfExpression, ImportPath, ImportSelector, ItemVisibility, LiteralIdentifier,
+        LiteralValue, MemberExpression, MemberObject, Name, Node, NodeRef, ObjectExpression, PipeExpression, Program,
+        TagDeclarator, Type, UnaryExpression, UnaryOperator,
     },
     source_range::SourceRange,
-    std::{
-        args::{Arg, Args, KwArgs, TyF64},
-        FunctionKind,
-    },
+    std::args::TyF64,
     CompilationError,
 };
-
-enum StatementKind<'a> {
-    Declaration { name: &'a str },
-    Expression,
-}
 
 impl<'a> StatementKind<'a> {
     fn expect_name(&self) -> &'a str {
@@ -141,10 +131,10 @@ impl ExecutorContext {
             match statement {
                 BodyItem::ImportStatement(import_stmt) => {
                     if !matches!(body_type, BodyType::Root) {
-                        return Err(KclError::Semantic(KclErrorDetails {
-                            message: "Imports are only supported at the top-level of a file.".to_owned(),
-                            source_ranges: vec![import_stmt.into()],
-                        }));
+                        return Err(KclError::Semantic(KclErrorDetails::new(
+                            "Imports are only supported at the top-level of a file.".to_owned(),
+                            vec![import_stmt.into()],
+                        )));
                     }
 
                     let source_range = SourceRange::from(import_stmt);
@@ -167,28 +157,25 @@ impl ExecutorContext {
                                 let mut ty = mem.get_from(&ty_name, env_ref, import_item.into(), 0).cloned();
 
                                 if value.is_err() && ty.is_err() {
-                                    return Err(KclError::UndefinedValue(KclErrorDetails {
-                                        message: format!("{} is not defined in module", import_item.name.name),
-                                        source_ranges: vec![SourceRange::from(&import_item.name)],
-                                    }));
+                                    return Err(KclError::UndefinedValue(KclErrorDetails::new(
+                                        format!("{} is not defined in module", import_item.name.name),
+                                        vec![SourceRange::from(&import_item.name)],
+                                    )));
                                 }
 
                                 // Check that the item is allowed to be imported (in at least one namespace).
                                 if value.is_ok() && !module_exports.contains(&import_item.name.name) {
-                                    value = Err(KclError::Semantic(KclErrorDetails {
-                                        message: format!(
+                                    value = Err(KclError::Semantic(KclErrorDetails::new(
+                                        format!(
                                             "Cannot import \"{}\" from module because it is not exported. Add \"export\" before the definition to export it.",
                                             import_item.name.name
                                         ),
-                                        source_ranges: vec![SourceRange::from(&import_item.name)],
-                                    }));
+                                        vec![SourceRange::from(&import_item.name)],
+                                    )));
                                 }
 
                                 if ty.is_ok() && !module_exports.contains(&ty_name) {
-                                    ty = Err(KclError::Semantic(KclErrorDetails {
-                                        message: String::new(),
-                                        source_ranges: vec![],
-                                    }));
+                                    ty = Err(KclError::Semantic(KclErrorDetails::new(String::new(), vec![])));
                                 }
 
                                 if value.is_err() && ty.is_err() {
@@ -235,10 +222,10 @@ impl ExecutorContext {
                                     .memory
                                     .get_from(name, env_ref, source_range, 0)
                                     .map_err(|_err| {
-                                        KclError::Internal(KclErrorDetails {
-                                            message: format!("{} is not defined in module (but was exported?)", name),
-                                            source_ranges: vec![source_range],
-                                        })
+                                        KclError::Internal(KclErrorDetails::new(
+                                            format!("{} is not defined in module (but was exported?)", name),
+                                            vec![source_range],
+                                        ))
                                     })?
                                     .clone();
                                 exec_state.mut_stack().add(name.to_owned(), item, source_range)?;
@@ -307,10 +294,10 @@ impl ExecutorContext {
                             let std_path = match &exec_state.mod_local.std_path {
                                 Some(p) => p,
                                 None => {
-                                    return Err(KclError::Semantic(KclErrorDetails {
-                                        message: "User-defined types are not yet supported.".to_owned(),
-                                        source_ranges: vec![metadata.source_range],
-                                    }));
+                                    return Err(KclError::Semantic(KclErrorDetails::new(
+                                        "User-defined types are not yet supported.".to_owned(),
+                                        vec![metadata.source_range],
+                                    )));
                                 }
                             };
                             let (t, props) = crate::std::std_ty(std_path, &ty.name.name);
@@ -323,10 +310,10 @@ impl ExecutorContext {
                                 .mut_stack()
                                 .add(name_in_mem.clone(), value, metadata.source_range)
                                 .map_err(|_| {
-                                    KclError::Semantic(KclErrorDetails {
-                                        message: format!("Redefinition of type {}.", ty.name.name),
-                                        source_ranges: vec![metadata.source_range],
-                                    })
+                                    KclError::Semantic(KclErrorDetails::new(
+                                        format!("Redefinition of type {}.", ty.name.name),
+                                        vec![metadata.source_range],
+                                    ))
                                 })?;
 
                             if let ItemVisibility::Export = ty.visibility {
@@ -353,10 +340,10 @@ impl ExecutorContext {
                                     .mut_stack()
                                     .add(name_in_mem.clone(), value, metadata.source_range)
                                     .map_err(|_| {
-                                        KclError::Semantic(KclErrorDetails {
-                                            message: format!("Redefinition of type {}.", ty.name.name),
-                                            source_ranges: vec![metadata.source_range],
-                                        })
+                                        KclError::Semantic(KclErrorDetails::new(
+                                            format!("Redefinition of type {}.", ty.name.name),
+                                            vec![metadata.source_range],
+                                        ))
                                     })?;
 
                                 if let ItemVisibility::Export = ty.visibility {
@@ -364,10 +351,10 @@ impl ExecutorContext {
                                 }
                             }
                             None => {
-                                return Err(KclError::Semantic(KclErrorDetails {
-                                    message: "User-defined types are not yet supported.".to_owned(),
-                                    source_ranges: vec![metadata.source_range],
-                                }))
+                                return Err(KclError::Semantic(KclErrorDetails::new(
+                                    "User-defined types are not yet supported.".to_owned(),
+                                    vec![metadata.source_range],
+                                )))
                             }
                         },
                     }
@@ -378,10 +365,10 @@ impl ExecutorContext {
                     let metadata = Metadata::from(return_statement);
 
                     if matches!(body_type, BodyType::Root) {
-                        return Err(KclError::Semantic(KclErrorDetails {
-                            message: "Cannot return from outside a function.".to_owned(),
-                            source_ranges: vec![metadata.source_range],
-                        }));
+                        return Err(KclError::Semantic(KclErrorDetails::new(
+                            "Cannot return from outside a function.".to_owned(),
+                            vec![metadata.source_range],
+                        )));
                     }
 
                     let value = self
@@ -397,10 +384,10 @@ impl ExecutorContext {
                         .mut_stack()
                         .add(memory::RETURN_NAME.to_owned(), value, metadata.source_range)
                         .map_err(|_| {
-                            KclError::Semantic(KclErrorDetails {
-                                message: "Multiple returns from a single function.".to_owned(),
-                                source_ranges: vec![metadata.source_range],
-                            })
+                            KclError::Semantic(KclErrorDetails::new(
+                                "Multiple returns from a single function.".to_owned(),
+                                vec![metadata.source_range],
+                            ))
                         })?;
                     last_expr = None;
                 }
@@ -503,10 +490,10 @@ impl ExecutorContext {
                     *cache = Some((val, er, items.clone()));
                     (er, items)
                 }),
-            ModuleRepr::Foreign(geom, _) => Err(KclError::Semantic(KclErrorDetails {
-                message: "Cannot import items from foreign modules".to_owned(),
-                source_ranges: vec![geom.source_range],
-            })),
+            ModuleRepr::Foreign(geom, _) => Err(KclError::Semantic(KclErrorDetails::new(
+                "Cannot import items from foreign modules".to_owned(),
+                vec![geom.source_range],
+            ))),
             ModuleRepr::Dummy => unreachable!("Looking up {}, but it is still being interpreted", path),
         };
 
@@ -582,19 +569,19 @@ impl ExecutorContext {
                 err.override_source_ranges(vec![source_range])
             } else {
                 // TODO would be great to have line/column for the underlying error here
-                KclError::Semantic(KclErrorDetails {
-                    message: format!(
+                KclError::Semantic(KclErrorDetails::new(
+                    format!(
                         "Error loading imported file ({path}). Open it to view more details.\n  {}",
                         err.message()
                     ),
-                    source_ranges: vec![source_range],
-                })
+                    vec![source_range],
+                ))
             }
         })
     }
 
     #[async_recursion]
-    async fn execute_expr<'a: 'async_recursion>(
+    pub(super) async fn execute_expr<'a: 'async_recursion>(
         &self,
         init: &Expr,
         exec_state: &mut ExecState,
@@ -649,11 +636,10 @@ impl ExecutorContext {
                             meta: vec![metadata.to_owned()],
                         }
                     } else {
-                        return Err(KclError::Semantic(KclErrorDetails {
-                            message: "Rust implementation of functions is restricted to the standard library"
-                                .to_owned(),
-                            source_ranges: vec![metadata.source_range],
-                        }));
+                        return Err(KclError::Semantic(KclErrorDetails::new(
+                            "Rust implementation of functions is restricted to the standard library".to_owned(),
+                            vec![metadata.source_range],
+                        )));
                     }
                 } else {
                     // Snapshotting memory here is crucial for semantics so that we close
@@ -677,18 +663,18 @@ impl ExecutorContext {
                         "you cannot declare variable {name} as %, because % can only be used in function calls"
                     );
 
-                    return Err(KclError::Semantic(KclErrorDetails {
+                    return Err(KclError::Semantic(KclErrorDetails::new(
                         message,
-                        source_ranges: vec![pipe_substitution.into()],
-                    }));
+                        vec![pipe_substitution.into()],
+                    )));
                 }
                 StatementKind::Expression => match exec_state.mod_local.pipe_value.clone() {
                     Some(x) => x,
                     None => {
-                        return Err(KclError::Semantic(KclErrorDetails {
-                            message: "cannot use % outside a pipe expression".to_owned(),
-                            source_ranges: vec![pipe_substitution.into()],
-                        }));
+                        return Err(KclError::Semantic(KclErrorDetails::new(
+                            "cannot use % outside a pipe expression".to_owned(),
+                            vec![pipe_substitution.into()],
+                        )));
                     }
                 },
             },
@@ -760,13 +746,13 @@ fn apply_ascription(
         } else {
             ""
         };
-        KclError::Semantic(KclErrorDetails {
-            message: format!(
+        KclError::Semantic(KclErrorDetails::new(
+            format!(
                 "could not coerce {} value to type {ty}{suggestion}",
                 value.human_friendly_type()
             ),
-            source_ranges: vec![source_range],
-        })
+            vec![source_range],
+        ))
     })
 }
 
@@ -787,16 +773,16 @@ impl BinaryPart {
 }
 
 impl Node<Name> {
-    async fn get_result<'a>(
+    pub(super) async fn get_result<'a>(
         &self,
         exec_state: &'a mut ExecState,
         ctx: &ExecutorContext,
     ) -> Result<&'a KclValue, KclError> {
         if self.abs_path {
-            return Err(KclError::Semantic(KclErrorDetails {
-                message: "Absolute paths (names beginning with `::` are not yet supported)".to_owned(),
-                source_ranges: self.as_source_ranges(),
-            }));
+            return Err(KclError::Semantic(KclErrorDetails::new(
+                "Absolute paths (names beginning with `::` are not yet supported)".to_owned(),
+                self.as_source_ranges(),
+            )));
         }
 
         if self.path.is_empty() {
@@ -808,10 +794,10 @@ impl Node<Name> {
             let value = match mem_spec {
                 Some((env, exports)) => {
                     if !exports.contains(&p.name) {
-                        return Err(KclError::Semantic(KclErrorDetails {
-                            message: format!("Item {} not found in module's exported items", p.name),
-                            source_ranges: p.as_source_ranges(),
-                        }));
+                        return Err(KclError::Semantic(KclErrorDetails::new(
+                            format!("Item {} not found in module's exported items", p.name),
+                            p.as_source_ranges(),
+                        )));
                     }
 
                     exec_state
@@ -823,13 +809,13 @@ impl Node<Name> {
             };
 
             let KclValue::Module { value: module_id, .. } = value else {
-                return Err(KclError::Semantic(KclErrorDetails {
-                    message: format!(
+                return Err(KclError::Semantic(KclErrorDetails::new(
+                    format!(
                         "Identifier in path must refer to a module, found {}",
                         value.human_friendly_type()
                     ),
-                    source_ranges: p.as_source_ranges(),
-                }));
+                    p.as_source_ranges(),
+                )));
             };
 
             mem_spec = Some(
@@ -840,10 +826,10 @@ impl Node<Name> {
 
         let (env, exports) = mem_spec.unwrap();
         if !exports.contains(&self.name.name) {
-            return Err(KclError::Semantic(KclErrorDetails {
-                message: format!("Item {} not found in module's exported items", self.name.name),
-                source_ranges: self.name.as_source_ranges(),
-            }));
+            return Err(KclError::Semantic(KclErrorDetails::new(
+                format!("Item {} not found in module's exported items", self.name.name),
+                self.name.as_source_ranges(),
+            )));
         }
 
         exec_state
@@ -871,46 +857,44 @@ impl Node<MemberExpression> {
                 if let Some(value) = map.get(&property) {
                     Ok(value.to_owned())
                 } else {
-                    Err(KclError::UndefinedValue(KclErrorDetails {
-                        message: format!("Property '{property}' not found in object"),
-                        source_ranges: vec![self.clone().into()],
-                    }))
+                    Err(KclError::UndefinedValue(KclErrorDetails::new(
+                        format!("Property '{property}' not found in object"),
+                        vec![self.clone().into()],
+                    )))
                 }
             }
-            (KclValue::Object { .. }, Property::String(property), true) => Err(KclError::Semantic(KclErrorDetails {
-                message: format!("Cannot index object with string; use dot notation instead, e.g. `obj.{property}`"),
-                source_ranges: vec![self.clone().into()],
-            })),
+            (KclValue::Object { .. }, Property::String(property), true) => {
+                Err(KclError::Semantic(KclErrorDetails::new(
+                    format!("Cannot index object with string; use dot notation instead, e.g. `obj.{property}`"),
+                    vec![self.clone().into()],
+                )))
+            }
             (KclValue::Object { .. }, p, _) => {
                 let t = p.type_name();
                 let article = article_for(t);
-                Err(KclError::Semantic(KclErrorDetails {
-                    message: format!(
-                        "Only strings can be used as the property of an object, but you're using {article} {t}",
-                    ),
-                    source_ranges: vec![self.clone().into()],
-                }))
+                Err(KclError::Semantic(KclErrorDetails::new(
+                    format!("Only strings can be used as the property of an object, but you're using {article} {t}",),
+                    vec![self.clone().into()],
+                )))
             }
             (KclValue::HomArray { value: arr, .. }, Property::UInt(index), _) => {
                 let value_of_arr = arr.get(index);
                 if let Some(value) = value_of_arr {
                     Ok(value.to_owned())
                 } else {
-                    Err(KclError::UndefinedValue(KclErrorDetails {
-                        message: format!("The array doesn't have any item at index {index}"),
-                        source_ranges: vec![self.clone().into()],
-                    }))
+                    Err(KclError::UndefinedValue(KclErrorDetails::new(
+                        format!("The array doesn't have any item at index {index}"),
+                        vec![self.clone().into()],
+                    )))
                 }
             }
             (KclValue::HomArray { .. }, p, _) => {
                 let t = p.type_name();
                 let article = article_for(t);
-                Err(KclError::Semantic(KclErrorDetails {
-                    message: format!(
-                        "Only integers >= 0 can be used as the index of an array, but you're using {article} {t}",
-                    ),
-                    source_ranges: vec![self.clone().into()],
-                }))
+                Err(KclError::Semantic(KclErrorDetails::new(
+                    format!("Only integers >= 0 can be used as the index of an array, but you're using {article} {t}",),
+                    vec![self.clone().into()],
+                )))
             }
             (KclValue::Solid { value }, Property::String(prop), false) if prop == "sketch" => Ok(KclValue::Sketch {
                 value: Box::new(value.sketch),
@@ -928,10 +912,10 @@ impl Node<MemberExpression> {
             (being_indexed, _, _) => {
                 let t = being_indexed.human_friendly_type();
                 let article = article_for(&t);
-                Err(KclError::Semantic(KclErrorDetails {
-                    message: format!("Only arrays can be indexed, but you're trying to index {article} {t}"),
-                    source_ranges: vec![self.clone().into()],
-                }))
+                Err(KclError::Semantic(KclErrorDetails::new(
+                    format!("Only arrays can be indexed, but you're trying to index {article} {t}"),
+                    vec![self.clone().into()],
+                )))
             }
         }
     }
@@ -1006,26 +990,26 @@ impl Node<BinaryExpression> {
                 meta: _,
             } = left_value
             else {
-                return Err(KclError::Semantic(KclErrorDetails {
-                    message: format!(
+                return Err(KclError::Semantic(KclErrorDetails::new(
+                    format!(
                         "Cannot apply logical operator to non-boolean value: {}",
                         left_value.human_friendly_type()
                     ),
-                    source_ranges: vec![self.left.clone().into()],
-                }));
+                    vec![self.left.clone().into()],
+                )));
             };
             let KclValue::Bool {
                 value: right_value,
                 meta: _,
             } = right_value
             else {
-                return Err(KclError::Semantic(KclErrorDetails {
-                    message: format!(
+                return Err(KclError::Semantic(KclErrorDetails::new(
+                    format!(
                         "Cannot apply logical operator to non-boolean value: {}",
                         right_value.human_friendly_type()
                     ),
-                    source_ranges: vec![self.right.clone().into()],
-                }));
+                    vec![self.right.clone().into()],
+                )));
             };
             let raw_value = match self.operator {
                 BinaryOperator::Or => left_value || right_value,
@@ -1125,13 +1109,13 @@ impl Node<UnaryExpression> {
                 meta: _,
             } = value
             else {
-                return Err(KclError::Semantic(KclErrorDetails {
-                    message: format!(
+                return Err(KclError::Semantic(KclErrorDetails::new(
+                    format!(
                         "Cannot apply unary operator ! to non-boolean value: {}",
                         value.human_friendly_type()
                     ),
-                    source_ranges: vec![self.into()],
-                }));
+                    vec![self.into()],
+                )));
             };
             let meta = vec![Metadata {
                 source_range: self.into(),
@@ -1146,13 +1130,13 @@ impl Node<UnaryExpression> {
 
         let value = &self.argument.get_result(exec_state, ctx).await?;
         let err = || {
-            KclError::Semantic(KclErrorDetails {
-                message: format!(
+            KclError::Semantic(KclErrorDetails::new(
+                format!(
                     "You can only negate numbers, planes, or lines, but this is a {}",
                     value.human_friendly_type()
                 ),
-                source_ranges: vec![self.into()],
-            })
+                vec![self.into()],
+            ))
         };
         match value {
             KclValue::Number { value, ty, .. } => {
@@ -1249,10 +1233,10 @@ pub(crate) async fn execute_pipe_body(
     ctx: &ExecutorContext,
 ) -> Result<KclValue, KclError> {
     let Some((first, body)) = body.split_first() else {
-        return Err(KclError::Semantic(KclErrorDetails {
-            message: "Pipe expressions cannot be empty".to_owned(),
-            source_ranges: vec![source_range],
-        }));
+        return Err(KclError::Semantic(KclErrorDetails::new(
+            "Pipe expressions cannot be empty".to_owned(),
+            vec![source_range],
+        )));
     };
     // Evaluate the first element in the pipeline.
     // They use the pipe_value from some AST node above this, so that if pipe expression is nested in a larger pipe expression,
@@ -1287,10 +1271,10 @@ async fn inner_execute_pipe_body(
 ) -> Result<KclValue, KclError> {
     for expression in body {
         if let Expr::TagDeclarator(_) = expression {
-            return Err(KclError::Semantic(KclErrorDetails {
-                message: format!("This cannot be in a PipeExpression: {:?}", expression),
-                source_ranges: vec![expression.into()],
-            }));
+            return Err(KclError::Semantic(KclErrorDetails::new(
+                format!("This cannot be in a PipeExpression: {:?}", expression),
+                vec![expression.into()],
+            )));
         }
         let metadata = Metadata {
             source_range: SourceRange::from(expression),
@@ -1303,300 +1287,6 @@ async fn inner_execute_pipe_body(
     // Safe to unwrap here, because pipe_value always has something pushed in when the `match first` executes.
     let final_output = exec_state.mod_local.pipe_value.take().unwrap();
     Ok(final_output)
-}
-
-impl Node<CallExpressionKw> {
-    #[async_recursion]
-    pub async fn execute(&self, exec_state: &mut ExecState, ctx: &ExecutorContext) -> Result<KclValue, KclError> {
-        let fn_name = &self.callee;
-        let callsite: SourceRange = self.into();
-
-        // Build a hashmap from argument labels to the final evaluated values.
-        let mut fn_args = IndexMap::with_capacity(self.arguments.len());
-        let mut errors = Vec::new();
-        for arg_expr in &self.arguments {
-            let source_range = SourceRange::from(arg_expr.arg.clone());
-            let metadata = Metadata { source_range };
-            let value = ctx
-                .execute_expr(&arg_expr.arg, exec_state, &metadata, &[], StatementKind::Expression)
-                .await?;
-            let arg = Arg::new(value, source_range);
-            match &arg_expr.label {
-                Some(l) => {
-                    fn_args.insert(l.name.clone(), arg);
-                }
-                None => {
-                    if let Some(id) = arg_expr.arg.ident_name() {
-                        fn_args.insert(id.to_owned(), arg);
-                    } else {
-                        errors.push(arg);
-                    }
-                }
-            }
-        }
-
-        // Evaluate the unlabeled first param, if any exists.
-        let unlabeled = if let Some(ref arg_expr) = self.unlabeled {
-            let source_range = SourceRange::from(arg_expr.clone());
-            let metadata = Metadata { source_range };
-            let value = ctx
-                .execute_expr(arg_expr, exec_state, &metadata, &[], StatementKind::Expression)
-                .await?;
-
-            let label = arg_expr.ident_name().map(str::to_owned);
-
-            Some((label, Arg::new(value, source_range)))
-        } else {
-            None
-        };
-
-        let mut args = Args::new_kw(
-            KwArgs {
-                unlabeled,
-                labeled: fn_args,
-                errors,
-            },
-            self.into(),
-            ctx.clone(),
-            exec_state.pipe_value().map(|v| Arg::new(v.clone(), callsite)),
-        );
-        match ctx.stdlib.get_either(fn_name) {
-            FunctionKind::Core(func) => {
-                if func.deprecated() {
-                    exec_state.warn(CompilationError::err(
-                        self.callee.as_source_range(),
-                        format!("`{fn_name}` is deprecated, see the docs for a recommended replacement"),
-                    ));
-                }
-
-                let formals = func.args(false);
-
-                // If it's possible the input arg was meant to be labelled and we probably don't want to use
-                // it as the input arg, then treat it as labelled.
-                if let Some((Some(label), _)) = &args.kw_args.unlabeled {
-                    if (formals.iter().all(|a| a.label_required) || exec_state.pipe_value().is_some())
-                        && formals.iter().any(|a| &a.name == label && a.label_required)
-                        && !args.kw_args.labeled.contains_key(label)
-                    {
-                        let (label, arg) = args.kw_args.unlabeled.take().unwrap();
-                        args.kw_args.labeled.insert(label.unwrap(), arg);
-                    }
-                }
-
-                #[cfg(feature = "artifact-graph")]
-                let op = if func.feature_tree_operation() {
-                    let op_labeled_args = args
-                        .kw_args
-                        .labeled
-                        .iter()
-                        .map(|(k, arg)| (k.clone(), OpArg::new(OpKclValue::from(&arg.value), arg.source_range)))
-                        .collect();
-                    Some(Operation::StdLibCall {
-                        std_lib_fn: (&func).into(),
-                        unlabeled_arg: args
-                            .unlabeled_kw_arg_unconverted()
-                            .map(|arg| OpArg::new(OpKclValue::from(&arg.value), arg.source_range)),
-                        labeled_args: op_labeled_args,
-                        source_range: callsite,
-                        is_error: false,
-                    })
-                } else {
-                    None
-                };
-
-                for (label, arg) in &args.kw_args.labeled {
-                    match formals.iter().find(|p| &p.name == label) {
-                        Some(p) => {
-                            if !p.label_required {
-                                exec_state.err(CompilationError::err(
-                                    arg.source_range,
-                                    format!(
-                                        "The function `{fn_name}` expects an unlabeled first parameter (`{label}`), but it is labelled in the call"
-                                    ),
-                                ));
-                            }
-                        }
-                        None => {
-                            exec_state.err(CompilationError::err(
-                                arg.source_range,
-                                format!("`{label}` is not an argument of `{fn_name}`"),
-                            ));
-                        }
-                    }
-                }
-
-                // Attempt to call the function.
-                let mut return_value = {
-                    // Don't early-return in this block.
-                    exec_state.mut_stack().push_new_env_for_rust_call();
-                    let result = func.std_lib_fn()(exec_state, args).await;
-                    exec_state.mut_stack().pop_env();
-
-                    #[cfg(feature = "artifact-graph")]
-                    if let Some(mut op) = op {
-                        op.set_std_lib_call_is_error(result.is_err());
-                        // Track call operation.  We do this after the call
-                        // since things like patternTransform may call user code
-                        // before running, and we will likely want to use the
-                        // return value. The call takes ownership of the args,
-                        // so we need to build the op before the call.
-                        exec_state.global.operations.push(op);
-                    }
-
-                    result
-                }?;
-
-                update_memory_for_tags_of_geometry(&mut return_value, exec_state)?;
-
-                Ok(return_value)
-            }
-            FunctionKind::UserDefined => {
-                // Clone the function so that we can use a mutable reference to
-                // exec_state.
-                let func = fn_name.get_result(exec_state, ctx).await?.clone();
-
-                let Some(fn_src) = func.as_fn() else {
-                    return Err(KclError::Semantic(KclErrorDetails {
-                        message: "cannot call this because it isn't a function".to_string(),
-                        source_ranges: vec![callsite],
-                    }));
-                };
-
-                let return_value = fn_src
-                    .call_kw(Some(fn_name.to_string()), exec_state, ctx, args, callsite)
-                    .await
-                    .map_err(|e| {
-                        // Add the call expression to the source ranges.
-                        e.add_source_ranges(vec![callsite])
-                    })?;
-
-                let result = return_value.ok_or_else(move || {
-                    let mut source_ranges: Vec<SourceRange> = vec![callsite];
-                    // We want to send the source range of the original function.
-                    if let KclValue::Function { meta, .. } = func {
-                        source_ranges = meta.iter().map(|m| m.source_range).collect();
-                    };
-                    KclError::UndefinedValue(KclErrorDetails {
-                        message: format!("Result of user-defined function {} is undefined", fn_name),
-                        source_ranges,
-                    })
-                })?;
-
-                Ok(result)
-            }
-        }
-    }
-}
-
-fn update_memory_for_tags_of_geometry(result: &mut KclValue, exec_state: &mut ExecState) -> Result<(), KclError> {
-    // If the return result is a sketch or solid, we want to update the
-    // memory for the tags of the group.
-    // TODO: This could probably be done in a better way, but as of now this was my only idea
-    // and it works.
-    match result {
-        KclValue::Sketch { value } => {
-            for (name, tag) in value.tags.iter() {
-                if exec_state.stack().cur_frame_contains(name) {
-                    exec_state.mut_stack().update(name, |v, _| {
-                        v.as_mut_tag().unwrap().merge_info(tag);
-                    });
-                } else {
-                    exec_state
-                        .mut_stack()
-                        .add(
-                            name.to_owned(),
-                            KclValue::TagIdentifier(Box::new(tag.clone())),
-                            SourceRange::default(),
-                        )
-                        .unwrap();
-                }
-            }
-        }
-        KclValue::Solid { ref mut value } => {
-            for v in &value.value {
-                if let Some(tag) = v.get_tag() {
-                    // Get the past tag and update it.
-                    let tag_id = if let Some(t) = value.sketch.tags.get(&tag.name) {
-                        let mut t = t.clone();
-                        let Some(info) = t.get_cur_info() else {
-                            return Err(KclError::Internal(KclErrorDetails {
-                                message: format!("Tag {} does not have path info", tag.name),
-                                source_ranges: vec![tag.into()],
-                            }));
-                        };
-
-                        let mut info = info.clone();
-                        info.surface = Some(v.clone());
-                        info.sketch = value.id;
-                        t.info.push((exec_state.stack().current_epoch(), info));
-                        t
-                    } else {
-                        // It's probably a fillet or a chamfer.
-                        // Initialize it.
-                        TagIdentifier {
-                            value: tag.name.clone(),
-                            info: vec![(
-                                exec_state.stack().current_epoch(),
-                                TagEngineInfo {
-                                    id: v.get_id(),
-                                    surface: Some(v.clone()),
-                                    path: None,
-                                    sketch: value.id,
-                                },
-                            )],
-                            meta: vec![Metadata {
-                                source_range: tag.clone().into(),
-                            }],
-                        }
-                    };
-
-                    // update the sketch tags.
-                    value.sketch.merge_tags(Some(&tag_id).into_iter());
-
-                    if exec_state.stack().cur_frame_contains(&tag.name) {
-                        exec_state.mut_stack().update(&tag.name, |v, _| {
-                            v.as_mut_tag().unwrap().merge_info(&tag_id);
-                        });
-                    } else {
-                        exec_state
-                            .mut_stack()
-                            .add(
-                                tag.name.clone(),
-                                KclValue::TagIdentifier(Box::new(tag_id)),
-                                SourceRange::default(),
-                            )
-                            .unwrap();
-                    }
-                }
-            }
-
-            // Find the stale sketch in memory and update it.
-            if !value.sketch.tags.is_empty() {
-                let sketches_to_update: Vec<_> = exec_state
-                    .stack()
-                    .find_keys_in_current_env(|v| match v {
-                        KclValue::Sketch { value: sk } => sk.original_id == value.sketch.original_id,
-                        _ => false,
-                    })
-                    .cloned()
-                    .collect();
-
-                for k in sketches_to_update {
-                    exec_state.mut_stack().update(&k, |v, _| {
-                        let sketch = v.as_mut_sketch().unwrap();
-                        sketch.merge_tags(value.sketch.tags.values());
-                    });
-                }
-            }
-        }
-        KclValue::Tuple { value, .. } | KclValue::HomArray { value, .. } => {
-            for v in value {
-                update_memory_for_tags_of_geometry(v, exec_state)?;
-            }
-        }
-        _ => {}
-    }
-    Ok(())
 }
 
 impl Node<TagDeclarator> {
@@ -1653,35 +1343,37 @@ impl Node<ArrayRangeExpression> {
                 StatementKind::Expression,
             )
             .await?;
-        let (start, start_ty) = start_val.as_int_with_ty().ok_or(KclError::Semantic(KclErrorDetails {
-            source_ranges: vec![self.into()],
-            message: format!("Expected int but found {}", start_val.human_friendly_type()),
-        }))?;
+        let (start, start_ty) = start_val
+            .as_int_with_ty()
+            .ok_or(KclError::Semantic(KclErrorDetails::new(
+                format!("Expected int but found {}", start_val.human_friendly_type()),
+                vec![self.into()],
+            )))?;
         let metadata = Metadata::from(&self.end_element);
         let end_val = ctx
             .execute_expr(&self.end_element, exec_state, &metadata, &[], StatementKind::Expression)
             .await?;
-        let (end, end_ty) = end_val.as_int_with_ty().ok_or(KclError::Semantic(KclErrorDetails {
-            source_ranges: vec![self.into()],
-            message: format!("Expected int but found {}", end_val.human_friendly_type()),
-        }))?;
+        let (end, end_ty) = end_val.as_int_with_ty().ok_or(KclError::Semantic(KclErrorDetails::new(
+            format!("Expected int but found {}", end_val.human_friendly_type()),
+            vec![self.into()],
+        )))?;
 
         if start_ty != end_ty {
             let start = start_val.as_ty_f64().unwrap_or(TyF64 { n: 0.0, ty: start_ty });
             let start = fmt::human_display_number(start.n, start.ty);
             let end = end_val.as_ty_f64().unwrap_or(TyF64 { n: 0.0, ty: end_ty });
             let end = fmt::human_display_number(end.n, end.ty);
-            return Err(KclError::Semantic(KclErrorDetails {
-                source_ranges: vec![self.into()],
-                message: format!("Range start and end must be of the same type, but found {start} and {end}"),
-            }));
+            return Err(KclError::Semantic(KclErrorDetails::new(
+                format!("Range start and end must be of the same type, but found {start} and {end}"),
+                vec![self.into()],
+            )));
         }
 
         if end < start {
-            return Err(KclError::Semantic(KclErrorDetails {
-                source_ranges: vec![self.into()],
-                message: format!("Range start is greater than range end: {start} .. {end}"),
-            }));
+            return Err(KclError::Semantic(KclErrorDetails::new(
+                format!("Range start is greater than range end: {start} .. {end}"),
+                vec![self.into()],
+            )));
         }
 
         let range: Vec<_> = if self.end_inclusive {
@@ -1742,10 +1434,10 @@ fn article_for<S: AsRef<str>>(s: S) -> &'static str {
 fn number_as_f64(v: &KclValue, source_range: SourceRange) -> Result<TyF64, KclError> {
     v.as_ty_f64().ok_or_else(|| {
         let actual_type = v.human_friendly_type();
-        KclError::Semantic(KclErrorDetails {
-            source_ranges: vec![source_range],
-            message: format!("Expected a number, but found {actual_type}",),
-        })
+        KclError::Semantic(KclErrorDetails::new(
+            format!("Expected a number, but found {actual_type}",),
+            vec![source_range],
+        ))
     })
 }
 
@@ -1834,16 +1526,16 @@ impl Property {
                         if let Some(x) = crate::try_f64_to_usize(value) {
                             Ok(Property::UInt(x))
                         } else {
-                            Err(KclError::Semantic(KclErrorDetails {
-                                source_ranges: property_sr,
-                                message: format!("{value} is not a valid index, indices must be whole numbers >= 0"),
-                            }))
+                            Err(KclError::Semantic(KclErrorDetails::new(
+                                format!("{value} is not a valid index, indices must be whole numbers >= 0"),
+                                property_sr,
+                            )))
                         }
                     }
-                    _ => Err(KclError::Semantic(KclErrorDetails {
-                        source_ranges: vec![sr],
-                        message: "Only numbers (>= 0) can be indexes".to_owned(),
-                    })),
+                    _ => Err(KclError::Semantic(KclErrorDetails::new(
+                        "Only numbers (>= 0) can be indexes".to_owned(),
+                        vec![sr],
+                    ))),
                 }
             }
         }
@@ -1851,12 +1543,7 @@ impl Property {
 }
 
 fn jvalue_to_prop(value: &KclValue, property_sr: Vec<SourceRange>, name: &str) -> Result<Property, KclError> {
-    let make_err = |message: String| {
-        Err::<Property, _>(KclError::Semantic(KclErrorDetails {
-            source_ranges: property_sr,
-            message,
-        }))
-    };
+    let make_err = |message: String| Err::<Property, _>(KclError::Semantic(KclErrorDetails::new(message, property_sr)));
     match value {
         KclValue::Number{value: num, .. } => {
             let num = *num;
@@ -1893,409 +1580,6 @@ impl Node<PipeExpression> {
     }
 }
 
-fn type_check_params_kw(
-    fn_name: Option<&str>,
-    function_expression: NodeRef<'_, FunctionExpression>,
-    args: &mut KwArgs,
-    exec_state: &mut ExecState,
-) -> Result<(), KclError> {
-    // If it's possible the input arg was meant to be labelled and we probably don't want to use
-    // it as the input arg, then treat it as labelled.
-    if let Some((Some(label), _)) = &args.unlabeled {
-        if (function_expression.params.iter().all(|p| p.labeled) || exec_state.pipe_value().is_some())
-            && function_expression
-                .params
-                .iter()
-                .any(|p| &p.identifier.name == label && p.labeled)
-            && !args.labeled.contains_key(label)
-        {
-            let (label, arg) = args.unlabeled.take().unwrap();
-            args.labeled.insert(label.unwrap(), arg);
-        }
-    }
-
-    for (label, arg) in &mut args.labeled {
-        match function_expression.params.iter().find(|p| &p.identifier.name == label) {
-            Some(p) => {
-                if !p.labeled {
-                    exec_state.err(CompilationError::err(
-                        arg.source_range,
-                        format!(
-                            "{} expects an unlabeled first parameter (`{label}`), but it is labelled in the call",
-                            fn_name
-                                .map(|n| format!("The function `{}`", n))
-                                .unwrap_or_else(|| "This function".to_owned()),
-                        ),
-                    ));
-                }
-
-                if let Some(ty) = &p.type_ {
-                    arg.value = arg
-                        .value
-                        .coerce(
-                            &RuntimeType::from_parsed(ty.inner.clone(), exec_state, arg.source_range).map_err(|e| KclError::Semantic(e.into()))?,
-                            exec_state,
-                        )
-                        .map_err(|e| {
-                            let mut message = format!(
-                                "{label} requires a value with type `{}`, but found {}",
-                                ty.inner,
-                                arg.value.human_friendly_type(),
-                            );
-                            if let Some(ty) = e.explicit_coercion {
-                                // TODO if we have access to the AST for the argument we could choose which example to suggest.
-                                message = format!("{message}\n\nYou may need to add information about the type of the argument, for example:\n  using a numeric suffix: `42{ty}`\n  or using type ascription: `foo(): number({ty})`");
-                            }
-                            KclError::Semantic(KclErrorDetails {
-                                message,
-                                source_ranges: vec![arg.source_range],
-                            })
-                        })?;
-                }
-            }
-            None => {
-                exec_state.err(CompilationError::err(
-                    arg.source_range,
-                    format!(
-                        "`{label}` is not an argument of {}",
-                        fn_name
-                            .map(|n| format!("`{}`", n))
-                            .unwrap_or_else(|| "this function".to_owned()),
-                    ),
-                ));
-            }
-        }
-    }
-
-    if !args.errors.is_empty() {
-        let actuals = args.labeled.keys();
-        let formals: Vec<_> = function_expression
-            .params
-            .iter()
-            .filter_map(|p| {
-                if !p.labeled {
-                    return None;
-                }
-
-                let name = &p.identifier.name;
-                if actuals.clone().any(|a| a == name) {
-                    return None;
-                }
-
-                Some(format!("`{name}`"))
-            })
-            .collect();
-
-        let suggestion = if formals.is_empty() {
-            String::new()
-        } else {
-            format!("; suggested labels: {}", formals.join(", "))
-        };
-
-        let mut errors = args.errors.iter().map(|e| {
-            CompilationError::err(
-                e.source_range,
-                format!("This argument needs a label, but it doesn't have one{suggestion}"),
-            )
-        });
-
-        let first = errors.next().unwrap();
-        errors.for_each(|e| exec_state.err(e));
-
-        return Err(KclError::Semantic(first.into()));
-    }
-
-    if let Some(arg) = &mut args.unlabeled {
-        if let Some(p) = function_expression.params.iter().find(|p| !p.labeled) {
-            if let Some(ty) = &p.type_ {
-                arg.1.value = arg
-                    .1
-                    .value
-                    .coerce(
-                        &RuntimeType::from_parsed(ty.inner.clone(), exec_state, arg.1.source_range)
-                            .map_err(|e| KclError::Semantic(e.into()))?,
-                        exec_state,
-                    )
-                    .map_err(|_| {
-                        KclError::Semantic(KclErrorDetails {
-                            message: format!(
-                                "The input argument of {} requires a value with type `{}`, but found {}",
-                                fn_name
-                                    .map(|n| format!("`{}`", n))
-                                    .unwrap_or_else(|| "this function".to_owned()),
-                                ty.inner,
-                                arg.1.value.human_friendly_type()
-                            ),
-                            source_ranges: vec![arg.1.source_range],
-                        })
-                    })?;
-            }
-        }
-    }
-
-    Ok(())
-}
-
-fn assign_args_to_params_kw(
-    fn_name: Option<&str>,
-    function_expression: NodeRef<'_, FunctionExpression>,
-    mut args: Args,
-    exec_state: &mut ExecState,
-) -> Result<(), KclError> {
-    type_check_params_kw(fn_name, function_expression, &mut args.kw_args, exec_state)?;
-
-    // Add the arguments to the memory.  A new call frame should have already
-    // been created.
-    let source_ranges = vec![function_expression.into()];
-
-    for param in function_expression.params.iter() {
-        if param.labeled {
-            let arg = args.kw_args.labeled.get(&param.identifier.name);
-            let arg_val = match arg {
-                Some(arg) => arg.value.clone(),
-                None => match param.default_value {
-                    Some(ref default_val) => KclValue::from_default_param(default_val.clone(), exec_state),
-                    None => {
-                        return Err(KclError::Semantic(KclErrorDetails {
-                            source_ranges,
-                            message: format!(
-                                "This function requires a parameter {}, but you haven't passed it one.",
-                                param.identifier.name
-                            ),
-                        }));
-                    }
-                },
-            };
-            exec_state
-                .mut_stack()
-                .add(param.identifier.name.clone(), arg_val, (&param.identifier).into())?;
-        } else {
-            let unlabelled = args.unlabeled_kw_arg_unconverted();
-
-            let Some(unlabeled) = unlabelled else {
-                let param_name = &param.identifier.name;
-                return Err(if args.kw_args.labeled.contains_key(param_name) {
-                    KclError::Semantic(KclErrorDetails {
-                        source_ranges,
-                        message: format!("The function does declare a parameter named '{param_name}', but this parameter doesn't use a label. Try removing the `{param_name}:`"),
-                    })
-                } else {
-                    KclError::Semantic(KclErrorDetails {
-                        source_ranges,
-                        message: "This function expects an unlabeled first parameter, but you haven't passed it one."
-                            .to_owned(),
-                    })
-                });
-            };
-            exec_state.mut_stack().add(
-                param.identifier.name.clone(),
-                unlabeled.value.clone(),
-                (&param.identifier).into(),
-            )?;
-        }
-    }
-
-    Ok(())
-}
-
-fn coerce_result_type(
-    result: Result<Option<KclValue>, KclError>,
-    function_expression: NodeRef<'_, FunctionExpression>,
-    exec_state: &mut ExecState,
-) -> Result<Option<KclValue>, KclError> {
-    if let Ok(Some(val)) = result {
-        if let Some(ret_ty) = &function_expression.return_type {
-            let ty = RuntimeType::from_parsed(ret_ty.inner.clone(), exec_state, ret_ty.as_source_range())
-                .map_err(|e| KclError::Semantic(e.into()))?;
-            let val = val.coerce(&ty, exec_state).map_err(|_| {
-                KclError::Semantic(KclErrorDetails {
-                    message: format!(
-                        "This function requires its result to be of type `{}`, but found {}",
-                        ty.human_friendly_type(),
-                        val.human_friendly_type(),
-                    ),
-                    source_ranges: ret_ty.as_source_ranges(),
-                })
-            })?;
-            Ok(Some(val))
-        } else {
-            Ok(Some(val))
-        }
-    } else {
-        result
-    }
-}
-
-async fn call_user_defined_function_kw(
-    fn_name: Option<&str>,
-    args: Args,
-    memory: EnvironmentRef,
-    function_expression: NodeRef<'_, FunctionExpression>,
-    exec_state: &mut ExecState,
-    ctx: &ExecutorContext,
-) -> Result<Option<KclValue>, KclError> {
-    // Create a new environment to execute the function body in so that local
-    // variables shadow variables in the parent scope.  The new environment's
-    // parent should be the environment of the closure.
-    exec_state.mut_stack().push_new_env_for_call(memory);
-    if let Err(e) = assign_args_to_params_kw(fn_name, function_expression, args, exec_state) {
-        exec_state.mut_stack().pop_env();
-        return Err(e);
-    }
-
-    // Execute the function body using the memory we just created.
-    let result = ctx
-        .exec_block(&function_expression.body, exec_state, BodyType::Block)
-        .await;
-    let mut result = result.map(|_| {
-        exec_state
-            .stack()
-            .get(memory::RETURN_NAME, function_expression.as_source_range())
-            .ok()
-            .cloned()
-    });
-
-    result = coerce_result_type(result, function_expression, exec_state);
-
-    // Restore the previous memory.
-    exec_state.mut_stack().pop_env();
-
-    result
-}
-
-impl FunctionSource {
-    pub async fn call_kw(
-        &self,
-        fn_name: Option<String>,
-        exec_state: &mut ExecState,
-        ctx: &ExecutorContext,
-        mut args: Args,
-        callsite: SourceRange,
-    ) -> Result<Option<KclValue>, KclError> {
-        match self {
-            FunctionSource::Std { func, ast, props } => {
-                if props.deprecated {
-                    exec_state.warn(CompilationError::err(
-                        callsite,
-                        format!(
-                            "`{}` is deprecated, see the docs for a recommended replacement",
-                            props.name
-                        ),
-                    ));
-                }
-
-                type_check_params_kw(Some(&props.name), ast, &mut args.kw_args, exec_state)?;
-
-                if let Some(arg) = &mut args.kw_args.unlabeled {
-                    if let Some(p) = ast.params.iter().find(|p| !p.labeled) {
-                        if let Some(ty) = &p.type_ {
-                            arg.1.value = arg
-                                .1
-                                .value
-                                .coerce(
-                                    &RuntimeType::from_parsed(ty.inner.clone(), exec_state, arg.1.source_range)
-                                        .map_err(|e| KclError::Semantic(e.into()))?,
-                                    exec_state,
-                                )
-                                .map_err(|_| {
-                                    KclError::Semantic(KclErrorDetails {
-                                        message: format!(
-                                            "The input argument of {} requires a value with type `{}`, but found {}",
-                                            props.name,
-                                            ty.inner,
-                                            arg.1.value.human_friendly_type(),
-                                        ),
-                                        source_ranges: vec![callsite],
-                                    })
-                                })?;
-                        }
-                    }
-                }
-
-                #[cfg(feature = "artifact-graph")]
-                let op = if props.include_in_feature_tree {
-                    let op_labeled_args = args
-                        .kw_args
-                        .labeled
-                        .iter()
-                        .map(|(k, arg)| (k.clone(), OpArg::new(OpKclValue::from(&arg.value), arg.source_range)))
-                        .collect();
-                    Some(Operation::KclStdLibCall {
-                        name: fn_name.unwrap_or_default(),
-                        unlabeled_arg: args
-                            .unlabeled_kw_arg_unconverted()
-                            .map(|arg| OpArg::new(OpKclValue::from(&arg.value), arg.source_range)),
-                        labeled_args: op_labeled_args,
-                        source_range: callsite,
-                        is_error: false,
-                    })
-                } else {
-                    None
-                };
-
-                // Attempt to call the function.
-                exec_state.mut_stack().push_new_env_for_rust_call();
-                let mut result = {
-                    // Don't early-return in this block.
-                    let result = func(exec_state, args).await;
-                    exec_state.mut_stack().pop_env();
-
-                    #[cfg(feature = "artifact-graph")]
-                    if let Some(mut op) = op {
-                        op.set_std_lib_call_is_error(result.is_err());
-                        // Track call operation.  We do this after the call
-                        // since things like patternTransform may call user code
-                        // before running, and we will likely want to use the
-                        // return value. The call takes ownership of the args,
-                        // so we need to build the op before the call.
-                        exec_state.global.operations.push(op);
-                    }
-                    result
-                }?;
-
-                update_memory_for_tags_of_geometry(&mut result, exec_state)?;
-
-                Ok(Some(result))
-            }
-            FunctionSource::User { ast, memory, .. } => {
-                // Track call operation.
-                #[cfg(feature = "artifact-graph")]
-                {
-                    let op_labeled_args = args
-                        .kw_args
-                        .labeled
-                        .iter()
-                        .map(|(k, arg)| (k.clone(), OpArg::new(OpKclValue::from(&arg.value), arg.source_range)))
-                        .collect();
-                    exec_state.global.operations.push(Operation::GroupBegin {
-                        group: Group::FunctionCall {
-                            name: fn_name.clone(),
-                            function_source_range: ast.as_source_range(),
-                            unlabeled_arg: args
-                                .kw_args
-                                .unlabeled
-                                .as_ref()
-                                .map(|arg| OpArg::new(OpKclValue::from(&arg.1.value), arg.1.source_range)),
-                            labeled_args: op_labeled_args,
-                        },
-                        source_range: callsite,
-                    });
-                }
-
-                let result =
-                    call_user_defined_function_kw(fn_name.as_deref(), args, *memory, ast, exec_state, ctx).await;
-
-                // Track return operation.
-                #[cfg(feature = "artifact-graph")]
-                exec_state.global.operations.push(Operation::GroupEnd);
-
-                result
-            }
-            FunctionSource::None => unreachable!(),
-        }
-    }
-}
-
 #[cfg(test)]
 mod test {
     use std::sync::Arc;
@@ -2305,150 +1589,9 @@ mod test {
     use super::*;
     use crate::{
         exec::UnitType,
-        execution::{memory::Stack, parse_execute, ContextType},
-        parsing::ast::types::{DefaultParamVal, Identifier, Parameter},
+        execution::{parse_execute, ContextType},
         ExecutorSettings, UnitLen,
     };
-
-    #[tokio::test(flavor = "multi_thread")]
-    async fn test_assign_args_to_params() {
-        // Set up a little framework for this test.
-        fn mem(number: usize) -> KclValue {
-            KclValue::Number {
-                value: number as f64,
-                ty: NumericType::count(),
-                meta: Default::default(),
-            }
-        }
-        fn ident(s: &'static str) -> Node<Identifier> {
-            Node::no_src(Identifier {
-                name: s.to_owned(),
-                digest: None,
-            })
-        }
-        fn opt_param(s: &'static str) -> Parameter {
-            Parameter {
-                identifier: ident(s),
-                type_: None,
-                default_value: Some(DefaultParamVal::none()),
-                labeled: true,
-                digest: None,
-            }
-        }
-        fn req_param(s: &'static str) -> Parameter {
-            Parameter {
-                identifier: ident(s),
-                type_: None,
-                default_value: None,
-                labeled: true,
-                digest: None,
-            }
-        }
-        fn additional_program_memory(items: &[(String, KclValue)]) -> Stack {
-            let mut program_memory = Stack::new_for_tests();
-            for (name, item) in items {
-                program_memory
-                    .add(name.clone(), item.clone(), SourceRange::default())
-                    .unwrap();
-            }
-            program_memory
-        }
-        // Declare the test cases.
-        for (test_name, params, args, expected) in [
-            ("empty", Vec::new(), Vec::new(), Ok(additional_program_memory(&[]))),
-            (
-                "all params required, and all given, should be OK",
-                vec![req_param("x")],
-                vec![("x", mem(1))],
-                Ok(additional_program_memory(&[("x".to_owned(), mem(1))])),
-            ),
-            (
-                "all params required, none given, should error",
-                vec![req_param("x")],
-                vec![],
-                Err(KclError::Semantic(KclErrorDetails {
-                    source_ranges: vec![SourceRange::default()],
-                    message: "This function requires a parameter x, but you haven't passed it one.".to_owned(),
-                })),
-            ),
-            (
-                "all params optional, none given, should be OK",
-                vec![opt_param("x")],
-                vec![],
-                Ok(additional_program_memory(&[("x".to_owned(), KclValue::none())])),
-            ),
-            (
-                "mixed params, too few given",
-                vec![req_param("x"), opt_param("y")],
-                vec![],
-                Err(KclError::Semantic(KclErrorDetails {
-                    source_ranges: vec![SourceRange::default()],
-                    message: "This function requires a parameter x, but you haven't passed it one.".to_owned(),
-                })),
-            ),
-            (
-                "mixed params, minimum given, should be OK",
-                vec![req_param("x"), opt_param("y")],
-                vec![("x", mem(1))],
-                Ok(additional_program_memory(&[
-                    ("x".to_owned(), mem(1)),
-                    ("y".to_owned(), KclValue::none()),
-                ])),
-            ),
-            (
-                "mixed params, maximum given, should be OK",
-                vec![req_param("x"), opt_param("y")],
-                vec![("x", mem(1)), ("y", mem(2))],
-                Ok(additional_program_memory(&[
-                    ("x".to_owned(), mem(1)),
-                    ("y".to_owned(), mem(2)),
-                ])),
-            ),
-        ] {
-            // Run each test.
-            let func_expr = &Node::no_src(FunctionExpression {
-                params,
-                body: Program::empty(),
-                return_type: None,
-                digest: None,
-            });
-            let labeled = args
-                .iter()
-                .map(|(name, value)| {
-                    let arg = Arg::new(value.clone(), SourceRange::default());
-                    ((*name).to_owned(), arg)
-                })
-                .collect::<IndexMap<_, _>>();
-            let exec_ctxt = ExecutorContext {
-                engine: Arc::new(Box::new(
-                    crate::engine::conn_mock::EngineConnection::new().await.unwrap(),
-                )),
-                fs: Arc::new(crate::fs::FileManager::new()),
-                stdlib: Arc::new(crate::std::StdLib::new()),
-                settings: Default::default(),
-                context_type: ContextType::Mock,
-            };
-            let mut exec_state = ExecState::new(&exec_ctxt);
-            exec_state.mod_local.stack = Stack::new_for_tests();
-
-            let args = Args::new_kw(
-                KwArgs {
-                    unlabeled: None,
-                    labeled,
-                    errors: Vec::new(),
-                },
-                SourceRange::default(),
-                exec_ctxt,
-                None,
-            );
-            let actual =
-                assign_args_to_params_kw(None, func_expr, args, &mut exec_state).map(|_| exec_state.mod_local.stack);
-            assert_eq!(
-                actual, expected,
-                "failed test '{test_name}':\ngot {actual:?}\nbut expected\n{expected:?}"
-            );
-        }
-    }
 
     #[tokio::test(flavor = "multi_thread")]
     async fn ascription() {
@@ -2643,10 +1786,10 @@ d = b + c
                 crate::engine::conn_mock::EngineConnection::new()
                     .await
                     .map_err(|err| {
-                        KclError::Internal(crate::errors::KclErrorDetails {
-                            message: format!("Failed to create mock engine connection: {}", err),
-                            source_ranges: vec![SourceRange::default()],
-                        })
+                        KclError::Internal(KclErrorDetails::new(
+                            format!("Failed to create mock engine connection: {}", err),
+                            vec![SourceRange::default()],
+                        ))
                     })
                     .unwrap(),
             )),

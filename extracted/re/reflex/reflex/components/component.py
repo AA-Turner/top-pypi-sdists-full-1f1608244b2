@@ -58,7 +58,7 @@ from reflex.vars.base import (
 )
 from reflex.vars.function import ArgsFunctionOperation, FunctionStringVar, FunctionVar
 from reflex.vars.number import ternary_operation
-from reflex.vars.object import LiteralObjectVar, ObjectVar
+from reflex.vars.object import ObjectVar
 from reflex.vars.sequence import LiteralArrayVar, LiteralStringVar, StringVar
 
 
@@ -280,6 +280,9 @@ class Component(BaseComponent, ABC):
     # The id for the component.
     id: Any = pydantic.v1.Field(default_factory=lambda: None)
 
+    # The Var to pass as the ref to the component.
+    ref: Var | None = pydantic.v1.Field(default_factory=lambda: None)
+
     # The class name for the component.
     class_name: Any = pydantic.v1.Field(default_factory=lambda: None)
 
@@ -497,36 +500,16 @@ class Component(BaseComponent, ABC):
             else:
                 continue
 
-            def determine_key(value: Any):
-                # Try to create a var from the value
-                key = value if isinstance(value, Var) else LiteralVar.create(value)
-
-                # Check that the var type is not None.
-                if key is None:
-                    raise TypeError
-
-                return key
-
             # Check whether the key is a component prop.
             if is_var:
                 try:
-                    kwargs[key] = determine_key(value)
+                    kwargs[key] = LiteralVar.create(value)
 
+                    # Get the passed type and the var type.
+                    passed_type = kwargs[key]._var_type
                     expected_type = types.get_args(
                         types.get_field_type(type(self), key)
                     )[0]
-
-                    # validate literal fields.
-                    types.validate_literal(
-                        key, value, expected_type, type(self).__name__
-                    )
-                    # Get the passed type and the var type.
-                    passed_type = kwargs[key]._var_type
-                    expected_type = (
-                        type(expected_type.__args__[0])
-                        if types.is_literal(expected_type)
-                        else expected_type
-                    )
                 except TypeError:
                     # If it is not a valid var, check the base types.
                     passed_type = type(value)
@@ -558,15 +541,19 @@ class Component(BaseComponent, ABC):
             kwargs.pop(key, None)
 
         # Place data_ and aria_ attributes into custom_attrs
-        special_attributes = tuple(
+        special_attributes = [
             key
             for key in kwargs
             if key not in fields and SpecialAttributes.is_special(key)
-        )
+        ]
         if special_attributes:
             custom_attrs = kwargs.setdefault("custom_attrs", {})
-            for key in special_attributes:
-                custom_attrs[format.to_kebab_case(key)] = kwargs.pop(key)
+            custom_attrs.update(
+                {
+                    format.to_kebab_case(key): kwargs.pop(key)
+                    for key in special_attributes
+                }
+            )
 
         # Add style props to the component.
         style = kwargs.get("style", {})
@@ -709,9 +696,10 @@ class Component(BaseComponent, ABC):
                 attr.removesuffix("_"): getattr(self, attr) for attr in self.get_props()
             }
 
-            # Add ref to element if `id` is not None.
-            ref = self.get_ref()
-            if ref is not None:
+            # Add ref to element if `ref` is None and `id` is not None.
+            if self.ref is not None:
+                props["ref"] = self.ref
+            elif (ref := self.get_ref()) is not None:
                 props["ref"] = Var(_js_expr=ref)
         else:
             props = props.copy()
@@ -802,6 +790,18 @@ class Component(BaseComponent, ABC):
         ]
 
     @classmethod
+    def _validate_children(cls, children: tuple | list):
+        from reflex.utils.exceptions import ChildrenTypeError
+
+        for child in children:
+            if isinstance(child, (tuple, list)):
+                cls._validate_children(child)
+
+            # Make sure the child is a valid type.
+            if isinstance(child, dict) or not isinstance(child, ComponentChildTypes):
+                raise ChildrenTypeError(component=cls.__name__, child=child)
+
+    @classmethod
     def create(cls: type[T], *children, **props) -> T:
         """Create the component.
 
@@ -815,24 +815,12 @@ class Component(BaseComponent, ABC):
         # Import here to avoid circular imports.
         from reflex.components.base.bare import Bare
         from reflex.components.base.fragment import Fragment
-        from reflex.utils.exceptions import ChildrenTypeError
 
         # Filter out None props
         props = {key: value for key, value in props.items() if value is not None}
 
-        def validate_children(children: tuple | list):
-            for child in children:
-                if isinstance(child, (tuple, list)):
-                    validate_children(child)
-
-                # Make sure the child is a valid type.
-                if isinstance(child, dict) or not isinstance(
-                    child, ComponentChildTypes
-                ):
-                    raise ChildrenTypeError(component=cls.__name__, child=child)
-
         # Validate all the children.
-        validate_children(children)
+        cls._validate_children(children)
 
         children_normalized = [
             (
@@ -2573,25 +2561,7 @@ def render_dict_to_var(tag: dict | Component | str, imported_names: set[str]) ->
             else LiteralNoneVar.create(),
         )
 
-    props = {}
-
-    special_props = []
-
-    for prop_str in tag["props"]:
-        if ":" not in prop_str:
-            special_props.append(Var(prop_str).to(ObjectVar))
-            continue
-        prop = prop_str.index(":")
-        key = prop_str[:prop]
-        value = prop_str[prop + 1 :]
-        props[key] = value
-
-    props = LiteralObjectVar.create(
-        {LiteralStringVar.create(k): Var(v) for k, v in props.items()}
-    )
-
-    for prop in special_props:
-        props = props.merge(prop)
+    props = Var("({" + ",".join(tag["props"]) + "})")
 
     contents = tag["contents"] if tag["contents"] else None
 
@@ -2642,6 +2612,12 @@ class LiteralComponentVar(CachedVarOperation, LiteralVar, ComponentVar):
         """
         return VarData.merge(
             self._var_data,
+            VarData(
+                imports={
+                    "@emotion/react": ["jsx"],
+                    "react": ["Fragment"],
+                },
+            ),
             VarData(
                 imports=self._var_value._get_all_imports(),
             ),

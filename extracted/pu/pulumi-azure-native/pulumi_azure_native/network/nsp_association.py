@@ -186,10 +186,8 @@ class NspAssociationArgs:
         pulumi.set(self, "tags", value)
 
 
+@pulumi.type_token("azure-native:network:NspAssociation")
 class NspAssociation(pulumi.CustomResource):
-
-    pulumi_type = "azure-native:network:NspAssociation"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -290,7 +288,7 @@ class NspAssociation(pulumi.CustomResource):
             __props__.__dict__["has_provisioning_issues"] = None
             __props__.__dict__["provisioning_state"] = None
             __props__.__dict__["type"] = None
-        alias_opts = pulumi.ResourceOptions(aliases=[pulumi.Alias(type_="azure-native:network/v20210201preview:NspAssociation"), pulumi.Alias(type_="azure-native:network/v20230701preview:NspAssociation"), pulumi.Alias(type_="azure-native:network/v20230801preview:NspAssociation"), pulumi.Alias(type_="azure-native:network/v20240601preview:NspAssociation")])
+        alias_opts = pulumi.ResourceOptions(aliases=[pulumi.Alias(type_="azure-native:network/v20210201preview:NspAssociation"), pulumi.Alias(type_="azure-native:network/v20230701preview:NspAssociation"), pulumi.Alias(type_="azure-native:network/v20230801preview:NspAssociation"), pulumi.Alias(type_="azure-native:network/v20240601preview:NspAssociation"), pulumi.Alias(type_="azure-native:network/v20240701:NspAssociation")])
         opts = pulumi.ResourceOptions.merge(opts, alias_opts)
         super(NspAssociation, __self__).__init__(
             'azure-native:network:NspAssociation',

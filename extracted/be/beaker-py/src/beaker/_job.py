@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from typing import Iterable, Literal
 
@@ -66,6 +67,10 @@ class JobClient(ServiceClient):
                     continue
 
                 return
+            except BeakerStreamConnectionClosedError as err:
+                # These errors are expected, see https://github.com/allenai/beaker/issues/6532
+                self._log_and_wait(1, err, log_level=logging.DEBUG)
+                update_request()
             except BeakerServerError as err:
                 if retries < self.beaker.MAX_RETRIES:
                     self._log_and_wait(retries, err)

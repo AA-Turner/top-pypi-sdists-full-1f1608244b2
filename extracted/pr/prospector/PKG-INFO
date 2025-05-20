@@ -1,43 +1,41 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.3
 Name: prospector
-Version: 1.16.1
+Version: 1.17.1
 Summary: Prospector is a tool to analyse Python code by aggregating the result of other tools.
-Home-page: http://prospector.readthedocs.io
 License: GPLv2+
-Keywords: pylint,prospector,static code analysis
+Keywords: prospector,pylint,static code analysis
 Author: Carl Crowder
 Author-email: git@carlcrowder.com
 Maintainer: Carl Crowder
 Maintainer-email: git@carlcrowder.com
-Requires-Python: >=3.9,<4.0
+Requires-Python: >=3.9
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Environment :: Console
 Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)
-Classifier: License :: Other/Proprietary License
 Classifier: Operating System :: Unix
-Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
 Classifier: Programming Language :: Python :: 3.9
-Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
-Classifier: Programming Language :: Python :: 3.9
 Classifier: Topic :: Software Development :: Quality Assurance
-Provides-Extra: with_bandit
-Provides-Extra: with_everything
-Provides-Extra: with_mypy
-Provides-Extra: with_pyright
-Provides-Extra: with_pyroma
-Provides-Extra: with_ruff
-Provides-Extra: with_vulture
+Provides-Extra: with-bandit
+Provides-Extra: with-everything
+Provides-Extra: with-mypy
+Provides-Extra: with-pyright
+Provides-Extra: with-pyroma
+Provides-Extra: with-ruff
+Provides-Extra: with-vulture
 Requires-Dist: GitPython (>=3.1.27,<4.0.0)
 Requires-Dist: PyYAML
-Requires-Dist: bandit (>=1.5.1); extra == "with_bandit" or extra == "with_everything"
+Requires-Dist: bandit ; extra == "with-bandit"
+Requires-Dist: bandit ; extra == "with-everything"
 Requires-Dist: dodgy (>=0.2.1,<0.3.0)
 Requires-Dist: mccabe (>=0.7.0,<0.8.0)
-Requires-Dist: mypy (>=0.600); extra == "with_mypy" or extra == "with_everything"
+Requires-Dist: mypy ; extra == "with-everything"
+Requires-Dist: mypy ; extra == "with-mypy"
 Requires-Dist: packaging
 Requires-Dist: pep8-naming (>=0.3.3,<=0.10.0)
 Requires-Dist: pycodestyle (>=2.9.0)
@@ -46,14 +44,20 @@ Requires-Dist: pyflakes (>=2.2.0)
 Requires-Dist: pylint (>=3.0)
 Requires-Dist: pylint-celery (==0.3)
 Requires-Dist: pylint-django (>=2.6.1)
-Requires-Dist: pyright (>=1.1.3); extra == "with_pyright" or extra == "with_everything"
-Requires-Dist: pyroma (>=2.4); extra == "with_pyroma" or extra == "with_everything"
+Requires-Dist: pyright ; extra == "with-everything"
+Requires-Dist: pyright ; extra == "with-pyright"
+Requires-Dist: pyroma ; extra == "with-everything"
+Requires-Dist: pyroma ; extra == "with-pyroma"
 Requires-Dist: requirements-detector (>=1.3.2)
-Requires-Dist: ruff; extra == "with_ruff" or extra == "with_everything"
+Requires-Dist: ruff ; extra == "with-everything"
+Requires-Dist: ruff ; extra == "with-ruff"
 Requires-Dist: setoptconf-tmp (>=0.3.1,<0.4.0)
 Requires-Dist: toml (>=0.10.2,<0.11.0)
-Requires-Dist: vulture (>=1.5); extra == "with_vulture" or extra == "with_everything"
-Project-URL: Repository, https://github.com/PyCQA/prospector
+Requires-Dist: vulture ; extra == "with-everything"
+Requires-Dist: vulture ; extra == "with-vulture"
+Project-URL: Bug Tracker, https://github.com/prospector-dev/prospector/issues
+Project-URL: Homepage, http://prospector.readthedocs.io
+Project-URL: Repository, https://github.com/prospector-dev/prospector
 Description-Content-Type: text/x-rst
 
 prospector
@@ -205,22 +209,22 @@ repository, you can install `pre-commit <https://pre-commit.com/>`_ and add the 
 text to your repositories' ``.pre-commit-config.yaml``::
 
     repos:
-    -   repo: https://github.com/PyCQA/prospector
-        rev: 1.10.0 # The version of Prospector to use, if not 'master' for latest
-        hooks:
-        -   id: prospector
+    - repo: https://github.com/PyCQA/prospector
+      rev: v1.16.1 # The version of Prospector to use, if not 'master' for latest
+      hooks:
+        - id: prospector
 
 This only installs base prospector - if you also use optional tools, for example bandit and/or mypy, then you can add
 them to the hook configuration like so::
 
     repos:
-    -   repo: https://github.com/PyCQA/prospector
-        rev: 1.10.0
-        hooks:
-        -   id: prospector
-            additional_dependencies:
+    - repo: https://github.com/PyCQA/prospector
+      rev: v1.16.1
+      hooks:
+        - id: prospector
+          additional_dependencies:
             - ".[with_mypy,with_bandit]"
-          - args: [
+          args: [
             '--with-tool=mypy',
             '--with-tool=bandit',
             ]
@@ -246,17 +250,17 @@ For prospector options which affect display only - those which are not configura
 added as command line arguments to the hook. For example::
 
     repos:
-    -   repo: https://github.com/PyCQA/prospector
-        rev: 1.10.0
-        hooks:
-        -   id: prospector
-            additional_dependencies:
-            -   ".[with_mypy,with_bandit]"
-            args:
-            -   --with-tool=mypy
-            -   --with-tool=bandit
-            -   --summary-only
-            -   --zero-exit
+    - repo: https://github.com/PyCQA/prospector
+      rev: v1.16.1
+      hooks:
+        - id: prospector
+          additional_dependencies:
+            - ".[with_mypy,with_bandit]"
+          args:
+            - --with-tool=mypy
+            - --with-tool=bandit
+            - --summary-only
+            - --zero-exit
 
 
 

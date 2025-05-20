@@ -381,6 +381,7 @@ class MCAPFile:
         return {
             schema.name: MessageDefinition(fmtmap[schema.encoding], schema.data)
             for schema in self.schemas.values()
+            if schema.encoding
         }
 
     def messages_scan(
@@ -522,8 +523,7 @@ class MCAPFile:
                 self.bio,
             )
             for x in self.chunks
-            if x.message_start_time != 0
-            and (start is None or start < x.message_end_time)
+            if (start is None or start < x.message_end_time)
             and (stop is None or x.message_start_time < stop)
             and (any(x.channel_count.get(cid, 0) for cid in channel_map))
         ]

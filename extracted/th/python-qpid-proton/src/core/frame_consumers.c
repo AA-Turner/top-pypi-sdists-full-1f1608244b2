@@ -2,16 +2,16 @@
 
 #include "core/consumers.h"
 
-/* D.C */
-size_t pn_amqp_decode_DqC(pn_bytes_t bytes, pn_data_t* arg0)
+/* D.R */
+size_t pn_amqp_decode_DqR(pn_bytes_t bytes, pn_bytes_t* arg0)
 {
     pni_consumer_t consumer = make_consumer_from_bytes(bytes);
-    consume_described_copy(&consumer, arg0);
+    consume_described_raw(&consumer, arg0);
     return consumer.position;
 }
 
-/* D.[.....D..D.[.....CC]] */
-size_t pn_amqp_decode_DqEqqqqqDqqDqEqqqqqCCee(pn_bytes_t bytes, pn_data_t* arg0, pn_data_t* arg1)
+/* D.[.....D..D.[.....RR]] */
+size_t pn_amqp_decode_DqEqqqqqDqqDqEqqqqqRRee(pn_bytes_t bytes, pn_bytes_t* arg0, pn_bytes_t* arg1)
 {
     pni_consumer_t consumer = make_consumer_from_bytes(bytes);
     {
@@ -43,8 +43,8 @@ size_t pn_amqp_decode_DqEqqqqqDqqDqEqqqqqCCee(pn_bytes_t bytes, pn_data_t* arg0,
                     consume_anything(&consumer);
                     consume_anything(&consumer);
                     consume_anything(&consumer);
-                    consume_copy(&consumer, arg0);
-                    consume_copy(&consumer, arg1);
+                    consume_raw(&consumer, arg0);
+                    consume_raw(&consumer, arg1);
                     consume_end_list(&consumer);
                 }
             }
@@ -54,8 +54,8 @@ size_t pn_amqp_decode_DqEqqqqqDqqDqEqqqqqCCee(pn_bytes_t bytes, pn_data_t* arg0,
     return consumer.position;
 }
 
-/* D.[.....D..D.[C]...] */
-size_t pn_amqp_decode_DqEqqqqqDqqDqECeqqqe(pn_bytes_t bytes, pn_data_t* arg0)
+/* D.[.....D..D.[R]...] */
+size_t pn_amqp_decode_DqEqqqqqDqqDqEReqqqe(pn_bytes_t bytes, pn_bytes_t* arg0)
 {
     pni_consumer_t consumer = make_consumer_from_bytes(bytes);
     {
@@ -82,7 +82,7 @@ size_t pn_amqp_decode_DqEqqqqqDqqDqECeqqqe(pn_bytes_t bytes, pn_data_t* arg0)
                     uint32_t count;
                     consume_list(&consumer, &subconsumer, &count);
                     pni_consumer_t consumer = subconsumer;
-                    consume_copy(&consumer, arg0);
+                    consume_raw(&consumer, arg0);
                     consume_end_list(&consumer);
                 }
             }
@@ -124,8 +124,8 @@ size_t pn_amqp_decode_DqEqqqqqDqqDLqqqqe(pn_bytes_t bytes, uint64_t* arg0)
     return consumer.position;
 }
 
-/* D.[.....D.[.....C.C.CC]] */
-size_t pn_amqp_decode_DqEqqqqqDqEqqqqqCqCqCCee(pn_bytes_t bytes, pn_data_t* arg0, pn_data_t* arg1, pn_data_t* arg2, pn_data_t* arg3)
+/* D.[.....D.[.....R.R.RR]] */
+size_t pn_amqp_decode_DqEqqqqqDqEqqqqqRqRqRRee(pn_bytes_t bytes, pn_bytes_t* arg0, pn_bytes_t* arg1, pn_bytes_t* arg2, pn_bytes_t* arg3)
 {
     pni_consumer_t consumer = make_consumer_from_bytes(bytes);
     {
@@ -156,12 +156,12 @@ size_t pn_amqp_decode_DqEqqqqqDqEqqqqqCqCqCCee(pn_bytes_t bytes, pn_data_t* arg0
                     consume_anything(&consumer);
                     consume_anything(&consumer);
                     consume_anything(&consumer);
-                    consume_copy(&consumer, arg0);
+                    consume_raw(&consumer, arg0);
                     consume_anything(&consumer);
-                    consume_copy(&consumer, arg1);
+                    consume_raw(&consumer, arg1);
                     consume_anything(&consumer);
-                    consume_copy(&consumer, arg2);
-                    consume_copy(&consumer, arg3);
+                    consume_raw(&consumer, arg2);
+                    consume_raw(&consumer, arg3);
                     consume_end_list(&consumer);
                 }
             }
@@ -244,8 +244,8 @@ size_t pn_amqp_decode_DqEQIIIIQIQIIqoe(pn_bytes_t bytes, bool* arg0, uint32_t* a
     return consumer.position;
 }
 
-/* D.[?S?S?I?HI..CCC] */
-size_t pn_amqp_decode_DqEQSQSQIQHIqqCCCe(pn_bytes_t bytes, bool* arg0, pn_bytes_t* arg1, bool* arg2, pn_bytes_t* arg3, bool* arg4, uint32_t* arg5, bool* arg6, uint16_t* arg7, uint32_t* arg8, pn_data_t* arg9, pn_data_t* arg10, pn_data_t* arg11)
+/* D.[?S?S?I?HI..RRR] */
+size_t pn_amqp_decode_DqEQSQSQIQHIqqRRRe(pn_bytes_t bytes, bool* arg0, pn_bytes_t* arg1, bool* arg2, pn_bytes_t* arg3, bool* arg4, uint32_t* arg5, bool* arg6, uint16_t* arg7, uint32_t* arg8, pn_bytes_t* arg9, pn_bytes_t* arg10, pn_bytes_t* arg11)
 {
     pni_consumer_t consumer = make_consumer_from_bytes(bytes);
     {
@@ -264,17 +264,17 @@ size_t pn_amqp_decode_DqEQSQSQIQHIqqCCCe(pn_bytes_t bytes, bool* arg0, pn_bytes_
             consume_uint(&consumer, arg8);
             consume_anything(&consumer);
             consume_anything(&consumer);
-            consume_copy(&consumer, arg9);
-            consume_copy(&consumer, arg10);
-            consume_copy(&consumer, arg11);
+            consume_raw(&consumer, arg9);
+            consume_raw(&consumer, arg10);
+            consume_raw(&consumer, arg11);
             consume_end_list(&consumer);
         }
     }
     return consumer.position;
 }
 
-/* D.[?o?oC] */
-size_t pn_amqp_decode_DqEQoQoCe(pn_bytes_t bytes, bool* arg0, bool* arg1, bool* arg2, bool* arg3, pn_data_t* arg4)
+/* D.[?o?oR] */
+size_t pn_amqp_decode_DqEQoQoRe(pn_bytes_t bytes, bool* arg0, bool* arg1, bool* arg2, bool* arg3, pn_bytes_t* arg4)
 {
     pni_consumer_t consumer = make_consumer_from_bytes(bytes);
     {
@@ -288,7 +288,7 @@ size_t pn_amqp_decode_DqEQoQoCe(pn_bytes_t bytes, bool* arg0, bool* arg1, bool* 
             pni_consumer_t consumer = subconsumer;
             *arg0 = consume_bool(&consumer, arg1);;
             *arg2 = consume_bool(&consumer, arg3);;
-            consume_copy(&consumer, arg4);
+            consume_raw(&consumer, arg4);
             consume_end_list(&consumer);
         }
     }
@@ -316,8 +316,8 @@ size_t pn_amqp_decode_DqEBze(pn_bytes_t bytes, uint8_t* arg0, pn_bytes_t* arg1)
     return consumer.position;
 }
 
-/* D.[D.[sSC]] */
-size_t pn_amqp_decode_DqEDqEsSCee(pn_bytes_t bytes, pn_bytes_t* arg0, pn_bytes_t* arg1, pn_data_t* arg2)
+/* D.[D.[sSR]] */
+size_t pn_amqp_decode_DqEDqEsSRee(pn_bytes_t bytes, pn_bytes_t* arg0, pn_bytes_t* arg1, pn_bytes_t* arg2)
 {
     pni_consumer_t consumer = make_consumer_from_bytes(bytes);
     {
@@ -340,7 +340,7 @@ size_t pn_amqp_decode_DqEDqEsSCee(pn_bytes_t bytes, pn_bytes_t* arg0, pn_bytes_t
                     pni_consumer_t consumer = subconsumer;
                     consume_symbol(&consumer, arg0);
                     consume_string(&consumer, arg1);
-                    consume_copy(&consumer, arg2);
+                    consume_raw(&consumer, arg2);
                     consume_end_list(&consumer);
                 }
             }
@@ -422,8 +422,8 @@ size_t pn_amqp_decode_DqERe(pn_bytes_t bytes, pn_bytes_t* arg0)
     return consumer.position;
 }
 
-/* D.[SIo?B?BD.[SIsIo.s]D.[SIsIo]..IL..?C] */
-size_t pn_amqp_decode_DqESIoQBQBDqESIsIoqseDqESIsIoeqqILqqQCe(pn_bytes_t bytes, pn_bytes_t* arg0, uint32_t* arg1, bool* arg2, bool* arg3, uint8_t* arg4, bool* arg5, uint8_t* arg6, pn_bytes_t* arg7, uint32_t* arg8, pn_bytes_t* arg9, uint32_t* arg10, bool* arg11, pn_bytes_t* arg12, pn_bytes_t* arg13, uint32_t* arg14, pn_bytes_t* arg15, uint32_t* arg16, bool* arg17, uint32_t* arg18, uint64_t* arg19, bool* arg20, pn_data_t* arg21)
+/* D.[SIo?B?BD.[SIsIo.s]D.[SIsIo]..IL..?R] */
+size_t pn_amqp_decode_DqESIoQBQBDqESIsIoqseDqESIsIoeqqILqqQRe(pn_bytes_t bytes, pn_bytes_t* arg0, uint32_t* arg1, bool* arg2, bool* arg3, uint8_t* arg4, bool* arg5, uint8_t* arg6, pn_bytes_t* arg7, uint32_t* arg8, pn_bytes_t* arg9, uint32_t* arg10, bool* arg11, pn_bytes_t* arg12, pn_bytes_t* arg13, uint32_t* arg14, pn_bytes_t* arg15, uint32_t* arg16, bool* arg17, uint32_t* arg18, uint64_t* arg19, bool* arg20, pn_bytes_t* arg21)
 {
     pni_consumer_t consumer = make_consumer_from_bytes(bytes);
     {
@@ -482,7 +482,7 @@ size_t pn_amqp_decode_DqESIoQBQBDqESIsIoqseDqESIsIoeqqILqqQCe(pn_bytes_t bytes, 
             consume_ulong(&consumer, arg19);
             consume_anything(&consumer);
             consume_anything(&consumer);
-            *arg20 = consume_copy(&consumer, arg21);;
+            *arg20 = consume_raw(&consumer, arg21);;
             consume_end_list(&consumer);
         }
     }
@@ -569,8 +569,8 @@ size_t pn_amqp_decode_DqEoIQIoRe(pn_bytes_t bytes, bool* arg0, uint32_t* arg1, b
     return consumer.position;
 }
 
-/* D.[sSC] */
-size_t pn_amqp_decode_DqEsSCe(pn_bytes_t bytes, pn_bytes_t* arg0, pn_bytes_t* arg1, pn_data_t* arg2)
+/* D.[sSR] */
+size_t pn_amqp_decode_DqEsSRe(pn_bytes_t bytes, pn_bytes_t* arg0, pn_bytes_t* arg1, pn_bytes_t* arg2)
 {
     pni_consumer_t consumer = make_consumer_from_bytes(bytes);
     {
@@ -584,7 +584,7 @@ size_t pn_amqp_decode_DqEsSCe(pn_bytes_t bytes, pn_bytes_t* arg0, pn_bytes_t* ar
             pni_consumer_t consumer = subconsumer;
             consume_symbol(&consumer, arg0);
             consume_string(&consumer, arg1);
-            consume_copy(&consumer, arg2);
+            consume_raw(&consumer, arg2);
             consume_end_list(&consumer);
         }
     }
@@ -665,6 +665,14 @@ size_t pn_amqp_decode_DQLQq(pn_bytes_t bytes, bool* arg0, uint64_t* arg1, bool* 
 {
     pni_consumer_t consumer = make_consumer_from_bytes(bytes);
     consume_described_maybe_type_maybe_anything(&consumer, arg0, arg1, arg2);
+    return consumer.position;
+}
+
+/* R */
+size_t pn_amqp_decode_R(pn_bytes_t bytes, pn_bytes_t* arg0)
+{
+    pni_consumer_t consumer = make_consumer_from_bytes(bytes);
+    consume_raw(&consumer, arg0);
     return consumer.position;
 }
 

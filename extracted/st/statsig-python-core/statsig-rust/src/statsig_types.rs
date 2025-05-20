@@ -1,15 +1,14 @@
 use crate::evaluation::evaluation_details::EvaluationDetails;
 use crate::evaluation::evaluation_types::{
-    AnyEvaluation, DynamicConfigEvaluation, ExperimentEvaluation, GateEvaluation, LayerEvaluation,
+    DynamicConfigEvaluation, ExperimentEvaluation, GateEvaluation, LayerEvaluation,
 };
-use crate::event_logging::event_logger::{EventLogger, QueuedEventPayload};
-use crate::event_logging::layer_exposure::LayerExposure;
-use crate::sampling_processor::SamplingDecision;
+use crate::event_logging::event_logger::{EventLogger, ExposureTrigger};
+use crate::event_logging::event_queue::queued_layer_param_expo::EnqueueLayerParamExpoOp;
 use crate::specs_response::param_store_types::Parameter;
 use crate::statsig_core_api_options::ParameterStoreEvaluationOptions;
 use crate::user::StatsigUserLoggable;
+use crate::Statsig;
 use crate::StatsigUser;
-use crate::{SamplingProcessor, Statsig};
 
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
@@ -26,8 +25,6 @@ pub struct FeatureGate {
     pub details: EvaluationDetails,
 
     pub(crate) __evaluation: Option<GateEvaluation>,
-    pub __version: Option<u32>,
-    pub __override_config_name: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -39,8 +36,6 @@ pub struct DynamicConfig {
     pub details: EvaluationDetails,
 
     pub __evaluation: Option<DynamicConfigEvaluation>,
-    pub __version: Option<u32>,
-    pub __override_config_name: Option<String>,
 }
 
 impl DynamicConfig {
@@ -63,8 +58,6 @@ pub struct Experiment {
     pub details: EvaluationDetails,
 
     pub __evaluation: Option<ExperimentEvaluation>,
-    pub __version: Option<u32>,
-    pub __override_config_name: Option<String>,
 }
 
 impl Experiment {
@@ -90,14 +83,12 @@ pub struct Layer {
     pub __evaluation: Option<LayerEvaluation>,
     pub __value: HashMap<String, Value>,
     pub __user: StatsigUserLoggable,
-    pub __version: Option<u32>,
     pub __disable_exposure: bool,
-    pub __override_config_name: Option<String>,
+
+    pub __version: Option<u32>, // todo: rm when Java/PHP layer exposures are not a JSON round trip
 
     #[serde(skip_serializing, skip_deserializing)]
     pub __event_logger_ptr: Option<Weak<EventLogger>>,
-    #[serde(skip_serializing, skip_deserializing)]
-    pub __sampling_processor: Option<Weak<SamplingProcessor>>,
 }
 
 impl Layer {
@@ -127,44 +118,18 @@ impl Layer {
     }
 
     fn log_param_exposure(&self, param_name: &str) -> Option<()> {
+        let logger = self.__event_logger_ptr.as_ref()?.upgrade()?;
+
         if self.__disable_exposure {
-            if let Some(ptr) = &self.__event_logger_ptr {
-                ptr.upgrade()?
-                    .increment_non_exposure_checks_count(self.name.clone());
-            }
+            logger.increment_non_exposure_checks(&self.name);
             return None;
         }
 
-        let mut sampling_details = SamplingDecision::default();
-
-        if let Some(ptr) = &self.__sampling_processor {
-            let layer_eval = self.__evaluation.as_ref();
-
-            sampling_details = ptr.upgrade()?.get_sampling_decision_and_details(
-                &self.__user.get_sampling_key(),
-                layer_eval.map(AnyEvaluation::from).as_ref(),
-                Some(param_name),
-            );
-
-            if !sampling_details.should_send_exposure {
-                return None;
-            }
-        }
-
-        if let Some(ptr) = &self.__event_logger_ptr {
-            ptr.upgrade()?
-                .enqueue(QueuedEventPayload::LayerExposure(LayerExposure {
-                    user: self.__user.clone(),
-                    layer_name: self.name.clone(),
-                    parameter_name: param_name.to_string(),
-                    evaluation: self.__evaluation.clone(),
-                    evaluation_details: self.details.clone(),
-                    version: self.__version,
-                    is_manual_exposure: false,
-                    sampling_details,
-                    override_config_name: self.__override_config_name.clone(),
-                }));
-        }
+        logger.enqueue(EnqueueLayerParamExpoOp::LayerRef(
+            self,
+            param_name,
+            ExposureTrigger::Auto,
+        ));
 
         None
     }

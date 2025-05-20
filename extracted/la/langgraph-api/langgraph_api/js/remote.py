@@ -39,6 +39,7 @@ from starlette.exceptions import HTTPException
 from starlette.requests import HTTPConnection, Request
 from starlette.routing import Route
 
+from langgraph_api import store as api_store
 from langgraph_api.auth.custom import DotDict, ProxyUser
 from langgraph_api.config import LANGGRAPH_AUTH_TYPE
 from langgraph_api.js.base import BaseRemotePregel
@@ -68,6 +69,12 @@ _client = httpx.AsyncClient(
     limits=httpx.Limits(),
     transport=httpx.AsyncHTTPTransport(verify=SSL),
 )
+
+
+def _snapshot_defaults():
+    if not hasattr(StateSnapshot, "interrupts"):
+        return {}
+    return {"interrupts": tuple()}
 
 
 def default_command(obj):
@@ -251,7 +258,7 @@ class RemotePregel(BaseRemotePregel):
             item.get("parentConfig"),
             _convert_tasks(item.get("tasks", [])),
             # TODO: add handling of interrupts when multiple resumes land in JS
-            tuple(),
+            **_snapshot_defaults(),
         )
 
     async def aget_state(
@@ -473,10 +480,8 @@ def _get_passthrough_checkpointer(conn: AsyncConnectionProto):
     return checkpointer
 
 
-def _get_passthrough_store():
-    from langgraph_runtime.store import Store
-
-    return Store()
+async def _get_passthrough_store():
+    return await api_store.get_store()
 
 
 # Setup a HTTP server on top of CHECKPOINTER_SOCKET unix socket
@@ -574,7 +579,7 @@ async def run_remote_checkpointer():
             else:
                 raise ValueError(f"Unknown operation type: {op}")
 
-        store = _get_passthrough_store()
+        store = await _get_passthrough_store()
         results = await store.abatch(processed_operations)
 
         # Handle potentially undefined or non-dict results
@@ -613,7 +618,7 @@ async def run_remote_checkpointer():
 
         namespaces = namespaces_str.split(".")
 
-        store = _get_passthrough_store()
+        store = await _get_passthrough_store()
         result = await store.aget(namespaces, key)
 
         return result
@@ -626,7 +631,7 @@ async def run_remote_checkpointer():
         value = payload["value"]
         index = payload.get("index")
 
-        store = _get_passthrough_store()
+        store = await _get_passthrough_store()
         await store.aput(namespace, key, value, index=index)
 
         return {"success": True}
@@ -639,7 +644,7 @@ async def run_remote_checkpointer():
         offset = payload.get("offset", 0)
         query = payload.get("query")
 
-        store = _get_passthrough_store()
+        store = await _get_passthrough_store()
         result = await store.asearch(
             namespace_prefix, filter=filter, limit=limit, offset=offset, query=query
         )
@@ -652,7 +657,7 @@ async def run_remote_checkpointer():
         namespace = tuple(payload["namespace"])
         key = payload["key"]
 
-        store = _get_passthrough_store()
+        store = await _get_passthrough_store()
         await store.adelete(namespace, key)
 
         return {"success": True}
@@ -665,7 +670,7 @@ async def run_remote_checkpointer():
         limit = payload.get("limit", 100)
         offset = payload.get("offset", 0)
 
-        store = _get_passthrough_store()
+        store = await _get_passthrough_store()
         result = await store.alist_namespaces(
             prefix=prefix,
             suffix=suffix,

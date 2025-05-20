@@ -998,21 +998,29 @@ class ParseInfo(_message.Message):
         "parse_function_input_type",
         "parse_function_output_type",
         "is_parse_function_output_optional",
+        "parse_function_input_type_name",
+        "parse_function_output_type_name",
     )
     PARSE_FUNCTION_FIELD_NUMBER: _ClassVar[int]
     PARSE_FUNCTION_INPUT_TYPE_FIELD_NUMBER: _ClassVar[int]
     PARSE_FUNCTION_OUTPUT_TYPE_FIELD_NUMBER: _ClassVar[int]
     IS_PARSE_FUNCTION_OUTPUT_OPTIONAL_FIELD_NUMBER: _ClassVar[int]
+    PARSE_FUNCTION_INPUT_TYPE_NAME_FIELD_NUMBER: _ClassVar[int]
+    PARSE_FUNCTION_OUTPUT_TYPE_NAME_FIELD_NUMBER: _ClassVar[int]
     parse_function: FunctionReference
     parse_function_input_type: _arrow_pb2.ArrowType
     parse_function_output_type: _arrow_pb2.ArrowType
     is_parse_function_output_optional: bool
+    parse_function_input_type_name: str
+    parse_function_output_type_name: str
     def __init__(
         self,
         parse_function: _Optional[_Union[FunctionReference, _Mapping]] = ...,
         parse_function_input_type: _Optional[_Union[_arrow_pb2.ArrowType, _Mapping]] = ...,
         parse_function_output_type: _Optional[_Union[_arrow_pb2.ArrowType, _Mapping]] = ...,
         is_parse_function_output_optional: bool = ...,
+        parse_function_input_type_name: _Optional[str] = ...,
+        parse_function_output_type_name: _Optional[str] = ...,
     ) -> None: ...
 
 class StreamResolver(_message.Message):

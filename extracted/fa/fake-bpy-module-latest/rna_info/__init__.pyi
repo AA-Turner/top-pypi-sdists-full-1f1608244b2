@@ -44,6 +44,7 @@ class InfoPropertyRNA:
     is_enum_flag: typing.Any
     is_never_none: typing.Any
     is_path_supports_blend_relative: typing.Any
+    is_path_supports_templates: typing.Any
     is_readonly: typing.Any
     is_required: typing.Any
     max: typing.Any

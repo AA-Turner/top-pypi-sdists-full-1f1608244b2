@@ -33,6 +33,14 @@ __all__ = [
     'ApiOpenIdConnectConfigArgsDict',
     'ChannelNamespaceAuthModeArgs',
     'ChannelNamespaceAuthModeArgsDict',
+    'ChannelNamespaceHandlerConfigsArgs',
+    'ChannelNamespaceHandlerConfigsArgsDict',
+    'ChannelNamespaceHandlerConfigArgs',
+    'ChannelNamespaceHandlerConfigArgsDict',
+    'ChannelNamespaceIntegrationArgs',
+    'ChannelNamespaceIntegrationArgsDict',
+    'ChannelNamespaceLambdaConfigArgs',
+    'ChannelNamespaceLambdaConfigArgsDict',
     'DataSourceAuthorizationConfigArgs',
     'DataSourceAuthorizationConfigArgsDict',
     'DataSourceAwsIamConfigArgs',
@@ -554,6 +562,190 @@ class ChannelNamespaceAuthModeArgs:
     @auth_type.setter
     def auth_type(self, value: Optional[pulumi.Input['ChannelNamespaceAuthenticationType']]):
         pulumi.set(self, "auth_type", value)
+
+
+if not MYPY:
+    class ChannelNamespaceHandlerConfigsArgsDict(TypedDict):
+        on_publish: NotRequired[pulumi.Input['ChannelNamespaceHandlerConfigArgsDict']]
+        """
+        The configuration for the `OnPublish` handler.
+        """
+        on_subscribe: NotRequired[pulumi.Input['ChannelNamespaceHandlerConfigArgsDict']]
+        """
+        The configuration for the `OnSubscribe` handler.
+        """
+elif False:
+    ChannelNamespaceHandlerConfigsArgsDict: TypeAlias = Mapping[str, Any]
+
+@pulumi.input_type
+class ChannelNamespaceHandlerConfigsArgs:
+    def __init__(__self__, *,
+                 on_publish: Optional[pulumi.Input['ChannelNamespaceHandlerConfigArgs']] = None,
+                 on_subscribe: Optional[pulumi.Input['ChannelNamespaceHandlerConfigArgs']] = None):
+        """
+        :param pulumi.Input['ChannelNamespaceHandlerConfigArgs'] on_publish: The configuration for the `OnPublish` handler.
+        :param pulumi.Input['ChannelNamespaceHandlerConfigArgs'] on_subscribe: The configuration for the `OnSubscribe` handler.
+        """
+        if on_publish is not None:
+            pulumi.set(__self__, "on_publish", on_publish)
+        if on_subscribe is not None:
+            pulumi.set(__self__, "on_subscribe", on_subscribe)
+
+    @property
+    @pulumi.getter(name="onPublish")
+    def on_publish(self) -> Optional[pulumi.Input['ChannelNamespaceHandlerConfigArgs']]:
+        """
+        The configuration for the `OnPublish` handler.
+        """
+        return pulumi.get(self, "on_publish")
+
+    @on_publish.setter
+    def on_publish(self, value: Optional[pulumi.Input['ChannelNamespaceHandlerConfigArgs']]):
+        pulumi.set(self, "on_publish", value)
+
+    @property
+    @pulumi.getter(name="onSubscribe")
+    def on_subscribe(self) -> Optional[pulumi.Input['ChannelNamespaceHandlerConfigArgs']]:
+        """
+        The configuration for the `OnSubscribe` handler.
+        """
+        return pulumi.get(self, "on_subscribe")
+
+    @on_subscribe.setter
+    def on_subscribe(self, value: Optional[pulumi.Input['ChannelNamespaceHandlerConfigArgs']]):
+        pulumi.set(self, "on_subscribe", value)
+
+
+if not MYPY:
+    class ChannelNamespaceHandlerConfigArgsDict(TypedDict):
+        behavior: pulumi.Input['ChannelNamespaceHandlerBehavior']
+        """
+        The behavior for the handler.
+        """
+        integration: pulumi.Input['ChannelNamespaceIntegrationArgsDict']
+        """
+        The integration data source configuration for the handler.
+        """
+elif False:
+    ChannelNamespaceHandlerConfigArgsDict: TypeAlias = Mapping[str, Any]
+
+@pulumi.input_type
+class ChannelNamespaceHandlerConfigArgs:
+    def __init__(__self__, *,
+                 behavior: pulumi.Input['ChannelNamespaceHandlerBehavior'],
+                 integration: pulumi.Input['ChannelNamespaceIntegrationArgs']):
+        """
+        :param pulumi.Input['ChannelNamespaceHandlerBehavior'] behavior: The behavior for the handler.
+        :param pulumi.Input['ChannelNamespaceIntegrationArgs'] integration: The integration data source configuration for the handler.
+        """
+        pulumi.set(__self__, "behavior", behavior)
+        pulumi.set(__self__, "integration", integration)
+
+    @property
+    @pulumi.getter
+    def behavior(self) -> pulumi.Input['ChannelNamespaceHandlerBehavior']:
+        """
+        The behavior for the handler.
+        """
+        return pulumi.get(self, "behavior")
+
+    @behavior.setter
+    def behavior(self, value: pulumi.Input['ChannelNamespaceHandlerBehavior']):
+        pulumi.set(self, "behavior", value)
+
+    @property
+    @pulumi.getter
+    def integration(self) -> pulumi.Input['ChannelNamespaceIntegrationArgs']:
+        """
+        The integration data source configuration for the handler.
+        """
+        return pulumi.get(self, "integration")
+
+    @integration.setter
+    def integration(self, value: pulumi.Input['ChannelNamespaceIntegrationArgs']):
+        pulumi.set(self, "integration", value)
+
+
+if not MYPY:
+    class ChannelNamespaceIntegrationArgsDict(TypedDict):
+        data_source_name: pulumi.Input[builtins.str]
+        """
+        Data source to invoke for this integration.
+        """
+        lambda_config: NotRequired[pulumi.Input['ChannelNamespaceLambdaConfigArgsDict']]
+        """
+        The configuration for a Lambda data source.
+        """
+elif False:
+    ChannelNamespaceIntegrationArgsDict: TypeAlias = Mapping[str, Any]
+
+@pulumi.input_type
+class ChannelNamespaceIntegrationArgs:
+    def __init__(__self__, *,
+                 data_source_name: pulumi.Input[builtins.str],
+                 lambda_config: Optional[pulumi.Input['ChannelNamespaceLambdaConfigArgs']] = None):
+        """
+        :param pulumi.Input[builtins.str] data_source_name: Data source to invoke for this integration.
+        :param pulumi.Input['ChannelNamespaceLambdaConfigArgs'] lambda_config: The configuration for a Lambda data source.
+        """
+        pulumi.set(__self__, "data_source_name", data_source_name)
+        if lambda_config is not None:
+            pulumi.set(__self__, "lambda_config", lambda_config)
+
+    @property
+    @pulumi.getter(name="dataSourceName")
+    def data_source_name(self) -> pulumi.Input[builtins.str]:
+        """
+        Data source to invoke for this integration.
+        """
+        return pulumi.get(self, "data_source_name")
+
+    @data_source_name.setter
+    def data_source_name(self, value: pulumi.Input[builtins.str]):
+        pulumi.set(self, "data_source_name", value)
+
+    @property
+    @pulumi.getter(name="lambdaConfig")
+    def lambda_config(self) -> Optional[pulumi.Input['ChannelNamespaceLambdaConfigArgs']]:
+        """
+        The configuration for a Lambda data source.
+        """
+        return pulumi.get(self, "lambda_config")
+
+    @lambda_config.setter
+    def lambda_config(self, value: Optional[pulumi.Input['ChannelNamespaceLambdaConfigArgs']]):
+        pulumi.set(self, "lambda_config", value)
+
+
+if not MYPY:
+    class ChannelNamespaceLambdaConfigArgsDict(TypedDict):
+        invoke_type: pulumi.Input['ChannelNamespaceInvokeType']
+        """
+        The invocation type for a Lambda data source.
+        """
+elif False:
+    ChannelNamespaceLambdaConfigArgsDict: TypeAlias = Mapping[str, Any]
+
+@pulumi.input_type
+class ChannelNamespaceLambdaConfigArgs:
+    def __init__(__self__, *,
+                 invoke_type: pulumi.Input['ChannelNamespaceInvokeType']):
+        """
+        :param pulumi.Input['ChannelNamespaceInvokeType'] invoke_type: The invocation type for a Lambda data source.
+        """
+        pulumi.set(__self__, "invoke_type", invoke_type)
+
+    @property
+    @pulumi.getter(name="invokeType")
+    def invoke_type(self) -> pulumi.Input['ChannelNamespaceInvokeType']:
+        """
+        The invocation type for a Lambda data source.
+        """
+        return pulumi.get(self, "invoke_type")
+
+    @invoke_type.setter
+    def invoke_type(self, value: pulumi.Input['ChannelNamespaceInvokeType']):
+        pulumi.set(self, "invoke_type", value)
 
 
 if not MYPY:
@@ -2091,7 +2283,7 @@ if not MYPY:
     class ResolverPipelineConfigArgsDict(TypedDict):
         """
         Use the ``PipelineConfig`` property type to specify ``PipelineConfig`` for an APSYlong resolver.
-          ``PipelineConfig`` is a property of the [AWS::AppSync::Resolver](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html) resource.
+         ``PipelineConfig`` is a property of the [AWS::AppSync::Resolver](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html) resource.
         """
         functions: NotRequired[pulumi.Input[Sequence[pulumi.Input[builtins.str]]]]
         """
@@ -2106,7 +2298,7 @@ class ResolverPipelineConfigArgs:
                  functions: Optional[pulumi.Input[Sequence[pulumi.Input[builtins.str]]]] = None):
         """
         Use the ``PipelineConfig`` property type to specify ``PipelineConfig`` for an APSYlong resolver.
-          ``PipelineConfig`` is a property of the [AWS::AppSync::Resolver](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html) resource.
+         ``PipelineConfig`` is a property of the [AWS::AppSync::Resolver](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html) resource.
         :param pulumi.Input[Sequence[pulumi.Input[builtins.str]]] functions: A list of ``Function`` objects.
         """
         if functions is not None:
@@ -2134,15 +2326,15 @@ if not MYPY:
         conflict_detection: pulumi.Input[builtins.str]
         """
         The Conflict Detection strategy to use.
-          +   *VERSION*: Detect conflicts based on object versions for this resolver.
-          +   *NONE*: Do not detect conflicts when invoking this resolver.
+          +  *VERSION*: Detect conflicts based on object versions for this resolver.
+          +  *NONE*: Do not detect conflicts when invoking this resolver.
         """
         conflict_handler: NotRequired[pulumi.Input[builtins.str]]
         """
         The Conflict Resolution strategy to perform in the event of a conflict.
-          +   *OPTIMISTIC_CONCURRENCY*: Resolve conflicts by rejecting mutations when versions don't match the latest version at the server.
-          +   *AUTOMERGE*: Resolve conflicts with the Automerge conflict resolution strategy.
-          +   *LAMBDA*: Resolve conflicts with an LAMlong function supplied in the ``LambdaConflictHandlerConfig``.
+          +  *OPTIMISTIC_CONCURRENCY*: Resolve conflicts by rejecting mutations when versions don't match the latest version at the server.
+          +  *AUTOMERGE*: Resolve conflicts with the Automerge conflict resolution strategy.
+          +  *LAMBDA*: Resolve conflicts with an LAMlong function supplied in the ``LambdaConflictHandlerConfig``.
         """
         lambda_conflict_handler_config: NotRequired[pulumi.Input['ResolverLambdaConflictHandlerConfigArgsDict']]
         """
@@ -2161,12 +2353,12 @@ class ResolverSyncConfigArgs:
         Describes a Sync configuration for a resolver.
          Specifies which Conflict Detection strategy and Resolution strategy to use when the resolver is invoked.
         :param pulumi.Input[builtins.str] conflict_detection: The Conflict Detection strategy to use.
-                 +   *VERSION*: Detect conflicts based on object versions for this resolver.
-                 +   *NONE*: Do not detect conflicts when invoking this resolver.
+                 +  *VERSION*: Detect conflicts based on object versions for this resolver.
+                 +  *NONE*: Do not detect conflicts when invoking this resolver.
         :param pulumi.Input[builtins.str] conflict_handler: The Conflict Resolution strategy to perform in the event of a conflict.
-                 +   *OPTIMISTIC_CONCURRENCY*: Resolve conflicts by rejecting mutations when versions don't match the latest version at the server.
-                 +   *AUTOMERGE*: Resolve conflicts with the Automerge conflict resolution strategy.
-                 +   *LAMBDA*: Resolve conflicts with an LAMlong function supplied in the ``LambdaConflictHandlerConfig``.
+                 +  *OPTIMISTIC_CONCURRENCY*: Resolve conflicts by rejecting mutations when versions don't match the latest version at the server.
+                 +  *AUTOMERGE*: Resolve conflicts with the Automerge conflict resolution strategy.
+                 +  *LAMBDA*: Resolve conflicts with an LAMlong function supplied in the ``LambdaConflictHandlerConfig``.
         :param pulumi.Input['ResolverLambdaConflictHandlerConfigArgs'] lambda_conflict_handler_config: The ``LambdaConflictHandlerConfig`` when configuring ``LAMBDA`` as the Conflict Handler.
         """
         pulumi.set(__self__, "conflict_detection", conflict_detection)
@@ -2180,8 +2372,8 @@ class ResolverSyncConfigArgs:
     def conflict_detection(self) -> pulumi.Input[builtins.str]:
         """
         The Conflict Detection strategy to use.
-          +   *VERSION*: Detect conflicts based on object versions for this resolver.
-          +   *NONE*: Do not detect conflicts when invoking this resolver.
+          +  *VERSION*: Detect conflicts based on object versions for this resolver.
+          +  *NONE*: Do not detect conflicts when invoking this resolver.
         """
         return pulumi.get(self, "conflict_detection")
 
@@ -2194,9 +2386,9 @@ class ResolverSyncConfigArgs:
     def conflict_handler(self) -> Optional[pulumi.Input[builtins.str]]:
         """
         The Conflict Resolution strategy to perform in the event of a conflict.
-          +   *OPTIMISTIC_CONCURRENCY*: Resolve conflicts by rejecting mutations when versions don't match the latest version at the server.
-          +   *AUTOMERGE*: Resolve conflicts with the Automerge conflict resolution strategy.
-          +   *LAMBDA*: Resolve conflicts with an LAMlong function supplied in the ``LambdaConflictHandlerConfig``.
+          +  *OPTIMISTIC_CONCURRENCY*: Resolve conflicts by rejecting mutations when versions don't match the latest version at the server.
+          +  *AUTOMERGE*: Resolve conflicts with the Automerge conflict resolution strategy.
+          +  *LAMBDA*: Resolve conflicts with an LAMlong function supplied in the ``LambdaConflictHandlerConfig``.
         """
         return pulumi.get(self, "conflict_handler")
 

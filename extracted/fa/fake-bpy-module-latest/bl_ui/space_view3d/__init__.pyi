@@ -6788,6 +6788,7 @@ class VIEW3D_PT_shading_options_shadow(bpy.types.Panel):
     bl_region_type: typing.Any
     bl_rna: typing.Any
     bl_space_type: typing.Any
+    bl_ui_units_x: typing.Any
     id_data: typing.Any
 
     def bl_rna_get_subclass(self) -> bpy.types.Struct:

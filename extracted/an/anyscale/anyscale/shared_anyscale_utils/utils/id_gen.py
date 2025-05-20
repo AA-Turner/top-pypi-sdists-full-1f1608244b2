@@ -17,7 +17,6 @@ class IDTypes(Enum):
     clouds = "cld"
     cloud_resources = "cldrsrc"
     cloud_resources_gcp = "cldrsrcgcp"
-    cluster_service_accounts = "csa"
     permissions_projects = "ppr"
     permissions_sessions = "pse"
     permissions_snapshots = "psn"
@@ -115,6 +114,9 @@ class IDTypes(Enum):
     resource_alerts = "rsa"
     aggregated_instance_usage = "aiu"
     readonly_collaborators = "rc"
+    machine_pools = "mp"
+    machines = "m"
+    cluster_log_cloud_resources = "clcr"
 
 
 _default_id_length: int = 26

@@ -6,6 +6,7 @@ from starlette.routing import BaseRoute
 
 from langgraph_api.auth.custom import handle_event as _handle_event
 from langgraph_api.route import ApiRequest, ApiResponse, ApiRoute
+from langgraph_api.store import get_store
 from langgraph_api.utils import get_auth_ctx
 from langgraph_api.validation import (
     StoreDeleteRequest,
@@ -14,7 +15,6 @@ from langgraph_api.validation import (
     StoreSearchRequest,
 )
 from langgraph_runtime.retry import retry_db
-from langgraph_runtime.store import Store
 
 
 def _validate_namespace(namespace: tuple[str, ...]) -> Response | None:
@@ -57,7 +57,9 @@ async def put_item(request: ApiRequest):
         "value": payload["value"],
     }
     await handle_event("put", handler_payload)
-    await Store().aput(namespace, handler_payload["key"], handler_payload["value"])
+    await (await get_store()).aput(
+        namespace, handler_payload["key"], handler_payload["value"]
+    )
     return Response(status_code=204)
 
 
@@ -75,7 +77,7 @@ async def get_item(request: ApiRequest):
         "key": key,
     }
     await handle_event("get", handler_payload)
-    result = await Store().aget(namespace, key)
+    result = await (await get_store()).aget(namespace, key)
     return ApiResponse(result.dict() if result is not None else None)
 
 
@@ -91,7 +93,9 @@ async def delete_item(request: ApiRequest):
         "key": payload["key"],
     }
     await handle_event("delete", handler_payload)
-    await Store().adelete(handler_payload["namespace"], handler_payload["key"])
+    await (await get_store()).adelete(
+        handler_payload["namespace"], handler_payload["key"]
+    )
     return Response(status_code=204)
 
 
@@ -114,7 +118,7 @@ async def search_items(request: ApiRequest):
         "query": query,
     }
     await handle_event("search", handler_payload)
-    items = await Store().asearch(
+    items = await (await get_store()).asearch(
         handler_payload["namespace"],
         filter=handler_payload["filter"],
         limit=handler_payload["limit"],
@@ -145,7 +149,7 @@ async def list_namespaces(request: ApiRequest):
         "offset": offset,
     }
     await handle_event("list_namespaces", handler_payload)
-    result = await Store().alist_namespaces(
+    result = await (await get_store()).alist_namespaces(
         prefix=handler_payload["namespace"],
         suffix=handler_payload["suffix"],
         max_depth=handler_payload["max_depth"],

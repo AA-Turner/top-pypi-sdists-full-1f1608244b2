@@ -1,10 +1,11 @@
-use pyo3::{exceptions::PyStopIteration, prelude::*, types::PyDict, IntoPyObjectExt};
-use std::sync::{atomic, Arc, OnceLock, RwLock};
+use pyo3::{IntoPyObjectExt, exceptions::PyStopIteration, prelude::*, types::PyDict};
+use std::sync::{Arc, OnceLock, RwLock, atomic};
 use tokio::sync::Notify;
 
 use crate::{asyncio::copy_context, conversion::FutureResultToPy};
 
-pub(crate) type ArcCBScheduler = Arc<Py<CallbackScheduler>>;
+pub(crate) type PyCBScheduler = Py<CallbackScheduler>;
+pub(crate) type ArcCBScheduler = Arc<PyCBScheduler>;
 
 #[pyclass(frozen, subclass, module = "granian._granian")]
 pub(crate) struct CallbackScheduler {
@@ -259,6 +260,7 @@ pub(crate) struct CallbackSchedulerState {
 }
 
 impl CallbackSchedulerState {
+    #[allow(unsafe_op_in_unsafe_fn)]
     unsafe fn add_waker(self: Arc<Self>, py: Python, fut: *mut pyo3::ffi::PyObject, fut_cbm: *mut pyo3::ffi::PyObject) {
         let waker = Py::new(py, CallbackSchedulerWaker { state: self.clone() }).unwrap();
         let ctxd = PyDict::new(py);

@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "projen-statemachine-example",
-    "2.0.736",
+    "2.0.737",
     __name__[0:-6],
-    "projen-statemachine-example@2.0.736.jsii.tgz",
+    "projen-statemachine-example@2.0.737.jsii.tgz",
 )
 
 __all__ = [

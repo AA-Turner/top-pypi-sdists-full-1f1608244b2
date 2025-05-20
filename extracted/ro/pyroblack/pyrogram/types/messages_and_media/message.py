@@ -2940,6 +2940,8 @@ class Message(Object, Update):
         message_effect_id: int = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         invert_media: bool = None,
+        progress: Callable = None,
+        progress_args: tuple = (),
     ) -> List["types.Message"]:
         """Bound method *reply_media_group* of :obj:`~pyrogram.types.Message`.
 
@@ -3005,6 +3007,28 @@ class Message(Object, Update):
             invert_media (``bool``, *optional*):
                 Inverts the position of the media and caption.
 
+            progress (``Callable``, *optional*):
+                Pass a callback function to view the file transmission progress.
+                The function must take *(current, total)* as positional arguments (look at Other Parameters below for a
+                detailed description) and will be called back each time a new file chunk has been successfully
+                transmitted.
+
+            progress_args (``tuple``, *optional*):
+                Extra custom arguments for the progress callback function.
+                You can pass anything you need to be available in the progress callback scope; for example, a Message
+                object or a Client instance in order to edit the message with the updated progress status.
+
+        Other Parameters:
+            current (``int``):
+                The amount of bytes transmitted so far.
+
+            total (``int``):
+                The total size of the file.
+
+            *args (``tuple``, *optional*):
+                Extra custom arguments as defined in the ``progress_args`` parameter.
+                You can either keep ``*args`` or add every single extra argument in your function signature.
+
         Returns:
             On success, a :obj:`~pyrogram.types.Messages` object is returned containing all the
             single messages sent.
@@ -3044,6 +3068,8 @@ class Message(Object, Update):
             allow_paid_broadcast=allow_paid_broadcast,
             message_effect_id=message_effect_id,
             invert_media=invert_media,
+            progress=progress,
+            progress_args=progress_args,
         )
 
     async def reply_photo(
@@ -3061,6 +3087,8 @@ class Message(Object, Update):
         reply_in_chat_id: Union[int, str] = None,
         quote_text: str = None,
         quote_entities: List["types.MessageEntity"] = None,
+        schedule_date: datetime = None,
+        protect_content: bool = None,
         allow_paid_broadcast: bool = None,
         message_effect_id: int = None,
         view_once: bool = None,
@@ -3154,6 +3182,12 @@ class Message(Object, Update):
                 Self-Destruct Timer.
                 If True, the photo will self-destruct after it was viewed.
 
+            schedule_date (:py:obj:`~datetime.datetime`, *optional*):
+                Date when the message will be automatically sent.
+
+            protect_content (``bool``, *optional*):
+                Protects the contents of the sent message from forwarding and saving.
+
             allow_paid_broadcast (``bool``, *optional*):
                 Pass True to allow the message to ignore regular broadcast limits for a small fee; for bots
 
@@ -3228,6 +3262,8 @@ class Message(Object, Update):
             reply_to_chat_id=reply_to_chat_id,
             quote_text=quote_text,
             quote_entities=quote_entities,
+            schedule_date=schedule_date,
+            protect_content=protect_content,
             allow_paid_broadcast=allow_paid_broadcast,
             message_effect_id=message_effect_id,
             view_once=view_once,
@@ -3764,9 +3800,11 @@ class Message(Object, Update):
         quote_entities: List["types.MessageEntity"] = None,
         allow_paid_broadcast: bool = None,
         message_effect_id: int = None,
+        view_once: bool = None,
         cover: Union[str, BinaryIO] = None,
         start_timestamp: int = None,
         schedule_date: datetime = None,
+        protect_content: bool = None,
         invert_media: bool = None,
         reply_markup: Union[
             "types.InlineKeyboardMarkup",
@@ -3884,8 +3922,14 @@ class Message(Object, Update):
             schedule_date (:py:obj:`~datetime.datetime`, *optional*):
                 Date when the message will be automatically sent.
 
+            protect_content (``bool``, *optional*):
+                Protects the contents of the sent message from forwarding and saving.
+
             message_effect_id (``int`` ``64-bit``, *optional*):
                 Unique identifier of the message effect to be added to the message; for private chats only.
+
+            view_once (``bool``, *optional*):
+                Pass True to send the video as a view-once message.
 
             invert_media (``bool``, *optional*):
                 Pass True to invert the video and caption position.
@@ -3966,6 +4010,8 @@ class Message(Object, Update):
             quote_entities=quote_entities,
             allow_paid_broadcast=allow_paid_broadcast,
             message_effect_id=message_effect_id,
+            view_once=view_once,
+            protect_content=protect_content,
             invert_media=invert_media,
             reply_markup=reply_markup,
             progress=progress,

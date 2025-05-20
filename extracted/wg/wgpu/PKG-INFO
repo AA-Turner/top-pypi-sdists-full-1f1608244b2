@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: wgpu
-Version: 0.22.1
+Version: 0.22.2
 Summary: WebGPU for Python
 Project-URL: Homepage, https://github.com/pygfx/wgpu-py
 Project-URL: Documentation, https://wgpu-py.readthedocs.io

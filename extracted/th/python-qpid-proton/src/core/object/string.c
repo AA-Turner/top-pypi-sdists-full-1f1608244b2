@@ -36,8 +36,8 @@
 
 struct pn_string_t {
   char *bytes;
-  ssize_t size;       // PNI_NULL_SIZE (-1) means null
-  size_t capacity;
+  int32_t size;       // PNI_NULL_SIZE (-1) means null
+  uint32_t capacity;
 };
 
 static void pn_string_finalize(void *object)
@@ -118,8 +118,7 @@ pn_string_t *pn_stringn(const char *bytes, size_t n)
 
 const char *pn_string_get(pn_string_t *string)
 {
-  assert(string);
-  if (string->size == PNI_NULL_SIZE) {
+  if (!string || string->size == PNI_NULL_SIZE) {
     return NULL;
   } else {
     return string->bytes;
@@ -128,11 +127,19 @@ const char *pn_string_get(pn_string_t *string)
 
 size_t pn_string_size(pn_string_t *string)
 {
-  assert(string);
-  if (string->size == PNI_NULL_SIZE) {
+  if (!string || string->size == PNI_NULL_SIZE) {
     return 0;
   } else {
     return string->size;
+  }
+}
+
+pn_bytes_t pn_string_bytes(pn_string_t *string)
+{
+  if (!string || string->size == PNI_NULL_SIZE) {
+    return (pn_bytes_t){0, NULL};
+  } else {
+    return (pn_bytes_t){string->size, string->bytes};
   }
 }
 
@@ -143,6 +150,8 @@ int pn_string_set(pn_string_t *string, const char *bytes)
 
 int pn_string_grow(pn_string_t *string, size_t capacity)
 {
+  if (!string) return PN_ARG_ERR;
+
   bool grow = false;
   while (string->capacity < (capacity*sizeof(char) + 1)) {
     string->capacity *= 2;
@@ -179,7 +188,8 @@ int pn_string_setn(pn_string_t *string, const char *bytes, size_t n)
 
 ssize_t pn_string_put(pn_string_t *string, char *dst)
 {
-  assert(string);
+  if (!string) return PNI_NULL_SIZE;
+
   assert(dst);
 
   if (string->size != PNI_NULL_SIZE) {
@@ -194,7 +204,7 @@ void pn_string_clear(pn_string_t *string)
   pn_string_set(string, NULL);
 }
 
-int pn_string_format(pn_string_t *string, const char *format, ...)
+int pn_string_format(pn_string_t *string, PN_PRINTF_FORMAT const char *format, ...)
 {
   va_list ap;
 
@@ -210,7 +220,7 @@ int pn_string_vformat(pn_string_t *string, const char *format, va_list ap)
   return pn_string_vaddf(string, format, ap);
 }
 
-int pn_string_addf(pn_string_t *string, const char *format, ...)
+int pn_string_addf(pn_string_t *string, PN_PRINTF_FORMAT const char *format, ...)
 {
   va_list ap;
 
@@ -245,19 +255,20 @@ int pn_string_vaddf(pn_string_t *string, const char *format, va_list ap)
 
 char *pn_string_buffer(pn_string_t *string)
 {
-  assert(string);
+  if (!string) return NULL;
+
   return string->bytes;
 }
 
 size_t pn_string_capacity(pn_string_t *string)
 {
-  assert(string);
+  if (!string) return 0;
+
   return string->capacity - 1;
 }
 
 int pn_string_resize(pn_string_t *string, size_t size)
 {
-  assert(string);
   int err = pn_string_grow(string, size);
   if (err) return err;
   string->size = size;
@@ -267,6 +278,5 @@ int pn_string_resize(pn_string_t *string, size_t size)
 
 int pn_string_copy(pn_string_t *string, pn_string_t *src)
 {
-  assert(string);
   return pn_string_setn(string, pn_string_get(src), pn_string_size(src));
 }

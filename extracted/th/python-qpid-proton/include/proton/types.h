@@ -142,6 +142,13 @@ extern "C" {
 typedef uint32_t  pn_sequence_t;
 
 /**
+ * A count or limit of AMQP transfer frames.
+ *
+ * @ingroup api_types
+ */
+typedef uint32_t pn_frame_count_t;
+
+/**
  * A span of time in milliseconds.
  *
  * @ingroup api_types
@@ -223,7 +230,11 @@ typedef struct pn_bytes_t {
  *
  * @ingroup api_types
  */
-PN_EXTERN pn_bytes_t pn_bytes(size_t size, const char *start);
+PN_EXTERN inline pn_bytes_t pn_bytes(size_t size, const char *start)
+{
+  pn_bytes_t bytes = {size, start};
+  return bytes;
+}
 
 PN_EXTERN extern const pn_bytes_t pn_bytes_null;
 
@@ -242,7 +253,11 @@ typedef struct pn_rwbytes_t {
  *
  * @ingroup api_types
  */
-PN_EXTERN pn_rwbytes_t pn_rwbytes(size_t size, char *start);
+PN_EXTERN inline pn_rwbytes_t pn_rwbytes(size_t size, char *start)
+{
+  pn_rwbytes_t bytes = {size, start};
+  return bytes;
+}
 
 PN_EXTERN extern const pn_rwbytes_t pn_rwbytes_null;
 

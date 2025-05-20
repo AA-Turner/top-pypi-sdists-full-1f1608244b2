@@ -37,7 +37,8 @@ _ALLOWED_EXCEPTIONS: tuple[type[Exception], ...] = (
 
 
 class ObjectStore(Store):
-    """A Zarr store that uses obstore for fast read/write from AWS, GCP, Azure.
+    """
+    Store that uses obstore for fast read/write from AWS, GCP, Azure.
 
     Parameters
     ----------
@@ -160,7 +161,7 @@ class ObjectStore(Store):
 
         self._check_writable()
 
-        buf = value.to_bytes()
+        buf = value.as_buffer_like()
         await obs.put_async(self.store, key, buf)
 
     async def set_if_not_exists(self, key: str, value: Buffer) -> None:
@@ -168,7 +169,7 @@ class ObjectStore(Store):
         import obstore as obs
 
         self._check_writable()
-        buf = value.to_bytes()
+        buf = value.as_buffer_like()
         with contextlib.suppress(obs.exceptions.AlreadyExistsError):
             await obs.put_async(self.store, key, buf, mode="create")
 

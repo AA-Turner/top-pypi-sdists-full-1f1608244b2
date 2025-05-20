@@ -27,6 +27,7 @@ __all__ = [
     'VariantStoreReferenceItem',
     'VariantStoreSseConfig',
     'WorkflowParameter',
+    'WorkflowVersionWorkflowParameter',
 ]
 
 @pulumi.output_type
@@ -374,6 +375,37 @@ class VariantStoreSseConfig(dict):
 
 @pulumi.output_type
 class WorkflowParameter(dict):
+    def __init__(__self__, *,
+                 description: Optional[builtins.str] = None,
+                 optional: Optional[builtins.bool] = None):
+        """
+        :param builtins.str description: The parameter's description.
+        :param builtins.bool optional: Whether the parameter is optional.
+        """
+        if description is not None:
+            pulumi.set(__self__, "description", description)
+        if optional is not None:
+            pulumi.set(__self__, "optional", optional)
+
+    @property
+    @pulumi.getter
+    def description(self) -> Optional[builtins.str]:
+        """
+        The parameter's description.
+        """
+        return pulumi.get(self, "description")
+
+    @property
+    @pulumi.getter
+    def optional(self) -> Optional[builtins.bool]:
+        """
+        Whether the parameter is optional.
+        """
+        return pulumi.get(self, "optional")
+
+
+@pulumi.output_type
+class WorkflowVersionWorkflowParameter(dict):
     def __init__(__self__, *,
                  description: Optional[builtins.str] = None,
                  optional: Optional[builtins.bool] = None):

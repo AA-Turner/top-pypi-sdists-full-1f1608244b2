@@ -262,6 +262,10 @@ Keyword arguments:
 - tabIndex (number; optional):
     tab-index.
 
+- tabularNums (boolean; optional):
+    Determines whether `font-variant-numeric: tabular-nums` style
+    should be set, `False` by default.
+
 - td (string | number; optional):
     TextDecoration.
 
@@ -273,8 +277,8 @@ Keyword arguments:
 - unstyled (boolean; optional):
     Remove all Mantine styling from the component.
 
-- variant (string; optional):
-    variant.
+- variant (a value equal to: 'default', 'vertical'; optional):
+    variant 'default' | 'vertical'.
 
 - verticalSpacing (number; optional):
     Vertical cells spacing, key of `theme.spacing` or any valid CSS
@@ -341,6 +345,8 @@ Keyword arguments:
         data: typing.Optional["Data"] = None,
         stickyHeader: typing.Optional[bool] = None,
         stickyHeaderOffset: typing.Optional[typing.Union[str, NumberType]] = None,
+        variant: typing.Optional[Literal["default", "vertical"]] = None,
+        tabularNums: typing.Optional[bool] = None,
         className: typing.Optional[str] = None,
         style: typing.Optional[typing.Any] = None,
         hiddenFrom: typing.Optional[typing.Union[Literal["xs"], Literal["sm"], Literal["md"], Literal["lg"], Literal["xl"]]] = None,
@@ -400,15 +406,14 @@ Keyword arguments:
         classNames: typing.Optional[dict] = None,
         styles: typing.Optional[typing.Any] = None,
         unstyled: typing.Optional[bool] = None,
-        variant: typing.Optional[str] = None,
         id: typing.Optional[typing.Union[str, dict]] = None,
         tabIndex: typing.Optional[NumberType] = None,
         loading_state: typing.Optional["LoadingState"] = None,
         **kwargs
     ):
-        self._prop_names = ['children', 'id', 'aria-*', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'borderColor', 'bottom', 'c', 'captionSide', 'className', 'classNames', 'darkHidden', 'data', 'data-*', 'display', 'ff', 'flex', 'fs', 'fw', 'fz', 'h', 'hiddenFrom', 'highlightOnHover', 'highlightOnHoverColor', 'horizontalSpacing', 'inset', 'layout', 'left', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'mb', 'me', 'mih', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'opacity', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'ps', 'pt', 'px', 'py', 'right', 'stickyHeader', 'stickyHeaderOffset', 'striped', 'stripedColor', 'style', 'styles', 'ta', 'tabIndex', 'td', 'top', 'tt', 'unstyled', 'variant', 'verticalSpacing', 'visibleFrom', 'w', 'withColumnBorders', 'withRowBorders', 'withTableBorder']
+        self._prop_names = ['children', 'id', 'aria-*', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'borderColor', 'bottom', 'c', 'captionSide', 'className', 'classNames', 'darkHidden', 'data', 'data-*', 'display', 'ff', 'flex', 'fs', 'fw', 'fz', 'h', 'hiddenFrom', 'highlightOnHover', 'highlightOnHoverColor', 'horizontalSpacing', 'inset', 'layout', 'left', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'mb', 'me', 'mih', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'opacity', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'ps', 'pt', 'px', 'py', 'right', 'stickyHeader', 'stickyHeaderOffset', 'striped', 'stripedColor', 'style', 'styles', 'ta', 'tabIndex', 'tabularNums', 'td', 'top', 'tt', 'unstyled', 'variant', 'verticalSpacing', 'visibleFrom', 'w', 'withColumnBorders', 'withRowBorders', 'withTableBorder']
         self._valid_wildcard_attributes =            ['data-', 'aria-']
-        self.available_properties = ['children', 'id', 'aria-*', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'borderColor', 'bottom', 'c', 'captionSide', 'className', 'classNames', 'darkHidden', 'data', 'data-*', 'display', 'ff', 'flex', 'fs', 'fw', 'fz', 'h', 'hiddenFrom', 'highlightOnHover', 'highlightOnHoverColor', 'horizontalSpacing', 'inset', 'layout', 'left', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'mb', 'me', 'mih', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'opacity', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'ps', 'pt', 'px', 'py', 'right', 'stickyHeader', 'stickyHeaderOffset', 'striped', 'stripedColor', 'style', 'styles', 'ta', 'tabIndex', 'td', 'top', 'tt', 'unstyled', 'variant', 'verticalSpacing', 'visibleFrom', 'w', 'withColumnBorders', 'withRowBorders', 'withTableBorder']
+        self.available_properties = ['children', 'id', 'aria-*', 'bd', 'bg', 'bga', 'bgp', 'bgr', 'bgsz', 'borderColor', 'bottom', 'c', 'captionSide', 'className', 'classNames', 'darkHidden', 'data', 'data-*', 'display', 'ff', 'flex', 'fs', 'fw', 'fz', 'h', 'hiddenFrom', 'highlightOnHover', 'highlightOnHoverColor', 'horizontalSpacing', 'inset', 'layout', 'left', 'lh', 'lightHidden', 'loading_state', 'lts', 'm', 'mah', 'maw', 'mb', 'me', 'mih', 'miw', 'ml', 'mod', 'mr', 'ms', 'mt', 'mx', 'my', 'opacity', 'p', 'pb', 'pe', 'pl', 'pos', 'pr', 'ps', 'pt', 'px', 'py', 'right', 'stickyHeader', 'stickyHeaderOffset', 'striped', 'stripedColor', 'style', 'styles', 'ta', 'tabIndex', 'tabularNums', 'td', 'top', 'tt', 'unstyled', 'variant', 'verticalSpacing', 'visibleFrom', 'w', 'withColumnBorders', 'withRowBorders', 'withTableBorder']
         self.available_wildcard_properties =            ['data-', 'aria-']
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

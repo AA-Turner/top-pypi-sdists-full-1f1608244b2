@@ -1,3 +1,4 @@
+import asyncio
 import re
 from datetime import datetime
 import getpass
@@ -660,16 +661,19 @@ async def entrada_de_notas_503(task: RpaProcessoEntradaDTO) -> RpaRetornoProcess
 
         # Seleciona pagamento
         console.log("Seleciona Pagamento", style="bold yellow")
-        pyautogui.click(623, 374)
+        # pyautogui.click(623, 374) old click
+        pyautogui.click(623, 360)
         await worker_sleep(1)
-        pyautogui.click(889, 349)
+        # pyautogui.click(889, 349) old
+        pyautogui.click(889, 330)
         await worker_sleep(1)
         pyautogui.write("27")
         await worker_sleep(1)
         pyautogui.hotkey("enter")
 
         # Digita "Valor"
-        pyautogui.click(1285, 352)
+        # pyautogui.click(1285, 352) old
+        pyautogui.click(1285, 332)
         await worker_sleep(1)
         pyautogui.hotkey("ctrl", "a")
         pyautogui.hotkey("del")

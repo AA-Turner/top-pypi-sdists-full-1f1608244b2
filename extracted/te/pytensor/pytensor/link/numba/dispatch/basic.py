@@ -76,7 +76,7 @@ def numba_njit(*args, fastmath=None, **kwargs):
         message=(
             "(\x1b\\[1m)*"  # ansi escape code for bold text
             "Cannot cache compiled function "
-            '"(numba_funcified_fgraph|store_core_outputs|cholesky|solve|solve_triangular|cho_solve)" '
+            '"(numba_funcified_fgraph|store_core_outputs|cholesky|solve|solve_triangular|cho_solve|lu_factor)" '
             "as it uses dynamic globals"
         ),
         category=NumbaWarning,
@@ -312,10 +312,10 @@ def generate_fallback_impl(op, node=None, storage_map=None, **kwargs):
     else:
 
         def py_perform_return(inputs):
-            # strict=False because we are in a hot loop
+            # zip strict not specified because we are in a hot loop
             return tuple(
                 out_type.filter(out[0])
-                for out_type, out in zip(output_types, py_perform(inputs), strict=False)
+                for out_type, out in zip(output_types, py_perform(inputs))
             )
 
     @numba_njit

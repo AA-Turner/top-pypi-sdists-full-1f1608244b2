@@ -1120,6 +1120,10 @@ class DocumentationPartLocationArgs:
 
 if not MYPY:
     class DomainNameEndpointConfigurationArgsDict(TypedDict):
+        """
+        The ``EndpointConfiguration`` property type specifies the endpoint types of an Amazon API Gateway domain name.
+         ``EndpointConfiguration`` is a property of the [AWS::ApiGateway::DomainName](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html) resource.
+        """
         ip_address_type: NotRequired[pulumi.Input[builtins.str]]
         """
         The IP address types that can invoke this DomainName. Use `ipv4` to allow only IPv4 addresses to invoke this DomainName, or use `dualstack` to allow both IPv4 and IPv6 addresses to invoke this DomainName. For the `PRIVATE` endpoint type, only `dualstack` is supported.
@@ -1137,6 +1141,8 @@ class DomainNameEndpointConfigurationArgs:
                  ip_address_type: Optional[pulumi.Input[builtins.str]] = None,
                  types: Optional[pulumi.Input[Sequence[pulumi.Input[builtins.str]]]] = None):
         """
+        The ``EndpointConfiguration`` property type specifies the endpoint types of an Amazon API Gateway domain name.
+         ``EndpointConfiguration`` is a property of the [AWS::ApiGateway::DomainName](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html) resource.
         :param pulumi.Input[builtins.str] ip_address_type: The IP address types that can invoke this DomainName. Use `ipv4` to allow only IPv4 addresses to invoke this DomainName, or use `dualstack` to allow both IPv4 and IPv6 addresses to invoke this DomainName. For the `PRIVATE` endpoint type, only `dualstack` is supported.
         :param pulumi.Input[Sequence[pulumi.Input[builtins.str]]] types: A list of endpoint types of an API (RestApi) or its custom domain name (DomainName). For an edge-optimized API and its custom domain name, the endpoint type is `"EDGE"` . For a regional API and its custom domain name, the endpoint type is `REGIONAL` . For a private API, the endpoint type is `PRIVATE` .
         """
@@ -1224,6 +1230,10 @@ class DomainNameMutualTlsAuthenticationArgs:
 
 if not MYPY:
     class DomainNameV2EndpointConfigurationArgsDict(TypedDict):
+        ip_address_type: NotRequired[pulumi.Input[builtins.str]]
+        """
+        The IP address types that can invoke an API (RestApi) or a DomainName. Use `ipv4` to allow only IPv4 addresses to invoke an API or DomainName, or use `dualstack` to allow both IPv4 and IPv6 addresses to invoke an API or a DomainName. For the `PRIVATE` endpoint type, only `dualstack` is supported.
+        """
         types: NotRequired[pulumi.Input[Sequence[pulumi.Input[builtins.str]]]]
         """
         A list of endpoint types of an API (RestApi) or its custom domain name (DomainName). For an edge-optimized API and its custom domain name, the endpoint type is `"EDGE"` . For a regional API and its custom domain name, the endpoint type is `REGIONAL` . For a private API, the endpoint type is `PRIVATE` .
@@ -1234,12 +1244,28 @@ elif False:
 @pulumi.input_type
 class DomainNameV2EndpointConfigurationArgs:
     def __init__(__self__, *,
+                 ip_address_type: Optional[pulumi.Input[builtins.str]] = None,
                  types: Optional[pulumi.Input[Sequence[pulumi.Input[builtins.str]]]] = None):
         """
+        :param pulumi.Input[builtins.str] ip_address_type: The IP address types that can invoke an API (RestApi) or a DomainName. Use `ipv4` to allow only IPv4 addresses to invoke an API or DomainName, or use `dualstack` to allow both IPv4 and IPv6 addresses to invoke an API or a DomainName. For the `PRIVATE` endpoint type, only `dualstack` is supported.
         :param pulumi.Input[Sequence[pulumi.Input[builtins.str]]] types: A list of endpoint types of an API (RestApi) or its custom domain name (DomainName). For an edge-optimized API and its custom domain name, the endpoint type is `"EDGE"` . For a regional API and its custom domain name, the endpoint type is `REGIONAL` . For a private API, the endpoint type is `PRIVATE` .
         """
+        if ip_address_type is not None:
+            pulumi.set(__self__, "ip_address_type", ip_address_type)
         if types is not None:
             pulumi.set(__self__, "types", types)
+
+    @property
+    @pulumi.getter(name="ipAddressType")
+    def ip_address_type(self) -> Optional[pulumi.Input[builtins.str]]:
+        """
+        The IP address types that can invoke an API (RestApi) or a DomainName. Use `ipv4` to allow only IPv4 addresses to invoke an API or DomainName, or use `dualstack` to allow both IPv4 and IPv6 addresses to invoke an API or a DomainName. For the `PRIVATE` endpoint type, only `dualstack` is supported.
+        """
+        return pulumi.get(self, "ip_address_type")
+
+    @ip_address_type.setter
+    def ip_address_type(self, value: Optional[pulumi.Input[builtins.str]]):
+        pulumi.set(self, "ip_address_type", value)
 
     @property
     @pulumi.getter

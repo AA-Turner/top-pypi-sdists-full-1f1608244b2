@@ -50,6 +50,7 @@ class Api(ConfigBuilder):
                 canonical_name="api.reporting_client",
                 default_value="fireball",
                 type_cast=str,
+                log_effective_config=False,
             ),
             ConfigOption(
                 canonical_name="api.request_audit.enable",

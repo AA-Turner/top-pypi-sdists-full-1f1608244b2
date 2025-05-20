@@ -8,7 +8,7 @@ ROOT = os.path.dirname(__file__)
 
 setup(
     name='tencentcloud-sdk-python-dbbrain',
-    install_requires=["tencentcloud-sdk-python-common==3.0.1381"],
+    install_requires=["tencentcloud-sdk-python-common==3.0.1383"],
     version=tencentcloud.__version__,
     description='Tencent Cloud Dbbrain SDK for Python',
     long_description=open('README.rst').read(),

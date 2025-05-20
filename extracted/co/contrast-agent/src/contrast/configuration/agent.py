@@ -118,11 +118,13 @@ class Agent(ConfigBuilder):
                 canonical_name="agent.python.enable_automatic_middleware",
                 default_value=True,
                 type_cast=str_to_bool,
+                log_effective_config=False,
             ),
             ConfigOption(
                 canonical_name="agent.python.enable_drf_response_analysis",
                 default_value=True,
                 type_cast=str_to_bool,
+                log_effective_config=False,
             ),
             # TODO: PYT-3337 - we should issue a deprecation warning if
             # agent.python.enable_profiler is used

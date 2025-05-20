@@ -6,7 +6,7 @@ import threading
 import time
 from contextlib import contextmanager
 from functools import cached_property
-from typing import Generator, TypeVar
+from typing import ClassVar, Generator, TypeVar
 
 import grpc
 import requests
@@ -49,18 +49,18 @@ class Beaker:
     :param user_agent: Override the "User-Agent" header used in requests to the Beaker server.
     """
 
-    API_VERSION = "v3"
-    CLIENT_VERSION = VERSION
-    VERSION_CHECK_INTERVAL = 12 * 3600  # 12 hours
+    API_VERSION: ClassVar[str] = "v3"
+    CLIENT_VERSION: ClassVar[str] = VERSION
+    VERSION_CHECK_INTERVAL: ClassVar[int] = 12 * 3600  # 12 hours
 
-    RPC_MAX_SEND_MESSAGE_LENGTH = 64 * 1024 * 1024  # 64MiB
+    RPC_MAX_SEND_MESSAGE_LENGTH: ClassVar[int] = 64 * 1024 * 1024  # 64MiB
 
-    RECOVERABLE_SERVER_ERROR_CODES = (429, 500, 502, 503, 504)
-    MAX_RETRIES = 5
-    BACKOFF_FACTOR = 1
-    BACKOFF_MAX = 120
-    TIMEOUT = 5.0
-    POOL_MAXSIZE = min(100, (os.cpu_count() or 16) * 6)
+    RECOVERABLE_SERVER_ERROR_CODES: ClassVar[tuple[int, ...]] = (429, 500, 502, 503, 504)
+    MAX_RETRIES: ClassVar[int] = 5
+    BACKOFF_FACTOR: ClassVar[int] = 1
+    BACKOFF_MAX: ClassVar[int] = 120
+    TIMEOUT: ClassVar[float] = 5.0
+    POOL_MAXSIZE: ClassVar[int] = min(100, (os.cpu_count() or 16) * 6)
 
     logger = logging.getLogger("beaker")
 
