@@ -1,5 +1,5 @@
 import os
-from typing import Optional, List, Union, Dict
+from typing import Optional, List, Union
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -43,21 +43,22 @@ class Label(BaseModel, extra=PYDANTIC_EXTRAS):
     angle: Optional[int] = None
     anchor: Optional[Position] = None
     position: Optional[Position] = None
+    wrapText: Optional[bool] = None
 
 
 class Labels(BaseModel, extra=PYDANTIC_EXTRAS):
-    center: Optional[Union[List[Label], Label]] = None
-    source: Optional[Union[List[Label], Label]] = None
-    target: Optional[Union[List[Label], Label]] = None
+    center: Optional[Union[list[Label], Label]] = None
+    source: Optional[Union[list[Label], Label]] = None
+    target: Optional[Union[list[Label], Label]] = None
 
 
 class ArrowHeads(BaseModel, extra=PYDANTIC_EXTRAS):
-    target: Optional[List[Position]] = Field(default_factory=list)
-    source: Optional[List[Position]] = Field(default_factory=list)
+    target: Optional[list[Position]] = Field(default_factory=list)
+    source: Optional[list[Position]] = Field(default_factory=list)
 
 
 class Positions(BaseModel, extra=PYDANTIC_EXTRAS):
-    line: Optional[List[Union[Position, EdgePosition]]] = Field(default_factory=list)
+    line: Optional[list[Union[Position, EdgePosition]]] = Field(default_factory=list)
     arrowHeads: Optional[ArrowHeads] = None
     labels: Optional[Labels] = None
 
@@ -89,10 +90,10 @@ class TrafficScore(BaseModel, extra=PYDANTIC_EXTRAS):
 
 
 class Packets(BaseModel, extra=PYDANTIC_EXTRAS):
-    packet: Optional[List[PROTOCOLS]] = Field(default_factory=list)
+    packet: Optional[list[PROTOCOLS]] = Field(default_factory=list)
     ifaceName: Optional[str] = None
-    prevEdgeIds: Optional[List[str]] = Field(default_factory=list)
-    nextEdgeIds: Optional[List[str]] = Field(default_factory=list)
+    prevEdgeIds: Optional[list[str]] = Field(default_factory=list)
+    nextEdgeIds: Optional[list[str]] = Field(default_factory=list)
     severityInfo: Optional[Checks] = None
     trafficScore: Optional[TrafficScore] = None
 
@@ -110,9 +111,9 @@ class Node(BaseModel, extra=PYDANTIC_EXTRAS):
     stack: Optional[bool] = None
     position: Optional[Position] = None
     style: Optional[Style] = None
-    acceptedPackets: Optional[Dict[str, Packets]] = Field(default_factory=dict)
-    droppedPackets: Optional[Dict[str, Packets]] = Field(default_factory=dict)
-    generatedPackets: Optional[Dict[str, Packets]] = Field(default_factory=dict)
+    acceptedPackets: Optional[dict[str, Packets]] = Field(default_factory=dict)
+    droppedPackets: Optional[dict[str, Packets]] = Field(default_factory=dict)
+    generatedPackets: Optional[dict[str, Packets]] = Field(default_factory=dict)
     extra: Optional[Extra] = None
 
 
@@ -136,21 +137,21 @@ class RelatedTechnology(BaseModel, extra=PYDANTIC_EXTRAS):
 
 class NetworkEdge(Edge, BaseModel, extra=PYDANTIC_EXTRAS):
     circle: bool
-    children: List[str]
+    children: list[str]
     relatedTechnology: Optional[RelatedTechnology] = None
 
 
 class PathLookupEdge(Edge, BaseModel, extra=PYDANTIC_EXTRAS):
-    nextEdgeIds: List[str]
-    prevEdgeIds: List[str]
-    packet: List[PROTOCOLS]
+    nextEdgeIds: list[str]
+    prevEdgeIds: list[str]
+    packet: list[PROTOCOLS]
     severityInfo: Severity
     sourceIfaceName: Optional[str] = None
     targetIfaceName: Optional[str] = None
     trafficScore: TrafficScore
     nextEdge: Optional[list] = Field(default_factory=list)
     prevEdge: Optional[list] = Field(default_factory=list)
-    loopIds: Optional[List[int]] = Field(default_factory=list)
+    loopIds: Optional[list[int]] = Field(default_factory=list)
 
 
 class EventsSummary(BaseModel, extra=PYDANTIC_EXTRAS):
@@ -163,13 +164,13 @@ class Traces(BaseModel, extra=PYDANTIC_EXTRAS):
     severityInfo: Checks
     sourcePacketId: str
     targetPacketId: str
-    trace: List[Trace]
+    trace: list[Trace]
 
 
 class Decision(BaseModel, extra=PYDANTIC_EXTRAS):
-    traces: List[Traces]
-    trafficIn: Optional[Dict[str, List[str]]] = Field(default_factory=dict)
-    trafficOut: Optional[Dict[str, List[str]]] = Field(default_factory=dict)
+    traces: list[Traces]
+    trafficIn: Optional[dict[str, list[str]]] = Field(default_factory=dict)
+    trafficOut: Optional[dict[str, list[str]]] = Field(default_factory=dict)
 
 
 class Check(BaseModel, extra=PYDANTIC_EXTRAS):
@@ -178,19 +179,19 @@ class Check(BaseModel, extra=PYDANTIC_EXTRAS):
 
 class PathLookup(BaseModel, extra=PYDANTIC_EXTRAS):
     eventsSummary: EventsSummary
-    decisions: Dict[str, Decision]
+    decisions: dict[str, Decision]
     passingTraffic: str
     check: Check
 
 
 class GraphData(BaseModel, extra=PYDANTIC_EXTRAS):
-    nodes: Dict[str, Node]
-    edges: Dict[str, Union[NetworkEdge, PathLookupEdge]]
+    nodes: dict[str, Node]
+    edges: dict[str, Union[NetworkEdge, PathLookupEdge]]
 
 
 class Entities(BaseModel, extra=PYDANTIC_EXTRAS):
-    deviceTypes: List[str]
-    edgeSettingsIds: List[str]
+    deviceTypes: list[str]
+    edgeSettingsIds: list[str]
 
 
 class Path(BaseModel, extra=PYDANTIC_EXTRAS):
@@ -201,11 +202,11 @@ class Path(BaseModel, extra=PYDANTIC_EXTRAS):
 class Topology(BaseModel, extra=PYDANTIC_EXTRAS):
     availableEntities: Entities
     allPathsSelected: bool
-    paths: Dict[str, Path]
+    paths: dict[str, Path]
 
 
 class GraphResult(BaseModel, extra=PYDANTIC_EXTRAS):
-    boxLabels: Dict[str, str]
+    boxLabels: dict[str, str]
     graphData: GraphData
     settings: Union[NetworkSettings, PathLookupSettings]
 
@@ -214,7 +215,7 @@ class BaseResult(BaseModel, extra=PYDANTIC_EXTRAS):
     graphResult: GraphResult
 
     @property
-    def nodes(self) -> Dict[str, Node]:
+    def nodes(self) -> dict[str, Node]:
         return self.graphResult.graphData.nodes
 
 
@@ -222,7 +223,7 @@ class TopologyResult(BaseResult, BaseModel, extra=PYDANTIC_EXTRAS):
     topology: Topology
 
     @property
-    def edges(self) -> Dict[str, NetworkEdge]:
+    def edges(self) -> dict[str, NetworkEdge]:
         return self.graphResult.graphData.edges
 
 
@@ -230,5 +231,5 @@ class PathLookupResult(BaseResult, BaseModel, extra=PYDANTIC_EXTRAS):
     pathlookup: Optional[PathLookup] = None
 
     @property
-    def edges(self) -> Dict[str, PathLookupEdge]:
+    def edges(self) -> dict[str, PathLookupEdge]:
         return self.graphResult.graphData.edges

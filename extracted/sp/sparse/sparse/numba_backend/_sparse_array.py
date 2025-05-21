@@ -609,8 +609,6 @@ class SparseArray:
         - [sparse.clip][] : For full documentation and more details.
         - [`numpy.clip`][] : Equivalent NumPy function.
         """
-        if min is None and max is None:
-            raise ValueError("One of max or min must be given.")
         if out is not None and not isinstance(out, tuple):
             out = (out,)
         return self.__array_ufunc__(np.clip, "__call__", self, a_min=min, a_max=max, out=out)
@@ -953,9 +951,9 @@ class SparseArray:
 
     def __array_namespace__(self, *, api_version=None):
         if api_version is None:
-            api_version = "2022.12"
+            api_version = "2024.12"
 
-        if api_version not in {"2021.12", "2022.12"}:
+        if api_version not in {"2021.12", "2022.12", "2023.12", "2024.12"}:
             raise ValueError(f'"{api_version}" Array API version not supported.')
         import sparse
 

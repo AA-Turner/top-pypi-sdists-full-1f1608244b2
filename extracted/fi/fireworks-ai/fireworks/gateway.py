@@ -6,9 +6,40 @@ import os
 from typing import List, Optional, TypeVar, Union
 
 import grpclib
+import grpc
 from grpclib.client import Channel
 import httpx
+from functools import cache as sync_cache
 from betterproto.lib.std.google.protobuf import FieldMask
+from google.protobuf.field_mask_pb2 import FieldMask as SyncFieldMask
+from fireworks.control_plane.generated.protos_grpcio.gateway.gateway_pb2_grpc import GatewayStub as SyncGatewayStub
+from fireworks.control_plane.generated.protos_grpcio.gateway.supervised_fine_tuning_job_pb2 import (
+    SupervisedFineTuningJob as SyncSupervisedFineTuningJob,
+    CreateSupervisedFineTuningJobRequest as SyncCreateSupervisedFineTuningJobRequest,
+)
+from fireworks.control_plane.generated.protos_grpcio.gateway.dataset_pb2 import (
+    Dataset as SyncDataset,
+    CreateDatasetRequest as SyncCreateDatasetRequest,
+    DeleteDatasetRequest as SyncDeleteDatasetRequest,
+    ListDatasetsRequest as SyncListDatasetsRequest,
+    GetDatasetUploadEndpointRequest as SyncGetDatasetUploadEndpointRequest,
+    ValidateDatasetUploadRequest as SyncValidateDatasetUploadRequest,
+)
+from fireworks.control_plane.generated.protos_grpcio.gateway.supervised_fine_tuning_job_pb2 import (
+    ListSupervisedFineTuningJobsRequest as SyncListSupervisedFineTuningJobsRequest,
+    ListSupervisedFineTuningJobsResponse as SyncListSupervisedFineTuningJobsResponse,
+)
+from fireworks.control_plane.generated.protos_grpcio.gateway.deployment_pb2 import (
+    ListDeploymentsRequest as SyncListDeploymentsRequest,
+    UpdateDeploymentRequest as SyncUpdateDeploymentRequest,
+    Deployment as SyncDeployment,
+    AutoscalingPolicy as SyncAutoscalingPolicy,
+    AcceleratorType as SyncAcceleratorType,
+    CreateDeploymentRequest as SyncCreateDeploymentRequest,
+    ScaleDeploymentRequest as SyncScaleDeploymentRequest,
+    GetDeploymentRequest as SyncGetDeploymentRequest,
+    DeleteDeploymentRequest as SyncDeleteDeploymentRequest,
+)
 from fireworks.control_plane.generated.protos.gateway import (
     AcceleratorType,
     AutoscalingPolicy,
@@ -38,6 +69,17 @@ from fireworks.control_plane.generated.protos.gateway import (
 )
 from asyncstdlib.functools import cache
 from openai import NOT_GIVEN, NotGiven
+
+from grpc import AuthMetadataPlugin, AuthMetadataContext
+
+
+class CustomAuthMetadata(AuthMetadataPlugin):
+    def __init__(self, api_key: str):
+        self._api_key = api_key
+
+    def __call__(self, context, callback):
+        metadata = [("x-api-key", self._api_key)]
+        callback(metadata, None)
 
 
 def _get_api_key_from_env() -> Optional[str]:
@@ -86,6 +128,12 @@ class Gateway:
         self._host = self._server_addr.split(":")[0]
         self._port = int(self._server_addr.split(":")[1])
         self._channel = Channel(host=self._host, port=self._port, ssl=True)
+        creds = grpc.composite_channel_credentials(
+            grpc.ssl_channel_credentials(),
+            grpc.metadata_call_credentials(CustomAuthMetadata(api_key)),
+        )
+        self._sync_channel = grpc.secure_channel(self._server_addr, creds)
+        self._sync_stub = SyncGatewayStub(self._sync_channel)
         self._stub = GatewayStub(self._channel, metadata=[("x-api-key", api_key)])
 
     async def __aenter__(self):
@@ -97,13 +145,21 @@ class Gateway:
     async def create_supervised_fine_tuning_job(
         self, request: CreateSupervisedFineTuningJobRequest
     ) -> SupervisedFineTuningJob:
-        account_id = await self.account_id()
+        account_id = self.account_id()
         request.parent = f"accounts/{account_id}"
         response = await self._stub.create_supervised_fine_tuning_job(request)
         return response
 
+    def create_supervised_fine_tuning_job_sync(
+        self, request: SyncCreateSupervisedFineTuningJobRequest
+    ) -> SupervisedFineTuningJob:
+        account_id = self.account_id()
+        request.parent = f"accounts/{account_id}"
+        response = self._sync_stub.CreateSupervisedFineTuningJob(request)
+        return response
+
     async def delete_supervised_fine_tuning_job(self, name: str) -> None:
-        account_id = await self.account_id()
+        account_id = self.account_id()
         try:
             await self._stub.delete_supervised_fine_tuning_job(
                 DeleteSupervisedFineTuningJobRequest(name=f"accounts/{account_id}/supervisedFineTuningJobs/{name}")
@@ -116,14 +172,23 @@ class Gateway:
     async def list_supervised_fine_tuning_jobs(
         self, request: ListSupervisedFineTuningJobsRequest
     ) -> ListSupervisedFineTuningJobsResponse:
-        account_id = await self.account_id()
+        account_id = self.account_id()
         request.parent = f"accounts/{account_id}"
         request.page_size = 200
         response = await self._stub.list_supervised_fine_tuning_jobs(request)
         return response
 
+    def list_supervised_fine_tuning_jobs_sync(
+        self, request: SyncListSupervisedFineTuningJobsRequest
+    ) -> SyncListSupervisedFineTuningJobsResponse:
+        account_id = self.account_id()
+        request.parent = f"accounts/{account_id}"
+        request.page_size = 200
+        response = self._sync_stub.ListSupervisedFineTuningJobs(request)
+        return response
+
     async def get_supervised_fine_tuning_job(self, name: str) -> Optional[SupervisedFineTuningJob]:
-        account_id = await self.account_id()
+        account_id = self.account_id()
         try:
             response = await self._stub.get_supervised_fine_tuning_job(
                 GetSupervisedFineTuningJobRequest(name=f"accounts/{account_id}/supervisedFineTuningJobs/{name}")
@@ -138,28 +203,56 @@ class Gateway:
         self,
         request: ListDatasetsRequest,
     ) -> List[Dataset]:
-        account_id = await self.account_id()
+        account_id = self.account_id()
         request.parent = f"accounts/{account_id}"
         response = await self._stub.list_datasets(request)
         return response.datasets
 
+    def list_datasets_sync(
+        self,
+        request: SyncListDatasetsRequest,
+    ) -> List[SyncDataset]:
+        account_id = self.account_id()
+        request.parent = f"accounts/{account_id}"
+        response = self._sync_stub.ListDatasets(request)
+        return response.datasets
+
     async def delete_dataset(self, name: str) -> None:
-        account_id = await self.account_id()
+        account_id = self.account_id()
         await self._stub.delete_dataset(DeleteDatasetRequest(name=f"accounts/{account_id}/datasets/{name}"))
 
+    def delete_dataset_sync(self, name: str) -> None:
+        account_id = self.account_id()
+        self._sync_stub.DeleteDataset(SyncDeleteDatasetRequest(name=f"accounts/{account_id}/datasets/{name}"))
+
     async def validate_dataset(self, name: str) -> None:
-        account_id = await self.account_id()
+        account_id = self.account_id()
         await self._stub.validate_dataset_upload(
             ValidateDatasetUploadRequest(name=f"accounts/{account_id}/datasets/{name}")
+        )
+
+    def validate_dataset_sync(self, name: str) -> None:
+        account_id = self.account_id()
+        self._sync_stub.ValidateDatasetUpload(
+            SyncValidateDatasetUploadRequest(name=f"accounts/{account_id}/datasets/{name}")
         )
 
     async def create_dataset(
         self,
         request: CreateDatasetRequest,
     ) -> Dataset:
-        account_id = await self.account_id()
+        account_id = self.account_id()
         request.parent = f"accounts/{account_id}"
         response = await self._stub.create_dataset(request)
+        return response
+
+    def create_dataset_sync(
+        self,
+        request: SyncCreateDatasetRequest,
+    ) -> SyncDataset:
+        account_id = self.account_id()
+        request.parent = f"accounts/{account_id}"
+        response = self._sync_stub.CreateDataset(request)
         return response
 
     async def get_dataset_upload_endpoint(
@@ -167,10 +260,22 @@ class Gateway:
         name: str,
         filename_to_size: dict[str, int],
     ) -> dict[str, str]:
-        account_id = await self.account_id()
+        account_id = self.account_id()
         name = f"accounts/{account_id}/datasets/{name}"
         response = await self._stub.get_dataset_upload_endpoint(
             GetDatasetUploadEndpointRequest(name=name, filename_to_size=filename_to_size)
+        )
+        return response.filename_to_signed_urls
+
+    def get_dataset_upload_endpoint_sync(
+        self,
+        name: str,
+        filename_to_size: dict[str, int],
+    ) -> dict[str, str]:
+        account_id = self.account_id()
+        name = f"accounts/{account_id}/datasets/{name}"
+        response = self._sync_stub.GetDatasetUploadEndpoint(
+            SyncGetDatasetUploadEndpointRequest(name=name, filename_to_size=filename_to_size)
         )
         return response.filename_to_signed_urls
 
@@ -220,9 +325,16 @@ class Gateway:
             page_token = response.next_page_token
 
     async def list_deployments(self, filter: str = ""):
-        account_id = await self.account_id()
+        account_id = self.account_id()
         deployments = await self._stub.list_deployments(
             ListDeploymentsRequest(parent=f"accounts/{account_id}", filter=filter)
+        )
+        return deployments.deployments
+
+    def list_deployments_sync(self, filter: str = "") -> List[SyncDeployment]:
+        account_id = self.account_id()
+        deployments = self._sync_stub.ListDeployments(
+            SyncListDeploymentsRequest(parent=f"accounts/{account_id}", filter=filter)
         )
         return deployments.deployments
 
@@ -230,13 +342,30 @@ class Gateway:
         self,
         deployment: Deployment,
     ):
-        account_id = await self.account_id()
+        account_id = self.account_id()
         request = CreateDeploymentRequest(parent=f"accounts/{account_id}", deployment=deployment)
         created_deployment = await self._stub.create_deployment(request)
         return created_deployment
 
+    def create_deployment_sync(
+        self,
+        deployment: SyncDeployment,
+    ):
+        account_id = self.account_id()
+        request = SyncCreateDeploymentRequest(parent=f"accounts/{account_id}", deployment=deployment)
+        created_deployment = self._sync_stub.CreateDeployment(request, metadata=[("x-api-key", self._api_key)])
+        return created_deployment
+
     async def scale_deployment(self, name: str, replicas: int):
         await self._stub.scale_deployment(ScaleDeploymentRequest(name=name, replica_count=replicas))
+
+    def scale_deployment_sync(self, name: str, replicas: int):
+        self._sync_stub.ScaleDeployment(SyncScaleDeploymentRequest(name=name, replica_count=replicas))
+
+    def delete_deployment_sync(self, name: str, ignore_checks: bool = False):
+        if not name.startswith("accounts/"):
+            name = f"accounts/{self.account_id()}/deployments/{name}"
+        self._sync_stub.DeleteDeployment(SyncDeleteDeploymentRequest(name=name, ignore_checks=ignore_checks))
 
     async def update_deployment(
         self,
@@ -256,15 +385,25 @@ class Gateway:
             return
         await self._stub.update_deployment(UpdateDeploymentRequest(deployment=deployment, update_mask=update_mask))
 
+    def update_deployment_sync(
+        self,
+        deployment: SyncDeployment,
+        update_mask: SyncFieldMask,
+    ):
+        self._sync_stub.UpdateDeployment(SyncUpdateDeploymentRequest(deployment=deployment, update_mask=update_mask))
+
     async def get_deployment(self, name: str) -> Deployment:
         return await self._stub.get_deployment(GetDeploymentRequest(name=name))
 
-    @cache
-    async def account_id(self) -> str:
+    def get_deployment_sync(self, name: str) -> Deployment:
+        return self._sync_stub.GetDeployment(SyncGetDeploymentRequest(name=name))
+
+    @sync_cache
+    def account_id(self) -> str:
         # make curl -v -H "Authorization: Bearer XXX" https://api.fireworks.ai/verifyApiKey
         # and read x-fireworks-account-id from headers of the response
-        async with httpx.AsyncClient() as client:
-            response = await client.get(
+        with httpx.Client() as client:
+            response = client.get(
                 "https://api.fireworks.ai/verifyApiKey",
                 headers={
                     "Authorization": f"Bearer {self._api_key}",

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pydantic-graph
-Version: 0.2.4
+Version: 0.2.5
 Summary: Graph and state machine library
 Project-URL: Homepage, https://ai.pydantic.dev/graph/tree/main/pydantic_graph
 Project-URL: Source, https://github.com/pydantic/pydantic-ai
@@ -8,6 +8,7 @@ Project-URL: Documentation, https://ai.pydantic.dev/graph
 Project-URL: Changelog, https://github.com/pydantic/pydantic-ai/releases
 Author-email: Samuel Colvin <samuel@pydantic.dev>
 License-Expression: MIT
+License-File: LICENSE
 Classifier: Development Status :: 4 - Beta
 Classifier: Environment :: Console
 Classifier: Environment :: MacOS X

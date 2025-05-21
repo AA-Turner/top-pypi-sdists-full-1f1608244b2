@@ -1219,7 +1219,7 @@ def struct_pack(mapping: Mapping[str, Underscore | Any]):
     Parameters
     ----------
     mapping
-     The mapping of names to features to construct the struct from.
+        The mapping of names to features to construct the struct from.
 
     Examples
     --------
@@ -3249,8 +3249,8 @@ def current_bucket_start(value: Underscore, bucket_duration: str, initial_bucket
     Parameters
     ----------
     value
-        The datetime feature for which the the current bucket end time is determined (likely _.chalk_now).
-    bucket_start
+        The datetime feature for which the current bucket end time is determined (likely _.chalk_now).
+    initial_bucket_start
         The start time of the bucket.
     bucket_duration
         The duration of the bucket (as a chalk duration): "1d", "12h", etc.
@@ -3261,7 +3261,7 @@ def current_bucket_start(value: Underscore, bucket_duration: str, initial_bucket
     >>> @features
     ... class MataggFeature:
     ...    id: str
-    ...    current_bucket_start: float = F.current_bucket_starte(_.chalk_now, "1d")
+    ...    current_bucket_start: float = F.current_bucket_start(_.chalk_now, "1d")
     """
     return UnderscoreFunction(
         "from_unixtime",
@@ -3280,8 +3280,8 @@ def current_bucket_end(value: Underscore, bucket_duration: str, initial_bucket_s
     Parameters
     ----------
     value
-        The datetime feature for which the the current bucket end time is determined (likely _.chalk_now).
-    bucket_start
+        The datetime feature for which the current bucket end time is determined (likely _.chalk_now).
+    initial_bucket_start
         The start time of the bucket.
     bucket_duration
         The duration of the bucket (as a chalk duration): "1d", "12h", etc.
@@ -3313,13 +3313,14 @@ def nth_bucket_start(value: Underscore, bucket_duration: str, n: int, initial_bu
     Parameters
     ----------
     value
-        The datetime feature for which the the current bucket end time is determined (likely _.chalk_now).
-    bucket_start
+        The datetime feature for which the current bucket end time is determined (likely _.chalk_now).
+    initial_bucket_start
         The start time of the bucket.
     n
         The nth bucket to calculate the absolute end time for.
     bucket_duration
         The duration of the bucket (as a chalk duration): "1d", "12h", etc.
+
     Examples
     --------
     >>> import chalk.functions as F
@@ -3348,13 +3349,14 @@ def nth_bucket_end(value: Underscore, bucket_duration: str, n: int, initial_buck
     Parameters
     ----------
     value
-        The datetime feature for which the the current bucket end time is determined (likely _.chalk_now).
+        The datetime feature for which the current bucket end time is determined (likely _.chalk_now).
     bucket_duration
         The duration of the bucket (as a chalk duration): "1d", "12h", etc.
     n
         The nth bucket to calculate the absolute end time for.
-    bucket_start
+    initial_bucket_start
         The start time of the bucket.
+
     Examples
     --------
     >>> import chalk.functions as F
@@ -3462,7 +3464,7 @@ def sklearn_decision_tree_classifier(
         A list of features which were used to train the model.
     model_path
         A filepath to the scikit-learn logistic regression model.
-    probability:
+    return_probability:
         Whether to return the prediction probability or the predicted class.
     threshold:
         The decision threshold for the model (ignored if probability = True).
@@ -3553,7 +3555,7 @@ def sklearn_random_forest_classifier(
         A list of features which were used to train the model.
     model_path
         A filepath to the scikit-learn logistic regression model.
-    probability:
+    return_probability:
         Whether to return the prediction probability or the predicted class.
     threshold:
         The decision threshold for the model (ignored if probability = True).
@@ -3644,7 +3646,7 @@ def sklearn_logistic_regression(
         A list of features which were used to train the model.
     model_path
         A filepath to the scikit-learn logistic regression model.
-    probability:
+    return_probability:
         Whether to return the prediction probability or the predicted class.
     threshold:
         The decision threshold for the model (ignored if probability = True).

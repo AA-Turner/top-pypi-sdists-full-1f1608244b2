@@ -178,6 +178,7 @@ class _SecondaryConnectionState:
         pulumi.set(self, "show_outputs", value)
 
 
+@pulumi.type_token("snowflake:index/secondaryConnection:SecondaryConnection")
 class SecondaryConnection(pulumi.CustomResource):
     @overload
     def __init__(__self__,

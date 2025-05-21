@@ -11,9 +11,9 @@ import types
 import uuid
 from pathlib import Path
 
-import __main__
 import pytest
 
+import __main__
 from pip_check_reqs import __version__, common
 
 
@@ -135,15 +135,17 @@ def test_find_imported_modules_frozen(
     for name, value in sys_module_items:
         try:
             spec = value.__spec__
-        except AttributeError:
+        # No coverage as this does not occur on Python 3.13
+        # with our current requirements.
+        except AttributeError:  # pragma: no cover
             continue
 
         if spec is not None and spec.origin == "frozen":
             frozen_item_names.append(name)
 
-    assert (
-        frozen_item_names
-    ), "This test is only valid if there are frozen modules in sys.modules"
+    assert frozen_item_names, (
+        "This test is only valid if there are frozen modules in sys.modules"
+    )
 
     spam = tmp_path / "spam.py"
     statement = f"import {frozen_item_names[0]}"
@@ -293,14 +295,10 @@ def test_find_imported_modules_advanced(
     caplog.set_level(logging.INFO)
 
     def ignore_files(path: str) -> bool:
-        if Path(path).name == "ham.py" and ignore_ham:
-            return True
-        return False
+        return bool(Path(path).name == "ham.py" and ignore_ham)
 
     def ignore_mods(module: str) -> bool:
-        if module == "hashlib" and ignore_hashlib:
-            return True
-        return False
+        return bool(module == "hashlib" and ignore_hashlib)
 
     result = common.find_imported_modules(
         paths=[root],

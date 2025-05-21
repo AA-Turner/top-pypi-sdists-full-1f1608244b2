@@ -1,7 +1,7 @@
 r'''
 # `okta_captcha_org_wide_settings`
 
-Refer to the Terraform Registry for docs: [`okta_captcha_org_wide_settings`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha_org_wide_settings).
+Refer to the Terraform Registry for docs: [`okta_captcha_org_wide_settings`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha_org_wide_settings).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class CaptchaOrgWideSettings(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.captchaOrgWideSettings.CaptchaOrgWideSettings",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha_org_wide_settings okta_captcha_org_wide_settings}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha_org_wide_settings okta_captcha_org_wide_settings}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class CaptchaOrgWideSettings(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha_org_wide_settings okta_captcha_org_wide_settings} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha_org_wide_settings okta_captcha_org_wide_settings} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param captcha_id: Array of pages that have CAPTCHA enabled. Valid values: ``SSR``, ``SSPR`` and ``SIGN_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha_org_wide_settings#captcha_id CaptchaOrgWideSettings#captcha_id}
-        :param enabled_for: Set of pages that have CAPTCHA enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha_org_wide_settings#enabled_for CaptchaOrgWideSettings#enabled_for}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha_org_wide_settings#id CaptchaOrgWideSettings#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param captcha_id: Array of pages that have CAPTCHA enabled. Valid values: ``SSR``, ``SSPR`` and ``SIGN_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha_org_wide_settings#captcha_id CaptchaOrgWideSettings#captcha_id}
+        :param enabled_for: Set of pages that have CAPTCHA enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha_org_wide_settings#enabled_for CaptchaOrgWideSettings#enabled_for}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha_org_wide_settings#id CaptchaOrgWideSettings#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class CaptchaOrgWideSettings(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the CaptchaOrgWideSettings to import.
-        :param import_from_id: The id of the existing CaptchaOrgWideSettings that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha_org_wide_settings#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing CaptchaOrgWideSettings that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha_org_wide_settings#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the CaptchaOrgWideSettings to import is found.
         '''
         if __debug__:
@@ -236,9 +236,9 @@ class CaptchaOrgWideSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param captcha_id: Array of pages that have CAPTCHA enabled. Valid values: ``SSR``, ``SSPR`` and ``SIGN_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha_org_wide_settings#captcha_id CaptchaOrgWideSettings#captcha_id}
-        :param enabled_for: Set of pages that have CAPTCHA enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha_org_wide_settings#enabled_for CaptchaOrgWideSettings#enabled_for}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha_org_wide_settings#id CaptchaOrgWideSettings#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param captcha_id: Array of pages that have CAPTCHA enabled. Valid values: ``SSR``, ``SSPR`` and ``SIGN_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha_org_wide_settings#captcha_id CaptchaOrgWideSettings#captcha_id}
+        :param enabled_for: Set of pages that have CAPTCHA enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha_org_wide_settings#enabled_for CaptchaOrgWideSettings#enabled_for}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha_org_wide_settings#id CaptchaOrgWideSettings#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -344,7 +344,7 @@ class CaptchaOrgWideSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def captcha_id(self) -> typing.Optional[builtins.str]:
         '''Array of pages that have CAPTCHA enabled. Valid values: ``SSR``, ``SSPR`` and ``SIGN_IN``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha_org_wide_settings#captcha_id CaptchaOrgWideSettings#captcha_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha_org_wide_settings#captcha_id CaptchaOrgWideSettings#captcha_id}
         '''
         result = self._values.get("captcha_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -353,14 +353,14 @@ class CaptchaOrgWideSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enabled_for(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Set of pages that have CAPTCHA enabled.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha_org_wide_settings#enabled_for CaptchaOrgWideSettings#enabled_for}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha_org_wide_settings#enabled_for CaptchaOrgWideSettings#enabled_for}
         '''
         result = self._values.get("enabled_for")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha_org_wide_settings#id CaptchaOrgWideSettings#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha_org_wide_settings#id CaptchaOrgWideSettings#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

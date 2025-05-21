@@ -63,7 +63,7 @@ def _create_device_match(rule, device, idx):
 
 def _get_cloud_inventory(ipf) -> dict:
     cloud = dict()
-    for k, v in {"aws": "arn", "azure": "sn", "gcp": "resourceName"}.items():  # TODO: NIM-17070
+    for k, v in {"aws": "arn", "azure": "resourceId", "gcp": "resourceName"}.items():
         columns = {"sn"}
         columns.add(v)
         cloud.update(
@@ -72,7 +72,7 @@ def _get_cloud_inventory(ipf) -> dict:
     return cloud
 
 
-def map_devices_to_rules(ipf, snapshot_id: str = "$last"):
+def map_devices_to_rules(ipf, snapshot_id: str = "$last"):  # NOSONAR
     ss = SiteSeparation(client=ipf)
     devices = {
         d["sn"]: d

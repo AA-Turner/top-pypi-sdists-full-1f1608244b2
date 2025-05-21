@@ -2587,6 +2587,7 @@ class _UserState:
         pulumi.set(self, "week_start", value)
 
 
+@pulumi.type_token("snowflake:index/user:User")
 class User(pulumi.CustomResource):
     @overload
     def __init__(__self__,

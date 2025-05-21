@@ -5,11 +5,11 @@ Python3 script to search for an IPv4, IPv6, or MAC address in multiple IP Fabric
 import argparse
 import json
 import logging
-from typing import Dict, Union
+from typing import Union
 
 from ipfabric import IPFClient
 from ipfabric.models.global_search import RouteTableSearch
-from ipfabric.scripts.shared import shared_args
+from ipfabric.scripts.shared import shared_args, load_env
 
 try:
     from rich.console import Console
@@ -23,7 +23,8 @@ logging.basicConfig(format="%(levelname)s: %(message)s")
 LOGGER = logging.getLogger("ipf_route_search")
 
 
-def main() -> Dict[str, Dict[str, Union[str, list]]]:
+def main() -> dict[str, dict[str, Union[str, list]]]:
+    load_env()
     arg_parser = argparse.ArgumentParser(
         description="Search IPv4 or IPv6 Route tables for an Address or Subnet.",
         formatter_class=argparse.RawTextHelpFormatter,

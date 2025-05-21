@@ -1,5 +1,5 @@
 import logging
-from typing import Optional, Dict, List, Any, Union, overload, Literal, Tuple, Set
+from typing import Optional, Dict, Any, Union, overload, Literal
 
 import deepdiff
 from pydantic import BaseModel, Field, computed_field
@@ -49,21 +49,21 @@ class BaseTable(BaseModel):
     def fetch(
         self,
         export: Literal["json"] = ...,
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         sort: Optional[dict] = None,
         limit: Optional[int] = 1000,
         start: Optional[int] = 0,
-    ) -> List[dict]: ...
+    ) -> list[dict]: ...
 
     @overload
     def fetch(
         self,
         export: Literal["csv"],
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         sort: Optional[dict] = None,
         limit: Optional[int] = 1000,
         start: Optional[int] = 0,
@@ -74,9 +74,9 @@ class BaseTable(BaseModel):
     def fetch(
         self,
         export: Literal["df"],
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         sort: Optional[dict] = None,
         limit: Optional[int] = 1000,
         start: Optional[int] = 0,
@@ -85,9 +85,9 @@ class BaseTable(BaseModel):
     def fetch(
         self,
         export: EXPORT_FORMAT = "json",
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         sort: Optional[dict] = None,
         limit: Optional[int] = 1000,
         start: Optional[int] = 0,
@@ -106,7 +106,7 @@ class BaseTable(BaseModel):
             csv_tz: str: Default None, set a timezone to return human-readable dates when using CSV;
                          see `ipfabric.tools.shared.TIMEZONES`
         Returns:
-            Union[List[dict], bytes, pd.DataFrame]: List of dict if json, bytes string if CSV, DataFrame if df
+            Union[list[dict], bytes, pd.DataFrame]: List of dict if json, bytes string if CSV, DataFrame if df
         """
         return self.client.fetch(
             self.endpoint,
@@ -125,19 +125,19 @@ class BaseTable(BaseModel):
     def all(
         self,
         export: Literal["json"] = ...,
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         sort: Optional[dict] = None,
-    ) -> List[dict]: ...
+    ) -> list[dict]: ...
 
     @overload
     def all(
         self,
         export: Literal["csv"],
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         sort: Optional[dict] = None,
         csv_tz: Optional[str] = None,
     ) -> bytes: ...
@@ -146,18 +146,18 @@ class BaseTable(BaseModel):
     def all(
         self,
         export: Literal["df"],
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         sort: Optional[dict] = None,
     ) -> DataFrame: ...
 
     def all(
         self,
         export: EXPORT_FORMAT = "json",
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         sort: Optional[dict] = None,
         csv_tz: Optional[str] = None,
     ):
@@ -172,7 +172,7 @@ class BaseTable(BaseModel):
             csv_tz: str: Default None, set a timezone to return human-readable dates when using CSV;
                          see `ipfabric.tools.shared.TIMEZONES`
         Returns:
-            Union[List[dict], bytes, pd.DataFrame]: List of dict if json, bytes string if CSV, DataFrame if df
+            Union[list[dict], bytes, pd.DataFrame]: List of dict if json, bytes string if CSV, DataFrame if df
         """
         return self.client.fetch_all(
             self.endpoint,
@@ -188,7 +188,7 @@ class BaseTable(BaseModel):
     def count(
         self,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
     ) -> int:
         """
         Gets count of table
@@ -214,23 +214,23 @@ class Table(BaseTable, BaseModel):
     def fetch(
         self,
         export: Literal["json"] = ...,
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
         limit: Optional[int] = 1000,
         start: Optional[int] = 0,
-    ) -> List[dict]: ...
+    ) -> list[dict]: ...
 
     @overload
     def fetch(
         self,
         export: Literal["csv"],
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         sort: Optional[dict] = None,
         limit: Optional[int] = 1000,
@@ -242,9 +242,9 @@ class Table(BaseTable, BaseModel):
     def fetch(
         self,
         export: Literal["df"],
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
@@ -255,9 +255,9 @@ class Table(BaseTable, BaseModel):
     def fetch(
         self,
         export: EXPORT_FORMAT = "json",
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
@@ -280,7 +280,7 @@ class Table(BaseTable, BaseModel):
             csv_tz: str: Default None, set a timezone to return human-readable dates when using CSV;
                          see `ipfabric.tools.shared.TIMEZONES`
         Returns:
-            Union[List[dict], bytes, pd.DataFrame]: List of dict if json, bytes string if CSV, DataFrame if df
+            Union[list[dict], bytes, pd.DataFrame]: List of dict if json, bytes string if CSV, DataFrame if df
         """
         columns, filters = self._dev_filters(self.endpoint, columns, filters)
         return self.client.fetch(
@@ -301,21 +301,21 @@ class Table(BaseTable, BaseModel):
     def all(
         self,
         export: Literal["json"] = ...,
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
-    ) -> List[dict]: ...
+    ) -> list[dict]: ...
 
     @overload
     def all(
         self,
         export: Literal["csv"],
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         sort: Optional[dict] = None,
         csv_tz: Optional[str] = None,
@@ -325,9 +325,9 @@ class Table(BaseTable, BaseModel):
     def all(
         self,
         export: Literal["df"],
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
@@ -336,9 +336,9 @@ class Table(BaseTable, BaseModel):
     def all(
         self,
         export: EXPORT_FORMAT = "json",
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
@@ -357,7 +357,7 @@ class Table(BaseTable, BaseModel):
             csv_tz: str: Default None, set a timezone to return human-readable dates when using CSV;
                          see `ipfabric.tools.shared.TIMEZONES`
         Returns:
-            Union[List[dict], bytes, pd.DataFrame]: List of dict if json, bytes string if CSV, DataFrame if df
+            Union[list[dict], bytes, pd.DataFrame]: List of dict if json, bytes string if CSV, DataFrame if df
         """
         columns, filters = self._dev_filters(self.endpoint, columns, filters)
         return self.client.fetch_all(
@@ -376,7 +376,7 @@ class Table(BaseTable, BaseModel):
         self,
         filters: Optional[dict] = None,
         snapshot_id: Optional[str] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
     ) -> int:
         """
         Gets count of table
@@ -420,7 +420,7 @@ class Table(BaseTable, BaseModel):
         # get all columns for the table
         table_columns = set(self.client.get_columns(self.endpoint))
         nested_cols_for_return = (
-            {col for col in set(self.client.oas[self.endpoint].nested_columns) if col in nested_keys}
+            {col for col in set(self.client.oas[self.endpoint].post.nested_columns) if col in nested_keys}
             if nested_keys
             else None
         )
@@ -568,7 +568,7 @@ class Table(BaseTable, BaseModel):
 
     def join_table(
         self,
-        on_column: Union[str, Dict[str, str], List[str], Tuple[str], Set[str]],
+        on_column: Union[str, dict[str, str], list[str], tuple[str], set[str]],
         join_table_path: str,
         how: Literal["right", "left"] = "right",
     ) -> Dict:
@@ -578,7 +578,7 @@ class Table(BaseTable, BaseModel):
         set(self.client.get_columns(self.endpoint)), ValueError is raised.
 
         Args:
-            on_column: Union[str, Dict[str, str], List[str], Tuple[str], Set[str]] : column(s) to use for join operation
+            on_column: Union[str, dict[str, str], list[str], tuple[str], set[str]] : column(s) to use for join operation
             join_table_path: URL of table to use for join operation
             how: str : type of join operation ('right' or 'left')
 

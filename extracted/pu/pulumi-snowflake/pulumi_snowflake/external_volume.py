@@ -210,6 +210,7 @@ class _ExternalVolumeState:
         pulumi.set(self, "storage_locations", value)
 
 
+@pulumi.type_token("snowflake:index/externalVolume:ExternalVolume")
 class ExternalVolume(pulumi.CustomResource):
     @overload
     def __init__(__self__,

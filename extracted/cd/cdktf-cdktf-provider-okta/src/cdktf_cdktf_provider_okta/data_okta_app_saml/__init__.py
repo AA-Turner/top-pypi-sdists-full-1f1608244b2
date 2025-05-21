@@ -1,7 +1,7 @@
 r'''
 # `data_okta_app_saml`
 
-Refer to the Terraform Registry for docs: [`data_okta_app_saml`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml).
+Refer to the Terraform Registry for docs: [`data_okta_app_saml`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaAppSaml(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaAppSaml.DataOktaAppSaml",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml okta_app_saml}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml okta_app_saml}.'''
 
     def __init__(
         self,
@@ -66,17 +66,17 @@ class DataOktaAppSaml(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml okta_app_saml} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml okta_app_saml} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param active_only: Search only ACTIVE applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#active_only DataOktaAppSaml#active_only}
-        :param id: Id of application to retrieve, conflicts with label and label_prefix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#id DataOktaAppSaml#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param label: The label of the app to retrieve, conflicts with label_prefix and id. Label uses the ?q= query parameter exposed by Okta's API. It should be noted that at this time this searches both name and label. This is used to avoid paginating through all applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#label DataOktaAppSaml#label}
-        :param label_prefix: Label prefix of the app to retrieve, conflicts with label and id. This will tell the provider to do a starts with query as opposed to an equals query. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#label_prefix DataOktaAppSaml#label_prefix}
-        :param request_compressed: Denotes whether the request is compressed or not. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#request_compressed DataOktaAppSaml#request_compressed}
-        :param skip_groups: Ignore groups sync. This is a temporary solution until 'groups' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#skip_groups DataOktaAppSaml#skip_groups}
-        :param skip_users: Ignore users sync. This is a temporary solution until 'users' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#skip_users DataOktaAppSaml#skip_users}
+        :param active_only: Search only ACTIVE applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#active_only DataOktaAppSaml#active_only}
+        :param id: Id of application to retrieve, conflicts with label and label_prefix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#id DataOktaAppSaml#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param label: The label of the app to retrieve, conflicts with label_prefix and id. Label uses the ?q= query parameter exposed by Okta's API. It should be noted that at this time this searches both name and label. This is used to avoid paginating through all applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#label DataOktaAppSaml#label}
+        :param label_prefix: Label prefix of the app to retrieve, conflicts with label and id. This will tell the provider to do a starts with query as opposed to an equals query. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#label_prefix DataOktaAppSaml#label_prefix}
+        :param request_compressed: Denotes whether the request is compressed or not. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#request_compressed DataOktaAppSaml#request_compressed}
+        :param skip_groups: Ignore groups sync. This is a temporary solution until 'groups' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#skip_groups DataOktaAppSaml#skip_groups}
+        :param skip_users: Ignore users sync. This is a temporary solution until 'users' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#skip_users DataOktaAppSaml#skip_users}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -121,7 +121,7 @@ class DataOktaAppSaml(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaAppSaml to import.
-        :param import_from_id: The id of the existing DataOktaAppSaml that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaAppSaml that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaAppSaml to import is found.
         '''
         if __debug__:
@@ -731,13 +731,13 @@ class DataOktaAppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param active_only: Search only ACTIVE applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#active_only DataOktaAppSaml#active_only}
-        :param id: Id of application to retrieve, conflicts with label and label_prefix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#id DataOktaAppSaml#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param label: The label of the app to retrieve, conflicts with label_prefix and id. Label uses the ?q= query parameter exposed by Okta's API. It should be noted that at this time this searches both name and label. This is used to avoid paginating through all applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#label DataOktaAppSaml#label}
-        :param label_prefix: Label prefix of the app to retrieve, conflicts with label and id. This will tell the provider to do a starts with query as opposed to an equals query. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#label_prefix DataOktaAppSaml#label_prefix}
-        :param request_compressed: Denotes whether the request is compressed or not. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#request_compressed DataOktaAppSaml#request_compressed}
-        :param skip_groups: Ignore groups sync. This is a temporary solution until 'groups' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#skip_groups DataOktaAppSaml#skip_groups}
-        :param skip_users: Ignore users sync. This is a temporary solution until 'users' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#skip_users DataOktaAppSaml#skip_users}
+        :param active_only: Search only ACTIVE applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#active_only DataOktaAppSaml#active_only}
+        :param id: Id of application to retrieve, conflicts with label and label_prefix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#id DataOktaAppSaml#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param label: The label of the app to retrieve, conflicts with label_prefix and id. Label uses the ?q= query parameter exposed by Okta's API. It should be noted that at this time this searches both name and label. This is used to avoid paginating through all applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#label DataOktaAppSaml#label}
+        :param label_prefix: Label prefix of the app to retrieve, conflicts with label and id. This will tell the provider to do a starts with query as opposed to an equals query. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#label_prefix DataOktaAppSaml#label_prefix}
+        :param request_compressed: Denotes whether the request is compressed or not. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#request_compressed DataOktaAppSaml#request_compressed}
+        :param skip_groups: Ignore groups sync. This is a temporary solution until 'groups' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#skip_groups DataOktaAppSaml#skip_groups}
+        :param skip_users: Ignore users sync. This is a temporary solution until 'users' field is supported in all the app-like resources. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#skip_users DataOktaAppSaml#skip_users}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -857,7 +857,7 @@ class DataOktaAppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Search only ACTIVE applications.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#active_only DataOktaAppSaml#active_only}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#active_only DataOktaAppSaml#active_only}
         '''
         result = self._values.get("active_only")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -866,7 +866,7 @@ class DataOktaAppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def id(self) -> typing.Optional[builtins.str]:
         '''Id of application to retrieve, conflicts with label and label_prefix.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#id DataOktaAppSaml#id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#id DataOktaAppSaml#id}
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -882,7 +882,7 @@ class DataOktaAppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         uses the ?q= query parameter exposed by Okta's API. It should be noted that at this time
         this searches both name and label. This is used to avoid paginating through all applications.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#label DataOktaAppSaml#label}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#label DataOktaAppSaml#label}
         '''
         result = self._values.get("label")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -894,7 +894,7 @@ class DataOktaAppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         This will tell the
         provider to do a starts with query as opposed to an equals query.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#label_prefix DataOktaAppSaml#label_prefix}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#label_prefix DataOktaAppSaml#label_prefix}
         '''
         result = self._values.get("label_prefix")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -905,7 +905,7 @@ class DataOktaAppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Denotes whether the request is compressed or not.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#request_compressed DataOktaAppSaml#request_compressed}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#request_compressed DataOktaAppSaml#request_compressed}
         '''
         result = self._values.get("request_compressed")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -916,7 +916,7 @@ class DataOktaAppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Ignore groups sync. This is a temporary solution until 'groups' field is supported in all the app-like resources.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#skip_groups DataOktaAppSaml#skip_groups}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#skip_groups DataOktaAppSaml#skip_groups}
         '''
         result = self._values.get("skip_groups")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -927,7 +927,7 @@ class DataOktaAppSamlConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Ignore users sync. This is a temporary solution until 'users' field is supported in all the app-like resources.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_saml#skip_users DataOktaAppSaml#skip_users}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_saml#skip_users DataOktaAppSaml#skip_users}
         '''
         result = self._values.get("skip_users")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)

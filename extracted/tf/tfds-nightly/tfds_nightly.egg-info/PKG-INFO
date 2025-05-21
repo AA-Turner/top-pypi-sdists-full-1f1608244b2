@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: tfds-nightly
-Version: 4.9.8.dev202505200044
+Version: 4.9.8.dev202505210044
 Summary: tensorflow/datasets is a library of datasets ready to use with TensorFlow.
 Home-page: https://github.com/tensorflow/datasets
 Download-URL: https://github.com/tensorflow/datasets/tags
@@ -52,7 +52,7 @@ Requires-Dist: jupyter; extra == "tests-all"
 Requires-Dist: pytest; extra == "tests-all"
 Requires-Dist: pytest-shard; extra == "tests-all"
 Requires-Dist: pytest-xdist; extra == "tests-all"
-Requires-Dist: apache-beam; extra == "tests-all"
+Requires-Dist: apache-beam<2.65.0; extra == "tests-all"
 Requires-Dist: conllu; extra == "tests-all"
 Requires-Dist: mlcroissant>=1.0.9; extra == "tests-all"
 Requires-Dist: pandas; extra == "tests-all"
@@ -60,15 +60,15 @@ Requires-Dist: pydub; extra == "tests-all"
 Requires-Dist: pyyaml; extra == "tests-all"
 Requires-Dist: tensorflow-io[tensorflow]; python_version < "3.12" and extra == "tests-all"
 Requires-Dist: scipy; extra == "tests-all"
-Requires-Dist: apache-beam; extra == "tests-all"
+Requires-Dist: apache-beam<2.65.0; extra == "tests-all"
 Requires-Dist: gcsfs; extra == "tests-all"
 Requires-Dist: zarr<3.0.0; extra == "tests-all"
-Requires-Dist: apache-beam; extra == "tests-all"
+Requires-Dist: apache-beam<2.65.0; extra == "tests-all"
 Requires-Dist: gcld3; extra == "tests-all"
 Requires-Dist: langdetect; extra == "tests-all"
 Requires-Dist: nltk==3.8.1; extra == "tests-all"
 Requires-Dist: tldextract; extra == "tests-all"
-Requires-Dist: apache-beam; extra == "tests-all"
+Requires-Dist: apache-beam<2.65.0; extra == "tests-all"
 Requires-Dist: matplotlib; extra == "tests-all"
 Requires-Dist: Pillow; extra == "tests-all"
 Requires-Dist: pydub; extra == "tests-all"
@@ -96,8 +96,8 @@ Requires-Dist: scipy; extra == "tests-all"
 Requires-Dist: scipy; extra == "tests-all"
 Requires-Dist: pandas; extra == "tests-all"
 Requires-Dist: Pillow; extra == "tests-all"
-Requires-Dist: apache-beam; extra == "tests-all"
-Requires-Dist: apache-beam; extra == "tests-all"
+Requires-Dist: apache-beam<2.65.0; extra == "tests-all"
+Requires-Dist: apache-beam<2.65.0; extra == "tests-all"
 Requires-Dist: mwparserfromhell; extra == "tests-all"
 Requires-Dist: mwxml; extra == "tests-all"
 Requires-Dist: bs4; extra == "tests-all"
@@ -110,7 +110,7 @@ Requires-Dist: jupyter; extra == "dev"
 Requires-Dist: pytest; extra == "dev"
 Requires-Dist: pytest-shard; extra == "dev"
 Requires-Dist: pytest-xdist; extra == "dev"
-Requires-Dist: apache-beam; extra == "dev"
+Requires-Dist: apache-beam<2.65.0; extra == "dev"
 Requires-Dist: conllu; extra == "dev"
 Requires-Dist: mlcroissant>=1.0.9; extra == "dev"
 Requires-Dist: pandas; extra == "dev"
@@ -175,18 +175,18 @@ Requires-Dist: datasets; extra == "huggingface"
 Provides-Extra: aflw2k3d
 Requires-Dist: scipy; extra == "aflw2k3d"
 Provides-Extra: beir
-Requires-Dist: apache-beam; extra == "beir"
+Requires-Dist: apache-beam<2.65.0; extra == "beir"
 Provides-Extra: ble-wind-field
 Requires-Dist: gcsfs; extra == "ble-wind-field"
 Requires-Dist: zarr<3.0.0; extra == "ble-wind-field"
 Provides-Extra: c4
-Requires-Dist: apache-beam; extra == "c4"
+Requires-Dist: apache-beam<2.65.0; extra == "c4"
 Requires-Dist: gcld3; extra == "c4"
 Requires-Dist: langdetect; extra == "c4"
 Requires-Dist: nltk==3.8.1; extra == "c4"
 Requires-Dist: tldextract; extra == "c4"
 Provides-Extra: c4-wsrs
-Requires-Dist: apache-beam; extra == "c4-wsrs"
+Requires-Dist: apache-beam<2.65.0; extra == "c4-wsrs"
 Provides-Extra: cats-vs-dogs
 Requires-Dist: matplotlib; extra == "cats-vs-dogs"
 Provides-Extra: colorectal-histology
@@ -242,9 +242,9 @@ Requires-Dist: pandas; extra == "wake-vision"
 Provides-Extra: wider-face
 Requires-Dist: Pillow; extra == "wider-face"
 Provides-Extra: wiki-dialog
-Requires-Dist: apache-beam; extra == "wiki-dialog"
+Requires-Dist: apache-beam<2.65.0; extra == "wiki-dialog"
 Provides-Extra: wikipedia
-Requires-Dist: apache-beam; extra == "wikipedia"
+Requires-Dist: apache-beam<2.65.0; extra == "wikipedia"
 Requires-Dist: mwparserfromhell; extra == "wikipedia"
 Requires-Dist: mwxml; extra == "wikipedia"
 Provides-Extra: wsc273

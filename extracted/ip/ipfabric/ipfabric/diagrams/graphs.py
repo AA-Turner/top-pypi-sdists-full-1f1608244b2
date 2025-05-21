@@ -1,12 +1,12 @@
-import logging
 import json
-from typing import Union, Dict, List, Optional, Literal, Any
+import logging
+from typing import Union, Optional, Literal, Any
 
 from pydantic import BaseModel
 
 from ipfabric.models import Device
 from ipfabric.models.security import DefaultAction
-from ipfabric.tools import raise_for_status
+from ipfabric.tools.shared import raise_for_status
 from .input_models import (
     Unicast,
     Multicast,
@@ -30,8 +30,8 @@ GRAPHS_URL = "graphs/"
 GRAPH_TYPES = Union[Unicast, Multicast, Host2GW, Network]
 GRAPH_SETTINGS = Optional[Union[NetworkSettings, PathLookupSettings]]
 OVERLAY_SETTINGS = Optional[Union[Overlay, dict]]
-ATTRIBUTE_FILTERS = Optional[Dict[str, List[str]]]
-POSITION_SETTINGS = Optional[Dict[str, Union[Position, dict]]]
+ATTRIBUTE_FILTERS = Optional[dict[str, list[str]]]
+POSITION_SETTINGS = Optional[dict[str, Union[Position, dict]]]
 GRAPH_RESULTS = Union[PathLookupResult, TopologyResult]
 
 
@@ -387,10 +387,10 @@ class Diagram(BaseModel):
     def nodes_in_diagram(
         self,
         path: Union[GRAPH_RESULTS, GRAPH_TYPES],
-        dev_types: Optional[List[str]] = None,
-        inventory_columns: Optional[List[str]] = None,
+        dev_types: Optional[list[str]] = None,
+        inventory_columns: Optional[Union[list[str], set[str]]] = None,
         snapshot_id: Optional[str] = None,
-    ) -> List[Device]:
+    ) -> list[Device]:
         """Fetches the device inventory for devices in the path.
 
         Args:
@@ -400,11 +400,11 @@ class Diagram(BaseModel):
                                ["sn", "version", "hostname", "model", "vendor", "siteName"]
             snapshot_id: Optional snapshot_id to use
         Returns:
-            List[dict]: Device inventory
+            list[dict]: Device inventory
         """
         list_of_device_objects = list()
         dev_types = NetworkSettings._valid_dev_types(dev_types or ["l3switch", "fw", "switch", "router", "lb"])
-        inventory_columns = inventory_columns or ["sn", "version", "hostname", "model", "vendor", "siteName"]
+        inventory_columns = list(inventory_columns) or ["sn", "version", "hostname", "model", "vendor", "siteName"]
         if not all(_ in self.ipf.oas["tables/inventory/devices"].post.columns for _ in inventory_columns):
             raise ValueError(
                 f"Inventory Columns '{inventory_columns}' must be in "
@@ -417,11 +417,11 @@ class Diagram(BaseModel):
             list_of_device_objects.append(self.ipf.devices.by_sn[sn])
         return list_of_device_objects
 
-    def security_event_rules(
+    def security_event_rules(  # NOSONAR
         self,
         path: Union[GraphResult, Unicast, Multicast, Host2GW],
         snapshot_id: Optional[str] = None,
-    ) -> List[GraphDevice]:  # noqa: C901
+    ) -> list[GraphDevice]:  # noqa: C901
         """Fetches the security events for devices in the path.
 
         Args:
@@ -429,7 +429,7 @@ class Diagram(BaseModel):
             snapshot_id: Optional snapshot_id to use
 
         Returns:
-            List[dict]: Device Inventory Information and Security Event
+            list[dict]: Device Inventory Information and Security Event
         """
         logger.warning("This method is experimental and may not work as expected.")
         path = self._process_path(path, snapshot_id)
@@ -474,7 +474,7 @@ class Diagram(BaseModel):
                             list_for_return.append(graph_device)
         return list_for_return
 
-    def stp_instances(self, sites: Union[List[str], str], vlan_id: int) -> List[dict]:
+    def stp_instances(self, sites: Union[list[str], str], vlan_id: int) -> list[dict]:
         """Get the STP instances for the given sites and VLAN ID.
 
         Args:

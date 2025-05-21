@@ -1,8 +1,8 @@
 from collections import defaultdict
 from copy import deepcopy
-from typing import Optional, List
+from typing import Optional
 
-from httpx._types import ProxiesTypes
+from httpx._types import ProxyTypes
 from pydantic import BaseModel
 
 from ipfabric.tools.nist import NIST, CVEs
@@ -12,14 +12,14 @@ class Version(BaseModel):
     vendor: str
     family: Optional[str] = None
     version: Optional[str] = None
-    cves: List[CVEs]
+    cves: list[CVEs]
     hostname: Optional[str] = None
     site: Optional[str] = None
 
 
 class Vulnerabilities:
     def __init__(
-        self, ipf, nvd_api_key: str, timeout: int = 60, proxies: Optional[ProxiesTypes] = None, retries: int = 2
+        self, ipf, nvd_api_key: str, timeout: int = 60, proxies: Optional[ProxyTypes] = None, retries: int = 2
     ):
         """
 
@@ -39,7 +39,7 @@ class Vulnerabilities:
         except AttributeError:
             return
 
-    def _check_versions(self, versions) -> List[Version]:
+    def _check_versions(self, versions) -> list[Version]:
         cves = list()
         for v in versions:
             cve = self.nist.check_cve(v["vendor"], v["family"], v["version"])
@@ -64,7 +64,7 @@ class Vulnerabilities:
             cves.append(cve)
         return cves
 
-    def check_versions(self, vendor=None) -> List[Version]:
+    def check_versions(self, vendor=None) -> list[Version]:
         filters = {"vendor": ["like", vendor]} if vendor else None
         versions = self.ipf.fetch_all(
             "tables/inventory/os-version-consistency/platforms",

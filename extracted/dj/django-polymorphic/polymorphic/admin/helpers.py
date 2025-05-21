@@ -3,6 +3,7 @@ Rendering utils for admin forms;
 
 This makes sure that admin fieldsets/layout settings are exported to the template.
 """
+
 import json
 
 from django.contrib.admin.helpers import AdminField, InlineAdminForm, InlineAdminFormSet
@@ -91,7 +92,7 @@ class PolymorphicInlineAdminFormSet(InlineAdminFormSet):
         verbose_name = self.opts.verbose_name
         return json.dumps(
             {
-                "name": "#%s" % self.formset.prefix,
+                "name": f"#{self.formset.prefix}",
                 "options": {
                     "prefix": self.formset.prefix,
                     "addText": gettext("Add another %(verbose_name)s")

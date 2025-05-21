@@ -1146,6 +1146,21 @@ class EvmAttributes(AttrUtil.Attributes):
         disables_build_cache=False,
     )
 
+    MAX_CONCURRENT_RULES = AttrUtil.AttributeDefinition(
+        attr_validation_func=Vf.validate_non_negative_integer,
+        argparse_args={
+            'action': AttrUtil.UniqueStore
+        },
+        help_msg="Set the maximum number of parallel rule evaluations. "
+                 "Lower values (e.g., 1, 2, or 4) may reduce memory usage in large runs. "
+                 "This can sometimes help to mitigate out of memory problems.",
+        default_desc="Number of available CPU cores.",
+        temporary_jar_invocation_allowed=True,
+        jar_flag="-maxConcurrentRules",
+        affects_build_cache_key=False,
+        disables_build_cache=False,
+    )
+
     @classmethod
     def hide_attributes(cls) -> List[str]:
         # do not show these attributes in the help message

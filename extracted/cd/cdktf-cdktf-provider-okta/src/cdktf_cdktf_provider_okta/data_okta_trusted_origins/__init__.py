@@ -1,7 +1,7 @@
 r'''
 # `data_okta_trusted_origins`
 
-Refer to the Terraform Registry for docs: [`data_okta_trusted_origins`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/trusted_origins).
+Refer to the Terraform Registry for docs: [`data_okta_trusted_origins`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/trusted_origins).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaTrustedOrigins(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaTrustedOrigins.DataOktaTrustedOrigins",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/trusted_origins okta_trusted_origins}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/trusted_origins okta_trusted_origins}.'''
 
     def __init__(
         self,
@@ -61,12 +61,12 @@ class DataOktaTrustedOrigins(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/trusted_origins okta_trusted_origins} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/trusted_origins okta_trusted_origins} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param filter: Filter criteria. Filter value will be URL-encoded by the provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/trusted_origins#filter DataOktaTrustedOrigins#filter}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/trusted_origins#id DataOktaTrustedOrigins#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param filter: Filter criteria. Filter value will be URL-encoded by the provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/trusted_origins#filter DataOktaTrustedOrigins#filter}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/trusted_origins#id DataOktaTrustedOrigins#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -106,7 +106,7 @@ class DataOktaTrustedOrigins(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaTrustedOrigins to import.
-        :param import_from_id: The id of the existing DataOktaTrustedOrigins that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/trusted_origins#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaTrustedOrigins that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/trusted_origins#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaTrustedOrigins to import is found.
         '''
         if __debug__:
@@ -215,8 +215,8 @@ class DataOktaTrustedOriginsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param filter: Filter criteria. Filter value will be URL-encoded by the provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/trusted_origins#filter DataOktaTrustedOrigins#filter}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/trusted_origins#id DataOktaTrustedOrigins#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param filter: Filter criteria. Filter value will be URL-encoded by the provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/trusted_origins#filter DataOktaTrustedOrigins#filter}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/trusted_origins#id DataOktaTrustedOrigins#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -319,14 +319,14 @@ class DataOktaTrustedOriginsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def filter(self) -> typing.Optional[builtins.str]:
         '''Filter criteria. Filter value will be URL-encoded by the provider.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/trusted_origins#filter DataOktaTrustedOrigins#filter}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/trusted_origins#filter DataOktaTrustedOrigins#filter}
         '''
         result = self._values.get("filter")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/trusted_origins#id DataOktaTrustedOrigins#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/trusted_origins#id DataOktaTrustedOrigins#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

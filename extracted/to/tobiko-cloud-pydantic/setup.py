@@ -24,5 +24,5 @@ setup(**{
         'tobikodata.pydantic',
     ),
     'python_requires': '<3.13,>=3.9',
-    'version': '202521.8.0',
+    'version': '202521.17.0',
 })

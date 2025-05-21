@@ -3,8 +3,6 @@ import sys
 import uuid
 from typing import Any, Generic, List, Optional, TypedDict, TypeVar
 
-from sqlalchemy import URL
-
 from dbos._app_db import ApplicationDatabase
 from dbos._context import MaxPriority, MinPriority
 
@@ -15,6 +13,7 @@ else:
 
 from dbos import _serialization
 from dbos._dbos import WorkflowHandle, WorkflowHandleAsync
+from dbos._dbos_config import is_valid_database_url
 from dbos._error import DBOSException, DBOSNonExistentWorkflowError
 from dbos._registrations import DEFAULT_MAX_RECOVERY_ATTEMPTS
 from dbos._serialization import WorkflowInputs
@@ -99,6 +98,7 @@ class WorkflowHandleClientAsyncPolling(Generic[R]):
 
 class DBOSClient:
     def __init__(self, database_url: str, *, system_database: Optional[str] = None):
+        assert is_valid_database_url(database_url)
         # We only create database connections but do not run migrations
         self._sys_db = SystemDatabase(
             database_url=database_url,
@@ -109,6 +109,7 @@ class DBOSClient:
             },
             sys_db_name=system_database,
         )
+        self._sys_db.check_connection()
         self._app_db = ApplicationDatabase(
             database_url=database_url,
             engine_kwargs={
@@ -231,7 +232,7 @@ class DBOSClient:
             "workflow_deadline_epoch_ms": None,
         }
         with self._sys_db.engine.begin() as conn:
-            self._sys_db.insert_workflow_status(
+            self._sys_db._insert_workflow_status(
                 status, conn, max_recovery_attempts=None
             )
         self._sys_db.send(status["workflow_uuid"], 0, destination_id, message, topic)

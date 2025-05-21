@@ -8,9 +8,9 @@ Copyright 2025 Vlad Emelianov
 Usage::
 
     ```python
-    from types_boto3_datasync.type_defs import CredentialsTypeDef
+    from types_boto3_datasync.type_defs import PlatformTypeDef
 
-    data: CredentialsTypeDef = ...
+    data: PlatformTypeDef = ...
     ```
 """
 
@@ -26,8 +26,6 @@ from .literals import (
     AgentStatusType,
     AtimeType,
     AzureAccessTierType,
-    DiscoveryJobStatusType,
-    DiscoveryResourceTypeType,
     EfsInTransitEncryptionType,
     EndpointTypeType,
     GidType,
@@ -47,7 +45,6 @@ from .literals import (
     PosixPermissionsType,
     PreserveDeletedFilesType,
     PreserveDevicesType,
-    RecommendationStatusType,
     ReportLevelType,
     ReportOutputTypeType,
     S3StorageClassType,
@@ -56,7 +53,6 @@ from .literals import (
     SmbAuthenticationTypeType,
     SmbSecurityDescriptorCopyFlagsType,
     SmbVersionType,
-    StorageSystemConnectivityStatusType,
     TaskExecutionStatusType,
     TaskFilterNameType,
     TaskModeType,
@@ -70,22 +66,19 @@ from .literals import (
 if sys.version_info >= (3, 9):
     from builtins import dict as Dict
     from builtins import list as List
-    from collections.abc import Mapping, Sequence
+    from collections.abc import Sequence
 else:
-    from typing import Dict, List, Mapping, Sequence
+    from typing import Dict, List, Sequence
 if sys.version_info >= (3, 12):
     from typing import Literal, NotRequired, TypedDict
 else:
     from typing_extensions import Literal, NotRequired, TypedDict
 
 __all__ = (
-    "AddStorageSystemRequestTypeDef",
-    "AddStorageSystemResponseTypeDef",
     "AgentListEntryTypeDef",
     "AzureBlobSasConfigurationTypeDef",
     "BlobTypeDef",
     "CancelTaskExecutionRequestTypeDef",
-    "CapacityTypeDef",
     "CreateAgentRequestTypeDef",
     "CreateAgentResponseTypeDef",
     "CreateLocationAzureBlobRequestTypeDef",
@@ -112,14 +105,11 @@ __all__ = (
     "CreateLocationSmbResponseTypeDef",
     "CreateTaskRequestTypeDef",
     "CreateTaskResponseTypeDef",
-    "CredentialsTypeDef",
     "DeleteAgentRequestTypeDef",
     "DeleteLocationRequestTypeDef",
     "DeleteTaskRequestTypeDef",
     "DescribeAgentRequestTypeDef",
     "DescribeAgentResponseTypeDef",
-    "DescribeDiscoveryJobRequestTypeDef",
-    "DescribeDiscoveryJobResponseTypeDef",
     "DescribeLocationAzureBlobRequestTypeDef",
     "DescribeLocationAzureBlobResponseTypeDef",
     "DescribeLocationEfsRequestTypeDef",
@@ -142,19 +132,10 @@ __all__ = (
     "DescribeLocationS3ResponseTypeDef",
     "DescribeLocationSmbRequestTypeDef",
     "DescribeLocationSmbResponseTypeDef",
-    "DescribeStorageSystemRequestTypeDef",
-    "DescribeStorageSystemResourceMetricsRequestPaginateTypeDef",
-    "DescribeStorageSystemResourceMetricsRequestTypeDef",
-    "DescribeStorageSystemResourceMetricsResponseTypeDef",
-    "DescribeStorageSystemResourcesRequestTypeDef",
-    "DescribeStorageSystemResourcesResponseTypeDef",
-    "DescribeStorageSystemResponseTypeDef",
     "DescribeTaskExecutionRequestTypeDef",
     "DescribeTaskExecutionResponseTypeDef",
     "DescribeTaskRequestTypeDef",
     "DescribeTaskResponseTypeDef",
-    "DiscoveryJobListEntryTypeDef",
-    "DiscoveryServerConfigurationTypeDef",
     "Ec2ConfigOutputTypeDef",
     "Ec2ConfigTypeDef",
     "Ec2ConfigUnionTypeDef",
@@ -164,22 +145,13 @@ __all__ = (
     "FsxProtocolTypeDef",
     "FsxUpdateProtocolSmbTypeDef",
     "FsxUpdateProtocolTypeDef",
-    "GenerateRecommendationsRequestTypeDef",
     "HdfsNameNodeTypeDef",
-    "IOPSTypeDef",
-    "LatencyTypeDef",
     "ListAgentsRequestPaginateTypeDef",
     "ListAgentsRequestTypeDef",
     "ListAgentsResponseTypeDef",
-    "ListDiscoveryJobsRequestPaginateTypeDef",
-    "ListDiscoveryJobsRequestTypeDef",
-    "ListDiscoveryJobsResponseTypeDef",
     "ListLocationsRequestPaginateTypeDef",
     "ListLocationsRequestTypeDef",
     "ListLocationsResponseTypeDef",
-    "ListStorageSystemsRequestPaginateTypeDef",
-    "ListStorageSystemsRequestTypeDef",
-    "ListStorageSystemsResponseTypeDef",
     "ListTagsForResourceRequestPaginateTypeDef",
     "ListTagsForResourceRequestTypeDef",
     "ListTagsForResourceResponseTypeDef",
@@ -192,40 +164,27 @@ __all__ = (
     "LocationFilterTypeDef",
     "LocationListEntryTypeDef",
     "ManifestConfigTypeDef",
-    "MaxP95PerformanceTypeDef",
-    "NetAppONTAPClusterTypeDef",
-    "NetAppONTAPSVMTypeDef",
-    "NetAppONTAPVolumeTypeDef",
     "NfsMountOptionsTypeDef",
     "OnPremConfigOutputTypeDef",
     "OnPremConfigTypeDef",
     "OnPremConfigUnionTypeDef",
     "OptionsTypeDef",
-    "P95MetricsTypeDef",
     "PaginatorConfigTypeDef",
     "PlatformTypeDef",
     "PrivateLinkConfigTypeDef",
     "QopConfigurationTypeDef",
-    "RecommendationTypeDef",
-    "RemoveStorageSystemRequestTypeDef",
     "ReportDestinationS3TypeDef",
     "ReportDestinationTypeDef",
     "ReportOverrideTypeDef",
     "ReportOverridesTypeDef",
     "ReportResultTypeDef",
-    "ResourceDetailsTypeDef",
-    "ResourceMetricsTypeDef",
     "ResponseMetadataTypeDef",
     "S3ConfigTypeDef",
     "S3ManifestConfigTypeDef",
     "SmbMountOptionsTypeDef",
     "SourceManifestConfigTypeDef",
-    "StartDiscoveryJobRequestTypeDef",
-    "StartDiscoveryJobResponseTypeDef",
     "StartTaskExecutionRequestTypeDef",
     "StartTaskExecutionResponseTypeDef",
-    "StopDiscoveryJobRequestTypeDef",
-    "StorageSystemListEntryTypeDef",
     "TagListEntryTypeDef",
     "TagResourceRequestTypeDef",
     "TaskExecutionFilesFailedDetailTypeDef",
@@ -237,11 +196,8 @@ __all__ = (
     "TaskReportConfigTypeDef",
     "TaskScheduleDetailsTypeDef",
     "TaskScheduleTypeDef",
-    "ThroughputTypeDef",
-    "TimestampTypeDef",
     "UntagResourceRequestTypeDef",
     "UpdateAgentRequestTypeDef",
-    "UpdateDiscoveryJobRequestTypeDef",
     "UpdateLocationAzureBlobRequestTypeDef",
     "UpdateLocationEfsRequestTypeDef",
     "UpdateLocationFsxLustreRequestTypeDef",
@@ -253,29 +209,9 @@ __all__ = (
     "UpdateLocationObjectStorageRequestTypeDef",
     "UpdateLocationS3RequestTypeDef",
     "UpdateLocationSmbRequestTypeDef",
-    "UpdateStorageSystemRequestTypeDef",
     "UpdateTaskExecutionRequestTypeDef",
     "UpdateTaskRequestTypeDef",
 )
-
-class CredentialsTypeDef(TypedDict):
-    Username: str
-    Password: str
-
-class DiscoveryServerConfigurationTypeDef(TypedDict):
-    ServerHostname: str
-    ServerPort: NotRequired[int]
-
-class TagListEntryTypeDef(TypedDict):
-    Key: str
-    Value: NotRequired[str]
-
-class ResponseMetadataTypeDef(TypedDict):
-    RequestId: str
-    HTTPStatusCode: int
-    HTTPHeaders: Dict[str, str]
-    RetryAttempts: int
-    HostId: NotRequired[str]
 
 class PlatformTypeDef(TypedDict):
     Version: NotRequired[str]
@@ -288,11 +224,16 @@ BlobTypeDef = Union[str, bytes, IO[Any], StreamingBody]
 class CancelTaskExecutionRequestTypeDef(TypedDict):
     TaskExecutionArn: str
 
-class CapacityTypeDef(TypedDict):
-    Used: NotRequired[int]
-    Provisioned: NotRequired[int]
-    LogicalUsed: NotRequired[int]
-    ClusterCloudStorageUsed: NotRequired[int]
+class TagListEntryTypeDef(TypedDict):
+    Key: str
+    Value: NotRequired[str]
+
+class ResponseMetadataTypeDef(TypedDict):
+    RequestId: str
+    HTTPStatusCode: int
+    HTTPHeaders: Dict[str, str]
+    RetryAttempts: int
+    HostId: NotRequired[str]
 
 class HdfsNameNodeTypeDef(TypedDict):
     Hostname: str
@@ -354,9 +295,6 @@ class PrivateLinkConfigTypeDef(TypedDict):
     SubnetArns: NotRequired[List[str]]
     SecurityGroupArns: NotRequired[List[str]]
 
-class DescribeDiscoveryJobRequestTypeDef(TypedDict):
-    DiscoveryJobArn: str
-
 class DescribeLocationAzureBlobRequestTypeDef(TypedDict):
     LocationArn: str
 
@@ -397,24 +335,6 @@ class DescribeLocationS3RequestTypeDef(TypedDict):
 class DescribeLocationSmbRequestTypeDef(TypedDict):
     LocationArn: str
 
-class DescribeStorageSystemRequestTypeDef(TypedDict):
-    StorageSystemArn: str
-
-class PaginatorConfigTypeDef(TypedDict):
-    MaxItems: NotRequired[int]
-    PageSize: NotRequired[int]
-    StartingToken: NotRequired[str]
-
-TimestampTypeDef = Union[datetime, str]
-
-class DescribeStorageSystemResourcesRequestTypeDef(TypedDict):
-    DiscoveryJobArn: str
-    ResourceType: DiscoveryResourceTypeType
-    ResourceIds: NotRequired[Sequence[str]]
-    Filter: NotRequired[Mapping[Literal["SVM"], Sequence[str]]]
-    MaxResults: NotRequired[int]
-    NextToken: NotRequired[str]
-
 class DescribeTaskExecutionRequestTypeDef(TypedDict):
     TaskExecutionArn: str
 
@@ -452,36 +372,16 @@ class TaskScheduleDetailsTypeDef(TypedDict):
     DisabledReason: NotRequired[str]
     DisabledBy: NotRequired[ScheduleDisabledByType]
 
-class DiscoveryJobListEntryTypeDef(TypedDict):
-    DiscoveryJobArn: NotRequired[str]
-    Status: NotRequired[DiscoveryJobStatusType]
-
 class Ec2ConfigTypeDef(TypedDict):
     SubnetArn: str
     SecurityGroupArns: Sequence[str]
 
-class GenerateRecommendationsRequestTypeDef(TypedDict):
-    DiscoveryJobArn: str
-    ResourceIds: Sequence[str]
-    ResourceType: DiscoveryResourceTypeType
-
-class IOPSTypeDef(TypedDict):
-    Read: NotRequired[float]
-    Write: NotRequired[float]
-    Other: NotRequired[float]
-    Total: NotRequired[float]
-
-class LatencyTypeDef(TypedDict):
-    Read: NotRequired[float]
-    Write: NotRequired[float]
-    Other: NotRequired[float]
+class PaginatorConfigTypeDef(TypedDict):
+    MaxItems: NotRequired[int]
+    PageSize: NotRequired[int]
+    StartingToken: NotRequired[str]
 
 class ListAgentsRequestTypeDef(TypedDict):
-    MaxResults: NotRequired[int]
-    NextToken: NotRequired[str]
-
-class ListDiscoveryJobsRequestTypeDef(TypedDict):
-    StorageSystemArn: NotRequired[str]
     MaxResults: NotRequired[int]
     NextToken: NotRequired[str]
 
@@ -493,14 +393,6 @@ class LocationFilterTypeDef(TypedDict):
 class LocationListEntryTypeDef(TypedDict):
     LocationArn: NotRequired[str]
     LocationUri: NotRequired[str]
-
-class ListStorageSystemsRequestTypeDef(TypedDict):
-    MaxResults: NotRequired[int]
-    NextToken: NotRequired[str]
-
-class StorageSystemListEntryTypeDef(TypedDict):
-    StorageSystemArn: NotRequired[str]
-    Name: NotRequired[str]
 
 class ListTagsForResourceRequestTypeDef(TypedDict):
     ResourceArn: str
@@ -528,35 +420,8 @@ class TaskListEntryTypeDef(TypedDict):
     Name: NotRequired[str]
     TaskMode: NotRequired[TaskModeType]
 
-class MaxP95PerformanceTypeDef(TypedDict):
-    IopsRead: NotRequired[float]
-    IopsWrite: NotRequired[float]
-    IopsOther: NotRequired[float]
-    IopsTotal: NotRequired[float]
-    ThroughputRead: NotRequired[float]
-    ThroughputWrite: NotRequired[float]
-    ThroughputOther: NotRequired[float]
-    ThroughputTotal: NotRequired[float]
-    LatencyRead: NotRequired[float]
-    LatencyWrite: NotRequired[float]
-    LatencyOther: NotRequired[float]
-
-class RecommendationTypeDef(TypedDict):
-    StorageType: NotRequired[str]
-    StorageConfiguration: NotRequired[Dict[str, str]]
-    EstimatedMonthlyStorageCost: NotRequired[str]
-
 class OnPremConfigTypeDef(TypedDict):
     AgentArns: Sequence[str]
-
-class ThroughputTypeDef(TypedDict):
-    Read: NotRequired[float]
-    Write: NotRequired[float]
-    Other: NotRequired[float]
-    Total: NotRequired[float]
-
-class RemoveStorageSystemRequestTypeDef(TypedDict):
-    StorageSystemArn: str
 
 class ReportDestinationS3TypeDef(TypedDict):
     S3BucketArn: str
@@ -572,9 +437,6 @@ class S3ManifestConfigTypeDef(TypedDict):
     S3BucketArn: str
     ManifestObjectVersionId: NotRequired[str]
 
-class StopDiscoveryJobRequestTypeDef(TypedDict):
-    DiscoveryJobArn: str
-
 class UntagResourceRequestTypeDef(TypedDict):
     ResourceArn: str
     Keys: Sequence[str]
@@ -582,10 +444,6 @@ class UntagResourceRequestTypeDef(TypedDict):
 class UpdateAgentRequestTypeDef(TypedDict):
     AgentArn: str
     Name: NotRequired[str]
-
-class UpdateDiscoveryJobRequestTypeDef(TypedDict):
-    DiscoveryJobArn: str
-    CollectionDurationMinutes: int
 
 class UpdateLocationEfsRequestTypeDef(TypedDict):
     LocationArn: str
@@ -605,23 +463,31 @@ class UpdateLocationFsxWindowsRequestTypeDef(TypedDict):
     User: NotRequired[str]
     Password: NotRequired[str]
 
-class UpdateStorageSystemRequestTypeDef(TypedDict):
-    StorageSystemArn: str
-    ServerConfiguration: NotRequired[DiscoveryServerConfigurationTypeDef]
-    AgentArns: NotRequired[Sequence[str]]
+class AgentListEntryTypeDef(TypedDict):
+    AgentArn: NotRequired[str]
     Name: NotRequired[str]
-    CloudWatchLogGroupArn: NotRequired[str]
-    Credentials: NotRequired[CredentialsTypeDef]
+    Status: NotRequired[AgentStatusType]
+    Platform: NotRequired[PlatformTypeDef]
 
-class AddStorageSystemRequestTypeDef(TypedDict):
-    ServerConfiguration: DiscoveryServerConfigurationTypeDef
-    SystemType: Literal["NetAppONTAP"]
-    AgentArns: Sequence[str]
-    ClientToken: str
-    Credentials: CredentialsTypeDef
-    CloudWatchLogGroupArn: NotRequired[str]
-    Tags: NotRequired[Sequence[TagListEntryTypeDef]]
-    Name: NotRequired[str]
+class UpdateLocationAzureBlobRequestTypeDef(TypedDict):
+    LocationArn: str
+    Subdirectory: NotRequired[str]
+    AuthenticationType: NotRequired[Literal["SAS"]]
+    SasConfiguration: NotRequired[AzureBlobSasConfigurationTypeDef]
+    BlobType: NotRequired[Literal["BLOCK"]]
+    AccessTier: NotRequired[AzureAccessTierType]
+    AgentArns: NotRequired[Sequence[str]]
+
+class UpdateLocationObjectStorageRequestTypeDef(TypedDict):
+    LocationArn: str
+    ServerPort: NotRequired[int]
+    ServerProtocol: NotRequired[ObjectStorageServerProtocolType]
+    Subdirectory: NotRequired[str]
+    ServerHostname: NotRequired[str]
+    AccessKey: NotRequired[str]
+    SecretKey: NotRequired[str]
+    AgentArns: NotRequired[Sequence[str]]
+    ServerCertificate: NotRequired[BlobTypeDef]
 
 class CreateAgentRequestTypeDef(TypedDict):
     ActivationKey: str
@@ -630,6 +496,16 @@ class CreateAgentRequestTypeDef(TypedDict):
     VpcEndpointId: NotRequired[str]
     SubnetArns: NotRequired[Sequence[str]]
     SecurityGroupArns: NotRequired[Sequence[str]]
+
+class CreateLocationAzureBlobRequestTypeDef(TypedDict):
+    ContainerUrl: str
+    AuthenticationType: Literal["SAS"]
+    AgentArns: Sequence[str]
+    SasConfiguration: NotRequired[AzureBlobSasConfigurationTypeDef]
+    BlobType: NotRequired[Literal["BLOCK"]]
+    AccessTier: NotRequired[AzureAccessTierType]
+    Subdirectory: NotRequired[str]
+    Tags: NotRequired[Sequence[TagListEntryTypeDef]]
 
 class CreateLocationFsxLustreRequestTypeDef(TypedDict):
     FsxFilesystemArn: str
@@ -646,19 +522,21 @@ class CreateLocationFsxWindowsRequestTypeDef(TypedDict):
     Tags: NotRequired[Sequence[TagListEntryTypeDef]]
     Domain: NotRequired[str]
 
-class StartDiscoveryJobRequestTypeDef(TypedDict):
-    StorageSystemArn: str
-    CollectionDurationMinutes: int
-    ClientToken: str
+class CreateLocationObjectStorageRequestTypeDef(TypedDict):
+    ServerHostname: str
+    BucketName: str
+    AgentArns: Sequence[str]
+    ServerPort: NotRequired[int]
+    ServerProtocol: NotRequired[ObjectStorageServerProtocolType]
+    Subdirectory: NotRequired[str]
+    AccessKey: NotRequired[str]
+    SecretKey: NotRequired[str]
     Tags: NotRequired[Sequence[TagListEntryTypeDef]]
+    ServerCertificate: NotRequired[BlobTypeDef]
 
 class TagResourceRequestTypeDef(TypedDict):
     ResourceArn: str
     Tags: Sequence[TagListEntryTypeDef]
-
-class AddStorageSystemResponseTypeDef(TypedDict):
-    StorageSystemArn: str
-    ResponseMetadata: ResponseMetadataTypeDef
 
 class CreateAgentResponseTypeDef(TypedDict):
     AgentArn: str
@@ -712,15 +590,6 @@ class CreateTaskResponseTypeDef(TypedDict):
     TaskArn: str
     ResponseMetadata: ResponseMetadataTypeDef
 
-class DescribeDiscoveryJobResponseTypeDef(TypedDict):
-    StorageSystemArn: str
-    DiscoveryJobArn: str
-    CollectionDurationMinutes: int
-    Status: DiscoveryJobStatusType
-    JobStartTime: datetime
-    JobEndTime: datetime
-    ResponseMetadata: ResponseMetadataTypeDef
-
 class DescribeLocationAzureBlobResponseTypeDef(TypedDict):
     LocationArn: str
     LocationUri: str
@@ -758,79 +627,14 @@ class DescribeLocationObjectStorageResponseTypeDef(TypedDict):
     ServerCertificate: bytes
     ResponseMetadata: ResponseMetadataTypeDef
 
-class DescribeStorageSystemResponseTypeDef(TypedDict):
-    StorageSystemArn: str
-    ServerConfiguration: DiscoveryServerConfigurationTypeDef
-    SystemType: Literal["NetAppONTAP"]
-    AgentArns: List[str]
-    Name: str
-    ErrorMessage: str
-    ConnectivityStatus: StorageSystemConnectivityStatusType
-    CloudWatchLogGroupArn: str
-    CreationTime: datetime
-    SecretsManagerArn: str
-    ResponseMetadata: ResponseMetadataTypeDef
-
 class ListTagsForResourceResponseTypeDef(TypedDict):
     Tags: List[TagListEntryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
 
-class StartDiscoveryJobResponseTypeDef(TypedDict):
-    DiscoveryJobArn: str
-    ResponseMetadata: ResponseMetadataTypeDef
-
 class StartTaskExecutionResponseTypeDef(TypedDict):
     TaskExecutionArn: str
     ResponseMetadata: ResponseMetadataTypeDef
-
-class AgentListEntryTypeDef(TypedDict):
-    AgentArn: NotRequired[str]
-    Name: NotRequired[str]
-    Status: NotRequired[AgentStatusType]
-    Platform: NotRequired[PlatformTypeDef]
-
-class CreateLocationAzureBlobRequestTypeDef(TypedDict):
-    ContainerUrl: str
-    AuthenticationType: Literal["SAS"]
-    AgentArns: Sequence[str]
-    SasConfiguration: NotRequired[AzureBlobSasConfigurationTypeDef]
-    BlobType: NotRequired[Literal["BLOCK"]]
-    AccessTier: NotRequired[AzureAccessTierType]
-    Subdirectory: NotRequired[str]
-    Tags: NotRequired[Sequence[TagListEntryTypeDef]]
-
-class UpdateLocationAzureBlobRequestTypeDef(TypedDict):
-    LocationArn: str
-    Subdirectory: NotRequired[str]
-    AuthenticationType: NotRequired[Literal["SAS"]]
-    SasConfiguration: NotRequired[AzureBlobSasConfigurationTypeDef]
-    BlobType: NotRequired[Literal["BLOCK"]]
-    AccessTier: NotRequired[AzureAccessTierType]
-    AgentArns: NotRequired[Sequence[str]]
-
-class CreateLocationObjectStorageRequestTypeDef(TypedDict):
-    ServerHostname: str
-    BucketName: str
-    AgentArns: Sequence[str]
-    ServerPort: NotRequired[int]
-    ServerProtocol: NotRequired[ObjectStorageServerProtocolType]
-    Subdirectory: NotRequired[str]
-    AccessKey: NotRequired[str]
-    SecretKey: NotRequired[str]
-    Tags: NotRequired[Sequence[TagListEntryTypeDef]]
-    ServerCertificate: NotRequired[BlobTypeDef]
-
-class UpdateLocationObjectStorageRequestTypeDef(TypedDict):
-    LocationArn: str
-    ServerPort: NotRequired[int]
-    ServerProtocol: NotRequired[ObjectStorageServerProtocolType]
-    Subdirectory: NotRequired[str]
-    ServerHostname: NotRequired[str]
-    AccessKey: NotRequired[str]
-    SecretKey: NotRequired[str]
-    AgentArns: NotRequired[Sequence[str]]
-    ServerCertificate: NotRequired[BlobTypeDef]
 
 class CreateLocationHdfsRequestTypeDef(TypedDict):
     NameNodes: Sequence[HdfsNameNodeTypeDef]
@@ -991,14 +795,9 @@ class DescribeLocationNfsResponseTypeDef(TypedDict):
     CreationTime: datetime
     ResponseMetadata: ResponseMetadataTypeDef
 
+Ec2ConfigUnionTypeDef = Union[Ec2ConfigTypeDef, Ec2ConfigOutputTypeDef]
+
 class ListAgentsRequestPaginateTypeDef(TypedDict):
-    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
-
-class ListDiscoveryJobsRequestPaginateTypeDef(TypedDict):
-    StorageSystemArn: NotRequired[str]
-    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
-
-class ListStorageSystemsRequestPaginateTypeDef(TypedDict):
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class ListTagsForResourceRequestPaginateTypeDef(TypedDict):
@@ -1008,30 +807,6 @@ class ListTagsForResourceRequestPaginateTypeDef(TypedDict):
 class ListTaskExecutionsRequestPaginateTypeDef(TypedDict):
     TaskArn: NotRequired[str]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
-
-class DescribeStorageSystemResourceMetricsRequestPaginateTypeDef(TypedDict):
-    DiscoveryJobArn: str
-    ResourceType: DiscoveryResourceTypeType
-    ResourceId: str
-    StartTime: NotRequired[TimestampTypeDef]
-    EndTime: NotRequired[TimestampTypeDef]
-    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
-
-class DescribeStorageSystemResourceMetricsRequestTypeDef(TypedDict):
-    DiscoveryJobArn: str
-    ResourceType: DiscoveryResourceTypeType
-    ResourceId: str
-    StartTime: NotRequired[TimestampTypeDef]
-    EndTime: NotRequired[TimestampTypeDef]
-    MaxResults: NotRequired[int]
-    NextToken: NotRequired[str]
-
-class ListDiscoveryJobsResponseTypeDef(TypedDict):
-    DiscoveryJobs: List[DiscoveryJobListEntryTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    NextToken: NotRequired[str]
-
-Ec2ConfigUnionTypeDef = Union[Ec2ConfigTypeDef, Ec2ConfigOutputTypeDef]
 
 class ListLocationsRequestPaginateTypeDef(TypedDict):
     Filters: NotRequired[Sequence[LocationFilterTypeDef]]
@@ -1044,11 +819,6 @@ class ListLocationsRequestTypeDef(TypedDict):
 
 class ListLocationsResponseTypeDef(TypedDict):
     Locations: List[LocationListEntryTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    NextToken: NotRequired[str]
-
-class ListStorageSystemsResponseTypeDef(TypedDict):
-    StorageSystems: List[StorageSystemListEntryTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
 
@@ -1071,59 +841,7 @@ class ListTasksResponseTypeDef(TypedDict):
     ResponseMetadata: ResponseMetadataTypeDef
     NextToken: NotRequired[str]
 
-class NetAppONTAPClusterTypeDef(TypedDict):
-    CifsShareCount: NotRequired[int]
-    NfsExportedVolumes: NotRequired[int]
-    ResourceId: NotRequired[str]
-    ClusterName: NotRequired[str]
-    MaxP95Performance: NotRequired[MaxP95PerformanceTypeDef]
-    ClusterBlockStorageSize: NotRequired[int]
-    ClusterBlockStorageUsed: NotRequired[int]
-    ClusterBlockStorageLogicalUsed: NotRequired[int]
-    Recommendations: NotRequired[List[RecommendationTypeDef]]
-    RecommendationStatus: NotRequired[RecommendationStatusType]
-    LunCount: NotRequired[int]
-    ClusterCloudStorageUsed: NotRequired[int]
-
-class NetAppONTAPSVMTypeDef(TypedDict):
-    ClusterUuid: NotRequired[str]
-    ResourceId: NotRequired[str]
-    SvmName: NotRequired[str]
-    CifsShareCount: NotRequired[int]
-    EnabledProtocols: NotRequired[List[str]]
-    TotalCapacityUsed: NotRequired[int]
-    TotalCapacityProvisioned: NotRequired[int]
-    TotalLogicalCapacityUsed: NotRequired[int]
-    MaxP95Performance: NotRequired[MaxP95PerformanceTypeDef]
-    Recommendations: NotRequired[List[RecommendationTypeDef]]
-    NfsExportedVolumes: NotRequired[int]
-    RecommendationStatus: NotRequired[RecommendationStatusType]
-    TotalSnapshotCapacityUsed: NotRequired[int]
-    LunCount: NotRequired[int]
-
-class NetAppONTAPVolumeTypeDef(TypedDict):
-    VolumeName: NotRequired[str]
-    ResourceId: NotRequired[str]
-    CifsShareCount: NotRequired[int]
-    SecurityStyle: NotRequired[str]
-    SvmUuid: NotRequired[str]
-    SvmName: NotRequired[str]
-    CapacityUsed: NotRequired[int]
-    CapacityProvisioned: NotRequired[int]
-    LogicalCapacityUsed: NotRequired[int]
-    NfsExported: NotRequired[bool]
-    SnapshotCapacityUsed: NotRequired[int]
-    MaxP95Performance: NotRequired[MaxP95PerformanceTypeDef]
-    Recommendations: NotRequired[List[RecommendationTypeDef]]
-    RecommendationStatus: NotRequired[RecommendationStatusType]
-    LunCount: NotRequired[int]
-
 OnPremConfigUnionTypeDef = Union[OnPremConfigTypeDef, OnPremConfigOutputTypeDef]
-
-class P95MetricsTypeDef(TypedDict):
-    IOPS: NotRequired[IOPSTypeDef]
-    Throughput: NotRequired[ThroughputTypeDef]
-    Latency: NotRequired[LatencyTypeDef]
 
 class ReportDestinationTypeDef(TypedDict):
     S3: NotRequired[ReportDestinationS3TypeDef]
@@ -1159,11 +877,6 @@ class CreateLocationEfsRequestTypeDef(TypedDict):
     FileSystemAccessRoleArn: NotRequired[str]
     InTransitEncryption: NotRequired[EfsInTransitEncryptionType]
 
-class ResourceDetailsTypeDef(TypedDict):
-    NetAppONTAPSVMs: NotRequired[List[NetAppONTAPSVMTypeDef]]
-    NetAppONTAPVolumes: NotRequired[List[NetAppONTAPVolumeTypeDef]]
-    NetAppONTAPClusters: NotRequired[List[NetAppONTAPClusterTypeDef]]
-
 class CreateLocationNfsRequestTypeDef(TypedDict):
     Subdirectory: str
     ServerHostname: str
@@ -1177,13 +890,6 @@ class UpdateLocationNfsRequestTypeDef(TypedDict):
     ServerHostname: NotRequired[str]
     OnPremConfig: NotRequired[OnPremConfigUnionTypeDef]
     MountOptions: NotRequired[NfsMountOptionsTypeDef]
-
-class ResourceMetricsTypeDef(TypedDict):
-    Timestamp: NotRequired[datetime]
-    P95Metrics: NotRequired[P95MetricsTypeDef]
-    Capacity: NotRequired[CapacityTypeDef]
-    ResourceId: NotRequired[str]
-    ResourceType: NotRequired[DiscoveryResourceTypeType]
 
 class TaskReportConfigTypeDef(TypedDict):
     Destination: NotRequired[ReportDestinationTypeDef]
@@ -1257,16 +963,6 @@ UpdateLocationFsxOntapRequestTypeDef = TypedDict(
         "Subdirectory": NotRequired[str],
     },
 )
-
-class DescribeStorageSystemResourcesResponseTypeDef(TypedDict):
-    ResourceDetails: ResourceDetailsTypeDef
-    ResponseMetadata: ResponseMetadataTypeDef
-    NextToken: NotRequired[str]
-
-class DescribeStorageSystemResourceMetricsResponseTypeDef(TypedDict):
-    Metrics: List[ResourceMetricsTypeDef]
-    ResponseMetadata: ResponseMetadataTypeDef
-    NextToken: NotRequired[str]
 
 class CreateTaskRequestTypeDef(TypedDict):
     SourceLocationArn: str

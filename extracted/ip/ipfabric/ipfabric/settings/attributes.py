@@ -1,11 +1,11 @@
 import logging
 import re
 from datetime import datetime
-from typing import Optional, List, Any
+from typing import Optional, Any
 
 from pydantic import Field, BaseModel
 
-from ipfabric.tools import raise_for_status
+from ipfabric.tools.shared import raise_for_status
 
 logger = logging.getLogger("ipfabric")
 
@@ -87,7 +87,7 @@ class Attributes(BaseModel):
         resp = raise_for_status(self.client.post(self.endpoint, json=attribute))
         return resp.json()
 
-    def set_attributes_by_sn(self, attributes: List[dict]):
+    def set_attributes_by_sn(self, attributes: list[dict]):
         """
         Sets a list of Attributes for devices based on serial numbers.
         Will Add or Update Attributes.
@@ -112,7 +112,7 @@ class Attributes(BaseModel):
         """
         return self.set_attribute_by_sn(serial_number, "siteName", site_name)
 
-    def set_sites_by_sn(self, sites: List[dict]):
+    def set_sites_by_sn(self, sites: list[dict]):
         """Sets a list of sites for devices based on serial numbers.
 
         Args:

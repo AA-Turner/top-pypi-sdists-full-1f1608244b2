@@ -279,6 +279,7 @@ class _SecretWithBasicAuthenticationState:
         pulumi.set(self, "username", value)
 
 
+@pulumi.type_token("snowflake:index/secretWithBasicAuthentication:SecretWithBasicAuthentication")
 class SecretWithBasicAuthentication(pulumi.CustomResource):
     @overload
     def __init__(__self__,

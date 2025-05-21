@@ -1,43 +1,82 @@
 import logging
-from typing import Any, Optional, List
+from typing import Any, Literal, Optional
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, field_validator, model_serializer
 
-from ipfabric.tools import raise_for_status, validate_ip_network_str
+from ipfabric.models.discovery import (
+    Community,
+    Networks,
+    CliRetryLimit,
+    CliSessionsLimit,
+    SeedList,
+    DiscoveryHistorySeeds,
+    DiscoveryTask,
+    BGPLimit,
+    LimitDiscoveryTasks,
+    ResolveNames,
+    Scanner,
+    Timeouts,
+    Traceroute,
+    Ports,
+)
+from ipfabric.models.site_separation import SiteSeparation
+from ipfabric.settings.authentication import Authentication
+from ipfabric.settings.vendor_api import VendorAPI
+from ipfabric.tools.shared import raise_for_status
 
 logger = logging.getLogger("ipfabric")
 
 
-class Networks(BaseModel):
-    exclude: Optional[List[str]] = Field(default_factory=list)
-    include: Optional[List[str]] = Field(default_factory=list)
-
-    @field_validator("exclude", "include")
-    @classmethod
-    def _verify_valid_networks(cls, v: List[str]) -> List[str]:
-        return [validate_ip_network_str(_) for _ in v]
-
-    @model_validator(mode="after")
-    def _verify_include_not_empty(self):
-        if not self.include:
-            raise ValueError("Discovery Settings Network Include list cannot be empty.")
-        return self
-
-
 class Discovery(BaseModel):
     client: Any = Field(exclude=True)
-    _networks: Optional[Networks] = None
-
-    def model_post_init(self, __context: Any) -> None:
-        self._networks = self._get_networks()
+    snapshot_id: Optional[str] = Field(None, exclude=True)
+    allowTelnet: bool
+    authentication: Authentication
+    bgps: list[Community]
+    cliRetryLimit: CliRetryLimit
+    cliSessionsLimit: CliSessionsLimit
+    disabledPostDiscoveryActions: list[Literal["graphCache", "historicalData", "intentVerification"]] = Field(
+        default_factory=list,
+    )
+    discoveryHistorySeeds: DiscoveryHistorySeeds
+    discoveryTasks: list[DiscoveryTask] = Field(default_factory=list)
+    fullBgpIpv6Limit: BGPLimit
+    fullBgpLimit: BGPLimit
+    limitDiscoveryTasks: LimitDiscoveryTasks
+    networks: Networks
+    ports: list[Ports]
+    resolveNames: ResolveNames
+    scanner: Scanner
+    seedList: list[str]
+    siteSeparation: SiteSeparation
+    timeouts: Timeouts
+    traceroute: Traceroute
+    vendorApi: VendorAPI
 
     @property
-    def networks(self):
-        return self._networks
+    def _endpoint(self) -> str:
+        return f"snapshots/{self.snapshot_id}/settings" if self.snapshot_id else "settings"
 
-    def _get_networks(self):
-        res = raise_for_status(self.client.get("settings"))
-        return Networks(**res.json()["networks"])
+    @field_validator("seedList")
+    @classmethod
+    def _verify_seed_list(cls, v: list[str]) -> list[str]:
+        return SeedList(seeds=v).model_dump()
+
+    @model_serializer
+    def _ser_model(self) -> dict[str, Any]:
+        ser = dict()
+        for k, v in self.model_fields.items():
+            if v.exclude:
+                continue
+            if k == "authentication":
+                ser.update(self.authentication.model_dump(by_alias=True))
+            elif k in ["allowTelnet", "disabledPostDiscoveryActions", "seedList"]:
+                ser.update({k: getattr(self, k)})
+            elif k in ["bgps", "discoveryTasks", "ports"]:
+                ser.update({k: [_.model_dump(by_alias=True) for _ in getattr(self, k)]})
+            else:
+                ser.update({k: getattr(self, k).model_dump(by_alias=True)})
+        return ser
 
     def update_discovery_networks(self, subnets: list, include: bool = False):
         payload = dict()
@@ -48,5 +87,5 @@ class Discovery(BaseModel):
         else:
             payload["networks"]["exclude"] = subnets
             payload["networks"]["include"] = self.networks.include
-        res = raise_for_status(self.client.patch("settings", json=payload))
+        res = raise_for_status(self.client.patch(self._endpoint, json=payload))
         return Networks(**res.json()["networks"])

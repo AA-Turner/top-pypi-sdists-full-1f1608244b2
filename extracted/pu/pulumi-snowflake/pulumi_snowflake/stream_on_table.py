@@ -396,6 +396,7 @@ class _StreamOnTableState:
         pulumi.set(self, "table", value)
 
 
+@pulumi.type_token("snowflake:index/streamOnTable:StreamOnTable")
 class StreamOnTable(pulumi.CustomResource):
     @overload
     def __init__(__self__,

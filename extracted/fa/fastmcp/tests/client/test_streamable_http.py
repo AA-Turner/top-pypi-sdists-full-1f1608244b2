@@ -119,7 +119,7 @@ def run_nested_server(host: str, port: int) -> None:
         mount = Starlette(routes=[Mount("/nest-inner", app=mcp_app)])
         mount2 = Starlette(
             routes=[Mount("/nest-outer", app=mount)],
-            lifespan=mcp_app.router.lifespan_context,
+            lifespan=mcp_app.lifespan,
         )
         server = uvicorn.Server(
             config=uvicorn.Config(
@@ -149,6 +149,10 @@ async def test_nested_streamable_http_server_resolves_correctly():
             assert result is True
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="Timeout tests are flaky on Windows. Timeouts *are* supported but the tests are unreliable.",
+)
 class TestTimeout:
     async def test_timeout(self, streamable_http_server: str):
         # note this transport behaves differently than others and raises

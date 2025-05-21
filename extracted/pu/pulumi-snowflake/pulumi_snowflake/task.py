@@ -2383,6 +2383,7 @@ class _TaskState:
         pulumi.set(self, "when", value)
 
 
+@pulumi.type_token("snowflake:index/task:Task")
 class Task(pulumi.CustomResource):
     @overload
     def __init__(__self__,

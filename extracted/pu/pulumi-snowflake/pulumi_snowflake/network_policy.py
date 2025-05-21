@@ -275,6 +275,7 @@ class _NetworkPolicyState:
         pulumi.set(self, "show_outputs", value)
 
 
+@pulumi.type_token("snowflake:index/networkPolicy:NetworkPolicy")
 class NetworkPolicy(pulumi.CustomResource):
     @overload
     def __init__(__self__,

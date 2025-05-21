@@ -39,6 +39,19 @@ _LAUNCH_CMD = (
     f' {{snippet_package}}/{_INSTRUMENTATION_RUNNER_PACKAGE}'
 )
 
+_SNIPPET_SERVER_START_ERROR_DEBUG_TIP = """
+Invalid instrumentation result log received during snippet server start:
+{instrumentation_result}
+
+For debugging, please check the following:
+1. Check the server process stdout attached below.
+2. The snippet server logs within the device's logcat file. Search for
+   "SNIPPET START" to locate the relevant process ID.
+
+Server process stdout:
+{server_start_stdout}
+"""
+
 # The command template to stop the snippet server
 _STOP_CMD = (
     'am instrument {user} -w -e action stop {snippet_package}/'
@@ -161,6 +174,7 @@ class SnippetClientV2(client_base.ClientBase):
     self._conn = None
     self._event_client = None
     self._config = config or Config()
+    self._server_start_stdout = []
 
   @property
   def user_id(self):
@@ -285,6 +299,7 @@ class SnippetClientV2(client_base.ClientBase):
     self._proc = self._run_adb_cmd(cmd)
 
     # Check protocol version and get the device port
+    self._server_start_stdout = []
     line = self._read_protocol_line()
     match = re.match('^SNIPPET START, PROTOCOL ([0-9]+) ([0-9]+)$', line)
     if not match or int(match.group(1)) != _PROTOCOL_MAJOR_VERSION:
@@ -293,7 +308,11 @@ class SnippetClientV2(client_base.ClientBase):
     line = self._read_protocol_line()
     match = re.match('^SNIPPET SERVING, PORT ([0-9]+)$', line)
     if not match:
-      raise errors.ServerStartProtocolError(self._device, line)
+      message = _SNIPPET_SERVER_START_ERROR_DEBUG_TIP.format(
+          instrumentation_result=line,
+          server_start_stdout='\n'.join(self._server_start_stdout),
+      )
+      raise errors.ServerStartProtocolError(self._device, message)
     self.device_port = int(match.group(1))
 
   def _run_adb_cmd(self, cmd):
@@ -365,6 +384,7 @@ class SnippetClientV2(client_base.ClientBase):
       errors.ServerStartError: If EOF is reached without any protocol lines
         being read.
     """
+    self._server_start_stdout = []
     while True:
       line = self._proc.stdout.readline().decode('utf-8')
       if not line:
@@ -383,6 +403,7 @@ class SnippetClientV2(client_base.ClientBase):
         self.log.debug('Accepted line from instrumentation output: "%s"', line)
         return line
 
+      self._server_start_stdout.append(line)
       self.log.debug('Discarded line from instrumentation output: "%s"', line)
 
   def make_connection(self):
@@ -446,9 +467,27 @@ class SnippetClientV2(client_base.ClientBase):
       self.log.debug(
           'Failed to connect to localhost, trying 127.0.0.1: %s', str(err)
       )
-      self._conn = socket.create_connection(
-          ('127.0.0.1', self.host_port), _SOCKET_CONNECTION_TIMEOUT
-      )
+      try:
+        self._conn = socket.create_connection(
+            ('127.0.0.1', self.host_port), _SOCKET_CONNECTION_TIMEOUT
+        )
+      except ConnectionRefusedError as err2:
+        ret, _, _ = utils.run_command(
+            f'netstat -tulpn | grep ":{self.host_port}"', shell=True
+        )
+        if ret != 0:
+          raise errors.Error(
+              self._device,
+              'The Adb forward command execution did not take effect. Please'
+              ' check if there are other processes affecting adb forward on the'
+              ' host.',
+          ) from err2
+
+        raise errors.Error(
+            self._device,
+            'Failed to establish socket connection from host to snippet server'
+            ' running on Android device.',
+        ) from err2
 
     self._conn.settimeout(_SOCKET_READ_TIMEOUT)
     self._client = self._conn.makefile(mode='brw')

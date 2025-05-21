@@ -268,6 +268,7 @@ class _NetworkRuleState:
         pulumi.set(self, "value_lists", value)
 
 
+@pulumi.type_token("snowflake:index/networkRule:NetworkRule")
 class NetworkRule(pulumi.CustomResource):
     @overload
     def __init__(__self__,

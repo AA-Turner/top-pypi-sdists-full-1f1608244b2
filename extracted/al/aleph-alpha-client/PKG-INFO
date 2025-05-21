@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: aleph-alpha-client
-Version: 10.1.0
+Version: 10.2.1
 Summary: python client to interact with Aleph Alpha api endpoints
 Author-email: Aleph Alpha <support@aleph-alpha.com>
 License-Expression: MIT
@@ -110,6 +110,15 @@ Now you should be able to ...
 * run all the tests using `uv run pytest` or, `uv run pytest -k <test_name>` to run a specific test
 * typecheck the code and tests using `uv run mypy aleph_alpha_client` resp. `uv run mypy tests`
 * format the code using `uv run ruff`
+
+### Releasing a new version
+
+1. Bump the version in `pyproject.toml`.
+2. Edit `Changelog.md`.
+3. Push and merge.
+4. Go to https://github.com/Aleph-Alpha/aleph-alpha-client/releases/new
+   - use the version as tag and release title (e.g. `v10.1.0`)
+   - auto-generate the description based on commit history
 
 ## Links
 

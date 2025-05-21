@@ -21,6 +21,7 @@ from worker_automate_hub.api.client import get_config_by_name, get_status_cte_em
 from worker_automate_hub.api.ahead_service import save_xml_to_downloads
 from worker_automate_hub.utils.util import (
     kill_all_emsys,
+    delete_xml,
     set_variable,
     type_text_into_field,
     worker_sleep,
@@ -358,3 +359,5 @@ async def importar_cte_xml(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO
             status=RpaHistoricoStatusEnum.Falha,
             tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)],
         )
+    finally:
+        await delete_xml(cte.get("chaveCte"))

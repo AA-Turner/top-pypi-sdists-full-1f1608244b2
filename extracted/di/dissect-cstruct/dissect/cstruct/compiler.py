@@ -11,20 +11,21 @@ from typing import TYPE_CHECKING
 from dissect.cstruct.bitbuffer import BitBuffer
 from dissect.cstruct.types import (
     Array,
-    ArrayMetaType,
+    BaseType,
     Char,
     CharArray,
     Flag,
     Int,
-    MetaType,
     Packed,
     Pointer,
     Structure,
     Union,
     Void,
+    VoidArray,
     Wchar,
     WcharArray,
 )
+from dissect.cstruct.types.base import BaseArray
 from dissect.cstruct.types.enum import EnumMetaType
 from dissect.cstruct.types.packed import _struct
 
@@ -48,6 +49,7 @@ SUPPORTED_TYPES = (
     Void,
     Wchar,
     WcharArray,
+    VoidArray,
 )
 
 log = logging.getLogger(__name__)
@@ -159,7 +161,7 @@ class _ReadSourceGenerator:
                 yield f"stream.seek(-stream.tell() & ({field.alignment} - 1), {io.SEEK_CUR})"
 
         for field in self.fields:
-            field_type = self.cs.resolve(field.type)
+            field_type = field.type
 
             if isinstance(field_type, EnumMetaType):
                 field_type = field_type.type
@@ -187,7 +189,7 @@ class _ReadSourceGenerator:
 
             # Array of structures and multi-dimensional arrays
             elif issubclass(field_type, (Array, CharArray, WcharArray)) and (
-                issubclass(field_type.type, Structure) or isinstance(field_type.type, ArrayMetaType) or is_dynamic
+                issubclass(field_type.type, Structure) or issubclass(field_type.type, BaseArray) or is_dynamic
             ):
                 yield from flush()
                 yield from align_to_field(field)
@@ -195,6 +197,9 @@ class _ReadSourceGenerator:
 
             # Bit fields
             elif field.bits:
+                if size is None:
+                    raise TypeError(f"Unsupported type for bit field: {field_type}")
+
                 if not prev_was_bits:
                     prev_bits_type = field_type
                     prev_was_bits = True
@@ -223,8 +228,8 @@ class _ReadSourceGenerator:
     def _generate_structure(self, field: Field) -> Iterator[str]:
         template = f"""
         _s = stream.tell()
-        r["{field.name}"] = {self._map_field(field)}._read(stream, context=r)
-        s["{field.name}"] = stream.tell() - _s
+        r["{field._name}"] = {self._map_field(field)}._read(stream, context=r)
+        s["{field._name}"] = stream.tell() - _s
         """
 
         yield dedent(template)
@@ -232,8 +237,8 @@ class _ReadSourceGenerator:
     def _generate_array(self, field: Field) -> Iterator[str]:
         template = f"""
         _s = stream.tell()
-        r["{field.name}"] = {self._map_field(field)}._read(stream, context=r)
-        s["{field.name}"] = stream.tell() - _s
+        r["{field._name}"] = {self._map_field(field)}._read(stream, context=r)
+        s["{field._name}"] = stream.tell() - _s
         """
 
         yield dedent(template)
@@ -252,7 +257,7 @@ class _ReadSourceGenerator:
 
         template = f"""
         _t = {lookup}
-        r["{field.name}"] = type.__call__(_t, bit_reader.read({read_type}, {field.bits}))
+        r["{field._name}"] = type.__call__(_t, bit_reader.read({read_type}, {field.bits}))
         """
 
         yield dedent(template)
@@ -269,7 +274,7 @@ class _ReadSourceGenerator:
                 size += count
                 continue
 
-            field_type = self.cs.resolve(field.type)
+            field_type = field.type
             read_type = _get_read_type(self.cs, field_type)
 
             if issubclass(field_type, (Array, CharArray, WcharArray)):
@@ -320,8 +325,8 @@ class _ReadSourceGenerator:
             else:
                 parser = parser_template.format(type=self._map_field(field), getter=getter)
 
-            reads.append(f'r["{field.name}"] = {parser}')
-            reads.append(f's["{field.name}"] = {field_type.size}')
+            reads.append(f'r["{field._name}"] = {parser}')
+            reads.append(f's["{field._name}"] = {field_type.size}')
             reads.append("")  # Generates a newline in the resulting code
 
             size += field_type.size
@@ -362,7 +367,7 @@ def _generate_struct_info(cs: cstruct, fields: list[Field], align: bool = False)
         read_type = _get_read_type(cs, field.type)
 
         # Drop voids
-        if issubclass(read_type, Void):
+        if issubclass(read_type, (Void, VoidArray)):
             continue
 
         # Array of more complex types are handled elsewhere
@@ -411,9 +416,7 @@ def _optimize_struct_fmt(info: Iterator[tuple[Field, int, str]]) -> str:
     return "".join(f"{count if count > 1 else ''}{char}" for count, char in chars)
 
 
-def _get_read_type(cs: cstruct, type_: MetaType | str) -> MetaType:
-    type_ = cs.resolve(type_)
-
+def _get_read_type(cs: cstruct, type_: type[BaseType]) -> type[BaseType]:
     if issubclass(type_, (Enum, Flag)):
         type_ = type_.type
 

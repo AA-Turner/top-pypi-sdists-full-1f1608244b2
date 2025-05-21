@@ -2,6 +2,7 @@ mod cors;
 mod handling;
 mod into_response;
 mod json;
+mod jwt;
 mod middleware;
 mod multipart;
 mod request;
@@ -15,12 +16,15 @@ mod templating;
 use cors::Cors;
 use handling::request_handler::handle_request;
 use handling::response_handler::handle_response;
+use pyo3::types::PyDict;
 use request::Request;
 use response::{Redirect, Response};
 use routing::{delete, get, head, options, patch, post, put, static_file, Route, Router};
+use serde::Deserialize;
 use session::{Session, SessionStore};
 use status::Status;
 
+use jwt::jwt_submodule;
 use serializer::serializer_submodule;
 use templating::templating_submodule;
 
@@ -54,6 +58,19 @@ trait IntoPyException<T> {
 impl<T, E: ToString> IntoPyException<T> for Result<T, E> {
     fn into_py_exception(self) -> PyResult<T> {
         self.map_err(|err| PyException::new_err(err.to_string()))
+    }
+}
+
+struct Wrap<T>(T);
+
+impl<T> From<Bound<'_, PyDict>> for Wrap<T>
+where
+    T: for<'de> Deserialize<'de>,
+{
+    fn from(value: Bound<'_, PyDict>) -> Self {
+        let json_string = json::dumps(&value.into()).unwrap();
+        let value = serde_json::from_str(&json_string).unwrap();
+        Wrap(value)
     }
 }
 
@@ -99,8 +116,8 @@ impl HttpServer {
         self.app_data = Some(Arc::new(app_data))
     }
 
-    fn attach(&mut self, router: PyRef<'_, Router>) {
-        self.routers.push(Arc::new(router.clone()));
+    fn attach(&mut self, router: Router) {
+        self.routers.push(Arc::new(router));
     }
 
     fn session_store(&mut self, session_store: SessionStore) {
@@ -111,8 +128,8 @@ impl HttpServer {
         self.template = Some(Arc::new(template))
     }
 
-    fn cors(&mut self, cors: PyRef<'_, Cors>) {
-        self.cors = Some(Arc::new(cors.clone()));
+    fn cors(&mut self, cors: Cors) {
+        self.cors = Some(Arc::new(cors));
     }
 
     fn max_connections(&mut self, max_connections: usize) {
@@ -236,6 +253,7 @@ fn oxapy(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     templating_submodule(m)?;
     serializer_submodule(m)?;
+    jwt_submodule(m)?;
 
     Ok(())
 }

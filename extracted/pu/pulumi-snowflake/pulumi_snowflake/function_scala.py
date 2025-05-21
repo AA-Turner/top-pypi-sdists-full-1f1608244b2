@@ -758,6 +758,7 @@ class _FunctionScalaState:
         pulumi.set(self, "trace_level", value)
 
 
+@pulumi.type_token("snowflake:index/functionScala:FunctionScala")
 class FunctionScala(pulumi.CustomResource):
     @overload
     def __init__(__self__,

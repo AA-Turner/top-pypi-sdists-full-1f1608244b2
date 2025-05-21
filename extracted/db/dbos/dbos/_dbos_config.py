@@ -329,17 +329,9 @@ def process_config(
     if data.get("database_url") is not None and data["database_url"] != "":
         # Parse the db string and check required fields
         assert data["database_url"] is not None
+        assert is_valid_database_url(data["database_url"])
+
         url = make_url(data["database_url"])
-        required_fields = [
-            ("username", "Username must be specified in the connection URL"),
-            ("password", "Password must be specified in the connection URL"),
-            ("host", "Host must be specified in the connection URL"),
-            ("database", "Database name must be specified in the connection URL"),
-        ]
-        for field_name, error_message in required_fields:
-            field_value = getattr(url, field_name, None)
-            if not field_value:
-                raise DBOSInitializationError(error_message)
 
         if not data["database"].get("sys_db_name"):
             assert url.database is not None
@@ -385,6 +377,9 @@ def process_config(
     if not silent and logs["logLevel"] == "INFO" or logs["logLevel"] == "DEBUG":
         log_url = make_url(data["database_url"]).render_as_string(hide_password=True)
         print(f"[bold blue]Using database connection string: {log_url}[/bold blue]")
+        print(
+            f"[bold blue]Database engine parameters: {data['database']['db_engine_kwargs']}[/bold blue]"
+        )
 
     # Return data as ConfigFile type
     return data
@@ -407,6 +402,7 @@ def configure_db_engine_parameters(
         "pool_timeout": 30,
         "max_overflow": 0,
         "pool_size": 20,
+        "pool_pre_ping": True,
     }
     # If user-provided kwargs are present, use them instead
     user_kwargs = data.get("db_engine_kwargs")
@@ -431,6 +427,21 @@ def configure_db_engine_parameters(
     data["sys_db_engine_kwargs"] = system_engine_kwargs
 
 
+def is_valid_database_url(database_url: str) -> bool:
+    url = make_url(database_url)
+    required_fields = [
+        ("username", "Username must be specified in the connection URL"),
+        ("password", "Password must be specified in the connection URL"),
+        ("host", "Host must be specified in the connection URL"),
+        ("database", "Database name must be specified in the connection URL"),
+    ]
+    for field_name, error_message in required_fields:
+        field_value = getattr(url, field_name, None)
+        if not field_value:
+            raise DBOSInitializationError(error_message)
+    return True
+
+
 def _is_valid_app_name(name: str) -> bool:
     name_len = len(name)
     if name_len < 3 or name_len > 30:
@@ -442,12 +453,6 @@ def _is_valid_app_name(name: str) -> bool:
 def _app_name_to_db_name(app_name: str) -> str:
     name = app_name.replace("-", "_").replace(" ", "_").lower()
     return name if not name[0].isdigit() else f"_{name}"
-
-
-def set_env_vars(config: ConfigFile) -> None:
-    for env, value in config.get("env", {}).items():
-        if value is not None:
-            os.environ[env] = str(value)
 
 
 def overwrite_config(provided_config: ConfigFile) -> ConfigFile:
@@ -529,26 +534,3 @@ def overwrite_config(provided_config: ConfigFile) -> ConfigFile:
         del provided_config["env"]
 
     return provided_config
-
-
-def check_config_consistency(
-    *,
-    name: str,
-    config_file_path: str = DBOS_CONFIG_PATH,
-) -> None:
-    # First load the config file and check whether it is present
-    try:
-        config = load_config(config_file_path, silent=True, run_process_config=False)
-    except FileNotFoundError:
-        dbos_logger.debug(
-            f"No configuration file {config_file_path} found. Skipping consistency check with provided config."
-        )
-        return
-    except Exception as e:
-        raise e
-
-    # Check the name
-    if name != config["name"]:
-        raise DBOSInitializationError(
-            f"Provided app name '{name}' does not match the app name '{config['name']}' in {config_file_path}."
-        )

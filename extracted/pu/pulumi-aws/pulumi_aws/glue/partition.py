@@ -264,10 +264,8 @@ class _PartitionState:
         pulumi.set(self, "table_name", value)
 
 
+@pulumi.type_token("aws:glue/partition:Partition")
 class Partition(pulumi.CustomResource):
-
-    pulumi_type = "aws:glue/partition:Partition"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -281,6 +279,18 @@ class Partition(pulumi.CustomResource):
                  __props__=None):
         """
         Provides a Glue Partition Resource.
+
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import pulumi_aws as aws
+
+        example = aws.glue.Partition("example",
+            database_name="some-database",
+            table_name="some-table",
+            partition_values=["some-value"])
+        ```
 
         ## Import
 
@@ -306,6 +316,18 @@ class Partition(pulumi.CustomResource):
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
         Provides a Glue Partition Resource.
+
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import pulumi_aws as aws
+
+        example = aws.glue.Partition("example",
+            database_name="some-database",
+            table_name="some-table",
+            partition_values=["some-value"])
+        ```
 
         ## Import
 

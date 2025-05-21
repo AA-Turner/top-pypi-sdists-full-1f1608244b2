@@ -334,6 +334,7 @@ class _MaskingPolicyState:
         pulumi.set(self, "show_outputs", value)
 
 
+@pulumi.type_token("snowflake:index/maskingPolicy:MaskingPolicy")
 class MaskingPolicy(pulumi.CustomResource):
     @overload
     def __init__(__self__,

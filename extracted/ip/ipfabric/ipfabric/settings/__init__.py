@@ -1,32 +1,13 @@
 from .api_tokens import APIToken
 from .attributes import Attributes
 from .authentication import Authentication
-from .discovery import Discovery, Networks
+from .discovery import Discovery
 from .local_users import LocalUsers
-from .seeds import Seeds, SeedList
+from .seeds import Seeds
+from ipfabric.models.discovery import SeedList, Networks  # TODO: 8.0 remove
 from .settings import Settings
 from .site_separation import SiteSeparation
 from .vendor_api import VendorAPI
-from .vendor_api_models import (
-    AWS_REGIONS,
-    AWS,
-    Azure,
-    CheckPointApiKey,
-    CheckPointUserAuth,
-    CiscoAPIC,
-    CiscoFMC,
-    CiscoFMCToken,
-    ForcePoint,
-    GCP,
-    JuniperMist,
-    Merakiv1,
-    Prisma,
-    RuckusVirtualSmartZone,
-    SilverPeak,
-    Versa,
-    Viptela,
-    NSXT,
-)
 
 __all__ = [
     "APIToken",
@@ -37,24 +18,6 @@ __all__ = [
     "SiteSeparation",
     "LocalUsers",
     "VendorAPI",
-    "AWS_REGIONS",
-    "AWS",
-    "Azure",
-    "CheckPointApiKey",
-    "CheckPointUserAuth",
-    "CiscoAPIC",
-    "CiscoFMC",
-    "CiscoFMCToken",
-    "ForcePoint",
-    "GCP",
-    "JuniperMist",
-    "Merakiv1",
-    "Prisma",
-    "RuckusVirtualSmartZone",
-    "SilverPeak",
-    "Versa",
-    "Viptela",
-    "NSXT",
     "Discovery",
     "Networks",
     "Settings",

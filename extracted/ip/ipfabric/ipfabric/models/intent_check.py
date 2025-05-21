@@ -1,4 +1,4 @@
-from typing import Union, List, Optional
+from typing import Union, Optional
 
 from pydantic import BaseModel, Field
 
@@ -76,13 +76,13 @@ class Group(BaseModel):
     custom: bool
     name: str
     group_id: str = Field(None, alias="id")
-    children: List[Child] = Field(default_factory=list)
+    children: list[Child] = Field(default_factory=list)
 
 
 class IntentCheck(BaseModel):
     """model for intent checks"""
 
-    groups: List[Group]
+    groups: list[Group]
     checks: Checks
     column: str
     custom: bool

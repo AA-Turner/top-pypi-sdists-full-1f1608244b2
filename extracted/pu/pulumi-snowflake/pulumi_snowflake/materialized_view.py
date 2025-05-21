@@ -343,6 +343,7 @@ class _MaterializedViewState:
         pulumi.set(self, "warehouse", value)
 
 
+@pulumi.type_token("snowflake:index/materializedView:MaterializedView")
 class MaterializedView(pulumi.CustomResource):
     @overload
     def __init__(__self__,

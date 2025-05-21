@@ -4,45 +4,22 @@ from __future__ import annotations
 
 import argparse
 import collections
-import importlib.metadata
 import logging
-import os
 import sys
-from functools import cache
 from pathlib import Path
-from typing import Callable, Iterable
-from unittest import mock
+from typing import TYPE_CHECKING, Callable
 
 from packaging.utils import NormalizedName, canonicalize_name
-from pip._internal.commands.show import (
-    _PackageInfo,  # pyright: ignore[reportPrivateUsage]
-    search_packages_info,
-)
 from pip._internal.network.session import PipSession
 from pip._internal.req.constructors import install_req_from_line
 from pip._internal.req.req_file import parse_requirements
 
 from pip_check_reqs import common
-from pip_check_reqs.common import FoundModule, version_info
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 log = logging.getLogger(__name__)
-
-
-# This is a slow operation.
-# It only happens once when calling the CLI, but it is hit many times in
-# tests.
-# We cache the result to speed up tests.
-@cache
-def get_packages_info() -> list[_PackageInfo]:
-    all_pkgs = [
-        dist.metadata["Name"] for dist in importlib.metadata.distributions()
-    ]
-
-    # On Python 3.11 (and maybe higher), setting this environment variable
-    # dramatically improves speeds.
-    # See https://github.com/r1chardj0n3s/pip-check-reqs/issues/123.
-    with mock.patch.dict(os.environ, {"_PIP_USE_IMPORTLIB_METADATA": "False"}):
-        return list(search_packages_info(query=all_pkgs))
 
 
 def find_missing_reqs(
@@ -50,7 +27,7 @@ def find_missing_reqs(
     paths: Iterable[Path],
     ignore_files_function: Callable[[str], bool],
     ignore_modules_function: Callable[[str], bool],
-) -> list[tuple[NormalizedName, list[FoundModule]]]:
+) -> list[tuple[NormalizedName, list[common.FoundModule]]]:
     # 1. find files used by imports in the code (as best we can without
     #    executing)
     used_modules = common.find_imported_modules(
@@ -60,8 +37,8 @@ def find_missing_reqs(
     )
 
     installed_files: dict[Path, str] = {}
-    packages_info = get_packages_info()
-    here = Path().resolve()
+    packages_info = common.get_packages_info()
+    here = common.cached_resolve_path(path=Path())
 
     for package in packages_info:
         package_name = package.name
@@ -69,7 +46,7 @@ def find_missing_reqs(
         package_files: list[str] = []
         for item in package.files or []:
             item_location_rel = Path(package_location) / item
-            item_location = item_location_rel.resolve()
+            item_location = common.cached_resolve_path(path=item_location_rel)
             try:
                 relative_item_location = item_location.relative_to(here)
             except ValueError:
@@ -86,7 +63,7 @@ def find_missing_reqs(
         )
         for package_file in package_files:
             path = Path(package_location) / package_file
-            path = path.resolve()
+            path = common.cached_resolve_path(path=path)
 
             installed_files[path] = package_name
             package_path = common.package_path(path=path)
@@ -136,8 +113,7 @@ def find_missing_reqs(
 
 
 def main(arguments: list[str] | None = None) -> None:
-    usage = "usage: %prog [options] files or directories"
-    parser = argparse.ArgumentParser(usage)
+    parser = argparse.ArgumentParser()
     parser.add_argument("paths", type=Path, nargs="*")
     parser.add_argument(
         "--requirements-file",
@@ -145,8 +121,7 @@ def main(arguments: list[str] | None = None) -> None:
         metavar="PATH",
         type=Path,
         default="requirements.txt",
-        help="path to the requirements file "
-        '(defaults to "requirements.txt")',
+        help='path to the requirements file (defaults to "requirements.txt")',
     )
     parser.add_argument(
         "-f",
@@ -192,7 +167,7 @@ def main(arguments: list[str] | None = None) -> None:
     parse_result = parser.parse_args(arguments)
 
     if parse_result.version:
-        sys.stdout.write(version_info() + "\n")
+        sys.stdout.write(common.version_info() + "\n")
         sys.exit(0)
 
     if not parse_result.paths:
@@ -207,11 +182,11 @@ def main(arguments: list[str] | None = None) -> None:
     elif parse_result.verbose:
         level = logging.INFO
     else:
-        level = logging.WARN
+        level = logging.WARNING
     log.setLevel(level)
     common.log.setLevel(level)
 
-    log.info(version_info())
+    log.info(common.version_info())
 
     missing = find_missing_reqs(
         requirements_filename=parse_result.requirements_filename,

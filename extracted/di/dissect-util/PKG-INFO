@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: dissect.util
-Version: 3.20
+Version: 3.21
 Summary: A Dissect module implementing various utility functions for the other Dissect modules
 Author-email: Dissect Team <dissect@fox-it.com>
 License: Apache License 2.0
@@ -26,6 +26,7 @@ Provides-Extra: lzo
 Requires-Dist: python-lzo; (platform_system != "Windows" or platform_python_implementation != "PyPy") and extra == "lzo"
 Provides-Extra: lz4
 Requires-Dist: lz4; extra == "lz4"
+Dynamic: license-file
 
 # dissect.util
 

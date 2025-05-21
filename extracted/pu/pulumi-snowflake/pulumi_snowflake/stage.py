@@ -505,6 +505,7 @@ class _StageState:
         pulumi.set(self, "url", value)
 
 
+@pulumi.type_token("snowflake:index/stage:Stage")
 class Stage(pulumi.CustomResource):
     @overload
     def __init__(__self__,

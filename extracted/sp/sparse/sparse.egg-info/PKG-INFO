@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sparse
-Version: 0.16.0
+Version: 0.17.0
 Summary: Sparse n-dimensional arrays for the PyData ecosystem
 Maintainer-email: Hameer Abbasi <hameerabbasi@yahoo.com>
 License: BSD 3-Clause License
@@ -87,7 +87,7 @@ Provides-Extra: all
 Requires-Dist: sparse[docs,mlir,notebooks,tox]; extra == "all"
 Requires-Dist: matrepr; extra == "all"
 Provides-Extra: finch
-Requires-Dist: finch-tensor>=0.2.10; extra == "finch"
+Requires-Dist: finch-tensor>=0.2.12; extra == "finch"
 Provides-Extra: mlir
 Requires-Dist: finch-mlir>=0.0.2; extra == "mlir"
 Dynamic: license-file

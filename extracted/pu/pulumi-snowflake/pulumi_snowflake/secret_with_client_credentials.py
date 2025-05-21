@@ -287,6 +287,7 @@ class _SecretWithClientCredentialsState:
         pulumi.set(self, "show_outputs", value)
 
 
+@pulumi.type_token("snowflake:index/secretWithClientCredentials:SecretWithClientCredentials")
 class SecretWithClientCredentials(pulumi.CustomResource):
     @overload
     def __init__(__self__,

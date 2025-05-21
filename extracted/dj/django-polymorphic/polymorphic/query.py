@@ -1,10 +1,10 @@
 """
 QuerySet for PolymorphicModel
 """
+
 import copy
 from collections import defaultdict
 
-from django import get_version as get_django_version
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import FieldDoesNotExist
 from django.db.models import FilteredRelation
@@ -53,7 +53,6 @@ class PolymorphicModelIterable(ModelIterable):
             # Make sure the base iterator is read in chunks instead of
             # reading it completely, in case our caller read only a few objects.
             for i in range(Polymorphic_QuerySet_objects_per_request):
-
                 try:
                     o = next(base_iter)
                     base_result_objects.append(o)
@@ -158,35 +157,17 @@ class PolymorphicQuerySet(QuerySet):
         # Implementation in _translate_polymorphic_filter_defnition."""
         return self.filter(not_instance_of=args)
 
-    # Makes _filter_or_exclude compatible with the change in signature introduced in django at 9c9a3fe
-    if get_django_version() >= "3.2":
-
-        def _filter_or_exclude(self, negate, args, kwargs):
-            # We override this internal Django function as it is used for all filter member functions.
-            q_objects = translate_polymorphic_filter_definitions_in_args(
-                queryset_model=self.model, args=args, using=self.db
-            )
-            # filter_field='data'
-            additional_args = translate_polymorphic_filter_definitions_in_kwargs(
-                queryset_model=self.model, kwargs=kwargs, using=self.db
-            )
-            args = list(q_objects) + additional_args
-            return super()._filter_or_exclude(negate=negate, args=args, kwargs=kwargs)
-
-    else:
-
-        def _filter_or_exclude(self, negate, *args, **kwargs):
-            # We override this internal Django function as it is used for all filter member functions.
-            q_objects = translate_polymorphic_filter_definitions_in_args(
-                self.model, args, using=self.db
-            )
-            # filter_field='data'
-            additional_args = translate_polymorphic_filter_definitions_in_kwargs(
-                self.model, kwargs, using=self.db
-            )
-            return super()._filter_or_exclude(
-                negate, *(list(q_objects) + additional_args), **kwargs
-            )
+    def _filter_or_exclude(self, negate, args, kwargs):
+        # We override this internal Django function as it is used for all filter member functions.
+        q_objects = translate_polymorphic_filter_definitions_in_args(
+            queryset_model=self.model, args=args, using=self.db
+        )
+        # filter_field='data'
+        additional_args = translate_polymorphic_filter_definitions_in_kwargs(
+            queryset_model=self.model, kwargs=kwargs, using=self.db
+        )
+        args = list(q_objects) + additional_args
+        return super()._filter_or_exclude(negate=negate, args=args, kwargs=kwargs)
 
     def order_by(self, *field_names):
         """translate the field paths in the args, then call vanilla order_by."""
@@ -258,7 +239,8 @@ class PolymorphicQuerySet(QuerySet):
 
     def _process_aggregate_args(self, args, kwargs):
         """for aggregate and annotate kwargs: allow ModelX___field syntax for kwargs, forbid it for args.
-        Modifies kwargs if needed (these are Aggregate objects, we translate the lookup member variable)"""
+        Modifies kwargs if needed (these are Aggregate objects, we translate the lookup member variable)
+        """
         ___lookup_assert_msg = "PolymorphicModel: annotate()/aggregate(): ___ model lookup supported for keyword arguments only"
 
         def patch_lookup(a):
@@ -295,7 +277,8 @@ class PolymorphicQuerySet(QuerySet):
                 tree_node_test___lookup(self.model, a)
             elif hasattr(a, "get_source_expressions"):
                 for source_expression in a.get_source_expressions():
-                    test___lookup(source_expression)
+                    if source_expression is not None:
+                        test___lookup(source_expression)
             else:
                 assert "___" not in a.name, ___lookup_assert_msg
 
@@ -386,7 +369,6 @@ class PolymorphicQuerySet(QuerySet):
         ).pk
 
         for i, base_object in enumerate(base_result_objects):
-
             if base_object.polymorphic_ctype_id == self_model_class_id:
                 # Real class is exactly the same as base class, go straight to results
                 resultlist.append(base_object)
@@ -418,7 +400,7 @@ class PolymorphicQuerySet(QuerySet):
         for real_concrete_class, idlist in idlist_per_model.items():
             indices = indexlist_per_model[real_concrete_class]
             real_objects = real_concrete_class._base_objects.db_manager(self.db).filter(
-                **{("%s__in" % pk_name): idlist}
+                **{(f"{pk_name}__in"): idlist}
             )
             # copy select related configuration to new qs
             real_objects.query.select_related = self.query.select_related
@@ -505,15 +487,15 @@ class PolymorphicQuerySet(QuerySet):
 
     def __repr__(self, *args, **kwargs):
         if self.model.polymorphic_query_multiline_output:
-            result = [repr(o) for o in self.all()]
-            return "[ " + ",\n  ".join(result) + " ]"
+            result = ",\n  ".join(repr(o) for o in self.all())
+            return f"[ {result} ]"
         else:
             return super().__repr__(*args, **kwargs)
 
     class _p_list_class(list):
         def __repr__(self, *args, **kwargs):
-            result = [repr(o) for o in self]
-            return "[ " + ",\n  ".join(result) + " ]"
+            result = ",\n  ".join(repr(o) for o in self)
+            return f"[ {result} ]"
 
     def get_real_instances(self, base_result_objects=None):
         """

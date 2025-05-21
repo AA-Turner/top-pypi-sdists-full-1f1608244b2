@@ -255,6 +255,7 @@ class _SequenceState:
         pulumi.set(self, "schema", value)
 
 
+@pulumi.type_token("snowflake:index/sequence:Sequence")
 class Sequence(pulumi.CustomResource):
     @overload
     def __init__(__self__,

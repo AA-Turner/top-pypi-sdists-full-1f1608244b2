@@ -368,6 +368,22 @@ def filenames_to_hosts(filenames: list[str], tool: str) -> list[str]:
   return sorted(hosts)
 
 
+def validate_xplane_asset_paths(asset_paths: List[str]) -> None:
+  """Validates that all xplane asset paths that are provided are valid files.
+
+  Args:
+    asset_paths: A list of asset paths.
+
+  Raises:
+    FileNotFoundError: If any of the xplane asset paths do not exist.
+  """
+  for asset_path in asset_paths:
+    if str(asset_path).endswith(TOOLS['xplane']) and not epath.Path(
+        asset_path
+    ).exists():
+      raise FileNotFoundError(f'Invalid asset path: {asset_path}')
+
+
 class ProfilePlugin(base_plugin.TBPlugin):
   """Profile Plugin for TensorBoard."""
 
@@ -515,7 +531,7 @@ class ProfilePlugin(base_plugin.TBPlugin):
     if not run_dir:
       logger.warning('Cannot find asset directory for: %s', run)
       return []
-    tool_pattern = make_filename('*', tool)
+    tool_pattern = '*.xplane.pb'
     filenames = []
     try:
       path = epath.Path(run_dir)
@@ -575,13 +591,6 @@ class ProfilePlugin(base_plugin.TBPlugin):
     # pytype: enable=wrong-arg-types
     run = request.args.get('run')
     tool = request.args.get('tag')
-    # TODO(b/382737556) Migrate to the hlo_module_list_route instead.
-    if (tool in HLO_TOOLS):
-      module_list = [
-          {'hostname': module_name}
-          for module_name in self.hlo_module_list_impl(request).split(',')
-      ]
-      return respond(module_list, 'application/json')
     hosts = self.host_impl(run, tool, request)
     return respond(hosts, 'application/json')
 
@@ -591,7 +600,7 @@ class ProfilePlugin(base_plugin.TBPlugin):
       self, request: wrappers.Request
   ) -> wrappers.Response:
     module_names_str = self.hlo_module_list_impl(request)
-    return respond(module_names_str, 'application/text')
+    return respond(module_names_str, 'text/plain')
 
   def data_impl(
       self, request: wrappers.Request
@@ -608,20 +617,21 @@ class ProfilePlugin(base_plugin.TBPlugin):
     run = request.args.get('run')
     tool = request.args.get('tag')
     host = request.args.get('host')
+    module_name = request.args.get('module_name')
     tqx = request.args.get('tqx')
     graph_viewer_options = self._get_graph_viewer_options(request)
     # Host param is used by HLO tools to identify the module.
     params = {
         'graph_viewer_options': graph_viewer_options,
         'tqx': tqx,
-        'host': host
+        'host': host,
+        'module_name': module_name
     }
     run_dir = self._run_dir(run)
     content_type = 'application/json'
 
     if tool not in TOOLS and not use_xplane(tool):
       return None, content_type, None
-
     if tool == 'memory_viewer' and request.args.get(
         'view_memory_allocation_timeline'
     ):
@@ -657,14 +667,18 @@ class ProfilePlugin(base_plugin.TBPlugin):
         asset_paths = [asset_path]
 
       try:
+        validate_xplane_asset_paths(asset_paths)
         data, content_type = convert.xspace_to_tool_data(
             asset_paths, tool, params)
       except AttributeError as e:
-        logger.warning('XPlane converters are available after Tensorflow 2.4')
+        logger.warning('Error generating analysis results due to %s', e)
         raise AttributeError(
-            'XPlane converters are available after Tensorflow 2.4'
+            'Error generating analysis results due to %s' % e
         ) from e
       except ValueError as e:
+        logger.warning('XPlane convert to tool data failed as %s', e)
+        raise e
+      except FileNotFoundError as e:
         logger.warning('XPlane convert to tool data failed as %s', e)
         raise e
       return data, content_type, content_encoding
@@ -675,7 +689,7 @@ class ProfilePlugin(base_plugin.TBPlugin):
   def hlo_module_list_impl(
       self, request: wrappers.Request
   ) -> str:
-    """Returns a string of HLO module names concatened by comma for the given run."""
+    """Returns a string of HLO module names concatenated by comma for the given run."""
     run = request.args.get('run')
     run_dir = self._run_dir(run)
     module_list = []
@@ -714,6 +728,8 @@ class ProfilePlugin(base_plugin.TBPlugin):
     except AttributeError as e:
       return respond(str(e), 'text/plain', code=500)
     except ValueError as e:
+      return respond(str(e), 'text/plain', code=500)
+    except FileNotFoundError as e:
       return respond(str(e), 'text/plain', code=500)
     except IOError as e:
       return respond(str(e), 'text/plain', code=500)
@@ -910,17 +926,26 @@ class ProfilePlugin(base_plugin.TBPlugin):
             profile/
               run1/
                 hostA.trace
+        new_job/
+          tensorboard/
+            plugins/
+              profile/
+                run1/
+                  hostA.xplane.pb
     Yields:
     A sequence of string that are "frontend run names".
     For the above example, this would be:
-        "run1", "train/run1", "train/run2", "validation/run1"
+        "run1", "train/run1", "train/run2", "validation/run1",
+        "new_job/tensorboard/run1"
     """
 
     # Create a background context; we may not be in a request.
     ctx = tb_context.RequestContext()
     tb_runs = set()
+    # Get all tfevents files that TensorBoard would consider runs.
+    # TODO(kcai): Remove this block once we can rely on the behavior of
+    #             list_runs() returning all subdirectories with tfevents files.
     for run in self.data_provider.list_runs(ctx, experiment_id=''):
-      tb_runs.add(run.run_name)
       # Ensure that we also check the parent directory of runs generated by
       # Tensorboard.
       # Example:
@@ -936,13 +961,21 @@ class ProfilePlugin(base_plugin.TBPlugin):
       #   2024-08-20-12-34-56/
       if os.path.basename(run.run_name) in ['train', 'validation']:
         tb_runs.add(os.path.dirname(run.run_name))
-    # Ensure that we also check the root logdir, even if it isn't a recognized
-    # TensorBoard run (i.e. has no tfevents file directly under it), to remain
-    # backwards compatible with previously profile plugin behavior. Note that we
-    # check if logdir is a directory to handle case where it's actually a
-    # multipart directory spec, which this plugin does not support.
-    if '.' not in tb_runs and epath.Path(self.logdir).is_dir():
+    # Ensure that we also check the root logdir and all subdirectories, even if
+    # it isn't a recognized TensorBoard run (i.e. has no tfevents file directly
+    # under it), to remain backwards compatible with previously profile plugin
+    # behavior. Note that we check if logdir is a directory to handle case where
+    # it's actually a multipart directory spec, which this plugin does not
+    # support.
+    #
+    # This change still enforce the requirement that the subdirectories must
+    # end with plugins/profile directory, as enforced by TensorBoard.
+    logdir_path = epath.Path(self.logdir)
+    if '.' not in tb_runs and logdir_path.is_dir():
       tb_runs.add('.')
+      for cur_dir, subdirs, _ in logdir_path.walk():
+        for subdir in subdirs:
+          tb_runs.add(str(cur_dir.relative_to(logdir_path).joinpath(subdir)))
     tb_run_names_to_dirs = {
         run: _tb_run_directory(self.logdir, run) for run in tb_runs
     }

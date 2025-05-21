@@ -3,7 +3,7 @@ from starlette.authentication import AuthenticationBackend, AuthenticationError
 from starlette.middleware.authentication import AuthenticationMiddleware
 from starlette.requests import HTTPConnection
 from typing import Tuple
-from maleo_foundation.authentication import Credentials, User
+from maleo_foundation.authentication import Token, Credentials, User
 from maleo_foundation.enums import BaseEnums
 from maleo_foundation.client.manager import MaleoFoundationClientManager
 from maleo_foundation.models.schemas import BaseGeneralSchemas
@@ -33,7 +33,7 @@ class Backend(AuthenticationBackend):
             scheme, token = parts
             if scheme != 'Bearer':
                 raise AuthenticationError("Authorization scheme must be Bearer token")
-            
+
             #* Decode token
             decode_token_parameters = (
                 MaleoFoundationTokenParametersTransfers
@@ -44,12 +44,15 @@ class Backend(AuthenticationBackend):
                 .decode(parameters=decode_token_parameters)
             )
             if decode_token_result.success:
+                type = BaseEnums.TokenType.ACCESS
                 payload = decode_token_result.data
+                token = Token(
+                    type=type,
+                    payload=payload
+                )
                 return (
                     Credentials(
-                        token_type=BaseEnums.TokenType.ACCESS,
                         token=token,
-                        payload=payload,
                         scopes=["authenticated", payload.sr]
                     ),
                     User(
@@ -71,12 +74,15 @@ class Backend(AuthenticationBackend):
                 .decode(parameters=decode_token_parameters)
             )
             if decode_token_result.success:
+                type = BaseEnums.TokenType.ACCESS
                 payload = decode_token_result.data
+                token = Token(
+                    type=type,
+                    payload=payload
+                )
                 return (
                     Credentials(
-                        token_type=BaseEnums.TokenType.REFRESH,
                         token=token,
-                        payload=payload,
                         scopes=["authenticated", payload.sr]
                     ),
                     User(

@@ -129,6 +129,7 @@ class _UserPublicKeysState:
         pulumi.set(self, "rsa_public_key2", value)
 
 
+@pulumi.type_token("snowflake:index/userPublicKeys:UserPublicKeys")
 class UserPublicKeys(pulumi.CustomResource):
     @overload
     def __init__(__self__,

@@ -1,11 +1,11 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: mobly
-Version: 1.12.4
+Version: 1.13
 Summary: Automation framework for special end-to-end test cases
 Maintainer-email: Ang Li <mobly-github@googlegroups.com>
 License: Apache2.0
 Project-URL: Homepage, https://github.com/google/mobly
-Project-URL: Download, https://github.com/google/mobly/tarball/1.12.4
+Project-URL: Download, https://github.com/google/mobly/tarball/1.13
 Requires-Python: >=3.11
 License-File: LICENSE
 Requires-Dist: portpicker
@@ -15,3 +15,4 @@ Provides-Extra: testing
 Requires-Dist: mock; extra == "testing"
 Requires-Dist: pytest; extra == "testing"
 Requires-Dist: pytz; extra == "testing"
+Dynamic: license-file

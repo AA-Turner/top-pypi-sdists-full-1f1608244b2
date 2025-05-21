@@ -10,6 +10,11 @@ from urllib.parse import urlparse # Added for URL parsing
 import inspect # Added for checking async functions
 import json # Added for JSON parsing and printing
 import asyncio # Added for async operations
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+import pickle  # For serializing session context in process pool
+import weakref  # For weak references to prevent memory leaks
+import atexit   # For cleanup on process exit
+import time
 
 # Define thread-local storage
 _thread_local = threading.local()
@@ -22,12 +27,92 @@ _global_session_managers = {}
 # Global parent thread tracker
 _parent_thread_sessions = {}
 
+# Async context tracking by task
+_async_task_sessions = {}
+
+# Task creation tracking to handle nested tasks
+_async_task_parents = {}
+
+# Track sessions by event loop to handle multiple event loops
+_loop_sessions = {}
+
+# Add a lock for thread-safe operations
+_session_lock = threading.RLock()
+
+# Process-specific session ID
+_process_session_id = os.getpid()
+
+# Monitor task cancellation
+def _setup_task_cleanup():
+    """Setup task cleanup for session management"""
+    try:
+        loop = asyncio.get_running_loop()
+        
+        # Only add the callback once per loop
+        if loop not in _loop_sessions:
+            _loop_sessions[loop] = {}
+            
+            # Add callback to clean up task sessions when they complete
+            def task_cleanup(task):
+                task_id = id(task)
+                with _session_lock:
+                    if task_id in _async_task_sessions:
+                        del _async_task_sessions[task_id]
+                    if task_id in _async_task_parents:
+                        del _async_task_parents[task_id]
+            
+            # Add a callback to all tasks when they're done
+            asyncio.all_tasks(loop=loop)
+            loop.set_task_factory(_session_aware_task_factory)
+    except RuntimeError:
+        # Not in an async context
+        pass
+
+# Custom task factory that tracks parent-child task relationships
+_original_task_factory = None
+def _session_aware_task_factory(loop, coro):
+    """Task factory that maintains session context across task parent-child relationships"""
+    if _original_task_factory is None:
+        task = asyncio.Task(coro, loop=loop)
+    else:
+        task = _original_task_factory(loop, coro)
+    
+    # Get current task and link the new task to it
+    try:
+        current_task = asyncio.current_task(loop=loop)
+        if current_task:
+            # Track parent-child relationship
+            _async_task_parents[id(task)] = id(current_task)
+            
+            # If parent has a session, inherit it
+            if id(current_task) in _async_task_sessions:
+                _async_task_sessions[id(task)] = _async_task_sessions[id(current_task)].copy()
+    except Exception:
+        pass
+    
+    # Add done callback to clean up
+    task.add_done_callback(lambda t: _cleanup_task_session(id(t)))
+    
+    return task
+
+def _cleanup_task_session(task_id):
+    """Remove task from tracking dictionaries when it completes"""
+    with _session_lock:
+        if task_id in _async_task_sessions:
+            del _async_task_sessions[task_id]
+        if task_id in _async_task_parents:
+            del _async_task_parents[task_id]
+
 # Store original requests.Session.send method
 _original_requests_session_send = requests.Session.send
 _original_httpx_async_client_send = httpx.AsyncClient.send # Added for httpx
 
 # Default metadata endpoint
-DEFAULT_METADATA_ENDPOINT = "https://api.tropir.com/api/v1/metadata"
+def get_default_metadata_endpoint():
+    if os.environ.get("ENVIRONMENT") == "dev":
+        return "http://localhost:8080/api/v1/metadata"
+    else:
+        return "https://api.tropir.com/api/v1/metadata"
 
 # Initialize thread-local storage
 def _init_thread_local():
@@ -60,6 +145,32 @@ class SessionManager:
         self.previous_stack = None
         self.previous_session_name = None
         
+        # When using session() inside an async function decorated with @begin_session,
+        # we need to ensure it gets the correct session ID for the current execution context
+        
+        # First check if we're in an async context
+        try:
+            current_task = asyncio.current_task()
+            if current_task and id(current_task) in _async_task_sessions:
+                task_session = _async_task_sessions[id(current_task)]
+                # If this session name matches our current async task session, use that
+                if session_name == task_session['session_name']:
+                    self.session_id = task_session['session_id']
+                    return
+        except RuntimeError:
+            # Not in an async context
+            pass
+        
+        # If not in a matching async context, check the thread-local session stack
+        _init_thread_local()
+        current_stack_session_id = get_session_id()
+        
+        # If we have both a current session ID from the stack AND a session name that matches
+        # what we're looking for, use that ID instead of a stored one
+        if current_stack_session_id and session_name == _thread_local.current_session_name:
+            self.session_id = current_stack_session_id
+            return
+            
         # If this is an existing session manager, retrieve it
         if session_name and session_name in _global_session_managers:
             existing_manager = _global_session_managers[session_name]
@@ -68,7 +179,6 @@ class SessionManager:
             
         # If session_name is provided, try to find an existing session ID
         if session_name:
-            _init_thread_local()
             # Check thread-local named sessions first
             if session_name in _thread_local.named_sessions:
                 self.session_id = _thread_local.named_sessions[session_name]
@@ -151,9 +261,19 @@ class SessionManager:
         if not self.session_id:
             # Try to find an existing session by name
             if self.session_name:
-                self.__init__(self.session_name)  # Re-initialize to find session
+                # Don't reuse existing sessions - this is crucial for concurrent async functions
+                # where each call should have its own session
+                if self.session_name in _thread_local.named_sessions:
+                    # Get the most recently set session ID for this name
+                    self.session_id = _thread_local.named_sessions[self.session_name]
+                else:
+                    # If we're calling add_step() outside of a @begin_session context,
+                    # create a new session ID
+                    self.session_id = str(uuid.uuid4())
+                    _thread_local.named_sessions[self.session_name] = self.session_id
+                    _global_sessions_by_name[self.session_name] = self.session_id
             
-            # If we still don't have a session ID, get the current one
+            # If we still don't have a session ID after trying by name, get the current one
             if not self.session_id:
                 current_session_id = get_session_id()
                 if current_session_id:
@@ -175,7 +295,7 @@ class SessionManager:
             payload["step_name"] = step_name
         
         # Determine the endpoint
-        endpoint = os.environ.get("TROPIR_METADATA_ENDPOINT", DEFAULT_METADATA_ENDPOINT)
+        endpoint = os.environ.get("TROPIR_METADATA_ENDPOINT", get_default_metadata_endpoint())
         
         # Setup headers with Tropir headers
         headers = {
@@ -243,6 +363,36 @@ class SessionManager:
 
 def _add_tropir_headers(headers_obj, url_str):
     """Helper function to add all Tropir headers to a headers object."""
+    # Try to detect if we're in an async task context first
+    try:
+        current_task = asyncio.current_task()
+        if current_task and id(current_task) in _async_task_sessions:
+            task_session = _async_task_sessions[id(current_task)]
+            session_id = task_session['session_id']
+            session_name = task_session['session_name']
+            
+            headers_obj["X-Session-ID"] = str(session_id)
+            headers_obj["X-Session-Name"] = str(session_name)
+            logging.debug(f"Tropir Session (async): Added headers - ID: {session_id}, Name: {session_name}")
+            
+            tropir_api_key = getattr(_thread_local, 'tropir_api_key', None)
+            if tropir_api_key:
+                headers_obj["X-TROPIR-API-KEY"] = tropir_api_key
+            
+            # Determine if it's a target host for logging
+            parsed_url = urlparse(url_str)
+            hostname = parsed_url.hostname
+            port = parsed_url.port
+            is_target_host = (hostname == "api.tropir.com") or \
+                (hostname == "localhost" and port == 8080) or \
+                (hostname == "host.docker.internal" and port == 8080)
+                
+            return is_target_host
+    except RuntimeError:
+        # Not in an async context, continue with normal flow
+        pass
+    
+    # Normal flow for non-async contexts
     session_id = get_session_id()
     if session_id:
         headers_obj["X-Session-ID"] = str(session_id)
@@ -372,11 +522,49 @@ def _inherit_parent_session():
 def get_session_id():
     """Get the current session ID.
     
-    First checks thread-local storage, then tries to inherit from parent thread if needed.
+    Checks in this order:
+    1. Current async task context
+    2. Parent async task context (if current task has no session)
+    3. Thread-local storage
+    4. Parent thread inheritance
+    5. Event loop specific storage
     
     Returns:
         str or None: The current session ID if one exists, otherwise None.
     """
+    # Ensure task monitoring is setup if we're in an async context
+    try:
+        _setup_task_cleanup()
+    except Exception:
+        pass
+    
+    # Check if we're in an async context
+    try:
+        current_task = asyncio.current_task()
+        if current_task:
+            task_id = id(current_task)
+            
+            # Direct task session
+            with _session_lock:
+                if task_id in _async_task_sessions:
+                    return _async_task_sessions[task_id]['session_id']
+                
+                # Check parent task's session (for nested tasks)
+                if task_id in _async_task_parents:
+                    parent_id = _async_task_parents[task_id]
+                    if parent_id in _async_task_sessions:
+                        # Create a copy for this task too for future lookups
+                        _async_task_sessions[task_id] = _async_task_sessions[parent_id].copy()
+                        return _async_task_sessions[task_id]['session_id']
+                
+                # Check event loop-specific sessions
+                loop = asyncio.get_running_loop()
+                if loop in _loop_sessions and 'current_session_id' in _loop_sessions[loop]:
+                    return _loop_sessions[loop]['current_session_id']
+    except RuntimeError:
+        # Not in an async context
+        pass
+    
     _init_thread_local()
     
     # Check thread-local stack first
@@ -401,6 +589,39 @@ def get_session_id():
 
 def get_session_name():
     """Get the current session name, if any."""
+    # Ensure task monitoring is setup if we're in an async context
+    try:
+        _setup_task_cleanup()
+    except Exception:
+        pass
+    
+    # First check if we're in an async context
+    try:
+        current_task = asyncio.current_task()
+        if current_task:
+            task_id = id(current_task)
+            
+            # Direct task session
+            with _session_lock:
+                if task_id in _async_task_sessions:
+                    return _async_task_sessions[task_id]['session_name']
+                
+                # Check parent task's session (for nested tasks)
+                if task_id in _async_task_parents:
+                    parent_id = _async_task_parents[task_id]
+                    if parent_id in _async_task_sessions:
+                        # Create a copy for this task too for future lookups
+                        _async_task_sessions[task_id] = _async_task_sessions[parent_id].copy()
+                        return _async_task_sessions[task_id]['session_name']
+                
+                # Check event loop-specific sessions
+                loop = asyncio.get_running_loop()
+                if loop in _loop_sessions and 'current_session_name' in _loop_sessions[loop]:
+                    return _loop_sessions[loop]['current_session_name']
+    except RuntimeError:
+        # Not in an async context
+        pass
+    
     _init_thread_local()
     
     # Try to inherit from parent if we don't have a session yet
@@ -462,13 +683,19 @@ def session(session_name=None):
     # To access an existing session:
     session("my_session").add_step({"key": "value"})
     
+    In concurrent environments (like multiple async functions decorated with @begin_session),
+    this function will return the SessionManager associated with the current execution context.
+    
     Args:
         session_name: Optional name for the session. If provided and this
-                     session has been used before, the same session ID will be reused.
+                     session has been used before, the same session ID will be reused,
+                     unless we're in an active session context with that name.
                      
     Returns:
         SessionManager: A manager for the session that can be used to add metadata steps.
     """
+    # When using session() inside concurrent @begin_session functions,
+    # we need to ensure it gets the correct session manager for the current execution context
     return SessionManager(session_name)
 
 def begin_session(session_name_or_func=None):
@@ -537,14 +764,51 @@ def begin_session(session_name_or_func=None):
             if inspect.iscoroutinefunction(func_to_decorate):
                 @functools.wraps(func_to_decorate)
                 async def async_wrapper(*args, **kwargs):
-                    with SessionManager(actual_session_name) as session_manager:
+                    # Generate a unique session ID for each call (with the same name)
+                    unique_session_id = str(uuid.uuid4())
+                    # Create a new SessionManager with this ID but reusing the name
+                    session_manager = SessionManager(actual_session_name)
+                    session_manager.session_id = unique_session_id
+                    
+                    # Track session for this specific async task
+                    current_task = asyncio.current_task()
+                    if current_task:
+                        _async_task_sessions[id(current_task)] = {
+                            'session_id': unique_session_id,
+                            'session_name': actual_session_name
+                        }
+                    
+                    # Also update the thread-local and global store
+                    _thread_local.named_sessions[actual_session_name] = unique_session_id
+                    _global_sessions_by_name[actual_session_name] = unique_session_id
+                    
+                    # Use __enter__ and __exit__ manually to ensure proper session management
+                    session_manager.__enter__()
+                    try:
                         return await func_to_decorate(*args, **kwargs)
+                    finally:
+                        # Clean up the async task tracking
+                        if current_task and id(current_task) in _async_task_sessions:
+                            del _async_task_sessions[id(current_task)]
+                        session_manager.__exit__(None, None, None)
                 return async_wrapper
             else:
                 @functools.wraps(func_to_decorate)
                 def sync_wrapper(*args, **kwargs):
-                    with SessionManager(actual_session_name) as session_manager:
+                    # Generate a unique session ID for each call (with the same name)
+                    unique_session_id = str(uuid.uuid4())
+                    # Create a new SessionManager with this ID but reusing the name
+                    session_manager = SessionManager(actual_session_name)
+                    session_manager.session_id = unique_session_id
+                    _thread_local.named_sessions[actual_session_name] = unique_session_id
+                    _global_sessions_by_name[actual_session_name] = unique_session_id
+                    
+                    # Use __enter__ and __exit__ manually to ensure proper session management
+                    session_manager.__enter__()
+                    try:
                         return func_to_decorate(*args, **kwargs)
+                    finally:
+                        session_manager.__exit__(None, None, None)
                 return sync_wrapper
         
         # If begin_session("some_name") was called directly, this part also starts the session.
@@ -608,7 +872,18 @@ def _thread_init_with_session_inheritance(self, *args, **kwargs):
     # Call the original __init__
     _original_thread_init(self, *args, **kwargs)
     
-    # Store the current thread's session info for inheritance
+    # Check if we're in an async context first
+    try:
+        current_task = asyncio.current_task()
+        if current_task and id(current_task) in _async_task_sessions:
+            # Store the async task's session for inheritance in the new thread
+            self._parent_async_session = _async_task_sessions[id(current_task)]
+            return
+    except RuntimeError:
+        # Not in an async context
+        pass
+    
+    # If not in async context, fall back to thread-based inheritance
     if threading.current_thread().name in _parent_thread_sessions:
         self._parent_session = _parent_thread_sessions[threading.current_thread().name]
     else:
@@ -620,14 +895,299 @@ threading.Thread.__init__ = _thread_init_with_session_inheritance
 _original_thread_run = threading.Thread.run
 
 def _thread_run_with_session_inheritance(self):
-    # Set up session inheritance if we have parent session info
-    if hasattr(self, '_parent_session') and self._parent_session:
+    # First check for async context inheritance
+    if hasattr(self, '_parent_async_session'):
+        session_id = self._parent_async_session['session_id']
+        session_name = self._parent_async_session['session_name']
+        if session_id and session_name:
+            # Set thread-local storage for this thread
+            set_session_id(session_id, session_name)
+            # Also register in thread-specific named sessions
+            _init_thread_local()
+            _thread_local.named_sessions[session_name] = session_id
+            logging.debug(f"Thread {self.name} inherited async session {session_name} ({session_id})")
+    # Otherwise fall back to thread session inheritance
+    elif hasattr(self, '_parent_session') and self._parent_session:
         session_id, session_name = self._parent_session
         if session_id and session_name:
             set_session_id(session_id, session_name)
-            logging.debug(f"Thread {self.name} inherited session {session_name} ({session_id})")
+            logging.debug(f"Thread {self.name} inherited thread session {session_name} ({session_id})")
     
     # Call the original run method
     _original_thread_run(self)
 
-threading.Thread.run = _thread_run_with_session_inheritance 
+threading.Thread.run = _thread_run_with_session_inheritance
+
+def capture_async_session_context():
+    """
+    Capture the current async session context for use in thread workers.
+    
+    This is useful when you need to explicitly pass the session context to a thread,
+    such as in ThreadPoolExecutor which might not properly inherit the async context.
+    
+    Returns:
+        dict: A dictionary containing the session context, or None if not in an async context.
+    """
+    # Ensure task monitoring is setup if we're in an async context
+    try:
+        _setup_task_cleanup()
+    except Exception:
+        pass
+    
+    try:
+        current_task = asyncio.current_task()
+        if current_task and id(current_task) in _async_task_sessions:
+            # Make a copy to avoid reference issues
+            with _session_lock:
+                return _async_task_sessions[id(current_task)].copy()
+                
+        # Check parent task session
+        if current_task and id(current_task) in _async_task_parents:
+            parent_id = _async_task_parents[id(current_task)]
+            if parent_id in _async_task_sessions:
+                with _session_lock:
+                    # Create a copy for this task too for future lookups
+                    _async_task_sessions[id(current_task)] = _async_task_sessions[parent_id].copy()
+                    return _async_task_sessions[id(current_task)].copy()
+                    
+        # Check event loop specific sessions
+        loop = asyncio.get_running_loop()
+        if loop in _loop_sessions and 'current_session' in _loop_sessions[loop]:
+            return _loop_sessions[loop]['current_session'].copy()
+    except RuntimeError:
+        # Not in an async context
+        pass
+    
+    # If not in an async context or no session found, return thread-local session info
+    _init_thread_local()
+    session_id = get_session_id()
+    session_name = get_session_name()
+    
+    if session_id and session_name:
+        return {
+            'session_id': session_id,
+            'session_name': session_name,
+            'thread_id': threading.get_ident()
+        }
+    return None
+
+def apply_session_context(context_dict):
+    """
+    Apply a captured session context to the current thread or async task.
+    
+    Args:
+        context_dict: The session context dictionary from capture_async_session_context().
+    """
+    if not context_dict:
+        return
+        
+    session_id = context_dict.get('session_id')
+    session_name = context_dict.get('session_name')
+    
+    if not session_id or not session_name:
+        return
+        
+    # Set in thread-local storage with thread safety
+    with _session_lock:
+        set_session_id(session_id, session_name)
+        
+        # Also try to set in async task context if we're in an async context
+        try:
+            current_task = asyncio.current_task()
+            if current_task:
+                task_id = id(current_task)
+                _async_task_sessions[task_id] = {
+                    'session_id': session_id,
+                    'session_name': session_name,
+                    'applied_at': time.time()
+                }
+                
+                # Register for cleanup
+                current_task.add_done_callback(lambda t: _cleanup_task_session(task_id))
+        except RuntimeError:
+            # Not in an async context
+            pass
+
+# Register cleanup handler for process exit
+def _cleanup_sessions():
+    """Clean up session tracking to prevent memory leaks."""
+    global _async_task_sessions, _async_task_parents, _loop_sessions
+    
+    with _session_lock:
+        # Clear global dictionaries
+        _async_task_sessions.clear()
+        _async_task_parents.clear()
+        _loop_sessions.clear()
+        
+        # Reset task factory for each loop
+        try:
+            for loop in asyncio.all_event_loops():
+                if loop.is_running():
+                    loop.set_task_factory(None)
+        except Exception:
+            pass
+
+# Register the cleanup handler
+atexit.register(_cleanup_sessions)
+
+# Force cleanup on import to prevent issues with module reloading
+_cleanup_sessions()
+
+class SessionAwareThreadPoolExecutor(ThreadPoolExecutor):
+    """
+    A ThreadPoolExecutor that automatically captures and applies session context to workers.
+    
+    This ensures that any thread created by this executor will inherit the session context
+    from the creating thread or async task, even in complex async/thread scenarios.
+    """
+    
+    def __init__(self, *args, **kwargs):
+        # Capture the current session context when the executor is created
+        with _session_lock:
+            self.session_context = capture_async_session_context()
+            # Additional tracking for exception safety
+            self._futures = weakref.WeakSet()
+        super().__init__(*args, **kwargs)
+    
+    def submit(self, fn, *args, **kwargs):
+        # Check if we have a current session that's different from when executor was created
+        current_context = capture_async_session_context()
+        # Use most recent context if available
+        context_to_use = current_context or self.session_context
+        
+        # Wrap the function to apply session context before execution
+        @functools.wraps(fn)
+        def session_aware_fn(*fn_args, **fn_kwargs):
+            try:
+                # Apply the captured session context to this worker thread
+                apply_session_context(context_to_use)
+                # Then run the original function
+                return fn(*fn_args, **fn_kwargs)
+            except Exception as e:
+                # Log the exception
+                logging.error(f"Error in session_aware_fn: {str(e)}")
+                # Re-raise
+                raise
+        
+        # Submit the wrapped function
+        future = super().submit(session_aware_fn, *args, **kwargs)
+        # Track for cleanup
+        with _session_lock:
+            self._futures.add(future)
+        return future
+    
+    def shutdown(self, wait=True, cancel_futures=False):
+        """Shutdown the executor, with proper exception handling."""
+        try:
+            if cancel_futures:
+                # Cancel any remaining futures
+                with _session_lock:
+                    for future in self._futures:
+                        if not future.done():
+                            future.cancel()
+            super().shutdown(wait=wait)
+        except Exception as e:
+            logging.error(f"Error shutting down SessionAwareThreadPoolExecutor: {str(e)}")
+
+class SessionAwareProcessPoolExecutor(ProcessPoolExecutor):
+    """
+    A ProcessPoolExecutor that attempts to pass session context to worker processes.
+    
+    Note: Due to the nature of separate processes, this can only pass the initial
+    session context to workers, but they cannot update the parent's context.
+    """
+    
+    def __init__(self, *args, **kwargs):
+        # Capture the current session context when the executor is created
+        with _session_lock:
+            self.session_context = capture_async_session_context()
+            # Additional tracking for exception safety
+            self._futures = weakref.WeakSet()
+            
+            # Also capture process ID to detect serialization
+            self._created_in_pid = os.getpid()
+        super().__init__(*args, **kwargs)
+    
+    def submit(self, fn, *args, **kwargs):
+        # Check if we have a current session that's different from when executor was created
+        current_context = capture_async_session_context()
+        # Use most recent context if available and if we're in the same process
+        if os.getpid() == self._created_in_pid:
+            context_to_use = current_context or self.session_context
+        else:
+            # We're being called from a different process, create new context
+            context_to_use = current_context
+        
+        # Create a serializable session context
+        if context_to_use:
+            serializable_context = {
+                'session_id': context_to_use.get('session_id'),
+                'session_name': context_to_use.get('session_name'),
+                'origin_pid': os.getpid()
+            }
+        else:
+            serializable_context = None
+        
+        # Wrap the function to apply session context before execution
+        @functools.wraps(fn)
+        def session_aware_fn(*fn_args, **fn_kwargs):
+            try:
+                # Apply the serialized session context to this worker process
+                if serializable_context:
+                    # Create a new session with this info
+                    session_id = serializable_context.get('session_id')
+                    session_name = serializable_context.get('session_name')
+                    if session_id and session_name:
+                        set_session_id(session_id, session_name)
+                
+                # Then run the original function
+                return fn(*fn_args, **fn_kwargs)
+            except Exception as e:
+                # Log the exception
+                logging.error(f"Error in process session_aware_fn: {str(e)}")
+                # Re-raise
+                raise
+        
+        # Submit the wrapped function
+        future = super().submit(session_aware_fn, *args, **kwargs)
+        # Track for cleanup
+        with _session_lock:
+            self._futures.add(future)
+        return future
+    
+    def shutdown(self, wait=True, cancel_futures=False):
+        """Shutdown the executor, with proper exception handling."""
+        try:
+            if cancel_futures:
+                # Cancel any remaining futures
+                with _session_lock:
+                    for future in self._futures:
+                        if not future.done():
+                            future.cancel()
+            super().shutdown(wait=wait)
+        except Exception as e:
+            logging.error(f"Error shutting down SessionAwareProcessPoolExecutor: {str(e)}")
+
+# Example usage of SessionAwareThreadPoolExecutor:
+#
+# @begin_session("my_session")
+# async def my_async_function():
+#     # This async function has a session context
+#     
+#     # Use SessionAwareThreadPoolExecutor instead of regular ThreadPoolExecutor
+#     with SessionAwareThreadPoolExecutor() as executor:
+#         # These worker threads will inherit the async session context
+#         futures = [
+#             executor.submit(some_work_function, arg1, arg2),
+#             executor.submit(another_function, arg3)
+#         ]
+#         
+#         for future in futures:
+#             result = future.result()
+#             # Process result...
+#
+# def some_work_function(arg1, arg2):
+#     # This will automatically have the same session as the parent async function
+#     # Any calls to session() or session_id-related APIs will use the correct context
+#     session("my_session").add_step({"data": f"Processing {arg1} and {arg2}"})
+#     return process_data(arg1, arg2) 

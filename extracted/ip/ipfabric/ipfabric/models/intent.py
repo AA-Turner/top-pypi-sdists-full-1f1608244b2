@@ -1,11 +1,11 @@
 import logging
 from collections import defaultdict
-from typing import Any, Union, List, Dict, Optional
+from typing import Any, Union, Optional
 
 from httpx import HTTPStatusError
 from pydantic import BaseModel, PrivateAttr, Field
 
-from ipfabric.tools import raise_for_status
+from ipfabric.tools.shared import raise_for_status
 from .intent_check import Group, IntentCheck
 
 logger = logging.getLogger("ipfabric")
@@ -14,15 +14,18 @@ COLOR_DICT = dict(nan=-1, green=0, blue=10, amber=20, red=30)
 
 class Intent(BaseModel):
     client: Any = Field(exclude=True)
-    _intent_checks: List[IntentCheck] = PrivateAttr(default_factory=list)
-    _groups: List[Group] = PrivateAttr(default_factory=list)
+    _intent_checks: list[IntentCheck] = PrivateAttr(default_factory=list)
+    _groups: list[Group] = PrivateAttr(default_factory=list)
     _snapshot_id: Optional[str] = None
 
     def model_post_init(self, __context: Any) -> None:
         self._snapshot_id = self.client.snapshot_id
         if self.snapshot_id:
-            self._intent_checks: List[IntentCheck] = self.get_intent_checks()
-            self._groups: List[Group] = self.get_groups()
+            try:
+                self._intent_checks: list[IntentCheck] = self.get_intent_checks()
+            except ValueError:
+                pass
+            self._groups: list[Group] = self.get_groups()
 
     @property
     def intent_checks(self):
@@ -44,7 +47,7 @@ class Intent(BaseModel):
     def snapshot_id(self, snapshot_id: str):
         self._snapshot_id = snapshot_id
 
-    def get_intent_checks(self, snapshot_id: str = None) -> List[IntentCheck]:
+    def get_intent_checks(self, snapshot_id: str = None) -> list[IntentCheck]:
         """Gets all intent checks and returns a list of them.
 
         Args:
@@ -91,41 +94,41 @@ class Intent(BaseModel):
             return list()
 
     @property
-    def custom(self) -> List[IntentCheck]:
+    def custom(self) -> list[IntentCheck]:
         return [c for c in self.intent_checks if c.custom]
 
     @property
-    def builtin(self) -> List[IntentCheck]:
+    def builtin(self) -> list[IntentCheck]:
         return [c for c in self.intent_checks if not c.custom]
 
     @property
-    def intent_by_id(self) -> Dict[str, IntentCheck]:
+    def intent_by_id(self) -> dict[str, IntentCheck]:
         return {c.intent_id: c for c in self.intent_checks}
 
     @property
-    def intents_by_name(self) -> Dict[str, List[IntentCheck]]:
+    def intents_by_name(self) -> dict[str, list[IntentCheck]]:
         reports = defaultdict(list)
         [reports[c.name].append(c) for c in self.intent_checks]
         return dict(reports)
 
     @property
-    def intent_ids_by_web_endpoint(self) -> Dict[str, List[str]]:
+    def intent_ids_by_web_endpoint(self) -> dict[str, list[str]]:
         reports = defaultdict(list)
         [reports[c.web_endpoint].append(c.intent_id) for c in self.intent_checks]
         return dict(reports)
 
     @property
-    def intent_ids_by_api_endpoint(self) -> Dict[str, List[str]]:
+    def intent_ids_by_api_endpoint(self) -> dict[str, list[str]]:
         reports = defaultdict(list)
         [reports[c.api_endpoint].append(c.intent_id) for c in self.intent_checks]
         return dict(reports)
 
     @property
-    def group_by_id(self) -> Dict[str, Group]:
+    def group_by_id(self) -> dict[str, Group]:
         return {g.group_id: g for g in self.groups}
 
     @property
-    def group_by_name(self) -> Dict[str, Group]:
+    def group_by_name(self) -> dict[str, Group]:
         return {g.name: g for g in self.groups}
 
     def get_results(self, intent: IntentCheck, color: Union[str, int], snapshot_id: str = None) -> list:

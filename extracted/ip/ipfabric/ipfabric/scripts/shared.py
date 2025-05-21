@@ -1,9 +1,9 @@
 import logging
 import os
+from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
 import dotenv
-from argparse import ArgumentParser, Namespace
 
 from ipfabric.tools.shared import valid_snapshot
 

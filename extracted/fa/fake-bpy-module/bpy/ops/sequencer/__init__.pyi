@@ -2255,7 +2255,7 @@ def text_edit_mode_toggle(
 def text_edit_paste(
     execution_context: int | str | None = None, undo: bool | None = None
 ):
-    """Paste text to clipboard
+    """Paste text from clipboard
 
     :type execution_context: int | str | None
     :type undo: bool | None

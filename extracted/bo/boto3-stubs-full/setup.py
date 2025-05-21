@@ -12,7 +12,7 @@ LONG_DESCRIPTION = (Path(__file__).parent / "README.md").read_text()
 
 setup(
     name="boto3-stubs-full",
-    version="1.38.19",
+    version="1.38.20",
     packages=[
         "mypy_boto3_accessanalyzer",
         "mypy_boto3_account",
@@ -310,7 +310,6 @@ setup(
         "mypy_boto3_pipes",
         "mypy_boto3_polly",
         "mypy_boto3_pricing",
-        "mypy_boto3_privatenetworks",
         "mypy_boto3_proton",
         "mypy_boto3_qapps",
         "mypy_boto3_qbusiness",
@@ -423,7 +422,7 @@ setup(
     license="MIT License",
     author="Vlad Emelianov",
     author_email="vlad.emelianov.nz@gmail.com",
-    description="All-in-one type annotations for boto3 1.38.19 generated with mypy-boto3-builder 8.11.0",
+    description="All-in-one type annotations for boto3 1.38.20 generated with mypy-boto3-builder 8.11.0",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
@@ -743,7 +742,6 @@ setup(
         "mypy_boto3_pipes": ["py.typed", "*.pyi"],
         "mypy_boto3_polly": ["py.typed", "*.pyi"],
         "mypy_boto3_pricing": ["py.typed", "*.pyi"],
-        "mypy_boto3_privatenetworks": ["py.typed", "*.pyi"],
         "mypy_boto3_proton": ["py.typed", "*.pyi"],
         "mypy_boto3_qapps": ["py.typed", "*.pyi"],
         "mypy_boto3_qbusiness": ["py.typed", "*.pyi"],

@@ -1,7 +1,7 @@
 r'''
 # `provider`
 
-Refer to the Terraform Registry for docs: [`okta`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs).
+Refer to the Terraform Registry for docs: [`okta`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class OktaProvider(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.provider.OktaProvider",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs okta}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs okta}.'''
 
     def __init__(
         self,
@@ -70,28 +70,28 @@ class OktaProvider(
         request_timeout: typing.Optional[jsii.Number] = None,
         scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs okta} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs okta} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param access_token: Bearer token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#access_token OktaProvider#access_token}
-        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#alias OktaProvider#alias}
-        :param api_token: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#api_token OktaProvider#api_token}
-        :param backoff: Use exponential back off strategy for rate limits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#backoff OktaProvider#backoff}
-        :param base_url: The Okta url. (Use 'oktapreview.com' for Okta testing). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#base_url OktaProvider#base_url}
-        :param client_id: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#client_id OktaProvider#client_id}
-        :param http_proxy: Alternate HTTP proxy of scheme://hostname or scheme://hostname:port format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#http_proxy OktaProvider#http_proxy}
-        :param log_level: providers log level. Minimum is 1 (TRACE), and maximum is 5 (ERROR). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#log_level OktaProvider#log_level}
-        :param max_api_capacity: Sets what percentage of capacity the provider can use of the total rate limit capacity while making calls to the Okta management API endpoints. Okta API operates in one minute buckets. See Okta Management API Rate Limits: https://developer.okta.com/docs/reference/rl-global-mgmt/ Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#max_api_capacity OktaProvider#max_api_capacity}
-        :param max_retries: maximum number of retries to attempt before erroring out. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#max_retries OktaProvider#max_retries}
-        :param max_wait_seconds: maximum seconds to wait when rate limit is hit. We use exponential backoffs when backoff is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#max_wait_seconds OktaProvider#max_wait_seconds}
-        :param min_wait_seconds: minimum seconds to wait when rate limit is hit. We use exponential backoffs when backoff is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#min_wait_seconds OktaProvider#min_wait_seconds}
-        :param org_name: The organization to manage in Okta. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#org_name OktaProvider#org_name}
-        :param parallelism: Number of concurrent requests to make within a resource where bulk operations are not possible. Take note of https://developer.okta.com/docs/api/getting_started/rate-limits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#parallelism OktaProvider#parallelism}
-        :param private_key: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#private_key OktaProvider#private_key}
-        :param private_key_id: API Token Id granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#private_key_id OktaProvider#private_key_id}
-        :param request_timeout: Timeout for single request (in seconds) which is made to Okta, the default is ``0`` (means no limit is set). The maximum value can be ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#request_timeout OktaProvider#request_timeout}
-        :param scopes: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#scopes OktaProvider#scopes}
+        :param access_token: Bearer token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#access_token OktaProvider#access_token}
+        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#alias OktaProvider#alias}
+        :param api_token: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#api_token OktaProvider#api_token}
+        :param backoff: Use exponential back off strategy for rate limits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#backoff OktaProvider#backoff}
+        :param base_url: The Okta url. (Use 'oktapreview.com' for Okta testing). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#base_url OktaProvider#base_url}
+        :param client_id: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#client_id OktaProvider#client_id}
+        :param http_proxy: Alternate HTTP proxy of scheme://hostname or scheme://hostname:port format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#http_proxy OktaProvider#http_proxy}
+        :param log_level: providers log level. Minimum is 1 (TRACE), and maximum is 5 (ERROR). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#log_level OktaProvider#log_level}
+        :param max_api_capacity: Sets what percentage of capacity the provider can use of the total rate limit capacity while making calls to the Okta management API endpoints. Okta API operates in one minute buckets. See Okta Management API Rate Limits: https://developer.okta.com/docs/reference/rl-global-mgmt/ Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#max_api_capacity OktaProvider#max_api_capacity}
+        :param max_retries: maximum number of retries to attempt before erroring out. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#max_retries OktaProvider#max_retries}
+        :param max_wait_seconds: maximum seconds to wait when rate limit is hit. We use exponential backoffs when backoff is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#max_wait_seconds OktaProvider#max_wait_seconds}
+        :param min_wait_seconds: minimum seconds to wait when rate limit is hit. We use exponential backoffs when backoff is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#min_wait_seconds OktaProvider#min_wait_seconds}
+        :param org_name: The organization to manage in Okta. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#org_name OktaProvider#org_name}
+        :param parallelism: Number of concurrent requests to make within a resource where bulk operations are not possible. Take note of https://developer.okta.com/docs/api/getting_started/rate-limits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#parallelism OktaProvider#parallelism}
+        :param private_key: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#private_key OktaProvider#private_key}
+        :param private_key_id: API Token Id granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#private_key_id OktaProvider#private_key_id}
+        :param request_timeout: Timeout for single request (in seconds) which is made to Okta, the default is ``0`` (means no limit is set). The maximum value can be ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#request_timeout OktaProvider#request_timeout}
+        :param scopes: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#scopes OktaProvider#scopes}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__0808da6b083e2f9f99a310ae982044c5cce9f930ec458184ed0d591ca91e8007)
@@ -133,7 +133,7 @@ class OktaProvider(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the OktaProvider to import.
-        :param import_from_id: The id of the existing OktaProvider that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing OktaProvider that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the OktaProvider to import is found.
         '''
         if __debug__:
@@ -591,24 +591,24 @@ class OktaProviderConfig:
         scopes: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param access_token: Bearer token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#access_token OktaProvider#access_token}
-        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#alias OktaProvider#alias}
-        :param api_token: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#api_token OktaProvider#api_token}
-        :param backoff: Use exponential back off strategy for rate limits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#backoff OktaProvider#backoff}
-        :param base_url: The Okta url. (Use 'oktapreview.com' for Okta testing). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#base_url OktaProvider#base_url}
-        :param client_id: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#client_id OktaProvider#client_id}
-        :param http_proxy: Alternate HTTP proxy of scheme://hostname or scheme://hostname:port format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#http_proxy OktaProvider#http_proxy}
-        :param log_level: providers log level. Minimum is 1 (TRACE), and maximum is 5 (ERROR). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#log_level OktaProvider#log_level}
-        :param max_api_capacity: Sets what percentage of capacity the provider can use of the total rate limit capacity while making calls to the Okta management API endpoints. Okta API operates in one minute buckets. See Okta Management API Rate Limits: https://developer.okta.com/docs/reference/rl-global-mgmt/ Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#max_api_capacity OktaProvider#max_api_capacity}
-        :param max_retries: maximum number of retries to attempt before erroring out. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#max_retries OktaProvider#max_retries}
-        :param max_wait_seconds: maximum seconds to wait when rate limit is hit. We use exponential backoffs when backoff is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#max_wait_seconds OktaProvider#max_wait_seconds}
-        :param min_wait_seconds: minimum seconds to wait when rate limit is hit. We use exponential backoffs when backoff is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#min_wait_seconds OktaProvider#min_wait_seconds}
-        :param org_name: The organization to manage in Okta. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#org_name OktaProvider#org_name}
-        :param parallelism: Number of concurrent requests to make within a resource where bulk operations are not possible. Take note of https://developer.okta.com/docs/api/getting_started/rate-limits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#parallelism OktaProvider#parallelism}
-        :param private_key: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#private_key OktaProvider#private_key}
-        :param private_key_id: API Token Id granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#private_key_id OktaProvider#private_key_id}
-        :param request_timeout: Timeout for single request (in seconds) which is made to Okta, the default is ``0`` (means no limit is set). The maximum value can be ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#request_timeout OktaProvider#request_timeout}
-        :param scopes: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#scopes OktaProvider#scopes}
+        :param access_token: Bearer token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#access_token OktaProvider#access_token}
+        :param alias: Alias name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#alias OktaProvider#alias}
+        :param api_token: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#api_token OktaProvider#api_token}
+        :param backoff: Use exponential back off strategy for rate limits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#backoff OktaProvider#backoff}
+        :param base_url: The Okta url. (Use 'oktapreview.com' for Okta testing). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#base_url OktaProvider#base_url}
+        :param client_id: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#client_id OktaProvider#client_id}
+        :param http_proxy: Alternate HTTP proxy of scheme://hostname or scheme://hostname:port format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#http_proxy OktaProvider#http_proxy}
+        :param log_level: providers log level. Minimum is 1 (TRACE), and maximum is 5 (ERROR). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#log_level OktaProvider#log_level}
+        :param max_api_capacity: Sets what percentage of capacity the provider can use of the total rate limit capacity while making calls to the Okta management API endpoints. Okta API operates in one minute buckets. See Okta Management API Rate Limits: https://developer.okta.com/docs/reference/rl-global-mgmt/ Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#max_api_capacity OktaProvider#max_api_capacity}
+        :param max_retries: maximum number of retries to attempt before erroring out. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#max_retries OktaProvider#max_retries}
+        :param max_wait_seconds: maximum seconds to wait when rate limit is hit. We use exponential backoffs when backoff is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#max_wait_seconds OktaProvider#max_wait_seconds}
+        :param min_wait_seconds: minimum seconds to wait when rate limit is hit. We use exponential backoffs when backoff is enabled. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#min_wait_seconds OktaProvider#min_wait_seconds}
+        :param org_name: The organization to manage in Okta. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#org_name OktaProvider#org_name}
+        :param parallelism: Number of concurrent requests to make within a resource where bulk operations are not possible. Take note of https://developer.okta.com/docs/api/getting_started/rate-limits. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#parallelism OktaProvider#parallelism}
+        :param private_key: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#private_key OktaProvider#private_key}
+        :param private_key_id: API Token Id granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#private_key_id OktaProvider#private_key_id}
+        :param request_timeout: Timeout for single request (in seconds) which is made to Okta, the default is ``0`` (means no limit is set). The maximum value can be ``300``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#request_timeout OktaProvider#request_timeout}
+        :param scopes: API Token granting privileges to Okta API. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#scopes OktaProvider#scopes}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__db2af804ca7d98e9e315bd0ff05a8444e2d8730b17bb1e9dae47ec495742e825)
@@ -672,7 +672,7 @@ class OktaProviderConfig:
     def access_token(self) -> typing.Optional[builtins.str]:
         '''Bearer token granting privileges to Okta API.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#access_token OktaProvider#access_token}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#access_token OktaProvider#access_token}
         '''
         result = self._values.get("access_token")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -681,7 +681,7 @@ class OktaProviderConfig:
     def alias(self) -> typing.Optional[builtins.str]:
         '''Alias name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#alias OktaProvider#alias}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#alias OktaProvider#alias}
         '''
         result = self._values.get("alias")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -690,7 +690,7 @@ class OktaProviderConfig:
     def api_token(self) -> typing.Optional[builtins.str]:
         '''API Token granting privileges to Okta API.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#api_token OktaProvider#api_token}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#api_token OktaProvider#api_token}
         '''
         result = self._values.get("api_token")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -701,7 +701,7 @@ class OktaProviderConfig:
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Use exponential back off strategy for rate limits.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#backoff OktaProvider#backoff}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#backoff OktaProvider#backoff}
         '''
         result = self._values.get("backoff")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -710,7 +710,7 @@ class OktaProviderConfig:
     def base_url(self) -> typing.Optional[builtins.str]:
         '''The Okta url. (Use 'oktapreview.com' for Okta testing).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#base_url OktaProvider#base_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#base_url OktaProvider#base_url}
         '''
         result = self._values.get("base_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -719,7 +719,7 @@ class OktaProviderConfig:
     def client_id(self) -> typing.Optional[builtins.str]:
         '''API Token granting privileges to Okta API.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#client_id OktaProvider#client_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#client_id OktaProvider#client_id}
         '''
         result = self._values.get("client_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -728,7 +728,7 @@ class OktaProviderConfig:
     def http_proxy(self) -> typing.Optional[builtins.str]:
         '''Alternate HTTP proxy of scheme://hostname or scheme://hostname:port format.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#http_proxy OktaProvider#http_proxy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#http_proxy OktaProvider#http_proxy}
         '''
         result = self._values.get("http_proxy")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -737,7 +737,7 @@ class OktaProviderConfig:
     def log_level(self) -> typing.Optional[jsii.Number]:
         '''providers log level. Minimum is 1 (TRACE), and maximum is 5 (ERROR).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#log_level OktaProvider#log_level}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#log_level OktaProvider#log_level}
         '''
         result = self._values.get("log_level")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -748,7 +748,7 @@ class OktaProviderConfig:
 
         Okta API operates in one minute buckets. See Okta Management API Rate Limits: https://developer.okta.com/docs/reference/rl-global-mgmt/
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#max_api_capacity OktaProvider#max_api_capacity}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#max_api_capacity OktaProvider#max_api_capacity}
         '''
         result = self._values.get("max_api_capacity")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -757,7 +757,7 @@ class OktaProviderConfig:
     def max_retries(self) -> typing.Optional[jsii.Number]:
         '''maximum number of retries to attempt before erroring out.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#max_retries OktaProvider#max_retries}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#max_retries OktaProvider#max_retries}
         '''
         result = self._values.get("max_retries")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -766,7 +766,7 @@ class OktaProviderConfig:
     def max_wait_seconds(self) -> typing.Optional[jsii.Number]:
         '''maximum seconds to wait when rate limit is hit. We use exponential backoffs when backoff is enabled.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#max_wait_seconds OktaProvider#max_wait_seconds}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#max_wait_seconds OktaProvider#max_wait_seconds}
         '''
         result = self._values.get("max_wait_seconds")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -775,7 +775,7 @@ class OktaProviderConfig:
     def min_wait_seconds(self) -> typing.Optional[jsii.Number]:
         '''minimum seconds to wait when rate limit is hit. We use exponential backoffs when backoff is enabled.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#min_wait_seconds OktaProvider#min_wait_seconds}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#min_wait_seconds OktaProvider#min_wait_seconds}
         '''
         result = self._values.get("min_wait_seconds")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -784,7 +784,7 @@ class OktaProviderConfig:
     def org_name(self) -> typing.Optional[builtins.str]:
         '''The organization to manage in Okta.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#org_name OktaProvider#org_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#org_name OktaProvider#org_name}
         '''
         result = self._values.get("org_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -793,7 +793,7 @@ class OktaProviderConfig:
     def parallelism(self) -> typing.Optional[jsii.Number]:
         '''Number of concurrent requests to make within a resource where bulk operations are not possible. Take note of https://developer.okta.com/docs/api/getting_started/rate-limits.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#parallelism OktaProvider#parallelism}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#parallelism OktaProvider#parallelism}
         '''
         result = self._values.get("parallelism")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -802,7 +802,7 @@ class OktaProviderConfig:
     def private_key(self) -> typing.Optional[builtins.str]:
         '''API Token granting privileges to Okta API.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#private_key OktaProvider#private_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#private_key OktaProvider#private_key}
         '''
         result = self._values.get("private_key")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -811,7 +811,7 @@ class OktaProviderConfig:
     def private_key_id(self) -> typing.Optional[builtins.str]:
         '''API Token Id granting privileges to Okta API.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#private_key_id OktaProvider#private_key_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#private_key_id OktaProvider#private_key_id}
         '''
         result = self._values.get("private_key_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -822,7 +822,7 @@ class OktaProviderConfig:
 
         The maximum value can be ``300``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#request_timeout OktaProvider#request_timeout}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#request_timeout OktaProvider#request_timeout}
         '''
         result = self._values.get("request_timeout")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -831,7 +831,7 @@ class OktaProviderConfig:
     def scopes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''API Token granting privileges to Okta API.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs#scopes OktaProvider#scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs#scopes OktaProvider#scopes}
         '''
         result = self._values.get("scopes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)

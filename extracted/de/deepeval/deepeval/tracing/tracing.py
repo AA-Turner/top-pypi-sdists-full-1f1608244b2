@@ -1,4 +1,5 @@
 from typing import Any, Dict, List, Literal, Optional, Set, Union, Callable
+from deepeval.telemetry import capture_send_trace
 from deepeval.tracing.utils import (
     Environment,
     validate_environment,
@@ -220,6 +221,8 @@ class Trace(BaseModel):
     metadata: Optional[Dict[str, Any]] = None
     thread_id: Optional[str] = None
     user_id: Optional[str] = None
+    input: Optional[Any] = None
+    output: Optional[Any] = None
 
 
 # Create a context variable to track the current span
@@ -281,6 +284,7 @@ class TraceManager:
                 message=f"INTERRUPTED: Exiting with {queue_size + in_flight} trace(s) remaining to be posted.",
                 trace_worker_status=TraceWorkerStatus.WARNING,
             )
+            
         sys.exit(0)
 
     def _warn_on_exit(self):
@@ -592,27 +596,28 @@ class TraceManager:
             message=f"Flushing {len(remaining_trace_request_bodies)} remaining trace(s)",
         )
         for body in remaining_trace_request_bodies:
-            try:
-                api = Api()
-                resp = api.send_request(
-                    method=HttpMethods.POST,
-                    endpoint=Endpoints.TRACING_ENDPOINT,
-                    body=body,
-                )
-                qs = self._trace_queue.qsize()
-                self._print_trace_status(
-                    trace_worker_status=TraceWorkerStatus.SUCCESS,
-                    message=f"Successfully posted trace ({qs} traces remaining in queue, 1 in flight)",
-                    description=resp["link"],
-                    environment=self.environment,
-                )
-            except Exception as e:
-                qs = self._trace_queue.qsize()
-                self._print_trace_status(
-                    trace_worker_status=TraceWorkerStatus.FAILURE,
-                    message="Error flushing remaining trace(s)",
-                    description=str(e),
-                )
+            with capture_send_trace():
+                try:
+                    api = Api()
+                    resp = api.send_request(
+                        method=HttpMethods.POST,
+                        endpoint=Endpoints.TRACING_ENDPOINT,
+                        body=body,
+                    )
+                    qs = self._trace_queue.qsize()
+                    self._print_trace_status(
+                        trace_worker_status=TraceWorkerStatus.SUCCESS,
+                        message=f"Successfully posted trace ({qs} traces remaining in queue, 1 in flight)",
+                        description=resp["link"],
+                        environment=self.environment,
+                    )
+                except Exception as e:
+                    qs = self._trace_queue.qsize()
+                    self._print_trace_status(
+                        trace_worker_status=TraceWorkerStatus.FAILURE,
+                        message="Error flushing remaining trace(s)",
+                        description=str(e),
+                    )
 
     def create_trace_api(self, trace: Trace) -> TraceApi:
         # Initialize empty lists for each span type
@@ -673,6 +678,8 @@ class TraceManager:
             environment=self.environment,
             threadId=trace.thread_id,
             userId=trace.user_id,
+            input=trace.input,
+            output=trace.output
         )
 
     def _convert_span_to_api_span(self, span: BaseSpan) -> BaseApiSpan:
@@ -1214,6 +1221,8 @@ def update_current_trace(
     metadata: Optional[Dict[str, Any]] = None,
     thread_id: Optional[str] = None,
     user_id: Optional[str] = None,
+    input: Optional[Any] = None,
+    output: Optional[Any] = None,
 ):
     current_trace = current_trace_context.get()
     if not current_trace:
@@ -1225,4 +1234,8 @@ def update_current_trace(
     if thread_id:
         current_trace.thread_id = thread_id
     if user_id:
-        current_trace.user_id = user_ids
+        current_trace.user_id = user_id
+    if input:
+        current_trace.input = input
+    if output:
+        current_trace.output = output

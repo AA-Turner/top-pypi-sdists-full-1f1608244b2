@@ -2443,6 +2443,7 @@ class _LegacyServiceUserState:
         pulumi.set(self, "week_start", value)
 
 
+@pulumi.type_token("snowflake:index/legacyServiceUser:LegacyServiceUser")
 class LegacyServiceUser(pulumi.CustomResource):
     @overload
     def __init__(__self__,

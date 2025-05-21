@@ -126,10 +126,8 @@ class _TagState:
         pulumi.set(self, "value", value)
 
 
+@pulumi.type_token("aws:transfer/tag:Tag")
 class Tag(pulumi.CustomResource):
-
-    pulumi_type = "aws:transfer/tag:Tag"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -154,11 +152,11 @@ class Tag(pulumi.CustomResource):
         example = aws.transfer.Server("example", identity_provider_type="SERVICE_MANAGED")
         zone_id = aws.transfer.Tag("zone_id",
             resource_arn=example.arn,
-            key="aws:transfer:route53HostedZoneId",
+            key="transfer:route53HostedZoneId",
             value="/hostedzone/MyHostedZoneId")
         hostname = aws.transfer.Tag("hostname",
             resource_arn=example.arn,
-            key="aws:transfer:customHostname",
+            key="transfer:customHostname",
             value="example.com")
         ```
 
@@ -198,11 +196,11 @@ class Tag(pulumi.CustomResource):
         example = aws.transfer.Server("example", identity_provider_type="SERVICE_MANAGED")
         zone_id = aws.transfer.Tag("zone_id",
             resource_arn=example.arn,
-            key="aws:transfer:route53HostedZoneId",
+            key="transfer:route53HostedZoneId",
             value="/hostedzone/MyHostedZoneId")
         hostname = aws.transfer.Tag("hostname",
             resource_arn=example.arn,
-            key="aws:transfer:customHostname",
+            key="transfer:customHostname",
             value="example.com")
         ```
 

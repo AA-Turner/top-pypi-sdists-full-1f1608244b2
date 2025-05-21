@@ -1,7 +1,7 @@
 r'''
 # `okta_domain_certificate`
 
-Refer to the Terraform Registry for docs: [`okta_domain_certificate`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate).
+Refer to the Terraform Registry for docs: [`okta_domain_certificate`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DomainCertificate(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.domainCertificate.DomainCertificate",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate okta_domain_certificate}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate okta_domain_certificate}.'''
 
     def __init__(
         self,
@@ -65,16 +65,16 @@ class DomainCertificate(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate okta_domain_certificate} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate okta_domain_certificate} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param certificate: Certificate content. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#certificate DomainCertificate#certificate}
-        :param certificate_chain: Certificate chain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#certificate_chain DomainCertificate#certificate_chain}
-        :param domain_id: Domain's ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#domain_id DomainCertificate#domain_id}
-        :param private_key: Certificate private key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#private_key DomainCertificate#private_key}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#id DomainCertificate#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param type: Certificate type. Valid value is ``PEM``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#type DomainCertificate#type}
+        :param certificate: Certificate content. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#certificate DomainCertificate#certificate}
+        :param certificate_chain: Certificate chain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#certificate_chain DomainCertificate#certificate_chain}
+        :param domain_id: Domain's ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#domain_id DomainCertificate#domain_id}
+        :param private_key: Certificate private key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#private_key DomainCertificate#private_key}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#id DomainCertificate#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param type: Certificate type. Valid value is ``PEM``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#type DomainCertificate#type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -118,7 +118,7 @@ class DomainCertificate(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DomainCertificate to import.
-        :param import_from_id: The id of the existing DomainCertificate that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DomainCertificate that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DomainCertificate to import is found.
         '''
         if __debug__:
@@ -298,12 +298,12 @@ class DomainCertificateConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param certificate: Certificate content. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#certificate DomainCertificate#certificate}
-        :param certificate_chain: Certificate chain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#certificate_chain DomainCertificate#certificate_chain}
-        :param domain_id: Domain's ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#domain_id DomainCertificate#domain_id}
-        :param private_key: Certificate private key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#private_key DomainCertificate#private_key}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#id DomainCertificate#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param type: Certificate type. Valid value is ``PEM``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#type DomainCertificate#type}
+        :param certificate: Certificate content. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#certificate DomainCertificate#certificate}
+        :param certificate_chain: Certificate chain. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#certificate_chain DomainCertificate#certificate_chain}
+        :param domain_id: Domain's ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#domain_id DomainCertificate#domain_id}
+        :param private_key: Certificate private key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#private_key DomainCertificate#private_key}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#id DomainCertificate#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param type: Certificate type. Valid value is ``PEM``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#type DomainCertificate#type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -415,7 +415,7 @@ class DomainCertificateConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def certificate(self) -> builtins.str:
         '''Certificate content.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#certificate DomainCertificate#certificate}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#certificate DomainCertificate#certificate}
         '''
         result = self._values.get("certificate")
         assert result is not None, "Required property 'certificate' is missing"
@@ -425,7 +425,7 @@ class DomainCertificateConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def certificate_chain(self) -> builtins.str:
         '''Certificate chain.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#certificate_chain DomainCertificate#certificate_chain}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#certificate_chain DomainCertificate#certificate_chain}
         '''
         result = self._values.get("certificate_chain")
         assert result is not None, "Required property 'certificate_chain' is missing"
@@ -435,7 +435,7 @@ class DomainCertificateConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def domain_id(self) -> builtins.str:
         '''Domain's ID.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#domain_id DomainCertificate#domain_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#domain_id DomainCertificate#domain_id}
         '''
         result = self._values.get("domain_id")
         assert result is not None, "Required property 'domain_id' is missing"
@@ -445,7 +445,7 @@ class DomainCertificateConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def private_key(self) -> builtins.str:
         '''Certificate private key.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#private_key DomainCertificate#private_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#private_key DomainCertificate#private_key}
         '''
         result = self._values.get("private_key")
         assert result is not None, "Required property 'private_key' is missing"
@@ -453,7 +453,7 @@ class DomainCertificateConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#id DomainCertificate#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#id DomainCertificate#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -465,7 +465,7 @@ class DomainCertificateConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> typing.Optional[builtins.str]:
         '''Certificate type. Valid value is ``PEM``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/domain_certificate#type DomainCertificate#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/domain_certificate#type DomainCertificate#type}
         '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)

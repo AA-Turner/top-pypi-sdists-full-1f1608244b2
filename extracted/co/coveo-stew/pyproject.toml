@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "coveo-stew"
-version = "3.1.28"
+version = "3.1.29"
 description = "Opinionated python packaging and development utilities"
 license = "Apache-2.0"
 readme = "README.md"

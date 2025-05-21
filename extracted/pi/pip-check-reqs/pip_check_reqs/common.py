@@ -4,27 +4,50 @@ from __future__ import annotations
 
 import ast
 import fnmatch
+import importlib.metadata
 import logging
 import os
 import sys
 from dataclasses import dataclass, field
+from functools import cache
 from importlib.util import find_spec
 from pathlib import Path
-from typing import (
-    Callable,
-    Generator,
-    Iterable,
-)
+from typing import TYPE_CHECKING, Callable
 
 from packaging.markers import Marker
 from packaging.utils import NormalizedName, canonicalize_name
+from pip._internal.commands.show import (
+    _PackageInfo,  # pyright: ignore[reportPrivateUsage]
+    search_packages_info,
+)
 from pip._internal.network.session import PipSession
 from pip._internal.req.constructors import install_req_from_line
 from pip._internal.req.req_file import ParsedRequirement, parse_requirements
 
 from . import __version__
 
+if TYPE_CHECKING:
+    from collections.abc import Generator, Iterable
+
 log = logging.getLogger(__name__)
+
+
+@cache
+def cached_resolve_path(path: Path) -> Path:
+    return path.resolve()
+
+
+# This is a slow operation.
+# It only happens once when calling the CLI, but it is hit many times in
+# tests.
+# We cache the result to speed up tests.
+@cache
+def get_packages_info() -> list[_PackageInfo]:
+    all_pkgs = [
+        dist.metadata["Name"] for dist in importlib.metadata.distributions()
+    ]
+
+    return list(search_packages_info(query=all_pkgs))
 
 
 @dataclass
@@ -223,9 +246,13 @@ def package_path(*, path: Path) -> Path | None:
     return path.parent
 
 
+def _null_ignorer(_: str | ParsedRequirement) -> bool:
+    return False
+
+
 def ignorer(*, ignore_cfg: list[str]) -> Callable[..., bool]:
     if not ignore_cfg:
-        return lambda _: False
+        return _null_ignorer
 
     def ignorer_function(
         candidate: str | ParsedRequirement,

@@ -1,7 +1,7 @@
 r'''
 # `okta_factor`
 
-Refer to the Terraform Registry for docs: [`okta_factor`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/factor).
+Refer to the Terraform Registry for docs: [`okta_factor`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/factor).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Factor(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.factor.Factor",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/factor okta_factor}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/factor okta_factor}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class Factor(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/factor okta_factor} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/factor okta_factor} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param provider_id: The MFA provider name. Allowed values are ``duo``, ``fido_u2f``, ``fido_webauthn``, ``google_otp``, ``okta_call``, ``okta_otp``, ``okta_password``, ``okta_push``, ``okta_question``, ``okta_sms``, ``okta_email``, ``rsa_token``, ``symantec_vip``, ``yubikey_token``, or ``hotp``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/factor#provider_id Factor#provider_id}
-        :param active: Whether to activate the provider, by default, it is set to ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/factor#active Factor#active}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/factor#id Factor#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param provider_id: The MFA provider name. Allowed values are ``duo``, ``fido_u2f``, ``fido_webauthn``, ``google_otp``, ``okta_call``, ``okta_otp``, ``okta_password``, ``okta_push``, ``okta_question``, ``okta_sms``, ``okta_email``, ``rsa_token``, ``symantec_vip``, ``yubikey_token``, or ``hotp``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/factor#provider_id Factor#provider_id}
+        :param active: Whether to activate the provider, by default, it is set to ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/factor#active Factor#active}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/factor#id Factor#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class Factor(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Factor to import.
-        :param import_from_id: The id of the existing Factor that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/factor#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Factor that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/factor#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Factor to import is found.
         '''
         if __debug__:
@@ -237,9 +237,9 @@ class FactorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param provider_id: The MFA provider name. Allowed values are ``duo``, ``fido_u2f``, ``fido_webauthn``, ``google_otp``, ``okta_call``, ``okta_otp``, ``okta_password``, ``okta_push``, ``okta_question``, ``okta_sms``, ``okta_email``, ``rsa_token``, ``symantec_vip``, ``yubikey_token``, or ``hotp``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/factor#provider_id Factor#provider_id}
-        :param active: Whether to activate the provider, by default, it is set to ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/factor#active Factor#active}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/factor#id Factor#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param provider_id: The MFA provider name. Allowed values are ``duo``, ``fido_u2f``, ``fido_webauthn``, ``google_otp``, ``okta_call``, ``okta_otp``, ``okta_password``, ``okta_push``, ``okta_question``, ``okta_sms``, ``okta_email``, ``rsa_token``, ``symantec_vip``, ``yubikey_token``, or ``hotp``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/factor#provider_id Factor#provider_id}
+        :param active: Whether to activate the provider, by default, it is set to ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/factor#active Factor#active}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/factor#id Factor#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -347,7 +347,7 @@ class FactorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Allowed values are ``duo``, ``fido_u2f``, ``fido_webauthn``, ``google_otp``, ``okta_call``, ``okta_otp``, ``okta_password``, ``okta_push``, ``okta_question``, ``okta_sms``, ``okta_email``, ``rsa_token``, ``symantec_vip``, ``yubikey_token``, or ``hotp``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/factor#provider_id Factor#provider_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/factor#provider_id Factor#provider_id}
         '''
         result = self._values.get("provider_id")
         assert result is not None, "Required property 'provider_id' is missing"
@@ -359,14 +359,14 @@ class FactorConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether to activate the provider, by default, it is set to ``true``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/factor#active Factor#active}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/factor#active Factor#active}
         '''
         result = self._values.get("active")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/factor#id Factor#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/factor#id Factor#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

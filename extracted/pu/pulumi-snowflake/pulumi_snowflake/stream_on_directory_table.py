@@ -292,6 +292,7 @@ class _StreamOnDirectoryTableState:
         pulumi.set(self, "stream_type", value)
 
 
+@pulumi.type_token("snowflake:index/streamOnDirectoryTable:StreamOnDirectoryTable")
 class StreamOnDirectoryTable(pulumi.CustomResource):
     @overload
     def __init__(__self__,

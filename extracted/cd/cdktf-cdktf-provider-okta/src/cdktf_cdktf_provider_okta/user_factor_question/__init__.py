@@ -1,7 +1,7 @@
 r'''
 # `okta_user_factor_question`
 
-Refer to the Terraform Registry for docs: [`okta_user_factor_question`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question).
+Refer to the Terraform Registry for docs: [`okta_user_factor_question`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class UserFactorQuestion(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.userFactorQuestion.UserFactorQuestion",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question okta_user_factor_question}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question okta_user_factor_question}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class UserFactorQuestion(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question okta_user_factor_question} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question okta_user_factor_question} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param answer: Security question answer. Note here that answer won't be set during the resource import. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question#answer UserFactorQuestion#answer}
-        :param key: Security question unique key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question#key UserFactorQuestion#key}
-        :param user_id: ID of the user. Resource will be recreated when ``user_id`` changes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question#user_id UserFactorQuestion#user_id}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question#id UserFactorQuestion#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param answer: Security question answer. Note here that answer won't be set during the resource import. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question#answer UserFactorQuestion#answer}
+        :param key: Security question unique key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question#key UserFactorQuestion#key}
+        :param user_id: ID of the user. Resource will be recreated when ``user_id`` changes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question#user_id UserFactorQuestion#user_id}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question#id UserFactorQuestion#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class UserFactorQuestion(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the UserFactorQuestion to import.
-        :param import_from_id: The id of the existing UserFactorQuestion that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing UserFactorQuestion that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the UserFactorQuestion to import is found.
         '''
         if __debug__:
@@ -260,10 +260,10 @@ class UserFactorQuestionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param answer: Security question answer. Note here that answer won't be set during the resource import. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question#answer UserFactorQuestion#answer}
-        :param key: Security question unique key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question#key UserFactorQuestion#key}
-        :param user_id: ID of the user. Resource will be recreated when ``user_id`` changes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question#user_id UserFactorQuestion#user_id}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question#id UserFactorQuestion#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param answer: Security question answer. Note here that answer won't be set during the resource import. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question#answer UserFactorQuestion#answer}
+        :param key: Security question unique key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question#key UserFactorQuestion#key}
+        :param user_id: ID of the user. Resource will be recreated when ``user_id`` changes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question#user_id UserFactorQuestion#user_id}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question#id UserFactorQuestion#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -370,7 +370,7 @@ class UserFactorQuestionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def answer(self) -> builtins.str:
         '''Security question answer. Note here that answer won't be set during the resource import.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question#answer UserFactorQuestion#answer}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question#answer UserFactorQuestion#answer}
         '''
         result = self._values.get("answer")
         assert result is not None, "Required property 'answer' is missing"
@@ -380,7 +380,7 @@ class UserFactorQuestionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def key(self) -> builtins.str:
         '''Security question unique key.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question#key UserFactorQuestion#key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question#key UserFactorQuestion#key}
         '''
         result = self._values.get("key")
         assert result is not None, "Required property 'key' is missing"
@@ -390,7 +390,7 @@ class UserFactorQuestionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_id(self) -> builtins.str:
         '''ID of the user. Resource will be recreated when ``user_id`` changes.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question#user_id UserFactorQuestion#user_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question#user_id UserFactorQuestion#user_id}
         '''
         result = self._values.get("user_id")
         assert result is not None, "Required property 'user_id' is missing"
@@ -398,7 +398,7 @@ class UserFactorQuestionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_factor_question#id UserFactorQuestion#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_factor_question#id UserFactorQuestion#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

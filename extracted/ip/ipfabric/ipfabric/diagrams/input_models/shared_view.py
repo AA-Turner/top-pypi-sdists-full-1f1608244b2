@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import List, Optional, Union, Dict
+from typing import Optional, Union
 
 from deepdiff import DeepDiff
 from pydantic import BaseModel, field_validator, Field
@@ -39,7 +39,7 @@ class SharedView(BaseModel):
     snapshot_id: str
     client_snapshot_id: str
     positions: dict
-    settings: List[dict]
+    settings: list[dict]
     params: dict
     hidden_devs: Optional[list] = Field(default_factory=list)
     hidden_nodes: Optional[list] = Field(default_factory=list)  # Not available in API
@@ -97,7 +97,7 @@ class SharedView(BaseModel):
         return None
 
     @property
-    def positions_settings(self) -> Dict[str, Position]:
+    def positions_settings(self) -> dict[str, Position]:
         return {k: Position(**v) for k, v in self.positions.items()}
 
     def create_code(self, positions: bool = False):

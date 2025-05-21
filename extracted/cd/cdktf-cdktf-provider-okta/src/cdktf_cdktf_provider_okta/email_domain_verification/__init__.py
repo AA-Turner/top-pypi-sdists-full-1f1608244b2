@@ -1,7 +1,7 @@
 r'''
 # `okta_email_domain_verification`
 
-Refer to the Terraform Registry for docs: [`okta_email_domain_verification`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_domain_verification).
+Refer to the Terraform Registry for docs: [`okta_email_domain_verification`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain_verification).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class EmailDomainVerification(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.emailDomainVerification.EmailDomainVerification",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_domain_verification okta_email_domain_verification}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain_verification okta_email_domain_verification}.'''
 
     def __init__(
         self,
@@ -61,12 +61,12 @@ class EmailDomainVerification(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_domain_verification okta_email_domain_verification} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain_verification okta_email_domain_verification} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param email_domain_id: Email domain ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_domain_verification#email_domain_id EmailDomainVerification#email_domain_id}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_domain_verification#id EmailDomainVerification#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param email_domain_id: Email domain ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain_verification#email_domain_id EmailDomainVerification#email_domain_id}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain_verification#id EmailDomainVerification#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -106,7 +106,7 @@ class EmailDomainVerification(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the EmailDomainVerification to import.
-        :param import_from_id: The id of the existing EmailDomainVerification that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_domain_verification#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing EmailDomainVerification that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain_verification#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the EmailDomainVerification to import is found.
         '''
         if __debug__:
@@ -206,8 +206,8 @@ class EmailDomainVerificationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param email_domain_id: Email domain ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_domain_verification#email_domain_id EmailDomainVerification#email_domain_id}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_domain_verification#id EmailDomainVerification#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param email_domain_id: Email domain ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain_verification#email_domain_id EmailDomainVerification#email_domain_id}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain_verification#id EmailDomainVerification#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -310,7 +310,7 @@ class EmailDomainVerificationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def email_domain_id(self) -> builtins.str:
         '''Email domain ID.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_domain_verification#email_domain_id EmailDomainVerification#email_domain_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain_verification#email_domain_id EmailDomainVerification#email_domain_id}
         '''
         result = self._values.get("email_domain_id")
         assert result is not None, "Required property 'email_domain_id' is missing"
@@ -318,7 +318,7 @@ class EmailDomainVerificationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_domain_verification#id EmailDomainVerification#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_domain_verification#id EmailDomainVerification#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

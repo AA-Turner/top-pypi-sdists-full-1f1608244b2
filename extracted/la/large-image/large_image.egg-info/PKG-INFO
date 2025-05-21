@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: large-image
-Version: 1.32.4
+Version: 1.32.6
 Summary: Python modules to work with large, multiresolution images.
 Home-page: https://github.com/girder/large_image
 Author: Kitware, Inc.
@@ -29,7 +29,7 @@ Requires-Dist: pylibmc>=1.5.1; platform_system != "Windows" and extra == "memcac
 Provides-Extra: redis
 Requires-Dist: redis>=4.5.5; extra == "redis"
 Provides-Extra: converter
-Requires-Dist: large-image-converter>=1.32.4; extra == "converter"
+Requires-Dist: large-image-converter>=1.32.6; extra == "converter"
 Provides-Extra: colormaps
 Requires-Dist: matplotlib; extra == "colormaps"
 Requires-Dist: tol_colors; extra == "colormaps"
@@ -43,109 +43,109 @@ Provides-Extra: performance
 Requires-Dist: psutil>=4.2.0; extra == "performance"
 Requires-Dist: simplejpeg; extra == "performance"
 Provides-Extra: bioformats
-Requires-Dist: large-image-source-bioformats>=1.32.4; extra == "bioformats"
+Requires-Dist: large-image-source-bioformats>=1.32.6; extra == "bioformats"
 Provides-Extra: deepzoom
-Requires-Dist: large-image-source-deepzoom>=1.32.4; extra == "deepzoom"
+Requires-Dist: large-image-source-deepzoom>=1.32.6; extra == "deepzoom"
 Provides-Extra: dicom
-Requires-Dist: large-image-source-dicom>=1.32.4; extra == "dicom"
+Requires-Dist: large-image-source-dicom>=1.32.6; extra == "dicom"
 Provides-Extra: dummy
-Requires-Dist: large-image-source-dummy>=1.32.4; extra == "dummy"
+Requires-Dist: large-image-source-dummy>=1.32.6; extra == "dummy"
 Provides-Extra: gdal
-Requires-Dist: large-image-source-gdal>=1.32.4; extra == "gdal"
+Requires-Dist: large-image-source-gdal>=1.32.6; extra == "gdal"
 Provides-Extra: mapnik
-Requires-Dist: large-image-source-mapnik>=1.32.4; extra == "mapnik"
+Requires-Dist: large-image-source-mapnik>=1.32.6; extra == "mapnik"
 Provides-Extra: multi
-Requires-Dist: large-image-source-multi>=1.32.4; extra == "multi"
+Requires-Dist: large-image-source-multi>=1.32.6; extra == "multi"
 Provides-Extra: nd2
-Requires-Dist: large-image-source-nd2>=1.32.4; extra == "nd2"
+Requires-Dist: large-image-source-nd2>=1.32.6; extra == "nd2"
 Provides-Extra: ometiff
-Requires-Dist: large-image-source-ometiff>=1.32.4; extra == "ometiff"
+Requires-Dist: large-image-source-ometiff>=1.32.6; extra == "ometiff"
 Provides-Extra: openjpeg
-Requires-Dist: large-image-source-openjpeg>=1.32.4; extra == "openjpeg"
+Requires-Dist: large-image-source-openjpeg>=1.32.6; extra == "openjpeg"
 Provides-Extra: openslide
-Requires-Dist: large-image-source-openslide>=1.32.4; extra == "openslide"
+Requires-Dist: large-image-source-openslide>=1.32.6; extra == "openslide"
 Provides-Extra: pil
-Requires-Dist: large-image-source-pil>=1.32.4; extra == "pil"
+Requires-Dist: large-image-source-pil>=1.32.6; extra == "pil"
 Provides-Extra: rasterio
-Requires-Dist: large-image-source-rasterio>=1.32.4; extra == "rasterio"
+Requires-Dist: large-image-source-rasterio>=1.32.6; extra == "rasterio"
 Provides-Extra: test
-Requires-Dist: large-image-source-test>=1.32.4; extra == "test"
+Requires-Dist: large-image-source-test>=1.32.6; extra == "test"
 Provides-Extra: tiff
-Requires-Dist: large-image-source-tiff>=1.32.4; extra == "tiff"
+Requires-Dist: large-image-source-tiff>=1.32.6; extra == "tiff"
 Provides-Extra: tifffile
-Requires-Dist: large-image-source-tifffile>=1.32.4; extra == "tifffile"
+Requires-Dist: large-image-source-tifffile>=1.32.6; extra == "tifffile"
 Provides-Extra: vips
-Requires-Dist: large-image-source-vips>=1.32.4; extra == "vips"
+Requires-Dist: large-image-source-vips>=1.32.6; extra == "vips"
 Provides-Extra: zarr
-Requires-Dist: large-image-source-zarr>=1.32.4; extra == "zarr"
+Requires-Dist: large-image-source-zarr>=1.32.6; extra == "zarr"
 Provides-Extra: sources
-Requires-Dist: large-image-source-dummy>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-tifffile>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-mapnik>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-nd2>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-multi>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-pil>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-gdal>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-deepzoom>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-ometiff>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-vips>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-rasterio>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-dicom>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-bioformats>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-test>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-tiff>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-zarr>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-openjpeg>=1.32.4; extra == "sources"
-Requires-Dist: large-image-source-openslide>=1.32.4; extra == "sources"
+Requires-Dist: large-image-source-nd2>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-deepzoom>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-openslide>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-tiff>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-mapnik>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-pil>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-dummy>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-test>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-bioformats>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-dicom>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-ometiff>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-tifffile>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-zarr>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-openjpeg>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-vips>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-multi>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-gdal>=1.32.6; extra == "sources"
+Requires-Dist: large-image-source-rasterio>=1.32.6; extra == "sources"
 Provides-Extra: all
+Requires-Dist: large-image-source-nd2>=1.32.6; extra == "all"
+Requires-Dist: pylibmc>=1.5.1; platform_system != "Windows" and extra == "all"
+Requires-Dist: large-image-source-deepzoom>=1.32.6; extra == "all"
+Requires-Dist: large-image-source-openslide>=1.32.6; extra == "all"
+Requires-Dist: large-image-source-tiff>=1.32.6; extra == "all"
+Requires-Dist: large-image-source-rasterio[all]>=1.32.6; extra == "all"
 Requires-Dist: matplotlib; extra == "all"
-Requires-Dist: psutil>=4.2.0; extra == "all"
-Requires-Dist: large-image-source-dummy>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-mapnik>=1.32.4; extra == "all"
-Requires-Dist: redis>=4.5.5; extra == "all"
-Requires-Dist: large-image-source-multi>=1.32.4; extra == "all"
+Requires-Dist: large-image-source-bioformats>=1.32.6; extra == "all"
+Requires-Dist: large-image-source-ometiff>=1.32.6; extra == "all"
 Requires-Dist: aiohttp; extra == "all"
-Requires-Dist: ipyvue; extra == "all"
-Requires-Dist: large-image-source-gdal>=1.32.4; extra == "all"
-Requires-Dist: large-image-converter>=1.32.4; extra == "all"
-Requires-Dist: simplejpeg; extra == "all"
-Requires-Dist: large-image-source-rasterio[all]>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-pil[all]>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-bioformats>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-rasterio>=1.32.4; extra == "all"
-Requires-Dist: pyvips; extra == "all"
-Requires-Dist: large-image-source-tifffile>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-tiff[all]>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-openslide>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-nd2>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-multi[all]>=1.32.4; extra == "all"
+Requires-Dist: large-image-source-tifffile>=1.32.6; extra == "all"
+Requires-Dist: large-image-source-zarr>=1.32.6; extra == "all"
+Requires-Dist: large-image-converter>=1.32.6; extra == "all"
 Requires-Dist: ipyleaflet; extra == "all"
 Requires-Dist: tol_colors; extra == "all"
-Requires-Dist: large-image-source-pil>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-ometiff>=1.32.4; extra == "all"
-Requires-Dist: pylibmc>=1.5.1; platform_system != "Windows" and extra == "all"
-Requires-Dist: large-image-source-deepzoom>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-vips>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-dicom>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-test>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-tiff>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-zarr>=1.32.4; extra == "all"
-Requires-Dist: large-image-source-openjpeg>=1.32.4; extra == "all"
+Requires-Dist: large-image-source-vips>=1.32.6; extra == "all"
+Requires-Dist: large-image-source-multi>=1.32.6; extra == "all"
+Requires-Dist: large-image-source-gdal>=1.32.6; extra == "all"
+Requires-Dist: simplejpeg; extra == "all"
+Requires-Dist: large-image-source-test>=1.32.6; extra == "all"
+Requires-Dist: large-image-source-pil[all]>=1.32.6; extra == "all"
+Requires-Dist: redis>=4.5.5; extra == "all"
+Requires-Dist: large-image-source-tiff[all]>=1.32.6; extra == "all"
+Requires-Dist: large-image-source-mapnik>=1.32.6; extra == "all"
+Requires-Dist: large-image-source-pil>=1.32.6; extra == "all"
+Requires-Dist: large-image-source-dummy>=1.32.6; extra == "all"
+Requires-Dist: large-image-source-dicom>=1.32.6; extra == "all"
+Requires-Dist: psutil>=4.2.0; extra == "all"
+Requires-Dist: large-image-source-multi[all]>=1.32.6; extra == "all"
+Requires-Dist: large-image-source-openjpeg>=1.32.6; extra == "all"
+Requires-Dist: pyvips; extra == "all"
+Requires-Dist: ipyvue; extra == "all"
+Requires-Dist: large-image-source-rasterio>=1.32.6; extra == "all"
 Provides-Extra: common
+Requires-Dist: large-image-source-nd2>=1.32.6; extra == "common"
+Requires-Dist: large-image-source-deepzoom>=1.32.6; extra == "common"
+Requires-Dist: large-image-source-openslide>=1.32.6; extra == "common"
+Requires-Dist: large-image-source-pil[all]>=1.32.6; extra == "common"
+Requires-Dist: large-image-source-rasterio[all]>=1.32.6; extra == "common"
 Requires-Dist: matplotlib; extra == "common"
+Requires-Dist: large-image-source-dicom>=1.32.6; extra == "common"
 Requires-Dist: psutil>=4.2.0; extra == "common"
-Requires-Dist: large-image-source-nd2>=1.32.4; extra == "common"
-Requires-Dist: large-image-source-multi>=1.32.4; extra == "common"
-Requires-Dist: tol_colors; extra == "common"
+Requires-Dist: large-image-source-zarr>=1.32.6; extra == "common"
+Requires-Dist: large-image-source-tifffile>=1.32.6; extra == "common"
 Requires-Dist: simplejpeg; extra == "common"
-Requires-Dist: large-image-source-rasterio[all]>=1.32.4; extra == "common"
-Requires-Dist: large-image-source-pil[all]>=1.32.4; extra == "common"
-Requires-Dist: large-image-source-dicom>=1.32.4; extra == "common"
-Requires-Dist: large-image-source-deepzoom>=1.32.4; extra == "common"
-Requires-Dist: large-image-source-test>=1.32.4; extra == "common"
-Requires-Dist: large-image-source-tifffile>=1.32.4; extra == "common"
-Requires-Dist: large-image-source-zarr>=1.32.4; extra == "common"
-Requires-Dist: large-image-source-openslide>=1.32.4; extra == "common"
+Requires-Dist: tol_colors; extra == "common"
+Requires-Dist: large-image-source-multi>=1.32.6; extra == "common"
+Requires-Dist: large-image-source-test>=1.32.6; extra == "common"
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier
@@ -316,13 +316,15 @@ There is also cache management to balance memory use and speed of response in Gi
 
 Most tile sources can be used with Girder Large Image.  You can specify an extras_require of ``girder`` to install the following packages:
 
-  - ``girder-large-image``: Large Image as a Girder 3.x plugin.
-    You can install ``large-image[tasks]`` to install a Girder Worker task that can convert otherwise unreadable images to pyramidal tiff files.
+- ``girder-large-image``: Large Image as a Girder 3.x plugin.
 
-  - ``girder-large-image-annotation``: Adds models to the Girder database for supporting annotating large images.  These annotations can be rendered on images. Annotations can include polygons, points, image overlays, and other types. Each annotation can have a label and metadata.
+  You can install ``large-image[tasks]`` to install a Girder Worker task that can convert otherwise unreadable images to pyramidal tiff files.
 
-  - ``large-image-tasks``: A utility for running the converter via Girder Worker.
-    You can specify an extras_require of ``girder`` to include modules needed to work with the Girder remote worker or ``worker`` to include modules needed on the remote side of the Girder remote worker.  If neither is specified, some conversion tasks can be run using Girder local jobs.
+- ``girder-large-image-annotation``: Adds models to the Girder database for supporting annotating large images.  These annotations can be rendered on images. Annotations can include polygons, points, image overlays, and other types. Each annotation can have a label and metadata.
+
+- ``large-image-tasks``: A utility for running the converter via Girder Worker.
+
+  You can specify an extras_require of ``girder`` to include modules needed to work with the Girder remote worker or ``worker`` to include modules needed on the remote side of the Girder remote worker.  If neither is specified, some conversion tasks can be run using Girder local jobs.
 
 
 

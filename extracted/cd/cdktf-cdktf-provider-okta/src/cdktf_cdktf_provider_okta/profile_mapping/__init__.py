@@ -1,7 +1,7 @@
 r'''
 # `okta_profile_mapping`
 
-Refer to the Terraform Registry for docs: [`okta_profile_mapping`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping).
+Refer to the Terraform Registry for docs: [`okta_profile_mapping`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class ProfileMapping(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.profileMapping.ProfileMapping",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping okta_profile_mapping}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping okta_profile_mapping}.'''
 
     def __init__(
         self,
@@ -65,16 +65,16 @@ class ProfileMapping(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping okta_profile_mapping} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping okta_profile_mapping} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param source_id: The source id of the mapping to manage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#source_id ProfileMapping#source_id}
-        :param target_id: The target id of the mapping to manage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#target_id ProfileMapping#target_id}
-        :param always_apply: Whether apply the changes to all users with this profile after updating or creating the these mappings. ~> **WARNING:**: 'always_apply' is incompatible with OAuth 2.0 authentication and will be ignored when using that type of authentication. ~> **WARNING:** 'always_apply' makes use of an internal/private Okta API endpoint that could change without notice rendering this resource inoperable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#always_apply ProfileMapping#always_apply}
-        :param delete_when_absent: When turned on this flag will trigger the provider to delete mapping properties that are not defined in config. By default, we do not delete missing properties. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#delete_when_absent ProfileMapping#delete_when_absent}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#id ProfileMapping#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param mappings: mappings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#mappings ProfileMapping#mappings}
+        :param source_id: The source id of the mapping to manage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#source_id ProfileMapping#source_id}
+        :param target_id: The target id of the mapping to manage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#target_id ProfileMapping#target_id}
+        :param always_apply: Whether apply the changes to all users with this profile after updating or creating the these mappings. ~> **WARNING:**: 'always_apply' is incompatible with OAuth 2.0 authentication and will be ignored when using that type of authentication. ~> **WARNING:** 'always_apply' makes use of an internal/private Okta API endpoint that could change without notice rendering this resource inoperable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#always_apply ProfileMapping#always_apply}
+        :param delete_when_absent: When turned on this flag will trigger the provider to delete mapping properties that are not defined in config. By default, we do not delete missing properties. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#delete_when_absent ProfileMapping#delete_when_absent}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#id ProfileMapping#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param mappings: mappings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#mappings ProfileMapping#mappings}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -118,7 +118,7 @@ class ProfileMapping(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the ProfileMapping to import.
-        :param import_from_id: The id of the existing ProfileMapping that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing ProfileMapping that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the ProfileMapping to import is found.
         '''
         if __debug__:
@@ -346,12 +346,12 @@ class ProfileMappingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param source_id: The source id of the mapping to manage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#source_id ProfileMapping#source_id}
-        :param target_id: The target id of the mapping to manage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#target_id ProfileMapping#target_id}
-        :param always_apply: Whether apply the changes to all users with this profile after updating or creating the these mappings. ~> **WARNING:**: 'always_apply' is incompatible with OAuth 2.0 authentication and will be ignored when using that type of authentication. ~> **WARNING:** 'always_apply' makes use of an internal/private Okta API endpoint that could change without notice rendering this resource inoperable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#always_apply ProfileMapping#always_apply}
-        :param delete_when_absent: When turned on this flag will trigger the provider to delete mapping properties that are not defined in config. By default, we do not delete missing properties. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#delete_when_absent ProfileMapping#delete_when_absent}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#id ProfileMapping#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param mappings: mappings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#mappings ProfileMapping#mappings}
+        :param source_id: The source id of the mapping to manage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#source_id ProfileMapping#source_id}
+        :param target_id: The target id of the mapping to manage. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#target_id ProfileMapping#target_id}
+        :param always_apply: Whether apply the changes to all users with this profile after updating or creating the these mappings. ~> **WARNING:**: 'always_apply' is incompatible with OAuth 2.0 authentication and will be ignored when using that type of authentication. ~> **WARNING:** 'always_apply' makes use of an internal/private Okta API endpoint that could change without notice rendering this resource inoperable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#always_apply ProfileMapping#always_apply}
+        :param delete_when_absent: When turned on this flag will trigger the provider to delete mapping properties that are not defined in config. By default, we do not delete missing properties. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#delete_when_absent ProfileMapping#delete_when_absent}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#id ProfileMapping#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param mappings: mappings block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#mappings ProfileMapping#mappings}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -465,7 +465,7 @@ class ProfileMappingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def source_id(self) -> builtins.str:
         '''The source id of the mapping to manage.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#source_id ProfileMapping#source_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#source_id ProfileMapping#source_id}
         '''
         result = self._values.get("source_id")
         assert result is not None, "Required property 'source_id' is missing"
@@ -475,7 +475,7 @@ class ProfileMappingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def target_id(self) -> builtins.str:
         '''The target id of the mapping to manage.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#target_id ProfileMapping#target_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#target_id ProfileMapping#target_id}
         '''
         result = self._values.get("target_id")
         assert result is not None, "Required property 'target_id' is missing"
@@ -490,7 +490,7 @@ class ProfileMappingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         ~> **WARNING:**: 'always_apply' is incompatible with OAuth 2.0 authentication and will be ignored when using that type of authentication.
         ~> **WARNING:** 'always_apply' makes use of an internal/private Okta API endpoint that could change without notice rendering this resource inoperable.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#always_apply ProfileMapping#always_apply}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#always_apply ProfileMapping#always_apply}
         '''
         result = self._values.get("always_apply")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -503,14 +503,14 @@ class ProfileMappingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         By default, we do not delete missing properties.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#delete_when_absent ProfileMapping#delete_when_absent}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#delete_when_absent ProfileMapping#delete_when_absent}
         '''
         result = self._values.get("delete_when_absent")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#id ProfileMapping#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#id ProfileMapping#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -524,7 +524,7 @@ class ProfileMappingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ProfileMappingMappings"]]]:
         '''mappings block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#mappings ProfileMapping#mappings}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#mappings ProfileMapping#mappings}
         '''
         result = self._values.get("mappings")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ProfileMappingMappings"]]], result)
@@ -555,9 +555,9 @@ class ProfileMappingMappings:
         push_status: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param expression: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#expression ProfileMapping#expression}.
-        :param id: The mapping property key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#id ProfileMapping#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param push_status: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#push_status ProfileMapping#push_status}.
+        :param expression: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#expression ProfileMapping#expression}.
+        :param id: The mapping property key. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#id ProfileMapping#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param push_status: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#push_status ProfileMapping#push_status}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__9d20787fce6403bde8e610860a6cb36119c471002b763caeba41fc497e0b462b)
@@ -573,7 +573,7 @@ class ProfileMappingMappings:
 
     @builtins.property
     def expression(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#expression ProfileMapping#expression}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#expression ProfileMapping#expression}.'''
         result = self._values.get("expression")
         assert result is not None, "Required property 'expression' is missing"
         return typing.cast(builtins.str, result)
@@ -582,7 +582,7 @@ class ProfileMappingMappings:
     def id(self) -> builtins.str:
         '''The mapping property key.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#id ProfileMapping#id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#id ProfileMapping#id}
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -593,7 +593,7 @@ class ProfileMappingMappings:
 
     @builtins.property
     def push_status(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/profile_mapping#push_status ProfileMapping#push_status}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/profile_mapping#push_status ProfileMapping#push_status}.'''
         result = self._values.get("push_status")
         return typing.cast(typing.Optional[builtins.str], result)
 

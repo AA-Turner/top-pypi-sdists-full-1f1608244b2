@@ -1,7 +1,7 @@
 r'''
 # `okta_captcha`
 
-Refer to the Terraform Registry for docs: [`okta_captcha`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha).
+Refer to the Terraform Registry for docs: [`okta_captcha`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Captcha(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.captcha.Captcha",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha okta_captcha}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha okta_captcha}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class Captcha(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha okta_captcha} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha okta_captcha} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Name of the CAPTCHA. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#name Captcha#name}
-        :param secret_key: Secret key issued from the CAPTCHA vendor to perform server-side validation for a CAPTCHA token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#secret_key Captcha#secret_key}
-        :param site_key: Site key issued from the CAPTCHA vendor to render a CAPTCHA on a page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#site_key Captcha#site_key}
-        :param type: Type of the captcha. Valid values: ``HCAPTCHA``, ``RECAPTCHA_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#type Captcha#type}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#id Captcha#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param name: Name of the CAPTCHA. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#name Captcha#name}
+        :param secret_key: Secret key issued from the CAPTCHA vendor to perform server-side validation for a CAPTCHA token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#secret_key Captcha#secret_key}
+        :param site_key: Site key issued from the CAPTCHA vendor to render a CAPTCHA on a page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#site_key Captcha#site_key}
+        :param type: Type of the captcha. Valid values: ``HCAPTCHA``, ``RECAPTCHA_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#type Captcha#type}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#id Captcha#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class Captcha(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Captcha to import.
-        :param import_from_id: The id of the existing Captcha that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Captcha that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Captcha to import is found.
         '''
         if __debug__:
@@ -272,11 +272,11 @@ class CaptchaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Name of the CAPTCHA. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#name Captcha#name}
-        :param secret_key: Secret key issued from the CAPTCHA vendor to perform server-side validation for a CAPTCHA token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#secret_key Captcha#secret_key}
-        :param site_key: Site key issued from the CAPTCHA vendor to render a CAPTCHA on a page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#site_key Captcha#site_key}
-        :param type: Type of the captcha. Valid values: ``HCAPTCHA``, ``RECAPTCHA_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#type Captcha#type}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#id Captcha#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param name: Name of the CAPTCHA. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#name Captcha#name}
+        :param secret_key: Secret key issued from the CAPTCHA vendor to perform server-side validation for a CAPTCHA token. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#secret_key Captcha#secret_key}
+        :param site_key: Site key issued from the CAPTCHA vendor to render a CAPTCHA on a page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#site_key Captcha#site_key}
+        :param type: Type of the captcha. Valid values: ``HCAPTCHA``, ``RECAPTCHA_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#type Captcha#type}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#id Captcha#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -385,7 +385,7 @@ class CaptchaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the CAPTCHA.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#name Captcha#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#name Captcha#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -395,7 +395,7 @@ class CaptchaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def secret_key(self) -> builtins.str:
         '''Secret key issued from the CAPTCHA vendor to perform server-side validation for a CAPTCHA token.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#secret_key Captcha#secret_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#secret_key Captcha#secret_key}
         '''
         result = self._values.get("secret_key")
         assert result is not None, "Required property 'secret_key' is missing"
@@ -405,7 +405,7 @@ class CaptchaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def site_key(self) -> builtins.str:
         '''Site key issued from the CAPTCHA vendor to render a CAPTCHA on a page.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#site_key Captcha#site_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#site_key Captcha#site_key}
         '''
         result = self._values.get("site_key")
         assert result is not None, "Required property 'site_key' is missing"
@@ -415,7 +415,7 @@ class CaptchaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> builtins.str:
         '''Type of the captcha. Valid values: ``HCAPTCHA``, ``RECAPTCHA_V2``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#type Captcha#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#type Captcha#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -423,7 +423,7 @@ class CaptchaConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/captcha#id Captcha#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/captcha#id Captcha#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

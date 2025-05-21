@@ -1,6 +1,10 @@
 use std::{collections::HashMap, sync::Arc};
 
-use pyo3::{exceptions::PyAttributeError, prelude::*, types::PyDict};
+use pyo3::{
+    exceptions::{PyAttributeError, PyValueError},
+    prelude::*,
+    types::PyDict,
+};
 
 use crate::{
     multipart,
@@ -53,57 +57,51 @@ impl Request {
         self.app_data.as_ref().map(|d| d.clone_ref(py))
     }
 
-    fn query(&self) -> PyResult<Option<HashMap<String, String>>> {
+    fn query(&self, py: Python<'_>) -> PyResult<Option<HashMap<String, String>>> {
         let query_string = self.uri.split('?').nth(1);
         if let Some(query) = query_string {
-            let query_params = Self::parse_query_string(query.to_string());
+            let query_params = Self::parse_query_string(query, py)?;
             return Ok(Some(query_params));
         }
         Ok(None)
     }
 
     pub fn form(&self, py: Python<'_>) -> PyResult<Py<PyDict>> {
+        let dict = PyDict::new(py);
         if let Some(ref form_data) = self.form_data {
-            let dict = PyDict::new(py);
             for (key, value) in form_data {
                 dict.set_item(key, value)?;
             }
-            Ok(dict.into())
-        } else {
-            Ok(PyDict::new(py).into())
         }
+        Ok(dict.into())
     }
 
     pub fn files(&self, py: Python<'_>) -> PyResult<Py<PyDict>> {
+        let dict = PyDict::new(py);
         if let Some(ref files) = self.files {
-            let dict = PyDict::new(py);
             for (key, file) in files {
                 dict.set_item(key, file.clone())?;
             }
-            Ok(dict.into())
-        } else {
-            Ok(PyDict::new(py).into())
         }
+        Ok(dict.into())
     }
 
     pub fn session(&self) -> PyResult<Session> {
-        if let Some(ref session) = self.session {
-            Ok(session.as_ref().clone())
-        } else {
-            Err(pyo3::exceptions::PyAttributeError::new_err(
-                "Session not available. Make sure you've configured SessionStore.",
-            ))
-        }
+        let message = "Session not available. Make sure you've configured SessionStore.";
+        let session = self
+            .session
+            .as_ref()
+            .ok_or_else(|| PyAttributeError::new_err(message))?;
+        Ok(session.as_ref().clone())
     }
 
     fn __getattr__(&self, py: Python<'_>, name: &str) -> PyResult<PyObject> {
-        if let Some(value) = self.ext.get(name) {
-            Ok(value.clone_ref(py))
-        } else {
-            Err(PyAttributeError::new_err(format!(
-                "Request object has no attribute {name}"
-            )))
-        }
+        let message = format!("Request object has no attribute {name}");
+        let obj = self
+            .ext
+            .get(name)
+            .ok_or_else(|| PyAttributeError::new_err(message))?;
+        Ok(obj.clone_ref(py))
     }
 
     fn __setattr__(&mut self, name: &str, value: PyObject) -> PyResult<()> {
@@ -122,15 +120,22 @@ impl Request {
 }
 
 impl Request {
-    fn parse_query_string(query_string: String) -> HashMap<String, String> {
-        query_string
-            .split('&')
-            .filter_map(|pair| {
-                let mut parts = pair.split('=');
-                let key = parts.next()?.to_string();
-                let value = parts.next().map_or("".to_string(), |v| v.to_string());
-                Some((key, value))
-            })
-            .collect()
+    fn parse_query_string(query_string: &str, py: Python<'_>) -> PyResult<HashMap<String, String>> {
+        let urllib = PyModule::import(py, "urllib")?;
+        let unqoute = urllib.getattr("parse")?.getattr("unquote")?;
+        let mut result = HashMap::new();
+
+        for pair in query_string.split("&") {
+            let mut parts = pair.split("=");
+            let key = parts
+                .next()
+                .ok_or_else(|| PyValueError::new_err("Invalide query string format"))?
+                .to_string();
+            let value = parts.next().unwrap_or_default();
+            let value_parsed: String = unqoute.call1((value,))?.extract()?;
+            result.insert(key, value_parsed);
+        }
+
+        Ok(result)
     }
 }

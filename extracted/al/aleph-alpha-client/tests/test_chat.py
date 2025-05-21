@@ -1,3 +1,4 @@
+import json
 import pytest
 
 from aleph_alpha_client import AsyncClient, Client
@@ -11,9 +12,11 @@ from aleph_alpha_client.chat import (
     Usage,
     stream_chat_item_from_json,
 )
+from aleph_alpha_client.structured_output import JSONSchema
+
+from .test_steering import create_sample_steering_concept_creation_request
 
 
-@pytest.mark.system_test
 async def test_can_not_chat_with_all_models(async_client: AsyncClient, model_name: str):
     request = ChatRequest(
         messages=[Message(role=Role.User, content="Hello, how are you?")],
@@ -167,10 +170,14 @@ def test_steering_chat(sync_client: Client, chat_model_name: str):
         model=chat_model_name,
     )
 
+    steering_concept_id = sync_client.create_steering_concept(
+        create_sample_steering_concept_creation_request()
+    ).id
+
     steered_request = ChatRequest(
         messages=[Message(role=Role.User, content="Hello, how are you?")],
         model=chat_model_name,
-        steering_concepts=["_worker/slang"],
+        steering_concepts=[steering_concept_id],
     )
 
     base_response = sync_client.chat(base_request, model=chat_model_name)
@@ -182,3 +189,18 @@ def test_steering_chat(sync_client: Client, chat_model_name: str):
     assert base_completion_result
     assert steered_completion_result
     assert base_completion_result != steered_completion_result
+
+
+def test_response_format_json_schema(sync_client: Client, dummy_model_name: str):
+    example_json_schema = {"properties": {"bar": {"type": "integer"}, "type": "object"}}
+
+    request = ChatRequest(
+        messages=[Message(role=Role.User, content="Give me JSON!")],
+        model=dummy_model_name,
+        response_format=JSONSchema(example_json_schema),
+    )
+
+    response = sync_client.chat(request, model=dummy_model_name)
+
+    # Dummy worker simply returns the JSON schema that the user has submitted
+    assert json.loads(response.message.content) == example_json_schema

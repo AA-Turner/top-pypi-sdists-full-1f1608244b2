@@ -366,6 +366,7 @@ class _PipeState:
         pulumi.set(self, "schema", value)
 
 
+@pulumi.type_token("snowflake:index/pipe:Pipe")
 class Pipe(pulumi.CustomResource):
     @overload
     def __init__(__self__,

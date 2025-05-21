@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Union, List
+from typing import Any, Union
 
 from pydantic import Field, BaseModel
 
@@ -26,7 +26,7 @@ class DiscoveryHistory(BaseModel):
         ts_format: Valid formats ['utc', 'datetime', 'int']; datetime will return python datetime object
 
         Returns:
-            List[Dict]
+            list[Dict]
         """
         columns = columns or COLUMNS
         if ts_format not in ["utc", "datetime", "int"] and "ts" in columns:
@@ -99,7 +99,7 @@ class DiscoveryHistory(BaseModel):
             filters = {"ts": ["gte", int(date_parser(daterange).timestamp() * 1000)]}
         return self.get_all_history(columns=columns, sort=sort, filters=filters, ts_format=ts_format)
 
-    def delete_history(self, history_id: Union[List[str], str]):
+    def delete_history(self, history_id: Union[list[str], str]):
         if isinstance(history_id, str):
             history_id = [history_id]
 

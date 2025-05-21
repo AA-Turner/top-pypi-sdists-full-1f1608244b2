@@ -287,6 +287,7 @@ class _ManagedAccountState:
         pulumi.set(self, "url", value)
 
 
+@pulumi.type_token("snowflake:index/managedAccount:ManagedAccount")
 class ManagedAccount(pulumi.CustomResource):
     @overload
     def __init__(__self__,

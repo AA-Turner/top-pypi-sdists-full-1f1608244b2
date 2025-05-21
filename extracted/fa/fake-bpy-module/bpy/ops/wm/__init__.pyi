@@ -2904,7 +2904,7 @@ def obj_import(
         :type import_vertex_groups: bool | None
         :param validate_meshes: Validate Meshes, Ensure the data is valid (when disabled, data may be imported which causes crashes displaying or editing)
         :type validate_meshes: bool | None
-        :param close_spline_loops: Detect Cyclic Curves, Join curve endpoints if overlapping control points are detected(if disabled, no curves will be cyclic)
+        :param close_spline_loops: Detect Cyclic Curves, Join curve endpoints if overlapping control points are detected (if disabled, no curves will be cyclic)
         :type close_spline_loops: bool | None
         :param collection_separator: Path Separator, Character used to separate objects name into hierarchical structure
         :type collection_separator: str

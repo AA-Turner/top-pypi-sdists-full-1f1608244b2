@@ -30,7 +30,6 @@ from tensorboard_plugin_profile.convert import inference_stats_proto_to_gviz
 from tensorboard_plugin_profile.convert import input_pipeline_proto_to_gviz
 from tensorboard_plugin_profile.convert import kernel_stats_proto_to_gviz
 from tensorboard_plugin_profile.convert import overview_page_proto_to_gviz
-from tensorboard_plugin_profile.convert import roofline_model_proto_to_gviz
 from tensorboard_plugin_profile.convert import tf_stats_proto_to_gviz
 from tensorboard_plugin_profile.convert import trace_events_json
 from tensorboard_plugin_profile.protobuf import trace_events_old_pb2
@@ -180,15 +179,22 @@ def xspace_to_tool_data(
     if success:
       data = json_data
   elif tool == 'roofline_model':
-    raw_data, success = xspace_wrapper_func(xspace_paths, tool)
+    json_data, success = xspace_wrapper_func(xspace_paths, tool)
     if success:
-      data = roofline_model_proto_to_gviz.to_json(raw_data)
+      data = json_data
   elif tool == 'graph_viewer':
+    download_hlo_types = ['pb', 'pbtxt', 'json', 'short_txt', 'long_txt']
+    graph_html_type = 'graph'
     options = params.get('graph_viewer_options', {})
     raw_data, success = xspace_wrapper_func(xspace_paths, tool, options)
     if success:
       data = raw_data
-      content_type = 'text/html'
+      content_type = 'text/plain'
+      data_type = options.get('type', '')
+      if (data_type in download_hlo_types):
+        content_type = 'application/octet-stream'
+      if data_type == graph_html_type:
+        content_type = 'text/html'
     else:
       # TODO(tf-profiler) Handle errors for other tools as well,
       # to pass along the error message to client
@@ -200,7 +206,7 @@ def xspace_to_tool_data(
         'view_memory_allocation_timeline', False
     )
     options = {
-        'module_name': params.get('host'),
+        'module_name': params.get('module_name'),
         'view_memory_allocation_timeline': view_memory_allocation_timeline,
         'memory_space': params.get('memory_space', ''),
     }

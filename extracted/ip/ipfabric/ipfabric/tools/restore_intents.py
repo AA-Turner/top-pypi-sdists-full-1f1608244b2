@@ -1,3 +1,4 @@
+# TODO: REMOVE IN 8.0
 import json
 import logging
 from collections import OrderedDict
@@ -16,6 +17,11 @@ logger = logging.getLogger("ipfabric")
 @dataclass
 class RestoreIntents:
     ipf: Any = Field(exclude=True)
+
+    def __post_init__(self):
+        logger.warning(
+            "This is a deprecated class. Use the `IPFClient().settings.appliance_configuration` utility instead."
+        )
 
     def restore_from_file(self, intents_file: str, groups_file: str, dashboard_file: str):
         if not all(path.exists(f) for f in [intents_file, groups_file, dashboard_file]):

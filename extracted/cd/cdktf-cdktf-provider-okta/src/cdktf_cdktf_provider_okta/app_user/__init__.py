@@ -1,7 +1,7 @@
 r'''
 # `okta_app_user`
 
-Refer to the Terraform Registry for docs: [`okta_app_user`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user).
+Refer to the Terraform Registry for docs: [`okta_app_user`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AppUser(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.appUser.AppUser",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user okta_app_user}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user okta_app_user}.'''
 
     def __init__(
         self,
@@ -66,17 +66,17 @@ class AppUser(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user okta_app_user} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user okta_app_user} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param app_id: App to associate user with. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#app_id AppUser#app_id}
-        :param user_id: User associated with the application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#user_id AppUser#user_id}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#id AppUser#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param password: The password to use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#password AppUser#password}
-        :param profile: The JSON profile of the App User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#profile AppUser#profile}
-        :param retain_assignment: Retain the user assignment on destroy. If set to true, the resource will be removed from state but not from the Okta app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#retain_assignment AppUser#retain_assignment}
-        :param username: The username to use for the app user. In case the user is assigned to the app with ``SHARED_USERNAME_AND_PASSWORD`` credentials scheme, this field will be computed and should not be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#username AppUser#username}
+        :param app_id: App to associate user with. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#app_id AppUser#app_id}
+        :param user_id: User associated with the application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#user_id AppUser#user_id}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#id AppUser#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param password: The password to use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#password AppUser#password}
+        :param profile: The JSON profile of the App User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#profile AppUser#profile}
+        :param retain_assignment: Retain the user assignment on destroy. If set to true, the resource will be removed from state but not from the Okta app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#retain_assignment AppUser#retain_assignment}
+        :param username: The username to use for the app user. In case the user is assigned to the app with ``SHARED_USERNAME_AND_PASSWORD`` credentials scheme, this field will be computed and should not be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#username AppUser#username}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -121,7 +121,7 @@ class AppUser(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AppUser to import.
-        :param import_from_id: The id of the existing AppUser that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AppUser that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AppUser to import is found.
         '''
         if __debug__:
@@ -344,13 +344,13 @@ class AppUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param app_id: App to associate user with. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#app_id AppUser#app_id}
-        :param user_id: User associated with the application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#user_id AppUser#user_id}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#id AppUser#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param password: The password to use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#password AppUser#password}
-        :param profile: The JSON profile of the App User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#profile AppUser#profile}
-        :param retain_assignment: Retain the user assignment on destroy. If set to true, the resource will be removed from state but not from the Okta app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#retain_assignment AppUser#retain_assignment}
-        :param username: The username to use for the app user. In case the user is assigned to the app with ``SHARED_USERNAME_AND_PASSWORD`` credentials scheme, this field will be computed and should not be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#username AppUser#username}
+        :param app_id: App to associate user with. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#app_id AppUser#app_id}
+        :param user_id: User associated with the application. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#user_id AppUser#user_id}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#id AppUser#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param password: The password to use. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#password AppUser#password}
+        :param profile: The JSON profile of the App User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#profile AppUser#profile}
+        :param retain_assignment: Retain the user assignment on destroy. If set to true, the resource will be removed from state but not from the Okta app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#retain_assignment AppUser#retain_assignment}
+        :param username: The username to use for the app user. In case the user is assigned to the app with ``SHARED_USERNAME_AND_PASSWORD`` credentials scheme, this field will be computed and should not be set. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#username AppUser#username}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -467,7 +467,7 @@ class AppUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def app_id(self) -> builtins.str:
         '''App to associate user with.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#app_id AppUser#app_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#app_id AppUser#app_id}
         '''
         result = self._values.get("app_id")
         assert result is not None, "Required property 'app_id' is missing"
@@ -477,7 +477,7 @@ class AppUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_id(self) -> builtins.str:
         '''User associated with the application.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#user_id AppUser#user_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#user_id AppUser#user_id}
         '''
         result = self._values.get("user_id")
         assert result is not None, "Required property 'user_id' is missing"
@@ -485,7 +485,7 @@ class AppUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#id AppUser#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#id AppUser#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -497,7 +497,7 @@ class AppUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def password(self) -> typing.Optional[builtins.str]:
         '''The password to use.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#password AppUser#password}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#password AppUser#password}
         '''
         result = self._values.get("password")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -506,7 +506,7 @@ class AppUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def profile(self) -> typing.Optional[builtins.str]:
         '''The JSON profile of the App User.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#profile AppUser#profile}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#profile AppUser#profile}
         '''
         result = self._values.get("profile")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -519,7 +519,7 @@ class AppUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         If set to true, the resource will be removed from state but not from the Okta app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#retain_assignment AppUser#retain_assignment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#retain_assignment AppUser#retain_assignment}
         '''
         result = self._values.get("retain_assignment")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -530,7 +530,7 @@ class AppUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         In case the user is assigned to the app with ``SHARED_USERNAME_AND_PASSWORD`` credentials scheme, this field will be computed and should not be set.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_user#username AppUser#username}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_user#username AppUser#username}
         '''
         result = self._values.get("username")
         return typing.cast(typing.Optional[builtins.str], result)

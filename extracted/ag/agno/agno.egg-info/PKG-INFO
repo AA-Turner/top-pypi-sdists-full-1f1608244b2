@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: agno
-Version: 1.5.1
+Version: 1.5.2
 Summary: Agno: a lightweight library for building Reasoning Agents
 Author-email: Ashpreet Bedi <ashpreet@agno.com>
 License: Copyright (c) Agno, Inc.
@@ -517,6 +517,8 @@ Provides-Extra: confluence
 Requires-Dist: atlassian-python-api; extra == "confluence"
 Provides-Extra: zep
 Requires-Dist: zep-cloud; extra == "zep"
+Provides-Extra: google-bigquery
+Requires-Dist: google-cloud-bigquery; extra == "google-bigquery"
 Provides-Extra: sql
 Requires-Dist: sqlalchemy; extra == "sql"
 Provides-Extra: postgres
@@ -537,6 +539,8 @@ Requires-Dist: lancedb==0.20.0; extra == "lancedb"
 Requires-Dist: tantivy; extra == "lancedb"
 Provides-Extra: qdrant
 Requires-Dist: qdrant-client; extra == "qdrant"
+Provides-Extra: couchbase
+Requires-Dist: couchbase; extra == "couchbase"
 Provides-Extra: cassandra
 Requires-Dist: cassio; extra == "cassandra"
 Provides-Extra: mongodb
@@ -604,6 +608,7 @@ Requires-Dist: agno[browserbase]; extra == "tools"
 Requires-Dist: agno[agentql]; extra == "tools"
 Requires-Dist: agno[confluence]; extra == "tools"
 Requires-Dist: agno[zep]; extra == "tools"
+Requires-Dist: agno[google_bigquery]; extra == "tools"
 Provides-Extra: storage
 Requires-Dist: agno[sql]; extra == "storage"
 Requires-Dist: agno[postgres]; extra == "storage"
@@ -615,6 +620,7 @@ Requires-Dist: agno[pgvector]; extra == "vectordbs"
 Requires-Dist: agno[chromadb]; extra == "vectordbs"
 Requires-Dist: agno[lancedb]; extra == "vectordbs"
 Requires-Dist: agno[qdrant]; extra == "vectordbs"
+Requires-Dist: agno[couchbase]; extra == "vectordbs"
 Requires-Dist: agno[cassandra]; extra == "vectordbs"
 Requires-Dist: agno[mongodb]; extra == "vectordbs"
 Requires-Dist: agno[singlestore]; extra == "vectordbs"
@@ -655,17 +661,18 @@ Dynamic: license-file
   <a href="https://github.com/agno-agi/agno/stargazers">🌟 Star Us</a>
 </div>
 
-<div align="center">
-  <img src="https://img.shields.io/pypi/v/agno" alt="PyPI - Version">
-</div>
+## What is Agno?
 
-## Introduction
+[Agno](https://docs.agno.com) is a lightweight, high-performance library for building Agents.
 
-[Agno](https://docs.agno.com) is a lightweight library for building Agents with memory, knowledge, tools and reasoning.
+It helps you progressively build the 5 levels of Agentic Systems:
+- Level 1: Agents with tools and instructions.
+- Level 2: Agents with knowledge and storage.
+- Level 3: Agents with memory and reasoning.
+- Level 4: Teams of Agents with collaboration and coordination.
+- Level 5: Agentic Workflows with state and determinism.
 
-Developers use Agno to build Reasoning Agents, Multimodal Agents, Teams of Agents and Agentic Workflows. Agno also provides a beautiful UI to chat with your Agents, pre-built FastAPI routes to serve your Agents and tools to monitor and evaluate their performance.
-
-Here's an Agent that writes a report on a stock, reasoning through each step:
+Here's a Investment Research Agent that analyzes stocks, reasoning through each step:
 
 ```python reasoning_finance_agent.py
 from agno.agent import Agent

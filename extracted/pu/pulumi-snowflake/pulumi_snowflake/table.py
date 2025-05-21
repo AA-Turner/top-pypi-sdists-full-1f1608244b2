@@ -400,6 +400,7 @@ class _TableState:
         pulumi.set(self, "tags", value)
 
 
+@pulumi.type_token("snowflake:index/table:Table")
 class Table(pulumi.CustomResource):
     @overload
     def __init__(__self__,

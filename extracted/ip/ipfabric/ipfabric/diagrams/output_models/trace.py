@@ -1,10 +1,5 @@
 import os
-from typing import Optional, List, Union, Literal
-
-try:
-    from typing import Annotated  # py38 required Annotated
-except ImportError:
-    from typing_extensions import Annotated
+from typing import Optional, Union, Literal, Annotated
 
 from pydantic import BaseModel, Field
 
@@ -17,11 +12,11 @@ class SeverityInfo(BaseModel, extra=PYDANTIC_EXTRAS):
     name: str
     severity: int
     topic: str
-    details: Optional[List[str]] = Field(default_factory=list)
+    details: Optional[list[str]] = Field(default_factory=list)
 
 
 class ValueMatch(BaseModel, extra=PYDANTIC_EXTRAS):
-    value: Union[str, List[str], None]
+    value: Union[str, list[str], None]
 
 
 class PacketDataMatch(ValueMatch, BaseModel, extra=PYDANTIC_EXTRAS):
@@ -37,6 +32,8 @@ class RemoveHeader(BaseModel, extra=PYDANTIC_EXTRAS):
     index: int
     headerType: str
     type: Literal["remove header"]
+    reason: Optional[str] = None
+    tunnelDstIp: Optional[str] = None
 
 
 class Filter(BaseModel, extra=PYDANTIC_EXTRAS):
@@ -44,7 +41,7 @@ class Filter(BaseModel, extra=PYDANTIC_EXTRAS):
     mask: Optional[int] = None
     vrf: Optional[str] = None
     prefix: Optional[str] = None
-    ip: Optional[Union[str, List[str]]] = None
+    ip: Optional[Union[str, list[str]]] = None
     groupIp: Optional[str] = None
     sourceIp: Optional[str] = None
     inIfaceName: Optional[str] = None
@@ -77,9 +74,9 @@ class InsertHeader(BaseModel, extra=PYDANTIC_EXTRAS):
 
 
 class Patch(BaseModel, extra=PYDANTIC_EXTRAS):
-    stack: Optional[List[int]] = None
+    stack: Optional[list[int]] = None
     ttl: Optional[int] = None
-    dst: Optional[Union[str, List[str]]] = None
+    dst: Optional[Union[str, list[str]]] = None
     policyApplied: Optional[bool] = None
 
 
@@ -94,9 +91,9 @@ class DropPacket(BaseModel, extra=PYDANTIC_EXTRAS):
     type: Literal["drop packet"]
     reason: str
     severityInfo: Optional[SeverityInfo] = None
-    ips: Optional[List[str]] = None
-    groupIp: Optional[List[str]] = None
-    sourceIp: Optional[List[str]] = None
+    ips: Optional[list[str]] = None
+    groupIp: Optional[list[str]] = None
+    sourceIp: Optional[list[str]] = None
 
 
 class SeverityEvent(BaseModel, extra=PYDANTIC_EXTRAS):
@@ -106,7 +103,7 @@ class SeverityEvent(BaseModel, extra=PYDANTIC_EXTRAS):
 
 class BaseEvent(BaseModel, extra=PYDANTIC_EXTRAS):
     decidingPolicyName: Optional[str] = None
-    decidingRule: Optional[List[int]] = None
+    decidingRule: Optional[list[int]] = None
     protocolId: str
     securityType: str
     severityInfo: Optional[SeverityInfo] = None
@@ -179,4 +176,4 @@ EVENT = Annotated[
 class Trace(BaseModel, extra=PYDANTIC_EXTRAS):
     chain: str
     phase: str
-    events: List[EVENT]
+    events: list[EVENT]

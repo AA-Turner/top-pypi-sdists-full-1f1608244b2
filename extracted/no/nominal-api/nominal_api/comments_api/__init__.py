@@ -14,7 +14,6 @@ from .._impl import (
     comments_api_Reaction as Reaction,
     comments_api_ReactionRid as ReactionRid,
     comments_api_ReactionType as ReactionType,
-    comments_api_ResourceRid as ResourceRid,
     comments_api_ResourceType as ResourceType,
 )
 

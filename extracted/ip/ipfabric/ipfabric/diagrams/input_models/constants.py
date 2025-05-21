@@ -1,12 +1,7 @@
 import json
-from typing import List
+from importlib.resources import files, as_file
 
 from pydantic import BaseModel
-
-try:
-    from importlib.resources import files, as_file
-except ImportError:
-    from importlib_resources import files, as_file
 
 
 class Label(BaseModel):
@@ -22,7 +17,7 @@ class Label(BaseModel):
 
 class Protocol(BaseModel):
     name: str
-    labels: List[Label]
+    labels: list[Label]
 
     def __eq__(self, other):
         return self.name == other.lower()

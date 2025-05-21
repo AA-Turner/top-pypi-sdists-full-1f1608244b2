@@ -200,7 +200,8 @@ async def _get_config(
 
 
     try:
-        self.Config = config_fn._from_json(res.response,data_provider_type=self.data_provider_type)
+        self.Config = config_fn._from_json(obj = res.response,
+                                           data_provider_type=self.data_provider_type)
     
     except dmde.DomoError as e:
         if not is_suppress_no_config:

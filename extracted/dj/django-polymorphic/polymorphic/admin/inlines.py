@@ -3,6 +3,7 @@ Django Admin support for polymorphic inlines.
 
 Each row in the inline can correspond with a different subclass.
 """
+
 from functools import partial
 
 from django.conf import settings
@@ -38,7 +39,7 @@ class PolymorphicInlineModelAdmin(InlineModelAdmin):
     #: This can be redefined for subclasses.
     polymorphic_media = Media(
         js=(
-            "admin/js/vendor/jquery/jquery{}.js".format("" if settings.DEBUG else ".min"),
+            f"admin/js/vendor/jquery/{'jquery' if settings.DEBUG else 'jquery.min'}.js",
             "admin/js/jquery.init.js",
             "polymorphic/js/polymorphic_inlines.js",
         ),

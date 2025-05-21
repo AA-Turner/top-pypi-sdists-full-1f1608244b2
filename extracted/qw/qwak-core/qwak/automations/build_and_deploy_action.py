@@ -32,6 +32,9 @@ from _qwak_proto.qwak.automation.v1.auto_scaling_pb2 import (
     METRIC_TYPE_CPU,
     METRIC_TYPE_LATENCY,
     METRIC_TYPE_MEMORY,
+    METRIC_TYPE_ERROR_RATE,
+    METRIC_TYPE_THROUGHPUT,
+    METRIC_TYPE_GPU,
     AutoScalingConfig as AutoScalingConfigProto,
     AutoScalingPrometheusTrigger as AutoScalingPrometheusTriggerProto,
     QuerySpec,
@@ -427,6 +430,9 @@ class MetricType(Enum):
     cpu = METRIC_TYPE_CPU
     latency = METRIC_TYPE_LATENCY
     memory = METRIC_TYPE_MEMORY
+    error_rate = METRIC_TYPE_ERROR_RATE
+    throughput = METRIC_TYPE_THROUGHPUT
+    gpu = METRIC_TYPE_GPU
 
 
 class AggregationType(Enum):
@@ -725,10 +731,11 @@ class AutoScaleQuerySpec:
     time_period: int = field(default=None)
 
     def to_proto(self):
+        aggregation_type_lower: str = self.aggregation_type.lower()
         return QuerySpec(
             time_period=self.time_period,
             metric_type=MetricType[self.metric_type.lower()].value,
-            aggregation_type=AggregationType[self.aggregation_type.lower()].value,
+            aggregation_type=AggregationType[aggregation_type_lower].value,
         )
 
     @staticmethod
@@ -792,6 +799,9 @@ def map_auto_scaling_metric_type_proto_to_name(metric_type):
         METRIC_TYPE_CPU: "cpu",
         METRIC_TYPE_LATENCY: "latency",
         METRIC_TYPE_MEMORY: "memory",
+        METRIC_TYPE_ERROR_RATE: "error_rate",
+        METRIC_TYPE_THROUGHPUT: "throughput",
+        METRIC_TYPE_GPU: "gpu",
     }
     return mapping.get(metric_type)
 

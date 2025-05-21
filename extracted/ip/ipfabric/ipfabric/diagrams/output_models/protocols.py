@@ -1,12 +1,7 @@
 import os
-from typing import List, Union, Optional, Literal
+from typing import Union, Optional, Literal, Annotated
 
 from pydantic import BaseModel, Field
-
-try:
-    from typing import Annotated  # py38 required Annotated
-except ImportError:
-    from typing_extensions import Annotated
 
 PYDANTIC_EXTRAS = os.getenv("IPFABRIC_PYDANTIC_EXTRAS", "allow")
 
@@ -19,16 +14,16 @@ class Number(BaseModel, extra=PYDANTIC_EXTRAS):
 class Numbers(BaseModel, extra=PYDANTIC_EXTRAS):
     """Possibly only for Internal Testing"""
 
-    numbers: List[Number]
+    numbers: list[Number]
 
 
 class Transport(BaseModel, extra=PYDANTIC_EXTRAS):
-    src: Union[List[str], str]
-    dst: Union[List[str], Numbers, str]
+    src: Union[list[str], str]
+    dst: Union[list[str], Numbers, str]
 
 
 class TCP(Transport, BaseModel, extra=PYDANTIC_EXTRAS):
-    flags: List[str]
+    flags: list[str]
     type: Literal["tcp"]
 
 
@@ -43,7 +38,7 @@ class ICMP(BaseModel, extra=PYDANTIC_EXTRAS):
 
 
 class MPLS(BaseModel, extra=PYDANTIC_EXTRAS):
-    stack: List[int]
+    stack: list[int]
     type: Literal["mpls"]
 
 
@@ -62,8 +57,8 @@ class ESP(BaseModel, extra=PYDANTIC_EXTRAS):
 
 
 class IP(BaseModel, extra=PYDANTIC_EXTRAS):
-    src: List[str]
-    dst: List[str]
+    src: list[str]
+    dst: list[str]
     fragmentOffset: int = Field(alias="fragment offset")
     protocol: str
     ttl: int

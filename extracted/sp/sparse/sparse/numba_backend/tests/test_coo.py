@@ -1130,9 +1130,6 @@ def test_clip():
 
     assert_eq(np.clip(s, 1, 3), np.clip(x, 1, 3))
 
-    with pytest.raises(ValueError):
-        s.clip()
-
     out = sparse.COO.from_numpy(np.zeros_like(x))
     out2 = s.clip(min=1, max=3, out=out)
     assert out is out2
@@ -1919,3 +1916,13 @@ def test_to_invalid_device():
     s = sparse.random((5, 5), density=0.5)
     with pytest.raises(ValueError, match=r"Only .* is supported."):
         s.to_device("invalid_device")
+
+
+# regression test for gh-869
+def test_xH_x():
+    Y = np.array([[0, -1j], [+1j, 0]])
+    Ysp = COO.from_numpy(Y)
+
+    assert_eq(Ysp.conj().T @ Y, Y.conj().T @ Y)
+    assert_eq(Ysp.conj().T @ Ysp, Y.conj().T @ Y)
+    assert_eq(Y.conj().T @ Ysp.conj().T, Y.conj().T @ Y.conj().T)

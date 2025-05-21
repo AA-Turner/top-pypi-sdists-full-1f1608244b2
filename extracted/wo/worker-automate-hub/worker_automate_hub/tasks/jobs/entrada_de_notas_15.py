@@ -1,4 +1,5 @@
 import asyncio
+from datetime import datetime
 import getpass
 import os
 import warnings
@@ -532,26 +533,42 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
         panel_TTabSheet.wait("visible")
         panel_TTabSheet.click()
         send_keys("{DOWN " + ("7") + "}")
-
+        
+        await worker_sleep(5)
+        
         panel_TPage = main_window.child_window(class_name="TPage", title="Formulario")
         panel_TTabSheet = panel_TPage.child_window(class_name="TPageControl")
 
         panel_TabPagamento = panel_TTabSheet.child_window(class_name="TTabSheet")
-
-        panel_TabPagamentoCaixa = panel_TTabSheet.child_window(
-            title="Pagamento Pelo Caixa"
-        )
-
-        tipo_cobranca = panel_TabPagamentoCaixa.child_window(
-            class_name="TDBIComboBox", found_index=0
-        )
-
-        console.print(f"Selecionando a Especie de Caixa... \n")
-        tipo_cobranca.click()
+        #check if have restante
+        remove_btn = panel_TabPagamento.child_window(class_name="TDBIBitBtn", found_index=0)
+        remove_btn.click()
         try:
-            set_combobox("||List", "BANCO DO BRASIL BOLETO")
+            #Confirm screen to remove actual value and expiration date
+            app = Application().connect(class_name="TMessageForm")
+            panel_confirm = app['TMessageForm']
+            await worker_sleep(1)
+            panel_confirm.child_window(class_name="TButton", found_index=1).click()
         except:
-            set_combobox("||List", "BOLETO")
+            console.print("Sem tela de confirmação")
+            
+        # panel_TabPagamentoCaixa = panel_TTabSheet.child_window(
+        #     title="Pagamento Pelo Caixa"
+        # )
+
+        # tipo_cobranca = panel_TabPagamentoCaixa.child_window(
+        #     class_name="TDBIComboBox", found_index=0
+        # )
+        # console.print(f"Selecionando a Especie de Caixa... \n")
+        # tipo_cobranca.click()
+        app = Application().connect(class_name="TFrmNotaFiscalEntrada")
+        panel_tab_pagamento = app['TFrmNotaFiscalEntrada']
+        try:
+            # set_combobox("||List", "BANCO DO BRASIL BOLETO")
+            panel_tab_pagamento.child_window(class_name="TDBIComboBox", found_index=0).select("BANCO DO BRASIL BOLETO")
+        except:
+            # set_combobox("||List", "BOLETO")
+            panel_tab_pagamento.child_window(class_name="TDBIComboBox", found_index=0).select("BOLETO")
 
         await emsys.inserir_vencimento_e_valor(
             nota.get("nomeFornecedor"),
@@ -559,6 +576,7 @@ async def entrada_de_notas_15(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
             nota.get("dataVencimento"),
             nota.get("valorNota"),
         )
+
         await worker_sleep(8)
         await emsys.incluir_registro()
         await worker_sleep(5)

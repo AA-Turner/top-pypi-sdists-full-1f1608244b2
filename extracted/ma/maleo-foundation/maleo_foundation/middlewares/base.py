@@ -137,15 +137,15 @@ class BaseMiddleware(BaseHTTPMiddleware):
         if sign_result.success:
             response.headers["X-Signature"] = sign_result.data.signature
         if (authentication.user.is_authenticated
-            and authentication.credentials.token_type == BaseEnums.TokenType.REFRESH
-            and authentication.credentials.payload is not None
+            and authentication.credentials.token.type == BaseEnums.TokenType.REFRESH
+            and authentication.credentials.token.payload is not None
             and (response.status_code >= 200 and response.status_code < 300)
         ):
             #* Regenerate new authorization
             payload = (
                 MaleoFoundationTokenGeneralTransfers
                 .BaseEncodePayload
-                .model_validate(authentication.credentials.payload.model_dump())
+                .model_validate(authentication.credentials.token.payload.model_dump())
             )
             parameters = (
                 MaleoFoundationTokenParametersTransfers

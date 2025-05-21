@@ -1,6 +1,5 @@
 import asyncio
 import os
-from collections import defaultdict
 from datetime import UTC, datetime
 
 import langgraph.version
@@ -37,8 +36,8 @@ PLAN = "enterprise" if plus_features_enabled() else "developer"
 USER_API_URL = os.getenv("LANGGRAPH_API_URL", None)
 
 LOGS: list[dict] = []
-RUN_COUNTER = defaultdict(int)
-NODE_COUNTER = defaultdict(int)
+RUN_COUNTER = 0
+NODE_COUNTER = 0
 FROM_TIMESTAMP = datetime.now(UTC).isoformat()
 
 if (
@@ -50,12 +49,14 @@ else:
     METADATA_ENDPOINT = "https://api.smith.langchain.com/v1/metadata/submit"
 
 
-def incr_runs(*, graph_id: str | None = None, incr: int = 1) -> None:
-    RUN_COUNTER[graph_id] += incr
+def incr_runs(*, incr: int = 1) -> None:
+    global RUN_COUNTER
+    RUN_COUNTER += incr
 
 
-def incr_nodes(*_, graph_id: str | None = None, incr: int = 1) -> None:
-    NODE_COUNTER[graph_id] += incr
+def incr_nodes(_, *, incr: int = 1) -> None:
+    global NODE_COUNTER
+    NODE_COUNTER += incr
 
 
 def append_log(log: dict) -> None:
@@ -88,23 +89,13 @@ async def metadata_loop() -> None:
         # we don't need a lock as long as there's no awaits in this block
         from_timestamp = FROM_TIMESTAMP
         to_timestamp = datetime.now(UTC).isoformat()
-        nodes = NODE_COUNTER.copy()
-        runs = RUN_COUNTER.copy()
+        nodes = NODE_COUNTER
+        runs = RUN_COUNTER
         logs = LOGS.copy()
         LOGS.clear()
-        RUN_COUNTER.clear()
-        NODE_COUNTER.clear()
+        RUN_COUNTER = 0
+        NODE_COUNTER = 0
         FROM_TIMESTAMP = to_timestamp
-        graph_measures = {
-            f"langgraph.platform.graph_runs.{graph_id}": runs.get(graph_id, 0)
-            for graph_id in runs
-        }
-        graph_measures.update(
-            {
-                f"langgraph.platform.graph_nodes.{graph_id}": nodes.get(graph_id, 0)
-                for graph_id in nodes
-            }
-        )
 
         payload = {
             "license_key": LANGGRAPH_CLOUD_LICENSE_KEY,
@@ -129,9 +120,8 @@ async def metadata_loop() -> None:
                 "user_app.uses_store_ttl": str(USES_STORE_TTL),
             },
             "measures": {
-                "langgraph.platform.runs": sum(runs.values()),
-                "langgraph.platform.nodes": sum(nodes.values()),
-                **graph_measures,
+                "langgraph.platform.runs": runs,
+                "langgraph.platform.nodes": nodes,
             },
             "logs": logs,
         }
@@ -144,10 +134,8 @@ async def metadata_loop() -> None:
             )
         except Exception as e:
             # retry on next iteration
-            for graph_id, incr in runs.items():
-                incr_runs(graph_id=graph_id, incr=incr)
-            for graph_id, incr in nodes.items():
-                incr_nodes(graph_id=graph_id, incr=incr)
+            incr_runs(incr=runs)
+            incr_nodes("", incr=nodes)
             FROM_TIMESTAMP = from_timestamp
             await logger.ainfo("Metadata submission skipped.", error=str(e))
         await asyncio.sleep(INTERVAL)

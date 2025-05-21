@@ -17,14 +17,13 @@
 
 from __future__ import annotations
 
-from .base import HidDescriptor, CtapHidConnection, FIDO_USAGE_PAGE, FIDO_USAGE
-
 import ctypes
 import ctypes.util
-import threading
-from queue import Queue, Empty
-
 import logging
+import threading
+from queue import Empty, Queue
+
+from .base import FIDO_USAGE, FIDO_USAGE_PAGE, CtapHidConnection, HidDescriptor
 
 logger = logging.getLogger(__name__)
 
@@ -253,14 +252,30 @@ def _dev_read_thread(hid_device):
         hid_device.handle, REMOVAL_CALLBACK, ctypes.py_object(hid_device)
     )
 
-    # Run the run loop
-    run_loop_run_result = cf.CFRunLoopRunInMode(
-        K_CF_RUNLOOP_DEFAULT_MODE, 4, True  # Timeout in seconds
-    )  # Return after source handled
+    max_retries = 2  # Maximum number of run loop retries
+    retries = 0
 
-    # log any unexpected run loop exit
-    if run_loop_run_result != K_CF_RUN_LOOP_RUN_HANDLED_SOURCE:
-        logger.error("Unexpected run loop exit code: %d", run_loop_run_result)
+    while retries < max_retries:
+        # Run the run loop
+        run_loop_run_result = cf.CFRunLoopRunInMode(
+            K_CF_RUNLOOP_DEFAULT_MODE,
+            4,
+            True,  # Timeout in seconds
+        )  # Return after source handled
+
+        received_data = not hid_device.read_queue.empty()
+        if run_loop_run_result == K_CF_RUN_LOOP_RUN_HANDLED_SOURCE:
+            if received_data:
+                # Return when data has been received
+                break
+            else:
+                # Retry running the run loop if data has not been received yet
+                logger.debug("Read queue empty after HANDLE_SOURCE, attempting retry")
+                retries += 1
+        else:
+            # log any unexpected run loop exit
+            logger.error("Unexpected run loop exit code: %d", run_loop_run_result)
+            break
 
     # Unschedule from run loop
     iokit.IOHIDDeviceUnscheduleFromRunLoop(

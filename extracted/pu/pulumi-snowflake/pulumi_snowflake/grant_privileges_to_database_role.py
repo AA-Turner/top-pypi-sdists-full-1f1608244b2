@@ -314,6 +314,7 @@ class _GrantPrivilegesToDatabaseRoleState:
         pulumi.set(self, "with_grant_option", value)
 
 
+@pulumi.type_token("snowflake:index/grantPrivilegesToDatabaseRole:GrantPrivilegesToDatabaseRole")
 class GrantPrivilegesToDatabaseRole(pulumi.CustomResource):
     @overload
     def __init__(__self__,

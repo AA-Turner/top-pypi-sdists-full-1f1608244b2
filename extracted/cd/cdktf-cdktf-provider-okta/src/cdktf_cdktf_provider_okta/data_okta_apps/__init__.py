@@ -1,7 +1,7 @@
 r'''
 # `data_okta_apps`
 
-Refer to the Terraform Registry for docs: [`data_okta_apps`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps).
+Refer to the Terraform Registry for docs: [`data_okta_apps`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaApps(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaApps.DataOktaApps",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps okta_apps}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps okta_apps}.'''
 
     def __init__(
         self,
@@ -65,16 +65,16 @@ class DataOktaApps(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps okta_apps} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps okta_apps} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param active_only: Search only active applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#active_only DataOktaApps#active_only}
-        :param include_non_deleted: Specifies whether to include non-active, but not deleted apps in the results. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#include_non_deleted DataOktaApps#include_non_deleted}
-        :param label: Searches for applications whose label or name property matches this value exactly. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#label DataOktaApps#label}
-        :param label_prefix: Searches for applications whose label or name property begins with this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#label_prefix DataOktaApps#label_prefix}
-        :param q: Searches for applications whose name or label properties that starts with this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#q DataOktaApps#q}
-        :param use_optimization: Specifies whether to use query optimization. If you specify ``useOptimization=true`` in the request query, the response contains a subset of app instance properties. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#use_optimization DataOktaApps#use_optimization}
+        :param active_only: Search only active applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#active_only DataOktaApps#active_only}
+        :param include_non_deleted: Specifies whether to include non-active, but not deleted apps in the results. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#include_non_deleted DataOktaApps#include_non_deleted}
+        :param label: Searches for applications whose label or name property matches this value exactly. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#label DataOktaApps#label}
+        :param label_prefix: Searches for applications whose label or name property begins with this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#label_prefix DataOktaApps#label_prefix}
+        :param q: Searches for applications whose name or label properties that starts with this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#q DataOktaApps#q}
+        :param use_optimization: Specifies whether to use query optimization. If you specify ``useOptimization=true`` in the request query, the response contains a subset of app instance properties. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#use_optimization DataOktaApps#use_optimization}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -118,7 +118,7 @@ class DataOktaApps(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaApps to import.
-        :param import_from_id: The id of the existing DataOktaApps that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaApps that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaApps to import is found.
         '''
         if __debug__:
@@ -665,12 +665,12 @@ class DataOktaAppsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param active_only: Search only active applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#active_only DataOktaApps#active_only}
-        :param include_non_deleted: Specifies whether to include non-active, but not deleted apps in the results. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#include_non_deleted DataOktaApps#include_non_deleted}
-        :param label: Searches for applications whose label or name property matches this value exactly. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#label DataOktaApps#label}
-        :param label_prefix: Searches for applications whose label or name property begins with this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#label_prefix DataOktaApps#label_prefix}
-        :param q: Searches for applications whose name or label properties that starts with this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#q DataOktaApps#q}
-        :param use_optimization: Specifies whether to use query optimization. If you specify ``useOptimization=true`` in the request query, the response contains a subset of app instance properties. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#use_optimization DataOktaApps#use_optimization}
+        :param active_only: Search only active applications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#active_only DataOktaApps#active_only}
+        :param include_non_deleted: Specifies whether to include non-active, but not deleted apps in the results. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#include_non_deleted DataOktaApps#include_non_deleted}
+        :param label: Searches for applications whose label or name property matches this value exactly. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#label DataOktaApps#label}
+        :param label_prefix: Searches for applications whose label or name property begins with this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#label_prefix DataOktaApps#label_prefix}
+        :param q: Searches for applications whose name or label properties that starts with this value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#q DataOktaApps#q}
+        :param use_optimization: Specifies whether to use query optimization. If you specify ``useOptimization=true`` in the request query, the response contains a subset of app instance properties. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#use_optimization DataOktaApps#use_optimization}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -787,7 +787,7 @@ class DataOktaAppsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Search only active applications.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#active_only DataOktaApps#active_only}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#active_only DataOktaApps#active_only}
         '''
         result = self._values.get("active_only")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -798,7 +798,7 @@ class DataOktaAppsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Specifies whether to include non-active, but not deleted apps in the results.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#include_non_deleted DataOktaApps#include_non_deleted}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#include_non_deleted DataOktaApps#include_non_deleted}
         '''
         result = self._values.get("include_non_deleted")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -807,7 +807,7 @@ class DataOktaAppsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def label(self) -> typing.Optional[builtins.str]:
         '''Searches for applications whose label or name property matches this value exactly.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#label DataOktaApps#label}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#label DataOktaApps#label}
         '''
         result = self._values.get("label")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -816,7 +816,7 @@ class DataOktaAppsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def label_prefix(self) -> typing.Optional[builtins.str]:
         '''Searches for applications whose label or name property begins with this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#label_prefix DataOktaApps#label_prefix}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#label_prefix DataOktaApps#label_prefix}
         '''
         result = self._values.get("label_prefix")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -825,7 +825,7 @@ class DataOktaAppsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def q(self) -> typing.Optional[builtins.str]:
         '''Searches for applications whose name or label properties that starts with this value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#q DataOktaApps#q}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#q DataOktaApps#q}
         '''
         result = self._values.get("q")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -838,7 +838,7 @@ class DataOktaAppsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         If you specify ``useOptimization=true`` in the request query, the response contains a subset of app instance properties.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/apps#use_optimization DataOktaApps#use_optimization}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/apps#use_optimization DataOktaApps#use_optimization}
         '''
         result = self._values.get("use_optimization")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)

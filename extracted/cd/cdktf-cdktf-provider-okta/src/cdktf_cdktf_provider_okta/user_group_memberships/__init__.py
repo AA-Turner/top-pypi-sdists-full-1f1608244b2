@@ -1,7 +1,7 @@
 r'''
 # `okta_user_group_memberships`
 
-Refer to the Terraform Registry for docs: [`okta_user_group_memberships`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_group_memberships).
+Refer to the Terraform Registry for docs: [`okta_user_group_memberships`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_group_memberships).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class UserGroupMemberships(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.userGroupMemberships.UserGroupMemberships",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_group_memberships okta_user_group_memberships}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_group_memberships okta_user_group_memberships}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class UserGroupMemberships(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_group_memberships okta_user_group_memberships} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_group_memberships okta_user_group_memberships} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param groups: The list of Okta group IDs which the user should have membership managed for. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_group_memberships#groups UserGroupMemberships#groups}
-        :param user_id: ID of a Okta User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_group_memberships#user_id UserGroupMemberships#user_id}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_group_memberships#id UserGroupMemberships#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param groups: The list of Okta group IDs which the user should have membership managed for. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_group_memberships#groups UserGroupMemberships#groups}
+        :param user_id: ID of a Okta User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_group_memberships#user_id UserGroupMemberships#user_id}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_group_memberships#id UserGroupMemberships#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class UserGroupMemberships(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the UserGroupMemberships to import.
-        :param import_from_id: The id of the existing UserGroupMemberships that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_group_memberships#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing UserGroupMemberships that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_group_memberships#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the UserGroupMemberships to import is found.
         '''
         if __debug__:
@@ -228,9 +228,9 @@ class UserGroupMembershipsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param groups: The list of Okta group IDs which the user should have membership managed for. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_group_memberships#groups UserGroupMemberships#groups}
-        :param user_id: ID of a Okta User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_group_memberships#user_id UserGroupMemberships#user_id}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_group_memberships#id UserGroupMemberships#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param groups: The list of Okta group IDs which the user should have membership managed for. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_group_memberships#groups UserGroupMemberships#groups}
+        :param user_id: ID of a Okta User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_group_memberships#user_id UserGroupMemberships#user_id}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_group_memberships#id UserGroupMemberships#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -335,7 +335,7 @@ class UserGroupMembershipsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def groups(self) -> typing.List[builtins.str]:
         '''The list of Okta group IDs which the user should have membership managed for.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_group_memberships#groups UserGroupMemberships#groups}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_group_memberships#groups UserGroupMemberships#groups}
         '''
         result = self._values.get("groups")
         assert result is not None, "Required property 'groups' is missing"
@@ -345,7 +345,7 @@ class UserGroupMembershipsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_id(self) -> builtins.str:
         '''ID of a Okta User.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_group_memberships#user_id UserGroupMemberships#user_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_group_memberships#user_id UserGroupMemberships#user_id}
         '''
         result = self._values.get("user_id")
         assert result is not None, "Required property 'user_id' is missing"
@@ -353,7 +353,7 @@ class UserGroupMembershipsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_group_memberships#id UserGroupMemberships#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_group_memberships#id UserGroupMemberships#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

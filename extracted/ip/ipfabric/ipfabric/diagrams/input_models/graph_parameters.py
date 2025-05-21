@@ -3,17 +3,12 @@ from __future__ import annotations as _annotations
 import os
 import re
 from ipaddress import IPv4Interface
-from typing import Optional, Union, List, Dict, Any
+from typing import Optional, Union, Any, Annotated
 
-try:
-    from typing import Annotated  # py38 required Annotated
-except ImportError:
-    from typing_extensions import Annotated
+from pydantic import field_validator, BaseModel, Field, AliasChoices, model_serializer, StringConstraints
+from pydantic.functional_validators import BeforeValidator, AfterValidator
 
-from pydantic import field_validator, BaseModel, Field, AliasChoices, model_serializer
-from pydantic.functional_validators import BeforeValidator
-from ipfabric.tools import validate_ip_network_str, VALID_IP
-
+from ipfabric.tools.shared import validate_ip_network_str, VALID_IP
 from .constants import VALID_LAYOUTS
 
 PYDANTIC_EXTRAS = os.getenv("IPFABRIC_PYDANTIC_EXTRAS", "allow")
@@ -32,11 +27,11 @@ class Instance(BaseModel, extra=PYDANTIC_EXTRAS):
 
 class STPInstances(BaseModel, extra=PYDANTIC_EXTRAS):
     isolate: bool = False
-    instances: Optional[List[Instance]] = Field(default_factory=list)
+    instances: list[Instance] = Field(default_factory=list)
 
 
 class Technologies(BaseModel, extra=PYDANTIC_EXTRAS):
-    expandDeviceGroups: Optional[List[str]] = Field(default_factory=list)
+    expandDeviceGroups: Optional[list[str]] = Field(default_factory=list)
     stpInstances: Optional[STPInstances] = Field(default_factory=STPInstances)
 
 
@@ -46,8 +41,10 @@ class ICMP(BaseModel, extra=PYDANTIC_EXTRAS):
 
 
 class OtherOptions(BaseModel, extra=PYDANTIC_EXTRAS):
-    applications: Optional[str] = ".*"
-    tracked: Optional[bool] = False
+    applications: str = ".*"
+    tracked: bool = False
+    category: str = ""
+    url: str = ""
 
 
 class EntryPoint(BaseModel, extra=PYDANTIC_EXTRAS):
@@ -62,14 +59,14 @@ class Algorithm(BaseModel):
     """Default is automatic. Adding entryPoints will change to userDefined."""
 
     vrf: Optional[str] = None
-    entryPoints: Optional[List[EntryPoint]] = None
+    entryPoints: Optional[list[EntryPoint]] = None
 
     @property
     def type(self):
         return "userDefined" if self.entryPoints else "automatic"
 
     @model_serializer
-    def _serialize_algorithm(self) -> Dict[str, Any]:
+    def _serialize_algorithm(self) -> dict[str, Any]:
         if self.entryPoints:
             return dict(type=self.type, entryPoints=[_.model_dump() for _ in self.entryPoints])
         else:
@@ -77,49 +74,44 @@ class Algorithm(BaseModel):
 
 
 class PathLookup(BaseModel, extra=PYDANTIC_EXTRAS):
-    protocol: Optional[str] = Field("tcp", title="Protocol", description="Valid protocols are tcp, udp, or icmp.")
-    srcPorts: Optional[Union[str, int]] = Field(
+    protocol: Annotated[str, AfterValidator(lambda s: s.lower()), StringConstraints(pattern=r"tcp|udp|icmp")] = Field(
+        "tcp", title="Protocol", description="Valid protocols are tcp, udp, or icmp."
+    )
+    srcPorts: Union[str, int] = Field(
         "1024-65535",
         title="Source Ports",
         description="Source ports if protocol is tcp or udp. "
         "Can be comma separated, a range using -, or any combination.",
     )
-    dstPorts: Optional[Union[str, int]] = Field(
+    dstPorts: Union[str, int] = Field(
         "80,443",
         title="Destination Ports",
         description="Destination ports if protocol is tcp or udp. "
         "Can be comma separated, a range using -, or any combination.",
     )
-    tcpFlags: Optional[list] = Field(
+    tcpFlags: list[
+        Annotated[str, AfterValidator(lambda s: s.lower()), StringConstraints(pattern=r"ack|fin|psh|rst|syn|urg")]
+    ] = Field(
         default_factory=list,
         title="TCP Flags",
         description="Optional additional flags if protocol = TCP. "
         "Valid flags are ['ack', 'fin', 'psh', 'rst', 'syn', 'urg']",
         validation_alias=AliasChoices("tcpFlags", "flags"),
     )
-    icmp: Optional[ICMP] = Field(
+    icmp: ICMP = Field(
         ICMP(type=0, code=0),
         title="ICMP Packet",
         description="Default is Echo Reply (type=0, code=0). You can pass in an ICMP model from ipfabric.diagrams.icmp "
         "or specify your own values like {'type': 1, 'code': 2}.",
     )
-    ttl: Optional[int] = Field(128, title="Time To Live", description="TTL value, default is 128.")
-    fragmentOffset: Optional[int] = Field(
-        0, title="Fragment Offset", description="Fragment Offset value, default is 0."
-    )
-    securedPath: Optional[bool] = True
-    enableRegions: Optional[bool] = False
-    srcRegions: Optional[str] = ".*"
-    dstRegions: Optional[str] = ".*"
-    otherOptions: Optional[OtherOptions] = Field(default_factory=OtherOptions)
-    firstHopAlgorithm: Optional[Algorithm] = Field(default_factory=Algorithm)
-
-    @field_validator("protocol")
-    @classmethod
-    def _valid_protocols(cls, v):
-        if v.lower() not in ["tcp", "udp", "icmp"]:
-            raise ValueError(f'Protocol "{v}" not in ["tcp", "udp", "icmp"]')
-        return v.lower()
+    ttl: int = Field(128, title="Time To Live", description="TTL value, default is 128.")
+    fragmentOffset: int = Field(0, title="Fragment Offset", description="Fragment Offset value, default is 0.")
+    securedPath: bool = True
+    enableRegions: bool = False
+    srcRegions: str = ".*"
+    dstRegions: str = ".*"
+    otherOptions: OtherOptions = Field(default_factory=OtherOptions)
+    firstHopAlgorithm: Algorithm = Field(default_factory=Algorithm)
 
     @field_validator("srcPorts", "dstPorts")
     @classmethod
@@ -136,16 +128,8 @@ class PathLookup(BaseModel, extra=PYDANTIC_EXTRAS):
                     raise ValueError(f'Ports "{p}" is invalid. {pn[0]} must be smaller than {pn[1]}.')
         return str(",".join(ports))
 
-    @field_validator("tcpFlags")
-    @classmethod
-    def _valid_flags(cls, v):
-        v = [f.lower() for f in v] if v else list()
-        if all(f in ["ack", "fin", "psh", "rst", "syn", "urg"] for f in v):
-            return v
-        raise ValueError(f'TCP Flags "{v}" must be None or combination of ["ack", "fin", "psh", "rst", "syn", "urg"]')
-
     @property
-    def l4_options(self) -> Dict[str, Any]:
+    def l4_options(self) -> dict[str, Any]:
         if self.protocol == "icmp":
             return dict(type=self.icmp.type, code=self.icmp.code)
         elif self.protocol == "udp":
@@ -154,7 +138,7 @@ class PathLookup(BaseModel, extra=PYDANTIC_EXTRAS):
             return dict(srcPorts=self.srcPorts, dstPorts=self.dstPorts, flags=self.tcpFlags)
 
     @model_serializer
-    def _serializer(self) -> Dict[str, Any]:
+    def _serializer(self) -> dict[str, Any]:
         return dict(
             type="pathLookup",
             groupBy="siteName",
@@ -185,7 +169,7 @@ class Multicast(PathLookup, BaseModel, extra=PYDANTIC_EXTRAS):
         return v
 
     @model_serializer
-    def _serializer(self) -> Dict[str, Any]:
+    def _serializer(self) -> dict[str, Any]:
         parameters = super()._serializer()
         if self.receiver:
             parameters["receiver"] = str(self.receiver)
@@ -202,7 +186,7 @@ class Unicast(PathLookup, BaseModel, extra=PYDANTIC_EXTRAS):
     destinationPoint: IPv4 = Field(title="Destination IP Address or Subnet")
 
     @model_serializer
-    def _serializer(self) -> Dict[str, Any]:
+    def _serializer(self) -> dict[str, Any]:
         parameters = super()._serializer()
         return dict(
             pathLookupType="unicast",
@@ -239,7 +223,7 @@ class Host2GW(BaseModel, extra=PYDANTIC_EXTRAS):
     vrf: Optional[str] = None
 
     @model_serializer
-    def _serializer(self) -> Dict[str, Any]:
+    def _serializer(self) -> dict[str, Any]:
         parameters = dict(
             pathLookupType="hostToDefaultGW",
             type="pathLookup",
@@ -264,9 +248,9 @@ class Layout(BaseModel, extra=PYDANTIC_EXTRAS):
 
 
 class Network(BaseModel, extra=PYDANTIC_EXTRAS):
-    sites: Optional[Union[str, List[str]]] = Field(default_factory=list)
-    all_network: Optional[bool] = Field(True, description="Show all sites as clouds, UI option 'All Network'")
-    layouts: Optional[List[Layout]] = None
+    sites: Optional[Union[str, list[str]]] = Field(default_factory=list)
+    all_network: bool = Field(True, description="Show all sites as clouds, UI option 'All Network'")
+    layouts: Optional[list[Layout]] = None
     technologies: Optional[Technologies] = None
 
     @field_validator("sites")
@@ -277,7 +261,7 @@ class Network(BaseModel, extra=PYDANTIC_EXTRAS):
         return v
 
     @model_serializer
-    def _serializer(self) -> Dict[str, Any]:
+    def _serializer(self) -> dict[str, Any]:
         parameters = dict(type="topology", groupBy="siteName", paths=self.sites.copy())
         if self.all_network and ALL_NETWORK not in parameters["paths"]:
             parameters["paths"].append(ALL_NETWORK)

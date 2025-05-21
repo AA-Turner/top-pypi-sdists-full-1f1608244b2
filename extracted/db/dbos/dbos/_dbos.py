@@ -90,10 +90,8 @@ from ._context import (
 from ._dbos_config import (
     ConfigFile,
     DBOSConfig,
-    check_config_consistency,
     overwrite_config,
     process_config,
-    set_env_vars,
     translate_dbos_config_to_config_file,
 )
 from ._error import (
@@ -299,6 +297,7 @@ class DBOS:
 
         self._launched: bool = False
         self._debug_mode: bool = False
+        self._configured_threadpool: bool = False
         self._sys_db_field: Optional[SystemDatabase] = None
         self._app_db_field: Optional[ApplicationDatabase] = None
         self._registry: DBOSRegistry = _get_or_create_dbos_registry()
@@ -323,14 +322,12 @@ class DBOS:
         unvalidated_config = translate_dbos_config_to_config_file(config)
         if os.environ.get("DBOS__CLOUD") == "true":
             unvalidated_config = overwrite_config(unvalidated_config)
-        check_config_consistency(name=unvalidated_config["name"])
 
         if unvalidated_config is not None:
             self._config: ConfigFile = process_config(data=unvalidated_config)
         else:
             raise ValueError("No valid configuration was loaded.")
 
-        set_env_vars(self._config)
         config_logger(self._config)
         dbos_tracer.config(self._config)
         dbos_logger.info(f"Initializing DBOS (v{GlobalParams.dbos_version})")
@@ -719,6 +716,7 @@ class DBOS:
         **kwargs: P.kwargs,
     ) -> WorkflowHandleAsync[R]:
         """Invoke a workflow function on the event loop, returning a handle to the ongoing execution."""
+        await cls._configure_asyncio_thread_pool()
         return await start_workflow_async(
             _get_dbos_instance(), func, None, True, *args, **kwargs
         )
@@ -736,6 +734,7 @@ class DBOS:
     async def get_workflow_status_async(
         cls, workflow_id: str
     ) -> Optional[WorkflowStatus]:
+        await cls._configure_asyncio_thread_pool()
         """Return the status of a workflow execution."""
         return await asyncio.to_thread(cls.get_workflow_status, workflow_id)
 
@@ -757,6 +756,7 @@ class DBOS:
     ) -> WorkflowHandleAsync[R]:
         """Return a `WorkflowHandle` for a workflow execution."""
         dbos = _get_dbos_instance()
+        await cls._configure_asyncio_thread_pool()
         if existing_workflow:
             stat = await dbos.get_workflow_status_async(workflow_id)
             if stat is None:
@@ -775,6 +775,7 @@ class DBOS:
         cls, destination_id: str, message: Any, topic: Optional[str] = None
     ) -> None:
         """Send a message to a workflow execution."""
+        await cls._configure_asyncio_thread_pool()
         await asyncio.to_thread(lambda: DBOS.send(destination_id, message, topic))
 
     @classmethod
@@ -797,6 +798,7 @@ class DBOS:
         This function is to be called from within a workflow.
         `recv_async` will return the message sent on `topic`, asyncronously waiting if necessary.
         """
+        await cls._configure_asyncio_thread_pool()
         return await asyncio.to_thread(lambda: DBOS.recv(topic, timeout_seconds))
 
     @classmethod
@@ -835,6 +837,7 @@ class DBOS:
         It is important to use `DBOS.sleep` or `DBOS.sleep_async` (as opposed to any other sleep) within workflows,
         as the DBOS sleep methods are durable and completed sleeps will be skipped during recovery.
         """
+        await cls._configure_asyncio_thread_pool()
         await asyncio.to_thread(lambda: DBOS.sleep(seconds))
 
     @classmethod
@@ -869,6 +872,7 @@ class DBOS:
             value(Any): A serializable value to associate with the key
 
         """
+        await cls._configure_asyncio_thread_pool()
         await asyncio.to_thread(lambda: DBOS.set_event(key, value))
 
     @classmethod
@@ -901,6 +905,7 @@ class DBOS:
             timeout_seconds(float): The amount of time to wait, in case `set_event` has not yet been called byt the workflow
 
         """
+        await cls._configure_asyncio_thread_pool()
         return await asyncio.to_thread(
             lambda: DBOS.get_event(workflow_id, key, timeout_seconds)
         )
@@ -928,6 +933,19 @@ class DBOS:
         return _get_dbos_instance()._sys_db.call_function_as_step(
             fn, "DBOS.cancelWorkflow"
         )
+
+    @classmethod
+    async def _configure_asyncio_thread_pool(cls) -> None:
+        """
+        Configure the thread pool for asyncio.to_thread.
+
+        This function is called before the first call to asyncio.to_thread.
+        """
+        if _get_dbos_instance()._configured_threadpool:
+            return
+        loop = asyncio.get_running_loop()
+        loop.set_default_executor(_get_dbos_instance()._executor)
+        _get_dbos_instance()._configured_threadpool = True
 
     @classmethod
     def resume_workflow(cls, workflow_id: str) -> WorkflowHandle[Any]:

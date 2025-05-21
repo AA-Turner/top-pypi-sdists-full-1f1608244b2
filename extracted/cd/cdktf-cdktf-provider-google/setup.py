@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-google",
-    "version": "14.34.0",
+    "version": "14.35.0",
     "description": "Prebuilt google Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-google.git",
@@ -146,6 +146,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_google.bigquery_reservation",
         "cdktf_cdktf_provider_google.bigquery_reservation_assignment",
         "cdktf_cdktf_provider_google.bigquery_routine",
+        "cdktf_cdktf_provider_google.bigquery_row_access_policy",
         "cdktf_cdktf_provider_google.bigquery_table",
         "cdktf_cdktf_provider_google.bigquery_table_iam_binding",
         "cdktf_cdktf_provider_google.bigquery_table_iam_member",
@@ -456,6 +457,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_google.data_google_beyondcorp_app_connector",
         "cdktf_cdktf_provider_google.data_google_beyondcorp_app_gateway",
         "cdktf_cdktf_provider_google.data_google_beyondcorp_application_iam_policy",
+        "cdktf_cdktf_provider_google.data_google_beyondcorp_security_gateway",
         "cdktf_cdktf_provider_google.data_google_beyondcorp_security_gateway_iam_policy",
         "cdktf_cdktf_provider_google.data_google_bigquery_analytics_hub_data_exchange_iam_policy",
         "cdktf_cdktf_provider_google.data_google_bigquery_analytics_hub_listing_iam_policy",
@@ -582,6 +584,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_google.data_google_dataplex_datascan_iam_policy",
         "cdktf_cdktf_provider_google.data_google_dataplex_entry_group_iam_policy",
         "cdktf_cdktf_provider_google.data_google_dataplex_entry_type_iam_policy",
+        "cdktf_cdktf_provider_google.data_google_dataplex_glossary_iam_policy",
         "cdktf_cdktf_provider_google.data_google_dataplex_lake_iam_policy",
         "cdktf_cdktf_provider_google.data_google_dataplex_task_iam_policy",
         "cdktf_cdktf_provider_google.data_google_dataplex_zone_iam_policy",
@@ -654,6 +657,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_google.data_google_logging_project_cmek_settings",
         "cdktf_cdktf_provider_google.data_google_logging_project_settings",
         "cdktf_cdktf_provider_google.data_google_logging_sink",
+        "cdktf_cdktf_provider_google.data_google_lustre_instance",
         "cdktf_cdktf_provider_google.data_google_memcache_instance",
         "cdktf_cdktf_provider_google.data_google_memorystore_instance",
         "cdktf_cdktf_provider_google.data_google_monitoring_app_engine_service",
@@ -805,6 +809,10 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_google.dataplex_entry_type_iam_binding",
         "cdktf_cdktf_provider_google.dataplex_entry_type_iam_member",
         "cdktf_cdktf_provider_google.dataplex_entry_type_iam_policy",
+        "cdktf_cdktf_provider_google.dataplex_glossary",
+        "cdktf_cdktf_provider_google.dataplex_glossary_iam_binding",
+        "cdktf_cdktf_provider_google.dataplex_glossary_iam_member",
+        "cdktf_cdktf_provider_google.dataplex_glossary_iam_policy",
         "cdktf_cdktf_provider_google.dataplex_lake",
         "cdktf_cdktf_provider_google.dataplex_lake_iam_binding",
         "cdktf_cdktf_provider_google.dataplex_lake_iam_member",
@@ -920,6 +928,9 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_google.firebase_app_check_service_config",
         "cdktf_cdktf_provider_google.firebase_app_hosting_backend",
         "cdktf_cdktf_provider_google.firebase_app_hosting_build",
+        "cdktf_cdktf_provider_google.firebase_app_hosting_default_domain",
+        "cdktf_cdktf_provider_google.firebase_app_hosting_domain",
+        "cdktf_cdktf_provider_google.firebase_app_hosting_traffic",
         "cdktf_cdktf_provider_google.firebase_data_connect_service",
         "cdktf_cdktf_provider_google.firebaserules_release",
         "cdktf_cdktf_provider_google.firebaserules_ruleset",
@@ -1151,6 +1162,10 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_google.network_security_firewall_endpoint_association",
         "cdktf_cdktf_provider_google.network_security_gateway_security_policy",
         "cdktf_cdktf_provider_google.network_security_gateway_security_policy_rule",
+        "cdktf_cdktf_provider_google.network_security_intercept_deployment",
+        "cdktf_cdktf_provider_google.network_security_intercept_deployment_group",
+        "cdktf_cdktf_provider_google.network_security_intercept_endpoint_group",
+        "cdktf_cdktf_provider_google.network_security_intercept_endpoint_group_association",
         "cdktf_cdktf_provider_google.network_security_mirroring_deployment",
         "cdktf_cdktf_provider_google.network_security_mirroring_deployment_group",
         "cdktf_cdktf_provider_google.network_security_mirroring_endpoint_group",
@@ -1406,7 +1421,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_google._jsii": [
-            "provider-google@14.34.0.jsii.tgz"
+            "provider-google@14.35.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_google": [
             "py.typed"

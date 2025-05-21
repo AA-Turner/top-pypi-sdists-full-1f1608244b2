@@ -1,7 +1,7 @@
 r'''
 # `okta_trusted_origin`
 
-Refer to the Terraform Registry for docs: [`okta_trusted_origin`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin).
+Refer to the Terraform Registry for docs: [`okta_trusted_origin`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class TrustedOrigin(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.trustedOrigin.TrustedOrigin",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin okta_trusted_origin}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin okta_trusted_origin}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class TrustedOrigin(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin okta_trusted_origin} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin okta_trusted_origin} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Unique name for this trusted origin. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#name TrustedOrigin#name}
-        :param origin: Unique origin URL for this trusted origin. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#origin TrustedOrigin#origin}
-        :param scopes: Scopes of the Trusted Origin - can either be ``CORS`` and/or ``REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#scopes TrustedOrigin#scopes}
-        :param active: Whether the Trusted Origin is active or not - can only be issued post-creation. By default, it is ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#active TrustedOrigin#active}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#id TrustedOrigin#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param name: Unique name for this trusted origin. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#name TrustedOrigin#name}
+        :param origin: Unique origin URL for this trusted origin. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#origin TrustedOrigin#origin}
+        :param scopes: Scopes of the Trusted Origin - can either be ``CORS`` and/or ``REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#scopes TrustedOrigin#scopes}
+        :param active: Whether the Trusted Origin is active or not - can only be issued post-creation. By default, it is ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#active TrustedOrigin#active}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#id TrustedOrigin#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class TrustedOrigin(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the TrustedOrigin to import.
-        :param import_from_id: The id of the existing TrustedOrigin that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing TrustedOrigin that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the TrustedOrigin to import is found.
         '''
         if __debug__:
@@ -281,11 +281,11 @@ class TrustedOriginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Unique name for this trusted origin. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#name TrustedOrigin#name}
-        :param origin: Unique origin URL for this trusted origin. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#origin TrustedOrigin#origin}
-        :param scopes: Scopes of the Trusted Origin - can either be ``CORS`` and/or ``REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#scopes TrustedOrigin#scopes}
-        :param active: Whether the Trusted Origin is active or not - can only be issued post-creation. By default, it is ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#active TrustedOrigin#active}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#id TrustedOrigin#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param name: Unique name for this trusted origin. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#name TrustedOrigin#name}
+        :param origin: Unique origin URL for this trusted origin. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#origin TrustedOrigin#origin}
+        :param scopes: Scopes of the Trusted Origin - can either be ``CORS`` and/or ``REDIRECT``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#scopes TrustedOrigin#scopes}
+        :param active: Whether the Trusted Origin is active or not - can only be issued post-creation. By default, it is ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#active TrustedOrigin#active}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#id TrustedOrigin#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -395,7 +395,7 @@ class TrustedOriginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Unique name for this trusted origin.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#name TrustedOrigin#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#name TrustedOrigin#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -405,7 +405,7 @@ class TrustedOriginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def origin(self) -> builtins.str:
         '''Unique origin URL for this trusted origin.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#origin TrustedOrigin#origin}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#origin TrustedOrigin#origin}
         '''
         result = self._values.get("origin")
         assert result is not None, "Required property 'origin' is missing"
@@ -415,7 +415,7 @@ class TrustedOriginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def scopes(self) -> typing.List[builtins.str]:
         '''Scopes of the Trusted Origin - can either be ``CORS`` and/or ``REDIRECT``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#scopes TrustedOrigin#scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#scopes TrustedOrigin#scopes}
         '''
         result = self._values.get("scopes")
         assert result is not None, "Required property 'scopes' is missing"
@@ -427,14 +427,14 @@ class TrustedOriginConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether the Trusted Origin is active or not - can only be issued post-creation. By default, it is ``true``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#active TrustedOrigin#active}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#active TrustedOrigin#active}
         '''
         result = self._values.get("active")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/trusted_origin#id TrustedOrigin#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/trusted_origin#id TrustedOrigin#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

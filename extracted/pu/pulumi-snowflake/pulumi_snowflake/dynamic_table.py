@@ -558,6 +558,7 @@ class _DynamicTableState:
         pulumi.set(self, "warehouse", value)
 
 
+@pulumi.type_token("snowflake:index/dynamicTable:DynamicTable")
 class DynamicTable(pulumi.CustomResource):
     @overload
     def __init__(__self__,

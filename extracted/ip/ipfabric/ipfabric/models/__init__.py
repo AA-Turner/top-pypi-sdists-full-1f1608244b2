@@ -1,20 +1,22 @@
+from .authentication import Credential, Privilege
+from .config_export import ExportConfig
 from .device import Device, Devices
+from .site_separation import SiteSeparation
+from .extensions import Extensions
+from .global_search import GlobalSearch, RouteTableSearch
 from .intent import Intent
 from .inventory import Inventory
 from .jobs import Jobs, Job
 from .oas import OAS, Endpoint, Methods
 from .rbac import Role, Policy
-from .snapshot import Snapshot, SNAPSHOT_COLUMNS, create_snapshot, snapshot_upload
+from .security import SecurityModel
+from .snapshot import Snapshot, create_snapshot, snapshot_upload
 from .snapshots import Snapshots
-from .table import BaseTable, Table
+from .table import Table
 from .technology import Technology
 from .users import User
-from .global_search import GlobalSearch, RouteTableSearch
-from .security import SecurityModel
-from .extensions import Extensions
 
 __all__ = [
-    "BaseTable",
     "Table",
     "Inventory",
     "Technology",
@@ -22,7 +24,6 @@ __all__ = [
     "Job",
     "Snapshot",
     "Intent",
-    "SNAPSHOT_COLUMNS",
     "Device",
     "Devices",
     "OAS",
@@ -38,4 +39,8 @@ __all__ = [
     "snapshot_upload",
     "SecurityModel",
     "Extensions",
+    "ExportConfig",
+    "Credential",
+    "Privilege",
+    "SiteSeparation",
 ]

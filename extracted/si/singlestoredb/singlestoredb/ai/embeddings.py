@@ -1,24 +1,27 @@
-import os as _os
+import os
 from typing import Any
 
+from singlestoredb.fusion.handlers.utils import get_workspace_manager
+
 try:
-    from langchain_community.embeddings.ollama import OllamaEmbeddings
+    from langchain_openai import OpenAIEmbeddings
 except ImportError:
     raise ImportError(
-        'Could not import langchain_community python package. '
-        'Please install it with `pip install langchain_community`.',
+        'Could not import langchain_openai python package. '
+        'Please install it with `pip install langchain_openai`.',
     )
 
 
-class SingleStoreEmbeddings(OllamaEmbeddings):
+class SingleStoreEmbeddings(OpenAIEmbeddings):
 
-    def __init__(self, **kwargs: Any):
-        url = _os.getenv('SINGLESTORE_AI_EXPERIMENTAL_URL')
-        if not url:
-            raise ValueError(
-                "Environment variable 'SINGLESTORE_AI_EXPERIMENTAL_URL' must be set",
-            )
-
-        base_url = url.strip('/v1')
-        kwargs = {'model': 'nomic-embed-text', **kwargs}
-        super().__init__(base_url=base_url, **kwargs)
+    def __init__(self, model_name: str, **kwargs: Any):
+        inference_api_manger = (
+            get_workspace_manager().organizations.current.inference_apis
+        )
+        info = inference_api_manger.get(model_name=model_name)
+        super().__init__(
+            base_url=info.connection_url,
+            api_key=os.environ.get('SINGLESTOREDB_USER_TOKEN'),
+            model=model_name,
+            **kwargs,
+        )

@@ -75,35 +75,74 @@ class BSplineTransformer(BaseEstimator, TransformerMixin):
 		Xt = self.bspline(X1d)
 		return Xt.reshape(X.shape)
 
+def _check_dtype(dtype):
+	if isinstance(dtype, str) and dtype.startswith("datetime64"):
+		dtypes = ["datetime64[D]", "datetime64[s]"]
+		if dtype not in dtypes:
+			raise ValueError("Temporal data type {0} not in {1}".format(dtype, dtypes))
+
+def _fit_dtype(dtype, X):
+	if _is_proto_pandas_categorical(dtype):
+		X = to_numpy(X)
+		return CategoricalDtype(categories = _unique(X), ordered = False)
+	else:
+		return dtype
+
 class CastTransformer(BaseEstimator, TransformerMixin, OneToOneFeatureMixin):
 	"""Change data type."""
 
 	def __init__(self, dtype):
-		if isinstance(dtype, str) and dtype.startswith("datetime64"):
-			dtypes = ["datetime64[D]", "datetime64[s]"]
-			if dtype not in dtypes:
-				raise ValueError("Temporal data type {0} not in {1}".format(dtype, dtypes))
+		_check_dtype(dtype)
 		self.dtype = dtype
 
 	def fit(self, X, y = None):
-		if _is_proto_pandas_categorical(self.dtype):
-			X = to_numpy(X)
-			self.dtype_ = CategoricalDtype(categories = _unique(X), ordered = False)
-		else:
-			self.dtype_ = self.dtype
+		self.dtype_ = _fit_dtype(self.dtype, X)
 		return self
 
 	def transform(self, X):
 		return cast(X, self.dtype_)
 
+class MultiCastTransformer(BaseEstimator, TransformerMixin):
+
+	def __init__(self, dtypes):
+		for dtype in dtypes:
+			_check_dtype(dtype)
+		self.dtypes = dtypes
+
+	def fit(self, X, y = None):
+		rows, columns = X.shape
+		if len(self.dtypes) != columns:
+			raise ValueError("The number of columns {0} is not equal to the number of data types {1}".format(columns, len(self.dtypes)))
+		if isinstance(X, DataFrame):
+			dtypes_ = [_fit_dtype(dtype, X[column]) for dtype, column in zip(self.dtypes, X.columns)]
+		else:
+			dtypes_ = [_fit_dtype(dtype, X[:, column]) for dtype, column in zip(self.dtypes, range(0, columns))]
+		self.dtypes_ = dtypes_
+		return self
+
+	def transform(self, X):
+		rows, columns = X.shape
+		# XXX
+		X = X.copy()
+		if isinstance(X, DataFrame):
+			for dtype, column in zip(self.dtypes_, X.columns):
+				X[column] = cast(X[column], dtype)
+		else:
+			for dtype, column in zip(self.dtypes_, range(0, columns)):
+				X[:, column] = cast(X[:, column], dtype)
+		return X
+
 class CutTransformer(BaseEstimator, TransformerMixin):
 	"""Bin continuous data to categorical."""
 
-	def __init__(self, bins, right = True, labels = None, include_lowest = True):
+	def __init__(self, bins, right = True, labels = None, include_lowest = True, dtype = None):
 		self.bins = bins
 		self.right = right
 		self.labels = labels
 		self.include_lowest = include_lowest
+		if dtype and not _is_proto_pandas_categorical(dtype):
+			raise ValueError("Data type {} is not a proto-categorical data type".format(dtype))
+		self.dtype = dtype
 
 	def fit(self, X, y = None):
 		to_1d(X)
@@ -112,9 +151,12 @@ class CutTransformer(BaseEstimator, TransformerMixin):
 	def transform(self, X):
 		X1d = to_1d(X)
 		Xt = pandas.cut(X1d, bins = self.bins, right = self.right, labels = self.labels, include_lowest = self.include_lowest)
-		if _is_pandas_categorical(Xt.dtype):
-			Xt = to_numpy(Xt)
-		return Xt.reshape(X.shape)
+		if self.dtype:
+			return Xt
+		else:
+			if _is_pandas_categorical(Xt.dtype):
+				Xt = to_numpy(Xt)
+			return Xt.reshape(X.shape)
 
 class DataFrameConstructor(BaseEstimator, TransformerMixin):
 
@@ -377,7 +419,7 @@ class LookupTransformer(BaseEstimator, TransformerMixin):
 
 	"""
 
-	def __init__(self, mapping, default_value):
+	def __init__(self, mapping, default_value, dtype = None):
 		if type(mapping) is not dict:
 			raise TypeError("Input value to output value mapping is not a dict")
 		k_type = None
@@ -403,6 +445,9 @@ class LookupTransformer(BaseEstimator, TransformerMixin):
 				if type(default_value) != v_type:
 					raise TypeError("Default value is not a {0}".format(v_type.__name__))
 		self.default_value = default_value
+		if dtype and not _is_proto_pandas_categorical(dtype):
+			raise ValueError("Data type {} is not a proto-categorical data type".format(dtype))
+		self.dtype = dtype
 
 	def _transform_dict(self):
 		transform_dict = defaultdict(lambda: self.default_value)
@@ -422,7 +467,7 @@ class LookupTransformer(BaseEstimator, TransformerMixin):
 				return x
 			return transform_dict[x]
 
-		Xt = eval_rows(X1d, _eval_row, shape = X.shape)
+		Xt = eval_rows(X1d, _eval_row, shape = X.shape, dtype = self.dtype)
 		return Xt
 
 class FilterLookupTransformer(LookupTransformer):
@@ -465,8 +510,8 @@ def _deeptype(t):
 class MultiLookupTransformer(LookupTransformer):
 	"""Re-map multidimensional categorical data."""
 
-	def __init__(self, mapping, default_value):
-		super(MultiLookupTransformer, self).__init__(mapping, default_value)
+	def __init__(self, mapping, default_value, dtype = None):
+		super(MultiLookupTransformer, self).__init__(mapping, default_value, dtype = dtype)
 		k_type = None
 		for k, v in mapping.items():
 			if not isinstance(k, tuple):
@@ -491,8 +536,12 @@ class MultiLookupTransformer(LookupTransformer):
 			x = x if isinstance(x, Hashable) else tuple(numpy.squeeze(numpy.asarray(x)))
 			return transform_dict[tuple(x)]
 
-		Xt = eval_rows(X, _eval_row, to_numpy = True)
-		return Xt.reshape((-1, 1))
+		if self.dtype:
+			Xt = eval_rows(X, _eval_row, dtype = self.dtype)
+			return Xt
+		else:
+			Xt = eval_rows(X, _eval_row, to_numpy = True)
+			return Xt.reshape((-1, 1))
 
 def _make_index(values):
 	result = {}

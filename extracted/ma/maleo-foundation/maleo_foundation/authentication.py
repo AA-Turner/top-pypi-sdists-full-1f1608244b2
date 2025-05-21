@@ -5,30 +5,22 @@ from maleo_foundation.enums import BaseEnums
 from maleo_foundation.models.transfers.general.token import MaleoFoundationTokenGeneralTransfers
 from maleo_foundation.types import BaseTypes
 
+class Token(BaseModel):
+    type:BaseEnums.TokenType = Field(..., description="Token's type")
+    payload:MaleoFoundationTokenGeneralTransfers.DecodePayload = Field(..., description="Token's payload")
+
 class Credentials(AuthCredentials):
     def __init__(
         self,
-        token_type:Optional[BaseEnums.TokenType] = None,
-        token:BaseTypes.OptionalString = None,
-        payload:Optional[MaleoFoundationTokenGeneralTransfers.DecodePayload] = None,
+        token:Optional[Token] = None,
         scopes:Optional[Sequence[str]] = None
     ) -> None:
-        self._token_type = token_type
         self._token = token
-        self._payload = payload
         super().__init__(scopes)
 
     @property
-    def token_type(self) -> Optional[BaseEnums.TokenType]:
-        return self._token_type
-
-    @property
-    def token(self) -> BaseTypes.OptionalString:
+    def token(self) -> Optional[Token]:
         return self._token
-
-    @property
-    def payload(self) -> Optional[MaleoFoundationTokenGeneralTransfers.DecodePayload]:
-        return self._payload
 
 class User(BaseUser):
     def __init__(

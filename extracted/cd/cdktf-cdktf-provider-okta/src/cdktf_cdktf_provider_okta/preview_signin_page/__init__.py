@@ -1,7 +1,7 @@
 r'''
 # `okta_preview_signin_page`
 
-Refer to the Terraform Registry for docs: [`okta_preview_signin_page`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page).
+Refer to the Terraform Registry for docs: [`okta_preview_signin_page`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class PreviewSigninPage(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.previewSigninPage.PreviewSigninPage",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page okta_preview_signin_page}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page okta_preview_signin_page}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class PreviewSigninPage(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page okta_preview_signin_page} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page okta_preview_signin_page} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param brand_id: brand id of the preview signin page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#brand_id PreviewSigninPage#brand_id}
-        :param page_content: page content of the preview signin page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#page_content PreviewSigninPage#page_content}
-        :param widget_version: widget version specified as a Semver. The following are currently supported *, ^1, ^2, ^3, ^4, ^5, ^6, ^7, 1.6, 1.7, 1.8, 1.9, 1.10, 1.11, 1.12, 1.13, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10, 2.11, 2.12, 2.13, 2.14, 2.15, 2.16, 2.17, 2.18, 2.19, 2.20, 2.21, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 5.10, 5.11, 5.12, 5.13, 5.14, 5.15, 5.16, 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 7.0, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 7.12, 7.13. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#widget_version PreviewSigninPage#widget_version}
-        :param content_security_policy_setting: content_security_policy_setting block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#content_security_policy_setting PreviewSigninPage#content_security_policy_setting}
-        :param widget_customizations: widget_customizations block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#widget_customizations PreviewSigninPage#widget_customizations}
+        :param brand_id: brand id of the preview signin page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#brand_id PreviewSigninPage#brand_id}
+        :param page_content: page content of the preview signin page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#page_content PreviewSigninPage#page_content}
+        :param widget_version: widget version specified as a Semver. The following are currently supported *, ^1, ^2, ^3, ^4, ^5, ^6, ^7, 1.6, 1.7, 1.8, 1.9, 1.10, 1.11, 1.12, 1.13, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10, 2.11, 2.12, 2.13, 2.14, 2.15, 2.16, 2.17, 2.18, 2.19, 2.20, 2.21, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 5.10, 5.11, 5.12, 5.13, 5.14, 5.15, 5.16, 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 7.0, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 7.12, 7.13. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#widget_version PreviewSigninPage#widget_version}
+        :param content_security_policy_setting: content_security_policy_setting block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#content_security_policy_setting PreviewSigninPage#content_security_policy_setting}
+        :param widget_customizations: widget_customizations block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#widget_customizations PreviewSigninPage#widget_customizations}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class PreviewSigninPage(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the PreviewSigninPage to import.
-        :param import_from_id: The id of the existing PreviewSigninPage that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing PreviewSigninPage that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the PreviewSigninPage to import is found.
         '''
         if __debug__:
@@ -135,9 +135,9 @@ class PreviewSigninPage(
         src_list: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param mode: enforced or report_only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#mode PreviewSigninPage#mode}
-        :param report_uri: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#report_uri PreviewSigninPage#report_uri}.
-        :param src_list: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#src_list PreviewSigninPage#src_list}.
+        :param mode: enforced or report_only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#mode PreviewSigninPage#mode}
+        :param report_uri: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#report_uri PreviewSigninPage#report_uri}.
+        :param src_list: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#src_list PreviewSigninPage#src_list}.
         '''
         value = PreviewSigninPageContentSecurityPolicySetting(
             mode=mode, report_uri=report_uri, src_list=src_list
@@ -172,27 +172,27 @@ class PreviewSigninPage(
         username_label: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param widget_generation: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#widget_generation PreviewSigninPage#widget_generation}.
-        :param authenticator_page_custom_link_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#authenticator_page_custom_link_label PreviewSigninPage#authenticator_page_custom_link_label}.
-        :param authenticator_page_custom_link_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#authenticator_page_custom_link_url PreviewSigninPage#authenticator_page_custom_link_url}.
-        :param classic_recovery_flow_email_or_username_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#classic_recovery_flow_email_or_username_label PreviewSigninPage#classic_recovery_flow_email_or_username_label}.
-        :param custom_link1_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#custom_link_1_label PreviewSigninPage#custom_link_1_label}.
-        :param custom_link1_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#custom_link_1_url PreviewSigninPage#custom_link_1_url}.
-        :param custom_link2_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#custom_link_2_label PreviewSigninPage#custom_link_2_label}.
-        :param custom_link2_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#custom_link_2_url PreviewSigninPage#custom_link_2_url}.
-        :param forgot_password_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#forgot_password_label PreviewSigninPage#forgot_password_label}.
-        :param forgot_password_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#forgot_password_url PreviewSigninPage#forgot_password_url}.
-        :param help_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#help_label PreviewSigninPage#help_label}.
-        :param help_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#help_url PreviewSigninPage#help_url}.
-        :param password_info_tip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#password_info_tip PreviewSigninPage#password_info_tip}.
-        :param password_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#password_label PreviewSigninPage#password_label}.
-        :param show_password_visibility_toggle: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#show_password_visibility_toggle PreviewSigninPage#show_password_visibility_toggle}.
-        :param show_user_identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#show_user_identifier PreviewSigninPage#show_user_identifier}.
-        :param sign_in_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#sign_in_label PreviewSigninPage#sign_in_label}.
-        :param unlock_account_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#unlock_account_label PreviewSigninPage#unlock_account_label}.
-        :param unlock_account_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#unlock_account_url PreviewSigninPage#unlock_account_url}.
-        :param username_info_tip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#username_info_tip PreviewSigninPage#username_info_tip}.
-        :param username_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#username_label PreviewSigninPage#username_label}.
+        :param widget_generation: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#widget_generation PreviewSigninPage#widget_generation}.
+        :param authenticator_page_custom_link_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#authenticator_page_custom_link_label PreviewSigninPage#authenticator_page_custom_link_label}.
+        :param authenticator_page_custom_link_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#authenticator_page_custom_link_url PreviewSigninPage#authenticator_page_custom_link_url}.
+        :param classic_recovery_flow_email_or_username_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#classic_recovery_flow_email_or_username_label PreviewSigninPage#classic_recovery_flow_email_or_username_label}.
+        :param custom_link1_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#custom_link_1_label PreviewSigninPage#custom_link_1_label}.
+        :param custom_link1_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#custom_link_1_url PreviewSigninPage#custom_link_1_url}.
+        :param custom_link2_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#custom_link_2_label PreviewSigninPage#custom_link_2_label}.
+        :param custom_link2_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#custom_link_2_url PreviewSigninPage#custom_link_2_url}.
+        :param forgot_password_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#forgot_password_label PreviewSigninPage#forgot_password_label}.
+        :param forgot_password_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#forgot_password_url PreviewSigninPage#forgot_password_url}.
+        :param help_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#help_label PreviewSigninPage#help_label}.
+        :param help_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#help_url PreviewSigninPage#help_url}.
+        :param password_info_tip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#password_info_tip PreviewSigninPage#password_info_tip}.
+        :param password_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#password_label PreviewSigninPage#password_label}.
+        :param show_password_visibility_toggle: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#show_password_visibility_toggle PreviewSigninPage#show_password_visibility_toggle}.
+        :param show_user_identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#show_user_identifier PreviewSigninPage#show_user_identifier}.
+        :param sign_in_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#sign_in_label PreviewSigninPage#sign_in_label}.
+        :param unlock_account_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#unlock_account_label PreviewSigninPage#unlock_account_label}.
+        :param unlock_account_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#unlock_account_url PreviewSigninPage#unlock_account_url}.
+        :param username_info_tip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#username_info_tip PreviewSigninPage#username_info_tip}.
+        :param username_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#username_label PreviewSigninPage#username_label}.
         '''
         value = PreviewSigninPageWidgetCustomizations(
             widget_generation=widget_generation,
@@ -369,11 +369,11 @@ class PreviewSigninPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param brand_id: brand id of the preview signin page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#brand_id PreviewSigninPage#brand_id}
-        :param page_content: page content of the preview signin page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#page_content PreviewSigninPage#page_content}
-        :param widget_version: widget version specified as a Semver. The following are currently supported *, ^1, ^2, ^3, ^4, ^5, ^6, ^7, 1.6, 1.7, 1.8, 1.9, 1.10, 1.11, 1.12, 1.13, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10, 2.11, 2.12, 2.13, 2.14, 2.15, 2.16, 2.17, 2.18, 2.19, 2.20, 2.21, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 5.10, 5.11, 5.12, 5.13, 5.14, 5.15, 5.16, 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 7.0, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 7.12, 7.13. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#widget_version PreviewSigninPage#widget_version}
-        :param content_security_policy_setting: content_security_policy_setting block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#content_security_policy_setting PreviewSigninPage#content_security_policy_setting}
-        :param widget_customizations: widget_customizations block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#widget_customizations PreviewSigninPage#widget_customizations}
+        :param brand_id: brand id of the preview signin page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#brand_id PreviewSigninPage#brand_id}
+        :param page_content: page content of the preview signin page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#page_content PreviewSigninPage#page_content}
+        :param widget_version: widget version specified as a Semver. The following are currently supported *, ^1, ^2, ^3, ^4, ^5, ^6, ^7, 1.6, 1.7, 1.8, 1.9, 1.10, 1.11, 1.12, 1.13, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10, 2.11, 2.12, 2.13, 2.14, 2.15, 2.16, 2.17, 2.18, 2.19, 2.20, 2.21, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 5.10, 5.11, 5.12, 5.13, 5.14, 5.15, 5.16, 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 7.0, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 7.12, 7.13. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#widget_version PreviewSigninPage#widget_version}
+        :param content_security_policy_setting: content_security_policy_setting block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#content_security_policy_setting PreviewSigninPage#content_security_policy_setting}
+        :param widget_customizations: widget_customizations block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#widget_customizations PreviewSigninPage#widget_customizations}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -487,7 +487,7 @@ class PreviewSigninPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def brand_id(self) -> builtins.str:
         '''brand id of the preview signin page.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#brand_id PreviewSigninPage#brand_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#brand_id PreviewSigninPage#brand_id}
         '''
         result = self._values.get("brand_id")
         assert result is not None, "Required property 'brand_id' is missing"
@@ -497,7 +497,7 @@ class PreviewSigninPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def page_content(self) -> builtins.str:
         '''page content of the preview signin page.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#page_content PreviewSigninPage#page_content}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#page_content PreviewSigninPage#page_content}
         '''
         result = self._values.get("page_content")
         assert result is not None, "Required property 'page_content' is missing"
@@ -514,7 +514,7 @@ class PreviewSigninPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 5.10, 5.11, 5.12, 5.13, 5.14, 5.15, 5.16, 6.0, 6.1, 6.2, 6.3, 6.4, 6.5,
         6.6, 6.7, 6.8, 6.9, 7.0, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.10, 7.11, 7.12, 7.13.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#widget_version PreviewSigninPage#widget_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#widget_version PreviewSigninPage#widget_version}
         '''
         result = self._values.get("widget_version")
         assert result is not None, "Required property 'widget_version' is missing"
@@ -526,7 +526,7 @@ class PreviewSigninPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional["PreviewSigninPageContentSecurityPolicySetting"]:
         '''content_security_policy_setting block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#content_security_policy_setting PreviewSigninPage#content_security_policy_setting}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#content_security_policy_setting PreviewSigninPage#content_security_policy_setting}
         '''
         result = self._values.get("content_security_policy_setting")
         return typing.cast(typing.Optional["PreviewSigninPageContentSecurityPolicySetting"], result)
@@ -537,7 +537,7 @@ class PreviewSigninPageConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional["PreviewSigninPageWidgetCustomizations"]:
         '''widget_customizations block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#widget_customizations PreviewSigninPage#widget_customizations}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#widget_customizations PreviewSigninPage#widget_customizations}
         '''
         result = self._values.get("widget_customizations")
         return typing.cast(typing.Optional["PreviewSigninPageWidgetCustomizations"], result)
@@ -568,9 +568,9 @@ class PreviewSigninPageContentSecurityPolicySetting:
         src_list: typing.Optional[typing.Sequence[builtins.str]] = None,
     ) -> None:
         '''
-        :param mode: enforced or report_only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#mode PreviewSigninPage#mode}
-        :param report_uri: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#report_uri PreviewSigninPage#report_uri}.
-        :param src_list: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#src_list PreviewSigninPage#src_list}.
+        :param mode: enforced or report_only. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#mode PreviewSigninPage#mode}
+        :param report_uri: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#report_uri PreviewSigninPage#report_uri}.
+        :param src_list: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#src_list PreviewSigninPage#src_list}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__1692258d76c9fde16adaa8c25e331977f30d0a8acf8c93362f9ed75be1e89b1d)
@@ -589,20 +589,20 @@ class PreviewSigninPageContentSecurityPolicySetting:
     def mode(self) -> typing.Optional[builtins.str]:
         '''enforced or report_only.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#mode PreviewSigninPage#mode}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#mode PreviewSigninPage#mode}
         '''
         result = self._values.get("mode")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def report_uri(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#report_uri PreviewSigninPage#report_uri}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#report_uri PreviewSigninPage#report_uri}.'''
         result = self._values.get("report_uri")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def src_list(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#src_list PreviewSigninPage#src_list}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#src_list PreviewSigninPage#src_list}.'''
         result = self._values.get("src_list")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
@@ -773,27 +773,27 @@ class PreviewSigninPageWidgetCustomizations:
         username_label: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param widget_generation: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#widget_generation PreviewSigninPage#widget_generation}.
-        :param authenticator_page_custom_link_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#authenticator_page_custom_link_label PreviewSigninPage#authenticator_page_custom_link_label}.
-        :param authenticator_page_custom_link_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#authenticator_page_custom_link_url PreviewSigninPage#authenticator_page_custom_link_url}.
-        :param classic_recovery_flow_email_or_username_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#classic_recovery_flow_email_or_username_label PreviewSigninPage#classic_recovery_flow_email_or_username_label}.
-        :param custom_link1_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#custom_link_1_label PreviewSigninPage#custom_link_1_label}.
-        :param custom_link1_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#custom_link_1_url PreviewSigninPage#custom_link_1_url}.
-        :param custom_link2_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#custom_link_2_label PreviewSigninPage#custom_link_2_label}.
-        :param custom_link2_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#custom_link_2_url PreviewSigninPage#custom_link_2_url}.
-        :param forgot_password_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#forgot_password_label PreviewSigninPage#forgot_password_label}.
-        :param forgot_password_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#forgot_password_url PreviewSigninPage#forgot_password_url}.
-        :param help_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#help_label PreviewSigninPage#help_label}.
-        :param help_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#help_url PreviewSigninPage#help_url}.
-        :param password_info_tip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#password_info_tip PreviewSigninPage#password_info_tip}.
-        :param password_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#password_label PreviewSigninPage#password_label}.
-        :param show_password_visibility_toggle: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#show_password_visibility_toggle PreviewSigninPage#show_password_visibility_toggle}.
-        :param show_user_identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#show_user_identifier PreviewSigninPage#show_user_identifier}.
-        :param sign_in_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#sign_in_label PreviewSigninPage#sign_in_label}.
-        :param unlock_account_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#unlock_account_label PreviewSigninPage#unlock_account_label}.
-        :param unlock_account_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#unlock_account_url PreviewSigninPage#unlock_account_url}.
-        :param username_info_tip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#username_info_tip PreviewSigninPage#username_info_tip}.
-        :param username_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#username_label PreviewSigninPage#username_label}.
+        :param widget_generation: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#widget_generation PreviewSigninPage#widget_generation}.
+        :param authenticator_page_custom_link_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#authenticator_page_custom_link_label PreviewSigninPage#authenticator_page_custom_link_label}.
+        :param authenticator_page_custom_link_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#authenticator_page_custom_link_url PreviewSigninPage#authenticator_page_custom_link_url}.
+        :param classic_recovery_flow_email_or_username_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#classic_recovery_flow_email_or_username_label PreviewSigninPage#classic_recovery_flow_email_or_username_label}.
+        :param custom_link1_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#custom_link_1_label PreviewSigninPage#custom_link_1_label}.
+        :param custom_link1_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#custom_link_1_url PreviewSigninPage#custom_link_1_url}.
+        :param custom_link2_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#custom_link_2_label PreviewSigninPage#custom_link_2_label}.
+        :param custom_link2_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#custom_link_2_url PreviewSigninPage#custom_link_2_url}.
+        :param forgot_password_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#forgot_password_label PreviewSigninPage#forgot_password_label}.
+        :param forgot_password_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#forgot_password_url PreviewSigninPage#forgot_password_url}.
+        :param help_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#help_label PreviewSigninPage#help_label}.
+        :param help_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#help_url PreviewSigninPage#help_url}.
+        :param password_info_tip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#password_info_tip PreviewSigninPage#password_info_tip}.
+        :param password_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#password_label PreviewSigninPage#password_label}.
+        :param show_password_visibility_toggle: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#show_password_visibility_toggle PreviewSigninPage#show_password_visibility_toggle}.
+        :param show_user_identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#show_user_identifier PreviewSigninPage#show_user_identifier}.
+        :param sign_in_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#sign_in_label PreviewSigninPage#sign_in_label}.
+        :param unlock_account_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#unlock_account_label PreviewSigninPage#unlock_account_label}.
+        :param unlock_account_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#unlock_account_url PreviewSigninPage#unlock_account_url}.
+        :param username_info_tip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#username_info_tip PreviewSigninPage#username_info_tip}.
+        :param username_label: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#username_label PreviewSigninPage#username_label}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__fd3a9e7f5560f06e5ce0a3c1850194b36f900e7ec7d213954efc721c6429fcdc)
@@ -864,20 +864,20 @@ class PreviewSigninPageWidgetCustomizations:
 
     @builtins.property
     def widget_generation(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#widget_generation PreviewSigninPage#widget_generation}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#widget_generation PreviewSigninPage#widget_generation}.'''
         result = self._values.get("widget_generation")
         assert result is not None, "Required property 'widget_generation' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def authenticator_page_custom_link_label(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#authenticator_page_custom_link_label PreviewSigninPage#authenticator_page_custom_link_label}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#authenticator_page_custom_link_label PreviewSigninPage#authenticator_page_custom_link_label}.'''
         result = self._values.get("authenticator_page_custom_link_label")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def authenticator_page_custom_link_url(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#authenticator_page_custom_link_url PreviewSigninPage#authenticator_page_custom_link_url}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#authenticator_page_custom_link_url PreviewSigninPage#authenticator_page_custom_link_url}.'''
         result = self._values.get("authenticator_page_custom_link_url")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -885,67 +885,67 @@ class PreviewSigninPageWidgetCustomizations:
     def classic_recovery_flow_email_or_username_label(
         self,
     ) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#classic_recovery_flow_email_or_username_label PreviewSigninPage#classic_recovery_flow_email_or_username_label}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#classic_recovery_flow_email_or_username_label PreviewSigninPage#classic_recovery_flow_email_or_username_label}.'''
         result = self._values.get("classic_recovery_flow_email_or_username_label")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def custom_link1_label(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#custom_link_1_label PreviewSigninPage#custom_link_1_label}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#custom_link_1_label PreviewSigninPage#custom_link_1_label}.'''
         result = self._values.get("custom_link1_label")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def custom_link1_url(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#custom_link_1_url PreviewSigninPage#custom_link_1_url}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#custom_link_1_url PreviewSigninPage#custom_link_1_url}.'''
         result = self._values.get("custom_link1_url")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def custom_link2_label(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#custom_link_2_label PreviewSigninPage#custom_link_2_label}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#custom_link_2_label PreviewSigninPage#custom_link_2_label}.'''
         result = self._values.get("custom_link2_label")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def custom_link2_url(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#custom_link_2_url PreviewSigninPage#custom_link_2_url}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#custom_link_2_url PreviewSigninPage#custom_link_2_url}.'''
         result = self._values.get("custom_link2_url")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def forgot_password_label(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#forgot_password_label PreviewSigninPage#forgot_password_label}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#forgot_password_label PreviewSigninPage#forgot_password_label}.'''
         result = self._values.get("forgot_password_label")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def forgot_password_url(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#forgot_password_url PreviewSigninPage#forgot_password_url}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#forgot_password_url PreviewSigninPage#forgot_password_url}.'''
         result = self._values.get("forgot_password_url")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def help_label(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#help_label PreviewSigninPage#help_label}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#help_label PreviewSigninPage#help_label}.'''
         result = self._values.get("help_label")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def help_url(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#help_url PreviewSigninPage#help_url}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#help_url PreviewSigninPage#help_url}.'''
         result = self._values.get("help_url")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def password_info_tip(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#password_info_tip PreviewSigninPage#password_info_tip}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#password_info_tip PreviewSigninPage#password_info_tip}.'''
         result = self._values.get("password_info_tip")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def password_label(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#password_label PreviewSigninPage#password_label}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#password_label PreviewSigninPage#password_label}.'''
         result = self._values.get("password_label")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -953,7 +953,7 @@ class PreviewSigninPageWidgetCustomizations:
     def show_password_visibility_toggle(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#show_password_visibility_toggle PreviewSigninPage#show_password_visibility_toggle}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#show_password_visibility_toggle PreviewSigninPage#show_password_visibility_toggle}.'''
         result = self._values.get("show_password_visibility_toggle")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -961,37 +961,37 @@ class PreviewSigninPageWidgetCustomizations:
     def show_user_identifier(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#show_user_identifier PreviewSigninPage#show_user_identifier}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#show_user_identifier PreviewSigninPage#show_user_identifier}.'''
         result = self._values.get("show_user_identifier")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def sign_in_label(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#sign_in_label PreviewSigninPage#sign_in_label}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#sign_in_label PreviewSigninPage#sign_in_label}.'''
         result = self._values.get("sign_in_label")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def unlock_account_label(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#unlock_account_label PreviewSigninPage#unlock_account_label}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#unlock_account_label PreviewSigninPage#unlock_account_label}.'''
         result = self._values.get("unlock_account_label")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def unlock_account_url(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#unlock_account_url PreviewSigninPage#unlock_account_url}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#unlock_account_url PreviewSigninPage#unlock_account_url}.'''
         result = self._values.get("unlock_account_url")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def username_info_tip(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#username_info_tip PreviewSigninPage#username_info_tip}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#username_info_tip PreviewSigninPage#username_info_tip}.'''
         result = self._values.get("username_info_tip")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def username_label(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/preview_signin_page#username_label PreviewSigninPage#username_label}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/preview_signin_page#username_label PreviewSigninPage#username_label}.'''
         result = self._values.get("username_label")
         return typing.cast(typing.Optional[builtins.str], result)
 

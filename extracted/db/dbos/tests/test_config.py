@@ -14,12 +14,10 @@ from dbos import DBOS
 from dbos._dbos_config import (
     ConfigFile,
     DBOSConfig,
-    check_config_consistency,
     configure_db_engine_parameters,
     load_config,
     overwrite_config,
     process_config,
-    set_env_vars,
     translate_dbos_config_to_config_file,
 )
 from dbos._error import DBOSInitializationError
@@ -85,17 +83,11 @@ def test_load_valid_config_file(mocker):
                 - "python3 main.py"
             admin_port: 8001
         database_url: "postgres://user:dbos@localhost:5432/dbname?connect_timeout=10&sslmode=require&sslrootcert=ca.pem"
-        env:
-            foo: ${BARBAR}
-            bazbaz: BAZBAZ
-            bob: ${BOBBOB}
-            test_number: 123
         telemetry:
             OTLPExporter:
                 logsEndpoint: 'fooLogs'
                 tracesEndpoint: 'fooTraces'
     """
-    os.environ["BARBAR"] = "FOOFOO"
     mocker.patch(
         "builtins.open", side_effect=generate_mock_open(mock_filename, mock_config)
     )
@@ -106,15 +98,6 @@ def test_load_valid_config_file(mocker):
         configFile["database_url"]
         == f"postgres://user:dbos@localhost:5432/dbname?connect_timeout=10&sslmode=require&sslrootcert=ca.pem"
     )
-    assert configFile["env"]["foo"] == "FOOFOO"
-    assert configFile["env"]["bob"] is None  # Unset environment variable
-    assert configFile["env"]["test_number"] == 123
-
-    set_env_vars(configFile)
-    assert os.environ["bazbaz"] == "BAZBAZ"
-    assert os.environ["foo"] == "FOOFOO"
-    assert os.environ["test_number"] == "123"
-    assert "bob" not in os.environ
 
     assert configFile["telemetry"]["OTLPExporter"]["logsEndpoint"] == ["fooLogs"]
     assert configFile["telemetry"]["OTLPExporter"]["tracesEndpoint"] == ["fooTraces"]
@@ -237,6 +220,7 @@ def test_process_config_full():
         "pool_timeout": 30,
         "max_overflow": 0,
         "pool_size": 20,
+        "pool_pre_ping": True,
         "connect_args": {"connect_timeout": 1},
     }
     assert configFile["database"]["sys_db_engine_kwargs"] == {
@@ -244,6 +228,7 @@ def test_process_config_full():
         "pool_timeout": 30,
         "max_overflow": 0,
         "pool_size": 27,
+        "pool_pre_ping": True,
         "connect_args": {"connect_timeout": 1},
     }
     assert configFile["runtimeConfig"]["start"] == ["python3 main.py"]
@@ -402,12 +387,14 @@ def test_configure_db_engine_parameters_defaults():
         "pool_timeout": 30,
         "max_overflow": 0,
         "pool_size": 20,
+        "pool_pre_ping": True,
         "connect_args": {"connect_timeout": 10},
     }
     assert data["sys_db_engine_kwargs"] == {
         "pool_timeout": 30,
         "max_overflow": 0,
         "pool_size": 20,
+        "pool_pre_ping": True,
         "connect_args": {"connect_timeout": 10},
     }
 
@@ -422,12 +409,14 @@ def test_configure_db_engine_parameters_custom_sys_db_pool_sizes():
         "pool_timeout": 30,
         "max_overflow": 0,
         "pool_size": 20,
+        "pool_pre_ping": True,
         "connect_args": {"connect_timeout": 10},
     }
     assert data["sys_db_engine_kwargs"] == {
         "pool_timeout": 30,
         "max_overflow": 0,
         "pool_size": 35,
+        "pool_pre_ping": True,
         "connect_args": {"connect_timeout": 10},
     }
 
@@ -582,12 +571,14 @@ def test_configure_db_engine_parameters_empty_user_kwargs():
         "pool_timeout": 30,
         "max_overflow": 0,
         "pool_size": 20,
+        "pool_pre_ping": True,
         "connect_args": {"connect_timeout": 10},
     }
     assert data["sys_db_engine_kwargs"] == {
         "pool_timeout": 30,
         "max_overflow": 0,
         "pool_size": 20,
+        "pool_pre_ping": True,
         "connect_args": {"connect_timeout": 10},
     }
 
@@ -810,8 +801,6 @@ def test_overwrite_config(mocker):
         OTLPExporter:
             logsEndpoint: thelogsendpoint
             tracesEndpoint:  thetracesendpoint
-    env:
-        KEY: "VALUE"
     runtimeConfig:
         start:
             - "a start command"
@@ -1097,41 +1086,6 @@ def test_overwrite_config_missing_dbos_database_url(mocker):
 
 
 ####################
-# PROVIDED CONFIGS vs CONFIG FILE
-####################
-
-
-def test_no_discrepancy(mocker):
-    mock_config = """
-    name: "stock-prices" \
-    """
-    mocker.patch(
-        "builtins.open", side_effect=generate_mock_open("dbos-config.yaml", mock_config)
-    )
-    check_config_consistency(name="stock-prices")
-
-
-def test_name_does_no_match(mocker):
-    mock_config = """
-    name: "stock-prices" \
-    """
-    mocker.patch(
-        "builtins.open", side_effect=generate_mock_open("dbos-config.yaml", mock_config)
-    )
-    with pytest.raises(DBOSInitializationError) as exc_info:
-        check_config_consistency(name="stock-prices-wrong")
-    assert (
-        "Provided app name 'stock-prices-wrong' does not match the app name 'stock-prices' in dbos-config.yaml"
-        in str(exc_info.value)
-    )
-
-
-def test_no_config_file():
-    # Handles FileNotFoundError
-    check_config_consistency(name="stock-prices")
-
-
-####################
 # DATABASES CONNECTION POOLS
 ####################
 
@@ -1148,12 +1102,12 @@ def test_configured_pool_default():
     assert dbos._app_db.engine.pool._pool.maxsize == 20
     assert dbos._app_db.engine.pool._timeout == 30
     assert dbos._app_db.engine.pool._max_overflow == 0
-    assert dbos._app_db.engine.pool._pre_ping == False
+    assert dbos._app_db.engine.pool._pre_ping == True
 
     assert dbos._sys_db.engine.pool._pool.maxsize == 20
     assert dbos._sys_db.engine.pool._timeout == 30
     assert dbos._sys_db.engine.pool._max_overflow == 0
-    assert dbos._sys_db.engine.pool._pre_ping == False
+    assert dbos._sys_db.engine.pool._pre_ping == True
 
     # force the release of connections so we can intercept on connect.
     app_db_engine = dbos._app_db.engine

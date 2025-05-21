@@ -554,6 +554,9 @@ class ConnectionsClient:
             "serviceName": {"$ref": "#/components/schemas/serviceName"},
             "host": {"$ref": "#/components/schemas/host"},
             "entity": {"$ref": "#/components/schemas/entity"},
+            "dynamicAuthConfig": {
+                "$ref": "#/components/schemas/dynamicAuthConfig"
+            },
         },
     }
 
@@ -580,6 +583,10 @@ class ConnectionsClient:
             "serviceName": {"$ref": "#/components/schemas/serviceName"},
             "host": {"$ref": "#/components/schemas/host"},
             "entity": {"$ref": "#/components/schemas/entity"},
+            "dynamicAuthConfig": {
+                "$ref": "#/components/schemas/dynamicAuthConfig"
+            },
+            "filterClause": {"$ref": "#/components/schemas/filterClause"},
         },
     }
 
@@ -602,6 +609,9 @@ class ConnectionsClient:
             "serviceName": {"$ref": "#/components/schemas/serviceName"},
             "host": {"$ref": "#/components/schemas/host"},
             "entity": {"$ref": "#/components/schemas/entity"},
+            "dynamicAuthConfig": {
+                "$ref": "#/components/schemas/dynamicAuthConfig"
+            },
         },
     }
 
@@ -624,6 +634,10 @@ class ConnectionsClient:
             "serviceName": {"$ref": "#/components/schemas/serviceName"},
             "host": {"$ref": "#/components/schemas/host"},
             "entity": {"$ref": "#/components/schemas/entity"},
+            "dynamicAuthConfig": {
+                "$ref": "#/components/schemas/dynamicAuthConfig"
+            },
+            "filterClause": {"$ref": "#/components/schemas/filterClause"},
         },
     }
 
@@ -647,6 +661,9 @@ class ConnectionsClient:
             "serviceName": {"$ref": "#/components/schemas/serviceName"},
             "host": {"$ref": "#/components/schemas/host"},
             "entity": {"$ref": "#/components/schemas/entity"},
+            "dynamicAuthConfig": {
+                "$ref": "#/components/schemas/dynamicAuthConfig"
+            },
         },
     }
 
@@ -670,6 +687,9 @@ class ConnectionsClient:
             "action": {"$ref": "#/components/schemas/action"},
             "connectorInputPayload": {
                 "$ref": f"#/components/schemas/connectorInputPayload_{action}"
+            },
+            "dynamicAuthConfig": {
+                "$ref": "#/components/schemas/dynamicAuthConfig"
             },
         },
     }

@@ -369,6 +369,7 @@ class _AuthenticationPolicyState:
         pulumi.set(self, "show_outputs", value)
 
 
+@pulumi.type_token("snowflake:index/authenticationPolicy:AuthenticationPolicy")
 class AuthenticationPolicy(pulumi.CustomResource):
     @overload
     def __init__(__self__,

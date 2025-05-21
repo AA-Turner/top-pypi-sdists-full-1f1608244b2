@@ -28,10 +28,10 @@ class PolymorphicChildModelFilter(admin.SimpleListFilter):
             value = None
         if value:
             # ensure the content type is allowed
-            for choice_value, _ in self.lookup_choices:
+            for choice_value, _ in self.lookup_choices:  # noqa: F402
                 if choice_value == value:
                     return queryset.filter(polymorphic_ctype_id=choice_value)
             raise PermissionDenied(
-                'Invalid ContentType "{}". It must be registered as child model.'.format(value)
+                f'Invalid ContentType "{value}". It must be registered as child model.'
             )
         return queryset

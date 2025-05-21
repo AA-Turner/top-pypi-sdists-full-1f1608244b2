@@ -80,8 +80,8 @@ async def exportacao_docs_portal_b2b(task: RpaProcessoEntradaDTO) -> RpaRetornoP
             console.print(f"\nError Message: {return_login.retorno}", style="bold red")
             return return_login
         await worker_sleep(5)
-        # # Identificando jenela principal
-        app = Application().connect(class_name="TFrmEnviaEmailBoletaTitulo", backend="uia")
+        # Identificando jenela principal
+        app = Application().connect(class_name="TFrmEnviaEmailBoletaTitulo", backend="win32")
         main_window_envia_boletos = app["TFrmEnviaEmailBoletaTitulo"]
         main_window_envia_boletos.set_focus()
 
@@ -106,7 +106,10 @@ async def exportacao_docs_portal_b2b(task: RpaProcessoEntradaDTO) -> RpaRetornoP
             select_model = main_window_envia_boletos.child_window(class_name="TDBIComboBox", found_index=0)
             select_model.select("BANCO DO BRASIL BOLETO")
 
-
+        #Desmarcando Frete/Carregamento
+        main_window_envia_boletos.child_window(class_name="TDBICheckBox", found_index=7).click()
+        #Desmarcando PDF do Ct-e
+        main_window_envia_boletos.child_window(class_name="TDBICheckBox", found_index=4).click()
         #Selecionando "Somente Não Enviados"
         main_window_envia_boletos.child_window(class_name="TDBICheckBox", found_index=6).click()
         #Selecionando "Enviar XML e PDF do NF-e"
@@ -173,10 +176,10 @@ async def exportacao_docs_portal_b2b(task: RpaProcessoEntradaDTO) -> RpaRetornoP
                 window_company_select.set_focus()
                 pyautogui.click(720, 623)
                 await worker_sleep(5)
-                if task.uuidProcesso != "5ad2d209-e9da-438c-ba62-db0a5f9a3795":
-                    window_company_select.child_window(class_name='TEdit').type_keys('189')
-                    await worker_sleep(2)
-                    pyautogui.click(690, 440)
+                #Remove filial 189
+                window_company_select.child_window(class_name='TEdit').type_keys('189')
+                await worker_sleep(2)
+                pyautogui.click(690, 440)
         except Exception as ex:
             log_msg = f"Erro ao identificar a janela de empresas: {str(ex)}"
             console.print(log_msg, style="bold red")
@@ -201,11 +204,8 @@ async def exportacao_docs_portal_b2b(task: RpaProcessoEntradaDTO) -> RpaRetornoP
             console.print(log_msg, style="bold red")
             return RpaRetornoProcessoDTO(sucesso=False, retorno=log_msg, status=RpaHistoricoStatusEnum.Falha, tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)])
 
-        # #Clica em Pesquisar
-        # pyautogui.click(602, 588)
-        # await worker_sleep(5)   
-
         #Desmarca titulos sem Nosso Número gerado
+        
         #Clica para selecionar todos registros
         pyautogui.click(970,580)
 

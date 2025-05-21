@@ -64,10 +64,8 @@ class _CertificateState:
         pulumi.set(self, "certificate_identifier", value)
 
 
+@pulumi.type_token("aws:rds/certificate:Certificate")
 class Certificate(pulumi.CustomResource):
-
-    pulumi_type = "aws:rds/certificate:Certificate"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -86,10 +84,10 @@ class Certificate(pulumi.CustomResource):
 
         ## Import
 
-        Using `pulumi import`, import the default EBS encryption state. For example:
+        Using `pulumi import`, import the RDS certificate override using the `region`. For example:
 
         ```sh
-        $ pulumi import aws:rds/certificate:Certificate example default
+        $ pulumi import aws:rds/certificate:Certificate example us-west-2
         ```
 
         :param str resource_name: The name of the resource.
@@ -114,10 +112,10 @@ class Certificate(pulumi.CustomResource):
 
         ## Import
 
-        Using `pulumi import`, import the default EBS encryption state. For example:
+        Using `pulumi import`, import the RDS certificate override using the `region`. For example:
 
         ```sh
-        $ pulumi import aws:rds/certificate:Certificate example default
+        $ pulumi import aws:rds/certificate:Certificate example us-west-2
         ```
 
         :param str resource_name: The name of the resource.

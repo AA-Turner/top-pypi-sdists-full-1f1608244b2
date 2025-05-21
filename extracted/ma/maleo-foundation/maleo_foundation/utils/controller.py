@@ -1,3 +1,4 @@
+import inspect
 from fastapi import status
 from functools import wraps
 from typing import Awaitable, Callable, Dict, List
@@ -24,7 +25,12 @@ class BaseControllerUtils:
         """
         def decorator(func:Callable[..., Awaitable[BaseServiceRESTControllerResults]]):
             @wraps(func)
-            async def wrapper(parameters, *args, **kwargs):
+            async def wrapper(*args, **kwargs):
+                sig = inspect.signature(func)
+                bound = sig.bind(*args, **kwargs)
+                bound.apply_defaults()
+
+                parameters = bound.arguments.get("parameters")
                 expand:BaseTypes.OptionalListOfStrings = getattr(parameters, 'expand', None)
 
                 #* Validate expandable fields dependencies
@@ -42,7 +48,7 @@ class BaseControllerUtils:
                                     )
 
                 #* Call the original function
-                result = await func(parameters, *args, **kwargs)
+                result = await func(*args, **kwargs)
 
                 if not isinstance(result.content, Dict):
                     return result

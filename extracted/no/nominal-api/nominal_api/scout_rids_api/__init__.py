@@ -1,6 +1,7 @@
 # coding=utf-8
 from .._impl import (
     scout_rids_api_ApiKeyRid as ApiKeyRid,
+    scout_rids_api_AssetRefName as AssetRefName,
     scout_rids_api_AssetRid as AssetRid,
     scout_rids_api_CheckAlertRid as CheckAlertRid,
     scout_rids_api_CheckAlertState as CheckAlertState,

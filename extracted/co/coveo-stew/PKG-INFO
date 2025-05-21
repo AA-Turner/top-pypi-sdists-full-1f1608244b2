@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: coveo-stew
-Version: 3.1.28
+Version: 3.1.29
 Summary: Opinionated python packaging and development utilities
 Home-page: https://github.com/coveo/stew
 License: Apache-2.0

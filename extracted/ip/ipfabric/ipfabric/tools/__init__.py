@@ -1,5 +1,6 @@
 from .configuration import DeviceConfigs, trigger_backup
 from .discovery_history import DiscoveryHistory
+from .feature_matrix import FeatureMatrix
 from .restore_intents import RestoreIntents
 from .shared import (
     parse_mac,
@@ -13,7 +14,6 @@ from .shared import (
 )
 from .site_seperation_report import map_devices_to_rules
 from .vulnerabilities import Vulnerabilities
-from .feature_matrix import FeatureMatrix
 
 __all__ = [
     "DeviceConfigs",

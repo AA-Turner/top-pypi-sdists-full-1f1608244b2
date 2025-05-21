@@ -30,20 +30,18 @@
 
 from __future__ import annotations
 
-from ctypes.util import find_library
 import ctypes
 import fcntl
 import glob
+import logging
+import os
 import re
 import struct
-import os
-from array import array
-
-from .base import HidDescriptor, parse_report_descriptor, FileCtapHidConnection
-
-import logging
 import sys
-from typing import Dict, Optional, Set, Union
+from array import array
+from ctypes.util import find_library
+
+from .base import FileCtapHidConnection, HidDescriptor, parse_report_descriptor
 
 # Don't typecheck this file on Windows
 assert sys.platform != "win32"  # nosec
@@ -140,7 +138,7 @@ def _enumerate():
         if retval != 0:
             continue
 
-        dev: Dict[str, Optional[Union[str, int]]] = {}
+        dev: dict[str, str | int | None] = {}
         dev["name"] = uhid[len(devdir) :]
         dev["path"] = uhid
 
@@ -216,7 +214,7 @@ def get_descriptor(path):
 
 
 # Cache for continuously failing devices
-_failed_cache: Set[str] = set()
+_failed_cache: set[str] = set()
 
 
 def list_descriptors():

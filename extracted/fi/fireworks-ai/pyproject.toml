@@ -17,15 +17,6 @@ include_trailing_comma = "true"
 line_length = 80
 multi_line_output = 3
 
-[tool.pdm.dev-dependencies]
-dev = [
-    "hypothesis",
-    "pytest",
-    "pytest-timeout",
-    "backoff",
-    "grpcio-tools",
-]
-
 [tool.pdm.build]
 includes = [
     "fireworks",
@@ -52,7 +43,9 @@ dependencies = [
     "mmh3>=4.1.0",
     "betterproto-fw[compiler]>=2.0.3",
     "asyncstdlib-fw>=3.13.2",
-    "nest-asyncio>=1.6.0",
+    "greenlet>=3.2.2",
+    "grpcio>=1.71.0",
+    "protobuf==5.29.4",
 ]
 name = "fireworks-ai"
 dynamic = []
@@ -65,7 +58,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Development Status :: 3 - Alpha",
 ]
-version = "0.17.4"
+version = "0.17.6"
 
 [project.license]
 text = "MIT"
@@ -94,7 +87,8 @@ dev = [
     "pytest",
     "pytest-timeout",
     "backoff",
-    "grpcio-tools",
     "pytest-asyncio>=0.21.2",
     "ipykernel>=6.29.5",
+    "setuptools>=80.7.1",
+    "grpcio-tools==1.71.0",
 ]

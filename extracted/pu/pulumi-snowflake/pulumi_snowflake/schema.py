@@ -802,6 +802,7 @@ class _SchemaState:
         pulumi.set(self, "with_managed_access", value)
 
 
+@pulumi.type_token("snowflake:index/schema:Schema")
 class Schema(pulumi.CustomResource):
     @overload
     def __init__(__self__,

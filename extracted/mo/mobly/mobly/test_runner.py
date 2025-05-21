@@ -126,8 +126,12 @@ def parse_mobly_cli_args(argv):
       '--test_case',
       nargs='+',
       type=str,
-      metavar='[test_a test_b...]',
-      help='A list of tests in the test class to execute.',
+      metavar='[test_a test_b re:test_(c|d)...]',
+      help=(
+          'A list of tests in the test class to execute. Each value can be a '
+          'test name string or a `re:` prefixed string for full regex match of'
+          ' test names.'
+      ),
   )
   parser.add_argument(
       '-tb',
@@ -305,6 +309,53 @@ class TestRunner:
       if self._start_counter is None or self._end_counter is None:
         return None
       return self._end_counter - self._start_counter
+
+  def get_full_test_names(self):
+    """Returns the names of all tests that will be run in this test runner.
+
+    Returns:
+      A list of test names. Each test name is in the format of
+      <test.TAG>.<test_name>.
+    """
+    test_names = []
+    for test_run_info in self._test_run_infos:
+      test_config = test_run_info.config.copy()
+      test_config.test_class_name_suffix = test_run_info.test_class_name_suffix
+      test = test_run_info.test_class(test_config)
+
+      tests = self._get_test_names_from_class(test)
+      if test_run_info.tests is not None:
+        # If tests is provided, verify that all tests exist in the class.
+        tests_set = set(tests)
+        for test_name in test_run_info.tests:
+          if test_name not in tests_set:
+            raise Error(
+                'Unknown test method: %s in class %s', (test_name, test.TAG)
+            )
+          test_names.append(f'{test.TAG}.{test_name}')
+      else:
+        test_names.extend([f'{test.TAG}.{n}' for n in tests])
+
+    return test_names
+
+  def _get_test_names_from_class(self, test):
+    """Returns the names of all the tests in a test class.
+
+    Args:
+      test: module, the test module to print names from.
+    """
+    try:
+      # Executes pre-setup procedures, this is required since it might
+      # generate test methods that we want to return as well.
+      test._pre_run()
+      if test.tests:
+        # Specified by run list in class.
+        return list(test.tests)
+      else:
+        # No test method specified by user, list all in test class.
+        return test.get_existing_test_names()
+    finally:
+      test._clean_up()
 
   def __init__(self, log_dir, testbed_name):
     """Constructor for TestRunner.

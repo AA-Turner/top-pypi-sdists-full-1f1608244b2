@@ -1,42 +1,65 @@
+import json
+import logging
 import os
 import tempfile
-from typing import List, Optional, Dict, Literal, Any
+from typing import Optional, Literal, Any, Union
 from urllib.parse import urlparse
 
 import httpx
 from httpx import Response, HTTPError
 from pydantic import BaseModel, Field
 
-from ipfabric.tools import raise_for_status
+from ipfabric.tools.shared import raise_for_status
+from ipfabric.models.users import User
+
+logger = logging.getLogger("ipfabric")
+
+
+class Resources(BaseModel):
+    cpu: int
+    memory: int
 
 
 class Extension(BaseModel):
+    client: Optional[Any] = Field(None, exclude=True)
     id: str
     name: str
     description: Optional[str] = None
     slug: str
     status: str
     type: Optional[Literal["docker-zip", "docker-image"]] = None
-    environmentVariables: Optional[List[Dict[str, str]]] = None
+    environment_variables: Optional[list[dict[str, str]]] = Field(alias="environmentVariables")
+    access_permission: str = Field(alias="accessPermission")
+    accessible_by_users: list[str] = Field(alias="accessibleByUsers")
+    resources: Resources
 
+    @property
+    def users(self) -> list[User]:
+        """
+        Fetch users with access to the extension.
 
-class ExtensionsResponse(BaseModel):
-    extensions: List[Extension]
+        Returns:
+            List[User]: List of users with access to the extension
+        """
+        try:
+            return [self.client.settings.local_users.users_by_id[user] for user in self.accessible_by_users]
+        except:  # noqa: E722
+            return []
 
 
 class Extensions(BaseModel):
     client: Any = Field(exclude=True)
 
     @property
-    def extensions(self) -> List[Extension]:
+    def extensions(self) -> list[Extension]:
         """
         Fetch all extensions.
 
         Returns:
             List[Extension]: List of all available extensions
         """
-        response = ExtensionsResponse(extensions=raise_for_status(self.client.get("extensions")).json()["extensions"])
-        return response.extensions
+        response = raise_for_status(self.client.get("extensions")).json()["extensions"]
+        return [Extension(client=self.client, **ext) for ext in response]
 
     def extension_by_id(self, extension_id: str) -> Extension:
         """
@@ -48,9 +71,9 @@ class Extensions(BaseModel):
         Returns:
             Extension: The requested extension
         """
-        return Extension(**raise_for_status(self.client.get(f"extensions/{extension_id}")).json())
+        return Extension(client=self.client, **raise_for_status(self.client.get(f"extensions/{extension_id}")).json())
 
-    def logs_by_extension_id(self, extension_id: str) -> Dict:
+    def logs_by_extension_id(self, extension_id: str) -> dict:
         """
         Fetch paginated logs for a specific extension.
 
@@ -80,13 +103,62 @@ class Extensions(BaseModel):
             raise ValueError(f"Extension with slug '{slug}' not found")
         return extension
 
+    @staticmethod
+    def _users_permissions(
+        access_permission: Literal["anyone", "only-me", "selected-users"] = "anyone",
+        accessible_by_users: Optional[list[str]] = None,
+    ):
+        if access_permission != "selected-users":
+            if accessible_by_users:
+                logger.warning("Accessible by Users is only allowed with selected-users permission")
+            return {"accessPermission": access_permission, "accessibleByUsers": []}
+        return {"accessPermission": access_permission, "accessibleByUsers": accessible_by_users}
+
+    def _register_extension(
+        self,
+        docker_type: Literal["docker-zip", "docker-image"],
+        file: bytes,
+        name: str,
+        slug: str,
+        description: str,
+        cpu: int = 1,
+        memory: int = 512,
+        environment_variables: Optional[dict[str, str]] = None,
+        access_permission: Literal["anyone", "only-me", "selected-users"] = "anyone",
+        accessible_by_users: Optional[list[str]] = None,
+    ) -> Response:
+        files = (
+            {"file": ("extension.zip", file, "application/zip")}
+            if docker_type == "docker-zip"
+            else {"file": ("image.tar", file, "application/x-tar")}
+        )
+
+        data = {
+            "name": name,
+            "slug": slug,
+            "description": description,
+            "resources": json.dumps({"cpu": cpu, "memory": memory}),
+            **self._users_permissions(access_permission, accessible_by_users),
+        }
+
+        if environment_variables:
+            data["environmentVariables"] = [
+                {"name": key, "value": value} for key, value in environment_variables.items()
+            ]
+
+        return raise_for_status(self.client.post(f"extensions/{docker_type}", files=files, data=data, timeout=300))
+
     def register_docker_zip(
         self,
         file: bytes,
         name: str,
         slug: str,
         description: str,
-        environment_variables: Optional[Dict[str, str]] = None,
+        cpu: int = 1,
+        memory: int = 512,
+        environment_variables: Optional[dict[str, str]] = None,
+        access_permission: Literal["anyone", "only-me", "selected-users"] = "anyone",
+        accessible_by_users: Optional[list[str]] = None,
     ) -> Response:
         """
         Register a new extension using zipped source code. Raises an exception if the extension is not registered successfully.
@@ -96,16 +168,24 @@ class Extensions(BaseModel):
             name (str): Name of the extension
             slug (str): Slug for the extension
             description (str): Description of the extension
+            cpu (int): Number of CPU cores for the extension
+            memory (int): Memory size in MB for the extension
             environment_variables (Optional[Dict[str, str]]): Environment variables for the extension
+            access_permission (Literal["anyone", "only-me", "selected-users"]): Access permission for the extension
+            accessible_by_users (Optional[List[str]]): List of User IDs with access to the extension
         """
-        files = {"file": ("extension.zip", file, "application/zip")}
-
-        data = {"name": name, "slug": slug, "description": description}
-
-        if environment_variables:
-            data["environmentVariables"] = environment_variables
-
-        return raise_for_status(self.client.post("extensions/docker-zip", files=files, data=data, timeout=300))
+        return self._register_extension(
+            "docker-zip",
+            file=file,
+            name=name,
+            slug=slug,
+            description=description,
+            cpu=cpu,
+            memory=memory,
+            environment_variables=environment_variables,
+            access_permission=access_permission,
+            accessible_by_users=accessible_by_users,
+        )
 
     def register_docker_image(
         self,
@@ -113,7 +193,11 @@ class Extensions(BaseModel):
         name: str,
         slug: str,
         description: str,
-        environment_variables: Optional[Dict[str, str]] = None,
+        cpu: int = 1,
+        memory: int = 512,
+        environment_variables: Optional[dict[str, str]] = None,
+        access_permission: Literal["anyone", "only-me", "selected-users"] = "anyone",
+        accessible_by_users: Optional[list[str]] = None,
     ) -> Response:
         """
         Register a new extension using a docker image. Raises an exception if the extension is not registered successfully.
@@ -123,18 +207,24 @@ class Extensions(BaseModel):
             name (str): Name of the extension
             slug (str): Slug for the extension
             description (str): Description of the extension
+            cpu (int): Number of CPU cores for the extension
+            memory (int): Memory size in MB for the extension
             environment_variables (Optional[Dict[str, str]]): Environment variables for the extension
+            access_permission (Literal["anyone", "only-me", "selected-users"]): Access permission for the extension
+            accessible_by_users (Optional[List[str]]): List of User IDs with access to the extension
         """
-        files = {"file": ("image.tar", file, "application/x-tar")}
-
-        data = {"name": name, "slug": slug, "description": description}
-
-        if environment_variables:
-            data["environmentVariables"] = [
-                {"name": key, "value": value} for key, value in environment_variables.items()
-            ]
-
-        return raise_for_status(self.client.post("extensions/docker-image", files=files, data=data, timeout=300))
+        self._register_extension(
+            "docker-zip",
+            file=file,
+            name=name,
+            slug=slug,
+            description=description,
+            cpu=cpu,
+            memory=memory,
+            environment_variables=environment_variables,
+            access_permission=access_permission,
+            accessible_by_users=accessible_by_users,
+        )
 
     def start_extension(self, extension_id: str) -> Response:
         """
@@ -170,8 +260,12 @@ class Extensions(BaseModel):
         slug: str,
         description: str,
         branch: str = "main",
-        environment_variables: Optional[Dict[str, str]] = None,
-    ) -> None:
+        cpu: int = 1,
+        memory: int = 512,
+        environment_variables: Optional[dict[str, str]] = None,
+        access_permission: Literal["anyone", "only-me", "selected-users"] = "anyone",
+        accessible_by_users: Optional[list[str]] = None,
+    ) -> Union[Response, None]:
         """
         Register an extension from a Git repository URL. Supports GitHub and GitLab repositories.
         Downloads the repository, creates a ZIP file, and registers it as a docker-zip extension.
@@ -182,7 +276,11 @@ class Extensions(BaseModel):
             slug (str): Slug for the extension
             description (str): Description of the extension
             branch (str): Branch to download (default: "main")
+            cpu (int): Number of CPU cores for the extension
+            memory (int): Memory size in MB for the extension
             environment_variables (Optional[Dict[str, str]]): Environment variables for the extension
+            access_permission (Literal["anyone", "only-me", "selected-users"]): Access permission for the extension
+            accessible_by_users (Optional[List[str]]): List of User IDs with access to the extension
 
         Example:
             client.extensions.register_from_git_url(
@@ -222,12 +320,18 @@ class Extensions(BaseModel):
 
         try:
             with open(tmp_file.name, "rb") as f:
-                self.register_docker_zip(
+                resp = self._register_extension(
+                    "docker-zip",
                     file=f.read(),
                     name=name,
                     slug=slug,
                     description=description,
+                    cpu=cpu,
+                    memory=memory,
                     environment_variables=environment_variables,
+                    access_permission=access_permission,
+                    accessible_by_users=accessible_by_users,
                 )
         finally:
             os.unlink(tmp_file.name)
+        return resp

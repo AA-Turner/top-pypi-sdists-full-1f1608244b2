@@ -1,18 +1,14 @@
 import json
-from functools import cached_property
 from collections import defaultdict
-from typing import Optional, List, Any, Dict, Union
+from functools import cached_property
+from importlib.resources import files
+from typing import Optional, Any, Union
 from urllib.parse import quote_plus
-from httpx import URL
 
+from httpx import URL
 from pydantic import BaseModel, PrivateAttr, TypeAdapter, Field, FilePath
 
-from ipfabric.tools import raise_for_status
-
-try:
-    from importlib.resources import files
-except ImportError:
-    from importlib_resources import files
+from ipfabric.tools.shared import raise_for_status
 
 OAS_DIR = files("ipfabric.oas")
 CONTENT_TYPE = "application/json"
@@ -26,24 +22,25 @@ class NestedColumn(BaseModel):
 class Column(BaseModel):
     name: str
     filter: Optional[str] = None
+    deprecated: Optional[bool] = False
 
 
 class Scan(BaseModel):
-    columns: Optional[List[Union[Column, NestedColumn]]] = Field(default_factory=list)
+    columns: Optional[list[Union[Column, NestedColumn]]] = Field(default_factory=list)
     full_scan: bool = True
 
 
 class ComplexColumn(BaseModel):
     filter: Optional[str] = None
     array: Optional[bool] = Field(False)
-    children: List[Column] = Field(default_factory=list)
+    children: list[Column] = Field(default_factory=list)
 
     @property
-    def children_by_name(self) -> Dict[str, Column]:
+    def children_by_name(self) -> dict[str, Column]:
         return {_.name: _ for _ in self.children}
 
     @property
-    def children_by_filters(self) -> Dict[str, List[Column]]:
+    def children_by_filters(self) -> dict[str, list[Column]]:
         tmp = defaultdict(list)
         [tmp[_.filter].append(_) for _ in self.children]
         return dict(tmp)
@@ -52,21 +49,25 @@ class ComplexColumn(BaseModel):
 class Endpoint(BaseModel):
     full_api_endpoint: str
     web_endpoint: Optional[str] = None
-    columns: Optional[List[str]] = None
-    nested_columns: Optional[Dict[str, ComplexColumn]] = Field(default_factory=dict)
-    array_columns: Optional[Dict[str, ComplexColumn]] = Field(default_factory=dict)
+    columns: Optional[list[str]] = None
+    nested_columns: Optional[dict[str, ComplexColumn]] = Field(default_factory=dict)
+    array_columns: Optional[dict[str, ComplexColumn]] = Field(default_factory=dict)
+    deprecated_columns: Optional[set[str]] = Field(default_factory=set)
     summary: Optional[str] = None
     title: Optional[str] = None
-    tags: Optional[List[str]] = Field(default_factory=list)
-    tag_groups: Optional[List[str]] = Field(default_factory=list)
+    tags: Optional[list[str]] = Field(default_factory=list)
+    tag_groups: Optional[list[str]] = Field(default_factory=list)
     method: str
-    ui_columns: Optional[List[str]] = None
+    ui_columns: Optional[list[str]] = None
     api_scope_id: Optional[str] = None
     description: Optional[str] = None
     ipv4: Optional[Scan] = Field(default_factory=Scan)
     ipv6: Optional[Scan] = Field(default_factory=Scan)
     mac: Optional[Scan] = Field(default_factory=Scan)
     deprecated: Optional[bool] = False
+    device_filters: list[str] = Field(default_factory=list)
+    device_attribute_filters: bool = False
+    attribute_filters: bool = False
 
     def __repr__(self):
         return f"({self.method}, {self.api_endpoint})"
@@ -104,32 +105,32 @@ class Methods(BaseModel):
 class OAS(BaseModel):
     client: Any = Field(exclude=True)
     local_oas: bool = True
-    local_oas_file: Optional[FilePath] = None
-    _oas: Dict[str, Methods] = PrivateAttr(default_factory=dict)
+    local_oas_file: Optional[Union[FilePath, dict]] = None
+    _oas: dict[str, Methods] = PrivateAttr(default_factory=dict)
 
     def model_post_init(self, __context) -> None:
         self._oas = self._get_oas()
 
     @property
-    def oas(self) -> Dict[str, Methods]:
+    def oas(self) -> dict[str, Methods]:
         return self._oas
 
-    def _get_oas(self) -> Dict[str, Methods]:
+    def _get_oas(self) -> dict[str, Methods]:
         if not self.local_oas or (self.local_oas_file and self.local_oas):
             return self._parse_oas()
         try:
             min_oas = OAS_DIR.joinpath(self.client.api_version + ".json").read_text(encoding="UTF-8")
-            oas = TypeAdapter(Dict[str, Methods]).validate_json(min_oas)
+            oas = TypeAdapter(dict[str, Methods]).validate_json(min_oas)
             return oas
         except FileNotFoundError:
             return self._parse_oas()
 
     @cached_property
-    def web_to_api(self) -> Dict[str, Endpoint]:
+    def web_to_api(self) -> dict[str, Endpoint]:
         return {m.post.web_endpoint: m.post for m in self._oas.values() if m.post and m.post.web_endpoint}
 
     @cached_property
-    def scope_to_api(self) -> Dict[str, Endpoint]:
+    def scope_to_api(self) -> dict[str, Endpoint]:
         _ = dict()
         for methods in self._oas.values():
             for method in ["get", "put", "post", "patch", "delete"]:
@@ -138,7 +139,7 @@ class OAS(BaseModel):
                     _[m.api_scope_id] = m
         return _
 
-    def _complex_columns(self, data: Endpoint, spec: dict) -> Endpoint:
+    def _complex_columns(self, data: Endpoint, spec: dict) -> Endpoint:  # NOSONAR
         x_columns = {_["key"]: _ for _ in spec.get("x-table", {}).get("columns", [])}
 
         try:
@@ -153,6 +154,7 @@ class OAS(BaseModel):
                         Column(
                             name=c["field"],
                             filter=c["filter"]["type"] if isinstance(c["filter"], dict) else c["filter"],
+                            deprecated=c.get("deprecated", False),
                         )
                         for c in x_columns[k]["filter"]["children"]
                     ]
@@ -227,10 +229,12 @@ class OAS(BaseModel):
                 data.mac.columns.append(Column(name=key, filter=filter_type))
         return self._complex_global_search(data)
 
-    def _parse_oas(self) -> Dict[str, Methods]:
+    def _parse_oas(self) -> dict[str, Methods]:
         if not self.local_oas or not self.local_oas_file:
             url = self.client.base_url.join("/api/static/oas/openapi-internal.json")
             oas = raise_for_status(self.client.get(url, follow_redirects=True)).json()
+        elif isinstance(self.local_oas_file, dict):
+            oas = self.local_oas_file
         else:
             with open(self.local_oas_file, "r") as f:
                 oas = json.load(f)
@@ -239,6 +243,14 @@ class OAS(BaseModel):
         for endpoint, methods in oas["paths"].items():
             methods_obj = Methods(full_api_endpoint=endpoint)
             for method, spec in methods.items():
+                r_props = (
+                    spec.get("requestBody", {})
+                    .get("content", {})
+                    .get(CONTENT_TYPE, {})
+                    .get("schema", {})
+                    .get("properties", {})
+                )
+                filters = r_props.get("filters", {}).get("properties", {})
                 data = Endpoint(
                     full_api_endpoint=endpoint,
                     method=method,
@@ -248,6 +260,12 @@ class OAS(BaseModel):
                     tags=spec.get("tags", None),
                     tag_groups=spec.get("x-tagGroups", None),
                     deprecated=spec.get("deprecated", False),
+                    deprecated_columns={
+                        _["key"] for _ in spec.get("x-table", {}).get("columns", []) if _.get("deprecated", False)
+                    },
+                    device_filters=[_ for _ in filters if _.startswith("device.")],
+                    device_attribute_filters="device.attributes" in filters,
+                    attribute_filters="attributeFilters" in r_props,
                 )
                 if method == "post":
                     data = self._post_logic(data, spec)

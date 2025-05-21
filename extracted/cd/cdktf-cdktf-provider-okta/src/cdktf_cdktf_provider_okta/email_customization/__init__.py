@@ -1,7 +1,7 @@
 r'''
 # `okta_email_customization`
 
-Refer to the Terraform Registry for docs: [`okta_email_customization`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization).
+Refer to the Terraform Registry for docs: [`okta_email_customization`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class EmailCustomization(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.emailCustomization.EmailCustomization",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization okta_email_customization}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization okta_email_customization}.'''
 
     def __init__(
         self,
@@ -66,17 +66,17 @@ class EmailCustomization(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization okta_email_customization} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization okta_email_customization} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param brand_id: Brand ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#brand_id EmailCustomization#brand_id}
-        :param template_name: Template Name - Example values: ``AccountLockout``,``ADForgotPassword``,``ADForgotPasswordDenied``,``ADSelfServiceUnlock``,``ADUserActivation``,``AuthenticatorEnrolled``,``AuthenticatorReset``,``ChangeEmailConfirmation``,``EmailChallenge``,``EmailChangeConfirmation``,``EmailFactorVerification``,``ForgotPassword``,``ForgotPasswordDenied``,``IGAReviewerEndNotification``,``IGAReviewerNotification``,``IGAReviewerPendingNotification``,``IGAReviewerReassigned``,``LDAPForgotPassword``,``LDAPForgotPasswordDenied``,``LDAPSelfServiceUnlock``,``LDAPUserActivation``,``MyAccountChangeConfirmation``,``NewSignOnNotification``,``OktaVerifyActivation``,``PasswordChanged``,``PasswordResetByAdmin``,``PendingEmailChange``,``RegistrationActivation``,``RegistrationEmailVerification``,``SelfServiceUnlock``,``SelfServiceUnlockOnUnlockedAccount``,``UserActivation``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#template_name EmailCustomization#template_name}
-        :param body: The body of the customization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#body EmailCustomization#body}
-        :param force_is_default: Force is_default on the create and delete by deleting all email customizations. Comma separated string with values of 'create' or 'destroy' or both `create,destroy'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#force_is_default EmailCustomization#force_is_default}
-        :param is_default: Whether the customization is the default. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#is_default EmailCustomization#is_default}
-        :param language: The language supported by the customization - Example values from `supported languages <https://developer.okta.com/docs/reference/api/brands/#supported-languages>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#language EmailCustomization#language}
-        :param subject: The subject of the customization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#subject EmailCustomization#subject}
+        :param brand_id: Brand ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#brand_id EmailCustomization#brand_id}
+        :param template_name: Template Name - Example values: ``AccountLockout``,``ADForgotPassword``,``ADForgotPasswordDenied``,``ADSelfServiceUnlock``,``ADUserActivation``,``AuthenticatorEnrolled``,``AuthenticatorReset``,``ChangeEmailConfirmation``,``EmailChallenge``,``EmailChangeConfirmation``,``EmailFactorVerification``,``ForgotPassword``,``ForgotPasswordDenied``,``IGAReviewerEndNotification``,``IGAReviewerNotification``,``IGAReviewerPendingNotification``,``IGAReviewerReassigned``,``LDAPForgotPassword``,``LDAPForgotPasswordDenied``,``LDAPSelfServiceUnlock``,``LDAPUserActivation``,``MyAccountChangeConfirmation``,``NewSignOnNotification``,``OktaVerifyActivation``,``PasswordChanged``,``PasswordResetByAdmin``,``PendingEmailChange``,``RegistrationActivation``,``RegistrationEmailVerification``,``SelfServiceUnlock``,``SelfServiceUnlockOnUnlockedAccount``,``UserActivation``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#template_name EmailCustomization#template_name}
+        :param body: The body of the customization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#body EmailCustomization#body}
+        :param force_is_default: Force is_default on the create and delete by deleting all email customizations. Comma separated string with values of 'create' or 'destroy' or both `create,destroy'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#force_is_default EmailCustomization#force_is_default}
+        :param is_default: Whether the customization is the default. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#is_default EmailCustomization#is_default}
+        :param language: The language supported by the customization - Example values from `supported languages <https://developer.okta.com/docs/reference/api/brands/#supported-languages>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#language EmailCustomization#language}
+        :param subject: The subject of the customization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#subject EmailCustomization#subject}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -121,7 +121,7 @@ class EmailCustomization(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the EmailCustomization to import.
-        :param import_from_id: The id of the existing EmailCustomization that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing EmailCustomization that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the EmailCustomization to import is found.
         '''
         if __debug__:
@@ -347,13 +347,13 @@ class EmailCustomizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param brand_id: Brand ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#brand_id EmailCustomization#brand_id}
-        :param template_name: Template Name - Example values: ``AccountLockout``,``ADForgotPassword``,``ADForgotPasswordDenied``,``ADSelfServiceUnlock``,``ADUserActivation``,``AuthenticatorEnrolled``,``AuthenticatorReset``,``ChangeEmailConfirmation``,``EmailChallenge``,``EmailChangeConfirmation``,``EmailFactorVerification``,``ForgotPassword``,``ForgotPasswordDenied``,``IGAReviewerEndNotification``,``IGAReviewerNotification``,``IGAReviewerPendingNotification``,``IGAReviewerReassigned``,``LDAPForgotPassword``,``LDAPForgotPasswordDenied``,``LDAPSelfServiceUnlock``,``LDAPUserActivation``,``MyAccountChangeConfirmation``,``NewSignOnNotification``,``OktaVerifyActivation``,``PasswordChanged``,``PasswordResetByAdmin``,``PendingEmailChange``,``RegistrationActivation``,``RegistrationEmailVerification``,``SelfServiceUnlock``,``SelfServiceUnlockOnUnlockedAccount``,``UserActivation``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#template_name EmailCustomization#template_name}
-        :param body: The body of the customization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#body EmailCustomization#body}
-        :param force_is_default: Force is_default on the create and delete by deleting all email customizations. Comma separated string with values of 'create' or 'destroy' or both `create,destroy'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#force_is_default EmailCustomization#force_is_default}
-        :param is_default: Whether the customization is the default. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#is_default EmailCustomization#is_default}
-        :param language: The language supported by the customization - Example values from `supported languages <https://developer.okta.com/docs/reference/api/brands/#supported-languages>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#language EmailCustomization#language}
-        :param subject: The subject of the customization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#subject EmailCustomization#subject}
+        :param brand_id: Brand ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#brand_id EmailCustomization#brand_id}
+        :param template_name: Template Name - Example values: ``AccountLockout``,``ADForgotPassword``,``ADForgotPasswordDenied``,``ADSelfServiceUnlock``,``ADUserActivation``,``AuthenticatorEnrolled``,``AuthenticatorReset``,``ChangeEmailConfirmation``,``EmailChallenge``,``EmailChangeConfirmation``,``EmailFactorVerification``,``ForgotPassword``,``ForgotPasswordDenied``,``IGAReviewerEndNotification``,``IGAReviewerNotification``,``IGAReviewerPendingNotification``,``IGAReviewerReassigned``,``LDAPForgotPassword``,``LDAPForgotPasswordDenied``,``LDAPSelfServiceUnlock``,``LDAPUserActivation``,``MyAccountChangeConfirmation``,``NewSignOnNotification``,``OktaVerifyActivation``,``PasswordChanged``,``PasswordResetByAdmin``,``PendingEmailChange``,``RegistrationActivation``,``RegistrationEmailVerification``,``SelfServiceUnlock``,``SelfServiceUnlockOnUnlockedAccount``,``UserActivation``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#template_name EmailCustomization#template_name}
+        :param body: The body of the customization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#body EmailCustomization#body}
+        :param force_is_default: Force is_default on the create and delete by deleting all email customizations. Comma separated string with values of 'create' or 'destroy' or both `create,destroy'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#force_is_default EmailCustomization#force_is_default}
+        :param is_default: Whether the customization is the default. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#is_default EmailCustomization#is_default}
+        :param language: The language supported by the customization - Example values from `supported languages <https://developer.okta.com/docs/reference/api/brands/#supported-languages>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#language EmailCustomization#language}
+        :param subject: The subject of the customization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#subject EmailCustomization#subject}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -470,7 +470,7 @@ class EmailCustomizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def brand_id(self) -> builtins.str:
         '''Brand ID.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#brand_id EmailCustomization#brand_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#brand_id EmailCustomization#brand_id}
         '''
         result = self._values.get("brand_id")
         assert result is not None, "Required property 'brand_id' is missing"
@@ -480,7 +480,7 @@ class EmailCustomizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def template_name(self) -> builtins.str:
         '''Template Name - Example values: ``AccountLockout``,``ADForgotPassword``,``ADForgotPasswordDenied``,``ADSelfServiceUnlock``,``ADUserActivation``,``AuthenticatorEnrolled``,``AuthenticatorReset``,``ChangeEmailConfirmation``,``EmailChallenge``,``EmailChangeConfirmation``,``EmailFactorVerification``,``ForgotPassword``,``ForgotPasswordDenied``,``IGAReviewerEndNotification``,``IGAReviewerNotification``,``IGAReviewerPendingNotification``,``IGAReviewerReassigned``,``LDAPForgotPassword``,``LDAPForgotPasswordDenied``,``LDAPSelfServiceUnlock``,``LDAPUserActivation``,``MyAccountChangeConfirmation``,``NewSignOnNotification``,``OktaVerifyActivation``,``PasswordChanged``,``PasswordResetByAdmin``,``PendingEmailChange``,``RegistrationActivation``,``RegistrationEmailVerification``,``SelfServiceUnlock``,``SelfServiceUnlockOnUnlockedAccount``,``UserActivation``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#template_name EmailCustomization#template_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#template_name EmailCustomization#template_name}
         '''
         result = self._values.get("template_name")
         assert result is not None, "Required property 'template_name' is missing"
@@ -490,7 +490,7 @@ class EmailCustomizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def body(self) -> typing.Optional[builtins.str]:
         '''The body of the customization.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#body EmailCustomization#body}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#body EmailCustomization#body}
         '''
         result = self._values.get("body")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -501,7 +501,7 @@ class EmailCustomizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Comma separated string with values of 'create' or 'destroy' or both `create,destroy'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#force_is_default EmailCustomization#force_is_default}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#force_is_default EmailCustomization#force_is_default}
         '''
         result = self._values.get("force_is_default")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -512,7 +512,7 @@ class EmailCustomizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether the customization is the default.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#is_default EmailCustomization#is_default}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#is_default EmailCustomization#is_default}
         '''
         result = self._values.get("is_default")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -521,7 +521,7 @@ class EmailCustomizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def language(self) -> typing.Optional[builtins.str]:
         '''The language supported by the customization - Example values from `supported languages <https://developer.okta.com/docs/reference/api/brands/#supported-languages>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#language EmailCustomization#language}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#language EmailCustomization#language}
         '''
         result = self._values.get("language")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -530,7 +530,7 @@ class EmailCustomizationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def subject(self) -> typing.Optional[builtins.str]:
         '''The subject of the customization.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/email_customization#subject EmailCustomization#subject}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/email_customization#subject EmailCustomization#subject}
         '''
         result = self._values.get("subject")
         return typing.cast(typing.Optional[builtins.str], result)

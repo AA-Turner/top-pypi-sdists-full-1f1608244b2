@@ -40,6 +40,62 @@ class Record:
         self._node = node
         self._data = RecordData(table, node)
 
+    def __str__(self) -> str:
+        column_values = serialise_record_column_values(self, max_columns=None)
+        return f"<Record {column_values}>"
+
+    def __repr__(self) -> str:
+        column_values = serialise_record_column_values(self)
+        return f"<Record {column_values}>"
+
+    def __hash__(self) -> int:
+        return hash((self._table, self._node))
+
+    def __getitem__(self, attr: str) -> RecordValue:
+        return self.get(attr)
+
+    def __getattr__(self, attr: str) -> RecordValue:
+        try:
+            return self.get(attr)
+        except KeyError:
+            return object.__getattribute__(self, attr)
+
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, Record):
+            return False
+
+        return self._node.key == value._node.key
+
+    def __ne__(self, value: object) -> bool:
+        if not isinstance(value, Record):
+            return False
+
+        return self._node.key != value._node.key
+
+    def __lt__(self, value: object) -> bool:
+        if not isinstance(value, Record):
+            return False
+
+        return self._node.key < value._node.key
+
+    def __le__(self, value: object) -> bool:
+        if not isinstance(value, Record):
+            return False
+
+        return self._node.key <= value._node.key
+
+    def __gt__(self, value: object) -> bool:
+        if not isinstance(value, Record):
+            return False
+
+        return self._node.key > value._node.key
+
+    def __ge__(self, value: object) -> bool:
+        if not isinstance(value, Record):
+            return False
+
+        return self._node.key >= value._node.key
+
     def get(self, attr: str, raw: bool = False) -> RecordValue:
         """Retrieve a value from the record with the given name.
 
@@ -54,23 +110,6 @@ class Record:
 
     def as_dict(self, raw: bool = False) -> dict[str, RecordValue]:
         return self._data.as_dict(raw)
-
-    def __getitem__(self, attr: str) -> RecordValue:
-        return self.get(attr)
-
-    def __getattr__(self, attr: str) -> RecordValue:
-        try:
-            return self.get(attr)
-        except KeyError:
-            return object.__getattribute__(self, attr)
-
-    def __str__(self) -> str:
-        column_values = serialise_record_column_values(self, max_columns=None)
-        return f"<Record {column_values}>"
-
-    def __repr__(self) -> str:
-        column_values = serialise_record_column_values(self)
-        return f"<Record {column_values}>"
 
 
 class RecordData:
@@ -256,7 +295,7 @@ class RecordData:
 
         return value
 
-    def _parse_multivalue(self, value: bytes, tag_field: TagField) -> bytes:
+    def _parse_multivalue(self, value: bytes, tag_field: TagField) -> list[bytes]:
         fSeparatedInstance = 0x8000
 
         if tag_field.flags & TAGFLD_HEADER.TwoValues:
@@ -281,6 +320,8 @@ class RecordData:
                     data = self.table.get_long_value(bytes(data))
                 values.append(data)
             value = values
+        else:
+            raise ValueError(f"Unknown flags for tag field: {tag_field}")
 
         if tag_field.flags & TAGFLD_HEADER.Compressed:
             # Only the first entry appears to be compressed

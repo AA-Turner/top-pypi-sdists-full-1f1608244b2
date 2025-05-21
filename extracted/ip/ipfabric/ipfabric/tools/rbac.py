@@ -1,17 +1,13 @@
 import json
 import logging
 import re
-from typing import Any, Dict
+from importlib.resources import files
+from typing import Any
 
 from deepdiff import DeepDiff
 from pydantic import BaseModel, Field, ConfigDict, PrivateAttr
 
 from ipfabric.models import Policy, Role
-
-try:
-    from importlib.resources import files
-except ImportError:
-    from importlib_resources import files
 
 logger = logging.getLogger("ipfabric")
 
@@ -45,7 +41,7 @@ class ManagedRBAC(BaseModel):
             if k in self._roles
         }
 
-    def _apply_policy(self) -> Dict[str, Policy]:
+    def _apply_policy(self) -> dict[str, Policy]:
         policies = dict()
         if not self._current_policies:
             logger.warning("No Managed RBAC Policies found, pushing new policies.")
@@ -72,7 +68,7 @@ class ManagedRBAC(BaseModel):
             diff = DeepDiff(configured, self._current_policies, exclude_regex_paths=EXCLUDE_PATH, ignore_order=True)
             if diff:
                 logger.warning("Policy changes found, pushing updates.")
-                for _ in diff.affected_root_keys.items:
+                for _ in diff.affected_root_keys:
                     logger.warning(f"Updating policy: {_}.")
                     policy = self.ipf.settings.policies.update_policy(
                         policy=self._current_policies[_]["policy_id"],
@@ -86,14 +82,14 @@ class ManagedRBAC(BaseModel):
                     {
                         _: self.ipf.settings.policies.policies_by_name[_]
                         for _ in configured
-                        if _ not in diff.affected_root_keys.items
+                        if _ not in diff.affected_root_keys
                     }
                 )
             else:
                 policies.update({_: self.ipf.settings.policies.policies_by_name[_] for _ in configured})
         return policies
 
-    def _apply_role(self, policies) -> Dict[str, Role]:
+    def _apply_role(self, policies) -> dict[str, Role]:
         roles = dict()
         if not self._roles:
             logger.warning("No Managed RBAC Roles found, pushing new roles.")
@@ -120,7 +116,7 @@ class ManagedRBAC(BaseModel):
             diff = DeepDiff(configured, self._current_roles, exclude_regex_paths=EXCLUDE_PATH, ignore_order=True)
             if diff:
                 logger.warning("Role changes found, pushing updates.")
-                for _ in diff.affected_root_keys.items:
+                for _ in diff.affected_root_keys:
                     logger.warning(f"Updating role: {_}.")
                     role = self.ipf.settings.roles.update_role(
                         role=self._current_roles[_]["role_id"],
@@ -134,7 +130,7 @@ class ManagedRBAC(BaseModel):
                     {
                         _: self.ipf.settings.roles.roles_by_name[_]
                         for _ in configured
-                        if _ not in diff.affected_root_keys.items
+                        if _ not in diff.affected_root_keys
                     }
                 )
             else:

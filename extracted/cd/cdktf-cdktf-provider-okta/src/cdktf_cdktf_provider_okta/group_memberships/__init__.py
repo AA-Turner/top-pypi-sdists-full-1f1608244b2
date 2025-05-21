@@ -1,7 +1,7 @@
 r'''
 # `okta_group_memberships`
 
-Refer to the Terraform Registry for docs: [`okta_group_memberships`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships).
+Refer to the Terraform Registry for docs: [`okta_group_memberships`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class GroupMemberships(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.groupMemberships.GroupMemberships",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships okta_group_memberships}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships okta_group_memberships}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class GroupMemberships(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships okta_group_memberships} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships okta_group_memberships} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param group_id: ID of a Okta group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships#group_id GroupMemberships#group_id}
-        :param users: The list of Okta user IDs which the group should have membership managed for. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships#users GroupMemberships#users}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships#id GroupMemberships#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param track_all_users: The resource concerns itself with all users added/deleted to the group; even those managed outside of the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships#track_all_users GroupMemberships#track_all_users}
+        :param group_id: ID of a Okta group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships#group_id GroupMemberships#group_id}
+        :param users: The list of Okta user IDs which the group should have membership managed for. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships#users GroupMemberships#users}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships#id GroupMemberships#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param track_all_users: The resource concerns itself with all users added/deleted to the group; even those managed outside of the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships#track_all_users GroupMemberships#track_all_users}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class GroupMemberships(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the GroupMemberships to import.
-        :param import_from_id: The id of the existing GroupMemberships that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing GroupMemberships that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the GroupMemberships to import is found.
         '''
         if __debug__:
@@ -261,10 +261,10 @@ class GroupMembershipsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param group_id: ID of a Okta group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships#group_id GroupMemberships#group_id}
-        :param users: The list of Okta user IDs which the group should have membership managed for. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships#users GroupMemberships#users}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships#id GroupMemberships#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param track_all_users: The resource concerns itself with all users added/deleted to the group; even those managed outside of the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships#track_all_users GroupMemberships#track_all_users}
+        :param group_id: ID of a Okta group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships#group_id GroupMemberships#group_id}
+        :param users: The list of Okta user IDs which the group should have membership managed for. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships#users GroupMemberships#users}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships#id GroupMemberships#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param track_all_users: The resource concerns itself with all users added/deleted to the group; even those managed outside of the resource. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships#track_all_users GroupMemberships#track_all_users}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -372,7 +372,7 @@ class GroupMembershipsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def group_id(self) -> builtins.str:
         '''ID of a Okta group.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships#group_id GroupMemberships#group_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships#group_id GroupMemberships#group_id}
         '''
         result = self._values.get("group_id")
         assert result is not None, "Required property 'group_id' is missing"
@@ -382,7 +382,7 @@ class GroupMembershipsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def users(self) -> typing.List[builtins.str]:
         '''The list of Okta user IDs which the group should have membership managed for.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships#users GroupMemberships#users}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships#users GroupMemberships#users}
         '''
         result = self._values.get("users")
         assert result is not None, "Required property 'users' is missing"
@@ -390,7 +390,7 @@ class GroupMembershipsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships#id GroupMemberships#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships#id GroupMemberships#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -404,7 +404,7 @@ class GroupMembershipsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''The resource concerns itself with all users added/deleted to the group; even those managed outside of the resource.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/group_memberships#track_all_users GroupMemberships#track_all_users}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/group_memberships#track_all_users GroupMemberships#track_all_users}
         '''
         result = self._values.get("track_all_users")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)

@@ -1030,10 +1030,8 @@ class _EventSourceMappingState:
         pulumi.set(self, "uuid", value)
 
 
+@pulumi.type_token("aws:lambda/eventSourceMapping:EventSourceMapping")
 class EventSourceMapping(pulumi.CustomResource):
-
-    pulumi_type = "aws:lambda/eventSourceMapping:EventSourceMapping"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -1112,6 +1110,41 @@ class EventSourceMapping(pulumi.CustomResource):
             function_name=example_aws_lambda_function["arn"],
             topics=["Example"],
             starting_position="TRIM_HORIZON")
+        ```
+
+        ### Self Managed Apache Kafka
+
+        ```python
+        import pulumi
+        import pulumi_aws as aws
+
+        example = aws.lambda_.EventSourceMapping("example",
+            function_name=example_aws_lambda_function["arn"],
+            topics=["Example"],
+            starting_position="TRIM_HORIZON",
+            provisioned_poller_config={
+                "maximum_pollers": 80,
+                "minimum_pollers": 10,
+            },
+            self_managed_event_source={
+                "endpoints": {
+                    "KAFKA_BOOTSTRAP_SERVERS": "kafka1.example.com:9092,kafka2.example.com:9092",
+                },
+            },
+            source_access_configurations=[
+                {
+                    "type": "VPC_SUBNET",
+                    "uri": "subnet:subnet-example1",
+                },
+                {
+                    "type": "VPC_SUBNET",
+                    "uri": "subnet:subnet-example2",
+                },
+                {
+                    "type": "VPC_SECURITY_GROUP",
+                    "uri": "security_group:sg-example",
+                },
+            ])
         ```
 
         ### SQS
@@ -1286,6 +1319,41 @@ class EventSourceMapping(pulumi.CustomResource):
             function_name=example_aws_lambda_function["arn"],
             topics=["Example"],
             starting_position="TRIM_HORIZON")
+        ```
+
+        ### Self Managed Apache Kafka
+
+        ```python
+        import pulumi
+        import pulumi_aws as aws
+
+        example = aws.lambda_.EventSourceMapping("example",
+            function_name=example_aws_lambda_function["arn"],
+            topics=["Example"],
+            starting_position="TRIM_HORIZON",
+            provisioned_poller_config={
+                "maximum_pollers": 80,
+                "minimum_pollers": 10,
+            },
+            self_managed_event_source={
+                "endpoints": {
+                    "KAFKA_BOOTSTRAP_SERVERS": "kafka1.example.com:9092,kafka2.example.com:9092",
+                },
+            },
+            source_access_configurations=[
+                {
+                    "type": "VPC_SUBNET",
+                    "uri": "subnet:subnet-example1",
+                },
+                {
+                    "type": "VPC_SUBNET",
+                    "uri": "subnet:subnet-example2",
+                },
+                {
+                    "type": "VPC_SECURITY_GROUP",
+                    "uri": "security_group:sg-example",
+                },
+            ])
         ```
 
         ### SQS

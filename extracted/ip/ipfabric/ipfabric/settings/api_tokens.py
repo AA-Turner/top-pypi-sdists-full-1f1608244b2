@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Union, Optional, List
+from typing import Any, Union, Optional
 
 from pydantic import Field, BaseModel
 
@@ -15,17 +15,17 @@ class Token(BaseModel):
     expires: Optional[int] = None
     token: Optional[str] = None
     user_id: str = Field(alias="userId")
-    user_role_ids: Optional[List[str]] = Field(None, alias="userRoleIds")
+    user_role_ids: Optional[list[str]] = Field(None, alias="userRoleIds")
     token_id: str = Field(alias="id")
     is_expired: bool = Field(alias="isExpired")
     last_used: Optional[Union[str, int]] = Field(None, alias="lastUsed")
-    role_ids: List[str] = Field(alias="roleIds", default_factory=list)
-    role_names: Optional[List[str]] = Field(None, alias="roleNames")
+    role_ids: list[str] = Field(alias="roleIds", default_factory=list)
+    role_names: Optional[list[str]] = Field(None, alias="roleNames")
 
 
 class APIToken(BaseModel):
     client: Any = Field(exclude=True)
-    _tokens: Optional[List[Token]] = None
+    _tokens: Optional[list[Token]] = None
 
     def model_post_init(self, __context: Any) -> None:
         self._tokens = self.get_tokens()
@@ -42,7 +42,7 @@ class APIToken(BaseModel):
     def tokens_by_description(self):
         return {t.description: t for t in self.tokens}
 
-    def get_tokens(self) -> List[Token]:
+    def get_tokens(self) -> list[Token]:
         res = raise_for_status(self.client.get("api-tokens"))
         return [Token(**t) for t in res.json()]
 

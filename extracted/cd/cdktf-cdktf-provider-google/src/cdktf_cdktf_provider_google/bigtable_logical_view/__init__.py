@@ -1,7 +1,7 @@
 r'''
 # `google_bigtable_logical_view`
 
-Refer to the Terraform Registry for docs: [`google_bigtable_logical_view`](https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view).
+Refer to the Terraform Registry for docs: [`google_bigtable_logical_view`](https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class BigtableLogicalView(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-google.bigtableLogicalView.BigtableLogicalView",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view google_bigtable_logical_view}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view google_bigtable_logical_view}.'''
 
     def __init__(
         self,
@@ -53,6 +53,7 @@ class BigtableLogicalView(
         *,
         logical_view_id: builtins.str,
         query: builtins.str,
+        deletion_protection: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         id: typing.Optional[builtins.str] = None,
         instance: typing.Optional[builtins.str] = None,
         project: typing.Optional[builtins.str] = None,
@@ -65,16 +66,17 @@ class BigtableLogicalView(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view google_bigtable_logical_view} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view google_bigtable_logical_view} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param logical_view_id: The unique name of the logical view in the form '[*a-zA-Z0-9][-*.a-zA-Z0-9]*'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#logical_view_id BigtableLogicalView#logical_view_id}
-        :param query: The logical view's select query. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#query BigtableLogicalView#query}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#id BigtableLogicalView#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param instance: The name of the instance to create the logical view within. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#instance BigtableLogicalView#instance}
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#project BigtableLogicalView#project}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#timeouts BigtableLogicalView#timeouts}
+        :param logical_view_id: The unique name of the logical view in the form '[*a-zA-Z0-9][-*.a-zA-Z0-9]*'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#logical_view_id BigtableLogicalView#logical_view_id}
+        :param query: The logical view's select query. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#query BigtableLogicalView#query}
+        :param deletion_protection: Set to true to make the logical view protected against deletion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#deletion_protection BigtableLogicalView#deletion_protection}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#id BigtableLogicalView#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param instance: The name of the instance to create the logical view within. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#instance BigtableLogicalView#instance}
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#project BigtableLogicalView#project}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#timeouts BigtableLogicalView#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -90,6 +92,7 @@ class BigtableLogicalView(
         config = BigtableLogicalViewConfig(
             logical_view_id=logical_view_id,
             query=query,
+            deletion_protection=deletion_protection,
             id=id,
             instance=instance,
             project=project,
@@ -118,7 +121,7 @@ class BigtableLogicalView(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the BigtableLogicalView to import.
-        :param import_from_id: The id of the existing BigtableLogicalView that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing BigtableLogicalView that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the BigtableLogicalView to import is found.
         '''
         if __debug__:
@@ -138,15 +141,19 @@ class BigtableLogicalView(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#create BigtableLogicalView#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#delete BigtableLogicalView#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#update BigtableLogicalView#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#create BigtableLogicalView#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#delete BigtableLogicalView#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#update BigtableLogicalView#update}.
         '''
         value = BigtableLogicalViewTimeouts(
             create=create, delete=delete, update=update
         )
 
         return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
+
+    @jsii.member(jsii_name="resetDeletionProtection")
+    def reset_deletion_protection(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDeletionProtection", []))
 
     @jsii.member(jsii_name="resetId")
     def reset_id(self) -> None:
@@ -188,6 +195,13 @@ class BigtableLogicalView(
         return typing.cast("BigtableLogicalViewTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
+    @jsii.member(jsii_name="deletionProtectionInput")
+    def deletion_protection_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "deletionProtectionInput"))
+
+    @builtins.property
     @jsii.member(jsii_name="idInput")
     def id_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "idInput"))
@@ -218,6 +232,23 @@ class BigtableLogicalView(
         self,
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "BigtableLogicalViewTimeouts"]]:
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "BigtableLogicalViewTimeouts"]], jsii.get(self, "timeoutsInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deletionProtection")
+    def deletion_protection(
+        self,
+    ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "deletionProtection"))
+
+    @deletion_protection.setter
+    def deletion_protection(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c7d3491a5a054dd54ac5f641cb92d83d5f727309623fc1a4989eb5878243738d)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "deletionProtection", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
     @jsii.member(jsii_name="id")
@@ -293,6 +324,7 @@ class BigtableLogicalView(
         "provisioners": "provisioners",
         "logical_view_id": "logicalViewId",
         "query": "query",
+        "deletion_protection": "deletionProtection",
         "id": "id",
         "instance": "instance",
         "project": "project",
@@ -312,6 +344,7 @@ class BigtableLogicalViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
         logical_view_id: builtins.str,
         query: builtins.str,
+        deletion_protection: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         id: typing.Optional[builtins.str] = None,
         instance: typing.Optional[builtins.str] = None,
         project: typing.Optional[builtins.str] = None,
@@ -325,12 +358,13 @@ class BigtableLogicalViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param logical_view_id: The unique name of the logical view in the form '[*a-zA-Z0-9][-*.a-zA-Z0-9]*'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#logical_view_id BigtableLogicalView#logical_view_id}
-        :param query: The logical view's select query. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#query BigtableLogicalView#query}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#id BigtableLogicalView#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param instance: The name of the instance to create the logical view within. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#instance BigtableLogicalView#instance}
-        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#project BigtableLogicalView#project}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#timeouts BigtableLogicalView#timeouts}
+        :param logical_view_id: The unique name of the logical view in the form '[*a-zA-Z0-9][-*.a-zA-Z0-9]*'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#logical_view_id BigtableLogicalView#logical_view_id}
+        :param query: The logical view's select query. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#query BigtableLogicalView#query}
+        :param deletion_protection: Set to true to make the logical view protected against deletion. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#deletion_protection BigtableLogicalView#deletion_protection}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#id BigtableLogicalView#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param instance: The name of the instance to create the logical view within. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#instance BigtableLogicalView#instance}
+        :param project: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#project BigtableLogicalView#project}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#timeouts BigtableLogicalView#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -347,6 +381,7 @@ class BigtableLogicalViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument provisioners", value=provisioners, expected_type=type_hints["provisioners"])
             check_type(argname="argument logical_view_id", value=logical_view_id, expected_type=type_hints["logical_view_id"])
             check_type(argname="argument query", value=query, expected_type=type_hints["query"])
+            check_type(argname="argument deletion_protection", value=deletion_protection, expected_type=type_hints["deletion_protection"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
             check_type(argname="argument instance", value=instance, expected_type=type_hints["instance"])
             check_type(argname="argument project", value=project, expected_type=type_hints["project"])
@@ -369,6 +404,8 @@ class BigtableLogicalViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["provider"] = provider
         if provisioners is not None:
             self._values["provisioners"] = provisioners
+        if deletion_protection is not None:
+            self._values["deletion_protection"] = deletion_protection
         if id is not None:
             self._values["id"] = id
         if instance is not None:
@@ -446,7 +483,7 @@ class BigtableLogicalViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def logical_view_id(self) -> builtins.str:
         '''The unique name of the logical view in the form '[*a-zA-Z0-9][-*.a-zA-Z0-9]*'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#logical_view_id BigtableLogicalView#logical_view_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#logical_view_id BigtableLogicalView#logical_view_id}
         '''
         result = self._values.get("logical_view_id")
         assert result is not None, "Required property 'logical_view_id' is missing"
@@ -456,15 +493,26 @@ class BigtableLogicalViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def query(self) -> builtins.str:
         '''The logical view's select query.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#query BigtableLogicalView#query}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#query BigtableLogicalView#query}
         '''
         result = self._values.get("query")
         assert result is not None, "Required property 'query' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
+    def deletion_protection(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''Set to true to make the logical view protected against deletion.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#deletion_protection BigtableLogicalView#deletion_protection}
+        '''
+        result = self._values.get("deletion_protection")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#id BigtableLogicalView#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#id BigtableLogicalView#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -476,14 +524,14 @@ class BigtableLogicalViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def instance(self) -> typing.Optional[builtins.str]:
         '''The name of the instance to create the logical view within.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#instance BigtableLogicalView#instance}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#instance BigtableLogicalView#instance}
         '''
         result = self._values.get("instance")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def project(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#project BigtableLogicalView#project}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#project BigtableLogicalView#project}.'''
         result = self._values.get("project")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -491,7 +539,7 @@ class BigtableLogicalViewConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["BigtableLogicalViewTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#timeouts BigtableLogicalView#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#timeouts BigtableLogicalView#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["BigtableLogicalViewTimeouts"], result)
@@ -522,9 +570,9 @@ class BigtableLogicalViewTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#create BigtableLogicalView#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#delete BigtableLogicalView#delete}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#update BigtableLogicalView#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#create BigtableLogicalView#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#delete BigtableLogicalView#delete}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#update BigtableLogicalView#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__a02f439f4dd7a4c121613b389f53bdaf0d3ae32383613f6725f67837be746794)
@@ -541,19 +589,19 @@ class BigtableLogicalViewTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#create BigtableLogicalView#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#create BigtableLogicalView#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#delete BigtableLogicalView#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#delete BigtableLogicalView#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/bigtable_logical_view#update BigtableLogicalView#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs/resources/bigtable_logical_view#update BigtableLogicalView#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -685,6 +733,7 @@ def _typecheckingstub__212ba2dfaf47d7b3e6d787e81f305f9670656993352a4dbd1173e3c01
     *,
     logical_view_id: builtins.str,
     query: builtins.str,
+    deletion_protection: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     id: typing.Optional[builtins.str] = None,
     instance: typing.Optional[builtins.str] = None,
     project: typing.Optional[builtins.str] = None,
@@ -705,6 +754,12 @@ def _typecheckingstub__39a49e29b67333c8e0af6135167d0b4f37cf65b4cdddbccaf861b6a49
     import_to_id: builtins.str,
     import_from_id: builtins.str,
     provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c7d3491a5a054dd54ac5f641cb92d83d5f727309623fc1a4989eb5878243738d(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
 ) -> None:
     """Type checking stubs"""
     pass
@@ -750,6 +805,7 @@ def _typecheckingstub__e2fa241fd69b6948da7774771d9b76536a528405d5734dccdfc05244f
     provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     logical_view_id: builtins.str,
     query: builtins.str,
+    deletion_protection: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     id: typing.Optional[builtins.str] = None,
     instance: typing.Optional[builtins.str] = None,
     project: typing.Optional[builtins.str] = None,

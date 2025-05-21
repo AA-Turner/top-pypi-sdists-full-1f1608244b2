@@ -4,7 +4,7 @@ from enum import Enum
 
 from ._version import __version__, __version_tuple__  # noqa: F401
 
-__array_api_version__ = "2022.12"
+__array_api_version__ = "2024.12"
 
 
 class _BackendType(Enum):
@@ -48,6 +48,7 @@ else:
     from sparse.numba_backend import *  # noqa: F403
     from sparse.numba_backend import (  # noqa: F401
         __all__,
+        __array_namespace_info__,
         _common,
         _compressed,
         _coo,

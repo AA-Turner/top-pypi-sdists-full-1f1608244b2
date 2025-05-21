@@ -9,6 +9,7 @@ from starlette.exceptions import HTTPException
 from starlette.types import Lifespan, AppType
 from sqlalchemy import MetaData
 from typing import Optional
+from uuid import UUID
 from maleo_foundation.client.manager import MaleoFoundationClientManager
 from maleo_foundation.enums import BaseEnums
 from maleo_foundation.models.schemas.general import BaseGeneralSchemas
@@ -51,6 +52,7 @@ class Settings(BaseSettings):
 
 class MaleoCredentials(BaseModel):
     id:int = Field(..., description="ID")
+    uuid:UUID = Field(..., description="UUID")
     username:str = Field(..., description="Username")
     email:str = Field(..., description="Email")
     password:str = Field(..., description="Password")
@@ -210,11 +212,13 @@ class ServiceManager:
             else self._settings.ENVIRONMENT
         )
         id = int(self._secret_manager.get(f"maleo-service-account-id-{environment}"))
+        uuid = self._secret_manager.get(f"maleo-service-account-uuid-{environment}")
         email = self._secret_manager.get("maleo-service-account-email")
         username = self._secret_manager.get("maleo-service-account-username")
         password = self._secret_manager.get("maleo-service-account-password")
         self._maleo_credentials = MaleoCredentials(
             id=id,
+            uuid=UUID(uuid),
             username=username,
             email=email,
             password=password
@@ -372,6 +376,8 @@ class ServiceManager:
             iss=None,
             sub=str(self._maleo_credentials.id),
             sr="administrator",
+            u_i=self._maleo_credentials.id,
+            u_uu=self._maleo_credentials.uuid,
             u_u=self._maleo_credentials.username,
             u_e=self._maleo_credentials.email,
             u_ut="service",

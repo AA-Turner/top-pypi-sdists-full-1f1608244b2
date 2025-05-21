@@ -1,10 +1,10 @@
 import logging
-from typing import Any, Optional, List, Dict
+from typing import Any, Optional
 
 from httpx import HTTPStatusError
 from pydantic import Field, BaseModel
 
-from ipfabric.models import User
+from ipfabric.models.users import User
 from ipfabric.tools.shared import TIMEZONES, raise_for_status
 from .rbac import Roles
 
@@ -13,7 +13,7 @@ logger = logging.getLogger("ipfabric")
 
 class LocalUsers(BaseModel):
     client: Any = Field(exclude=True)
-    _users: Optional[List[User]] = None
+    _users: Optional[list[User]] = None
     _roles: Optional[Roles] = None
 
     def setup(self):
@@ -24,16 +24,16 @@ class LocalUsers(BaseModel):
             pass
 
     @property
-    def users(self) -> List[User]:
+    def users(self) -> list[User]:
         if not self._users:
             self.setup()
         return self._users
 
     @property
-    def users_by_id(self) -> Dict[str, User]:
-        return {_.user_id: _ for _ in self._users}
+    def users_by_id(self) -> dict[str, User]:
+        return {_.user_id: _ for _ in self.users}
 
-    def get_users(self, username: str = None) -> List[User]:
+    def get_users(self, username: str = None) -> list[User]:
         """
         Gets all users or filters on one of the options.
         :param username: str: Username to filter
