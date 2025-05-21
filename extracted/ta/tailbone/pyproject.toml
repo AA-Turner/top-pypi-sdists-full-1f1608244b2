@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "Tailbone"
-version = "0.22.7"
+version = "0.22.8"
 description = "Backoffice Web Application for Rattail"
 readme = "README.md"
 authors = [{name = "Lance Edgar", email = "lance@edbob.org"}]

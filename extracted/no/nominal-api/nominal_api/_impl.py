@@ -3096,7 +3096,7 @@ class comments_api_CommentParentResource(ConjureBeanType):
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
             'resource_type': ConjureFieldDefinition('resourceType', comments_api_ResourceType),
-            'resource_rid': ConjureFieldDefinition('resourceRid', comments_api_ResourceRid)
+            'resource_rid': ConjureFieldDefinition('resourceRid', str)
         }
 
     __slots__: List[str] = ['_resource_type', '_resource_rid']
@@ -3468,7 +3468,7 @@ class comments_api_Conversation(ConjureBeanType):
     @builtins.classmethod
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
-            'resource_rid': ConjureFieldDefinition('resourceRid', comments_api_ResourceRid),
+            'resource_rid': ConjureFieldDefinition('resourceRid', str),
             'resource_type': ConjureFieldDefinition('resourceType', comments_api_ResourceType),
             'comments': ConjureFieldDefinition('comments', List[comments_api_ConversationNode])
         }
@@ -16633,15 +16633,17 @@ class scout_api_ChannelLocator(ConjureBeanType):
         return {
             'data_source_ref': ConjureFieldDefinition('dataSourceRef', scout_api_DataSourceRefName),
             'channel': ConjureFieldDefinition('channel', api_Channel),
-            'tags': ConjureFieldDefinition('tags', Dict[api_TagName, api_TagValue])
+            'tags': ConjureFieldDefinition('tags', Dict[api_TagName, api_TagValue]),
+            'asset': ConjureFieldDefinition('asset', OptionalTypeWrapper[scout_rids_api_AssetRefName])
         }
 
-    __slots__: List[str] = ['_data_source_ref', '_channel', '_tags']
+    __slots__: List[str] = ['_data_source_ref', '_channel', '_tags', '_asset']
 
-    def __init__(self, channel: str, data_source_ref: str, tags: Dict[str, str]) -> None:
+    def __init__(self, channel: str, data_source_ref: str, tags: Dict[str, str], asset: Optional[str] = None) -> None:
         self._data_source_ref = data_source_ref
         self._channel = channel
         self._tags = tags
+        self._asset = asset
 
     @builtins.property
     def data_source_ref(self) -> str:
@@ -16654,6 +16656,10 @@ class scout_api_ChannelLocator(ConjureBeanType):
     @builtins.property
     def tags(self) -> Dict[str, str]:
         return self._tags
+
+    @builtins.property
+    def asset(self) -> Optional[str]:
+        return self._asset
 
 
 scout_api_ChannelLocator.__name__ = "ChannelLocator"
@@ -34390,16 +34396,18 @@ class scout_compute_api_AssetChannel(ConjureBeanType):
             'asset_rid': ConjureFieldDefinition('assetRid', scout_compute_api_StringConstant),
             'data_scope_name': ConjureFieldDefinition('dataScopeName', scout_compute_api_StringConstant),
             'channel': ConjureFieldDefinition('channel', scout_compute_api_StringConstant),
-            'additional_tags': ConjureFieldDefinition('additionalTags', Dict[str, scout_compute_api_StringConstant])
+            'additional_tags': ConjureFieldDefinition('additionalTags', Dict[str, scout_compute_api_StringConstant]),
+            'tags_to_group_by': ConjureFieldDefinition('tagsToGroupBy', List[str])
         }
 
-    __slots__: List[str] = ['_asset_rid', '_data_scope_name', '_channel', '_additional_tags']
+    __slots__: List[str] = ['_asset_rid', '_data_scope_name', '_channel', '_additional_tags', '_tags_to_group_by']
 
-    def __init__(self, additional_tags: Dict[str, "scout_compute_api_StringConstant"], asset_rid: "scout_compute_api_StringConstant", channel: "scout_compute_api_StringConstant", data_scope_name: "scout_compute_api_StringConstant") -> None:
+    def __init__(self, additional_tags: Dict[str, "scout_compute_api_StringConstant"], asset_rid: "scout_compute_api_StringConstant", channel: "scout_compute_api_StringConstant", data_scope_name: "scout_compute_api_StringConstant", tags_to_group_by: List[str]) -> None:
         self._asset_rid = asset_rid
         self._data_scope_name = data_scope_name
         self._channel = channel
         self._additional_tags = additional_tags
+        self._tags_to_group_by = tags_to_group_by
 
     @builtins.property
     def asset_rid(self) -> "scout_compute_api_StringConstant":
@@ -34424,6 +34432,14 @@ collisions with tag keys already defined for the given Asset data scope. Only re
 both sets of tag filters. For log series, include arg filters here in addition to tag filters.
         """
         return self._additional_tags
+
+    @builtins.property
+    def tags_to_group_by(self) -> List[str]:
+        """
+        Tags that the channel should be grouped by. If this is non-empty a grouped result will be returned
+with an entry for each grouping.
+        """
+        return self._tags_to_group_by
 
 
 scout_compute_api_AssetChannel.__name__ = "AssetChannel"
@@ -36190,6 +36206,7 @@ class scout_compute_api_ComputeNodeResponse(ConjureUnionType):
     _numeric_histogram: Optional["scout_compute_api_NumericHistogramPlot"] = None
     _enum_histogram: Optional["scout_compute_api_EnumHistogramPlot"] = None
     _curve_fit: Optional["scout_compute_api_CurveFitResult"] = None
+    _grouped: Optional["scout_compute_api_GroupedComputeNodeResponses"] = None
 
     @builtins.classmethod
     def _options(cls) -> Dict[str, ConjureFieldDefinition]:
@@ -36212,7 +36229,8 @@ class scout_compute_api_ComputeNodeResponse(ConjureUnionType):
             'frequency_domain': ConjureFieldDefinition('frequencyDomain', scout_compute_api_FrequencyDomainPlot),
             'numeric_histogram': ConjureFieldDefinition('numericHistogram', scout_compute_api_NumericHistogramPlot),
             'enum_histogram': ConjureFieldDefinition('enumHistogram', scout_compute_api_EnumHistogramPlot),
-            'curve_fit': ConjureFieldDefinition('curveFit', scout_compute_api_CurveFitResult)
+            'curve_fit': ConjureFieldDefinition('curveFit', scout_compute_api_CurveFitResult),
+            'grouped': ConjureFieldDefinition('grouped', scout_compute_api_GroupedComputeNodeResponses)
         }
 
     def __init__(
@@ -36236,10 +36254,11 @@ class scout_compute_api_ComputeNodeResponse(ConjureUnionType):
             numeric_histogram: Optional["scout_compute_api_NumericHistogramPlot"] = None,
             enum_histogram: Optional["scout_compute_api_EnumHistogramPlot"] = None,
             curve_fit: Optional["scout_compute_api_CurveFitResult"] = None,
+            grouped: Optional["scout_compute_api_GroupedComputeNodeResponses"] = None,
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (range is not None) + (ranges_summary is not None) + (range_value is not None) + (numeric is not None) + (bucketed_numeric is not None) + (numeric_point is not None) + (enum is not None) + (enum_point is not None) + (bucketed_enum is not None) + (paged_log is not None) + (log_point is not None) + (cartesian is not None) + (bucketed_cartesian is not None) + (bucketed_cartesian3d is not None) + (bucketed_geo is not None) + (frequency_domain is not None) + (numeric_histogram is not None) + (enum_histogram is not None) + (curve_fit is not None) != 1:
+            if (range is not None) + (ranges_summary is not None) + (range_value is not None) + (numeric is not None) + (bucketed_numeric is not None) + (numeric_point is not None) + (enum is not None) + (enum_point is not None) + (bucketed_enum is not None) + (paged_log is not None) + (log_point is not None) + (cartesian is not None) + (bucketed_cartesian is not None) + (bucketed_cartesian3d is not None) + (bucketed_geo is not None) + (frequency_domain is not None) + (numeric_histogram is not None) + (enum_histogram is not None) + (curve_fit is not None) + (grouped is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if range is not None:
@@ -36299,6 +36318,9 @@ class scout_compute_api_ComputeNodeResponse(ConjureUnionType):
             if curve_fit is not None:
                 self._curve_fit = curve_fit
                 self._type = 'curveFit'
+            if grouped is not None:
+                self._grouped = grouped
+                self._type = 'grouped'
 
         elif type_of_union == 'range':
             if range is None:
@@ -36395,6 +36417,11 @@ class scout_compute_api_ComputeNodeResponse(ConjureUnionType):
                 raise ValueError('a union value must not be None')
             self._curve_fit = curve_fit
             self._type = 'curveFit'
+        elif type_of_union == 'grouped':
+            if grouped is None:
+                raise ValueError('a union value must not be None')
+            self._grouped = grouped
+            self._type = 'grouped'
 
     @builtins.property
     def range(self) -> Optional[List["scout_compute_api_Range"]]:
@@ -36472,6 +36499,10 @@ class scout_compute_api_ComputeNodeResponse(ConjureUnionType):
     def curve_fit(self) -> Optional["scout_compute_api_CurveFitResult"]:
         return self._curve_fit
 
+    @builtins.property
+    def grouped(self) -> Optional["scout_compute_api_GroupedComputeNodeResponses"]:
+        return self._grouped
+
     def accept(self, visitor) -> Any:
         if not isinstance(visitor, scout_compute_api_ComputeNodeResponseVisitor):
             raise ValueError('{} is not an instance of scout_compute_api_ComputeNodeResponseVisitor'.format(visitor.__class__.__name__))
@@ -36513,6 +36544,8 @@ class scout_compute_api_ComputeNodeResponse(ConjureUnionType):
             return visitor._enum_histogram(self.enum_histogram)
         if self._type == 'curveFit' and self.curve_fit is not None:
             return visitor._curve_fit(self.curve_fit)
+        if self._type == 'grouped' and self.grouped is not None:
+            return visitor._grouped(self.grouped)
 
 
 scout_compute_api_ComputeNodeResponse.__name__ = "ComputeNodeResponse"
@@ -36596,6 +36629,10 @@ class scout_compute_api_ComputeNodeResponseVisitor:
 
     @abstractmethod
     def _curve_fit(self, curve_fit: "scout_compute_api_CurveFitResult") -> Any:
+        pass
+
+    @abstractmethod
+    def _grouped(self, grouped: "scout_compute_api_GroupedComputeNodeResponses") -> Any:
         pass
 
 
@@ -37618,15 +37655,17 @@ class scout_compute_api_DataSourceChannel(ConjureBeanType):
         return {
             'data_source_rid': ConjureFieldDefinition('dataSourceRid', scout_compute_api_StringConstant),
             'channel': ConjureFieldDefinition('channel', scout_compute_api_StringConstant),
-            'tags': ConjureFieldDefinition('tags', Dict[str, scout_compute_api_StringConstant])
+            'tags': ConjureFieldDefinition('tags', Dict[str, scout_compute_api_StringConstant]),
+            'tags_to_group_by': ConjureFieldDefinition('tagsToGroupBy', List[str])
         }
 
-    __slots__: List[str] = ['_data_source_rid', '_channel', '_tags']
+    __slots__: List[str] = ['_data_source_rid', '_channel', '_tags', '_tags_to_group_by']
 
-    def __init__(self, channel: "scout_compute_api_StringConstant", data_source_rid: "scout_compute_api_StringConstant", tags: Dict[str, "scout_compute_api_StringConstant"]) -> None:
+    def __init__(self, channel: "scout_compute_api_StringConstant", data_source_rid: "scout_compute_api_StringConstant", tags: Dict[str, "scout_compute_api_StringConstant"], tags_to_group_by: List[str]) -> None:
         self._data_source_rid = data_source_rid
         self._channel = channel
         self._tags = tags
+        self._tags_to_group_by = tags_to_group_by
 
     @builtins.property
     def data_source_rid(self) -> "scout_compute_api_StringConstant":
@@ -37643,6 +37682,14 @@ class scout_compute_api_DataSourceChannel(ConjureBeanType):
 provided tag keys. For log series, include arg filters here in addition to tag filters.
         """
         return self._tags
+
+    @builtins.property
+    def tags_to_group_by(self) -> List[str]:
+        """
+        Tags that the channel should be grouped by. If this is non-empty a grouped result will be returned
+with an entry for each grouping.
+        """
+        return self._tags_to_group_by
 
 
 scout_compute_api_DataSourceChannel.__name__ = "DataSourceChannel"
@@ -39464,6 +39511,121 @@ class scout_compute_api_GeoTimeBucket(ConjureBeanType):
 scout_compute_api_GeoTimeBucket.__name__ = "GeoTimeBucket"
 scout_compute_api_GeoTimeBucket.__qualname__ = "GeoTimeBucket"
 scout_compute_api_GeoTimeBucket.__module__ = "nominal_api.scout_compute_api"
+
+
+class scout_compute_api_GroupedComputeNodeResponse(ConjureBeanType):
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'grouping': ConjureFieldDefinition('grouping', scout_compute_api_Grouping),
+            'response': ConjureFieldDefinition('response', scout_compute_api_ComputeNodeResponse)
+        }
+
+    __slots__: List[str] = ['_grouping', '_response']
+
+    def __init__(self, grouping: "scout_compute_api_Grouping", response: "scout_compute_api_ComputeNodeResponse") -> None:
+        self._grouping = grouping
+        self._response = response
+
+    @builtins.property
+    def grouping(self) -> "scout_compute_api_Grouping":
+        return self._grouping
+
+    @builtins.property
+    def response(self) -> "scout_compute_api_ComputeNodeResponse":
+        return self._response
+
+
+scout_compute_api_GroupedComputeNodeResponse.__name__ = "GroupedComputeNodeResponse"
+scout_compute_api_GroupedComputeNodeResponse.__qualname__ = "GroupedComputeNodeResponse"
+scout_compute_api_GroupedComputeNodeResponse.__module__ = "nominal_api.scout_compute_api"
+
+
+class scout_compute_api_GroupedComputeNodeResponses(ConjureBeanType):
+    """
+    Contains a `ComputeNodeResponse` for each applicable grouping along with metadata describing the grouping.
+All the contained `ComputeNodeResponse`s are guaranteed to be of the same type.
+    """
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'responses': ConjureFieldDefinition('responses', List[scout_compute_api_GroupedComputeNodeResponse])
+        }
+
+    __slots__: List[str] = ['_responses']
+
+    def __init__(self, responses: List["scout_compute_api_GroupedComputeNodeResponse"]) -> None:
+        self._responses = responses
+
+    @builtins.property
+    def responses(self) -> List["scout_compute_api_GroupedComputeNodeResponse"]:
+        return self._responses
+
+
+scout_compute_api_GroupedComputeNodeResponses.__name__ = "GroupedComputeNodeResponses"
+scout_compute_api_GroupedComputeNodeResponses.__qualname__ = "GroupedComputeNodeResponses"
+scout_compute_api_GroupedComputeNodeResponses.__module__ = "nominal_api.scout_compute_api"
+
+
+class scout_compute_api_Grouping(ConjureUnionType):
+    _tags_with_values: Optional[Dict[str, str]] = None
+
+    @builtins.classmethod
+    def _options(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'tags_with_values': ConjureFieldDefinition('tagsWithValues', Dict[str, str])
+        }
+
+    def __init__(
+            self,
+            tags_with_values: Optional[Dict[str, str]] = None,
+            type_of_union: Optional[str] = None
+            ) -> None:
+        if type_of_union is None:
+            if (tags_with_values is not None) != 1:
+                raise ValueError('a union must contain a single member')
+
+            if tags_with_values is not None:
+                self._tags_with_values = tags_with_values
+                self._type = 'tagsWithValues'
+
+        elif type_of_union == 'tagsWithValues':
+            if tags_with_values is None:
+                raise ValueError('a union value must not be None')
+            self._tags_with_values = tags_with_values
+            self._type = 'tagsWithValues'
+
+    @builtins.property
+    def tags_with_values(self) -> Optional[Dict[str, str]]:
+        """
+        A grouping identified by a specific instantiation of tag keys and values.
+        """
+        return self._tags_with_values
+
+    def accept(self, visitor) -> Any:
+        if not isinstance(visitor, scout_compute_api_GroupingVisitor):
+            raise ValueError('{} is not an instance of scout_compute_api_GroupingVisitor'.format(visitor.__class__.__name__))
+        if self._type == 'tagsWithValues' and self.tags_with_values is not None:
+            return visitor._tags_with_values(self.tags_with_values)
+
+
+scout_compute_api_Grouping.__name__ = "Grouping"
+scout_compute_api_Grouping.__qualname__ = "Grouping"
+scout_compute_api_Grouping.__module__ = "nominal_api.scout_compute_api"
+
+
+class scout_compute_api_GroupingVisitor:
+
+    @abstractmethod
+    def _tags_with_values(self, tags_with_values: Dict[str, str]) -> Any:
+        pass
+
+
+scout_compute_api_GroupingVisitor.__name__ = "GroupingVisitor"
+scout_compute_api_GroupingVisitor.__qualname__ = "GroupingVisitor"
+scout_compute_api_GroupingVisitor.__module__ = "nominal_api.scout_compute_api"
 
 
 class scout_compute_api_HighPassConfiguration(ConjureBeanType):
@@ -44296,16 +44458,18 @@ class scout_compute_api_RunChannel(ConjureBeanType):
             'run_rid': ConjureFieldDefinition('runRid', scout_compute_api_StringConstant),
             'data_scope_name': ConjureFieldDefinition('dataScopeName', scout_compute_api_StringConstant),
             'channel': ConjureFieldDefinition('channel', scout_compute_api_StringConstant),
-            'additional_tags': ConjureFieldDefinition('additionalTags', Dict[str, scout_compute_api_StringConstant])
+            'additional_tags': ConjureFieldDefinition('additionalTags', Dict[str, scout_compute_api_StringConstant]),
+            'tags_to_group_by': ConjureFieldDefinition('tagsToGroupBy', List[str])
         }
 
-    __slots__: List[str] = ['_run_rid', '_data_scope_name', '_channel', '_additional_tags']
+    __slots__: List[str] = ['_run_rid', '_data_scope_name', '_channel', '_additional_tags', '_tags_to_group_by']
 
-    def __init__(self, additional_tags: Dict[str, "scout_compute_api_StringConstant"], channel: "scout_compute_api_StringConstant", data_scope_name: "scout_compute_api_StringConstant", run_rid: "scout_compute_api_StringConstant") -> None:
+    def __init__(self, additional_tags: Dict[str, "scout_compute_api_StringConstant"], channel: "scout_compute_api_StringConstant", data_scope_name: "scout_compute_api_StringConstant", run_rid: "scout_compute_api_StringConstant", tags_to_group_by: List[str]) -> None:
         self._run_rid = run_rid
         self._data_scope_name = data_scope_name
         self._channel = channel
         self._additional_tags = additional_tags
+        self._tags_to_group_by = tags_to_group_by
 
     @builtins.property
     def run_rid(self) -> "scout_compute_api_StringConstant":
@@ -44330,6 +44494,14 @@ collisions with tag keys already defined for the given Run data scope. Only retu
 both sets of tag filters. For log series, include arg filters here in addition to tag filters.
         """
         return self._additional_tags
+
+    @builtins.property
+    def tags_to_group_by(self) -> List[str]:
+        """
+        Tags that the channel should be grouped by. If this is non-empty a grouped result will be returned
+with an entry for each grouping.
+        """
+        return self._tags_to_group_by
 
 
 scout_compute_api_RunChannel.__name__ = "RunChannel"
@@ -49504,14 +49676,16 @@ class scout_compute_resolved_api_ClickHouseSeriesResolutionDetails(ConjureBeanTy
         return {
             'channel': ConjureFieldDefinition('channel', api_Channel),
             'tags': ConjureFieldDefinition('tags', Dict[api_TagName, api_TagValue]),
+            'tags_to_group_by': ConjureFieldDefinition('tagsToGroupBy', List[api_TagName]),
             'org_rid': ConjureFieldDefinition('orgRid', authentication_api_OrgRid)
         }
 
-    __slots__: List[str] = ['_channel', '_tags', '_org_rid']
+    __slots__: List[str] = ['_channel', '_tags', '_tags_to_group_by', '_org_rid']
 
-    def __init__(self, channel: str, org_rid: str, tags: Dict[str, str]) -> None:
+    def __init__(self, channel: str, org_rid: str, tags: Dict[str, str], tags_to_group_by: List[str]) -> None:
         self._channel = channel
         self._tags = tags
+        self._tags_to_group_by = tags_to_group_by
         self._org_rid = org_rid
 
     @builtins.property
@@ -49521,6 +49695,10 @@ class scout_compute_resolved_api_ClickHouseSeriesResolutionDetails(ConjureBeanTy
     @builtins.property
     def tags(self) -> Dict[str, str]:
         return self._tags
+
+    @builtins.property
+    def tags_to_group_by(self) -> List[str]:
+        return self._tags_to_group_by
 
     @builtins.property
     def org_rid(self) -> str:
@@ -80037,14 +80215,16 @@ class timeseries_logicalseries_api_NominalLocator(ConjureBeanType):
         return {
             'channel': ConjureFieldDefinition('channel', api_Channel),
             'tags': ConjureFieldDefinition('tags', Dict[api_TagName, api_TagValue]),
+            'tags_to_group_by': ConjureFieldDefinition('tagsToGroupBy', List[api_TagName]),
             'type': ConjureFieldDefinition('type', storage_series_api_NominalDataType)
         }
 
-    __slots__: List[str] = ['_channel', '_tags', '_type']
+    __slots__: List[str] = ['_channel', '_tags', '_tags_to_group_by', '_type']
 
-    def __init__(self, channel: str, tags: Dict[str, str], type: "storage_series_api_NominalDataType") -> None:
+    def __init__(self, channel: str, tags: Dict[str, str], tags_to_group_by: List[str], type: "storage_series_api_NominalDataType") -> None:
         self._channel = channel
         self._tags = tags
+        self._tags_to_group_by = tags_to_group_by
         self._type = type
 
     @builtins.property
@@ -80054,6 +80234,10 @@ class timeseries_logicalseries_api_NominalLocator(ConjureBeanType):
     @builtins.property
     def tags(self) -> Dict[str, str]:
         return self._tags
+
+    @builtins.property
+    def tags_to_group_by(self) -> List[str]:
+        return self._tags_to_group_by
 
     @builtins.property
     def type(self) -> "storage_series_api_NominalDataType":
@@ -80101,15 +80285,17 @@ class timeseries_logicalseries_api_ResolveSeriesRequest(ConjureBeanType):
         return {
             'name': ConjureFieldDefinition('name', api_Channel),
             'datasource': ConjureFieldDefinition('datasource', api_rids_DataSourceRid),
-            'tags': ConjureFieldDefinition('tags', Dict[api_TagName, api_TagValue])
+            'tags': ConjureFieldDefinition('tags', Dict[api_TagName, api_TagValue]),
+            'tags_to_group_by': ConjureFieldDefinition('tagsToGroupBy', List[api_TagName])
         }
 
-    __slots__: List[str] = ['_name', '_datasource', '_tags']
+    __slots__: List[str] = ['_name', '_datasource', '_tags', '_tags_to_group_by']
 
-    def __init__(self, datasource: str, name: str, tags: Dict[str, str]) -> None:
+    def __init__(self, datasource: str, name: str, tags: Dict[str, str], tags_to_group_by: List[str]) -> None:
         self._name = name
         self._datasource = datasource
         self._tags = tags
+        self._tags_to_group_by = tags_to_group_by
 
     @builtins.property
     def name(self) -> str:
@@ -80122,6 +80308,10 @@ class timeseries_logicalseries_api_ResolveSeriesRequest(ConjureBeanType):
     @builtins.property
     def tags(self) -> Dict[str, str]:
         return self._tags
+
+    @builtins.property
+    def tags_to_group_by(self) -> List[str]:
+        return self._tags_to_group_by
 
 
 timeseries_logicalseries_api_ResolveSeriesRequest.__name__ = "ResolveSeriesRequest"
@@ -81676,8 +81866,6 @@ persistent_compute_api_Milliseconds = int
 
 scout_compute_api_ErrorType = str
 
-comments_api_ResourceRid = str
-
 scout_rids_api_FunctionLineageRid = str
 
 timeseries_logicalseries_api_DatabaseName = str
@@ -81737,6 +81925,8 @@ scout_chartdefinition_api_WorkbookVizDefinitionMap = Dict[scout_rids_api_VizId, 
 api_McapChannelId = int
 
 scout_rids_api_CheckRid = str
+
+scout_rids_api_AssetRefName = str
 
 api_Token = str
 

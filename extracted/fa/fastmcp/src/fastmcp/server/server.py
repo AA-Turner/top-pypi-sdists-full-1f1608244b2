@@ -11,6 +11,7 @@ from contextlib import (
     asynccontextmanager,
 )
 from functools import partial
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, Generic, Literal
 
 import anyio
@@ -35,7 +36,6 @@ from mcp.types import Resource as MCPResource
 from mcp.types import ResourceTemplate as MCPResourceTemplate
 from mcp.types import Tool as MCPTool
 from pydantic import AnyUrl
-from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.requests import Request
 from starlette.responses import Response
@@ -48,7 +48,11 @@ from fastmcp.prompts import Prompt, PromptManager
 from fastmcp.prompts.prompt import PromptResult
 from fastmcp.resources import Resource, ResourceManager
 from fastmcp.resources.template import ResourceTemplate
-from fastmcp.server.http import create_sse_app
+from fastmcp.server.http import (
+    StarletteWithLifespan,
+    create_sse_app,
+    create_streamable_http_app,
+)
 from fastmcp.tools import ToolManager
 from fastmcp.tools.tool import Tool
 from fastmcp.utilities.cache import TimedCache
@@ -57,16 +61,16 @@ from fastmcp.utilities.logging import get_logger
 
 if TYPE_CHECKING:
     from fastmcp.client import Client
+    from fastmcp.client.transports import ClientTransport
     from fastmcp.server.openapi import FastMCPOpenAPI
     from fastmcp.server.proxy import FastMCPProxy
-
 logger = get_logger(__name__)
 
 DuplicateBehavior = Literal["warn", "error", "replace", "ignore"]
 
 
 @asynccontextmanager
-async def default_lifespan(server: FastMCP) -> AsyncIterator[Any]:
+async def default_lifespan(server: FastMCP[LifespanResultT]) -> AsyncIterator[Any]:
     """Default lifespan context manager that does nothing.
 
     Args:
@@ -79,8 +83,10 @@ async def default_lifespan(server: FastMCP) -> AsyncIterator[Any]:
 
 
 def _lifespan_wrapper(
-    app: FastMCP,
-    lifespan: Callable[[FastMCP], AbstractAsyncContextManager[LifespanResultT]],
+    app: FastMCP[LifespanResultT],
+    lifespan: Callable[
+        [FastMCP[LifespanResultT]], AbstractAsyncContextManager[LifespanResultT]
+    ],
 ) -> Callable[
     [MCPServer[LifespanResultT]], AbstractAsyncContextManager[LifespanResultT]
 ]:
@@ -189,15 +195,13 @@ class FastMCP(Generic[LifespanResultT]):
         """
         if transport is None:
             transport = "stdio"
-        if transport not in ["stdio", "streamable-http", "sse"]:
+        if transport not in {"stdio", "streamable-http", "sse"}:
             raise ValueError(f"Unknown transport: {transport}")
 
         if transport == "stdio":
             await self.run_stdio_async(**transport_kwargs)
-        elif transport == "streamable-http":
-            await self.run_http_async(transport="streamable-http", **transport_kwargs)
-        elif transport == "sse":
-            await self.run_http_async(transport="sse", **transport_kwargs)
+        elif transport in {"streamable-http", "sse"}:
+            await self.run_http_async(transport=transport, **transport_kwargs)
         else:
             raise ValueError(f"Unknown transport: {transport}")
 
@@ -211,7 +215,6 @@ class FastMCP(Generic[LifespanResultT]):
         Args:
             transport: Transport protocol to use ("stdio", "sse", or "streamable-http")
         """
-        logger.info(f'Starting server "{self.name}"...')
 
         anyio.run(partial(self.run_async, transport, **transport_kwargs))
 
@@ -228,7 +231,7 @@ class FastMCP(Generic[LifespanResultT]):
     async def get_tools(self) -> dict[str, Tool]:
         """Get all registered tools, indexed by registered key."""
         if (tools := self._cache.get("tools")) is self._cache.NOT_FOUND:
-            tools = {}
+            tools: dict[str, Tool] = {}
             for server in self._mounted_servers.values():
                 server_tools = await server.get_tools()
                 tools.update(server_tools)
@@ -239,7 +242,7 @@ class FastMCP(Generic[LifespanResultT]):
     async def get_resources(self) -> dict[str, Resource]:
         """Get all registered resources, indexed by registered key."""
         if (resources := self._cache.get("resources")) is self._cache.NOT_FOUND:
-            resources = {}
+            resources: dict[str, Resource] = {}
             for server in self._mounted_servers.values():
                 server_resources = await server.get_resources()
                 resources.update(server_resources)
@@ -252,7 +255,7 @@ class FastMCP(Generic[LifespanResultT]):
         if (
             templates := self._cache.get("resource_templates")
         ) is self._cache.NOT_FOUND:
-            templates = {}
+            templates: dict[str, ResourceTemplate] = {}
             for server in self._mounted_servers.values():
                 server_templates = await server.get_resource_templates()
                 templates.update(server_templates)
@@ -265,7 +268,7 @@ class FastMCP(Generic[LifespanResultT]):
         List all available prompts.
         """
         if (prompts := self._cache.get("prompts")) is self._cache.NOT_FOUND:
-            prompts = {}
+            prompts: dict[str, Prompt] = {}
             for server in self._mounted_servers.values():
                 server_prompts = await server.get_prompts()
                 prompts.update(server_prompts)
@@ -728,6 +731,7 @@ class FastMCP(Generic[LifespanResultT]):
     async def run_stdio_async(self) -> None:
         """Run the server using stdio transport."""
         async with stdio_server() as (read_stream, write_stream):
+            logger.info(f"Starting MCP server {self.name!r} with transport 'stdio'")
             await self._mcp_server.run(
                 read_stream,
                 write_stream,
@@ -743,7 +747,8 @@ class FastMCP(Generic[LifespanResultT]):
         port: int | None = None,
         log_level: str | None = None,
         path: str | None = None,
-        uvicorn_config: dict | None = None,
+        uvicorn_config: dict[str, Any] | None = None,
+        middleware: list[Middleware] | None = None,
     ) -> None:
         """Run the server using HTTP transport.
 
@@ -755,21 +760,29 @@ class FastMCP(Generic[LifespanResultT]):
             path: Path for the endpoint (defaults to settings.streamable_http_path or settings.sse_path)
             uvicorn_config: Additional configuration for the Uvicorn server
         """
-        uvicorn_config = uvicorn_config or {}
-        uvicorn_config.setdefault("timeout_graceful_shutdown", 0)
-        # lifespan is required for streamable http
-        uvicorn_config["lifespan"] = "on"
+        host = host or self.settings.host
+        port = port or self.settings.port
+        default_log_level_to_use = log_level or self.settings.log_level.lower()
 
-        app = self.http_app(path=path, transport=transport)
+        app = self.http_app(path=path, transport=transport, middleware=middleware)
 
-        config = uvicorn.Config(
-            app,
-            host=host or self.settings.host,
-            port=port or self.settings.port,
-            log_level=log_level or self.settings.log_level.lower(),
-            **uvicorn_config,
-        )
+        _uvicorn_config_from_user = uvicorn_config or {}
+
+        config_kwargs: dict[str, Any] = {
+            "timeout_graceful_shutdown": 0,
+            "lifespan": "on",
+        }
+        config_kwargs.update(_uvicorn_config_from_user)
+
+        if "log_config" not in config_kwargs and "log_level" not in config_kwargs:
+            config_kwargs["log_level"] = default_log_level_to_use
+
+        config = uvicorn.Config(app, host=host, port=port, **config_kwargs)
         server = uvicorn.Server(config)
+        path = app.state.path.lstrip("/")  # type: ignore
+        logger.info(
+            f"Starting MCP server {self.name!r} with transport {transport!r} on http://{host}:{port}/{path}"
+        )
         await server.serve()
 
     async def run_sse_async(
@@ -779,7 +792,7 @@ class FastMCP(Generic[LifespanResultT]):
         log_level: str | None = None,
         path: str | None = None,
         message_path: str | None = None,
-        uvicorn_config: dict | None = None,
+        uvicorn_config: dict[str, Any] | None = None,
     ) -> None:
         """Run the server using SSE transport."""
 
@@ -805,7 +818,7 @@ class FastMCP(Generic[LifespanResultT]):
         path: str | None = None,
         message_path: str | None = None,
         middleware: list[Middleware] | None = None,
-    ) -> Starlette:
+    ) -> StarletteWithLifespan:
         """
         Create a Starlette app for the SSE server.
 
@@ -836,7 +849,7 @@ class FastMCP(Generic[LifespanResultT]):
         self,
         path: str | None = None,
         middleware: list[Middleware] | None = None,
-    ) -> Starlette:
+    ) -> StarletteWithLifespan:
         """
         Create a Starlette app for the StreamableHTTP server.
 
@@ -857,7 +870,7 @@ class FastMCP(Generic[LifespanResultT]):
         path: str | None = None,
         middleware: list[Middleware] | None = None,
         transport: Literal["streamable-http", "sse"] = "streamable-http",
-    ) -> Starlette:
+    ) -> StarletteWithLifespan:
         """Create a Starlette app using the specified HTTP transport.
 
         Args:
@@ -868,7 +881,6 @@ class FastMCP(Generic[LifespanResultT]):
         Returns:
             A Starlette application configured with the specified transport
         """
-        from fastmcp.server.http import create_streamable_http_app
 
         if transport == "streamable-http":
             return create_streamable_http_app(
@@ -901,7 +913,7 @@ class FastMCP(Generic[LifespanResultT]):
         port: int | None = None,
         log_level: str | None = None,
         path: str | None = None,
-        uvicorn_config: dict | None = None,
+        uvicorn_config: dict[str, Any] | None = None,
     ) -> None:
         # Deprecated since 2.3.2
         warnings.warn(
@@ -1028,9 +1040,6 @@ class FastMCP(Generic[LifespanResultT]):
         - The prompts are imported with prefixed names using the
           prompt_separator Example: If server has a prompt named
           "weather_prompt", it will be available as "weather_weather_prompt"
-        - The mounted server's lifespan will be executed when the parent
-          server's lifespan runs, ensuring that any setup needed by the mounted
-          server is performed
 
         Args:
             prefix: The prefix to use for the mounted server server: The FastMCP
@@ -1103,13 +1112,47 @@ class FastMCP(Generic[LifespanResultT]):
         )
 
     @classmethod
+    def as_proxy(
+        cls,
+        backend: Client
+        | ClientTransport
+        | FastMCP[Any]
+        | AnyUrl
+        | Path
+        | dict[str, Any]
+        | str,
+        **settings: Any,
+    ) -> FastMCPProxy:
+        """Create a FastMCP proxy server for the given backend.
+
+        The ``backend`` argument can be either an existing :class:`~fastmcp.client.Client`
+        instance or any value accepted as the ``transport`` argument of
+        :class:`~fastmcp.client.Client`. This mirrors the convenience of the
+        ``Client`` constructor.
+        """
+        from fastmcp.client.client import Client
+        from fastmcp.server.proxy import FastMCPProxy
+
+        if isinstance(backend, Client):
+            client = backend
+        else:
+            client = Client(backend)
+
+        return FastMCPProxy(client=client, **settings)
+
+    @classmethod
     def from_client(cls, client: Client, **settings: Any) -> FastMCPProxy:
         """
         Create a FastMCP proxy server from a FastMCP client.
         """
-        from fastmcp.server.proxy import FastMCPProxy
+        # Deprecated since 2.3.5
+        warnings.warn(
+            "FastMCP.from_client() is deprecated; use FastMCP.as_proxy() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
-        return FastMCPProxy(client=client, **settings)
+        return cls.as_proxy(client, **settings)
 
 
 def _validate_resource_prefix(prefix: str) -> None:
@@ -1128,7 +1171,7 @@ class MountedServer:
     def __init__(
         self,
         prefix: str,
-        server: FastMCP,
+        server: FastMCP[LifespanResultT],
         tool_separator: str | None = None,
         resource_separator: str | None = None,
         prompt_separator: str | None = None,

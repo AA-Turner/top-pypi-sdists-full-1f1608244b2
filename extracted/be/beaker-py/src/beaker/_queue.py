@@ -6,7 +6,6 @@ import time
 from contextlib import AbstractContextManager as ContextManager
 from contextlib import contextmanager
 from dataclasses import dataclass
-from itertools import chain
 from queue import Empty as QueueEmpty
 from queue import SimpleQueue
 from typing import Generator, Iterable, Literal, overload
@@ -279,28 +278,69 @@ class QueueClient(ServiceClient):
         done: threading.Event,
         error: threading.Event,
     ):
+        # NOTE (epwalsh): For reasons I don't fully understand we need to be very careful
+        # when retrying these streaming requests to ensure that the `request_iter`
+        # generator function (defined below) from the failed request (that we're about to retry)
+        # gets exhausted before we restart the request with another `request_iter`.
+        # Otherwise we end up in a bad state where we stop sending or receiving new streaming messages.
+        #
+        # Hence these extra bookkeeping flags:
+        #
+        # We set `iter_done` to `True` within the `request_iter` function when it gets exhausted
+        # in order to signal to the output while-loop that we can safely recreate a new `request_iter` function.
+        iter_done = True
+        # We set `iter_canceled` to `True` in the outer while-loop below each time we intercept a retriable
+        # error in order to signal to the `request_iter` function that it should complete early.
+        iter_canceled = False
+
         retries = 0
         while not done.is_set():
             try:
-                request_iter = chain(
-                    [
-                        pb2.ProcessQueueEntriesRequest(
-                            init=pb2.ProcessQueueEntriesRequest.Init(worker_id=worker.id)
-                        )
-                    ],
-                    iter(tx.get, None),
-                )
+                if not iter_done:
+                    self.logger.debug("Waiting for previous entry requests iterator to exit...")
+                    while not iter_done:
+                        time.sleep(0.5)
+
+                iter_canceled = False
+                iter_done = False
+
+                def request_iter() -> Generator[pb2.ProcessQueueEntriesRequest, None, None]:
+                    nonlocal iter_done
+
+                    yield pb2.ProcessQueueEntriesRequest(
+                        init=pb2.ProcessQueueEntriesRequest.Init(worker_id=worker.id)
+                    )
+                    self.logger.debug("Waiting for new entry process requests from thread")
+
+                    while not iter_canceled:
+                        try:
+                            request = tx.get(
+                                block=True,
+                                timeout=0.5,
+                            )
+                        except QueueEmpty:
+                            continue
+
+                        if request is None:
+                            break
+
+                        self.logger.debug("Sending new entry process request from thread")
+                        yield request
+
+                    self.logger.debug("Exhausted entry process requests from thread")
+                    iter_done = True
 
                 for response in self.rpc_bidirectional_streaming_request(
                     RpcBidirectionalStreamingMethod[pb2.ProcessQueueEntriesResponse](
                         self.service.ProcessQueueEntries
                     ),
-                    request_iter,
+                    request_iter(),
                     exceptions_for_status={
                         grpc.StatusCode.NOT_FOUND: BeakerQueueWorkerNotFound(worker.id)
                     },
                 ):
                     batch_inputs = list(response.batch.worker_input)
+                    self.logger.debug("Received new entry batch from thread")
                     rx.put(batch_inputs)
 
                     if done.is_set():
@@ -310,8 +350,10 @@ class QueueClient(ServiceClient):
                 return
             except BeakerStreamConnectionClosedError as err:
                 # These errors are expected, see https://github.com/allenai/beaker/issues/6532
+                iter_canceled = True
                 self._log_and_wait(1, err, log_level=logging.DEBUG)
             except BeakerServerError as err:
+                iter_canceled = True
                 if retries < self.beaker.MAX_RETRIES:
                     self._log_and_wait(retries, err)
                     retries += 1
@@ -320,6 +362,7 @@ class QueueClient(ServiceClient):
                     rx.put(None)
                     raise
             except BaseException:
+                iter_canceled = True
                 error.set()
                 rx.put(None)
                 raise

@@ -539,8 +539,6 @@ class DatasetRevision(Protocol):
             The resolver to download the replay data for, or its fqn.
         show_progress
             Whether to show a progress bar
-        lazy
-            Whether to return Polars LazyFrames
         timeout
             How long to wait, in seconds, for job completion before raising a TimeoutError.
             Jobs will continue to run in the background if they take longer than this timeout.

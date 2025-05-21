@@ -1,7 +1,7 @@
 r'''
 # `okta_policy_profile_enrollment`
 
-Refer to the Terraform Registry for docs: [`okta_policy_profile_enrollment`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment).
+Refer to the Terraform Registry for docs: [`okta_policy_profile_enrollment`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class PolicyProfileEnrollment(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.policyProfileEnrollment.PolicyProfileEnrollment",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment okta_policy_profile_enrollment}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment okta_policy_profile_enrollment}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class PolicyProfileEnrollment(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment okta_policy_profile_enrollment} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment okta_policy_profile_enrollment} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Name of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment#name PolicyProfileEnrollment#name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment#id PolicyProfileEnrollment#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param status: Status of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment#status PolicyProfileEnrollment#status}
+        :param name: Name of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment#name PolicyProfileEnrollment#name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment#id PolicyProfileEnrollment#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param status: Status of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment#status PolicyProfileEnrollment#status}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class PolicyProfileEnrollment(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the PolicyProfileEnrollment to import.
-        :param import_from_id: The id of the existing PolicyProfileEnrollment that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing PolicyProfileEnrollment that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the PolicyProfileEnrollment to import is found.
         '''
         if __debug__:
@@ -232,9 +232,9 @@ class PolicyProfileEnrollmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Name of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment#name PolicyProfileEnrollment#name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment#id PolicyProfileEnrollment#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param status: Status of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment#status PolicyProfileEnrollment#status}
+        :param name: Name of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment#name PolicyProfileEnrollment#name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment#id PolicyProfileEnrollment#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param status: Status of the policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment#status PolicyProfileEnrollment#status}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -340,7 +340,7 @@ class PolicyProfileEnrollmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment#name PolicyProfileEnrollment#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment#name PolicyProfileEnrollment#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -348,7 +348,7 @@ class PolicyProfileEnrollmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment#id PolicyProfileEnrollment#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment#id PolicyProfileEnrollment#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -360,7 +360,7 @@ class PolicyProfileEnrollmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Status of the policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment#status PolicyProfileEnrollment#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment#status PolicyProfileEnrollment#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)

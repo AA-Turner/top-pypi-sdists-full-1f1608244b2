@@ -63,6 +63,7 @@ __all__ = (
     "Ec2ScanModeStatusType",
     "Ec2ScanModeType",
     "EcrPullDateRescanDurationType",
+    "EcrPullDateRescanModeType",
     "EcrRescanDurationStatusType",
     "EcrRescanDurationType",
     "EcrScanFrequencyType",
@@ -79,6 +80,7 @@ __all__ = (
     "FreeTrialStatusType",
     "FreeTrialTypeType",
     "GetCisScanResultDetailsPaginatorName",
+    "GetClustersForImagePaginatorName",
     "GroupKeyType",
     "ImageLayerSortByType",
     "Inspector2ServiceName",
@@ -209,6 +211,7 @@ Ec2PlatformType = Literal["LINUX", "MACOS", "UNKNOWN", "WINDOWS"]
 Ec2ScanModeStatusType = Literal["PENDING", "SUCCESS"]
 Ec2ScanModeType = Literal["EC2_HYBRID", "EC2_SSM_AGENT_BASED"]
 EcrPullDateRescanDurationType = Literal["DAYS_14", "DAYS_180", "DAYS_30", "DAYS_60", "DAYS_90"]
+EcrPullDateRescanModeType = Literal["LAST_IN_USE_AT", "LAST_PULL_DATE"]
 EcrRescanDurationStatusType = Literal["FAILED", "PENDING", "SUCCESS"]
 EcrRescanDurationType = Literal["DAYS_14", "DAYS_180", "DAYS_30", "DAYS_60", "DAYS_90", "LIFETIME"]
 EcrScanFrequencyType = Literal["CONTINUOUS_SCAN", "MANUAL", "SCAN_ON_PUSH"]
@@ -244,6 +247,7 @@ FreeTrialInfoErrorCodeType = Literal["ACCESS_DENIED", "INTERNAL_ERROR"]
 FreeTrialStatusType = Literal["ACTIVE", "INACTIVE"]
 FreeTrialTypeType = Literal["EC2", "ECR", "LAMBDA", "LAMBDA_CODE"]
 GetCisScanResultDetailsPaginatorName = Literal["get_cis_scan_result_details"]
+GetClustersForImagePaginatorName = Literal["get_clusters_for_image"]
 GroupKeyType = Literal[
     "ACCOUNT_ID", "ECR_REPOSITORY_NAME", "RESOURCE_TYPE", "SCAN_STATUS_CODE", "SCAN_STATUS_REASON"
 ]
@@ -368,6 +372,7 @@ ScanStatusReasonType = Literal[
     "NO_RESOURCES_FOUND",
     "PENDING_DISABLE",
     "PENDING_INITIAL_SCAN",
+    "PENDING_REVIVAL_SCAN",
     "RESOURCE_TERMINATED",
     "SCAN_ELIGIBILITY_EXPIRED",
     "SCAN_FREQUENCY_MANUAL",
@@ -715,7 +720,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -776,7 +780,6 @@ ServiceName = Literal[
     "signer",
     "simspaceweaver",
     "sms",
-    "sms-voice",
     "snow-device-management",
     "snowball",
     "sns",
@@ -784,6 +787,7 @@ ServiceName = Literal[
     "sqs",
     "ssm",
     "ssm-contacts",
+    "ssm-guiconnect",
     "ssm-incidents",
     "ssm-quicksetup",
     "ssm-sap",
@@ -838,6 +842,7 @@ ResourceServiceName = Literal[
 ]
 PaginatorName = Literal[
     "get_cis_scan_result_details",
+    "get_clusters_for_image",
     "list_account_permissions",
     "list_cis_scan_configurations",
     "list_cis_scan_results_aggregated_by_checks",

@@ -256,7 +256,7 @@ class Organization(_message.Message):
     def __init__(self, id: _Optional[str] = ..., created: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., name: _Optional[str] = ..., display_name: _Optional[str] = ..., description: _Optional[str] = ...) -> None: ...
 
 class Workspace(_message.Message):
-    __slots__ = ("id", "created", "name", "description", "owner_org", "owner_user", "author_org", "author_user", "modified", "archived", "size", "maximum_workload_priority", "budget_id", "slot_limit_preemptible", "slot_limit_non_preemptible", "assigned_slots_preemptible", "assigned_slots_non_preemptible")
+    __slots__ = ("id", "created", "name", "description", "owner_org", "owner_user", "author_org", "author_user", "modified", "archived", "size", "maximum_workload_priority", "budget_id", "slot_limit_preemptible", "slot_limit_non_preemptible", "assigned_slots_preemptible", "assigned_slots_non_preemptible", "queued_slots_preemptible", "queued_slots_non_preemptible")
     class WorkspaceItemCount(_message.Message):
         __slots__ = ("datasets", "experiments", "groups", "images", "environments")
         DATASETS_FIELD_NUMBER: _ClassVar[int]
@@ -287,6 +287,8 @@ class Workspace(_message.Message):
     SLOT_LIMIT_NON_PREEMPTIBLE_FIELD_NUMBER: _ClassVar[int]
     ASSIGNED_SLOTS_PREEMPTIBLE_FIELD_NUMBER: _ClassVar[int]
     ASSIGNED_SLOTS_NON_PREEMPTIBLE_FIELD_NUMBER: _ClassVar[int]
+    QUEUED_SLOTS_PREEMPTIBLE_FIELD_NUMBER: _ClassVar[int]
+    QUEUED_SLOTS_NON_PREEMPTIBLE_FIELD_NUMBER: _ClassVar[int]
     id: str
     created: _timestamp_pb2.Timestamp
     name: str
@@ -304,7 +306,9 @@ class Workspace(_message.Message):
     slot_limit_non_preemptible: int
     assigned_slots_preemptible: int
     assigned_slots_non_preemptible: int
-    def __init__(self, id: _Optional[str] = ..., created: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., owner_org: _Optional[_Union[Organization, _Mapping]] = ..., owner_user: _Optional[_Union[User, _Mapping]] = ..., author_org: _Optional[_Union[Organization, _Mapping]] = ..., author_user: _Optional[_Union[User, _Mapping]] = ..., modified: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived: bool = ..., size: _Optional[_Union[Workspace.WorkspaceItemCount, _Mapping]] = ..., maximum_workload_priority: _Optional[_Union[JobPriority, str]] = ..., budget_id: _Optional[str] = ..., slot_limit_preemptible: _Optional[int] = ..., slot_limit_non_preemptible: _Optional[int] = ..., assigned_slots_preemptible: _Optional[int] = ..., assigned_slots_non_preemptible: _Optional[int] = ...) -> None: ...
+    queued_slots_preemptible: int
+    queued_slots_non_preemptible: int
+    def __init__(self, id: _Optional[str] = ..., created: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., owner_org: _Optional[_Union[Organization, _Mapping]] = ..., owner_user: _Optional[_Union[User, _Mapping]] = ..., author_org: _Optional[_Union[Organization, _Mapping]] = ..., author_user: _Optional[_Union[User, _Mapping]] = ..., modified: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., archived: bool = ..., size: _Optional[_Union[Workspace.WorkspaceItemCount, _Mapping]] = ..., maximum_workload_priority: _Optional[_Union[JobPriority, str]] = ..., budget_id: _Optional[str] = ..., slot_limit_preemptible: _Optional[int] = ..., slot_limit_non_preemptible: _Optional[int] = ..., assigned_slots_preemptible: _Optional[int] = ..., assigned_slots_non_preemptible: _Optional[int] = ..., queued_slots_preemptible: _Optional[int] = ..., queued_slots_non_preemptible: _Optional[int] = ...) -> None: ...
 
 class NodeShape(_message.Message):
     __slots__ = ("cpu_count", "memory_bytes", "gpu_count", "gpu_type")

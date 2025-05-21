@@ -588,8 +588,8 @@ def compute_max_eigenvalue(matrix: NDArray[np.float64]) -> Tuple[float, NDArray[
     """
     ...
 
-def find_follow_volume_sum_same_price(times: NDArray[np.float64], prices: NDArray[np.float64], volumes: NDArray[np.float64], time_window: float = 0.1) -> NDArray[np.float64]:
-    """计算每一行在其后0.1秒内具有相同price和volume的行的volume总和。
+def find_follow_volume_sum_same_price(times: NDArray[np.float64], prices: NDArray[np.float64], volumes: NDArray[np.float64], time_window: float = 0.1, check_price: bool = True, filter_ratio: float = 0.0) -> NDArray[np.float64]:
+    """计算每一行在其后time_window秒内具有相同volume（及可选相同price）的行的volume总和。
 
     参数说明：
     ----------
@@ -601,11 +601,16 @@ def find_follow_volume_sum_same_price(times: NDArray[np.float64], prices: NDArra
         成交量数组
     time_window : float, optional
         时间窗口大小（单位：秒），默认为0.1
+    check_price : bool, optional
+        是否检查价格是否相同，默认为True。设为False时只检查volume是否相同。
+    filter_ratio : float, optional
+        要过滤的volume数值比例，默认为0（不过滤）。如果大于0，则过滤出现频率最高的前 filter_ratio 比例的volume种类，对应的行会被设为NaN。
 
     返回值：
     -------
     numpy.ndarray
-        每一行在其后time_window秒内（包括当前行）具有相同price和volume的行的volume总和
+        每一行在其后time_window秒内（包括当前行）具有相同条件的行的volume总和。
+        如果filter_ratio>0，则出现频率最高的前filter_ratio比例的volume值对应的行会被设为NaN。
 
     示例：
     -------
@@ -620,11 +625,27 @@ def find_follow_volume_sum_same_price(times: NDArray[np.float64], prices: NDArra
     ...     'volume': [100, 100, 100, 200, 100]
     ... })
     >>> 
-    >>> # 计算follow列
-    >>> df['follow'] = find_follow_volume_sum(
+    >>> # 计算follow列（默认检查price和volume）
+    >>> df['follow'] = find_follow_volume_sum_same_price(
     ...     df['exchtime'].values,
     ...     df['price'].values,
     ...     df['volume'].values
+    ... )
+    >>>
+    >>> # 不检查价格，只检查volume是否相同
+    >>> df['follow_no_price_check'] = find_follow_volume_sum_same_price(
+    ...     df['exchtime'].values,
+    ...     df['price'].values,
+    ...     df['volume'].values,
+    ...     check_price=False
+    ... )
+    >>>
+    >>> # 过滤频繁出现的volume值
+    >>> df['follow_filtered'] = find_follow_volume_sum_same_price(
+    ...     df['exchtime'].values,
+    ...     df['price'].values,
+    ...     df['volume'].values,
+    ...     filter_ratio=0.3
     ... )
     >>> print(df)
        exchtime  price  volume  follow
@@ -785,7 +806,7 @@ def mark_follow_groups_with_flag(times: NDArray[np.float64], prices: NDArray[np.
     """
     ...
 
-def find_half_energy_time(times: NDArray[np.float64], prices: NDArray[np.float64], time_window: float = 5.0) -> NDArray[np.float64]:
+def find_half_energy_time(times: NDArray[np.float64], prices: NDArray[np.float64], time_window: float = 5.0, direction: str = "ignore") -> NDArray[np.float64]:
     """计算每一行在其后指定时间窗口内的价格变动能量，并找出首次达到最终能量一半时所需的时间。
 
     参数说明：
@@ -828,6 +849,61 @@ def find_half_energy_time(times: NDArray[np.float64], prices: NDArray[np.float64
     # 2      1.2   10.5              1.8  # 在1.8秒时达到5秒能量的一半
     # 3      1.3   10.3              1.7  # 在1.7秒时达到5秒能量的一半
     # 4      1.4   10.1              5.0  # 未达到5秒能量的一半
+    """
+    ...
+
+def find_half_extreme_time(times: NDArray[np.float64], prices: NDArray[np.float64], time_window: float = 5.0, direction: str = "ignore") -> NDArray[np.float64]:
+    """计算每个时间点价格达到时间窗口内最大变动一半所需的时间。
+
+    该函数首先在每个时间点的后续时间窗口内找到价格的最大上涨和下跌幅度，
+    然后确定主要方向（上涨或下跌），最后计算价格首次达到该方向最大变动一半时所需的时间。
+
+    参数说明：
+    ----------
+    times : numpy.ndarray
+        时间戳数组（单位：秒）
+    prices : numpy.ndarray
+        价格数组
+    time_window : float, optional
+        时间窗口大小（单位：秒），默认为5.0
+
+    返回值：
+    -------
+    numpy.ndarray
+        浮点数数组，表示每行达到最大变动一半所需的时间（秒）。
+        如果在时间窗口内未达到一半变动，则返回time_window值。
+
+    示例：
+    -------
+    >>> import pandas as pd
+    >>> import numpy as np
+    >>> from rust_pyfunc import find_half_extreme_time
+    >>> 
+    >>> # 创建示例DataFrame
+    >>> df = pd.DataFrame({
+    ...     'exchtime': [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0],
+    ...     'price': [10.0, 10.2, 10.5, 10.3, 10.1, 10.0, 9.8, 9.5, 9.3, 9.2, 9.0]
+    ... })
+    >>> 
+    >>> # 计算达到最大变动一半所需时间
+    >>> df['half_extreme_time'] = find_half_extreme_time(
+    ...     df['exchtime'].values,
+    ...     df['price'].values,
+    ...     time_window=1.0  # 1秒时间窗口
+    ... )
+    >>> print(df)
+    #     exchtime  price  half_extreme_time
+    # 0        1.0   10.0               0.3  # 在0.3秒时达到最大上涨(0.5)的一半(0.25)
+    # 1        1.1   10.2               0.3  # 在0.3秒时达到最大上涨(0.3)的一半(0.15)
+    # 2        1.2   10.5               1.0  # 最大变动为下跌，但未达到一半
+    # 3        1.3   10.3               0.4  # 在0.4秒时达到最大下跌(0.5)的一半(0.25)
+    # 4        1.4   10.1               0.3  # 在0.3秒时达到最大下跌(0.6)的一半(0.3)
+    # 5        1.5   10.0               0.2  # 在0.2秒时达到最大下跌(0.5)的一半(0.25)
+    # 6        1.6    9.8               0.3  # 在0.3秒时达到最大下跌(0.8)的一半(0.4)
+    # 7        1.7    9.5               0.2  # 在0.2秒时达到最大下跌(0.7)的一半(0.35)
+    # 8        1.8    9.3               0.2  # 在0.2秒时达到最大下跌(0.5)的一半(0.25)
+    # 9        1.9    9.2               0.1  # 在0.1秒时达到最大下跌(0.2)的一半(0.1)
+    # 10       2.0    9.0               1.0  # 时间窗口内没有后续数据
     """
     ...
 
@@ -1255,5 +1331,58 @@ def calculate_large_order_nearby_small_order_time_gap(
     >>>     near_number=2        # 每个大单考虑最近的2个小单
     >>> )
     >>> print(df)
+    """
+    ...
+
+def dataframe_corrwith(df1: NDArray[np.float64], df2: NDArray[np.float64], axis: int = 0, drop_na: bool = True) -> NDArray[np.float64]:
+    """计算两个数据框对应列的相关系数。
+
+    这个函数类似于pandas中的df.corrwith(df1)，计算两个数据框中对应列之间的皮尔逊相关系数。
+    相关系数范围为[-1, 1]，其中：
+    - 1表示完全正相关
+    - -1表示完全负相关
+    - 0表示无相关性
+
+    参数说明：
+    ----------
+    df1 : numpy.ndarray
+        第一个数据框，形状为(n_rows, n_cols)，必须是float64类型
+    df2 : numpy.ndarray
+        第二个数据框，形状为(n_rows, m_cols)，必须是float64类型
+    axis : int, 默认为0
+        计算相关性的轴，默认为0（按列计算）。目前只支持按列计算。
+    drop_na : bool, 默认为True
+        是否忽略计算中的NaN值
+
+    返回值：
+    -------
+    numpy.ndarray
+        一维数组，长度为min(n_cols, m_cols)，包含对应列的相关系数
+
+    示例：
+    -------
+    >>> import numpy as np
+    >>> import pandas as pd
+    >>> from rust_pyfunc import dataframe_corrwith
+    >>> 
+    >>> # 创建两个数据框
+    >>> df1 = pd.DataFrame({
+    >>>     'A': [1.0, 2.0, 3.0, 4.0, 5.0],
+    >>>     'B': [5.0, 4.0, 3.0, 2.0, 1.0],
+    >>>     'C': [2.0, 4.0, 6.0, 8.0, 10.0]
+    >>> })
+    >>> df2 = pd.DataFrame({
+    >>>     'A': [1.1, 2.2, 2.9, 4.1, 5.2],
+    >>>     'B': [5.2, 4.1, 2.9, 2.1, 0.9],
+    >>>     'D': [1.0, 2.0, 3.0, 4.0, 5.0]
+    >>> })
+    >>> 
+    >>> # 计算相关系数
+    >>> corr = dataframe_corrwith(df1.values, df2.values)
+    >>> # 转换为Series以获得与pandas相同的输出格式
+    >>> result = pd.Series(corr, index=['A', 'B', 'C'])
+    >>> # 只保留有效对应列（A和B）
+    >>> result = result.iloc[:2]
+    >>> print(result)
     """
     ...

@@ -5,8 +5,8 @@ from typing import Any, Literal, Optional, Union
 
 import httpx
 from pydantic import BaseModel, Field, field_validator, ConfigDict
-from ipfabric.tools.shared import raise_for_status, VALID_REFS, valid_snapshot
 
+from ipfabric.tools.shared import raise_for_status, VALID_REFS, valid_snapshot
 from .table import BaseTable
 
 logger = logging.getLogger("ipfabric")
@@ -21,8 +21,17 @@ SNAP_JOBS = {
     "recalculate": "recalculateSites",
     "new": "discoveryNew",
 }
+ALL_JOBS = {
+    "export": "configurationExport",
+    "import": "configurationImport",
+    "load_graph": "loadGraphCache",
+    "history": "saveHistoricalData",
+    "report": "report",
+    **SNAP_JOBS,
+}
 
 SNAP_ACTIONS = Literal["load", "unload", "download", "add", "refresh", "delete", "discoveryNew"]
+ALL_ACTIONS = Union[Literal["export", "import"], SNAP_ACTIONS]
 SORT = {"order": "desc", "column": "startedAt"}
 
 
@@ -101,44 +110,50 @@ class Jobs(BaseModel):
             return None
         return Job(**jobs[0])
 
-    def _return_job(self, job_filter: dict) -> Union[Job, None]:
-        """Returns the job. Only supports Snapshot related Jobs.
+    def find_job(self, started: int, action: ALL_ACTIONS, snapshot_id: str = None) -> Union[Job, None]:
+        """Finds a job and returns it.
 
         Args:
-            job_filter: table filter for jobs
+            started: int: Integer time since epoch in milliseconds
+            action: str: Type of job to filter on.
+            snapshot_id: str: Optional: UUID of a snapshot to filter on
 
         Returns:
-            job: Job: Object about the job
+            Job: Job object or None if not found.
         """
-        if "name" not in job_filter and "snapshot" not in job_filter:
-            raise SyntaxError("Must provide a Snapshot ID and/or name for a filter.")
+        j_filter = dict(name=["eq", ALL_JOBS[action]], startedAt=["gte", started - 1000])
+        j_filter.update(dict(snapshot=["eq", snapshot_id]) if snapshot_id else dict())
         sleep(5)  # give the IPF server a chance to start the job
         # find the running snapshotDownload job (i.e. not done)
         jobs = self.all_jobs.fetch(
-            filters=job_filter,
+            filters=j_filter,
             sort={"order": "desc", "column": "startedAt"},
             columns=self.columns,
         )
-        logger.debug(f"Job filter: {job_filter}\nList of jobs:{jobs}")
+        logger.debug(f"Job filter: {j_filter}\nList of jobs:{jobs}")
         if not jobs:
-            logger.warning(f"Job not found: {job_filter}")
+            logger.warning(f"Job not found: {j_filter}")
             return None
         return Job(**jobs[0])
 
-    def _return_job_when_done(self, job_filter: dict, retry: int = 5, timeout: int = 5) -> Union[Job, None]:
+    def return_job_when_done(self, job: Union[Job, str], retry: int = 5, timeout: int = 5) -> Union[Job, None]:
         """
-        Returns the finished job. Only supports Snapshot related Jobs
+        Returns the finished job.
+
         Args:
-            job_filter: table filter for jobs
-            retry: how many times to query the table
-            timeout: how long to wait in-between retries
+            job: str: Job ID string; Job: Job object
+            retry: int: How many times to query the table
+            timeout: int: How long to wait in-between retries
 
         Returns:
             job: Job: Object about the job
         """
-        job = self._return_job(job_filter)
+        job = self.get_job_by_id(job if isinstance(job, str) else job.id)
+        if not job:
+            logger.critical(f"Job not found: {job}")
+            return None
 
-        if not job or job.isDone:
+        if job.isDone:
             return job
 
         for _ in range(retry):
@@ -155,17 +170,17 @@ class Jobs(BaseModel):
         """Checks to see if a snapshot load job is completed.
 
         Args:
-            snapshot_id: UUID of a snapshot
-            started: Integer time since epoch in milliseconds
-            action: Type of job to filter on
-            timeout: How long in seconds to wait before retry
-            retry: how many retries to use when looking for a job, increase for large downloads
+            snapshot_id: str: UUID of a snapshot
+            started: int: Integer time since epoch in milliseconds
+            action: str: Type of job to filter on
+            timeout: int: How long in seconds to wait before retry
+            retry: int: How many retries to use when looking for a job, increase for large downloads
 
         Returns:
             Job: Job object or None if did not complete.
         """
-        j_filter = dict(snapshot=["eq", snapshot_id], name=["eq", SNAP_JOBS[action]], startedAt=["gte", started - 1000])
-        return self._return_job_when_done(j_filter, retry=retry, timeout=timeout)
+        job = self.find_job(started=started, action=action, snapshot_id=snapshot_id)
+        return self.return_job_when_done(job, retry=retry, timeout=timeout)
 
     def check_snapshot_assurance_jobs(
         self, snapshot_id: str, assurance_settings: dict, started: int, retry: int = 5, timeout: int = 5
@@ -182,27 +197,21 @@ class Jobs(BaseModel):
         Returns:
             True if load is completed, False if still loading
         """
-        j_filter = dict(snapshot=["eq", snapshot_id], name=["eq", "loadGraphCache"], startedAt=["gte", started - 1000])
-        if (
-            assurance_settings["disabled_graph_cache"] is False
-            and self._return_job_when_done(j_filter, retry=retry, timeout=timeout) is None
-        ):
-            logger.error("Graph Cache did not finish loading; Snapshot is not fully loaded yet.")
-            return False
-        j_filter["name"] = ["eq", "saveHistoricalData"]
-        if (
-            assurance_settings["disabled_historical_data"] is False
-            and self._return_job_when_done(j_filter, retry=retry, timeout=timeout) is None
-        ):
-            logger.error("Historical Data did not finish loading; Snapshot is not fully loaded yet.")
-            return False
-        j_filter["name"] = ["eq", "report"]
-        if (
-            assurance_settings["disabled_intent_verification"] is False
-            and self._return_job_when_done(j_filter, retry=retry, timeout=timeout) is None
-        ):
-            logger.error("Intent Calculations did not finish loading; Snapshot is not fully loaded yet.")
-            return False
+        if assurance_settings["disabled_graph_cache"] is False:
+            job = self.find_job(started=started, action="load_graph", snapshot_id=snapshot_id)
+            if not job or self.return_job_when_done(job, retry=retry, timeout=timeout) is None:
+                logger.error("Graph Cache did not finish loading; Snapshot is not fully loaded yet.")
+                return False
+        if assurance_settings["disabled_historical_data"] is False:
+            job = self.find_job(started=started, action="history", snapshot_id=snapshot_id)
+            if not job or self.return_job_when_done(job, retry=retry, timeout=timeout) is None:
+                logger.error("Historical Data did not finish loading; Snapshot is not fully loaded yet.")
+                return False
+        if assurance_settings["disabled_intent_verification"] is False:
+            job = self.find_job(started=started, action="report", snapshot_id=snapshot_id)
+            if not job or self.return_job_when_done(job, retry=retry, timeout=timeout) is None:
+                logger.error("Intent Calculations did not finish loading; Snapshot is not fully loaded yet.")
+                return False
         return True
 
     def generate_techsupport(
@@ -225,15 +234,18 @@ class Jobs(BaseModel):
 
         job = tech_support_jobs[0]
         if wait_for_ts:
-            job = self._return_job_when_done(
-                job_filter={"id": ["eq", job["id"]], "name": ["eq", "techsupport"]},
+            job = self.return_job_when_done(
+                job=job,
                 retry=retry,
                 timeout=timeout,
             )
         return job
 
-    def download_techsupport_file(self, job_id: str) -> httpx.Response:
+    def download_job_file(self, job_id: str) -> httpx.Response:
         return self.client.get(f"jobs/{str(job_id)}/download")
+
+    def download_techsupport_file(self, job_id: str) -> httpx.Response:
+        return self.download_job_file(job_id)
 
     def upload_techsupport_file(
         self,

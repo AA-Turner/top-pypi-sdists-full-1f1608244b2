@@ -1,7 +1,7 @@
 r'''
-# CDKTF prebuilt bindings for okta/okta provider version 4.18.0
+# CDKTF prebuilt bindings for okta/okta provider version 4.19.0
 
-This repo builds and publishes the [Terraform okta provider](https://registry.terraform.io/providers/okta/okta/4.18.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform okta provider](https://registry.terraform.io/providers/okta/okta/4.19.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -63,7 +63,7 @@ This project is explicitly not tracking the Terraform okta provider version 1:1.
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform okta provider](https://registry.terraform.io/providers/okta/okta/4.18.0)
+* [Terraform okta provider](https://registry.terraform.io/providers/okta/okta/4.19.0)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.
@@ -188,6 +188,7 @@ __all__ = [
     "data_okta_domain",
     "data_okta_email_customization",
     "data_okta_email_customizations",
+    "data_okta_email_smtp_server",
     "data_okta_email_template",
     "data_okta_email_templates",
     "data_okta_everyone_group",
@@ -219,6 +220,7 @@ __all__ = [
     "email_domain_verification",
     "email_sender",
     "email_sender_verification",
+    "email_smtp_server",
     "email_template_settings",
     "event_hook",
     "event_hook_verification",
@@ -344,6 +346,7 @@ from . import data_okta_device_assurance_policy
 from . import data_okta_domain
 from . import data_okta_email_customization
 from . import data_okta_email_customizations
+from . import data_okta_email_smtp_server
 from . import data_okta_email_template
 from . import data_okta_email_templates
 from . import data_okta_everyone_group
@@ -375,6 +378,7 @@ from . import email_domain
 from . import email_domain_verification
 from . import email_sender
 from . import email_sender_verification
+from . import email_smtp_server
 from . import email_template_settings
 from . import event_hook
 from . import event_hook_verification

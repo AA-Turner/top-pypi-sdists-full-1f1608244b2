@@ -239,11 +239,13 @@ class Colormap:
             bad = info.bad if bad is None else bad
             self.info = info
             if isinstance(info.data, list):
+                if not info.data:  # pragma: no cover
+                    raise ValueError(f"Catalog colormap {info.name!r} has no data")
                 ld = len(info.data[0])
                 if ld == 2:
                     # if it's a list of tuples, it's a list of color stops
                     stops = ColorStops._from_uniform_stops(info.data)
-                elif ld == 3:
+                elif ld in (3, 4):
                     stops = ColorStops._from_colorarray_like(info.data)
                 else:  # pragma: no cover
                     raise ValueError(
@@ -998,7 +1000,7 @@ class ColorStops(Sequence[ColorStop]):
     def __reversed__(self) -> Iterator[ColorStop]:
         # this for the reversed() builtin ... when iterating single
         # ColorStops.  But see the reversed() method below for when
-        # you want to create a new ColorStops object that is "permantently"
+        # you want to create a new ColorStops object that is "permanently"
         # reversed.
         for pos, *rgba in self._stops[::-1]:
             # reverse the colors, but not the positions
@@ -1182,7 +1184,7 @@ class ColorStops(Sequence[ColorStop]):
         yield cls.parse  # pydantic validator
 
     def _json_encode(self) -> list:
-        return cast(list, self._stops.tolist())
+        return cast("list", self._stops.tolist())
 
 
 def _fill_stops(

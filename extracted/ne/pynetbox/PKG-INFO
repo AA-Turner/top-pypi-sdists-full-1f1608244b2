@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: pynetbox
-Version: 7.4.1
+Version: 7.5.0
 Summary: NetBox API client library
 Home-page: https://github.com/netbox-community/pynetbox
 Author: Zach Moody, Arthur Hanson
@@ -17,6 +17,17 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: requests<3.0,>=2.20.0
 Requires-Dist: packaging
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: summary
 
 # Pynetbox
 Python API client library for [NetBox](https://github.com/netbox-community/netbox).
@@ -29,6 +40,9 @@ Each pyNetBox Version listed below has been tested with its corresponding NetBox
 
 | NetBox Version | Plugin Version |
 |:--------------:|:--------------:|
+|      4.3       |     7.5.0      |
+|      4.2       |     7.5.0      |
+|      4.1       |     7.5.0      |
 |      4.0.6     |     7.4.1      |
 |      4.0.0     |     7.3.4      |
 |      3.7       |     7.3.0      |
@@ -89,6 +103,30 @@ nb = pynetbox.api(
     'http://localhost:8000',
     threading=True,
 )
+```
+
+## Running Tests
+
+First, create and activate a Python virtual environment in the pynetbox directory to isolate the project dependencies:
+
+```python
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Install both requirements files:
+
+```python
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+```
+
+The test suite requires Docker to be installed and running, as it will download and launch netbox-docker containers during test execution.
+
+With Docker installed and running, execute the following command to run the test suite:
+
+```python
+pytest
 ```
 
 ## Alternative Library

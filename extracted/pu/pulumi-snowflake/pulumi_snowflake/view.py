@@ -536,6 +536,7 @@ class _ViewState:
         pulumi.set(self, "statement", value)
 
 
+@pulumi.type_token("snowflake:index/view:View")
 class View(pulumi.CustomResource):
     @overload
     def __init__(__self__,

@@ -108,10 +108,8 @@ class _AccountSettingDefaultState:
         pulumi.set(self, "value", value)
 
 
+@pulumi.type_token("aws:ecs/accountSettingDefault:AccountSettingDefault")
 class AccountSettingDefault(pulumi.CustomResource):
-
-    pulumi_type = "aws:ecs/accountSettingDefault:AccountSettingDefault"
-
     @overload
     def __init__(__self__,
                  resource_name: str,
@@ -128,6 +126,8 @@ class AccountSettingDefault(pulumi.CustomResource):
 
         ## Example Usage
 
+        ### Enable the long task ARN format
+
         ```python
         import pulumi
         import pulumi_aws as aws
@@ -135,6 +135,17 @@ class AccountSettingDefault(pulumi.CustomResource):
         test = aws.ecs.AccountSettingDefault("test",
             name="taskLongArnFormat",
             value="enabled")
+        ```
+
+        ### Set the default log driver mode to non-blocking
+
+        ```python
+        import pulumi
+        import pulumi_aws as aws
+
+        test = aws.ecs.AccountSettingDefault("test",
+            name="defaultLogDriverMode",
+            value="non-blocking")
         ```
 
         ## Import
@@ -165,6 +176,8 @@ class AccountSettingDefault(pulumi.CustomResource):
 
         ## Example Usage
 
+        ### Enable the long task ARN format
+
         ```python
         import pulumi
         import pulumi_aws as aws
@@ -172,6 +185,17 @@ class AccountSettingDefault(pulumi.CustomResource):
         test = aws.ecs.AccountSettingDefault("test",
             name="taskLongArnFormat",
             value="enabled")
+        ```
+
+        ### Set the default log driver mode to non-blocking
+
+        ```python
+        import pulumi
+        import pulumi_aws as aws
+
+        test = aws.ecs.AccountSettingDefault("test",
+            name="defaultLogDriverMode",
+            value="non-blocking")
         ```
 
         ## Import

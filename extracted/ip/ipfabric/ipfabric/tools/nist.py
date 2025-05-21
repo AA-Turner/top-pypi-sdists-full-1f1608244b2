@@ -1,8 +1,8 @@
 from time import sleep
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from httpx import Client, ReadTimeout, HTTPStatusError
-from httpx._types import ProxiesTypes, TimeoutTypes
+from httpx._types import ProxyTypes, TimeoutTypes
 from pydantic import BaseModel, ConfigDict, field_validator
 
 UNSUPPORTED_VENDORS = [
@@ -127,13 +127,13 @@ class CVE(BaseModel):
 class CVEs(BaseModel):
     cpe: Optional[CPE] = None
     total_results: int
-    cves: List[CVE]
+    cves: list[CVE]
     error: Optional[str] = None
 
 
 class NIST(Client):
     def __init__(
-        self, nvd_api_key: str, timeout: TimeoutTypes = 60, proxies: Optional[ProxiesTypes] = None, retries: int = 2
+        self, nvd_api_key: str, timeout: TimeoutTypes = 60, proxies: Optional[ProxyTypes] = None, retries: int = 2
     ):
         """
         NIST updated to API v2.0.  You must request and pass an API Key which can be obtained at
@@ -176,8 +176,6 @@ class NIST(Client):
             if "" in parts:
                 parts.remove("")
             return ".".join(parts[:-1]) + parts[-1] if parts[-1].isalpha() else ".".join(parts)
-        elif family == "ios-xe":
-            return version
         elif family == "ios" and ("CML" in version or len(version.split(":")) > 1):
             return version.split("(")[0]
         elif family == "ios" and version.count("(") == 2:
@@ -213,7 +211,7 @@ class NIST(Client):
         parts = version.split(".")
         return ".".join(parts[:max_len]) if len(parts) > max_len else version
 
-    def get_cpe(self, vendor: str, family: str, version: str) -> List[CPE]:  # noqa: C901
+    def get_cpe(self, vendor: str, family: str, version: str) -> list[CPE]:  # noqa: C901
         """returns CVE data about a specific product line
 
         Args:
@@ -265,7 +263,7 @@ class NIST(Client):
             return unsupported
         return self._query_cpe({"cpeMatchString": match_str + ":", "startIndex": 0})
 
-    def check_cve(self, vendor: str, family: str, version: str) -> List[CVEs]:
+    def check_cve(self, vendor: str, family: str, version: str) -> list[CVEs]:
         cpes = self.get_cpe(vendor, family, version)
         if not cpes:
             return [CVEs(total_results=0, cves=[], error="No CPEs Found.")]
@@ -307,7 +305,7 @@ class NIST(Client):
             else:
                 return self._query_cve(cpe, attempt + 1)
 
-    def _query_cpe(self, params, attempt: int = 0) -> List[CPE]:
+    def _query_cpe(self, params, attempt: int = 0) -> list[CPE]:
         try:
             sleep(0.3 + attempt)  # NIST Rate Limit: 50 requests/30 seconds
             res = self.get("cpes/2.0", params=params)

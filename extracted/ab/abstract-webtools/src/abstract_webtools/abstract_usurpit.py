@@ -9,7 +9,25 @@ from abstract_utilities import *
 
 # Import your custom classes/functions
 # from your_module import linkManager, get_soup_mgr
-
+def make_directory(directory=None,path=None):
+    if directory==None:
+        directory=os.getcwd()
+    if path:
+        directory = os.path.join(base_dir,path)
+    os.makedirs(directory,exist_ok=True)
+    return directory
+def get_domain_name_from_url(url):
+    parsed_url = urlparse(url)
+    netloc = parsed_url.netloc
+    parsed_spl = netloc.split('.')
+    directory_name = '.'.join(parsed_spl[:-1])
+    if directory_name.startswith('www.'):
+        directory_name = directory_name[len('www.'):]
+    return directory_name
+def get_domain_directory_from_url(url,base_dir=None):
+    base_dir =base_dir or os.getcwd()
+    domain_name = get_domain_name_from_url(url)
+    return make_directory(directory,domain_name)
 # Configuration
 def normalize_url(url, base_url):
     """
@@ -164,12 +182,12 @@ class usurpManager():
         print("Website copying completed.")
 def test_download(url=None,directory=None):
     url=url or 'https://www.youtube.com/watch?v=jRGrNDV2mKc&list=RDMMjRGrNDV2mKc&start_radio=1'
-    output_dir= directory or os.path.join(os.getcwd(),'testit')
+    
+    output_dir= directory or get_directory_from_url(url) or os.path.join(os.getcwd(),'testit')
     os.makedirs(output_dir,exist_ok=True)
     site_mgr = usurpManager(url,output_dir)
     
 def usurpit(url,output_dir=None,max_depth=None,wait_between_requests=None,operating_system=None, browser=None, version=None,user_agent=None,website_bot=None):
-    output_dir= output_dir or os.path.join(os.getcwd(),'usurped')
-    os.makedirs(output_dir,exist_ok=True)
+    output_dir = get_domain_name_from_url(url) or  make_directory(path='usurped')
     site_mgr = usurpManager(url,output_dir=output_dir,max_depth=max_depth,wait_between_requests=wait_between_requests,operating_system=operating_system, browser=browser, version=version,user_agent=user_agent,website_bot=website_bot)
     site_mgr.main()

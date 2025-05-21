@@ -535,6 +535,7 @@ class _FunctionJavascriptState:
         pulumi.set(self, "trace_level", value)
 
 
+@pulumi.type_token("snowflake:index/functionJavascript:FunctionJavascript")
 class FunctionJavascript(pulumi.CustomResource):
     @overload
     def __init__(__self__,

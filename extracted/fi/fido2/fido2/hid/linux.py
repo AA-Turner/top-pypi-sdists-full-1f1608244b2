@@ -17,16 +17,14 @@
 
 from __future__ import annotations
 
-from .base import HidDescriptor, FileCtapHidConnection, parse_report_descriptor
-
-import glob
 import fcntl
-import struct
-from array import array
-from typing import Set
-
+import glob
 import logging
+import struct
 import sys
+from array import array
+
+from .base import FileCtapHidConnection, HidDescriptor, parse_report_descriptor
 
 # Don't typecheck this file on Windows
 assert sys.platform != "win32"  # nosec
@@ -86,7 +84,7 @@ def get_descriptor(path):
 
 
 # Cache for continuously failing devices
-_failed_cache: Set[str] = set()
+_failed_cache: set[str] = set()
 
 
 def list_descriptors():

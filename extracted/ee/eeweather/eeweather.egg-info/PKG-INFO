@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: eeweather
-Version: 0.3.29
+Version: 0.3.30
 Summary: Weather for Open Energy Efficiency Meter
 Home-page: http://github.com/openeemeter/eeweather
 Author: Phil Ngo
@@ -18,12 +18,14 @@ Requires-Dist: pandas>=1.0.0
 Requires-Dist: pyproj>=1.9.6
 Requires-Dist: requests
 Requires-Dist: shapely
+Requires-Dist: retry
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier
 Dynamic: description
 Dynamic: home-page
 Dynamic: license
+Dynamic: license-file
 Dynamic: requires-dist
 Dynamic: summary
 

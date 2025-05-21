@@ -5500,6 +5500,10 @@ class AWSManagedPolicies(enum.Enum):
     '''
     :stability: experimental
     '''
+    AWSPRIVATE_CA_CONNECTOR_FOR_KUBERNETES_POLICY = "AWSPRIVATE_CA_CONNECTOR_FOR_KUBERNETES_POLICY"
+    '''
+    :stability: experimental
+    '''
 
 
 class LambdaArmFunction(

@@ -271,6 +271,7 @@ class _RowAccessPolicyState:
         pulumi.set(self, "show_outputs", value)
 
 
+@pulumi.type_token("snowflake:index/rowAccessPolicy:RowAccessPolicy")
 class RowAccessPolicy(pulumi.CustomResource):
     @overload
     def __init__(__self__,

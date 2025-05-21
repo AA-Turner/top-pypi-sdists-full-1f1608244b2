@@ -1,17 +1,30 @@
 import asyncio
+import re
 from typing import Coroutine, Any, TypeVar
-import nest_asyncio
+from ._async import allow_nested_run, run
 
 T = TypeVar("T")
 
 
-def run_coroutine_in_appropriate_loop(coro: Coroutine[Any, Any, T]) -> T:
+def is_valid_resource_name(name: str):
+    return re.match(r"^[a-z0-9-]+$", name)
+
+
+def make_valid_resource_name(name: str):
+    return re.sub(r"[^a-z0-9-]", "-", name)
+
+
+def async_to_sync(coro: Coroutine[Any, Any, T]) -> T:
     """
-    Runs a coroutine in the appropriate event loop context and returns its result.
+    Runs a coroutine through greenlet.
+
+    Discovered this PR through: https://github.com/oremanj/greenback/issues/32
+    which led to: https://github.com/ARM-software/devlib/pull/683
+    which led to: https://raw.githubusercontent.com/ARM-software/devlib/refs/heads/master/devlib/utils/asyn.py
+    which I directly copied to _async.py
 
     This handles three cases:
-    1. Inside a running event loop - creates a future and waits for it
-    2. Event loop exists but not running - runs until complete
+    1. Inside a running event loop - allow nested run with greenlet
     3. No event loop available - creates a new one with asyncio.run
 
     Returns:
@@ -19,11 +32,12 @@ def run_coroutine_in_appropriate_loop(coro: Coroutine[Any, Any, T]) -> T:
     """
     # Try to run the coroutine in the current event loop if possible
     try:
-        # only solution I found for running loop inside another loop:
-        # https://github.com/python/cpython/issues/66435#issuecomment-2003904906
-        nest_asyncio.apply()
-        loop = asyncio.get_event_loop()
-        return loop.run_until_complete(coro)
+        # triggers error if no event loop is available
+        asyncio.get_event_loop()
+
+        allow_nested_run(coro)
+        result = run(coro)
+        return result  # type: ignore
     except RuntimeError as e:
         # if "There is no current event loop in thread"
         if "There is no current event loop in thread" in str(e):

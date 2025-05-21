@@ -10,10 +10,10 @@ import os
 import re
 import sys
 from collections import defaultdict
-from typing import Dict, Union
+from typing import Union
 
 from ipfabric import IPFClient
-from ipfabric.scripts.shared import shared_args
+from ipfabric.scripts.shared import shared_args, load_env
 
 try:
     from rich.console import Console
@@ -101,7 +101,8 @@ INT_OPERATORS = {
 }
 
 
-def main() -> Dict[str, Dict[str, Union[str, list]]]:
+def main() -> dict[str, dict[str, Union[str, list]]]:
+    load_env()
     arg_parser = argparse.ArgumentParser(
         description="Search the Inventory > Device table and return the results.",
         formatter_class=argparse.RawTextHelpFormatter,

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any, Callable, Coroutine, Optional, TypedDict
 from psycopg import errors
 from sqlalchemy.exc import OperationalError
 
+from dbos._logger import dbos_logger
 from dbos._utils import GlobalParams
 
 from ._core import P, R, execute_workflow_by_id, start_workflow, start_workflow_async
@@ -56,6 +57,8 @@ class Queue:
         from ._dbos import _get_or_create_dbos_registry
 
         registry = _get_or_create_dbos_registry()
+        if self.name in registry.queue_info_map:
+            dbos_logger.warning(f"Queue {name} has already been declared")
         registry.queue_info_map[self.name] = self
 
     def enqueue(
@@ -95,12 +98,8 @@ def queue_thread(stop_event: threading.Event, dbos: "DBOS") -> None:
                 if not isinstance(
                     e.orig, (errors.SerializationFailure, errors.LockNotAvailable)
                 ):
-                    dbos.logger.warning(
-                        f"Exception encountered in queue thread: {traceback.format_exc()}"
-                    )
-            except Exception:
+                    dbos.logger.warning(f"Exception encountered in queue thread: {e}")
+            except Exception as e:
                 if not stop_event.is_set():
                     # Only print the error if the thread is not stopping
-                    dbos.logger.warning(
-                        f"Exception encountered in queue thread: {traceback.format_exc()}"
-                    )
+                    dbos.logger.warning(f"Exception encountered in queue thread: {e}")

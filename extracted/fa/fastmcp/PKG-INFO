@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: fastmcp
-Version: 2.3.4
+Version: 2.3.5
 Summary: The fast, Pythonic way to build MCP servers.
 Project-URL: Homepage, https://gofastmcp.com
 Project-URL: Repository, https://github.com/jlowin/fastmcp
@@ -19,7 +19,7 @@ Classifier: Typing :: Typed
 Requires-Python: >=3.10
 Requires-Dist: exceptiongroup>=1.2.2
 Requires-Dist: httpx>=0.28.1
-Requires-Dist: mcp<2.0.0,>=1.8.1
+Requires-Dist: mcp<2.0.0,>=1.9.0
 Requires-Dist: openapi-pydantic>=0.5.1
 Requires-Dist: python-dotenv>=1.1.0
 Requires-Dist: rich>=13.9.4
@@ -290,7 +290,7 @@ FastMCP introduces powerful ways to structure and deploy your MCP applications.
 
 ### Proxy Servers
 
-Create a FastMCP server that acts as an intermediary for another local or remote MCP server using `FastMCP.from_client()`. This is especially useful for bridging transports (e.g., remote SSE to local Stdio) or adding a layer of logic to a server you don't control.
+Create a FastMCP server that acts as an intermediary for another local or remote MCP server using `FastMCP.as_proxy()`. This is especially useful for bridging transports (e.g., remote SSE to local Stdio) or adding a layer of logic to a server you don't control.
 
 Learn more in the [**Proxying Documentation**](https://gofastmcp.com/patterns/proxy).
 

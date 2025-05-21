@@ -1,7 +1,7 @@
 r'''
 # `data_okta_app_user_assignments`
 
-Refer to the Terraform Registry for docs: [`data_okta_app_user_assignments`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_user_assignments).
+Refer to the Terraform Registry for docs: [`data_okta_app_user_assignments`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_user_assignments).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaAppUserAssignments(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaAppUserAssignments.DataOktaAppUserAssignments",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_user_assignments okta_app_user_assignments}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_user_assignments okta_app_user_assignments}.'''
 
     def __init__(
         self,
@@ -60,11 +60,11 @@ class DataOktaAppUserAssignments(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_user_assignments okta_app_user_assignments} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_user_assignments okta_app_user_assignments} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param id: ID of the Okta App being queried for groups. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_user_assignments#id DataOktaAppUserAssignments#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param id: ID of the Okta App being queried for groups. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_user_assignments#id DataOktaAppUserAssignments#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -103,7 +103,7 @@ class DataOktaAppUserAssignments(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaAppUserAssignments to import.
-        :param import_from_id: The id of the existing DataOktaAppUserAssignments that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_user_assignments#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaAppUserAssignments that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_user_assignments#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaAppUserAssignments to import is found.
         '''
         if __debug__:
@@ -185,7 +185,7 @@ class DataOktaAppUserAssignmentsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param id: ID of the Okta App being queried for groups. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_user_assignments#id DataOktaAppUserAssignments#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param id: ID of the Okta App being queried for groups. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_user_assignments#id DataOktaAppUserAssignments#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -285,7 +285,7 @@ class DataOktaAppUserAssignmentsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def id(self) -> builtins.str:
         '''ID of the Okta App being queried for groups.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/app_user_assignments#id DataOktaAppUserAssignments#id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/app_user_assignments#id DataOktaAppUserAssignments#id}
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

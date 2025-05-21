@@ -1,6 +1,7 @@
 """
 The child admin displays the change/delete view of the subclass model.
 """
+
 import inspect
 
 from django.contrib import admin
@@ -90,10 +91,10 @@ class PolymorphicChildModelAdmin(admin.ModelAdmin):
 
         return [
             f"admin/{app_label}/{opts.object_name.lower()}/change_form.html",
-            "admin/%s/change_form.html" % app_label,
+            f"admin/{app_label}/change_form.html",
             # Added:
-            "admin/%s/%s/change_form.html" % (base_app_label, base_opts.object_name.lower()),
-            "admin/%s/change_form.html" % base_app_label,
+            f"admin/{base_app_label}/{base_opts.object_name.lower()}/change_form.html",
+            f"admin/{base_app_label}/change_form.html",
             "admin/polymorphic/change_form.html",
             "admin/change_form.html",
         ]
@@ -108,12 +109,11 @@ class PolymorphicChildModelAdmin(admin.ModelAdmin):
         base_app_label = base_opts.app_label
 
         return [
-            "admin/%s/%s/delete_confirmation.html" % (app_label, opts.object_name.lower()),
-            "admin/%s/delete_confirmation.html" % app_label,
+            f"admin/{app_label}/{opts.object_name.lower()}/delete_confirmation.html",
+            f"admin/{app_label}/delete_confirmation.html",
             # Added:
-            "admin/%s/%s/delete_confirmation.html"
-            % (base_app_label, base_opts.object_name.lower()),
-            "admin/%s/delete_confirmation.html" % base_app_label,
+            f"admin/{base_app_label}/{base_opts.object_name.lower()}/delete_confirmation.html",
+            f"admin/{base_app_label}/delete_confirmation.html",
             "admin/polymorphic/delete_confirmation.html",
             "admin/delete_confirmation.html",
         ]
@@ -129,10 +129,10 @@ class PolymorphicChildModelAdmin(admin.ModelAdmin):
 
         return [
             f"admin/{app_label}/{opts.object_name.lower()}/object_history.html",
-            "admin/%s/object_history.html" % app_label,
+            f"admin/{app_label}/object_history.html",
             # Added:
-            "admin/%s/%s/object_history.html" % (base_app_label, base_opts.object_name.lower()),
-            "admin/%s/object_history.html" % base_app_label,
+            f"admin/{base_app_label}/{base_opts.object_name.lower()}/object_history.html",
+            f"admin/{base_app_label}/object_history.html",
             "admin/polymorphic/object_history.html",
             "admin/object_history.html",
         ]
@@ -228,8 +228,17 @@ class PolymorphicChildModelAdmin(admin.ModelAdmin):
         # Find which fields are not part of the common fields.
         for fieldset in self.get_base_fieldsets(request, obj):
             for field in fieldset[1]["fields"]:
-                try:
-                    subclass_fields.remove(field)
-                except ValueError:
-                    pass  # field not found in form, Django will raise exception later.
+                # multiple elements in single line
+                if isinstance(field, tuple):
+                    for line_field in field:
+                        try:
+                            subclass_fields.remove(line_field)
+                        except ValueError:
+                            pass  # field not found in form, Django will raise exception later.
+                else:
+                    # regular one-element-per-line
+                    try:
+                        subclass_fields.remove(field)
+                    except ValueError:
+                        pass  # field not found in form, Django will raise exception later.
         return subclass_fields

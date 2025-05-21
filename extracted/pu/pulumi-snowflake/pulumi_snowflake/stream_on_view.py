@@ -396,6 +396,7 @@ class _StreamOnViewState:
         pulumi.set(self, "view", value)
 
 
+@pulumi.type_token("snowflake:index/streamOnView:StreamOnView")
 class StreamOnView(pulumi.CustomResource):
     @overload
     def __init__(__self__,

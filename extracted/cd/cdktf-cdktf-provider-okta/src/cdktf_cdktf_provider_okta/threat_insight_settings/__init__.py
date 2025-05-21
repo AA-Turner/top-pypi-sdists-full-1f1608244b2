@@ -1,7 +1,7 @@
 r'''
 # `okta_threat_insight_settings`
 
-Refer to the Terraform Registry for docs: [`okta_threat_insight_settings`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/threat_insight_settings).
+Refer to the Terraform Registry for docs: [`okta_threat_insight_settings`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/threat_insight_settings).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class ThreatInsightSettings(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.threatInsightSettings.ThreatInsightSettings",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/threat_insight_settings okta_threat_insight_settings}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/threat_insight_settings okta_threat_insight_settings}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class ThreatInsightSettings(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/threat_insight_settings okta_threat_insight_settings} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/threat_insight_settings okta_threat_insight_settings} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param action: Specifies how Okta responds to authentication requests from suspicious IPs. Valid values are ``none``, ``audit``, or ``block``. A value of ``none`` indicates that ThreatInsight is disabled. A value of ``audit`` indicates that Okta logs suspicious requests in the System Log. A value of ``block`` indicates that Okta logs suspicious requests in the System Log and blocks the requests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/threat_insight_settings#action ThreatInsightSettings#action}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/threat_insight_settings#id ThreatInsightSettings#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param network_excludes: Accepts a list of Network Zone IDs. Can only accept zones of ``IP`` type. IPs in the excluded Network Zones aren't logged or blocked by Okta ThreatInsight and proceed to Sign On rules evaluation. This ensures that traffic from known, trusted IPs isn't accidentally logged or blocked. The ordering of the network zone is not guarantee from the API sides Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/threat_insight_settings#network_excludes ThreatInsightSettings#network_excludes}
+        :param action: Specifies how Okta responds to authentication requests from suspicious IPs. Valid values are ``none``, ``audit``, or ``block``. A value of ``none`` indicates that ThreatInsight is disabled. A value of ``audit`` indicates that Okta logs suspicious requests in the System Log. A value of ``block`` indicates that Okta logs suspicious requests in the System Log and blocks the requests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/threat_insight_settings#action ThreatInsightSettings#action}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/threat_insight_settings#id ThreatInsightSettings#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param network_excludes: Accepts a list of Network Zone IDs. Can only accept zones of ``IP`` type. IPs in the excluded Network Zones aren't logged or blocked by Okta ThreatInsight and proceed to Sign On rules evaluation. This ensures that traffic from known, trusted IPs isn't accidentally logged or blocked. The ordering of the network zone is not guarantee from the API sides Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/threat_insight_settings#network_excludes ThreatInsightSettings#network_excludes}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class ThreatInsightSettings(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the ThreatInsightSettings to import.
-        :param import_from_id: The id of the existing ThreatInsightSettings that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/threat_insight_settings#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing ThreatInsightSettings that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/threat_insight_settings#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the ThreatInsightSettings to import is found.
         '''
         if __debug__:
@@ -232,9 +232,9 @@ class ThreatInsightSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param action: Specifies how Okta responds to authentication requests from suspicious IPs. Valid values are ``none``, ``audit``, or ``block``. A value of ``none`` indicates that ThreatInsight is disabled. A value of ``audit`` indicates that Okta logs suspicious requests in the System Log. A value of ``block`` indicates that Okta logs suspicious requests in the System Log and blocks the requests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/threat_insight_settings#action ThreatInsightSettings#action}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/threat_insight_settings#id ThreatInsightSettings#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param network_excludes: Accepts a list of Network Zone IDs. Can only accept zones of ``IP`` type. IPs in the excluded Network Zones aren't logged or blocked by Okta ThreatInsight and proceed to Sign On rules evaluation. This ensures that traffic from known, trusted IPs isn't accidentally logged or blocked. The ordering of the network zone is not guarantee from the API sides Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/threat_insight_settings#network_excludes ThreatInsightSettings#network_excludes}
+        :param action: Specifies how Okta responds to authentication requests from suspicious IPs. Valid values are ``none``, ``audit``, or ``block``. A value of ``none`` indicates that ThreatInsight is disabled. A value of ``audit`` indicates that Okta logs suspicious requests in the System Log. A value of ``block`` indicates that Okta logs suspicious requests in the System Log and blocks the requests. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/threat_insight_settings#action ThreatInsightSettings#action}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/threat_insight_settings#id ThreatInsightSettings#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param network_excludes: Accepts a list of Network Zone IDs. Can only accept zones of ``IP`` type. IPs in the excluded Network Zones aren't logged or blocked by Okta ThreatInsight and proceed to Sign On rules evaluation. This ensures that traffic from known, trusted IPs isn't accidentally logged or blocked. The ordering of the network zone is not guarantee from the API sides Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/threat_insight_settings#network_excludes ThreatInsightSettings#network_excludes}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -342,7 +342,7 @@ class ThreatInsightSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Valid values are ``none``, ``audit``, or ``block``. A value of ``none`` indicates that ThreatInsight is disabled. A value of ``audit`` indicates that Okta logs suspicious requests in the System Log. A value of ``block`` indicates that Okta logs suspicious requests in the System Log and blocks the requests.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/threat_insight_settings#action ThreatInsightSettings#action}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/threat_insight_settings#action ThreatInsightSettings#action}
         '''
         result = self._values.get("action")
         assert result is not None, "Required property 'action' is missing"
@@ -350,7 +350,7 @@ class ThreatInsightSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/threat_insight_settings#id ThreatInsightSettings#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/threat_insight_settings#id ThreatInsightSettings#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -364,7 +364,7 @@ class ThreatInsightSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Can only accept zones of ``IP`` type. IPs in the excluded Network Zones aren't logged or blocked by Okta ThreatInsight and proceed to Sign On rules evaluation. This ensures that traffic from known, trusted IPs isn't accidentally logged or blocked. The ordering of the network zone is not guarantee from the API sides
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/threat_insight_settings#network_excludes ThreatInsightSettings#network_excludes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/threat_insight_settings#network_excludes ThreatInsightSettings#network_excludes}
         '''
         result = self._values.get("network_excludes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)

@@ -1,20 +1,20 @@
 import logging
 import string
-from typing import Any, Optional, List, Dict, Union, Literal
+from typing import Any, Optional, Union, Literal
 
 from httpx import HTTPStatusError
 from pydantic import BaseModel, Field, PrivateAttr
 
 from ipfabric.models.oas import Endpoint
 from ipfabric.models.rbac import Role, Policy
-from ipfabric.tools import valid_slug, raise_for_status
+from ipfabric.tools.shared import valid_slug, raise_for_status
 
 logger = logging.getLogger("ipfabric")
 
 
 class Policies(BaseModel):
     client: Any = Field(exclude=True)
-    _policies: Optional[List[Policy]] = PrivateAttr(None)
+    _policies: Optional[list[Policy]] = PrivateAttr(None)
 
     def model_post_init(self, __context: Any) -> None:
         self.update()
@@ -27,14 +27,14 @@ class Policies(BaseModel):
         return self._policies
 
     @property
-    def policies_by_id(self) -> Dict[str, Policy]:
+    def policies_by_id(self) -> dict[str, Policy]:
         return {_.policy_id: _ for _ in self.policies}
 
     @property
-    def policies_by_name(self) -> Dict[str, Policy]:
+    def policies_by_name(self) -> dict[str, Policy]:
         return {_.name: _ for _ in self.policies}
 
-    def get_policies(self, policy_name: str = None) -> Union[List[Policy], Policy, None]:
+    def get_policies(self, policy_name: str = None) -> Union[list[Policy], Policy, None]:
         """
         Gets all policies or filters on one of the options.
         :param policy_name: str: Case Sensitive Policy Name to filter
@@ -52,7 +52,7 @@ class Policies(BaseModel):
 
     def search_policies_for_endpoint(
         self, api_endpoint: Union[str, Endpoint], method: Literal["POST", "GET", "DELETE", "PATCH", "PUT"] = "POST"
-    ) -> List[Policy]:
+    ) -> list[Policy]:
         """Takes an API endpoint and returns all related policies.
         Args:
             api_endpoint: API table endpoint, SDK Endpoint object, or Policy UUID.
@@ -100,7 +100,7 @@ class Policies(BaseModel):
         self,
         name: str,
         description: str,
-        api_scope_ids: List[Union[int, str, Endpoint]] = None,
+        api_scope_ids: list[Union[int, str, Endpoint]] = None,
         attribute_filters: dict = None,
     ) -> Policy:
         fmt_api_scopes = self._check_policy(name, description, api_scope_ids, attribute_filters)
@@ -120,7 +120,7 @@ class Policies(BaseModel):
         self,
         name: str,
         description: str,
-        api_scope_ids: List[Union[int, str, Endpoint]] = None,
+        api_scope_ids: list[Union[int, str, Endpoint]] = None,
         attribute_filters: dict = None,
     ) -> Policy:
         policy = self._create_policy(name, description, api_scope_ids, attribute_filters)
@@ -128,12 +128,12 @@ class Policies(BaseModel):
         return policy
 
     def create_policies(
-        self, policies: List[Dict[str, Union[str, dict, List[Union[int, str, Endpoint]]]]]
-    ) -> Dict[str, Policy]:
+        self, policies: list[dict[str, Union[str, dict, list[Union[int, str, Endpoint]]]]]
+    ) -> dict[str, Policy]:
         """Create multiple policies.
 
         Args:
-            policies: List of dicts [{name: str, description: str, api_scope_ids: List[Union[int, str, Endpoint]]}
+            policies: List of dicts [{name: str, description: str, api_scope_ids: list[Union[int, str, Endpoint]]}
                                     {name: str, description: str, attribute_filters: dict}]
 
         Returns: Dict of created policies by name.
@@ -171,7 +171,7 @@ class Policies(BaseModel):
         self.update()
         return _
 
-    def delete_policies(self, policies: List[Union[int, str, Policy]]) -> Dict[str, bool]:
+    def delete_policies(self, policies: list[Union[int, str, Policy]]) -> dict[str, bool]:
         deleted = dict()
         for policy in policies:
             policy_id = policy.policy_id if isinstance(policy, Policy) else str(policy)
@@ -185,7 +185,7 @@ class Policies(BaseModel):
     def update_policy(  # noqa: C901
         self,
         policy: Union[int, str, Policy],
-        api_scope_ids: List[Union[int, str, Endpoint]] = None,
+        api_scope_ids: list[Union[int, str, Endpoint]] = None,
         attribute_filters: dict = None,
         name: str = None,
         description: str = None,
@@ -223,7 +223,7 @@ class Policies(BaseModel):
 
 class Roles(BaseModel):
     client: Any
-    _roles: Optional[List[Role]] = None
+    _roles: Optional[list[Role]] = None
     _policies: Optional[Policies] = PrivateAttr(None)
 
     def model_post_init(self, __context: Any) -> None:
@@ -246,7 +246,7 @@ class Roles(BaseModel):
     def roles_by_name(self):
         return {r.name: r for r in self.roles}
 
-    def get_roles(self, role_name: str = None) -> [List[Role], Role, None]:
+    def get_roles(self, role_name: str = None) -> [list[Role], Role, None]:
         """
         Gets all roles or filters on one of the options.
         :param role_name: str: Case Sensitive Role Name to filter
@@ -264,7 +264,7 @@ class Roles(BaseModel):
             return roles.pop() if roles else None
         return roles
 
-    def search_roles_for_policy(self, policy_name: str = None, policy_id: Union[str, int] = None) -> List[Role]:
+    def search_roles_for_policy(self, policy_name: str = None, policy_id: Union[str, int] = None) -> list[Role]:
         if policy_name and not self._policies:
             raise ValueError(self.client._api_insuf_rights + 'on POST "/tables/policies".')
         if policy_name:
@@ -276,7 +276,7 @@ class Roles(BaseModel):
 
     def search_roles_for_endpoint(
         self, api_endpoint: Union[str, Endpoint], method: Literal["POST", "GET", "DELETE", "PATCH", "PUT"] = "POST"
-    ) -> List[Role]:
+    ) -> list[Role]:
         """Takes an API endpoint and returns all related roles.
         Args:
             api_endpoint: API table endpoint, SDK Endpoint object, or Policy UUID.
@@ -293,7 +293,7 @@ class Roles(BaseModel):
             roles.update(set(self.search_roles_for_policy(policy_id=p.policy_id)))
         return list(roles)
 
-    def _create_role(self, name: str, description: str, policy_ids: List[Union[int, str, Policy]]) -> Role:
+    def _create_role(self, name: str, description: str, policy_ids: list[Union[int, str, Policy]]) -> Role:
         payload = {
             "name": valid_slug(name),
             "description": description,
@@ -302,16 +302,16 @@ class Roles(BaseModel):
         raise_for_status(self.client.post("roles", json=payload))
         return self.get_roles(name)
 
-    def create_role(self, name: str, description: str, policy_ids: List[Union[int, str, Policy]]) -> Role:
+    def create_role(self, name: str, description: str, policy_ids: list[Union[int, str, Policy]]) -> Role:
         role = self._create_role(name, description, policy_ids)
         self.update()
         return role
 
-    def create_roles(self, roles: List[Dict[str, Union[str, List[Union[int, str, Policy]]]]]) -> Dict[str, Role]:
+    def create_roles(self, roles: list[dict[str, Union[str, list[Union[int, str, Policy]]]]]) -> dict[str, Role]:
         """Create multiple roles.
 
         Args:
-            roles: List of dicts [{name: str, description: str, policy_ids: List[Union[int, str, Policy]]}]
+            roles: List of dicts [{name: str, description: str, policy_ids: list[Union[int, str, Policy]]}]
 
         Returns: Dict of created roles by name.
         """
@@ -352,7 +352,7 @@ class Roles(BaseModel):
         self.update()
         return _
 
-    def delete_roles(self, roles: List[Union[int, str, Role]]) -> Dict[str, bool]:
+    def delete_roles(self, roles: list[Union[int, str, Role]]) -> dict[str, bool]:
         deleted = dict()
         for role in roles:
             role_id = role.role_id if isinstance(role, Role) else str(role)
@@ -365,7 +365,7 @@ class Roles(BaseModel):
     def update_role(
         self,
         role: Union[int, str, Role],
-        policy_ids: List[Union[int, str, Policy]] = None,
+        policy_ids: list[Union[int, str, Policy]] = None,
         name: str = None,
         description: str = None,
         replace: bool = False,

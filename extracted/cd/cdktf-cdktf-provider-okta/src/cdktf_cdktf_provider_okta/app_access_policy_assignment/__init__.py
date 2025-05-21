@@ -1,7 +1,7 @@
 r'''
 # `okta_app_access_policy_assignment`
 
-Refer to the Terraform Registry for docs: [`okta_app_access_policy_assignment`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_access_policy_assignment).
+Refer to the Terraform Registry for docs: [`okta_app_access_policy_assignment`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_access_policy_assignment).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AppAccessPolicyAssignment(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.appAccessPolicyAssignment.AppAccessPolicyAssignment",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_access_policy_assignment okta_app_access_policy_assignment}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_access_policy_assignment okta_app_access_policy_assignment}.'''
 
     def __init__(
         self,
@@ -61,12 +61,12 @@ class AppAccessPolicyAssignment(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_access_policy_assignment okta_app_access_policy_assignment} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_access_policy_assignment okta_app_access_policy_assignment} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param app_id: The application ID; this value is immutable and can not be updated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_access_policy_assignment#app_id AppAccessPolicyAssignment#app_id}
-        :param policy_id: The access policy ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_access_policy_assignment#policy_id AppAccessPolicyAssignment#policy_id}
+        :param app_id: The application ID; this value is immutable and can not be updated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_access_policy_assignment#app_id AppAccessPolicyAssignment#app_id}
+        :param policy_id: The access policy ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_access_policy_assignment#policy_id AppAccessPolicyAssignment#policy_id}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -106,7 +106,7 @@ class AppAccessPolicyAssignment(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AppAccessPolicyAssignment to import.
-        :param import_from_id: The id of the existing AppAccessPolicyAssignment that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_access_policy_assignment#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AppAccessPolicyAssignment that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_access_policy_assignment#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AppAccessPolicyAssignment to import is found.
         '''
         if __debug__:
@@ -207,8 +207,8 @@ class AppAccessPolicyAssignmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param app_id: The application ID; this value is immutable and can not be updated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_access_policy_assignment#app_id AppAccessPolicyAssignment#app_id}
-        :param policy_id: The access policy ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_access_policy_assignment#policy_id AppAccessPolicyAssignment#policy_id}
+        :param app_id: The application ID; this value is immutable and can not be updated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_access_policy_assignment#app_id AppAccessPolicyAssignment#app_id}
+        :param policy_id: The access policy ID. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_access_policy_assignment#policy_id AppAccessPolicyAssignment#policy_id}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -310,7 +310,7 @@ class AppAccessPolicyAssignmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def app_id(self) -> builtins.str:
         '''The application ID; this value is immutable and can not be updated.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_access_policy_assignment#app_id AppAccessPolicyAssignment#app_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_access_policy_assignment#app_id AppAccessPolicyAssignment#app_id}
         '''
         result = self._values.get("app_id")
         assert result is not None, "Required property 'app_id' is missing"
@@ -320,7 +320,7 @@ class AppAccessPolicyAssignmentConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def policy_id(self) -> builtins.str:
         '''The access policy ID.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_access_policy_assignment#policy_id AppAccessPolicyAssignment#policy_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_access_policy_assignment#policy_id AppAccessPolicyAssignment#policy_id}
         '''
         result = self._values.get("policy_id")
         assert result is not None, "Required property 'policy_id' is missing"

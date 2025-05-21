@@ -1,7 +1,7 @@
 r'''
 # `data_okta_network_zone`
 
-Refer to the Terraform Registry for docs: [`data_okta_network_zone`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone).
+Refer to the Terraform Registry for docs: [`data_okta_network_zone`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaNetworkZone(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaNetworkZone.DataOktaNetworkZone",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone okta_network_zone}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone okta_network_zone}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class DataOktaNetworkZone(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone okta_network_zone} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone okta_network_zone} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param dynamic_locations_exclude: Array of locations ISO-3166-1(2) excluded. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#dynamic_locations_exclude DataOktaNetworkZone#dynamic_locations_exclude}
-        :param id: ID of the network zone to retrieve, conflicts with ``name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#id DataOktaNetworkZone#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param ip_service_categories_exclude: List of ip service excluded. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#ip_service_categories_exclude DataOktaNetworkZone#ip_service_categories_exclude}
-        :param ip_service_categories_include: List of ip service included. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#ip_service_categories_include DataOktaNetworkZone#ip_service_categories_include}
-        :param name: Name of the network zone to retrieve, conflicts with ``id``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#name DataOktaNetworkZone#name}
+        :param dynamic_locations_exclude: Array of locations ISO-3166-1(2) excluded. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#dynamic_locations_exclude DataOktaNetworkZone#dynamic_locations_exclude}
+        :param id: ID of the network zone to retrieve, conflicts with ``name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#id DataOktaNetworkZone#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param ip_service_categories_exclude: List of ip service excluded. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#ip_service_categories_exclude DataOktaNetworkZone#ip_service_categories_exclude}
+        :param ip_service_categories_include: List of ip service included. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#ip_service_categories_include DataOktaNetworkZone#ip_service_categories_include}
+        :param name: Name of the network zone to retrieve, conflicts with ``id``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#name DataOktaNetworkZone#name}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class DataOktaNetworkZone(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaNetworkZone to import.
-        :param import_from_id: The id of the existing DataOktaNetworkZone that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaNetworkZone that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaNetworkZone to import is found.
         '''
         if __debug__:
@@ -334,11 +334,11 @@ class DataOktaNetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param dynamic_locations_exclude: Array of locations ISO-3166-1(2) excluded. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#dynamic_locations_exclude DataOktaNetworkZone#dynamic_locations_exclude}
-        :param id: ID of the network zone to retrieve, conflicts with ``name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#id DataOktaNetworkZone#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param ip_service_categories_exclude: List of ip service excluded. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#ip_service_categories_exclude DataOktaNetworkZone#ip_service_categories_exclude}
-        :param ip_service_categories_include: List of ip service included. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#ip_service_categories_include DataOktaNetworkZone#ip_service_categories_include}
-        :param name: Name of the network zone to retrieve, conflicts with ``id``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#name DataOktaNetworkZone#name}
+        :param dynamic_locations_exclude: Array of locations ISO-3166-1(2) excluded. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#dynamic_locations_exclude DataOktaNetworkZone#dynamic_locations_exclude}
+        :param id: ID of the network zone to retrieve, conflicts with ``name``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#id DataOktaNetworkZone#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param ip_service_categories_exclude: List of ip service excluded. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#ip_service_categories_exclude DataOktaNetworkZone#ip_service_categories_exclude}
+        :param ip_service_categories_include: List of ip service included. Use with type ``DYNAMIC_V2``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#ip_service_categories_include DataOktaNetworkZone#ip_service_categories_include}
+        :param name: Name of the network zone to retrieve, conflicts with ``id``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#name DataOktaNetworkZone#name}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -450,7 +450,7 @@ class DataOktaNetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def dynamic_locations_exclude(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Array of locations ISO-3166-1(2) excluded. Format code: countryCode OR countryCode-regionCode. Use with type ``DYNAMIC_V2``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#dynamic_locations_exclude DataOktaNetworkZone#dynamic_locations_exclude}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#dynamic_locations_exclude DataOktaNetworkZone#dynamic_locations_exclude}
         '''
         result = self._values.get("dynamic_locations_exclude")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -459,7 +459,7 @@ class DataOktaNetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def id(self) -> typing.Optional[builtins.str]:
         '''ID of the network zone to retrieve, conflicts with ``name``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#id DataOktaNetworkZone#id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#id DataOktaNetworkZone#id}
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -473,7 +473,7 @@ class DataOktaNetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.List[builtins.str]]:
         '''List of ip service excluded. Use with type ``DYNAMIC_V2``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#ip_service_categories_exclude DataOktaNetworkZone#ip_service_categories_exclude}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#ip_service_categories_exclude DataOktaNetworkZone#ip_service_categories_exclude}
         '''
         result = self._values.get("ip_service_categories_exclude")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -484,7 +484,7 @@ class DataOktaNetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.List[builtins.str]]:
         '''List of ip service included. Use with type ``DYNAMIC_V2``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#ip_service_categories_include DataOktaNetworkZone#ip_service_categories_include}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#ip_service_categories_include DataOktaNetworkZone#ip_service_categories_include}
         '''
         result = self._values.get("ip_service_categories_include")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -493,7 +493,7 @@ class DataOktaNetworkZoneConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> typing.Optional[builtins.str]:
         '''Name of the network zone to retrieve, conflicts with ``id``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/network_zone#name DataOktaNetworkZone#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/network_zone#name DataOktaNetworkZone#name}
         '''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)

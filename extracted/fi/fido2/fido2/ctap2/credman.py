@@ -27,6 +27,11 @@
 
 from __future__ import annotations
 
+import logging
+import struct
+from enum import IntEnum, unique
+from typing import Any, Mapping, Sequence
+
 from .. import cbor
 from ..ctap import CtapError
 from ..webauthn import (
@@ -36,12 +41,6 @@ from ..webauthn import (
 )
 from .base import Ctap2, Info
 from .pin import PinProtocol, _PinUv
-
-from enum import IntEnum, unique
-from typing import Mapping, Sequence, Any
-
-import struct
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -98,6 +97,10 @@ class CredentialManagement:
     def is_update_supported(info: Info) -> bool:
         # Not supported in credentialMgmtPreview
         return bool(info.options.get("credMgmt"))
+
+    @staticmethod
+    def is_readonly_supported(info: Info) -> bool:
+        return bool(info.options.get("perCredMgmtRO"))
 
     def __init__(
         self,

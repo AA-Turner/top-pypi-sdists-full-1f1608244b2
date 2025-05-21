@@ -605,6 +605,7 @@ class _ExternalFunctionState:
         pulumi.set(self, "url_of_proxy_and_resource", value)
 
 
+@pulumi.type_token("snowflake:index/externalFunction:ExternalFunction")
 class ExternalFunction(pulumi.CustomResource):
     @overload
     def __init__(__self__,

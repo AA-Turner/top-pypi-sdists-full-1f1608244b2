@@ -1,7 +1,7 @@
 r'''
 # `okta_policy_profile_enrollment_apps`
 
-Refer to the Terraform Registry for docs: [`okta_policy_profile_enrollment_apps`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment_apps).
+Refer to the Terraform Registry for docs: [`okta_policy_profile_enrollment_apps`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment_apps).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class PolicyProfileEnrollmentApps(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.policyProfileEnrollmentApps.PolicyProfileEnrollmentApps",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment_apps okta_policy_profile_enrollment_apps}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment_apps okta_policy_profile_enrollment_apps}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class PolicyProfileEnrollmentApps(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment_apps okta_policy_profile_enrollment_apps} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment_apps okta_policy_profile_enrollment_apps} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param policy_id: ID of the enrollment policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment_apps#policy_id PolicyProfileEnrollmentApps#policy_id}
-        :param apps: List of app IDs to be added to this policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment_apps#apps PolicyProfileEnrollmentApps#apps}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment_apps#id PolicyProfileEnrollmentApps#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param policy_id: ID of the enrollment policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment_apps#policy_id PolicyProfileEnrollmentApps#policy_id}
+        :param apps: List of app IDs to be added to this policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment_apps#apps PolicyProfileEnrollmentApps#apps}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment_apps#id PolicyProfileEnrollmentApps#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class PolicyProfileEnrollmentApps(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the PolicyProfileEnrollmentApps to import.
-        :param import_from_id: The id of the existing PolicyProfileEnrollmentApps that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment_apps#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing PolicyProfileEnrollmentApps that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment_apps#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the PolicyProfileEnrollmentApps to import is found.
         '''
         if __debug__:
@@ -237,9 +237,9 @@ class PolicyProfileEnrollmentAppsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param policy_id: ID of the enrollment policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment_apps#policy_id PolicyProfileEnrollmentApps#policy_id}
-        :param apps: List of app IDs to be added to this policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment_apps#apps PolicyProfileEnrollmentApps#apps}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment_apps#id PolicyProfileEnrollmentApps#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param policy_id: ID of the enrollment policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment_apps#policy_id PolicyProfileEnrollmentApps#policy_id}
+        :param apps: List of app IDs to be added to this policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment_apps#apps PolicyProfileEnrollmentApps#apps}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment_apps#id PolicyProfileEnrollmentApps#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -345,7 +345,7 @@ class PolicyProfileEnrollmentAppsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def policy_id(self) -> builtins.str:
         '''ID of the enrollment policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment_apps#policy_id PolicyProfileEnrollmentApps#policy_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment_apps#policy_id PolicyProfileEnrollmentApps#policy_id}
         '''
         result = self._values.get("policy_id")
         assert result is not None, "Required property 'policy_id' is missing"
@@ -355,14 +355,14 @@ class PolicyProfileEnrollmentAppsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def apps(self) -> typing.Optional[typing.List[builtins.str]]:
         '''List of app IDs to be added to this policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment_apps#apps PolicyProfileEnrollmentApps#apps}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment_apps#apps PolicyProfileEnrollmentApps#apps}
         '''
         result = self._values.get("apps")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_profile_enrollment_apps#id PolicyProfileEnrollmentApps#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_profile_enrollment_apps#id PolicyProfileEnrollmentApps#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

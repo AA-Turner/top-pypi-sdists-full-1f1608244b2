@@ -146,6 +146,7 @@ def get_step_breakdown_table_args_for_tpu(ipa):
   step_time_summary = ipa.step_time_summary
   input_percent_summary = ipa.input_percent_summary
   custom_properties = {
+      "hardware_type": ipa.hardware_type,
       "steptime_ms_average": "{:.1f}".format(step_time_summary.average),
       "steptime_ms_standard_deviation": "{:.1f}".format(
           step_time_summary.standard_deviation
@@ -240,7 +241,7 @@ def get_step_breakdown_table_args(ipa):
   """
 
   table_description = [
-      ("stepname", "string", "Step Name"),
+      ("stepnum", "number", "Step Number"),
       ("deviceComputeTimeMs", "number", "Device compute"),
       ("deviceToDeviceTimeMs", "number", "Device to device"),
       ("deviceCollectivesTimeMs", "number", "Device collectives"),
@@ -291,7 +292,7 @@ def get_step_breakdown_table_args(ipa):
                    details.device_compute_ms)
 
     row = [
-        details.step_name,
+        details.step_number,
         details.device_compute_ms,
         details.device_to_device_ms,
         details.device_collectives_ms,

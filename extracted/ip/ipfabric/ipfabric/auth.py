@@ -4,25 +4,26 @@ import sys
 from datetime import datetime, timezone
 from http.cookiejar import CookieJar
 from importlib import metadata
+from ssl import SSLContext
 from time import sleep
-from typing import Optional, Union, Generator, Any, Type, Tuple, Literal, Mapping, List, Dict
+from typing import Optional, Union, Generator, Any, Type, Literal, Mapping
 
 import jwt
 from httpx import Client, BaseTransport, URL, Request, Response, Auth, Timeout, post, Proxy
 from httpx._client import EventHook
-from httpx._types import CertTypes, VerifyTypes, URLTypes
+from httpx._types import CertTypes, URLTypes
 from packaging.version import Version
 from pydantic import field_validator, Field, AliasChoices, PrivateAttr, InstanceOf
 from pydantic_settings import BaseSettings, SettingsConfigDict, PydanticBaseSettingsSource, InitSettingsSource
 
-from ipfabric.tools import raise_for_status, valid_snapshot
+from ipfabric.tools.shared import raise_for_status, valid_snapshot
 
 logger = logging.getLogger("ipfabric")
 
 RE_VERSION = re.compile(r"v?(\d(\.\d*)?)")
 ProxyTypes = Union[None, URLTypes, InstanceOf[Proxy]]
 TimeoutTypes = Union[
-    Optional[float], Tuple[Optional[float], Optional[float], Optional[float], Optional[float]], Timeout, None
+    Optional[float], tuple[Optional[float], Optional[float], Optional[float], Optional[float]], Timeout, None
 ]
 
 
@@ -44,7 +45,7 @@ class RateLimiter:
             version = response.url.path.split("/")[2]
             if version == self.os_api_version:
                 logger.warning(
-                    f"API endpoint '{response.url.path}' is deprecated and will be removed in the next major release."
+                    f"API endpoint '{response.url.path}' has deprecation header set and will be removed in a future release."
                 )
             else:
                 logger.info(
@@ -98,7 +99,7 @@ class AccessToken(Auth, RateLimiter):
         username: str,
         password: str,
         base_url: URL,
-        verify: VerifyTypes,
+        verify: Optional[Union[SSLContext, str, bool]],
         api_version: str = None,
     ):
         super().__init__(api_version)
@@ -120,7 +121,9 @@ class AccessToken(Auth, RateLimiter):
                 yield request
         return response
 
-    def _login(self, username: str, password: str, base_url: URL, verify: VerifyTypes) -> None:
+    def _login(
+        self, username: str, password: str, base_url: URL, verify: Optional[Union[SSLContext, str, bool]]
+    ) -> None:
         raise_for_status(
             post(
                 base_url.join("auth/login"),
@@ -132,7 +135,7 @@ class AccessToken(Auth, RateLimiter):
 
 
 class MyInitSettingsSource(InitSettingsSource):
-    def __init__(self, settings_cls, init_kwargs: Dict[str, Any]):
+    def __init__(self, settings_cls, init_kwargs: dict[str, Any]):
         timeout = init_kwargs.pop("timeout", "DEFAULT")
         init_kwargs = {k: v for k, v in init_kwargs.items() if v is not None}
         if timeout != "DEFAULT":
@@ -150,18 +153,16 @@ class Setup(BaseSettings):
     token: Optional[str] = None
     username: Optional[str] = None
     password: Optional[str] = None
-    snapshot_id: Optional[Union[str, None]] = Field(
-        "$last", validation_alias=AliasChoices("snapshot_id", "ipf_snapshot")
-    )
-    verify: Optional[VerifyTypes] = True
+    snapshot_id: Union[str, None] = Field("$last", validation_alias=AliasChoices("snapshot_id", "ipf_snapshot"))
+    verify: Union[SSLContext, bool, str] = True
     timeout: Union[TimeoutTypes, Literal["DEFAULT"]] = Timeout(timeout=5.0)
     nvd_api_key: Optional[str] = Field(None, alias="nvd_api_key")
-    debug: Optional[bool] = False
-    http2: Optional[bool] = True
+    debug: bool = False
+    http2: bool = True
     proxy: Optional[Union[ProxyTypes, None]] = None
     mounts: Optional[Mapping[str, Optional[BaseTransport]]] = None
     cert: Optional[Union[CertTypes, None]] = None
-    event_hooks: Optional[Mapping[str, List[EventHook]]] = None
+    event_hooks: Optional[Mapping[str, list[EventHook]]] = None
     _cookie_jar: CookieJar = PrivateAttr(default_factory=CookieJar)
     client: Optional[Client] = Field(None, exclude=True)
     os_version: Optional[str] = Field(None)
@@ -176,7 +177,7 @@ class Setup(BaseSettings):
         env_settings: PydanticBaseSettingsSource,
         dotenv_settings: PydanticBaseSettingsSource,
         file_secret_settings: PydanticBaseSettingsSource,
-    ) -> Tuple[PydanticBaseSettingsSource, ...]:
+    ) -> tuple[PydanticBaseSettingsSource, ...]:
         return (
             MyInitSettingsSource(settings_cls, init_settings.init_kwargs),
             env_settings,
@@ -217,7 +218,7 @@ class Setup(BaseSettings):
 
     def _check_jwt(self, token):
         try:
-            jwt.decode(token, options={"verify_signature": False})
+            jwt.decode(token, options={"verify_signature": False})  # NOSONAR
             self.client.cookies.set("accessToken", token)
             self._auth_type = "JWT_AUTH"
             return JWTToken(api_version=self._os_api_version)

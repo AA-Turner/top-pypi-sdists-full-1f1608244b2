@@ -1,7 +1,7 @@
 r'''
-# CDKTF prebuilt bindings for hashicorp/google provider version 6.35.0
+# CDKTF prebuilt bindings for hashicorp/google provider version 6.36.0
 
-This repo builds and publishes the [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
+This repo builds and publishes the [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.36.0/docs) bindings for [CDK for Terraform](https://cdk.tf).
 
 ## Available Packages
 
@@ -63,7 +63,7 @@ This project is explicitly not tracking the Terraform google provider version 1:
 These are the upstream dependencies:
 
 * [CDK for Terraform](https://cdk.tf)
-* [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.35.0)
+* [Terraform google provider](https://registry.terraform.io/providers/hashicorp/google/6.36.0)
 * [Terraform Engine](https://terraform.io)
 
 If there are breaking changes (backward incompatible) in any of the above, the major version of this project will be bumped.
@@ -249,6 +249,7 @@ __all__ = [
     "bigquery_reservation",
     "bigquery_reservation_assignment",
     "bigquery_routine",
+    "bigquery_row_access_policy",
     "bigquery_table",
     "bigquery_table_iam_binding",
     "bigquery_table_iam_member",
@@ -559,6 +560,7 @@ __all__ = [
     "data_google_beyondcorp_app_connector",
     "data_google_beyondcorp_app_gateway",
     "data_google_beyondcorp_application_iam_policy",
+    "data_google_beyondcorp_security_gateway",
     "data_google_beyondcorp_security_gateway_iam_policy",
     "data_google_bigquery_analytics_hub_data_exchange_iam_policy",
     "data_google_bigquery_analytics_hub_listing_iam_policy",
@@ -685,6 +687,7 @@ __all__ = [
     "data_google_dataplex_datascan_iam_policy",
     "data_google_dataplex_entry_group_iam_policy",
     "data_google_dataplex_entry_type_iam_policy",
+    "data_google_dataplex_glossary_iam_policy",
     "data_google_dataplex_lake_iam_policy",
     "data_google_dataplex_task_iam_policy",
     "data_google_dataplex_zone_iam_policy",
@@ -757,6 +760,7 @@ __all__ = [
     "data_google_logging_project_cmek_settings",
     "data_google_logging_project_settings",
     "data_google_logging_sink",
+    "data_google_lustre_instance",
     "data_google_memcache_instance",
     "data_google_memorystore_instance",
     "data_google_monitoring_app_engine_service",
@@ -908,6 +912,10 @@ __all__ = [
     "dataplex_entry_type_iam_binding",
     "dataplex_entry_type_iam_member",
     "dataplex_entry_type_iam_policy",
+    "dataplex_glossary",
+    "dataplex_glossary_iam_binding",
+    "dataplex_glossary_iam_member",
+    "dataplex_glossary_iam_policy",
     "dataplex_lake",
     "dataplex_lake_iam_binding",
     "dataplex_lake_iam_member",
@@ -1023,6 +1031,9 @@ __all__ = [
     "firebase_app_check_service_config",
     "firebase_app_hosting_backend",
     "firebase_app_hosting_build",
+    "firebase_app_hosting_default_domain",
+    "firebase_app_hosting_domain",
+    "firebase_app_hosting_traffic",
     "firebase_data_connect_service",
     "firebaserules_release",
     "firebaserules_ruleset",
@@ -1254,6 +1265,10 @@ __all__ = [
     "network_security_firewall_endpoint_association",
     "network_security_gateway_security_policy",
     "network_security_gateway_security_policy_rule",
+    "network_security_intercept_deployment",
+    "network_security_intercept_deployment_group",
+    "network_security_intercept_endpoint_group",
+    "network_security_intercept_endpoint_group_association",
     "network_security_mirroring_deployment",
     "network_security_mirroring_deployment_group",
     "network_security_mirroring_endpoint_group",
@@ -1634,6 +1649,7 @@ from . import bigquery_job
 from . import bigquery_reservation
 from . import bigquery_reservation_assignment
 from . import bigquery_routine
+from . import bigquery_row_access_policy
 from . import bigquery_table
 from . import bigquery_table_iam_binding
 from . import bigquery_table_iam_member
@@ -1944,6 +1960,7 @@ from . import data_google_beyondcorp_app_connection
 from . import data_google_beyondcorp_app_connector
 from . import data_google_beyondcorp_app_gateway
 from . import data_google_beyondcorp_application_iam_policy
+from . import data_google_beyondcorp_security_gateway
 from . import data_google_beyondcorp_security_gateway_iam_policy
 from . import data_google_bigquery_analytics_hub_data_exchange_iam_policy
 from . import data_google_bigquery_analytics_hub_listing_iam_policy
@@ -2070,6 +2087,7 @@ from . import data_google_dataplex_asset_iam_policy
 from . import data_google_dataplex_datascan_iam_policy
 from . import data_google_dataplex_entry_group_iam_policy
 from . import data_google_dataplex_entry_type_iam_policy
+from . import data_google_dataplex_glossary_iam_policy
 from . import data_google_dataplex_lake_iam_policy
 from . import data_google_dataplex_task_iam_policy
 from . import data_google_dataplex_zone_iam_policy
@@ -2142,6 +2160,7 @@ from . import data_google_logging_organization_settings
 from . import data_google_logging_project_cmek_settings
 from . import data_google_logging_project_settings
 from . import data_google_logging_sink
+from . import data_google_lustre_instance
 from . import data_google_memcache_instance
 from . import data_google_memorystore_instance
 from . import data_google_monitoring_app_engine_service
@@ -2293,6 +2312,10 @@ from . import dataplex_entry_type
 from . import dataplex_entry_type_iam_binding
 from . import dataplex_entry_type_iam_member
 from . import dataplex_entry_type_iam_policy
+from . import dataplex_glossary
+from . import dataplex_glossary_iam_binding
+from . import dataplex_glossary_iam_member
+from . import dataplex_glossary_iam_policy
 from . import dataplex_lake
 from . import dataplex_lake_iam_binding
 from . import dataplex_lake_iam_member
@@ -2408,6 +2431,9 @@ from . import firebase_app_check_recaptcha_v3_config
 from . import firebase_app_check_service_config
 from . import firebase_app_hosting_backend
 from . import firebase_app_hosting_build
+from . import firebase_app_hosting_default_domain
+from . import firebase_app_hosting_domain
+from . import firebase_app_hosting_traffic
 from . import firebase_data_connect_service
 from . import firebaserules_release
 from . import firebaserules_ruleset
@@ -2639,6 +2665,10 @@ from . import network_security_firewall_endpoint
 from . import network_security_firewall_endpoint_association
 from . import network_security_gateway_security_policy
 from . import network_security_gateway_security_policy_rule
+from . import network_security_intercept_deployment
+from . import network_security_intercept_deployment_group
+from . import network_security_intercept_endpoint_group
+from . import network_security_intercept_endpoint_group_association
 from . import network_security_mirroring_deployment
 from . import network_security_mirroring_deployment_group
 from . import network_security_mirroring_endpoint_group

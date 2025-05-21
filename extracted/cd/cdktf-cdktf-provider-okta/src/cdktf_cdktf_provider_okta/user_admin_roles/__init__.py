@@ -1,7 +1,7 @@
 r'''
 # `okta_user_admin_roles`
 
-Refer to the Terraform Registry for docs: [`okta_user_admin_roles`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles).
+Refer to the Terraform Registry for docs: [`okta_user_admin_roles`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class UserAdminRoles(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.userAdminRoles.UserAdminRoles",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles okta_user_admin_roles}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles okta_user_admin_roles}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class UserAdminRoles(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles okta_user_admin_roles} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles okta_user_admin_roles} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param admin_roles: The list of Okta user admin roles, e.g. ``['APP_ADMIN', 'USER_ADMIN']`` See `API Docs <https://developer.okta.com/docs/api/openapi/okta-management/guides/roles/#standard-roles>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles#admin_roles UserAdminRoles#admin_roles}
-        :param user_id: ID of a Okta User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles#user_id UserAdminRoles#user_id}
-        :param disable_notifications: When this setting is enabled, the admins won't receive any of the default Okta administrator emails. These admins also won't have access to contact Okta Support and open support cases on behalf of your org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles#disable_notifications UserAdminRoles#disable_notifications}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles#id UserAdminRoles#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param admin_roles: The list of Okta user admin roles, e.g. ``['APP_ADMIN', 'USER_ADMIN']`` See `API Docs <https://developer.okta.com/docs/api/openapi/okta-management/guides/roles/#standard-roles>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles#admin_roles UserAdminRoles#admin_roles}
+        :param user_id: ID of a Okta User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles#user_id UserAdminRoles#user_id}
+        :param disable_notifications: When this setting is enabled, the admins won't receive any of the default Okta administrator emails. These admins also won't have access to contact Okta Support and open support cases on behalf of your org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles#disable_notifications UserAdminRoles#disable_notifications}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles#id UserAdminRoles#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class UserAdminRoles(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the UserAdminRoles to import.
-        :param import_from_id: The id of the existing UserAdminRoles that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing UserAdminRoles that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the UserAdminRoles to import is found.
         '''
         if __debug__:
@@ -261,10 +261,10 @@ class UserAdminRolesConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param admin_roles: The list of Okta user admin roles, e.g. ``['APP_ADMIN', 'USER_ADMIN']`` See `API Docs <https://developer.okta.com/docs/api/openapi/okta-management/guides/roles/#standard-roles>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles#admin_roles UserAdminRoles#admin_roles}
-        :param user_id: ID of a Okta User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles#user_id UserAdminRoles#user_id}
-        :param disable_notifications: When this setting is enabled, the admins won't receive any of the default Okta administrator emails. These admins also won't have access to contact Okta Support and open support cases on behalf of your org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles#disable_notifications UserAdminRoles#disable_notifications}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles#id UserAdminRoles#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param admin_roles: The list of Okta user admin roles, e.g. ``['APP_ADMIN', 'USER_ADMIN']`` See `API Docs <https://developer.okta.com/docs/api/openapi/okta-management/guides/roles/#standard-roles>`_. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles#admin_roles UserAdminRoles#admin_roles}
+        :param user_id: ID of a Okta User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles#user_id UserAdminRoles#user_id}
+        :param disable_notifications: When this setting is enabled, the admins won't receive any of the default Okta administrator emails. These admins also won't have access to contact Okta Support and open support cases on behalf of your org. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles#disable_notifications UserAdminRoles#disable_notifications}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles#id UserAdminRoles#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -372,7 +372,7 @@ class UserAdminRolesConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def admin_roles(self) -> typing.List[builtins.str]:
         '''The list of Okta user admin roles, e.g. ``['APP_ADMIN', 'USER_ADMIN']`` See `API Docs <https://developer.okta.com/docs/api/openapi/okta-management/guides/roles/#standard-roles>`_.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles#admin_roles UserAdminRoles#admin_roles}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles#admin_roles UserAdminRoles#admin_roles}
         '''
         result = self._values.get("admin_roles")
         assert result is not None, "Required property 'admin_roles' is missing"
@@ -382,7 +382,7 @@ class UserAdminRolesConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_id(self) -> builtins.str:
         '''ID of a Okta User.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles#user_id UserAdminRoles#user_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles#user_id UserAdminRoles#user_id}
         '''
         result = self._values.get("user_id")
         assert result is not None, "Required property 'user_id' is missing"
@@ -396,14 +396,14 @@ class UserAdminRolesConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         These admins also won't have access to contact Okta Support and open support cases on behalf of your org.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles#disable_notifications UserAdminRoles#disable_notifications}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles#disable_notifications UserAdminRoles#disable_notifications}
         '''
         result = self._values.get("disable_notifications")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user_admin_roles#id UserAdminRoles#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user_admin_roles#id UserAdminRoles#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

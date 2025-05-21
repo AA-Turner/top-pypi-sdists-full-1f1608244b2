@@ -355,6 +355,7 @@ class _ResourceMonitorState:
         pulumi.set(self, "suspend_trigger", value)
 
 
+@pulumi.type_token("snowflake:index/resourceMonitor:ResourceMonitor")
 class ResourceMonitor(pulumi.CustomResource):
     @overload
     def __init__(__self__,

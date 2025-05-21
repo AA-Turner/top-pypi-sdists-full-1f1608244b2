@@ -8,6 +8,7 @@ from transformers.utils.import_utils import is_torchvision_available
 
 from ..configuration import AdapterFusionConfig, BnConfig
 from ..context import ForwardContext
+from .utils import fix_seed
 
 
 class Activation_Function_Class(nn.Module):
@@ -115,6 +116,9 @@ class Adapter(nn.Module):
 
         self.dropout = nn.Dropout(p=config["dropout"])
 
+        # Set seed for reproducibility if specified in config
+        fix_seed(config.init_weights_seed)
+
         # if we want to initialize with the bert strategy then this function is called for all the linear layers
         if config["init_weights"] == "bert":
             self.adapter_down.apply(self.init_bert_weights)
@@ -183,7 +187,17 @@ class Adapter(nn.Module):
                     residual = hidden_states
                 hidden_states = layer_norm(hidden_states)
             else:
-                hidden_states = hidden_states + input_tensor
+                # Some models like Phi use a parallel architecture where attention and FFN operate
+                # independently on the same normalized hidden_states. In this case, the residual connection
+                # is applied only once at the end by combining:
+                #     output = original_input + attention_output + ffn_output
+                #
+                # In our standard adapter implementation, we expect input_tensor to contain intermediate
+                # residuals between components. However, for parallel architectures like Phi, there are
+                # no intermediate residuals, so input_tensor will be None when the adapter is attached
+                # to the FFN. Therefore, this additional check is needed to prevent errors.
+                if input_tensor is not None:
+                    hidden_states = hidden_states + input_tensor
 
         if not self.residual_before_ln:
             residual = hidden_states
@@ -378,8 +392,17 @@ class BertFusion(nn.Module):
             self.value = nn.Linear(self.dense_size, self.dense_size, bias=False)
             self.value.apply(Adapter.init_bert_weights)
             if self.config["value_initialized"]:
-                self.value.weight.data = (torch.zeros(self.dense_size, self.dense_size) + 0.000001).fill_diagonal_(1.0)
-
+                init_tensor = (
+                    torch.zeros(
+                        self.dense_size,
+                        self.dense_size,
+                        device=self.value.weight.device,
+                        dtype=self.value.weight.dtype,
+                    )
+                    + 0.000001
+                )
+                init_tensor.fill_diagonal_(1.0)
+                self.value.weight.data = init_tensor
         if self.config["temperature"]:
             self.T = 50.0
         else:
@@ -656,6 +679,10 @@ class PHMLayer(nn.Module):
             return init_W(self.config, W_left, W_right, W)
 
     def reset_parameters(self):
+
+        # Set seed for reproducibility if specified in config
+        fix_seed(self.config.init_weights_seed)
+
         if not self.shared_W_phm:
             self._init_W()
 

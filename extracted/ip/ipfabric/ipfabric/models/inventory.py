@@ -1,5 +1,5 @@
 import logging
-from typing import Optional, Dict, List, Any, Union, overload, Literal
+from typing import Optional, Any, Union, overload, Literal
 
 from pydantic import BaseModel, computed_field, Field
 
@@ -35,23 +35,23 @@ class DeviceTable(Table):
     def fetch(
         self,
         export: Literal["json"] = ...,
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
         limit: Optional[int] = 1000,
         start: Optional[int] = 0,
-    ) -> List[dict]: ...
+    ) -> list[dict]: ...
 
     @overload
     def fetch(
         self,
         export: Literal["csv"],
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         sort: Optional[dict] = None,
         limit: Optional[int] = 1000,
@@ -63,9 +63,9 @@ class DeviceTable(Table):
     def fetch(
         self,
         export: Literal["df"],
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
@@ -77,9 +77,9 @@ class DeviceTable(Table):
     def fetch(
         self,
         export: Literal["object"],
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         sort: Optional[dict] = None,
         limit: Optional[int] = 1000,
@@ -89,9 +89,9 @@ class DeviceTable(Table):
     def fetch(
         self,
         export: DEVICE_EXPORT_FORMAT = "json",
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
@@ -114,7 +114,7 @@ class DeviceTable(Table):
             csv_tz: str: Default None, set a timezone to return human-readable dates when using CSV;
                          see `ipfabric.tools.shared.TIMEZONES`
         Returns:
-            Union[List[dict], Devices, bytes, DataFrame]: Default List of dicts 'json', Devices object if 'object',
+            Union[list[dict], Devices, bytes, DataFrame]: Default List of dicts 'json', Devices object if 'object',
                                                           bytes if 'csv', pandas.DataFrame if 'df'
         """
         devices = super(DeviceTable, self).fetch(
@@ -135,21 +135,21 @@ class DeviceTable(Table):
     def all(
         self,
         export: Literal["json"] = ...,
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
-    ) -> List[dict]: ...
+    ) -> list[dict]: ...
 
     @overload
     def all(
         self,
         export: Literal["csv"],
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         sort: Optional[dict] = None,
         csv_tz: Optional[str] = None,
@@ -159,9 +159,9 @@ class DeviceTable(Table):
     def all(
         self,
         export: Literal["df"],
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
@@ -171,20 +171,19 @@ class DeviceTable(Table):
     def all(
         self,
         export: Literal["object"],
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         sort: Optional[dict] = None,
-        client: Optional[Any] = None,
     ) -> Devices: ...
 
     def all(
         self,
         export: DEVICE_EXPORT_FORMAT = "json",
-        columns: Optional[list] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
@@ -203,7 +202,7 @@ class DeviceTable(Table):
             csv_tz: str: Default None, set a timezone to return human-readable dates when using CSV;
                          see `ipfabric.tools.shared.TIMEZONES`
         Returns:
-             Union[List[dict], Devices, bytes, DataFrame]: Default List of dicts 'json', Devices object if 'object',
+             Union[list[dict], Devices, bytes, DataFrame]: Default List of dicts 'json', Devices object if 'object',
                                                            bytes if 'csv', pandas.DataFrame if 'df'
         """
         devices = super(DeviceTable, self).all(

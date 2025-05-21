@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: dissect
-Version: 3.18
+Version: 3.19
 Summary: Dissect is a digital forensics & incident response framework and toolset that allows you to quickly access and analyse forensic artefacts from various disk and file formats, developed by Fox-IT (part of NCC Group)
 Author-email: Dissect Team <dissect@fox-it.com>
 License: Affero General Public License v3
@@ -22,12 +22,12 @@ Requires-Python: ~=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
 License-File: COPYRIGHT
-Requires-Dist: dissect.archive==1.5
+Requires-Dist: dissect.archive==1.6
 Requires-Dist: dissect.btrfs==1.7
-Requires-Dist: dissect.cim==3.11
+Requires-Dist: dissect.cim==3.12
 Requires-Dist: dissect.clfs==1.10
-Requires-Dist: dissect.cstruct==4.4
-Requires-Dist: dissect.esedb==3.15
+Requires-Dist: dissect.cstruct==4.5
+Requires-Dist: dissect.esedb==3.16
 Requires-Dist: dissect.etl==3.11
 Requires-Dist: dissect.eventlog==3.10
 Requires-Dist: dissect.evidence==3.11
@@ -35,25 +35,27 @@ Requires-Dist: dissect.executable==1.8
 Requires-Dist: dissect.extfs==3.13
 Requires-Dist: dissect.fat==3.12
 Requires-Dist: dissect.ffs==3.11
-Requires-Dist: dissect.fve==4.1; platform_system != "Windows" or platform_python_implementation != "PyPy"
-Requires-Dist: dissect.hypervisor==3.17
-Requires-Dist: dissect.jffs==1.4
+Requires-Dist: dissect.fve==4.2; platform_system != "Windows" or platform_python_implementation != "PyPy"
+Requires-Dist: dissect.hypervisor==3.18
+Requires-Dist: dissect.jffs==1.5
 Requires-Dist: dissect.ntfs==3.14
-Requires-Dist: dissect.ole==3.10
-Requires-Dist: dissect.regf==3.12
+Requires-Dist: dissect.ole==3.11
+Requires-Dist: dissect.qnxfs==1.0
+Requires-Dist: dissect.regf==3.13
 Requires-Dist: dissect.shellitem==3.11
 Requires-Dist: dissect.sql==3.11
 Requires-Dist: dissect.squashfs==1.9
-Requires-Dist: dissect.target[full]==3.21
+Requires-Dist: dissect.target[full]==3.22
 Requires-Dist: dissect.thumbcache==1.10
-Requires-Dist: dissect.util==3.20
+Requires-Dist: dissect.util==3.21
 Requires-Dist: dissect.vmfs==3.11
-Requires-Dist: dissect.volume==3.14
+Requires-Dist: dissect.volume==3.15
 Requires-Dist: dissect.xfs==3.12
 Provides-Extra: lz4
 Requires-Dist: dissect.util[lz4]; extra == "lz4"
 Provides-Extra: lzo
 Requires-Dist: dissect.util[lzo]; extra == "lzo"
+Dynamic: license-file
 
 # dissect
 

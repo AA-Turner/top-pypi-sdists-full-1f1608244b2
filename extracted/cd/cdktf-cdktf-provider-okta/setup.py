@@ -5,7 +5,7 @@ kwargs = json.loads(
     """
 {
     "name": "cdktf-cdktf-provider-okta",
-    "version": "13.12.0",
+    "version": "13.13.0",
     "description": "Prebuilt okta Provider for Terraform CDK (cdktf)",
     "license": "MPL-2.0",
     "url": "https://github.com/cdktf/cdktf-provider-okta.git",
@@ -85,6 +85,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_okta.data_okta_domain",
         "cdktf_cdktf_provider_okta.data_okta_email_customization",
         "cdktf_cdktf_provider_okta.data_okta_email_customizations",
+        "cdktf_cdktf_provider_okta.data_okta_email_smtp_server",
         "cdktf_cdktf_provider_okta.data_okta_email_template",
         "cdktf_cdktf_provider_okta.data_okta_email_templates",
         "cdktf_cdktf_provider_okta.data_okta_everyone_group",
@@ -116,6 +117,7 @@ kwargs = json.loads(
         "cdktf_cdktf_provider_okta.email_domain_verification",
         "cdktf_cdktf_provider_okta.email_sender",
         "cdktf_cdktf_provider_okta.email_sender_verification",
+        "cdktf_cdktf_provider_okta.email_smtp_server",
         "cdktf_cdktf_provider_okta.email_template_settings",
         "cdktf_cdktf_provider_okta.event_hook",
         "cdktf_cdktf_provider_okta.event_hook_verification",
@@ -177,7 +179,7 @@ kwargs = json.loads(
     ],
     "package_data": {
         "cdktf_cdktf_provider_okta._jsii": [
-            "provider-okta@13.12.0.jsii.tgz"
+            "provider-okta@13.13.0.jsii.tgz"
         ],
         "cdktf_cdktf_provider_okta": [
             "py.typed"

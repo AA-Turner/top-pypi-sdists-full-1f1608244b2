@@ -128,6 +128,7 @@ class _GrantAccountRoleState:
         pulumi.set(self, "user_name", value)
 
 
+@pulumi.type_token("snowflake:index/grantAccountRole:GrantAccountRole")
 class GrantAccountRole(pulumi.CustomResource):
     @overload
     def __init__(__self__,

@@ -175,7 +175,7 @@ class PyArrowToPolarsConverter:
                 # We'll first expand all null elements into null lists of the correct length, and then convert to numpy
                 null_elements = x.is_null()
                 empty = pa.scalar(
-                    np.empty((x.type.list_size,), dtype=np.dtype("float16")),
+                    np.zeros((x.type.list_size,), dtype=np.dtype("float16")),
                     pa.list_(pa.float16(), x.type.list_size),
                 )
                 x = x.fill_null(empty)
@@ -408,6 +408,11 @@ def _recursive_convert_map_type(dtype: pa.DataType) -> pa.DataType:
 
 
 def pa_cast_col(col: pa.Array, expected_type: pa.DataType) -> pa.Array:
+    """
+    Converts the provided input type to the provided expected type.
+    This conversion is used to avoid hard-to-represent types, like fixed-sized-lists or maps, which
+    polars in particular does not support.
+    """
     if col.null_count == len(col):
         # It's all null, so short circuit and return an array of nulls of the correct type
         # calling .flatten() sometimes will raise an exception if this condition is true
@@ -497,43 +502,48 @@ def pa_cast_col(col: pa.Array, expected_type: pa.DataType) -> pa.Array:
         assert len(ans) == len(col), "array should have the same number of elements"
         return ans
     if pa.types.is_fixed_size_list(expected_type):
-        assert isinstance(expected_type, pa.FixedSizeListType)
-        # We'll first expand all null elements into null lists of the correct length, and then convert to numpy
-        null_elements = col.is_null()
-        value_type = _try_get_pandas_dtype(expected_type.value_type)
-        if value_type is None:
-            # Dummy value if the pyarrow value type doesn't have a corresponding numpy dtype (e.g. large_string)
-            # This still works because we create an array of nulls and then cast to the expected arrow type afterwards
-            value_type = np.dtypes.IntDType
-        empty = pa.scalar(np.empty((expected_type.list_size,), dtype=value_type), expected_type)
-        col = col.fill_null(empty)
-        if isinstance(col, (pa.ListArray, pa.LargeListArray)):
-            # Possible if we are coming from polars
-            if pa.types.is_float16(expected_type.value_type):
-                # For float16, we need to go to numpy
-                flattened = pa.array(
-                    col.flatten().to_numpy(zero_copy_only=False).reshape(-1).astype(np.dtype("float16"))
+        # Cast the elements of the input column, and then reconstruct an outer list.
+        assert isinstance(col, (pa.ListArray, pa.LargeListArray))
+        if isinstance(col, pa.ListArray):
+            col_items_converted = pa_cast_col(col.values, expected_type=expected_type.value_type)
+            rebuilt_col = pa.ListArray.from_arrays(
+                offsets=col.offsets,
+                values=col_items_converted,
+                type=pa.list_(expected_type.value_type),
+            )
+            if col.null_count != 0:
+                # Pyarrow does not allow `mask` to be set if `offset` is non-zero.
+                # To support this case, null out the missing lists with `if_else`.
+
+                # Note: we are missing type stubs for `pc.if_else`
+                rebuilt_col = pc.if_else(  # pyright: ignore[reportAttributeAccessIssue]
+                    col.is_null(),
+                    pa.nulls(len(rebuilt_col), rebuilt_col.type),
+                    rebuilt_col,
                 )
-            else:
-                # For everything else, we go through python
-                # Cannot go through numpy because ints will be cast to floats, since numpy doesn't have null
-                # FIXME: Do this in c and skip python
-                flattened = pa.array(col.to_pylist(), expected_type)
-                assert isinstance(flattened, pa.FixedSizeListArray)
-                flattened = flattened.flatten()
+        elif isinstance(col, pa.LargeListArray):
+            col_items_converted = pa_cast_col(col.values, expected_type=expected_type.value_type)
+            rebuilt_col = pa.LargeListArray.from_arrays(
+                offsets=col.offsets,
+                values=col_items_converted,
+                type=pa.large_list(expected_type.value_type),
+            )
+            if col.null_count != 0:
+                # Pyarrow does not allow `mask` to be set if `offset` is non-zero.
+                # To support this case, null out the missing lists with `if_else`.
+
+                # Note: we are missing type stubs for `pc.if_else`
+                rebuilt_col = pc.if_else(  # pyright: ignore[reportAttributeAccessIssue]
+                    col.is_null(),
+                    pa.nulls(len(rebuilt_col), rebuilt_col.type),
+                    rebuilt_col,
+                )
         else:
-            assert isinstance(col.type, pa.FixedSizeListType)
-            assert isinstance(col, pa.FixedSizeListArray)
-            assert col.type.list_size == expected_type.list_size
-            flattened = col.flatten()
-        tbl = pa.Table.from_arrays([flattened], names=[expected_type.value_field.name])
-        tbl = pa_cast(tbl, pa.schema([expected_type.value_field]))
-        casted_col = tbl.column(0).combine_chunks()
-        ans = pa.FixedSizeListArray.from_arrays(casted_col, expected_type.list_size)
-        assert len(ans) == len(col), "array should have the same number of elements"
-        # Replace the filled empty elements with null
-        ans = pc.if_else(null_elements, pa.scalar(None, expected_type), ans)  # type: ignore
-        return ans
+            raise ValueError(
+                f"Cannot convert array with non-list type {col.type} to fixed-sized list type '{expected_type}'"
+            )
+
+        return pc.cast(rebuilt_col, expected_type)
     if pa.types.is_map(expected_type):
         return pa_cast_col(col, expected_type)
 
@@ -556,13 +566,6 @@ def pa_replace_column(t: T_ArrowTable, col_name: str, col: pa.Array | pa.Chunked
     if idx < 0:
         raise KeyError(f"Could not find unique column with name {col_name} in table.")
     return t.set_column(idx, col_name, col)
-
-
-def _try_get_pandas_dtype(dtype: pa.DataType) -> typing.Optional[np.dtype]:
-    try:
-        return dtype.to_pandas_dtype()
-    except NotImplementedError:
-        return None
 
 
 def _read_parquet(

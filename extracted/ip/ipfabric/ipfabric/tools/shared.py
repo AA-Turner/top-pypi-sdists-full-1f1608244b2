@@ -1,11 +1,20 @@
 import logging
 import re
-from uuid import UUID
 from datetime import datetime, timezone
-from ipaddress import IPv4Address, IPv4Network, IPv4Interface, AddressValueError
+from ipaddress import (
+    IPv4Address,
+    IPv4Network,
+    IPv4Interface,
+    AddressValueError,
+    IPv6Address,
+    IPv6Network,
+    IPv6Interface,
+    ip_network,
+)
 from json import JSONDecodeError, loads
 from typing import Union, Optional
 from urllib.parse import urljoin
+from uuid import UUID
 
 import macaddress
 from dateutil import parser
@@ -22,6 +31,7 @@ VALID_REFS_DICT = {
 }
 VALID_REFS = [LAST_ID, PREV_ID, LASTLOCKED_ID]
 VALID_IP = Union[IPv4Address, IPv4Network, IPv4Interface]
+VALID_IPv6 = Union[IPv6Address, IPv6Network, IPv6Interface]
 SLUG = re.compile(r"^[a-zA-Z0-9_\-.#:]*$")
 
 
@@ -104,23 +114,33 @@ def valid_slug(name: str):
     return name
 
 
-def validate_ip_network(ip: Union[str, VALID_IP], max_size: Optional[int] = None) -> IPv4Network:
-    if isinstance(ip, str):
-        try:
-            ip = IPv4Network(ip, strict=False)
-        except AddressValueError:
-            raise ValueError(f'IP "{ip}" not a valid IPv4 Address or Network.')
-    elif isinstance(ip, (IPv4Address, IPv4Interface)):
-        ip = IPv4Network(ip, strict=False)
-    if isinstance(max_size, str) and ip.prefixlen < max_size:
+def validate_ip_network(
+    ip: Union[str, VALID_IP, VALID_IPv6],
+    max_size: Optional[int] = None,
+    max_v6_size: Optional[int] = None,
+    ipv6: bool = False,
+) -> Union[IPv4Network, IPv6Network]:
+    try:
+        ip = ip_network(ip, strict=False)
+    except AddressValueError:
+        raise ValueError(f'IP "{ip}" not a valid IPv4/6 Address or Network.')
+
+    if ip.version == 6 and not ipv6:
+        raise ValueError(f"IP {ip} is IPv6 and IPv6 is not supported.")
+    if ip.version == 4 and max_size and ip.prefixlen < max_size:
         raise ValueError(f"Network {ip} is larger than the maximum allowed prefix length of {max_size}.")
+    if ip.version == 6 and max_v6_size and ip.prefixlen < max_v6_size:
+        raise ValueError(f"Network {ip} is larger than the maximum allowed prefix length of {max_v6_size}.")
     return ip
 
 
 def validate_ip_network_str(
-    ip: Union[str, IPv4Address, IPv4Network, IPv4Interface], max_size: Optional[int] = None
+    ip: Union[str, IPv4Address, IPv4Network, IPv4Interface],
+    max_size: Optional[int] = None,
+    max_v6_size: Optional[int] = None,
+    ipv6: bool = False,
 ) -> str:
-    return str((validate_ip_network(ip, max_size)))
+    return str(validate_ip_network(ip, max_size, max_v6_size, ipv6))
 
 
 def create_filter(client, url, filters=None, sn=None) -> tuple:

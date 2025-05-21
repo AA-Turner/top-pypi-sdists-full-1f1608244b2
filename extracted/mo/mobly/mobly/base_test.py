@@ -19,6 +19,7 @@ import functools
 import inspect
 import logging
 import os
+import re
 import sys
 
 from mobly import controller_manager
@@ -31,14 +32,13 @@ from mobly import utils
 # Macro strings for test result reporting.
 TEST_CASE_TOKEN = '[Test]'
 RESULT_LINE_TEMPLATE = TEST_CASE_TOKEN + ' %s %s'
+TEST_SELECTOR_REGEX_PREFIX = 're:'
 
 TEST_STAGE_BEGIN_LOG_TEMPLATE = '[{parent_token}]#{child_token} >>> BEGIN >>>'
 TEST_STAGE_END_LOG_TEMPLATE = '[{parent_token}]#{child_token} <<< END <<<'
 
 # Names of execution stages, in the order they happen during test runs.
 STAGE_NAME_PRE_RUN = 'pre_run'
-# Deprecated, use `STAGE_NAME_PRE_RUN` instead.
-STAGE_NAME_SETUP_GENERATED_TESTS = 'setup_generated_tests'
 STAGE_NAME_SETUP_CLASS = 'setup_class'
 STAGE_NAME_SETUP_TEST = 'setup_test'
 STAGE_NAME_TEARDOWN_TEST = 'teardown_test'
@@ -370,10 +370,6 @@ class BaseTestClass:
     try:
       with self._log_test_stage(stage_name):
         self.pre_run()
-      # TODO(angli): Remove this context block after the full deprecation of
-      # `setup_generated_tests`.
-      with self._log_test_stage(stage_name):
-        self.setup_generated_tests()
       return True
     except Exception as e:
       logging.exception('%s failed for %s.', stage_name, self.TAG)
@@ -386,19 +382,6 @@ class BaseTestClass:
 
   def pre_run(self):
     """Preprocesses that need to be done before setup_class.
-
-    This phase is used to do pre-test processes like generating tests.
-    This is the only place `self.generate_tests` should be called.
-
-    If this function throws an error, the test class will be marked failure
-    and the "Requested" field will be 0 because the number of tests
-    requested is unknown at this point.
-    """
-
-  def setup_generated_tests(self):
-    """[DEPRECATED] Use `pre_run` instead.
-
-    Preprocesses that need to be done before setup_class.
 
     This phase is used to do pre-test processes like generating tests.
     This is the only place `self.generate_tests` should be called.
@@ -904,8 +887,7 @@ class BaseTestClass:
   def generate_tests(self, test_logic, name_func, arg_sets, uid_func=None):
     """Generates tests in the test class.
 
-    This function has to be called inside a test class's `self.pre_run` or
-    `self.setup_generated_tests`.
+    This function has to be called inside a test class's `self.pre_run`.
 
     Generated tests are not written down as methods, but as a list of
     parameter sets. This way we reduce code repetition and improve test
@@ -926,9 +908,7 @@ class BaseTestClass:
         arguments as the test logic function and returns a string that
         is the corresponding UID.
     """
-    self._assert_function_names_in_stack(
-        [STAGE_NAME_PRE_RUN, STAGE_NAME_SETUP_GENERATED_TESTS]
-    )
+    self._assert_function_names_in_stack([STAGE_NAME_PRE_RUN])
     root_msg = 'During test generation of "%s":' % test_logic.__name__
     for args in arg_sets:
       test_name = name_func(*args)
@@ -1003,7 +983,8 @@ class BaseTestClass:
     """Resolves test method names to bound test methods.
 
     Args:
-      test_names: A list of strings, each string is a test method name.
+      test_names: A list of strings, each string is a test method name or a
+        regex for matching test names.
 
     Returns:
       A list of tuples of (string, function). String is the test method
@@ -1014,20 +995,51 @@ class BaseTestClass:
         This can only be caused by user input.
     """
     test_methods = []
+    # Process the test name selector one by one.
     for test_name in test_names:
-      if not test_name.startswith('test_'):
-        raise Error(
-            'Test method name %s does not follow naming '
-            'convention test_*, abort.' % test_name
+      if test_name.startswith(TEST_SELECTOR_REGEX_PREFIX):
+        # process the selector as a regex.
+        regex_matching_methods = self._get_regex_matching_test_methods(
+            test_name.removeprefix(TEST_SELECTOR_REGEX_PREFIX)
         )
+        test_methods += regex_matching_methods
+        continue
+      # process the selector as a regular test name string.
+      self._assert_valid_test_name(test_name)
+      if test_name not in self.get_existing_test_names():
+        raise Error(f'{self.TAG} does not have test method {test_name}.')
       if hasattr(self, test_name):
         test_method = getattr(self, test_name)
       elif test_name in self._generated_test_table:
         test_method = self._generated_test_table[test_name]
-      else:
-        raise Error('%s does not have test method %s.' % (self.TAG, test_name))
       test_methods.append((test_name, test_method))
     return test_methods
+
+  def _get_regex_matching_test_methods(self, test_name_regex):
+    matching_name_tuples = []
+    for name, method in inspect.getmembers(self, callable):
+      if (
+          name.startswith('test_')
+          and re.fullmatch(test_name_regex, name) is not None
+      ):
+        matching_name_tuples.append((name, method))
+    for name, method in self._generated_test_table.items():
+      if re.fullmatch(test_name_regex, name) is not None:
+        self._assert_valid_test_name(name)
+        matching_name_tuples.append((name, method))
+    if not matching_name_tuples:
+      raise Error(
+          f'{test_name_regex} does not match with any valid test case '
+          f'in {self.TAG}, abort!'
+      )
+    return matching_name_tuples
+
+  def _assert_valid_test_name(self, test_name):
+    if not test_name.startswith('test_'):
+      raise Error(
+          'Test method name %s does not follow naming '
+          'convention test_*, abort.' % test_name
+      )
 
   def _skip_remaining_tests(self, exception):
     """Marks any requested test that has not been executed in a class as

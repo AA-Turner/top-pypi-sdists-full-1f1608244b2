@@ -6,7 +6,7 @@ from pathlib import Path
 from ipfabric import IPFClient
 from ipfabric.models import Devices
 from ipfabric.scripts.shared import load_env, base_args, parse_base_args
-from ipfabric.tools import Vulnerabilities
+from ipfabric.tools.shared import Vulnerabilities
 
 try:
     import pandas as pd
@@ -195,7 +195,7 @@ def write_excel(df_eol: pd.DataFrame, df_cve: pd.DataFrame, df_clean: pd.DataFra
     writer.close()
 
 
-def main():
+def main():  # NOSONAR
     load_env()
     arg_parser = argparse.ArgumentParser(
         description="Creates an Excel report of CVEs and EoL for devices in IP Fabric; requires:\n"

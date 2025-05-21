@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: adapters
-Version: 1.1.1
+Version: 1.2.0
 Summary: A Unified Library for Parameter-Efficient and Modular Transfer Learning
 Home-page: https://github.com/adapter-hub/adapters
 Author: The AdapterHub team and community contributors
@@ -22,7 +22,7 @@ Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Requires-Python: >=3.9.0
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: transformers~=4.48.3
+Requires-Dist: transformers~=4.51.3
 Requires-Dist: packaging
 Provides-Extra: sklearn
 Requires-Dist: scikit-learn; extra == "sklearn"
@@ -64,7 +64,7 @@ Requires-Dist: flake8>=3.8.3; extra == "quality"
 Requires-Dist: GitPython<3.1.19; extra == "quality"
 Provides-Extra: docs
 Requires-Dist: docutils==0.16.0; extra == "docs"
-Requires-Dist: Jinja2==2.11.3; extra == "docs"
+Requires-Dist: Jinja2>=3.1.0; extra == "docs"
 Requires-Dist: markupsafe==2.0.1; extra == "docs"
 Requires-Dist: myst-parser; extra == "docs"
 Requires-Dist: sphinx==5.0.2; extra == "docs"
@@ -106,7 +106,7 @@ Requires-Dist: isort>=5.5.4; extra == "dev"
 Requires-Dist: flake8>=3.8.3; extra == "dev"
 Requires-Dist: GitPython<3.1.19; extra == "dev"
 Requires-Dist: docutils==0.16.0; extra == "dev"
-Requires-Dist: Jinja2==2.11.3; extra == "dev"
+Requires-Dist: Jinja2>=3.1.0; extra == "dev"
 Requires-Dist: markupsafe==2.0.1; extra == "dev"
 Requires-Dist: myst-parser; extra == "dev"
 Requires-Dist: sphinx==5.0.2; extra == "dev"
@@ -276,7 +276,9 @@ Currently, adapters integrates all architectures and methods listed below:
 | Parallel adapters,<br> Mix-and-Match adapters | [He et al. (2021)](https://arxiv.org/pdf/2110.04366.pdf) | [Docs](https://docs.adapterhub.ml/method_combinations.html#mix-and-match-adapters) |
 | Compacter | [Mahabadi et al. (2021)](https://arxiv.org/pdf/2106.04647.pdf) | [Docs](https://docs.adapterhub.ml/methods.html#compacter) |
 | LoRA | [Hu et al. (2021)](https://arxiv.org/pdf/2106.09685.pdf) | [Docs](https://docs.adapterhub.ml/methods.html#lora) |
+| MTL-LoRA | [Yang et al., 2024](https://arxiv.org/pdf/2410.09437) | [Docs](https://docs.adapterhub.ml/multi_task_methods.html#mtl-lora) |
 | (IA)^3 | [Liu et al. (2022)](https://arxiv.org/pdf/2205.05638.pdf) | [Docs](https://docs.adapterhub.ml/methods.html#ia-3) |
+| Vera | [Kopiczko et al., 2024](https://arxiv.org/pdf/2310.11454) | [Docs](https://docs.adapterhub.ml/methods.html#vera)
 | UniPELT | [Mao et al. (2022)](https://arxiv.org/pdf/2110.07577.pdf) | [Docs](https://docs.adapterhub.ml/method_combinations.html#unipelt) |
 | Prompt Tuning | [Lester et al. (2021)](https://aclanthology.org/2021.emnlp-main.243/) | [Docs](https://docs.adapterhub.ml/methods.html#prompt-tuning) |
 | QLoRA | [Dettmers et al. (2023)](https://arxiv.org/pdf/2305.14314.pdf) | [Notebook](https://colab.research.google.com/github/Adapter-Hub/adapters/blob/main/notebooks/QLoRA_Llama_Finetuning.ipynb) |

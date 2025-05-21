@@ -1,7 +1,7 @@
 r'''
 # `okta_app_basic_auth`
 
-Refer to the Terraform Registry for docs: [`okta_app_basic_auth`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth).
+Refer to the Terraform Registry for docs: [`okta_app_basic_auth`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AppBasicAuth(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.appBasicAuth.AppBasicAuth",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth okta_app_basic_auth}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth okta_app_basic_auth}.'''
 
     def __init__(
         self,
@@ -60,13 +60,21 @@ class AppBasicAuth(
         admin_note: typing.Optional[builtins.str] = None,
         app_links_json: typing.Optional[builtins.str] = None,
         auto_submit_toolbar: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        credentials_scheme: typing.Optional[builtins.str] = None,
         enduser_note: typing.Optional[builtins.str] = None,
         hide_ios: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         hide_web: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         id: typing.Optional[builtins.str] = None,
         logo: typing.Optional[builtins.str] = None,
+        reveal_password: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        shared_password: typing.Optional[builtins.str] = None,
+        shared_username: typing.Optional[builtins.str] = None,
         status: typing.Optional[builtins.str] = None,
         timeouts: typing.Optional[typing.Union["AppBasicAuthTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
+        user_name_template: typing.Optional[builtins.str] = None,
+        user_name_template_push_status: typing.Optional[builtins.str] = None,
+        user_name_template_suffix: typing.Optional[builtins.str] = None,
+        user_name_template_type: typing.Optional[builtins.str] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
         depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -75,26 +83,34 @@ class AppBasicAuth(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth okta_app_basic_auth} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth okta_app_basic_auth} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param auth_url: The URL of the authenticating site for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#auth_url AppBasicAuth#auth_url}
-        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#label AppBasicAuth#label}
-        :param url: The URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#url AppBasicAuth#url}
-        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#accessibility_error_redirect_url AppBasicAuth#accessibility_error_redirect_url}
-        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#accessibility_login_redirect_url AppBasicAuth#accessibility_login_redirect_url}
-        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#accessibility_self_service AppBasicAuth#accessibility_self_service}
-        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#admin_note AppBasicAuth#admin_note}
-        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#app_links_json AppBasicAuth#app_links_json}
-        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#auto_submit_toolbar AppBasicAuth#auto_submit_toolbar}
-        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#enduser_note AppBasicAuth#enduser_note}
-        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#hide_ios AppBasicAuth#hide_ios}
-        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#hide_web AppBasicAuth#hide_web}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#id AppBasicAuth#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#logo AppBasicAuth#logo}
-        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#status AppBasicAuth#status}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#timeouts AppBasicAuth#timeouts}
+        :param auth_url: The URL of the authenticating site for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#auth_url AppBasicAuth#auth_url}
+        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#label AppBasicAuth#label}
+        :param url: The URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#url AppBasicAuth#url}
+        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_error_redirect_url AppBasicAuth#accessibility_error_redirect_url}
+        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_login_redirect_url AppBasicAuth#accessibility_login_redirect_url}
+        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_self_service AppBasicAuth#accessibility_self_service}
+        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#admin_note AppBasicAuth#admin_note}
+        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#app_links_json AppBasicAuth#app_links_json}
+        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#auto_submit_toolbar AppBasicAuth#auto_submit_toolbar}
+        :param credentials_scheme: Application credentials scheme. One of: ``EDIT_USERNAME_AND_PASSWORD``, ``ADMIN_SETS_CREDENTIALS``, ``EDIT_PASSWORD_ONLY``, ``EXTERNAL_PASSWORD_SYNC``, or ``SHARED_USERNAME_AND_PASSWORD``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#credentials_scheme AppBasicAuth#credentials_scheme}
+        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#enduser_note AppBasicAuth#enduser_note}
+        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#hide_ios AppBasicAuth#hide_ios}
+        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#hide_web AppBasicAuth#hide_web}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#id AppBasicAuth#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#logo AppBasicAuth#logo}
+        :param reveal_password: Allow user to reveal password. Default is false. It can not be set to true if credentials_scheme is "ADMIN_SETS_CREDENTIALS", "SHARED_USERNAME_AND_PASSWORD" or "EXTERNAL_PASSWORD_SYNC". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#reveal_password AppBasicAuth#reveal_password}
+        :param shared_password: Shared password, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#shared_password AppBasicAuth#shared_password}
+        :param shared_username: Shared username, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#shared_username AppBasicAuth#shared_username}
+        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#status AppBasicAuth#status}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#timeouts AppBasicAuth#timeouts}
+        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template AppBasicAuth#user_name_template}
+        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH``, ``DONT_PUSH`` and ``NOT_CONFIGURED``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_push_status AppBasicAuth#user_name_template_push_status}
+        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_suffix AppBasicAuth#user_name_template_suffix}
+        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Valid values: ``NONE``, ``CUSTOM``, ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_type AppBasicAuth#user_name_template_type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -117,13 +133,21 @@ class AppBasicAuth(
             admin_note=admin_note,
             app_links_json=app_links_json,
             auto_submit_toolbar=auto_submit_toolbar,
+            credentials_scheme=credentials_scheme,
             enduser_note=enduser_note,
             hide_ios=hide_ios,
             hide_web=hide_web,
             id=id,
             logo=logo,
+            reveal_password=reveal_password,
+            shared_password=shared_password,
+            shared_username=shared_username,
             status=status,
             timeouts=timeouts,
+            user_name_template=user_name_template,
+            user_name_template_push_status=user_name_template_push_status,
+            user_name_template_suffix=user_name_template_suffix,
+            user_name_template_type=user_name_template_type,
             connection=connection,
             count=count,
             depends_on=depends_on,
@@ -148,7 +172,7 @@ class AppBasicAuth(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AppBasicAuth to import.
-        :param import_from_id: The id of the existing AppBasicAuth that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AppBasicAuth that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AppBasicAuth to import is found.
         '''
         if __debug__:
@@ -168,9 +192,9 @@ class AppBasicAuth(
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#create AppBasicAuth#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#read AppBasicAuth#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#update AppBasicAuth#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#create AppBasicAuth#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#read AppBasicAuth#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#update AppBasicAuth#update}.
         '''
         value = AppBasicAuthTimeouts(create=create, read=read, update=update)
 
@@ -200,6 +224,10 @@ class AppBasicAuth(
     def reset_auto_submit_toolbar(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetAutoSubmitToolbar", []))
 
+    @jsii.member(jsii_name="resetCredentialsScheme")
+    def reset_credentials_scheme(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCredentialsScheme", []))
+
     @jsii.member(jsii_name="resetEnduserNote")
     def reset_enduser_note(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetEnduserNote", []))
@@ -220,6 +248,18 @@ class AppBasicAuth(
     def reset_logo(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetLogo", []))
 
+    @jsii.member(jsii_name="resetRevealPassword")
+    def reset_reveal_password(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRevealPassword", []))
+
+    @jsii.member(jsii_name="resetSharedPassword")
+    def reset_shared_password(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetSharedPassword", []))
+
+    @jsii.member(jsii_name="resetSharedUsername")
+    def reset_shared_username(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetSharedUsername", []))
+
     @jsii.member(jsii_name="resetStatus")
     def reset_status(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetStatus", []))
@@ -227,6 +267,22 @@ class AppBasicAuth(
     @jsii.member(jsii_name="resetTimeouts")
     def reset_timeouts(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
+
+    @jsii.member(jsii_name="resetUserNameTemplate")
+    def reset_user_name_template(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUserNameTemplate", []))
+
+    @jsii.member(jsii_name="resetUserNameTemplatePushStatus")
+    def reset_user_name_template_push_status(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUserNameTemplatePushStatus", []))
+
+    @jsii.member(jsii_name="resetUserNameTemplateSuffix")
+    def reset_user_name_template_suffix(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUserNameTemplateSuffix", []))
+
+    @jsii.member(jsii_name="resetUserNameTemplateType")
+    def reset_user_name_template_type(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUserNameTemplateType", []))
 
     @jsii.member(jsii_name="synthesizeAttributes")
     def _synthesize_attributes(self) -> typing.Mapping[builtins.str, typing.Any]:
@@ -301,6 +357,11 @@ class AppBasicAuth(
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "autoSubmitToolbarInput"))
 
     @builtins.property
+    @jsii.member(jsii_name="credentialsSchemeInput")
+    def credentials_scheme_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "credentialsSchemeInput"))
+
+    @builtins.property
     @jsii.member(jsii_name="enduserNoteInput")
     def enduser_note_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "enduserNoteInput"))
@@ -335,6 +396,23 @@ class AppBasicAuth(
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "logoInput"))
 
     @builtins.property
+    @jsii.member(jsii_name="revealPasswordInput")
+    def reveal_password_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "revealPasswordInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="sharedPasswordInput")
+    def shared_password_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "sharedPasswordInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="sharedUsernameInput")
+    def shared_username_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "sharedUsernameInput"))
+
+    @builtins.property
     @jsii.member(jsii_name="statusInput")
     def status_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "statusInput"))
@@ -350,6 +428,26 @@ class AppBasicAuth(
     @jsii.member(jsii_name="urlInput")
     def url_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "urlInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="userNameTemplateInput")
+    def user_name_template_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "userNameTemplateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="userNameTemplatePushStatusInput")
+    def user_name_template_push_status_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "userNameTemplatePushStatusInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="userNameTemplateSuffixInput")
+    def user_name_template_suffix_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "userNameTemplateSuffixInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="userNameTemplateTypeInput")
+    def user_name_template_type_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "userNameTemplateTypeInput"))
 
     @builtins.property
     @jsii.member(jsii_name="accessibilityErrorRedirectUrl")
@@ -446,6 +544,18 @@ class AppBasicAuth(
         jsii.set(self, "autoSubmitToolbar", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
+    @jsii.member(jsii_name="credentialsScheme")
+    def credentials_scheme(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "credentialsScheme"))
+
+    @credentials_scheme.setter
+    def credentials_scheme(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__f5270bb647fe88c8d1d7313cac76d3a6e5964b3adcace10205c864a739fea348)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "credentialsScheme", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
     @jsii.member(jsii_name="enduserNote")
     def enduser_note(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "enduserNote"))
@@ -524,6 +634,47 @@ class AppBasicAuth(
         jsii.set(self, "logo", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
+    @jsii.member(jsii_name="revealPassword")
+    def reveal_password(
+        self,
+    ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "revealPassword"))
+
+    @reveal_password.setter
+    def reveal_password(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__161ea7d25f097eced1143fad10c26fad43bf748e5547c66e4022a0ab39620012)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "revealPassword", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="sharedPassword")
+    def shared_password(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "sharedPassword"))
+
+    @shared_password.setter
+    def shared_password(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__0993bba523ace44618ac7125eb5e978289db68b48802417d34cfc9b99600291e)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "sharedPassword", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="sharedUsername")
+    def shared_username(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "sharedUsername"))
+
+    @shared_username.setter
+    def shared_username(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__698199fd5eda514772d3ee6f859b14b87e92bb597590f0948c592c902c0d4cbc)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "sharedUsername", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
     @jsii.member(jsii_name="status")
     def status(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "status"))
@@ -547,6 +698,54 @@ class AppBasicAuth(
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         jsii.set(self, "url", value) # pyright: ignore[reportArgumentType]
 
+    @builtins.property
+    @jsii.member(jsii_name="userNameTemplate")
+    def user_name_template(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "userNameTemplate"))
+
+    @user_name_template.setter
+    def user_name_template(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__cb57f2ae518376155f84ac1a5278df0513114894f7a88113d143897242e0f9f4)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "userNameTemplate", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="userNameTemplatePushStatus")
+    def user_name_template_push_status(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "userNameTemplatePushStatus"))
+
+    @user_name_template_push_status.setter
+    def user_name_template_push_status(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__fc448563fc60d9e9ea0ac79d2dbdcb16ac3f47fc3809f09e8d87700b2fda33fe)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "userNameTemplatePushStatus", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="userNameTemplateSuffix")
+    def user_name_template_suffix(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "userNameTemplateSuffix"))
+
+    @user_name_template_suffix.setter
+    def user_name_template_suffix(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__916141b90047e4e2c9c23dd7bd0e5d5ce202f69566fea519106f4679c9a5ebeb)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "userNameTemplateSuffix", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="userNameTemplateType")
+    def user_name_template_type(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "userNameTemplateType"))
+
+    @user_name_template_type.setter
+    def user_name_template_type(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__5df44ef773c8c821ad86ca4469e7c0103b226b2229c8c6ae62943c059180b272)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "userNameTemplateType", value) # pyright: ignore[reportArgumentType]
+
 
 @jsii.data_type(
     jsii_type="@cdktf/provider-okta.appBasicAuth.AppBasicAuthConfig",
@@ -568,13 +767,21 @@ class AppBasicAuth(
         "admin_note": "adminNote",
         "app_links_json": "appLinksJson",
         "auto_submit_toolbar": "autoSubmitToolbar",
+        "credentials_scheme": "credentialsScheme",
         "enduser_note": "enduserNote",
         "hide_ios": "hideIos",
         "hide_web": "hideWeb",
         "id": "id",
         "logo": "logo",
+        "reveal_password": "revealPassword",
+        "shared_password": "sharedPassword",
+        "shared_username": "sharedUsername",
         "status": "status",
         "timeouts": "timeouts",
+        "user_name_template": "userNameTemplate",
+        "user_name_template_push_status": "userNameTemplatePushStatus",
+        "user_name_template_suffix": "userNameTemplateSuffix",
+        "user_name_template_type": "userNameTemplateType",
     },
 )
 class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
@@ -597,13 +804,21 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         admin_note: typing.Optional[builtins.str] = None,
         app_links_json: typing.Optional[builtins.str] = None,
         auto_submit_toolbar: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        credentials_scheme: typing.Optional[builtins.str] = None,
         enduser_note: typing.Optional[builtins.str] = None,
         hide_ios: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         hide_web: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         id: typing.Optional[builtins.str] = None,
         logo: typing.Optional[builtins.str] = None,
+        reveal_password: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        shared_password: typing.Optional[builtins.str] = None,
+        shared_username: typing.Optional[builtins.str] = None,
         status: typing.Optional[builtins.str] = None,
         timeouts: typing.Optional[typing.Union["AppBasicAuthTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
+        user_name_template: typing.Optional[builtins.str] = None,
+        user_name_template_push_status: typing.Optional[builtins.str] = None,
+        user_name_template_suffix: typing.Optional[builtins.str] = None,
+        user_name_template_type: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
         :param connection: 
@@ -613,22 +828,30 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param auth_url: The URL of the authenticating site for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#auth_url AppBasicAuth#auth_url}
-        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#label AppBasicAuth#label}
-        :param url: The URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#url AppBasicAuth#url}
-        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#accessibility_error_redirect_url AppBasicAuth#accessibility_error_redirect_url}
-        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#accessibility_login_redirect_url AppBasicAuth#accessibility_login_redirect_url}
-        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#accessibility_self_service AppBasicAuth#accessibility_self_service}
-        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#admin_note AppBasicAuth#admin_note}
-        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#app_links_json AppBasicAuth#app_links_json}
-        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#auto_submit_toolbar AppBasicAuth#auto_submit_toolbar}
-        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#enduser_note AppBasicAuth#enduser_note}
-        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#hide_ios AppBasicAuth#hide_ios}
-        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#hide_web AppBasicAuth#hide_web}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#id AppBasicAuth#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#logo AppBasicAuth#logo}
-        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#status AppBasicAuth#status}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#timeouts AppBasicAuth#timeouts}
+        :param auth_url: The URL of the authenticating site for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#auth_url AppBasicAuth#auth_url}
+        :param label: The Application's display name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#label AppBasicAuth#label}
+        :param url: The URL of the sign-in page for this app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#url AppBasicAuth#url}
+        :param accessibility_error_redirect_url: Custom error page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_error_redirect_url AppBasicAuth#accessibility_error_redirect_url}
+        :param accessibility_login_redirect_url: Custom login page URL. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_login_redirect_url AppBasicAuth#accessibility_login_redirect_url}
+        :param accessibility_self_service: Enable self service. Default is ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_self_service AppBasicAuth#accessibility_self_service}
+        :param admin_note: Application notes for admins. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#admin_note AppBasicAuth#admin_note}
+        :param app_links_json: Displays specific appLinks for the app. The value for each application link should be boolean. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#app_links_json AppBasicAuth#app_links_json}
+        :param auto_submit_toolbar: Display auto submit toolbar. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#auto_submit_toolbar AppBasicAuth#auto_submit_toolbar}
+        :param credentials_scheme: Application credentials scheme. One of: ``EDIT_USERNAME_AND_PASSWORD``, ``ADMIN_SETS_CREDENTIALS``, ``EDIT_PASSWORD_ONLY``, ``EXTERNAL_PASSWORD_SYNC``, or ``SHARED_USERNAME_AND_PASSWORD``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#credentials_scheme AppBasicAuth#credentials_scheme}
+        :param enduser_note: Application notes for end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#enduser_note AppBasicAuth#enduser_note}
+        :param hide_ios: Do not display application icon on mobile app. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#hide_ios AppBasicAuth#hide_ios}
+        :param hide_web: Do not display application icon to users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#hide_web AppBasicAuth#hide_web}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#id AppBasicAuth#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param logo: Local file path to the logo. The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#logo AppBasicAuth#logo}
+        :param reveal_password: Allow user to reveal password. Default is false. It can not be set to true if credentials_scheme is "ADMIN_SETS_CREDENTIALS", "SHARED_USERNAME_AND_PASSWORD" or "EXTERNAL_PASSWORD_SYNC". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#reveal_password AppBasicAuth#reveal_password}
+        :param shared_password: Shared password, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#shared_password AppBasicAuth#shared_password}
+        :param shared_username: Shared username, required for certain schemes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#shared_username AppBasicAuth#shared_username}
+        :param status: Status of application. By default, it is ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#status AppBasicAuth#status}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#timeouts AppBasicAuth#timeouts}
+        :param user_name_template: Username template. Default: ``${source.login}``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template AppBasicAuth#user_name_template}
+        :param user_name_template_push_status: Push username on update. Valid values: ``PUSH``, ``DONT_PUSH`` and ``NOT_CONFIGURED``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_push_status AppBasicAuth#user_name_template_push_status}
+        :param user_name_template_suffix: Username template suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_suffix AppBasicAuth#user_name_template_suffix}
+        :param user_name_template_type: Username template type. Default: ``BUILT_IN``. Valid values: ``NONE``, ``CUSTOM``, ``BUILT_IN``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_type AppBasicAuth#user_name_template_type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -652,13 +875,21 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument admin_note", value=admin_note, expected_type=type_hints["admin_note"])
             check_type(argname="argument app_links_json", value=app_links_json, expected_type=type_hints["app_links_json"])
             check_type(argname="argument auto_submit_toolbar", value=auto_submit_toolbar, expected_type=type_hints["auto_submit_toolbar"])
+            check_type(argname="argument credentials_scheme", value=credentials_scheme, expected_type=type_hints["credentials_scheme"])
             check_type(argname="argument enduser_note", value=enduser_note, expected_type=type_hints["enduser_note"])
             check_type(argname="argument hide_ios", value=hide_ios, expected_type=type_hints["hide_ios"])
             check_type(argname="argument hide_web", value=hide_web, expected_type=type_hints["hide_web"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
             check_type(argname="argument logo", value=logo, expected_type=type_hints["logo"])
+            check_type(argname="argument reveal_password", value=reveal_password, expected_type=type_hints["reveal_password"])
+            check_type(argname="argument shared_password", value=shared_password, expected_type=type_hints["shared_password"])
+            check_type(argname="argument shared_username", value=shared_username, expected_type=type_hints["shared_username"])
             check_type(argname="argument status", value=status, expected_type=type_hints["status"])
             check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
+            check_type(argname="argument user_name_template", value=user_name_template, expected_type=type_hints["user_name_template"])
+            check_type(argname="argument user_name_template_push_status", value=user_name_template_push_status, expected_type=type_hints["user_name_template_push_status"])
+            check_type(argname="argument user_name_template_suffix", value=user_name_template_suffix, expected_type=type_hints["user_name_template_suffix"])
+            check_type(argname="argument user_name_template_type", value=user_name_template_type, expected_type=type_hints["user_name_template_type"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "auth_url": auth_url,
             "label": label,
@@ -690,6 +921,8 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["app_links_json"] = app_links_json
         if auto_submit_toolbar is not None:
             self._values["auto_submit_toolbar"] = auto_submit_toolbar
+        if credentials_scheme is not None:
+            self._values["credentials_scheme"] = credentials_scheme
         if enduser_note is not None:
             self._values["enduser_note"] = enduser_note
         if hide_ios is not None:
@@ -700,10 +933,24 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["id"] = id
         if logo is not None:
             self._values["logo"] = logo
+        if reveal_password is not None:
+            self._values["reveal_password"] = reveal_password
+        if shared_password is not None:
+            self._values["shared_password"] = shared_password
+        if shared_username is not None:
+            self._values["shared_username"] = shared_username
         if status is not None:
             self._values["status"] = status
         if timeouts is not None:
             self._values["timeouts"] = timeouts
+        if user_name_template is not None:
+            self._values["user_name_template"] = user_name_template
+        if user_name_template_push_status is not None:
+            self._values["user_name_template_push_status"] = user_name_template_push_status
+        if user_name_template_suffix is not None:
+            self._values["user_name_template_suffix"] = user_name_template_suffix
+        if user_name_template_type is not None:
+            self._values["user_name_template_type"] = user_name_template_type
 
     @builtins.property
     def connection(
@@ -773,7 +1020,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def auth_url(self) -> builtins.str:
         '''The URL of the authenticating site for this app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#auth_url AppBasicAuth#auth_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#auth_url AppBasicAuth#auth_url}
         '''
         result = self._values.get("auth_url")
         assert result is not None, "Required property 'auth_url' is missing"
@@ -783,7 +1030,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def label(self) -> builtins.str:
         '''The Application's display name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#label AppBasicAuth#label}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#label AppBasicAuth#label}
         '''
         result = self._values.get("label")
         assert result is not None, "Required property 'label' is missing"
@@ -793,7 +1040,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def url(self) -> builtins.str:
         '''The URL of the sign-in page for this app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#url AppBasicAuth#url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#url AppBasicAuth#url}
         '''
         result = self._values.get("url")
         assert result is not None, "Required property 'url' is missing"
@@ -803,7 +1050,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def accessibility_error_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Custom error page URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#accessibility_error_redirect_url AppBasicAuth#accessibility_error_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_error_redirect_url AppBasicAuth#accessibility_error_redirect_url}
         '''
         result = self._values.get("accessibility_error_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -812,7 +1059,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def accessibility_login_redirect_url(self) -> typing.Optional[builtins.str]:
         '''Custom login page URL.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#accessibility_login_redirect_url AppBasicAuth#accessibility_login_redirect_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_login_redirect_url AppBasicAuth#accessibility_login_redirect_url}
         '''
         result = self._values.get("accessibility_login_redirect_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -823,7 +1070,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Enable self service. Default is ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#accessibility_self_service AppBasicAuth#accessibility_self_service}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#accessibility_self_service AppBasicAuth#accessibility_self_service}
         '''
         result = self._values.get("accessibility_self_service")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -832,7 +1079,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def admin_note(self) -> typing.Optional[builtins.str]:
         '''Application notes for admins.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#admin_note AppBasicAuth#admin_note}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#admin_note AppBasicAuth#admin_note}
         '''
         result = self._values.get("admin_note")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -841,7 +1088,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def app_links_json(self) -> typing.Optional[builtins.str]:
         '''Displays specific appLinks for the app. The value for each application link should be boolean.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#app_links_json AppBasicAuth#app_links_json}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#app_links_json AppBasicAuth#app_links_json}
         '''
         result = self._values.get("app_links_json")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -852,16 +1099,25 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Display auto submit toolbar.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#auto_submit_toolbar AppBasicAuth#auto_submit_toolbar}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#auto_submit_toolbar AppBasicAuth#auto_submit_toolbar}
         '''
         result = self._values.get("auto_submit_toolbar")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
+    def credentials_scheme(self) -> typing.Optional[builtins.str]:
+        '''Application credentials scheme. One of: ``EDIT_USERNAME_AND_PASSWORD``, ``ADMIN_SETS_CREDENTIALS``, ``EDIT_PASSWORD_ONLY``, ``EXTERNAL_PASSWORD_SYNC``, or ``SHARED_USERNAME_AND_PASSWORD``.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#credentials_scheme AppBasicAuth#credentials_scheme}
+        '''
+        result = self._values.get("credentials_scheme")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
     def enduser_note(self) -> typing.Optional[builtins.str]:
         '''Application notes for end users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#enduser_note AppBasicAuth#enduser_note}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#enduser_note AppBasicAuth#enduser_note}
         '''
         result = self._values.get("enduser_note")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -872,7 +1128,7 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not display application icon on mobile app.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#hide_ios AppBasicAuth#hide_ios}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#hide_ios AppBasicAuth#hide_ios}
         '''
         result = self._values.get("hide_ios")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -883,14 +1139,14 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not display application icon to users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#hide_web AppBasicAuth#hide_web}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#hide_web AppBasicAuth#hide_web}
         '''
         result = self._values.get("hide_web")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#id AppBasicAuth#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#id AppBasicAuth#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -904,16 +1160,47 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         The file must be in PNG, JPG, or GIF format, and less than 1 MB in size.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#logo AppBasicAuth#logo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#logo AppBasicAuth#logo}
         '''
         result = self._values.get("logo")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def reveal_password(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''Allow user to reveal password.
+
+        Default is false. It can not be set to true if credentials_scheme is "ADMIN_SETS_CREDENTIALS", "SHARED_USERNAME_AND_PASSWORD" or "EXTERNAL_PASSWORD_SYNC".
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#reveal_password AppBasicAuth#reveal_password}
+        '''
+        result = self._values.get("reveal_password")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    @builtins.property
+    def shared_password(self) -> typing.Optional[builtins.str]:
+        '''Shared password, required for certain schemes.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#shared_password AppBasicAuth#shared_password}
+        '''
+        result = self._values.get("shared_password")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def shared_username(self) -> typing.Optional[builtins.str]:
+        '''Shared username, required for certain schemes.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#shared_username AppBasicAuth#shared_username}
+        '''
+        result = self._values.get("shared_username")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def status(self) -> typing.Optional[builtins.str]:
         '''Status of application. By default, it is ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#status AppBasicAuth#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#status AppBasicAuth#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -922,10 +1209,46 @@ class AppBasicAuthConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["AppBasicAuthTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#timeouts AppBasicAuth#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#timeouts AppBasicAuth#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["AppBasicAuthTimeouts"], result)
+
+    @builtins.property
+    def user_name_template(self) -> typing.Optional[builtins.str]:
+        '''Username template. Default: ``${source.login}``.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template AppBasicAuth#user_name_template}
+        '''
+        result = self._values.get("user_name_template")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def user_name_template_push_status(self) -> typing.Optional[builtins.str]:
+        '''Push username on update. Valid values: ``PUSH``, ``DONT_PUSH`` and ``NOT_CONFIGURED``.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_push_status AppBasicAuth#user_name_template_push_status}
+        '''
+        result = self._values.get("user_name_template_push_status")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def user_name_template_suffix(self) -> typing.Optional[builtins.str]:
+        '''Username template suffix.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_suffix AppBasicAuth#user_name_template_suffix}
+        '''
+        result = self._values.get("user_name_template_suffix")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def user_name_template_type(self) -> typing.Optional[builtins.str]:
+        '''Username template type. Default: ``BUILT_IN``. Valid values: ``NONE``, ``CUSTOM``, ``BUILT_IN``.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#user_name_template_type AppBasicAuth#user_name_template_type}
+        '''
+        result = self._values.get("user_name_template_type")
+        return typing.cast(typing.Optional[builtins.str], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
@@ -953,9 +1276,9 @@ class AppBasicAuthTimeouts:
         update: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#create AppBasicAuth#create}.
-        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#read AppBasicAuth#read}.
-        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#update AppBasicAuth#update}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#create AppBasicAuth#create}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#read AppBasicAuth#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#update AppBasicAuth#update}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__f38857adcd5046c32b3c0049010c48a93cfe90e41d70d3160c1e279b96aa3ea1)
@@ -972,19 +1295,19 @@ class AppBasicAuthTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#create AppBasicAuth#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#create AppBasicAuth#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def read(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#read AppBasicAuth#read}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#read AppBasicAuth#read}.'''
         result = self._values.get("read")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def update(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/app_basic_auth#update AppBasicAuth#update}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/app_basic_auth#update AppBasicAuth#update}.'''
         result = self._values.get("update")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1123,13 +1446,21 @@ def _typecheckingstub__15a6dc01dbca2fe8ade4393b2af8bb27527a7e01bf7efb3f5a7f043da
     admin_note: typing.Optional[builtins.str] = None,
     app_links_json: typing.Optional[builtins.str] = None,
     auto_submit_toolbar: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    credentials_scheme: typing.Optional[builtins.str] = None,
     enduser_note: typing.Optional[builtins.str] = None,
     hide_ios: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     hide_web: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     id: typing.Optional[builtins.str] = None,
     logo: typing.Optional[builtins.str] = None,
+    reveal_password: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    shared_password: typing.Optional[builtins.str] = None,
+    shared_username: typing.Optional[builtins.str] = None,
     status: typing.Optional[builtins.str] = None,
     timeouts: typing.Optional[typing.Union[AppBasicAuthTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
+    user_name_template: typing.Optional[builtins.str] = None,
+    user_name_template_push_status: typing.Optional[builtins.str] = None,
+    user_name_template_suffix: typing.Optional[builtins.str] = None,
+    user_name_template_type: typing.Optional[builtins.str] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
     depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -1192,6 +1523,12 @@ def _typecheckingstub__46f1fd7b5bea0214b9971a6fc03bdb05112fc631f210ed296606dafdf
     """Type checking stubs"""
     pass
 
+def _typecheckingstub__f5270bb647fe88c8d1d7313cac76d3a6e5964b3adcace10205c864a739fea348(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
 def _typecheckingstub__94189fbf3cc9aff2c36765ab2a18da7b58e9c7fc7b810ea35d3d98815a55cb36(
     value: builtins.str,
 ) -> None:
@@ -1228,6 +1565,24 @@ def _typecheckingstub__a60c42008d0eb03afc37ce41afc4e2cc68736de4a88b46ac93507d07b
     """Type checking stubs"""
     pass
 
+def _typecheckingstub__161ea7d25f097eced1143fad10c26fad43bf748e5547c66e4022a0ab39620012(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__0993bba523ace44618ac7125eb5e978289db68b48802417d34cfc9b99600291e(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__698199fd5eda514772d3ee6f859b14b87e92bb597590f0948c592c902c0d4cbc(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
 def _typecheckingstub__d825a8e3196e6683246b21ae832e6f6d6019e4c80b54a7f66f4e1a8533bab96a(
     value: builtins.str,
 ) -> None:
@@ -1235,6 +1590,30 @@ def _typecheckingstub__d825a8e3196e6683246b21ae832e6f6d6019e4c80b54a7f66f4e1a853
     pass
 
 def _typecheckingstub__67f3f59b5984634de47114c0b845effbfb25f985f2437f39a6d1a70f82fecd93(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__cb57f2ae518376155f84ac1a5278df0513114894f7a88113d143897242e0f9f4(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__fc448563fc60d9e9ea0ac79d2dbdcb16ac3f47fc3809f09e8d87700b2fda33fe(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__916141b90047e4e2c9c23dd7bd0e5d5ce202f69566fea519106f4679c9a5ebeb(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__5df44ef773c8c821ad86ca4469e7c0103b226b2229c8c6ae62943c059180b272(
     value: builtins.str,
 ) -> None:
     """Type checking stubs"""
@@ -1258,13 +1637,21 @@ def _typecheckingstub__83a1b1e2f148023064aa0d2fb20c214954f54adc3073f93ef95ed215a
     admin_note: typing.Optional[builtins.str] = None,
     app_links_json: typing.Optional[builtins.str] = None,
     auto_submit_toolbar: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    credentials_scheme: typing.Optional[builtins.str] = None,
     enduser_note: typing.Optional[builtins.str] = None,
     hide_ios: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     hide_web: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     id: typing.Optional[builtins.str] = None,
     logo: typing.Optional[builtins.str] = None,
+    reveal_password: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    shared_password: typing.Optional[builtins.str] = None,
+    shared_username: typing.Optional[builtins.str] = None,
     status: typing.Optional[builtins.str] = None,
     timeouts: typing.Optional[typing.Union[AppBasicAuthTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
+    user_name_template: typing.Optional[builtins.str] = None,
+    user_name_template_push_status: typing.Optional[builtins.str] = None,
+    user_name_template_suffix: typing.Optional[builtins.str] = None,
+    user_name_template_type: typing.Optional[builtins.str] = None,
 ) -> None:
     """Type checking stubs"""
     pass

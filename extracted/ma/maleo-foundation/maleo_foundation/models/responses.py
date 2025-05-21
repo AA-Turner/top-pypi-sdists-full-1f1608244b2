@@ -50,6 +50,11 @@ class BaseResponses:
         message:str = "Unexpected Server Error"
         description:str = "An unexpected error occurred while processing your request."
 
+    class NotImplemented(Fail):
+        code:str = "MAL-NIM-001"
+        message:str = "Not Implemented"
+        description:str = "This request is not yet implemented by the system."
+
     class NotFound(BaseResultSchemas.NotFound): pass
 
     class NoData(BaseResultSchemas.NoData): pass
@@ -119,6 +124,10 @@ class BaseResponses:
         },
         status.HTTP_500_INTERNAL_SERVER_ERROR: {
             "description": "Internal Server Error Response",
+            "model": ServerError
+        },
+        status.HTTP_501_NOT_IMPLEMENTED: {
+            "description": "Not Implemented Response",
             "model": ServerError
         }
     }

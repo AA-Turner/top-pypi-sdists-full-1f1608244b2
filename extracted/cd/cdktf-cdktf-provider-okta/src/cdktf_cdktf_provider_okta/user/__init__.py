@@ -1,7 +1,7 @@
 r'''
 # `okta_user`
 
-Refer to the Terraform Registry for docs: [`okta_user`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user).
+Refer to the Terraform Registry for docs: [`okta_user`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class User(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.user.User",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user okta_user}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user okta_user}.'''
 
     def __init__(
         self,
@@ -102,53 +102,53 @@ class User(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user okta_user} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user okta_user} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param email: User primary email address. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#email User#email}
-        :param first_name: User first name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#first_name User#first_name}
-        :param last_name: User last name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#last_name User#last_name}
-        :param login: User Okta login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#login User#login}
-        :param city: User city. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#city User#city}
-        :param cost_center: User cost center. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#cost_center User#cost_center}
-        :param country_code: User country code. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#country_code User#country_code}
-        :param custom_profile_attributes: JSON formatted custom attributes for a user. It must be JSON due to various types Okta allows. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#custom_profile_attributes User#custom_profile_attributes}
-        :param custom_profile_attributes_to_ignore: List of custom_profile_attribute keys that should be excluded from being managed by Terraform. This is useful in situations where specific custom fields may contain sensitive information and should be managed outside of Terraform. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#custom_profile_attributes_to_ignore User#custom_profile_attributes_to_ignore}
-        :param department: User department. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#department User#department}
-        :param display_name: User display name, suitable to show end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#display_name User#display_name}
-        :param division: User division. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#division User#division}
-        :param employee_number: User employee number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#employee_number User#employee_number}
-        :param expire_password_on_create: If set to ``true``, the user will have to change the password at the next login. This property will be used when user is being created and works only when ``password`` field is set. Default: ``false`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#expire_password_on_create User#expire_password_on_create}
-        :param honorific_prefix: User honorific prefix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#honorific_prefix User#honorific_prefix}
-        :param honorific_suffix: User honorific suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#honorific_suffix User#honorific_suffix}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#id User#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param locale: User default location. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#locale User#locale}
-        :param manager: Manager of User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#manager User#manager}
-        :param manager_id: Manager ID of User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#manager_id User#manager_id}
-        :param middle_name: User middle name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#middle_name User#middle_name}
-        :param mobile_phone: User mobile phone number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#mobile_phone User#mobile_phone}
-        :param nick_name: User nickname. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#nick_name User#nick_name}
-        :param old_password: Old User Password. Should be only set in case the password was not changed using the provider. fter successful password change this field should be removed and ``password`` field should be used for further changes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#old_password User#old_password}
-        :param organization: User organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#organization User#organization}
-        :param password: User Password. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#password User#password}
-        :param password_hash: password_hash block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#password_hash User#password_hash}
-        :param password_inline_hook: Specifies that a Password Import Inline Hook should be triggered to handle verification of the user's password the first time the user logs in. This allows an existing password to be imported into Okta directly from some other store. When updating a user with a password hook the user must be in the ``STAGED`` status. The ``password`` field should not be specified when using Password Import Inline Hook. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#password_inline_hook User#password_inline_hook}
-        :param postal_address: User mailing address. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#postal_address User#postal_address}
-        :param preferred_language: User preferred language. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#preferred_language User#preferred_language}
-        :param primary_phone: User primary phone number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#primary_phone User#primary_phone}
-        :param profile_url: User online profile (web page). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#profile_url User#profile_url}
-        :param recovery_answer: User Password Recovery Answer. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#recovery_answer User#recovery_answer}
-        :param recovery_question: User Password Recovery Question. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#recovery_question User#recovery_question}
-        :param second_email: User secondary email address, used for account recovery. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#second_email User#second_email}
-        :param skip_roles: Do not populate user roles information (prevents additional API call). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#skip_roles User#skip_roles}
-        :param state: User state or region. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#state User#state}
-        :param status: User profile property. Valid values are ``ACTIVE``, ``DEPROVISIONED``, ``STAGED``, ``SUSPENDED``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#status User#status}
-        :param street_address: User street address. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#street_address User#street_address}
-        :param timezone: User default timezone. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#timezone User#timezone}
-        :param title: User title. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#title User#title}
-        :param user_type: User employee type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#user_type User#user_type}
-        :param zip_code: User zipcode or postal code. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#zip_code User#zip_code}
+        :param email: User primary email address. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#email User#email}
+        :param first_name: User first name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#first_name User#first_name}
+        :param last_name: User last name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#last_name User#last_name}
+        :param login: User Okta login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#login User#login}
+        :param city: User city. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#city User#city}
+        :param cost_center: User cost center. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#cost_center User#cost_center}
+        :param country_code: User country code. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#country_code User#country_code}
+        :param custom_profile_attributes: JSON formatted custom attributes for a user. It must be JSON due to various types Okta allows. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#custom_profile_attributes User#custom_profile_attributes}
+        :param custom_profile_attributes_to_ignore: List of custom_profile_attribute keys that should be excluded from being managed by Terraform. This is useful in situations where specific custom fields may contain sensitive information and should be managed outside of Terraform. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#custom_profile_attributes_to_ignore User#custom_profile_attributes_to_ignore}
+        :param department: User department. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#department User#department}
+        :param display_name: User display name, suitable to show end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#display_name User#display_name}
+        :param division: User division. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#division User#division}
+        :param employee_number: User employee number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#employee_number User#employee_number}
+        :param expire_password_on_create: If set to ``true``, the user will have to change the password at the next login. This property will be used when user is being created and works only when ``password`` field is set. Default: ``false`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#expire_password_on_create User#expire_password_on_create}
+        :param honorific_prefix: User honorific prefix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#honorific_prefix User#honorific_prefix}
+        :param honorific_suffix: User honorific suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#honorific_suffix User#honorific_suffix}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#id User#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param locale: User default location. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#locale User#locale}
+        :param manager: Manager of User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#manager User#manager}
+        :param manager_id: Manager ID of User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#manager_id User#manager_id}
+        :param middle_name: User middle name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#middle_name User#middle_name}
+        :param mobile_phone: User mobile phone number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#mobile_phone User#mobile_phone}
+        :param nick_name: User nickname. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#nick_name User#nick_name}
+        :param old_password: Old User Password. Should be only set in case the password was not changed using the provider. fter successful password change this field should be removed and ``password`` field should be used for further changes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#old_password User#old_password}
+        :param organization: User organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#organization User#organization}
+        :param password: User Password. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#password User#password}
+        :param password_hash: password_hash block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#password_hash User#password_hash}
+        :param password_inline_hook: Specifies that a Password Import Inline Hook should be triggered to handle verification of the user's password the first time the user logs in. This allows an existing password to be imported into Okta directly from some other store. When updating a user with a password hook the user must be in the ``STAGED`` status. The ``password`` field should not be specified when using Password Import Inline Hook. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#password_inline_hook User#password_inline_hook}
+        :param postal_address: User mailing address. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#postal_address User#postal_address}
+        :param preferred_language: User preferred language. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#preferred_language User#preferred_language}
+        :param primary_phone: User primary phone number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#primary_phone User#primary_phone}
+        :param profile_url: User online profile (web page). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#profile_url User#profile_url}
+        :param recovery_answer: User Password Recovery Answer. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#recovery_answer User#recovery_answer}
+        :param recovery_question: User Password Recovery Question. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#recovery_question User#recovery_question}
+        :param second_email: User secondary email address, used for account recovery. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#second_email User#second_email}
+        :param skip_roles: Do not populate user roles information (prevents additional API call). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#skip_roles User#skip_roles}
+        :param state: User state or region. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#state User#state}
+        :param status: User profile property. Valid values are ``ACTIVE``, ``DEPROVISIONED``, ``STAGED``, ``SUSPENDED``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#status User#status}
+        :param street_address: User street address. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#street_address User#street_address}
+        :param timezone: User default timezone. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#timezone User#timezone}
+        :param title: User title. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#title User#title}
+        :param user_type: User employee type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#user_type User#user_type}
+        :param zip_code: User zipcode or postal code. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#zip_code User#zip_code}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -229,7 +229,7 @@ class User(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the User to import.
-        :param import_from_id: The id of the existing User that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing User that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the User to import is found.
         '''
         if __debug__:
@@ -251,11 +251,11 @@ class User(
         work_factor: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param algorithm: The algorithm used to generate the hash using the password. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#algorithm User#algorithm}
-        :param value: For SHA-512, SHA-256, SHA-1, MD5, This is the actual base64-encoded hash of the password (and salt, if used). This is the Base64 encoded value of the SHA-512/SHA-256/SHA-1/MD5 digest that was computed by either pre-fixing or post-fixing the salt to the password, depending on the saltOrder. If a salt was not used in the source system, then this should just be the the Base64 encoded value of the password's SHA-512/SHA-256/SHA-1/MD5 digest. For BCRYPT, This is the actual radix64-encoded hashed password. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#value User#value}
-        :param salt: Only required for salted hashes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#salt User#salt}
-        :param salt_order: Specifies whether salt was pre- or postfixed to the password before hashing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#salt_order User#salt_order}
-        :param work_factor: Governs the strength of the hash and the time required to compute it. Only required for BCRYPT algorithm. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#work_factor User#work_factor}
+        :param algorithm: The algorithm used to generate the hash using the password. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#algorithm User#algorithm}
+        :param value: For SHA-512, SHA-256, SHA-1, MD5, This is the actual base64-encoded hash of the password (and salt, if used). This is the Base64 encoded value of the SHA-512/SHA-256/SHA-1/MD5 digest that was computed by either pre-fixing or post-fixing the salt to the password, depending on the saltOrder. If a salt was not used in the source system, then this should just be the the Base64 encoded value of the password's SHA-512/SHA-256/SHA-1/MD5 digest. For BCRYPT, This is the actual radix64-encoded hashed password. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#value User#value}
+        :param salt: Only required for salted hashes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#salt User#salt}
+        :param salt_order: Specifies whether salt was pre- or postfixed to the password before hashing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#salt_order User#salt_order}
+        :param work_factor: Governs the strength of the hash and the time required to compute it. Only required for BCRYPT algorithm. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#work_factor User#work_factor}
         '''
         value_ = UserPasswordHash(
             algorithm=algorithm,
@@ -1302,49 +1302,49 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param email: User primary email address. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#email User#email}
-        :param first_name: User first name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#first_name User#first_name}
-        :param last_name: User last name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#last_name User#last_name}
-        :param login: User Okta login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#login User#login}
-        :param city: User city. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#city User#city}
-        :param cost_center: User cost center. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#cost_center User#cost_center}
-        :param country_code: User country code. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#country_code User#country_code}
-        :param custom_profile_attributes: JSON formatted custom attributes for a user. It must be JSON due to various types Okta allows. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#custom_profile_attributes User#custom_profile_attributes}
-        :param custom_profile_attributes_to_ignore: List of custom_profile_attribute keys that should be excluded from being managed by Terraform. This is useful in situations where specific custom fields may contain sensitive information and should be managed outside of Terraform. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#custom_profile_attributes_to_ignore User#custom_profile_attributes_to_ignore}
-        :param department: User department. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#department User#department}
-        :param display_name: User display name, suitable to show end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#display_name User#display_name}
-        :param division: User division. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#division User#division}
-        :param employee_number: User employee number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#employee_number User#employee_number}
-        :param expire_password_on_create: If set to ``true``, the user will have to change the password at the next login. This property will be used when user is being created and works only when ``password`` field is set. Default: ``false`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#expire_password_on_create User#expire_password_on_create}
-        :param honorific_prefix: User honorific prefix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#honorific_prefix User#honorific_prefix}
-        :param honorific_suffix: User honorific suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#honorific_suffix User#honorific_suffix}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#id User#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param locale: User default location. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#locale User#locale}
-        :param manager: Manager of User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#manager User#manager}
-        :param manager_id: Manager ID of User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#manager_id User#manager_id}
-        :param middle_name: User middle name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#middle_name User#middle_name}
-        :param mobile_phone: User mobile phone number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#mobile_phone User#mobile_phone}
-        :param nick_name: User nickname. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#nick_name User#nick_name}
-        :param old_password: Old User Password. Should be only set in case the password was not changed using the provider. fter successful password change this field should be removed and ``password`` field should be used for further changes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#old_password User#old_password}
-        :param organization: User organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#organization User#organization}
-        :param password: User Password. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#password User#password}
-        :param password_hash: password_hash block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#password_hash User#password_hash}
-        :param password_inline_hook: Specifies that a Password Import Inline Hook should be triggered to handle verification of the user's password the first time the user logs in. This allows an existing password to be imported into Okta directly from some other store. When updating a user with a password hook the user must be in the ``STAGED`` status. The ``password`` field should not be specified when using Password Import Inline Hook. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#password_inline_hook User#password_inline_hook}
-        :param postal_address: User mailing address. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#postal_address User#postal_address}
-        :param preferred_language: User preferred language. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#preferred_language User#preferred_language}
-        :param primary_phone: User primary phone number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#primary_phone User#primary_phone}
-        :param profile_url: User online profile (web page). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#profile_url User#profile_url}
-        :param recovery_answer: User Password Recovery Answer. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#recovery_answer User#recovery_answer}
-        :param recovery_question: User Password Recovery Question. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#recovery_question User#recovery_question}
-        :param second_email: User secondary email address, used for account recovery. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#second_email User#second_email}
-        :param skip_roles: Do not populate user roles information (prevents additional API call). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#skip_roles User#skip_roles}
-        :param state: User state or region. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#state User#state}
-        :param status: User profile property. Valid values are ``ACTIVE``, ``DEPROVISIONED``, ``STAGED``, ``SUSPENDED``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#status User#status}
-        :param street_address: User street address. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#street_address User#street_address}
-        :param timezone: User default timezone. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#timezone User#timezone}
-        :param title: User title. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#title User#title}
-        :param user_type: User employee type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#user_type User#user_type}
-        :param zip_code: User zipcode or postal code. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#zip_code User#zip_code}
+        :param email: User primary email address. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#email User#email}
+        :param first_name: User first name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#first_name User#first_name}
+        :param last_name: User last name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#last_name User#last_name}
+        :param login: User Okta login. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#login User#login}
+        :param city: User city. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#city User#city}
+        :param cost_center: User cost center. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#cost_center User#cost_center}
+        :param country_code: User country code. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#country_code User#country_code}
+        :param custom_profile_attributes: JSON formatted custom attributes for a user. It must be JSON due to various types Okta allows. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#custom_profile_attributes User#custom_profile_attributes}
+        :param custom_profile_attributes_to_ignore: List of custom_profile_attribute keys that should be excluded from being managed by Terraform. This is useful in situations where specific custom fields may contain sensitive information and should be managed outside of Terraform. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#custom_profile_attributes_to_ignore User#custom_profile_attributes_to_ignore}
+        :param department: User department. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#department User#department}
+        :param display_name: User display name, suitable to show end users. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#display_name User#display_name}
+        :param division: User division. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#division User#division}
+        :param employee_number: User employee number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#employee_number User#employee_number}
+        :param expire_password_on_create: If set to ``true``, the user will have to change the password at the next login. This property will be used when user is being created and works only when ``password`` field is set. Default: ``false`` Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#expire_password_on_create User#expire_password_on_create}
+        :param honorific_prefix: User honorific prefix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#honorific_prefix User#honorific_prefix}
+        :param honorific_suffix: User honorific suffix. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#honorific_suffix User#honorific_suffix}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#id User#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param locale: User default location. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#locale User#locale}
+        :param manager: Manager of User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#manager User#manager}
+        :param manager_id: Manager ID of User. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#manager_id User#manager_id}
+        :param middle_name: User middle name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#middle_name User#middle_name}
+        :param mobile_phone: User mobile phone number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#mobile_phone User#mobile_phone}
+        :param nick_name: User nickname. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#nick_name User#nick_name}
+        :param old_password: Old User Password. Should be only set in case the password was not changed using the provider. fter successful password change this field should be removed and ``password`` field should be used for further changes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#old_password User#old_password}
+        :param organization: User organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#organization User#organization}
+        :param password: User Password. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#password User#password}
+        :param password_hash: password_hash block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#password_hash User#password_hash}
+        :param password_inline_hook: Specifies that a Password Import Inline Hook should be triggered to handle verification of the user's password the first time the user logs in. This allows an existing password to be imported into Okta directly from some other store. When updating a user with a password hook the user must be in the ``STAGED`` status. The ``password`` field should not be specified when using Password Import Inline Hook. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#password_inline_hook User#password_inline_hook}
+        :param postal_address: User mailing address. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#postal_address User#postal_address}
+        :param preferred_language: User preferred language. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#preferred_language User#preferred_language}
+        :param primary_phone: User primary phone number. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#primary_phone User#primary_phone}
+        :param profile_url: User online profile (web page). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#profile_url User#profile_url}
+        :param recovery_answer: User Password Recovery Answer. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#recovery_answer User#recovery_answer}
+        :param recovery_question: User Password Recovery Question. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#recovery_question User#recovery_question}
+        :param second_email: User secondary email address, used for account recovery. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#second_email User#second_email}
+        :param skip_roles: Do not populate user roles information (prevents additional API call). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#skip_roles User#skip_roles}
+        :param state: User state or region. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#state User#state}
+        :param status: User profile property. Valid values are ``ACTIVE``, ``DEPROVISIONED``, ``STAGED``, ``SUSPENDED``. Default: ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#status User#status}
+        :param street_address: User street address. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#street_address User#street_address}
+        :param timezone: User default timezone. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#timezone User#timezone}
+        :param title: User title. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#title User#title}
+        :param user_type: User employee type. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#user_type User#user_type}
+        :param zip_code: User zipcode or postal code. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#zip_code User#zip_code}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1569,7 +1569,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def email(self) -> builtins.str:
         '''User primary email address.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#email User#email}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#email User#email}
         '''
         result = self._values.get("email")
         assert result is not None, "Required property 'email' is missing"
@@ -1579,7 +1579,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def first_name(self) -> builtins.str:
         '''User first name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#first_name User#first_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#first_name User#first_name}
         '''
         result = self._values.get("first_name")
         assert result is not None, "Required property 'first_name' is missing"
@@ -1589,7 +1589,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def last_name(self) -> builtins.str:
         '''User last name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#last_name User#last_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#last_name User#last_name}
         '''
         result = self._values.get("last_name")
         assert result is not None, "Required property 'last_name' is missing"
@@ -1599,7 +1599,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def login(self) -> builtins.str:
         '''User Okta login.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#login User#login}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#login User#login}
         '''
         result = self._values.get("login")
         assert result is not None, "Required property 'login' is missing"
@@ -1609,7 +1609,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def city(self) -> typing.Optional[builtins.str]:
         '''User city.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#city User#city}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#city User#city}
         '''
         result = self._values.get("city")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1618,7 +1618,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def cost_center(self) -> typing.Optional[builtins.str]:
         '''User cost center.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#cost_center User#cost_center}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#cost_center User#cost_center}
         '''
         result = self._values.get("cost_center")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1627,7 +1627,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def country_code(self) -> typing.Optional[builtins.str]:
         '''User country code.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#country_code User#country_code}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#country_code User#country_code}
         '''
         result = self._values.get("country_code")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1636,7 +1636,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def custom_profile_attributes(self) -> typing.Optional[builtins.str]:
         '''JSON formatted custom attributes for a user. It must be JSON due to various types Okta allows.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#custom_profile_attributes User#custom_profile_attributes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#custom_profile_attributes User#custom_profile_attributes}
         '''
         result = self._values.get("custom_profile_attributes")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1649,7 +1649,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This is useful in situations where specific custom fields may contain sensitive information and should be managed outside of Terraform.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#custom_profile_attributes_to_ignore User#custom_profile_attributes_to_ignore}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#custom_profile_attributes_to_ignore User#custom_profile_attributes_to_ignore}
         '''
         result = self._values.get("custom_profile_attributes_to_ignore")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1658,7 +1658,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def department(self) -> typing.Optional[builtins.str]:
         '''User department.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#department User#department}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#department User#department}
         '''
         result = self._values.get("department")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1667,7 +1667,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def display_name(self) -> typing.Optional[builtins.str]:
         '''User display name, suitable to show end users.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#display_name User#display_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#display_name User#display_name}
         '''
         result = self._values.get("display_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1676,7 +1676,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def division(self) -> typing.Optional[builtins.str]:
         '''User division.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#division User#division}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#division User#division}
         '''
         result = self._values.get("division")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1685,7 +1685,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def employee_number(self) -> typing.Optional[builtins.str]:
         '''User employee number.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#employee_number User#employee_number}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#employee_number User#employee_number}
         '''
         result = self._values.get("employee_number")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1698,7 +1698,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This property will be used when user is being created and works only when ``password`` field is set. Default: ``false``
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#expire_password_on_create User#expire_password_on_create}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#expire_password_on_create User#expire_password_on_create}
         '''
         result = self._values.get("expire_password_on_create")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1707,7 +1707,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def honorific_prefix(self) -> typing.Optional[builtins.str]:
         '''User honorific prefix.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#honorific_prefix User#honorific_prefix}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#honorific_prefix User#honorific_prefix}
         '''
         result = self._values.get("honorific_prefix")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1716,14 +1716,14 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def honorific_suffix(self) -> typing.Optional[builtins.str]:
         '''User honorific suffix.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#honorific_suffix User#honorific_suffix}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#honorific_suffix User#honorific_suffix}
         '''
         result = self._values.get("honorific_suffix")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#id User#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#id User#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1735,7 +1735,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def locale(self) -> typing.Optional[builtins.str]:
         '''User default location.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#locale User#locale}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#locale User#locale}
         '''
         result = self._values.get("locale")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1744,7 +1744,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def manager(self) -> typing.Optional[builtins.str]:
         '''Manager of User.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#manager User#manager}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#manager User#manager}
         '''
         result = self._values.get("manager")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1753,7 +1753,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def manager_id(self) -> typing.Optional[builtins.str]:
         '''Manager ID of User.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#manager_id User#manager_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#manager_id User#manager_id}
         '''
         result = self._values.get("manager_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1762,7 +1762,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def middle_name(self) -> typing.Optional[builtins.str]:
         '''User middle name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#middle_name User#middle_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#middle_name User#middle_name}
         '''
         result = self._values.get("middle_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1771,7 +1771,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def mobile_phone(self) -> typing.Optional[builtins.str]:
         '''User mobile phone number.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#mobile_phone User#mobile_phone}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#mobile_phone User#mobile_phone}
         '''
         result = self._values.get("mobile_phone")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1780,7 +1780,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def nick_name(self) -> typing.Optional[builtins.str]:
         '''User nickname.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#nick_name User#nick_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#nick_name User#nick_name}
         '''
         result = self._values.get("nick_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1791,7 +1791,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Should be only set in case the password was not changed using the provider. fter successful password change this field should be removed and ``password`` field should be used for further changes.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#old_password User#old_password}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#old_password User#old_password}
         '''
         result = self._values.get("old_password")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1800,7 +1800,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def organization(self) -> typing.Optional[builtins.str]:
         '''User organization.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#organization User#organization}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#organization User#organization}
         '''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1809,7 +1809,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def password(self) -> typing.Optional[builtins.str]:
         '''User Password.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#password User#password}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#password User#password}
         '''
         result = self._values.get("password")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1818,7 +1818,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def password_hash(self) -> typing.Optional["UserPasswordHash"]:
         '''password_hash block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#password_hash User#password_hash}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#password_hash User#password_hash}
         '''
         result = self._values.get("password_hash")
         return typing.cast(typing.Optional["UserPasswordHash"], result)
@@ -1829,7 +1829,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This allows an existing password to be imported into Okta directly from some other store. When updating a user with a password hook the user must be in the ``STAGED`` status. The ``password`` field should not be specified when using Password Import Inline Hook.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#password_inline_hook User#password_inline_hook}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#password_inline_hook User#password_inline_hook}
         '''
         result = self._values.get("password_inline_hook")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1838,7 +1838,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def postal_address(self) -> typing.Optional[builtins.str]:
         '''User mailing address.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#postal_address User#postal_address}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#postal_address User#postal_address}
         '''
         result = self._values.get("postal_address")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1847,7 +1847,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def preferred_language(self) -> typing.Optional[builtins.str]:
         '''User preferred language.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#preferred_language User#preferred_language}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#preferred_language User#preferred_language}
         '''
         result = self._values.get("preferred_language")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1856,7 +1856,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def primary_phone(self) -> typing.Optional[builtins.str]:
         '''User primary phone number.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#primary_phone User#primary_phone}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#primary_phone User#primary_phone}
         '''
         result = self._values.get("primary_phone")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1865,7 +1865,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def profile_url(self) -> typing.Optional[builtins.str]:
         '''User online profile (web page).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#profile_url User#profile_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#profile_url User#profile_url}
         '''
         result = self._values.get("profile_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1874,7 +1874,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def recovery_answer(self) -> typing.Optional[builtins.str]:
         '''User Password Recovery Answer.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#recovery_answer User#recovery_answer}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#recovery_answer User#recovery_answer}
         '''
         result = self._values.get("recovery_answer")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1883,7 +1883,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def recovery_question(self) -> typing.Optional[builtins.str]:
         '''User Password Recovery Question.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#recovery_question User#recovery_question}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#recovery_question User#recovery_question}
         '''
         result = self._values.get("recovery_question")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1892,7 +1892,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def second_email(self) -> typing.Optional[builtins.str]:
         '''User secondary email address, used for account recovery.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#second_email User#second_email}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#second_email User#second_email}
         '''
         result = self._values.get("second_email")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1903,7 +1903,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not populate user roles information (prevents additional API call).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#skip_roles User#skip_roles}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#skip_roles User#skip_roles}
         '''
         result = self._values.get("skip_roles")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1912,7 +1912,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def state(self) -> typing.Optional[builtins.str]:
         '''User state or region.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#state User#state}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#state User#state}
         '''
         result = self._values.get("state")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1921,7 +1921,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''User profile property. Valid values are ``ACTIVE``, ``DEPROVISIONED``, ``STAGED``, ``SUSPENDED``. Default: ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#status User#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#status User#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1930,7 +1930,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def street_address(self) -> typing.Optional[builtins.str]:
         '''User street address.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#street_address User#street_address}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#street_address User#street_address}
         '''
         result = self._values.get("street_address")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1939,7 +1939,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timezone(self) -> typing.Optional[builtins.str]:
         '''User default timezone.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#timezone User#timezone}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#timezone User#timezone}
         '''
         result = self._values.get("timezone")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1948,7 +1948,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def title(self) -> typing.Optional[builtins.str]:
         '''User title.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#title User#title}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#title User#title}
         '''
         result = self._values.get("title")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1957,7 +1957,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_type(self) -> typing.Optional[builtins.str]:
         '''User employee type.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#user_type User#user_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#user_type User#user_type}
         '''
         result = self._values.get("user_type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1966,7 +1966,7 @@ class UserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def zip_code(self) -> typing.Optional[builtins.str]:
         '''User zipcode or postal code.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#zip_code User#zip_code}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#zip_code User#zip_code}
         '''
         result = self._values.get("zip_code")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2005,11 +2005,11 @@ class UserPasswordHash:
         work_factor: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param algorithm: The algorithm used to generate the hash using the password. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#algorithm User#algorithm}
-        :param value: For SHA-512, SHA-256, SHA-1, MD5, This is the actual base64-encoded hash of the password (and salt, if used). This is the Base64 encoded value of the SHA-512/SHA-256/SHA-1/MD5 digest that was computed by either pre-fixing or post-fixing the salt to the password, depending on the saltOrder. If a salt was not used in the source system, then this should just be the the Base64 encoded value of the password's SHA-512/SHA-256/SHA-1/MD5 digest. For BCRYPT, This is the actual radix64-encoded hashed password. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#value User#value}
-        :param salt: Only required for salted hashes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#salt User#salt}
-        :param salt_order: Specifies whether salt was pre- or postfixed to the password before hashing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#salt_order User#salt_order}
-        :param work_factor: Governs the strength of the hash and the time required to compute it. Only required for BCRYPT algorithm. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#work_factor User#work_factor}
+        :param algorithm: The algorithm used to generate the hash using the password. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#algorithm User#algorithm}
+        :param value: For SHA-512, SHA-256, SHA-1, MD5, This is the actual base64-encoded hash of the password (and salt, if used). This is the Base64 encoded value of the SHA-512/SHA-256/SHA-1/MD5 digest that was computed by either pre-fixing or post-fixing the salt to the password, depending on the saltOrder. If a salt was not used in the source system, then this should just be the the Base64 encoded value of the password's SHA-512/SHA-256/SHA-1/MD5 digest. For BCRYPT, This is the actual radix64-encoded hashed password. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#value User#value}
+        :param salt: Only required for salted hashes. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#salt User#salt}
+        :param salt_order: Specifies whether salt was pre- or postfixed to the password before hashing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#salt_order User#salt_order}
+        :param work_factor: Governs the strength of the hash and the time required to compute it. Only required for BCRYPT algorithm. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#work_factor User#work_factor}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__0afbd746a632cbc6108f83852997d20161fc56552b1561fe64840d1e603c32d4)
@@ -2033,7 +2033,7 @@ class UserPasswordHash:
     def algorithm(self) -> builtins.str:
         '''The algorithm used to generate the hash using the password.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#algorithm User#algorithm}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#algorithm User#algorithm}
         '''
         result = self._values.get("algorithm")
         assert result is not None, "Required property 'algorithm' is missing"
@@ -2045,7 +2045,7 @@ class UserPasswordHash:
 
         This is the Base64 encoded value of the SHA-512/SHA-256/SHA-1/MD5 digest that was computed by either pre-fixing or post-fixing the salt to the password, depending on the saltOrder. If a salt was not used in the source system, then this should just be the the Base64 encoded value of the password's SHA-512/SHA-256/SHA-1/MD5 digest. For BCRYPT, This is the actual radix64-encoded hashed password.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#value User#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#value User#value}
         '''
         result = self._values.get("value")
         assert result is not None, "Required property 'value' is missing"
@@ -2055,7 +2055,7 @@ class UserPasswordHash:
     def salt(self) -> typing.Optional[builtins.str]:
         '''Only required for salted hashes.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#salt User#salt}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#salt User#salt}
         '''
         result = self._values.get("salt")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2064,7 +2064,7 @@ class UserPasswordHash:
     def salt_order(self) -> typing.Optional[builtins.str]:
         '''Specifies whether salt was pre- or postfixed to the password before hashing.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#salt_order User#salt_order}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#salt_order User#salt_order}
         '''
         result = self._values.get("salt_order")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2073,7 +2073,7 @@ class UserPasswordHash:
     def work_factor(self) -> typing.Optional[jsii.Number]:
         '''Governs the strength of the hash and the time required to compute it. Only required for BCRYPT algorithm.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/user#work_factor User#work_factor}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/user#work_factor User#work_factor}
         '''
         result = self._values.get("work_factor")
         return typing.cast(typing.Optional[jsii.Number], result)

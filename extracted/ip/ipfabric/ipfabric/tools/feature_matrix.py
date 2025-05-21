@@ -1,4 +1,4 @@
-from typing import Any, Union, List
+from typing import Any, Union
 
 from httpx import Client, Timeout
 from pydantic import BaseModel, PrivateAttr
@@ -10,7 +10,7 @@ class FeatureMatrix(BaseModel):
     timeout: Any = Timeout(timeout=5.0)
     proxy: Any = None
     _client: Client = PrivateAttr(None)
-    _versions: List[Version] = PrivateAttr(None)
+    _versions: list[Version] = PrivateAttr(None)
     _matrix_version: Version = PrivateAttr(None)
     _matrix: Any = PrivateAttr(None)
 
@@ -21,7 +21,7 @@ class FeatureMatrix(BaseModel):
         self.create_matrix()
 
     @property
-    def versions(self) -> List[Version]:
+    def versions(self) -> list[Version]:
         """Descending Ordered List of Versions; Newest is index 0."""
         return self._versions
 

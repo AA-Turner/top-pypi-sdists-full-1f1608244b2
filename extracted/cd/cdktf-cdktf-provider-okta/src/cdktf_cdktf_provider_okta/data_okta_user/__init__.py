@@ -1,7 +1,7 @@
 r'''
 # `data_okta_user`
 
-Refer to the Terraform Registry for docs: [`data_okta_user`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user).
+Refer to the Terraform Registry for docs: [`data_okta_user`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaUser(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaUser.DataOktaUser",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user okta_user}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user okta_user}.'''
 
     def __init__(
         self,
@@ -66,17 +66,17 @@ class DataOktaUser(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user okta_user} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user okta_user} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param compound_search_operator: Search operator used when joining multiple search clauses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#compound_search_operator DataOktaUser#compound_search_operator}
-        :param delay_read_seconds: Force delay of the user read by N seconds. Useful when eventual consistency of user information needs to be allowed for. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#delay_read_seconds DataOktaUser#delay_read_seconds}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#id DataOktaUser#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param search: search block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#search DataOktaUser#search}
-        :param skip_groups: Do not populate user groups information (prevents additional API call). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#skip_groups DataOktaUser#skip_groups}
-        :param skip_roles: Do not populate user roles information (prevents additional API call). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#skip_roles DataOktaUser#skip_roles}
-        :param user_id: Retrieve a single user based on their id. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#user_id DataOktaUser#user_id}
+        :param compound_search_operator: Search operator used when joining multiple search clauses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#compound_search_operator DataOktaUser#compound_search_operator}
+        :param delay_read_seconds: Force delay of the user read by N seconds. Useful when eventual consistency of user information needs to be allowed for. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#delay_read_seconds DataOktaUser#delay_read_seconds}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#id DataOktaUser#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param search: search block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#search DataOktaUser#search}
+        :param skip_groups: Do not populate user groups information (prevents additional API call). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#skip_groups DataOktaUser#skip_groups}
+        :param skip_roles: Do not populate user roles information (prevents additional API call). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#skip_roles DataOktaUser#skip_roles}
+        :param user_id: Retrieve a single user based on their id. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#user_id DataOktaUser#user_id}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -121,7 +121,7 @@ class DataOktaUser(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaUser to import.
-        :param import_from_id: The id of the existing DataOktaUser that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaUser that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaUser to import is found.
         '''
         if __debug__:
@@ -538,13 +538,13 @@ class DataOktaUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param compound_search_operator: Search operator used when joining multiple search clauses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#compound_search_operator DataOktaUser#compound_search_operator}
-        :param delay_read_seconds: Force delay of the user read by N seconds. Useful when eventual consistency of user information needs to be allowed for. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#delay_read_seconds DataOktaUser#delay_read_seconds}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#id DataOktaUser#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param search: search block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#search DataOktaUser#search}
-        :param skip_groups: Do not populate user groups information (prevents additional API call). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#skip_groups DataOktaUser#skip_groups}
-        :param skip_roles: Do not populate user roles information (prevents additional API call). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#skip_roles DataOktaUser#skip_roles}
-        :param user_id: Retrieve a single user based on their id. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#user_id DataOktaUser#user_id}
+        :param compound_search_operator: Search operator used when joining multiple search clauses. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#compound_search_operator DataOktaUser#compound_search_operator}
+        :param delay_read_seconds: Force delay of the user read by N seconds. Useful when eventual consistency of user information needs to be allowed for. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#delay_read_seconds DataOktaUser#delay_read_seconds}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#id DataOktaUser#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param search: search block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#search DataOktaUser#search}
+        :param skip_groups: Do not populate user groups information (prevents additional API call). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#skip_groups DataOktaUser#skip_groups}
+        :param skip_roles: Do not populate user roles information (prevents additional API call). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#skip_roles DataOktaUser#skip_roles}
+        :param user_id: Retrieve a single user based on their id. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#user_id DataOktaUser#user_id}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -662,7 +662,7 @@ class DataOktaUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def compound_search_operator(self) -> typing.Optional[builtins.str]:
         '''Search operator used when joining multiple search clauses.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#compound_search_operator DataOktaUser#compound_search_operator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#compound_search_operator DataOktaUser#compound_search_operator}
         '''
         result = self._values.get("compound_search_operator")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -673,14 +673,14 @@ class DataOktaUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Useful when eventual consistency of user information needs to be allowed for.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#delay_read_seconds DataOktaUser#delay_read_seconds}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#delay_read_seconds DataOktaUser#delay_read_seconds}
         '''
         result = self._values.get("delay_read_seconds")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#id DataOktaUser#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#id DataOktaUser#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -694,7 +694,7 @@ class DataOktaUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DataOktaUserSearch"]]]:
         '''search block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#search DataOktaUser#search}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#search DataOktaUser#search}
         '''
         result = self._values.get("search")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["DataOktaUserSearch"]]], result)
@@ -705,7 +705,7 @@ class DataOktaUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not populate user groups information (prevents additional API call).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#skip_groups DataOktaUser#skip_groups}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#skip_groups DataOktaUser#skip_groups}
         '''
         result = self._values.get("skip_groups")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -716,7 +716,7 @@ class DataOktaUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Do not populate user roles information (prevents additional API call).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#skip_roles DataOktaUser#skip_roles}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#skip_roles DataOktaUser#skip_roles}
         '''
         result = self._values.get("skip_roles")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -725,7 +725,7 @@ class DataOktaUserConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def user_id(self) -> typing.Optional[builtins.str]:
         '''Retrieve a single user based on their id.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#user_id DataOktaUser#user_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#user_id DataOktaUser#user_id}
         '''
         result = self._values.get("user_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -762,10 +762,10 @@ class DataOktaUserSearch:
         value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param comparison: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#comparison DataOktaUser#comparison}.
-        :param expression: A raw search expression string. This requires the search feature be on. Please see Okta documentation on their filter API for users. https://developer.okta.com/docs/api/resources/users#list-users-with-search Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#expression DataOktaUser#expression}
-        :param name: Property name to search for. This requires the search feature be on. Please see Okta documentation on their filter API for users. https://developer.okta.com/docs/api/resources/users#list-users-with-search Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#name DataOktaUser#name}
-        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#value DataOktaUser#value}.
+        :param comparison: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#comparison DataOktaUser#comparison}.
+        :param expression: A raw search expression string. This requires the search feature be on. Please see Okta documentation on their filter API for users. https://developer.okta.com/docs/api/resources/users#list-users-with-search Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#expression DataOktaUser#expression}
+        :param name: Property name to search for. This requires the search feature be on. Please see Okta documentation on their filter API for users. https://developer.okta.com/docs/api/resources/users#list-users-with-search Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#name DataOktaUser#name}
+        :param value: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#value DataOktaUser#value}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__06e23473554f2b1a27f041494486b99ca5827e9eba4812c3278f38a85313c1dd)
@@ -785,7 +785,7 @@ class DataOktaUserSearch:
 
     @builtins.property
     def comparison(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#comparison DataOktaUser#comparison}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#comparison DataOktaUser#comparison}.'''
         result = self._values.get("comparison")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -795,7 +795,7 @@ class DataOktaUserSearch:
 
         This requires the search feature be on. Please see Okta documentation on their filter API for users. https://developer.okta.com/docs/api/resources/users#list-users-with-search
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#expression DataOktaUser#expression}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#expression DataOktaUser#expression}
         '''
         result = self._values.get("expression")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -806,14 +806,14 @@ class DataOktaUserSearch:
 
         This requires the search feature be on. Please see Okta documentation on their filter API for users. https://developer.okta.com/docs/api/resources/users#list-users-with-search
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#name DataOktaUser#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#name DataOktaUser#name}
         '''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def value(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/user#value DataOktaUser#value}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/user#value DataOktaUser#value}.'''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
 

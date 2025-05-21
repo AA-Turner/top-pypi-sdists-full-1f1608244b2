@@ -1,8 +1,11 @@
+import logging
 import warnings
 from typing import Any, Dict, List, Optional, Set, Union
 
 from collate_sqllineage.exceptions import SQLLineageException
 from collate_sqllineage.utils.helpers import escape_identifier_name
+
+logger = logging.getLogger(__name__)
 
 
 class Schema:
@@ -272,26 +275,34 @@ class Column:
 
         source_columns = set()
         for src_col, qualifier in self.source_columns:
-            if qualifier is None:
-                if src_col == "*":
-                    # select *
-                    for table in set(alias_mapping.values()):
-                        source_columns.add(_to_src_col(src_col, table))
+            try:
+                if qualifier is None:
+                    if src_col == "*":
+                        # select *
+                        for table in set(alias_mapping.values()):
+                            source_columns.add(_to_src_col(src_col, table))
+                    else:
+                        # select unqualified column
+                        src_col = _to_src_col(src_col, None)
+                        for table in set(alias_mapping.values()):
+                            # in case of only one table, we get the right answer
+                            # in case of multiple tables, a bunch of possible tables are set
+                            src_col.parent = table
+                        if (
+                            src_col is not None
+                            and hasattr(src_col, "raw_name")
+                            and src_col.raw_name is not None
+                        ):
+                            source_columns.add(src_col)
                 else:
-                    # select unqualified column
-                    src_col = _to_src_col(src_col, None)
-                    for table in set(alias_mapping.values()):
-                        # in case of only one table, we get the right answer
-                        # in case of multiple tables, a bunch of possible tables are set
-                        src_col.parent = table
-                    source_columns.add(src_col)
-            else:
-                if alias_mapping.get(qualifier):
-                    source_columns.add(
-                        _to_src_col(src_col, alias_mapping.get(qualifier))
-                    )
-                else:
-                    source_columns.add(_to_src_col(src_col, Table(qualifier)))
+                    if alias_mapping.get(qualifier):
+                        source_columns.add(
+                            _to_src_col(src_col, alias_mapping.get(qualifier))
+                        )
+                    else:
+                        source_columns.add(_to_src_col(src_col, Table(qualifier)))
+            except Exception as ex:
+                logger.error(f"Error processing column {self.raw_name}: {ex}")
         return source_columns
 
 

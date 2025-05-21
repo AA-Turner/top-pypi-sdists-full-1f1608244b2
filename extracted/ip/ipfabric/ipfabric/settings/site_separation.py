@@ -4,7 +4,7 @@ from typing import Any, Literal, Optional
 
 from pydantic import Field, BaseModel
 
-from ipfabric.tools import raise_for_status
+from ipfabric.tools.shared import raise_for_status
 
 logger = logging.getLogger("ipfabric")
 

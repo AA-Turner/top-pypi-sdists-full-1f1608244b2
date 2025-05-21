@@ -512,7 +512,7 @@ class PvtSequence:
     def generate_velocities(
             positions: List[MeasurementSequence],
             times: MeasurementSequence,
-            velocities: Optional[List[OptionalMeasurementSequence]],
+            velocities: Optional[List[OptionalMeasurementSequence]] = None,
             times_relative: bool = True
     ) -> PvtSequenceData:
         """
@@ -556,7 +556,7 @@ class PvtSequence:
     async def generate_velocities_async(
             positions: List[MeasurementSequence],
             times: MeasurementSequence,
-            velocities: Optional[List[OptionalMeasurementSequence]],
+            velocities: Optional[List[OptionalMeasurementSequence]] = None,
             times_relative: bool = True
     ) -> PvtSequenceData:
         """
@@ -1071,7 +1071,7 @@ class PvtSequence:
     def save_sequence_data(
             sequence_data: PvtSequenceData,
             path: str,
-            dimension_names: Optional[List[str]]
+            dimension_names: Optional[List[str]] = None
     ) -> None:
         """
         Saves PvtSequenceData object as csv file.
@@ -1099,7 +1099,7 @@ class PvtSequence:
     async def save_sequence_data_async(
             sequence_data: PvtSequenceData,
             path: str,
-            dimension_names: Optional[List[str]]
+            dimension_names: Optional[List[str]] = None
     ) -> None:
         """
         Saves PvtSequenceData object as csv file.

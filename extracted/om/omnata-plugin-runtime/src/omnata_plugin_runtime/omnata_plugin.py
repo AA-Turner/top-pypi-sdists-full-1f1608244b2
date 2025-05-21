@@ -50,6 +50,8 @@ from tenacity import Retrying, stop_after_attempt, wait_fixed, retry_if_exceptio
 
 from .logging import OmnataPluginLogHandler, logger, tracer
 from opentelemetry import context
+import math
+import numpy as np
 
 from .api import (
     PluginMessage,
@@ -653,6 +655,21 @@ class HttpRateLimiting:
     def __exit__(self, exc_type, exc_value, traceback):
         http.client.HTTPConnection.putrequest = self.original_putrequest  # type: ignore
 
+def wrap_result_value(x):
+    # Check for NaN (float or numpy.nan)
+    if x is None:
+        return None
+    if isinstance(x, float) and math.isnan(x):
+        return None
+    if isinstance(x, str):
+        return json.dumps({"value": x})
+    try:
+        # Try to detect pandas NaN (which is float('nan'))
+        if isinstance(x, np.floating) and np.isnan(x):
+            return None
+    except ImportError:
+        return None
+    return json.dumps(x)
 
 class OutboundSyncRequest(SyncRequest):
     """
@@ -810,9 +827,7 @@ class OutboundSyncRequest(SyncRequest):
             if "LOADBATCH_ID" not in results_df:
                 results_df["LOADBATCH_ID"] = self._get_next_loadbatch_id()
             # we dump the result data to a json string to make uploading to Snowflake less error prone, but only if it's not None
-            results_df["RESULT"] = results_df["RESULT"].apply(
-                lambda x: json.dumps(x) if x is not None else None
-            )
+            results_df["RESULT"] = results_df["RESULT"].apply(wrap_result_value)
         # trim out the columns we don't need to return
         return results_df[
             results_df.columns.intersection(
@@ -1911,7 +1926,7 @@ class FixedSizeGenerator:
 
     def __next__(self):
         with self.thread_lock:
-            logger.debug(f"initial leftovers: {self.leftovers}")
+            logger.debug(f"FixedSizeGenerator initial leftovers: {len(self.leftovers) if self.leftovers is not None else 0}")
             records_df = self.leftovers
             self.leftovers = None
             try:

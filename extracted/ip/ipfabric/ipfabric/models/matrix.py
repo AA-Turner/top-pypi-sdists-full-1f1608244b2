@@ -74,7 +74,7 @@ class Entry(BaseModel):
 
 class SupportMatrix(BaseModel):
     version: Version
-    matrix: List[Entry]
+    matrix: list[Entry]
 
     @staticmethod
     def _compare(value, obj) -> bool:
@@ -92,16 +92,16 @@ class SupportMatrix(BaseModel):
 
     def filter(
         self,
-        category_id: Union[str, List[str]] = None,
-        category_name: Union[str, List[str]] = None,
-        task_id: Union[str, List[str]] = None,
-        task_name: Union[str, List[str]] = None,
+        category_id: Union[str, list[str]] = None,
+        category_name: Union[str, list[str]] = None,
+        task_id: Union[str, list[str]] = None,
+        task_name: Union[str, list[str]] = None,
         task_description: str = None,
-        vendor_id: Union[str, List[str]] = None,
-        vendor_name: Union[str, List[str]] = None,
-        family_id: Union[str, List[str]] = None,
-        family_name: Union[str, List[str]] = None,
-        status: Union[STATES, List[STATES]] = None,
+        vendor_id: Union[str, list[str]] = None,
+        vendor_name: Union[str, list[str]] = None,
+        family_id: Union[str, list[str]] = None,
+        family_name: Union[str, list[str]] = None,
+        status: Union[STATES, list[STATES]] = None,
     ) -> SupportMatrix:
         tmp = list()
         for entry in self.matrix:

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: cmap
-Version: 0.6.0
+Version: 0.6.1
 Summary: Scientific colormaps for python, without dependencies
 Project-URL: Homepage, https://github.com/pyapp-kit/cmap
 Project-URL: Repository, https://github.com/pyapp-kit/cmap
@@ -29,70 +29,6 @@ Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Requires-Python: >=3.9
 Requires-Dist: numpy
-Provides-Extra: dev
-Requires-Dist: bokeh; extra == 'dev'
-Requires-Dist: colorspacious; extra == 'dev'
-Requires-Dist: colour; extra == 'dev'
-Requires-Dist: ipython; extra == 'dev'
-Requires-Dist: matplotlib; extra == 'dev'
-Requires-Dist: mypy; extra == 'dev'
-Requires-Dist: napari>=0.5.0; extra == 'dev'
-Requires-Dist: numba; extra == 'dev'
-Requires-Dist: numba<0.61; (python_version < '3.12') and extra == 'dev'
-Requires-Dist: pdbpp; extra == 'dev'
-Requires-Dist: plotly; extra == 'dev'
-Requires-Dist: pre-commit; extra == 'dev'
-Requires-Dist: pydantic; extra == 'dev'
-Requires-Dist: pydantic-extra-types!=2.10.1,>=2; extra == 'dev'
-Requires-Dist: pygfx; extra == 'dev'
-Requires-Dist: pyqt6; extra == 'dev'
-Requires-Dist: pyqtgraph; extra == 'dev'
-Requires-Dist: pytest; extra == 'dev'
-Requires-Dist: pytest-cov; extra == 'dev'
-Requires-Dist: pytest-qt; extra == 'dev'
-Requires-Dist: pytest>=6.0; extra == 'dev'
-Requires-Dist: qtpy; extra == 'dev'
-Requires-Dist: rich; extra == 'dev'
-Requires-Dist: ruff; extra == 'dev'
-Requires-Dist: viscm; (python_version < '3.13') and extra == 'dev'
-Requires-Dist: vispy>=0.14; extra == 'dev'
-Provides-Extra: docs
-Requires-Dist: colorcet; extra == 'docs'
-Requires-Dist: colorspacious; extra == 'docs'
-Requires-Dist: imageio; extra == 'docs'
-Requires-Dist: mkdocs; extra == 'docs'
-Requires-Dist: mkdocs-api-autonav; extra == 'docs'
-Requires-Dist: mkdocs-gen-files; extra == 'docs'
-Requires-Dist: mkdocs-literate-nav; extra == 'docs'
-Requires-Dist: mkdocs-material; extra == 'docs'
-Requires-Dist: mkdocs-minify-plugin; extra == 'docs'
-Requires-Dist: mkdocstrings-python; extra == 'docs'
-Requires-Dist: natsort; extra == 'docs'
-Provides-Extra: test
-Requires-Dist: pytest-cov; extra == 'test'
-Requires-Dist: pytest>=6.0; extra == 'test'
-Provides-Extra: test-min
-Requires-Dist: pytest>=6.0; extra == 'test-min'
-Provides-Extra: test-thirdparty
-Requires-Dist: bokeh; extra == 'test-thirdparty'
-Requires-Dist: colorspacious; extra == 'test-thirdparty'
-Requires-Dist: colour; extra == 'test-thirdparty'
-Requires-Dist: matplotlib; extra == 'test-thirdparty'
-Requires-Dist: napari>=0.5.0; extra == 'test-thirdparty'
-Requires-Dist: numba; extra == 'test-thirdparty'
-Requires-Dist: numba<0.61; (python_version < '3.12') and extra == 'test-thirdparty'
-Requires-Dist: plotly; extra == 'test-thirdparty'
-Requires-Dist: pydantic; extra == 'test-thirdparty'
-Requires-Dist: pydantic-extra-types!=2.10.1,>=2; extra == 'test-thirdparty'
-Requires-Dist: pygfx; extra == 'test-thirdparty'
-Requires-Dist: pyqtgraph; extra == 'test-thirdparty'
-Requires-Dist: pytest-cov; extra == 'test-thirdparty'
-Requires-Dist: pytest-qt; extra == 'test-thirdparty'
-Requires-Dist: pytest>=6.0; extra == 'test-thirdparty'
-Requires-Dist: qtpy; extra == 'test-thirdparty'
-Requires-Dist: rich; extra == 'test-thirdparty'
-Requires-Dist: viscm; (python_version < '3.13') and extra == 'test-thirdparty'
-Requires-Dist: vispy>=0.14; extra == 'test-thirdparty'
 Description-Content-Type: text/markdown
 
 # cmap

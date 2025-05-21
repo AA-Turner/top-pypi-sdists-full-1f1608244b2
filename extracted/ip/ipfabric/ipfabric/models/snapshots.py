@@ -1,18 +1,19 @@
 import logging
 from collections import OrderedDict
+from datetime import datetime, timezone
 from typing import Any, Union
 from typing import OrderedDict as OrderedDictType
 from uuid import UUID
-from datetime import datetime, timezone
 
 from pydantic import BaseModel, PrivateAttr, Field
 
-from ipfabric.models import Snapshot, SNAPSHOT_COLUMNS
-from ipfabric.tools import VALID_REFS, raise_for_status
+from ipfabric.models import Snapshot
+from ipfabric.tools.shared import VALID_REFS, raise_for_status
 
 logger = logging.getLogger("ipfabric")
 
 LAST_ID, PREV_ID, LASTLOCKED_ID = VALID_REFS
+SNAPSHOT_TABLE = "tables/management/snapshots"
 
 
 class Snapshots(BaseModel):
@@ -64,8 +65,11 @@ class Snapshots(BaseModel):
         if snapshot_id in self.snapshots:
             return self.snapshots[snapshot_id]
         else:
-            payload = {"columns": list(SNAPSHOT_COLUMNS), "filters": {"id": ["eq", snapshot_id]}}
-            results = list(self.client._ipf_pager("tables/management/snapshots", payload))
+            payload = {
+                "columns": self.client.oas[SNAPSHOT_TABLE].post.columns,
+                "filters": {"id": ["eq", snapshot_id]},
+            }
+            results = list(self.client._ipf_pager(SNAPSHOT_TABLE, payload))
             if not results:
                 logger.error(f"Snapshot {snapshot_id} not found.")
                 return None
@@ -126,10 +130,13 @@ class Snapshots(BaseModel):
         Returns:
             Dictionary with ID as key and dictionary with info as the value
         """
-        payload = {"columns": list(SNAPSHOT_COLUMNS), "sort": {"order": "desc", "column": "tsEnd"}}
+        payload = {
+            "columns": self.client.oas[SNAPSHOT_TABLE].post.columns,
+            "sort": {"order": "desc", "column": "tsEnd"},
+        }
         if not self.client.unloaded:
             payload["filters"] = {"status": ["nreg", "unloaded|error"]}
-        results = list(self.client._ipf_pager("tables/management/snapshots", payload))
+        results = list(self.client._ipf_pager(SNAPSHOT_TABLE, payload))
         get_results = self._get_snapshots()
 
         snap_dict = OrderedDict()

@@ -1,7 +1,7 @@
 r'''
 # `okta_policy_device_assurance_android`
 
-Refer to the Terraform Registry for docs: [`okta_policy_device_assurance_android`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android).
+Refer to the Terraform Registry for docs: [`okta_policy_device_assurance_android`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class PolicyDeviceAssuranceAndroid(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.policyDeviceAssuranceAndroid.PolicyDeviceAssuranceAndroid",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android okta_policy_device_assurance_android}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android okta_policy_device_assurance_android}.'''
 
     def __init__(
         self,
@@ -65,16 +65,16 @@ class PolicyDeviceAssuranceAndroid(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android okta_policy_device_assurance_android} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android okta_policy_device_assurance_android} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Policy device assurance name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#name PolicyDeviceAssuranceAndroid#name}
-        :param disk_encryption_type: List of disk encryption type, can be ``FULL``, ``USER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#disk_encryption_type PolicyDeviceAssuranceAndroid#disk_encryption_type}
-        :param jailbreak: Is the device jailbroken in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#jailbreak PolicyDeviceAssuranceAndroid#jailbreak}
-        :param os_version: Minimum os version of the device in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#os_version PolicyDeviceAssuranceAndroid#os_version}
-        :param screenlock_type: List of screenlock type, can be ``BIOMETRIC`` or ``BIOMETRIC, PASSCODE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#screenlock_type PolicyDeviceAssuranceAndroid#screenlock_type}
-        :param secure_hardware_present: Indicates if the device contains a secure hardware functionality. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#secure_hardware_present PolicyDeviceAssuranceAndroid#secure_hardware_present}
+        :param name: Policy device assurance name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#name PolicyDeviceAssuranceAndroid#name}
+        :param disk_encryption_type: List of disk encryption type, can be ``FULL``, ``USER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#disk_encryption_type PolicyDeviceAssuranceAndroid#disk_encryption_type}
+        :param jailbreak: Is the device jailbroken in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#jailbreak PolicyDeviceAssuranceAndroid#jailbreak}
+        :param os_version: Minimum os version of the device in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#os_version PolicyDeviceAssuranceAndroid#os_version}
+        :param screenlock_type: List of screenlock type, can be ``BIOMETRIC`` or ``BIOMETRIC, PASSCODE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#screenlock_type PolicyDeviceAssuranceAndroid#screenlock_type}
+        :param secure_hardware_present: Indicates if the device contains a secure hardware functionality. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#secure_hardware_present PolicyDeviceAssuranceAndroid#secure_hardware_present}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -118,7 +118,7 @@ class PolicyDeviceAssuranceAndroid(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the PolicyDeviceAssuranceAndroid to import.
-        :param import_from_id: The id of the existing PolicyDeviceAssuranceAndroid that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing PolicyDeviceAssuranceAndroid that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the PolicyDeviceAssuranceAndroid to import is found.
         '''
         if __debug__:
@@ -352,12 +352,12 @@ class PolicyDeviceAssuranceAndroidConfig(_cdktf_9a9027ec.TerraformMetaArguments)
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Policy device assurance name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#name PolicyDeviceAssuranceAndroid#name}
-        :param disk_encryption_type: List of disk encryption type, can be ``FULL``, ``USER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#disk_encryption_type PolicyDeviceAssuranceAndroid#disk_encryption_type}
-        :param jailbreak: Is the device jailbroken in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#jailbreak PolicyDeviceAssuranceAndroid#jailbreak}
-        :param os_version: Minimum os version of the device in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#os_version PolicyDeviceAssuranceAndroid#os_version}
-        :param screenlock_type: List of screenlock type, can be ``BIOMETRIC`` or ``BIOMETRIC, PASSCODE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#screenlock_type PolicyDeviceAssuranceAndroid#screenlock_type}
-        :param secure_hardware_present: Indicates if the device contains a secure hardware functionality. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#secure_hardware_present PolicyDeviceAssuranceAndroid#secure_hardware_present}
+        :param name: Policy device assurance name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#name PolicyDeviceAssuranceAndroid#name}
+        :param disk_encryption_type: List of disk encryption type, can be ``FULL``, ``USER``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#disk_encryption_type PolicyDeviceAssuranceAndroid#disk_encryption_type}
+        :param jailbreak: Is the device jailbroken in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#jailbreak PolicyDeviceAssuranceAndroid#jailbreak}
+        :param os_version: Minimum os version of the device in the device assurance policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#os_version PolicyDeviceAssuranceAndroid#os_version}
+        :param screenlock_type: List of screenlock type, can be ``BIOMETRIC`` or ``BIOMETRIC, PASSCODE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#screenlock_type PolicyDeviceAssuranceAndroid#screenlock_type}
+        :param secure_hardware_present: Indicates if the device contains a secure hardware functionality. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#secure_hardware_present PolicyDeviceAssuranceAndroid#secure_hardware_present}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -472,7 +472,7 @@ class PolicyDeviceAssuranceAndroidConfig(_cdktf_9a9027ec.TerraformMetaArguments)
     def name(self) -> builtins.str:
         '''Policy device assurance name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#name PolicyDeviceAssuranceAndroid#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#name PolicyDeviceAssuranceAndroid#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -482,7 +482,7 @@ class PolicyDeviceAssuranceAndroidConfig(_cdktf_9a9027ec.TerraformMetaArguments)
     def disk_encryption_type(self) -> typing.Optional[typing.List[builtins.str]]:
         '''List of disk encryption type, can be ``FULL``, ``USER``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#disk_encryption_type PolicyDeviceAssuranceAndroid#disk_encryption_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#disk_encryption_type PolicyDeviceAssuranceAndroid#disk_encryption_type}
         '''
         result = self._values.get("disk_encryption_type")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -493,7 +493,7 @@ class PolicyDeviceAssuranceAndroidConfig(_cdktf_9a9027ec.TerraformMetaArguments)
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Is the device jailbroken in the device assurance policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#jailbreak PolicyDeviceAssuranceAndroid#jailbreak}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#jailbreak PolicyDeviceAssuranceAndroid#jailbreak}
         '''
         result = self._values.get("jailbreak")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -502,7 +502,7 @@ class PolicyDeviceAssuranceAndroidConfig(_cdktf_9a9027ec.TerraformMetaArguments)
     def os_version(self) -> typing.Optional[builtins.str]:
         '''Minimum os version of the device in the device assurance policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#os_version PolicyDeviceAssuranceAndroid#os_version}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#os_version PolicyDeviceAssuranceAndroid#os_version}
         '''
         result = self._values.get("os_version")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -511,7 +511,7 @@ class PolicyDeviceAssuranceAndroidConfig(_cdktf_9a9027ec.TerraformMetaArguments)
     def screenlock_type(self) -> typing.Optional[typing.List[builtins.str]]:
         '''List of screenlock type, can be ``BIOMETRIC`` or ``BIOMETRIC, PASSCODE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#screenlock_type PolicyDeviceAssuranceAndroid#screenlock_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#screenlock_type PolicyDeviceAssuranceAndroid#screenlock_type}
         '''
         result = self._values.get("screenlock_type")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -522,7 +522,7 @@ class PolicyDeviceAssuranceAndroidConfig(_cdktf_9a9027ec.TerraformMetaArguments)
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Indicates if the device contains a secure hardware functionality.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/policy_device_assurance_android#secure_hardware_present PolicyDeviceAssuranceAndroid#secure_hardware_present}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/policy_device_assurance_android#secure_hardware_present PolicyDeviceAssuranceAndroid#secure_hardware_present}
         '''
         result = self._values.get("secure_hardware_present")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)

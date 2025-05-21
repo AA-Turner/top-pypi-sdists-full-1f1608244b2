@@ -1,13 +1,9 @@
 import enum
 import functools
 import inspect
-from typing import TYPE_CHECKING, Any, List, Optional
+from typing import Any, Optional
 
-from chalk.parsed.duplicate_input_gql import FailedImport
 from chalk.utils.environment_parsing import env_var_bool
-
-if TYPE_CHECKING:
-    from chalk.sql._internal.sql_file_resolver import SQLStringResult
 
 
 class IPythonEvents(enum.Enum):
@@ -18,16 +14,14 @@ class IPythonEvents(enum.Enum):
     POST_RUN_CELL = "post_run_cell"
 
 
-@functools.lru_cache(maxsize=None)
-def get_ipython_string() -> Optional[str]:
+def get_ipython_or_none() -> Optional[object]:
     """
-    :return: "ZMQInteractiveShell" for jupyter notebook, "TerminalInteractiveShell" for ipython in terminal, None otherwise.
+    Returns the global IPython shell object, if this code is running in an ipython environment.
+    :return: An `IPython.core.interactiveshell.InteractiveShell`, or None if we're not running in a notebook/ipython repl
     """
     try:
-        # I know this has a redline under it... we'll catch the NameError as a Falsy condition below
-        # noinspection PyUnresolvedReferences
-        shell = get_ipython().__class__.__name__  # type: ignore
-        return shell
+        # This method only exists if we're running inside an ipython env
+        return get_ipython()  # type: ignore
     except NameError:
         return None  # Probably standard Python interpreter
 
@@ -45,8 +39,17 @@ def _is_notebook() -> bool:
     """:return: true if run inside a Jupyter notebook"""
     if _is_notebook_override:
         return True
-    shell = get_ipython_string()
-    return shell == "ZMQInteractiveShell"
+    shell = get_ipython_or_none()
+    if shell is None:
+        return False
+    # Check MRO since some envs (e.g. DataBricks) subclass the kernel
+    for c in shell.__class__.__mro__:
+        cname: str = c.__name__
+        if cname == "ZMQInteractiveShell":
+            return True
+        if cname == "TerminalInteractiveShell":
+            return False  # ipython running in terminal
+    return False
 
 
 def is_notebook() -> bool:
@@ -78,47 +81,3 @@ def is_defined_in_cell_magic(obj: Any) -> bool:
     if isinstance(obj, Resolver):
         return obj.is_cell_magic
     return False
-
-
-def register_resolver_from_cell_magic(sql_string_result: "SQLStringResult") -> List[FailedImport]:
-    """Registers a resolver from the %%resolver cell magic.
-
-    Parameters
-    ----------
-    sql_string_result
-
-    Returns
-    -------
-    list[FailedImport]
-        A list of errors that occurred during registration.
-    """
-    from chalk.sql._internal.sql_file_resolver import get_sql_file_resolver
-    from chalk.sql._internal.sql_source import BaseSQLSource
-
-    if sql_string_result.path == "":
-        return [
-            FailedImport(
-                traceback="Resolver name is required, but none found. Please add a name to the first line of the cell, like %%resolver my_resolver",
-                filename="",
-                module="",
-            )
-        ]
-
-    result = get_sql_file_resolver(
-        sources=BaseSQLSource.registry,
-        sql_string_result=sql_string_result,
-    )
-
-    if result.resolver is not None:
-
-        result.resolver.is_cell_magic = True
-        result.resolver.add_to_registry(override=True)
-
-    return [
-        FailedImport(
-            traceback=error.display,
-            filename=error.path,
-            module=error.path,
-        )
-        for error in result.errors
-    ]

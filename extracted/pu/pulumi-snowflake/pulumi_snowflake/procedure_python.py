@@ -765,6 +765,7 @@ class _ProcedurePythonState:
         pulumi.set(self, "trace_level", value)
 
 
+@pulumi.type_token("snowflake:index/procedurePython:ProcedurePython")
 class ProcedurePython(pulumi.CustomResource):
     @overload
     def __init__(__self__,

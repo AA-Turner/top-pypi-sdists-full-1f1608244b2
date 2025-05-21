@@ -30,6 +30,7 @@ class TargetHotglue(Target):
 
     MAX_PARALLELISM = 8
     EXTERNAL_ID_KEY = "externalId"
+    GLOBAL_PRIMARY_KEY = "id"
 
     @property
     @abstractmethod
@@ -138,7 +139,7 @@ class TargetHotglue(Target):
                 sink_snapshot["InputId"] = sink_snapshot["InputId"].astype(str)
                 external_id = sink_snapshot[sink_snapshot["InputId"] == str(external_id)]
                 if len(external_id):
-                    record["id"] = external_id["RemoteId"].iloc[0]
+                    record[self.GLOBAL_PRIMARY_KEY] = external_id["RemoteId"].iloc[0]
 
         if isinstance(relation_fields, list):
             for relation in relation_fields:

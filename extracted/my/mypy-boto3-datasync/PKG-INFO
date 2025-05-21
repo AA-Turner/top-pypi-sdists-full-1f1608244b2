@@ -1,7 +1,7 @@
 Metadata-Version: 2.4
 Name: mypy-boto3-datasync
-Version: 1.38.0
-Summary: Type annotations for boto3 DataSync 1.38.0 service generated with mypy-boto3-builder 8.10.1
+Version: 1.38.20
+Summary: Type annotations for boto3 DataSync 1.38.20 service generated with mypy-boto3-builder 8.11.0
 Home-page: https://github.com/youtype/mypy_boto3_builder
 Author: Vlad Emelianov
 Author-email: vlad.emelianov.nz@gmail.com
@@ -56,7 +56,7 @@ Dynamic: summary
 
 ![boto3.typed](https://github.com/youtype/mypy_boto3_builder/raw/main/logo.png)
 
-Type annotations for [boto3 DataSync 1.38.0](https://pypi.org/project/boto3/)
+Type annotations for [boto3 DataSync 1.38.20](https://pypi.org/project/boto3/)
 compatible with [VSCode](https://code.visualstudio.com/),
 [PyCharm](https://www.jetbrains.com/pycharm/),
 [Emacs](https://www.gnu.org/software/emacs/),
@@ -65,7 +65,7 @@ compatible with [VSCode](https://code.visualstudio.com/),
 [pyright](https://github.com/microsoft/pyright) and other tools.
 
 Generated with
-[mypy-boto3-builder 8.10.1](https://github.com/youtype/mypy_boto3_builder).
+[mypy-boto3-builder 8.11.0](https://github.com/youtype/mypy_boto3_builder).
 
 More information can be found on
 [boto3-stubs](https://pypi.org/project/boto3-stubs/) page and in
@@ -118,7 +118,7 @@ You can generate type annotations for `boto3` package locally with
 isolation.
 
 1. Run mypy-boto3-builder in your package root directory:
-   `uvx --with 'boto3==1.38.0' mypy-boto3-builder`
+   `uvx --with 'boto3==1.38.20' mypy-boto3-builder`
 2. Select `boto3-stubs` AWS SDK.
 3. Add `DataSync` service.
 4. Use provided commands to install generated packages.
@@ -352,11 +352,8 @@ from boto3.session import Session
 
 from mypy_boto3_datasync import DataSyncClient
 from mypy_boto3_datasync.paginator import (
-    DescribeStorageSystemResourceMetricsPaginator,
     ListAgentsPaginator,
-    ListDiscoveryJobsPaginator,
     ListLocationsPaginator,
-    ListStorageSystemsPaginator,
     ListTagsForResourcePaginator,
     ListTaskExecutionsPaginator,
     ListTasksPaginator,
@@ -366,17 +363,8 @@ client: DataSyncClient = Session().client("datasync")
 
 # Explicit type annotations are optional here
 # Types should be correctly discovered by mypy and IDEs
-describe_storage_system_resource_metrics_paginator: DescribeStorageSystemResourceMetricsPaginator = client.get_paginator(
-    "describe_storage_system_resource_metrics"
-)
 list_agents_paginator: ListAgentsPaginator = client.get_paginator("list_agents")
-list_discovery_jobs_paginator: ListDiscoveryJobsPaginator = client.get_paginator(
-    "list_discovery_jobs"
-)
 list_locations_paginator: ListLocationsPaginator = client.get_paginator("list_locations")
-list_storage_systems_paginator: ListStorageSystemsPaginator = client.get_paginator(
-    "list_storage_systems"
-)
 list_tags_for_resource_paginator: ListTagsForResourcePaginator = client.get_paginator(
     "list_tags_for_resource"
 )
@@ -415,12 +403,12 @@ Full list of `DataSync` TypeDefs can be found in
 
 ```python
 # TypedDict usage example
-from mypy_boto3_datasync.type_defs import CredentialsTypeDef
+from mypy_boto3_datasync.type_defs import PlatformTypeDef
 
 
-def get_value() -> CredentialsTypeDef:
+def get_value() -> PlatformTypeDef:
     return {
-        "Username": ...,
+        "Version": ...,
     }
 ```
 

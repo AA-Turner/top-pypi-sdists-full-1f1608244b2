@@ -9,7 +9,7 @@ from ipaddress import (
     IPv4Interface,
     IPv6Interface,
 )
-from typing import List, Any, Union, Dict, Literal
+from typing import Any, Union, Literal
 
 from macaddress import EUI48
 from pydantic import BaseModel, Field, PrivateAttr
@@ -104,9 +104,9 @@ IP_INTERFACE = (IPv4Interface, IPv6Interface)
 
 class GlobalSearch(BaseModel):
     client: Any = Field(exclude=True)
-    _ipv4: List[Endpoint] = PrivateAttr(default_factory=list)
-    _ipv6: List[Endpoint] = PrivateAttr(default_factory=list)
-    _mac: List[Endpoint] = PrivateAttr(default_factory=list)
+    _ipv4: list[Endpoint] = PrivateAttr(default_factory=list)
+    _ipv6: list[Endpoint] = PrivateAttr(default_factory=list)
+    _mac: list[Endpoint] = PrivateAttr(default_factory=list)
 
     def model_post_init(self, __context: Any) -> None:
         self._load_default()
@@ -142,7 +142,7 @@ class GlobalSearch(BaseModel):
 
     @staticmethod
     def _create_filter(
-        columns: List[Union[Column, NestedColumn]], path: Endpoint, value: str, regex: bool = False
+        columns: list[Union[Column, NestedColumn]], path: Endpoint, value: str, regex: bool = False
     ) -> dict:
         oper = "reg" if regex else "eq"
         filters = [
@@ -152,7 +152,7 @@ class GlobalSearch(BaseModel):
                 else {col.name: ["any", oper, value]} if col.name in path.array_columns else {col.name: [oper, value]}
             )
             for col in columns
-            if not col.filter.startswith("routing")
+            if not getattr(col, "filter", "").startswith("routing")
         ]
         return {"or": filters} if filters else None
 
@@ -163,7 +163,7 @@ class GlobalSearch(BaseModel):
         full_scan: bool = False,
         regex: bool = False,
         first_match: bool = False,
-    ) -> Dict[str, Dict[str, Union[str, list]]]:
+    ) -> dict[str, dict[str, Union[str, list]]]:
 
         results, data = OrderedDict(), list()
 
@@ -197,7 +197,7 @@ class GlobalSearch(BaseModel):
         address: str,
         full_scan: bool = False,
         first_match: bool = False,
-    ) -> Union[None, Dict[str, Dict[str, Union[str, list]]]]:
+    ) -> Union[None, dict[str, dict[str, Union[str, list]]]]:
 
         if isinstance(address, int):
             raise TypeError(f"Input must be a valid string not integer: {str(address)}")
@@ -215,7 +215,7 @@ class GlobalSearch(BaseModel):
         address: str,
         full_scan: bool = False,
         first_match: bool = False,
-    ) -> Dict[str, Dict[str, Union[str, list]]]:
+    ) -> dict[str, dict[str, Union[str, list]]]:
 
         if isinstance(address, int):
             raise TypeError(f"Input must be a valid string not integer: {str(address)}")
@@ -230,7 +230,7 @@ class GlobalSearch(BaseModel):
         address: str,
         full_scan: bool = False,
         first_match: bool = False,
-    ) -> Dict[str, Dict[str, Union[str, list]]]:
+    ) -> dict[str, dict[str, Union[str, list]]]:
         LOGGER.info("Verifying Address is an IP.")
         ip = ip_address(address)
         if ip.version == 4:
@@ -246,7 +246,7 @@ class GlobalSearch(BaseModel):
         address: str,
         full_scan: bool = False,
         first_match: bool = False,
-    ) -> Dict[str, Dict[str, Union[str, list]]]:
+    ) -> dict[str, dict[str, Union[str, list]]]:
         ip = ip_address(address)
         if ip.version != version:
             raise ValueError()
@@ -257,7 +257,7 @@ class GlobalSearch(BaseModel):
         address: str,
         full_scan: bool = False,
         first_match: bool = False,
-    ) -> Union[None, Dict[str, Dict[str, Union[str, list]]]]:
+    ) -> Union[None, dict[str, dict[str, Union[str, list]]]]:
         return self._search_ip(4, address, full_scan, first_match)
 
     def search_ipv6(
@@ -265,7 +265,7 @@ class GlobalSearch(BaseModel):
         address: str,
         full_scan: bool = False,
         first_match: bool = False,
-    ) -> Union[None, Dict[str, Dict[str, Union[str, list]]]]:
+    ) -> Union[None, dict[str, dict[str, Union[str, list]]]]:
         return self._search_ip(6, address, full_scan, first_match)
 
     def search_regex(
@@ -274,7 +274,7 @@ class GlobalSearch(BaseModel):
         address: str,
         full_scan: bool = False,
         first_match: bool = False,
-    ) -> Dict[str, Dict[str, Union[str, list]]]:
+    ) -> dict[str, dict[str, Union[str, list]]]:
         LOGGER.debug(f'Searching for {search_type.upper()} Address "{address}".')
         return self._search(search_type, address, full_scan, True, first_match)
 
@@ -296,7 +296,7 @@ class RouteTableSearch(BaseModel):
                 raise SyntaxError(f'Address does not appear to be a IPv4 or IPv6 Address/Subnet: "{address}".')
 
     @staticmethod
-    def _check_search(
+    def _check_search(  # NOSONAR
         ip: Union[IPv4Address, IPv6Address, IPv4Interface, IPv6Interface],
         operator: str,
         next_hop: bool = False,
@@ -321,7 +321,7 @@ class RouteTableSearch(BaseModel):
 
     def search(
         self, address: str, operator: VALID_OPS = "=", next_hop: bool = False, ignore_default: bool = True
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """ """
         if operator not in OPERATORS.values():
             operator = OPERATORS[operator]

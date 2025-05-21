@@ -495,6 +495,7 @@ class _ApiIntegrationState:
         pulumi.set(self, "name", value)
 
 
+@pulumi.type_token("snowflake:index/apiIntegration:ApiIntegration")
 class ApiIntegration(pulumi.CustomResource):
     @overload
     def __init__(__self__,

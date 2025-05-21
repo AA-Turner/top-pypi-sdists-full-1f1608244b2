@@ -758,6 +758,30 @@ class SnippetClientV2Test(unittest.TestCase):
       'mobly.controllers.android_device_lib.snippet_client_v2.'
       'utils.start_standing_subprocess'
   )
+  def test_start_server_error_message_include_discarded_output(
+      self, mock_start_standing_subprocess
+  ):
+    """Tests that starting server process reports known protocol with junk."""
+    self._make_client()
+    discarded_output = 'java.lang.RuntimeException: Failed to start server'
+    self._mock_server_process_starting_response(
+        mock_start_standing_subprocess,
+        resp_lines=[
+            b'SNIPPET START, PROTOCOL 1 0\n',
+            discarded_output.encode('utf-8'),
+            b'INSTRUMENTATION_RESULT: shortMsg=Process crashed.',
+        ],
+    )
+    with self.assertRaisesRegex(
+        errors.ServerStartProtocolError,
+        discarded_output,
+    ):
+      self.client.start_server()
+
+  @mock.patch(
+      'mobly.controllers.android_device_lib.snippet_client_v2.'
+      'utils.start_standing_subprocess'
+  )
   def test_start_server_no_valid_line(self, mock_start_standing_subprocess):
     """Tests that starting server process reports unknown protocol message."""
     self._make_client()
@@ -1456,6 +1480,65 @@ class SnippetClientV2Test(unittest.TestCase):
     )
     self.socket_conn.settimeout.assert_called_once_with(
         snippet_client_v2._SOCKET_READ_TIMEOUT
+    )
+
+  @mock.patch(
+      'mobly.controllers.android_device_lib.snippet_client_v2.'
+      'adb.list_occupied_adb_ports',
+      return_value=[],
+  )
+  @mock.patch(
+      'mobly.controllers.android_device_lib.snippet_client_v2.'
+      'utils.run_command'
+  )
+  @mock.patch('socket.create_connection')
+  def test_make_connection_when_host_port_is_not_in_listening_state_(
+      self, mock_socket_create_conn, mock_run_cmd, _
+  ):
+    """Tests IOError occurred trying to create a socket connection."""
+    mock_socket_create_conn.side_effect = ConnectionRefusedError(
+        f'[Errno 111] Connection refused.'
+    )
+    mock_run_cmd.return_value = (1, b'', b'')
+    error_msg = 'The Adb forward command execution did not take effect'
+    with self.assertRaisesRegex(errors.Error, error_msg):
+      self._make_client()
+      self.client.device_port = 123
+      self.client.make_connection()
+
+    mock_run_cmd.assert_any_call(
+        f'netstat -tulpn | grep ":{MOCK_HOST_PORT}"', shell=True
+    )
+
+  @mock.patch(
+      'mobly.controllers.android_device_lib.snippet_client_v2.'
+      'adb.list_occupied_adb_ports',
+      return_value=[],
+  )
+  @mock.patch(
+      'mobly.controllers.android_device_lib.snippet_client_v2.'
+      'utils.run_command'
+  )
+  @mock.patch('socket.create_connection')
+  def test_make_connection_raise_when_host_port_is_in_listening_state_(
+      self, mock_socket_create_conn, mock_run_cmd, _
+  ):
+    """Tests IOError occurred trying to create a socket connection."""
+    mock_socket_create_conn.side_effect = ConnectionRefusedError(
+        f'[Errno 111] Connection refused.'
+    )
+    mock_run_cmd.return_value = (0, f'127.0.0.1:{MOCK_HOST_PORT}'.encode(), b'')
+    error_msg = (
+        'Failed to establish socket connection from host to snippet server'
+        ' running on Android device.'
+    )
+    with self.assertRaisesRegex(errors.Error, error_msg):
+      self._make_client()
+      self.client.device_port = 123
+      self.client.make_connection()
+
+    mock_run_cmd.assert_any_call(
+        f'netstat -tulpn | grep ":{MOCK_HOST_PORT}"', shell=True
     )
 
   @mock.patch(

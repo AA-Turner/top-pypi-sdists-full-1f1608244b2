@@ -1,7 +1,7 @@
 r'''
 # `data_okta_group`
 
-Refer to the Terraform Registry for docs: [`data_okta_group`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group).
+Refer to the Terraform Registry for docs: [`data_okta_group`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataOktaGroup(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.dataOktaGroup.DataOktaGroup",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group okta_group}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group okta_group}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class DataOktaGroup(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group okta_group} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group okta_group} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param delay_read_seconds: Force delay of the group read by N seconds. Useful when eventual consistency of group information needs to be allowed for; for instance, when group rules are known to have been applied. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#delay_read_seconds DataOktaGroup#delay_read_seconds}
-        :param id: ID of group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#id DataOktaGroup#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param include_users: Fetch group users, having default off cuts down on API calls. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#include_users DataOktaGroup#include_users}
-        :param name: Name of group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#name DataOktaGroup#name}
-        :param type: Type of the group. When specified in the terraform resource, will act as a filter when searching for the group Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#type DataOktaGroup#type}
+        :param delay_read_seconds: Force delay of the group read by N seconds. Useful when eventual consistency of group information needs to be allowed for; for instance, when group rules are known to have been applied. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#delay_read_seconds DataOktaGroup#delay_read_seconds}
+        :param id: ID of group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#id DataOktaGroup#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param include_users: Fetch group users, having default off cuts down on API calls. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#include_users DataOktaGroup#include_users}
+        :param name: Name of group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#name DataOktaGroup#name}
+        :param type: Type of the group. When specified in the terraform resource, will act as a filter when searching for the group Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#type DataOktaGroup#type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class DataOktaGroup(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataOktaGroup to import.
-        :param import_from_id: The id of the existing DataOktaGroup that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataOktaGroup that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataOktaGroup to import is found.
         '''
         if __debug__:
@@ -303,11 +303,11 @@ class DataOktaGroupConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param delay_read_seconds: Force delay of the group read by N seconds. Useful when eventual consistency of group information needs to be allowed for; for instance, when group rules are known to have been applied. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#delay_read_seconds DataOktaGroup#delay_read_seconds}
-        :param id: ID of group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#id DataOktaGroup#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param include_users: Fetch group users, having default off cuts down on API calls. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#include_users DataOktaGroup#include_users}
-        :param name: Name of group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#name DataOktaGroup#name}
-        :param type: Type of the group. When specified in the terraform resource, will act as a filter when searching for the group Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#type DataOktaGroup#type}
+        :param delay_read_seconds: Force delay of the group read by N seconds. Useful when eventual consistency of group information needs to be allowed for; for instance, when group rules are known to have been applied. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#delay_read_seconds DataOktaGroup#delay_read_seconds}
+        :param id: ID of group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#id DataOktaGroup#id} Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param include_users: Fetch group users, having default off cuts down on API calls. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#include_users DataOktaGroup#include_users}
+        :param name: Name of group. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#name DataOktaGroup#name}
+        :param type: Type of the group. When specified in the terraform resource, will act as a filter when searching for the group Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#type DataOktaGroup#type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -421,7 +421,7 @@ class DataOktaGroupConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Useful when eventual consistency of group information needs to be allowed for; for instance, when group rules are known to have been applied.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#delay_read_seconds DataOktaGroup#delay_read_seconds}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#delay_read_seconds DataOktaGroup#delay_read_seconds}
         '''
         result = self._values.get("delay_read_seconds")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -430,7 +430,7 @@ class DataOktaGroupConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def id(self) -> typing.Optional[builtins.str]:
         '''ID of group.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#id DataOktaGroup#id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#id DataOktaGroup#id}
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -444,7 +444,7 @@ class DataOktaGroupConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Fetch group users, having default off cuts down on API calls.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#include_users DataOktaGroup#include_users}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#include_users DataOktaGroup#include_users}
         '''
         result = self._values.get("include_users")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -453,7 +453,7 @@ class DataOktaGroupConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> typing.Optional[builtins.str]:
         '''Name of group.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#name DataOktaGroup#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#name DataOktaGroup#name}
         '''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -464,7 +464,7 @@ class DataOktaGroupConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         When specified in the terraform resource, will act as a filter when searching for the group
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/data-sources/group#type DataOktaGroup#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/data-sources/group#type DataOktaGroup#type}
         '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)

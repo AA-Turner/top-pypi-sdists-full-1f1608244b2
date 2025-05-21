@@ -94,8 +94,12 @@ def create(configs):
   """Creates AndroidDevice controller objects.
 
   Args:
-    configs: A list of dicts, each representing a configuration for an
-      Android device.
+    configs: Represents configurations for Android devices, this can take one of
+      the following forms:
+      * str, only asterisk symbol is accepted, indicating that all connected
+        Android devices will be used
+      * A list of dict, each representing a configuration for an Android device.
+      * A list of str, each representing the serial number of Android device.
 
   Returns:
     A list of AndroidDevice objects.
@@ -586,28 +590,6 @@ class AndroidDevice:
       info: serializable, content of the info.
     """
     self._user_added_device_info.update({name: info})
-
-  @property
-  def sl4a(self):
-    """Attribute for direct access of sl4a client.
-
-    Not recommended. This is here for backward compatibility reasons.
-
-    Preferred: directly access `ad.services.sl4a`.
-    """
-    if self.services.has_service_by_name('sl4a'):
-      return self.services.sl4a
-
-  @property
-  def ed(self):
-    """Attribute for direct access of sl4a's event dispatcher.
-
-    Not recommended. This is here for backward compatibility reasons.
-
-    Preferred: directly access `ad.services.sl4a.ed`.
-    """
-    if self.services.has_service_by_name('sl4a'):
-      return self.services.sl4a.ed
 
   @property
   def debug_tag(self):

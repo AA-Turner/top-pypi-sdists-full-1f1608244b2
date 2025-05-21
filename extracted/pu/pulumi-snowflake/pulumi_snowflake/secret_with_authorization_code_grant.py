@@ -310,6 +310,7 @@ class _SecretWithAuthorizationCodeGrantState:
         pulumi.set(self, "show_outputs", value)
 
 
+@pulumi.type_token("snowflake:index/secretWithAuthorizationCodeGrant:SecretWithAuthorizationCodeGrant")
 class SecretWithAuthorizationCodeGrant(pulumi.CustomResource):
     @overload
     def __init__(__self__,

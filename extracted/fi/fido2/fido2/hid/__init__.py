@@ -27,16 +27,17 @@
 
 from __future__ import annotations
 
-from .base import HidDescriptor
-from ..ctap import CtapDevice, CtapError, STATUS
-from ..utils import LOG_LEVEL_TRAFFIC
-from threading import Event
-from enum import IntEnum, IntFlag, unique
-from typing import Tuple, Optional, Callable, Iterator
+import logging
+import os
 import struct
 import sys
-import os
-import logging
+from enum import IntEnum, IntFlag, unique
+from threading import Event
+from typing import Callable, Iterator
+
+from ..ctap import STATUS, CtapDevice, CtapError
+from ..utils import LOG_LEVEL_TRAFFIC
+from .base import HidDescriptor
 
 logger = logging.getLogger(__name__)
 
@@ -133,7 +134,7 @@ class CtapHidDevice(CtapDevice):
         return self._u2fhid_version
 
     @property
-    def device_version(self) -> Tuple[int, int, int]:
+    def device_version(self) -> tuple[int, int, int]:
         """Device version number."""
         return self._device_version
 
@@ -143,12 +144,12 @@ class CtapHidDevice(CtapDevice):
         return self._capabilities
 
     @property
-    def product_name(self) -> Optional[str]:
+    def product_name(self) -> str | None:
         """Product name of device."""
         return self.descriptor.product_name
 
     @property
-    def serial_number(self) -> Optional[str]:
+    def serial_number(self) -> str | None:
         """Serial number of device."""
         return self.descriptor.serial_number
 
@@ -163,8 +164,8 @@ class CtapHidDevice(CtapDevice):
         self,
         cmd: int,
         data: bytes = b"",
-        event: Optional[Event] = None,
-        on_keepalive: Optional[Callable[[STATUS], None]] = None,
+        event: Event | None = None,
+        on_keepalive: Callable[[STATUS], None] | None = None,
     ) -> bytes:
         event = event or Event()
 

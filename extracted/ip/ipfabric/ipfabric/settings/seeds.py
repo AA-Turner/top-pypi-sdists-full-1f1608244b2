@@ -1,25 +1,12 @@
 import logging
 from ipaddress import IPv4Interface, AddressValueError
-from typing import Any, List
+from typing import Any
 
-from pydantic import Field, BaseModel, field_validator, model_serializer
+from pydantic import Field, BaseModel
 
-from ipfabric.tools import raise_for_status, validate_ip_network_str
+from ipfabric.tools.shared import raise_for_status
 
 logger = logging.getLogger("ipfabric")
-
-
-class SeedList(BaseModel):
-    seeds: List[str] = Field(default_factory=list)
-
-    @field_validator("seeds")
-    @classmethod
-    def _verify_valid_networks(cls, v: List[str]) -> List[str]:
-        return [validate_ip_network_str(_, 24) for _ in v]
-
-    @model_serializer
-    def _ser_model(self) -> List[str]:
-        return self.seeds
 
 
 class Seeds(BaseModel):
@@ -48,8 +35,7 @@ class Seeds(BaseModel):
         """
         if not isinstance(seeds, list):
             raise SyntaxError("Seeds must be a list of IP Addresses or networks")
-        if self._check_seeds(seeds):
-            return raise_for_status(self.client.put("settings/seed", json=seeds)).json()
+        return raise_for_status(self.client.put("settings/seed", json=self._check_seeds(seeds))).json()
 
     def add_seeds(self, seeds):
         """

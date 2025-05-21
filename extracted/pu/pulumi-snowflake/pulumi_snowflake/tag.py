@@ -257,6 +257,7 @@ class _TagState:
         pulumi.set(self, "show_outputs", value)
 
 
+@pulumi.type_token("snowflake:index/tag:Tag")
 class Tag(pulumi.CustomResource):
     @overload
     def __init__(__self__,

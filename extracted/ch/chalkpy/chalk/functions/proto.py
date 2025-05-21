@@ -51,9 +51,9 @@ def proto_serialize(mapping: Mapping[str, Union[Underscore, Any]], message: Mess
     Parameters
     ----------
     mapping
-     The mapping of names to features to serialize.
+       The mapping of names to features to serialize.
     message
-     The proto message to serialize.
+       The proto message to serialize.
 
     Examples
     --------

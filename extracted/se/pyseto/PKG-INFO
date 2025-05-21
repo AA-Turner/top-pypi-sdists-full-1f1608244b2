@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: pyseto
-Version: 1.8.3
+Version: 1.8.4
 Summary: A Python implementation of PASETO/PASERK.
 License: MIT
 Author: Ajitomi Daisuke
@@ -12,14 +12,10 @@ Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
-Provides-Extra: docs
-Requires-Dist: Sphinx[docs] (>=7.1,<8) ; extra == "docs"
 Requires-Dist: argon2-cffi (>=23.1.0)
-Requires-Dist: cryptography (>=42.0.1,<45)
+Requires-Dist: cryptography (>=42.0.1,<46)
 Requires-Dist: iso8601 (>=1.0.2,<3.0.0)
 Requires-Dist: pycryptodomex (>=3.18.0)
-Requires-Dist: sphinx-autodoc-typehints[docs] (>=1.25.2) ; extra == "docs"
-Requires-Dist: sphinx-rtd-theme[docs] (>=1.2.1,<4) ; extra == "docs"
 Project-URL: Repository, https://github.com/dajiaji/pyseto
 Description-Content-Type: text/markdown
 

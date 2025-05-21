@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: dissect.esedb
-Version: 3.15
+Version: 3.16
 Summary: A Dissect module implementing a parser for Microsofts Extensible Storage Engine Database (ESEDB), used for example in Active Directory, Exchange and Windows Update
 Author-email: Dissect Team <dissect@fox-it.com>
 License: Apache License 2.0
@@ -27,6 +27,7 @@ Requires-Dist: dissect.util<4,>=3.5
 Provides-Extra: dev
 Requires-Dist: dissect.cstruct<5.0.dev,>=4.0.dev; extra == "dev"
 Requires-Dist: dissect.util<4.0.dev,>=3.5.dev; extra == "dev"
+Dynamic: license-file
 
 # dissect.esedb
 

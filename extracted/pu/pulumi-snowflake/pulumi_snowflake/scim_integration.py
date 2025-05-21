@@ -304,6 +304,7 @@ class _ScimIntegrationState:
         pulumi.set(self, "sync_password", value)
 
 
+@pulumi.type_token("snowflake:index/scimIntegration:ScimIntegration")
 class ScimIntegration(pulumi.CustomResource):
     @overload
     def __init__(__self__,

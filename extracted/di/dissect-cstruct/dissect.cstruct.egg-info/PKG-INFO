@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: dissect.cstruct
-Version: 4.4
+Version: 4.5
 Summary: A Dissect module implementing a parser for C-like structures: structure parsing in Python made easy
 Author-email: Dissect Team <dissect@fox-it.com>
 License: Apache License 2.0
@@ -22,6 +22,9 @@ Requires-Python: ~=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
 License-File: COPYRIGHT
+Provides-Extra: dev
+Requires-Dist: typing_extensions; extra == "dev"
+Dynamic: license-file
 
 # dissect.cstruct
 

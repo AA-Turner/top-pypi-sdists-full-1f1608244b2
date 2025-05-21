@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: surya-ocr
-Version: 0.14.1
+Version: 0.14.2
 Summary: OCR, layout, reading order, and table recognition in 90+ languages
 License: GPL-3.0-or-later
 Keywords: ocr,pdf,text detection,text recognition,tables
@@ -24,7 +24,7 @@ Requires-Dist: pydantic (>=2.5.3,<3.0.0)
 Requires-Dist: pydantic-settings (>=2.1.0,<3.0.0)
 Requires-Dist: pypdfium2 (==4.30.0)
 Requires-Dist: python-dotenv (>=1.0.0,<2.0.0)
-Requires-Dist: torch (>=2.5.1,<3.0.0)
+Requires-Dist: torch (>=2.7.0,<3.0.0)
 Requires-Dist: transformers (>=4.51.2,<5.0.0)
 Project-URL: Repository, https://github.com/VikParuchuri/surya
 Description-Content-Type: text/markdown
@@ -90,7 +90,7 @@ There is a hosted API for all surya models available [here](https://www.datalab.
 
 I want surya to be as widely accessible as possible, while still funding my development/training costs. Research and personal usage is always okay, but there are some restrictions on commercial usage.
 
-The weights for the models are licensed `cc-by-nc-sa-4.0`, but I will waive that for any organization under $5M USD in gross revenue in the most recent 12-month period AND under $5M in lifetime VC/angel funding raised. You also must not be competitive with the [Datalab API](https://www.datalab.to/).  If you want to remove the GPL license requirements (dual-license) and/or use the weights commercially over the revenue limit, check out the options [here](https://www.datalab.to).
+The weights for the models are licensed `cc-by-nc-sa-4.0`, but I will waive that for any organization under \$2M USD in gross revenue in the most recent 12-month period AND under \$2M in lifetime VC/angel funding raised. You also must not be competitive with the [Datalab API](https://www.datalab.to/).  If you want to remove the GPL license requirements (dual-license) and/or use the weights commercially over the revenue limit, check out the options [here](https://www.datalab.to).
 
 # Installation
 

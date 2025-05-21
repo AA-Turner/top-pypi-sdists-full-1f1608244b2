@@ -5,68 +5,49 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ipfabric import IPFClient
 
+import httpx
 import logging
 from datetime import datetime, timezone, timedelta
 from time import sleep
-from typing import Optional, List, Union, Set, Dict, Literal, Any
+from typing import Optional, Union, Literal, Any
 from pathlib import Path
 from ipfabric.models import Device, Job, Jobs
-from ipfabric.tools import validate_ip_network_str, VALID_IP, raise_for_status
+from ipfabric.tools.shared import validate_ip_network_str, VALID_IP, raise_for_status
 from ipfabric.settings.attributes import Attributes
-from ipfabric.settings.discovery import Networks
-from ipfabric.settings.seeds import SeedList
-from ipfabric.settings.authentication import CredentialList, PrivilegeList
+from ipfabric.models.discovery import Networks, Community, SeedList
+from ipfabric.models.authentication import CredentialList, PrivilegeList
+from ipfabric.settings.discovery import Discovery
+from ipfabric.settings.vendor_api import VendorAPI
+from ipfabric.settings.authentication import Authentication
 
 from pydantic import BaseModel, Field, PrivateAttr
 
 logger = logging.getLogger("ipfabric")
 
 DATE_FORMAT = "%a, %d %b %Y %H:%M:%S %Z"
-SNAPSHOT_COLUMNS = {
-    "id",
-    "creatorUsername",
-    "status",
-    "finishStatus",
-    "loadedSize",
-    "unloadedSize",
-    "name",
-    "note",
-    "sites",
-    "fromArchive",
-    "loading",
-    "locked",
-    "deviceAddedCount",
-    "deviceRemovedCount",
-    "interfaceActiveCount",
-    "interfaceCount",
-    "interfaceEdgeCount",
-    "totalDevCount",
-    "isLastSnapshot",
-    "tsChange",
-    "tsEnd",
-    "tsStart",
-    "userCount",
-}
 VALID_SNAPSHOT_SETTINGS = {
-    "snapshotName",
-    "snapshotNote",
-    "fullBgpLimit",
-    "networks",
-    "resolveNames",
-    "scanner",
-    "traceroute",
-    "limitDiscoveryTasks",
     "allowTelnet",
-    "timeouts",
-    "cliSessionsLimit",
+    "bgps",
     "cliRetryLimit",
+    "cliSessionsLimit",
     "credentials",
     "disabledPostDiscoveryActions",
+    # "discoveryHistorySeeds",  # TODO:
     "discoveryTasks",
+    "fullBgpIpv6Limit",
+    "fullBgpLimit",
+    "limitDiscoveryTasks",
+    "networks",
     "ports",
     "privileges",
+    "resolveNames",
+    "scanner",
     "seedList",
     "siteSeparation",
+    "snapshotName",
+    "snapshotNote",
+    "timeouts",
+    "traceroute",
     "vendorApi",
 }
 DISABLED_ASSURANCE = {"graphCache", "historicalData", "intentVerification"}
@@ -74,10 +55,13 @@ DISABLED_ASSURANCE = {"graphCache", "historicalData", "intentVerification"}
 
 def loaded_status(func):
     def _decorator(self, *args, **kwargs):
-        if not self.loaded:
+        if self.running:
+            logger.warning(f"Snapshot {self.snapshot_id} is running; some methods may not be available.")
+        elif not self.loaded:
             logger.error(f"Snapshot {self.snapshot_id} is not loaded.")
-            return False
-        return func(self, *args, **kwargs)
+        else:
+            return func(self, *args, **kwargs)
+        return False
 
     return _decorator
 
@@ -105,7 +89,7 @@ class ScheduledSnapshot(BaseModel):
         self.error = True
         self.message = message
 
-    def add_params(self, params: dict):  # noqa: C901
+    def add_params(self, params: dict):  # noqa: C901 NOSONAR
         for k, v in params.items():
             if k not in VALID_SNAPSHOT_SETTINGS:
                 raise SyntaxError(f"Invalid Snapshot creation setting parameter '{k}'.")
@@ -117,16 +101,18 @@ class ScheduledSnapshot(BaseModel):
                 continue
             elif k == "credentials":
                 self.params[k] = (
-                    v.model_dump() if isinstance(v, CredentialList) else CredentialList(credentials=v).model_dump()
+                    v.model_dump() if isinstance(v, CredentialList) else CredentialList(root=v).model_dump()
                 )
             elif k == "privileges":
-                self.params[k] = (
-                    v.model_dump() if isinstance(v, PrivilegeList) else PrivilegeList(privileges=v).model_dump()
-                )
+                self.params[k] = v.model_dump() if isinstance(v, PrivilegeList) else PrivilegeList(root=v).model_dump()
             elif k == "networks":
                 self.params[k] = v.model_dump() if isinstance(v, Networks) else Networks(**v).model_dump()
             elif k == "seedList":
                 self.params[k] = v.model_dump() if isinstance(v, SeedList) else SeedList(seeds=v).model_dump()
+            elif k == "bgps":
+                self.params[k] = [
+                    _.model_dump() if isinstance(_, Community) else Community(**_).model_dump() for _ in v
+                ]
             else:
                 self.params[k] = v
 
@@ -186,11 +172,11 @@ def create_snapshot(
     ipf: IPFClient,
     snapshot_name: str = "",
     snapshot_note: str = "",
-    networks: Optional[Union[Networks, Dict[str, List[Union[str, VALID_IP]]]]] = None,
-    seeds: Optional[Union[SeedList, List[Union[str, VALID_IP]]]] = None,
-    credentials: Optional[Union[CredentialList, List[dict]]] = None,
-    privileges: Optional[Union[PrivilegeList, List[dict]]] = None,
-    disabled_assurance_jobs: Optional[List[Literal["graphCache", "historicalData", "intentVerification"]]] = None,
+    networks: Optional[Union[Networks, dict[str, list[Union[str, VALID_IP]]]]] = None,
+    seeds: Optional[Union[SeedList, list[Union[str, VALID_IP]]]] = None,
+    credentials: Optional[Union[CredentialList, list[dict]]] = None,
+    privileges: Optional[Union[PrivilegeList, list[dict]]] = None,
+    disabled_assurance_jobs: Optional[list[Literal["graphCache", "historicalData", "intentVerification"]]] = None,
     fail_if_running_snapshot: bool = True,
     **kwargs,
 ) -> ScheduledSnapshot:
@@ -238,24 +224,24 @@ class Snapshot(BaseModel):
     creator_username: Optional[str] = Field(None, alias="creatorUsername")
     total_dev_count: int = Field(None, alias="totalDevCount")
     licensed_dev_count: Optional[int] = Field(None, alias="licensedDevCount")
-    user_count: int = Field(None, alias="userCount")
-    interface_active_count: int = Field(None, alias="interfaceActiveCount")
-    interface_count: int = Field(None, alias="interfaceCount")
-    interface_edge_count: int = Field(None, alias="interfaceEdgeCount")
-    device_added_count: int = Field(None, alias="deviceAddedCount")
-    device_removed_count: int = Field(None, alias="deviceRemovedCount")
+    user_count: int = Field(0, alias="userCount")
+    interface_active_count: int = Field(0, alias="interfaceActiveCount")
+    interface_count: int = Field(0, alias="interfaceCount")
+    interface_edge_count: int = Field(0, alias="interfaceEdgeCount")
+    device_added_count: int = Field(0, alias="deviceAddedCount")
+    device_removed_count: int = Field(0, alias="deviceRemovedCount")
     status: str
-    finish_status: str = Field(None, alias="finishStatus")
+    finish_status: Optional[str] = Field(None, alias="finishStatus")  # TODO: NIM-19075
     loading: bool
     locked: bool
-    from_archive: bool = Field(None, alias="fromArchive")
+    from_archive: Optional[bool] = Field(None, alias="fromArchive")  # TODO: NIM-19075
     start: datetime = Field(None, alias="tsStart")
     end: Optional[datetime] = Field(None, alias="tsEnd")
     change: Optional[datetime] = Field(None, alias="tsChange")
     version: Optional[str] = None
     initial_version: Optional[str] = Field(None, alias="initialVersion")
-    sites: List[str]
-    errors: Optional[List[Error]] = None
+    sites: list[Union[str, None]]  # TODO: NIM-19075
+    errors: Optional[list[Error]] = None
     loaded_size: int = Field(None, alias="loadedSize")
     unloaded_size: int = Field(None, alias="unloadedSize")
     disabled_graph_cache: Optional[bool] = None
@@ -263,7 +249,7 @@ class Snapshot(BaseModel):
     disabled_intent_verification: Optional[bool] = None
     __jobs: Jobs = PrivateAttr()
     _local_attributes: Optional[Union[Attributes, bool]] = None
-    _connectivity_report: Optional[List[dict]] = None
+    _connectivity_report: Optional[list[dict]] = None
 
     @property
     def _jobs(self):
@@ -271,12 +257,26 @@ class Snapshot(BaseModel):
             self.__jobs = Jobs(client=self.client)
         return self.__jobs
 
-    def discovery_errors(self, filters: dict = None, columns: List[str] = None, sort: dict = None) -> List[dict]:
+    def snapshot_settings(self) -> Discovery:
+        """Returns the snapshot settings for the current snapshot."""
+        settings = raise_for_status(self.client.get(f"snapshots/{self.snapshot_id}/settings")).json()
+        return Discovery(
+            client=self.client,
+            snapshot_id=self.snapshot_id,
+            vendorApi=VendorAPI(client=self.client, snapshot_id=self.snapshot_id, vendor_api=settings.pop("vendorApi")),
+            authentication=Authentication(
+                client=self.client,
+                settings={"credentials": settings.pop("credentials"), "privileges": settings.pop("privileges")},
+            ),
+            **settings,
+        )
+
+    def discovery_errors(self, filters: dict = None, columns: list[str] = None, sort: dict = None) -> list[dict]:
         return self.client.fetch_all(
             "tables/reports/discovery-errors", snapshot_id=self.snapshot_id, filters=filters, columns=columns, sort=sort
         )
 
-    def discovery_tasks(self, filters: dict = None, columns: List[str] = None, sort: dict = None) -> List[dict]:
+    def discovery_tasks(self, filters: dict = None, columns: list[str] = None, sort: dict = None) -> list[dict]:
         return self.client.fetch_all(
             "tables/reports/discovery-tasks", snapshot_id=self.snapshot_id, filters=filters, columns=columns, sort=sort
         )
@@ -284,11 +284,11 @@ class Snapshot(BaseModel):
     def connectivity_report(
         self,
         export: Literal["json", "csv", "df"] = "json",
-        columns: Optional[List[str]] = None,
+        columns: Optional[list[str]] = None,
         filters: Optional[Union[dict, str]] = None,
         sort: Optional[dict] = None,
         csv_tz: Optional[str] = None,
-    ) -> List[dict]:
+    ) -> list[dict]:
         if not self._connectivity_report:
             self._connectivity_report = self.client.fetch_all(
                 "tables/reports/discovery-tasks",
@@ -348,7 +348,7 @@ class Snapshot(BaseModel):
         return not self.loading and self.status in ["run", "ready", "finishing"]
 
     def unload(self, wait_for_unload: bool = False, timeout: int = 60, retry: int = 5) -> bool:
-        if not self.loaded:
+        if not self.running:
             logger.warning(f"Snapshot {self.snapshot_id} is already unloaded.")
             return True
         resp = raise_for_status(
@@ -362,6 +362,12 @@ class Snapshot(BaseModel):
             return False
         self._refresh_status()
         return True
+
+    def delete(self):
+        resp = raise_for_status(
+            self.client.request("DELETE", "snapshots", json=[{"id": self.snapshot_id, "jobDetail": self.name}])
+        )
+        return True if resp.status_code == httpx.codes.OK else False
 
     def load(
         self,
@@ -569,7 +575,7 @@ class Snapshot(BaseModel):
         return disabled, ae_settings
 
     @staticmethod
-    def _dev_to_sn(devices: Union[List[str], List[Device], Set[str], str, Device]) -> Set[str]:
+    def _dev_to_sn(devices: Union[list[str], list[Device], set[str], str, Device]) -> set[str]:
         sns = set()
         if not isinstance(devices, (list, set)):
             devices = {devices}
@@ -582,8 +588,8 @@ class Snapshot(BaseModel):
 
     @loaded_status
     def verify_snapshot_devices(
-        self, devices: Union[List[str], List[Device], Set[str], str, Device]
-    ) -> Dict[str, Set[str]]:
+        self, devices: Union[list[str], list[Device], set[str], str, Device]
+    ) -> dict[str, set[str]]:
         """Checks to ensure that the Vendor is enabled for the devices.
 
         Args:
@@ -611,7 +617,7 @@ class Snapshot(BaseModel):
     @loaded_status
     def delete_devices(
         self,
-        devices: Union[List[str], List[Device], Set[str], str, Device],
+        devices: Union[list[str], list[Device], set[str], str, Device],
         wait_for_discovery: bool = True,
         wait_for_assurance: bool = True,
         timeout: int = 60,
@@ -639,7 +645,7 @@ class Snapshot(BaseModel):
     @loaded_status
     def rediscover_devices(
         self,
-        devices: Union[List[str], List[Device], Set[str], str, Device],
+        devices: Union[list[str], list[Device], set[str], str, Device],
         wait_for_discovery: bool = True,
         wait_for_assurance: bool = True,
         timeout: int = 60,
@@ -668,7 +674,7 @@ class Snapshot(BaseModel):
     def _rediscover_delete_devices(
         self,
         action: Literal["refresh", "delete"],
-        devices: Union[List[str], List[Device], Set[str], str, Device],
+        devices: Union[list[str], list[Device], set[str], str, Device],
         wait_for_discovery: bool = True,
         wait_for_assurance: bool = True,
         timeout: int = 60,
@@ -725,7 +731,7 @@ class Snapshot(BaseModel):
     @loaded_status
     def add_devices(
         self,
-        ip: Union[List[str], List[VALID_IP], str, VALID_IP] = None,
+        ip: Union[list[str], list[VALID_IP], str, VALID_IP] = None,
         refresh_vendor_api: bool = True,
         retry_timed_out: bool = True,
         wait_for_discovery: bool = True,
@@ -756,9 +762,7 @@ class Snapshot(BaseModel):
         ips = list()
         ip = list() if ip is None else ip
         for i in [ip] if isinstance(ip, str) else ip:
-            i = validate_ip_network_str(i)
-            if int(i.split("/")[1]) < 23:
-                raise ValueError(f"IP Network {i} is larger than /23.")
+            i = validate_ip_network_str(i, ipv6=False)  # TODO: Add v6 in 7.3
             ips.append(i)
 
         payload = {"ipList": ips, "retryTimedOut": retry_timed_out, "vendorApi": vendors}
@@ -788,7 +792,7 @@ class Snapshot(BaseModel):
     @loaded_status
     def add_ip_devices(
         self,
-        ip: Union[List[str], List[VALID_IP], str, VALID_IP],
+        ip: Union[list[str], list[VALID_IP], str, VALID_IP],
         wait_for_discovery: bool = True,
         wait_for_assurance: bool = True,
         timeout: int = 60,

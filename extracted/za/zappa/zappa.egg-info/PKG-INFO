@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: zappa
-Version: 0.60.0
+Version: 0.60.1
 Summary: Server-less Python Web Services for AWS Lambda and API Gateway
 Home-page: https://github.com/zappa/Zappa
 Author: Rich Jones

@@ -62,6 +62,17 @@ def make_rattail_config(settings):
     # nb. this is for compaibility with wuttaweb
     settings['wutta_config'] = rattail_config
 
+    # must import all sqlalchemy models before things get rolling,
+    # otherwise can have errors about continuum TransactionMeta class
+    # not yet mapped, when relevant pages are first requested...
+    # cf. https://docs.pylonsproject.org/projects/pyramid_cookbook/en/latest/database/sqlalchemy.html#importing-all-sqlalchemy-models
+    # hat tip to https://stackoverflow.com/a/59241485
+    if getattr(rattail_config, 'tempmon_engine', None):
+        from rattail_tempmon.db import model as tempmon_model, Session as TempmonSession
+        tempmon_session = TempmonSession()
+        tempmon_session.query(tempmon_model.Appliance).first()
+        tempmon_session.close()
+
     # configure database sessions
     if hasattr(rattail_config, 'appdb_engine'):
         tailbone.db.Session.configure(bind=rattail_config.appdb_engine)

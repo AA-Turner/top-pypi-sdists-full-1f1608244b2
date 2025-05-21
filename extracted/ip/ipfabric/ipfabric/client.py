@@ -2,15 +2,15 @@ import json
 import logging
 import re
 from datetime import datetime
-from json import loads, dumps
-from typing import Optional, Any, Union, Literal, List, Dict, overload, Tuple
+from typing import Optional, Any, Union, Literal, overload
 
 from httpx import InvalidURL, URL
 from pydantic import ConfigDict, BaseModel
 
-from ipfabric.api import IPFabricAPI
+from ipfabric.api import IPFabricAPI, check_deprecated
 from ipfabric.diagrams import Diagram
 from ipfabric.models import Technology, Inventory, Jobs, Intent, Devices, Extensions
+from ipfabric.models.oas import Methods
 from ipfabric.settings import Settings
 from ipfabric.tools import TIMEZONES, raise_for_status, valid_snapshot
 
@@ -21,7 +21,6 @@ except ImportError:
 
 logger = logging.getLogger("ipfabric")
 
-RE_PATH = re.compile(r"^/?(api/)?v\d(\.\d+)?/")
 RE_TABLE = re.compile(r"^tables/")
 EXPORT_FORMAT = Literal["json", "csv", "df"]
 
@@ -125,22 +124,6 @@ class IPFClient(IPFabricAPI, BaseModel):
         )
         return devices
 
-    def _check_url(self, url) -> str:
-        """Optimized URL processing with compiled regex and early returns"""
-
-        path = URL(url).path
-        if not path.startswith("/"):
-            path = "/" + url
-
-        # Early return for known web-to-api mappings
-        if path in self.web_to_api:
-            return self.web_to_api[path].api_endpoint
-
-        # Single regex match instead of multiple operations
-        if match := RE_PATH.search(path):
-            return path[match.end() :].lstrip("/")  # noqa: E203
-        return path.lstrip("/")
-
     def _create_payload(
         self,
         url: str,
@@ -166,8 +149,8 @@ class IPFClient(IPFabricAPI, BaseModel):
 
     def _check_url_payload(self, url, snapshot_id, filters, reports, sort, attr_filters, export, csv_tz):
         url = self._check_url(url)
-        oas_data = getattr(self.oas.get(url, {}), "post", None)
         payload = self._create_payload(url, snapshot_id, filters, sort, attr_filters)
+        oas_data = self.oas.get(url, Methods(full_api_endpoint="")).post
 
         if export != "csv":
             if isinstance(reports, (str, list)):
@@ -194,7 +177,7 @@ class IPFClient(IPFabricAPI, BaseModel):
     def _get_payload(self, url, payload) -> Union[str, bool]:
         snapshot_id = payload.pop("snapshot", None)
         reports = payload.pop("reports") if "reports" in payload and isinstance(payload["reports"], str) else None
-        p = "&".join([f"{k}={dumps(v, separators=(',', ':'))}" for k, v in payload.items()])
+        p = "&".join([f"{k}={json.dumps(v, separators=(',', ':'))}" for k, v in payload.items()])
         if snapshot_id:
             p += f"&snapshot={snapshot_id}"
         if reports:
@@ -204,6 +187,7 @@ class IPFClient(IPFabricAPI, BaseModel):
             return False
         return url
 
+    @check_deprecated("post")
     def _stream(self, url, payload, export):
         get_url = self._get_payload(url, payload)
         if get_url is False and export == "csv":
@@ -214,9 +198,9 @@ class IPFClient(IPFabricAPI, BaseModel):
         with self.stream("GET", get_url) as stream_resp:
             data = stream_resp.read()
             raise_for_status(stream_resp)
-        return data if export == "csv" else loads(data)["data"]
+        return data if export == "csv" else json.loads(data)["data"]
 
-    def query(self, url: str, payload: Union[str, dict], get_all: bool = True) -> Union[List[dict], bytes]:
+    def query(self, url: str, payload: Union[str, dict], get_all: bool = True) -> Union[list[dict], bytes]:
         """Submits a query, does no formatting on the parameters.  Use for copy/pasting from the webpage.
 
         Args:
@@ -229,7 +213,7 @@ class IPFClient(IPFabricAPI, BaseModel):
         """
         url = self._check_url(url)
         if isinstance(payload, str):
-            payload = loads(payload)
+            payload = json.loads(payload)
         export = payload.get("format", {}).get("dataType", "json")
         data = False
         if export == "csv" or (self.streaming and get_all):
@@ -241,7 +225,7 @@ class IPFClient(IPFabricAPI, BaseModel):
             data = res.json()["data"]
         return data
 
-    def get_columns(self, url: str, ui: bool = False) -> List[str]:
+    def get_columns(self, url: str, ui: bool = False) -> list[str]:
         """Checks OAS to find available columns.
 
         Args:
@@ -261,7 +245,7 @@ class IPFClient(IPFabricAPI, BaseModel):
         self,
         url: str,
         filters: Optional[Union[dict, str]] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot_id: Optional[str] = None,
         snapshot: bool = True,
         reports: Optional[Union[bool, list, str]] = False,
@@ -291,11 +275,18 @@ class IPFClient(IPFabricAPI, BaseModel):
             raise ImportError("pandas not installed. Run `pip install ipfabric[pd]`.")
         snapshot_id = snapshot_id or self.snapshot_id if snapshot else None
         if filters:
-            filters = loads(filters) if isinstance(filters, str) else filters
-        if "color" in dumps(filters) and not reports:
+            filters = json.loads(filters) if isinstance(filters, str) else filters
+        if "color" in json.dumps(filters) and not reports:
             reports = True
         url, payload = self._check_url_payload(url, snapshot_id, filters, reports, sort, attr_filters, export, csv_tz)
-        payload["columns"] = columns or self.get_columns(url)
+        payload["columns"] = self.get_columns(url) if not columns else list(columns)
+        cols = set(payload["columns"])
+        oas_data = self.oas.get(url, Methods(full_api_endpoint="")).post
+        if oas_data and cols.intersection(oas_data.deprecated_columns):
+            logger.warning(
+                f"API columns '{cols.intersection(oas_data.deprecated_columns)}' for endpoint "
+                f"'/{oas_data.api_endpoint}' are marked deprecated in the OpenAPI specification."
+            )
         return url, payload
 
     @overload
@@ -303,29 +294,29 @@ class IPFClient(IPFabricAPI, BaseModel):
         self,
         url,
         export: Literal["json"] = ...,
-        columns: Optional[List[str]] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[Union[dict, str]] = None,
         limit: Optional[int] = 1000,
         start: Optional[int] = 0,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot: bool = True,
-    ) -> List[dict]: ...
+    ) -> list[dict]: ...
 
     @overload
     def fetch(
         self,
         url,
         export: Literal["csv"],
-        columns: Optional[List] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[Union[dict, str]] = None,
         limit: Optional[int] = 1000,
         start: Optional[int] = 0,
         snapshot_id: Optional[str] = None,
         sort: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot: bool = True,
         csv_tz: Optional[str] = None,
     ) -> bytes: ...
@@ -335,14 +326,14 @@ class IPFClient(IPFabricAPI, BaseModel):
         self,
         url,
         export: Literal["df"] = ...,
-        columns: Optional[List] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[Union[dict, str]] = None,
         limit: Optional[int] = 1000,
         start: Optional[int] = 0,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot: bool = True,
     ) -> DataFrame: ...
 
@@ -350,14 +341,14 @@ class IPFClient(IPFabricAPI, BaseModel):
         self,
         url,
         export: EXPORT_FORMAT = "json",
-        columns: Optional[List] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[Union[dict, str]] = None,
         limit: Optional[int] = 1000,
         start: Optional[int] = 0,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot: bool = True,
         csv_tz: Optional[str] = None,
     ):
@@ -379,7 +370,7 @@ class IPFClient(IPFabricAPI, BaseModel):
             csv_tz: str: Default None, set a timezone to return human-readable dates when using CSV;
                          see `ipfabric.tools.shared.TIMEZONES`
         Returns:
-            Union[List[dict], bytes, pandas.DataFrame]: List of dict if json, bytes string if CSV, DataFrame is df
+            Union[list[dict], bytes, pandas.DataFrame]: List of dict if json, bytes string if CSV, DataFrame is df
         """
         url, payload = self._fetch_setup(
             url, export, columns, snapshot_id, filters, reports, sort, attr_filters, csv_tz, snapshot
@@ -400,25 +391,25 @@ class IPFClient(IPFabricAPI, BaseModel):
         self,
         url: str,
         export: Literal["json"] = ...,
-        columns: Optional[List] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[Union[dict, str]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot: bool = True,
-    ) -> List[dict]: ...
+    ) -> list[dict]: ...
 
     @overload
     def fetch_all(
         self,
         url: str,
         export: Literal["csv"],
-        columns: Optional[List] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[Union[dict, str]] = None,
         snapshot_id: Optional[str] = None,
         sort: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot: bool = True,
         csv_tz: Optional[str] = None,
     ) -> bytes: ...
@@ -428,12 +419,12 @@ class IPFClient(IPFabricAPI, BaseModel):
         self,
         url: str,
         export: Literal["df"],
-        columns: Optional[List] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[Union[dict, str]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot: bool = True,
     ) -> DataFrame: ...
 
@@ -441,12 +432,12 @@ class IPFClient(IPFabricAPI, BaseModel):
         self,
         url: str,
         export: EXPORT_FORMAT = "json",
-        columns: Optional[List] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         filters: Optional[Union[dict, str]] = None,
         snapshot_id: Optional[str] = None,
         reports: Optional[Union[bool, list, str]] = False,
         sort: Optional[dict] = None,
-        attr_filters: Optional[Dict[str, List[str]]] = None,
+        attr_filters: Optional[dict[str, list[str]]] = None,
         snapshot: bool = True,
         csv_tz: Optional[str] = None,
     ):
@@ -466,7 +457,7 @@ class IPFClient(IPFabricAPI, BaseModel):
             csv_tz: str: Default None, set a timezone to return human-readable dates when using CSV;
                          see `ipfabric.tools.shared.TIMEZONES`
         Returns:
-            Union[List[dict], bytes, pandas.DataFrame]: List of dict if json, bytes string if CSV, DataFrame is df
+            Union[list[dict], bytes, pandas.DataFrame]: List of dict if json, bytes string if CSV, DataFrame is df
         """
         url, payload = self._fetch_setup(
             url, export, columns, snapshot_id, filters, reports, sort, attr_filters, csv_tz, snapshot
@@ -480,7 +471,7 @@ class IPFClient(IPFabricAPI, BaseModel):
             data = DataFrame.from_records(data)
         return data
 
-    def _shared_url(self, url: Union[int, str], table: bool = True) -> Tuple[dict, str]:
+    def _shared_url(self, url: Union[int, str], table: bool = True) -> tuple[dict, str]:
         snapshot = None
         try:
             url_id = str(int(url))
@@ -541,7 +532,7 @@ class IPFClient(IPFabricAPI, BaseModel):
         self,
         url: str,
         filters: Union[dict, str],
-        columns: Optional[List] = None,
+        columns: Optional[Union[list[str], set[str]]] = None,
         sort: Optional[dict] = None,
         snapshot: Optional[Union[bool, str]] = False,
     ) -> str:
@@ -585,7 +576,7 @@ class IPFClient(IPFabricAPI, BaseModel):
             "autoSizedColumns": auto_size,
             "columnVisibility": _columns,
             "webEndpoint": web_endpoint,
-            "filters": loads(filters) if isinstance(filters, str) else filters,
+            "filters": json.loads(filters) if isinstance(filters, str) else filters,
         }
         payload.update({"columnWidth": col_width} if col_width else {})
         payload.update({"sort": sort} if sort else {})

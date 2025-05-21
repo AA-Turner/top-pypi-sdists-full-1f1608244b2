@@ -998,9 +998,6 @@ class ChalkAPIClientImpl(ChalkClient):
             if local:
                 raise ValueError("Cannot use local mode in a notebook")
 
-            # Register cell magics
-            self._register_cell_magics()
-
             if branch is None:
                 self.whoami()
             else:
@@ -1024,31 +1021,6 @@ class ChalkAPIClientImpl(ChalkClient):
                 raise RuntimeError(
                     f"Failed to apply branch '{branch}' using local source. Underlying error:\n {result.stderr}\n{result.stdout}"
                 )
-
-    def _register_cell_magics(self):
-        try:
-            from IPython.core.magic import register_cell_magic
-        except ImportError:
-            _logger.warning("Failed to register cell magics, IPython not found")
-            return
-
-        from chalk.utils.notebook import register_resolver_from_cell_magic
-
-        def resolver(line: str, cell: str | None):
-            """Parses the cell as a SQL string resolver and uploads it to the branch"""
-            from chalk.sql._internal.sql_file_resolver import SQLStringResult
-
-            failures = register_resolver_from_cell_magic(
-                sql_string_result=SQLStringResult(
-                    path=re.sub(r"[^A-Za-z_\-0-9]+", "_", line.strip()),
-                    sql_string=cell,
-                    error=None,
-                )
-            )
-            for failure in failures:
-                print(f"Failed to register resolver:\n{failure.traceback}\n")
-
-        register_cell_magic(resolver)
 
     def _exchange_credentials(self):
         _logger.debug("Performing a credentials exchange")

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: snowflake-cli
-Version: 3.8.0
+Version: 3.8.1
 Summary: Snowflake CLI
 Project-URL: Source code, https://github.com/snowflakedb/snowflake-cli
 Project-URL: Bug Tracker, https://github.com/snowflakedb/snowflake-cli/issues
@@ -231,7 +231,7 @@ Requires-Dist: requirements-parser==0.11.0
 Requires-Dist: rich==14.0.0
 Requires-Dist: setuptools==80.3.1
 Requires-Dist: snowflake-connector-python[secure-local-storage]==3.15.0
-Requires-Dist: snowflake-core==1.4.0; python_version < '3.12'
+Requires-Dist: snowflake-core==1.4.0
 Requires-Dist: snowflake-snowpark-python<1.26.0,>=1.15.0; python_version < '3.12'
 Requires-Dist: tomlkit==0.13.2
 Requires-Dist: typer==0.15.2

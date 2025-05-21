@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "deepeval"
-version = "2.9.3"
+version = "2.9.4"
 description = "The LLM Evaluation Framework"
 authors = ["Jeffrey Ip <jeffreyip@confident-ai.com>"]
 license = "Apache-2.0"
@@ -30,7 +30,8 @@ rich = "^13.6.0"
 portalocker = "*"
 openai = "*"
 aiohttp = "*"
-typer = "*"
+typer = ">=0.9,<1.0.0"
+click=">=8.0.0,<8.2.0"
 ollama="*"
 setuptools = "*"
 wheel = "*"

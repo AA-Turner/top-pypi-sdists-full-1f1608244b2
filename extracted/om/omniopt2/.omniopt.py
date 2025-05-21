@@ -171,7 +171,7 @@ with console.status("[bold green]Loading rich_argparse...") as status:
     try:
         from rich_argparse import RichHelpFormatter
     except ModuleNotFoundError:
-        RichHelpFormatter: Any = argparse.HelpFormatter # type: ignore
+        RichHelpFormatter: Any = argparse.HelpFormatter
 
 @beartype
 def makedirs(p: str) -> bool:
@@ -335,9 +335,6 @@ def print_debug(msg: str) -> None:
 
     msg = f"{stack_trace_element}"
 
-    #if args is not None and args.debug:
-    #    original_print(msg)
-
     _debug(msg)
 
     try:
@@ -345,7 +342,7 @@ def print_debug(msg: str) -> None:
             original_print(original_msg, file=f)
     except FileNotFoundError:
         print_red("It seems like the run's folder was deleted during the run. Cannot continue.")
-        sys.exit(99) # generalized code for run folder deleted during run
+        sys.exit(99)
     except Exception as e:
         original_print(f"_debug: Error trying to write log file: {e}")
 
@@ -489,12 +486,10 @@ class ConfigLoader:
             formatter_class=RichHelpFormatter
         )
 
-        # Add config arguments
         self.parser.add_argument('--config_yaml', help='YAML configuration file', type=str, default=None)
         self.parser.add_argument('--config_toml', help='TOML configuration file', type=str, default=None)
         self.parser.add_argument('--config_json', help='JSON configuration file', type=str, default=None)
 
-        # Initialize the remaining arguments
         self.add_arguments()
 
     @beartype
@@ -616,16 +611,13 @@ class ConfigLoader:
         converted_config = {}
         for key, value in config.items():
             if key in arg_defaults:
-                # Get the expected type either from the default value or from the CLI argument itself
                 default_value = arg_defaults[key]
                 if default_value is not None:
                     expected_type = type(default_value)
                 else:
-                    # Fall back to using the current value's type, assuming it's not None
                     expected_type = type(value)
 
                 try:
-                    # Convert the value to the expected type
                     converted_config[key] = expected_type(value)
                 except (ValueError, TypeError):
                     print(f"Warning: Cannot convert '{key}' to {expected_type.__name__}. Using default value.")
@@ -639,7 +631,6 @@ class ConfigLoader:
         """ Merge CLI args with config file args (CLI takes precedence) """
         arg_defaults = {arg.dest: arg.default for arg in self.parser._actions if arg.default is not argparse.SUPPRESS}
 
-        # Validate and convert the config values
         validated_config = self.validate_and_convert(config, arg_defaults)
 
         for key, value in vars(cli_args).items():
@@ -650,7 +641,6 @@ class ConfigLoader:
 
     @beartype
     def parse_arguments(self: Any) -> argparse.Namespace:
-        # First, parse the CLI arguments to check if config files are provided
         _args = self.parser.parse_args()
 
         config = {}
@@ -672,7 +662,6 @@ class ConfigLoader:
         elif _args.config_json:
             config = self.load_config(_args.config_json, 'json')
 
-        # Merge CLI args with config file (CLI has priority)
         _args = self.merge_args_with_config(config, _args)
 
         return _args
@@ -772,10 +761,14 @@ try:
         import torch
     with console.status("[bold green]Loading numpy...") as status:
         import numpy as np
+    with console.status("[bold green]Loading collections...") as status:
+        from collections import defaultdict
     with console.status("[bold green]Loading ax...") as status:
         import ax
 
-        from ax.plot.pareto_utils import compute_posterior_pareto_frontier
+        from ax.core.generator_run import GeneratorRun
+        from ax.core.arm import Arm
+
         from ax.core.objective import MultiObjective
         from ax.core import Metric
         import ax.exceptions.core
@@ -1239,7 +1232,7 @@ class ExternalProgramGenerationNode(ExternalGenerationNode):
 def append_and_read(file: str, nr: int = 0, recursion: int = 0) -> int:
     try:
         with open(file, mode='a+', encoding="utf-8") as f:
-            f.seek(0)  # Setze den Dateizeiger auf den Anfang der Datei
+            f.seek(0)
             nr_lines = len(f.readlines())
 
             if nr == 1:
@@ -1268,7 +1261,6 @@ def run_live_share_command() -> Tuple[str, str]:
 
     if get_current_run_folder():
         try:
-            # Environment variable USER
             _user = os.getenv('USER')
             if _user is None:
                 _user = 'defaultuser'
@@ -1284,7 +1276,6 @@ def run_live_share_command() -> Tuple[str, str]:
 
             result = subprocess.run(_command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-            # Return stdout and stderr
             return str(result.stdout), str(result.stderr)
         except subprocess.CalledProcessError as e:
             if e.stderr:
@@ -1565,9 +1556,6 @@ global_vars["mem_gb"] = None
 global_vars["num_parallel_jobs"] = None
 global_vars["parameter_names"] = []
 
-# max_eval usw. in unterordner
-# grid ausblenden
-
 main_pid = os.getpid()
 
 @beartype
@@ -1745,7 +1733,7 @@ def log_message_to_file(_logfile: Union[str, None], message: str, _lvl: int = 0,
             original_print(message, file=f)
     except FileNotFoundError:
         print_red("It seems like the run's folder was deleted during the run. Cannot continue.")
-        sys.exit(99) # generalized code for run folder deleted during run
+        sys.exit(99)
     except Exception as e:
         original_print(f"Error trying to write log file: {e}")
         log_message_to_file(_logfile, message, _lvl + 1, e)
@@ -1859,7 +1847,6 @@ def check_continue_previous_job(continue_previous_job: Optional[str]) -> dict:
     if continue_previous_job:
         load_global_vars(f"{continue_previous_job}/state_files/global_vars.json")
 
-        # Load experiment name from file if not already set
         if not global_vars.get("experiment_name"):
             exp_name_file = f"{continue_previous_job}/experiment_name"
             global_vars["experiment_name"] = get_file_content_or_exit(
@@ -2029,7 +2016,6 @@ def receive_usr_signal(signum: int, stack: Any) -> None:
     fool_linter(stack)
     print_yellow(f"\nReceived SIGUSR1 ({signum}) from PID {siginfo.si_pid}, sent by UID {siginfo.si_uid}\n")
 
-    # Show process and hierarchy information
     process_info = get_process_info(siginfo.si_pid)
     print_yellow(f"Process info for PID {siginfo.si_pid}:\n  → {process_info}\n")
 
@@ -2042,11 +2028,9 @@ def receive_usr_signal_term(signum: int, stack: Any) -> None:
     fool_linter(stack)
     print_yellow(f"\nReceived SIGTERM ({signum}) from PID {siginfo.si_pid}, sent by UID {siginfo.si_uid}\n")
 
-    # Show process and hierarchy information
     process_info = get_process_info(siginfo.si_pid)
     print_yellow(f"Process info for PID {siginfo.si_pid}:\n  → {process_info}\n")
 
-    # Additional specific handling for SIGTERM
     raise SignalTERM(f"TERM-signal received ({signum})")
 
 @beartype
@@ -2056,13 +2040,11 @@ def receive_signal_cont(signum: int, stack: Any) -> None:
     fool_linter(stack)
     print_yellow(f"\nReceived SIGCONT ({signum}) from PID {siginfo.si_pid}, sent by UID {siginfo.si_uid}\n")
 
-    # Show process and hierarchy information
     process_info = get_process_info(siginfo.si_pid)
     print_yellow(f"Process info for PID {siginfo.si_pid}:\n  → {process_info}\n")
 
     raise SignalCONT(f"CONT-signal received ({signum})")
 
-# Signal handlers registration
 signal.signal(signal.SIGUSR1, receive_usr_signal)
 signal.signal(signal.SIGUSR2, receive_usr_signal)
 signal.signal(signal.SIGTERM, receive_usr_signal_term)
@@ -2540,7 +2522,7 @@ class MonitorProcess:
         self.thread = threading.Thread(target=self._monitor)
         self.thread.daemon = True
 
-        fool_linter(f"self.thread.daemon was set to {self.thread.daemon}") # only for deadcode to not complain
+        fool_linter(f"self.thread.daemon was set to {self.thread.daemon}")
 
     def _monitor(self: Any) -> None:
         try:
@@ -2585,22 +2567,19 @@ class MonitorProcess:
 def execute_bash_code_log_time(code: str) -> list:
     process_item = subprocess.Popen(code, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-    # Monitor-Prozess starten
-    with MonitorProcess(process_item.pid):  # Startet den Monitor im 'with'-Kontext
+    with MonitorProcess(process_item.pid):
         try:
-            stdout, stderr = process_item.communicate()  # Warten auf Beendigung des Prozesses
+            stdout, stderr = process_item.communicate()
             result = subprocess.CompletedProcess(
                 args=code, returncode=process_item.returncode, stdout=stdout, stderr=stderr
             )
-            # Erfolgreiche Rückgabe der Ausgabe
             return [result.stdout, result.stderr, result.returncode, None]
         except subprocess.CalledProcessError as e:
             real_exit_code = e.returncode
             signal_code = None
-            if real_exit_code < 0:  # falls Signalcode vorhanden ist
+            if real_exit_code < 0:
                 signal_code = abs(e.returncode)
                 real_exit_code = 1
-            # Rückgabe im Fehlerfall
             return [e.stdout, e.stderr, real_exit_code, signal_code]
 
 @beartype
@@ -2661,7 +2640,7 @@ def get_results(input_string: Optional[Union[int, str]]) -> Optional[Union[Dict[
         return None
 
     try:
-        results: Dict[str, Optional[float]] = {}  # Typdefinition angepasst
+        results: Dict[str, Optional[float]] = {}
 
         for column_name in arg_result_names:
             _pattern = rf'\s*{re.escape(column_name)}\d*:\s*(-?\d+(?:\.\d+)?)'
@@ -2691,22 +2670,19 @@ def add_to_csv(file_path: str, new_heading: list, new_data: list) -> None:
     new_data = [helpers.to_int_when_possible(x) for x in new_data]
 
     with open(file_path, 'a+', encoding="utf-8", newline='') as file:
-        fcntl.flock(file, fcntl.LOCK_EX)  # Lock file
+        fcntl.flock(file, fcntl.LOCK_EX)
 
         file.seek(0)
-        rows = list(csv.reader(file))  # Read entire file into memory
+        rows = list(csv.reader(file))
         existing_heading = rows[0] if rows else []
 
-        # Merge old and new headers, preserving order
         all_headings = list(dict.fromkeys(existing_heading + new_heading))
 
-        # Update all rows to match the new header order
         updated_rows = [all_headings] + [
             [row[existing_heading.index(h)] if h in existing_heading else "" for h in all_headings]
             for row in rows[1:]
         ]
 
-        # Prepare new data line
         formatted_data = [
             ("{:.20f}".format(x).rstrip('0').rstrip('.')) if isinstance(x, float) else x
             for x in new_data
@@ -2714,12 +2690,11 @@ def add_to_csv(file_path: str, new_heading: list, new_data: list) -> None:
         new_row = [formatted_data[new_heading.index(h)] if h in new_heading else "" for h in all_headings]
         updated_rows.append(new_row)
 
-        # Rewrite the entire file
         file.seek(0)
         file.truncate()
         csv.writer(file).writerows(updated_rows)
 
-        fcntl.flock(file, fcntl.LOCK_UN)  # Unlock file
+        fcntl.flock(file, fcntl.LOCK_UN)
 
 @beartype
 def find_file_paths(_text: str) -> List[str]:
@@ -2811,10 +2786,8 @@ def write_failed_logs(data_dict: dict, error_description: str = "") -> None:
     header_file_path = os.path.join(failed_logs_dir, 'headers.csv')
 
     try:
-        # Create directories if they do not exist
         makedirs(failed_logs_dir)
 
-        # Write headers if the file does not exist
         if not os.path.exists(header_file_path):
             try:
                 with open(header_file_path, mode='w', encoding='utf-8', newline='') as header_file:
@@ -2824,7 +2797,6 @@ def write_failed_logs(data_dict: dict, error_description: str = "") -> None:
             except Exception as e:
                 print_red(f"Failed to write header file: {e}")
 
-        # Append data to the data file
         try:
             with open(data_file_path, mode='a', encoding="utf-8", newline='') as data_file:
                 writer = csv.writer(data_file)
@@ -2842,12 +2814,11 @@ def count_defective_nodes(file_path: Union[str, None] = None, entry: Any = None)
     if file_path is None:
         file_path = os.path.join(get_current_run_folder(), "state_files", "defective_nodes")
 
-    # Sicherstellen, dass das Verzeichnis existiert
     makedirs(os.path.dirname(file_path))
 
     try:
         with open(file_path, mode='a+', encoding="utf-8") as file:
-            file.seek(0)  # Zurück zum Anfang der Datei
+            file.seek(0)
             lines = file.readlines()
 
             entries = [line.strip() for line in lines]
@@ -2886,10 +2857,8 @@ def extract_info(data: Optional[str]) -> Tuple[List[str], List[str]]:
     names: List[str] = []
     values: List[str] = []
 
-    # Regex-Muster für OO-Info, das sowohl Groß- als auch Kleinschreibung berücksichtigt
     _pattern = re.compile(r'\s*OO-Info:\s*([a-zA-Z0-9_]+):\s*(.+)\s*$', re.IGNORECASE)
 
-    # Gehe durch jede Zeile im String
     for line in data.splitlines():
         match = _pattern.search(line)
         if match:
@@ -2908,13 +2877,12 @@ def ignore_signals() -> None:
 
 @beartype
 def calculate_signed_harmonic_distance(_args: Union[dict, List[Union[int, float]]]) -> Union[int, float]:
-    if not _args or len(_args) == 0: # Handle empty input gracefully
+    if not _args or len(_args) == 0:
         return 0
 
-    abs_inverse_sum: float = sum(1 / abs(a) for a in _args if a != 0)  # Avoid division by zero
+    abs_inverse_sum: float = sum(1 / abs(a) for a in _args if a != 0)
     harmonic_mean: float = len(_args) / abs_inverse_sum if abs_inverse_sum != 0 else 0
 
-    # Determine the sign based on the number of negatives
     num_negatives: float = sum(1 for a in _args if a < 0)
     sign: int = -1 if num_negatives % 2 != 0 else 1
 
@@ -3081,7 +3049,7 @@ def human_time_when_larger_than_a_min(seconds: Union[int, float]) -> str:
         parts.append(f"{hours}h")
     if minutes:
         parts.append(f"{minutes}m")
-    if secs or not parts:  # Zeige Sekunden immer, wenn sonst nichts da ist
+    if secs or not parts:
         parts.append(f"{secs}s")
     return f"({''.join(parts)})"
 
@@ -3245,14 +3213,14 @@ def attach_sem_to_result(stdout: str, name: str, value: Union[int, float, None, 
 
 @beartype
 def die_for_debug_reasons() -> None:
-    max_done = os.getenv("DIE_AFTER_THIS_NR_OF_DONE_JOBS")
-    if max_done is not None:
+    max_done_str = os.getenv("DIE_AFTER_THIS_NR_OF_DONE_JOBS")
+    if max_done_str is not None:
         try:
-            max_done = int(max_done)
+            max_done = int(max_done_str)
             if count_done_jobs() > max_done:
                 my_exit(34)
         except ValueError:
-            print_red(f"Invalid value for DIE_AFTER_THIS_NR_OF_DONE_JOBS: '{max_done}', cannot be converted to int")
+            print_red(f"Invalid value for DIE_AFTER_THIS_NR_OF_DONE_JOBS: '{max_done_str}', cannot be converted to int")
 
 @beartype
 def evaluate(parameters: dict) -> Optional[Union[int, float, Dict[str, Optional[Union[int, float, Tuple]]], List[float]]]:
@@ -3448,7 +3416,6 @@ def display_failed_jobs_table() -> None:
             parameters = [row for row in reader]
             #print_debug(f"Parameters: {parameters}")
 
-        # Create the table
         table = Table(show_header=True, header_style="bold red", title="Failed Jobs parameters")
 
         for header in headers:
@@ -3458,12 +3425,11 @@ def display_failed_jobs_table() -> None:
 
         for parameter_set in parameters:
             row = [str(helpers.to_int_when_possible(value)) for value in parameter_set]
-            row_tuple = tuple(row)  # Convert to tuple for set operations
+            row_tuple = tuple(row)
             if row_tuple not in added_rows:
                 table.add_row(*row, style='red')
                 added_rows.add(row_tuple)
 
-        # Print the table to the console
         console.print(table)
     except Exception as e:
         print_red(f"Error: {str(e)}")
@@ -3613,8 +3579,8 @@ def get_best_params(res_name: str = "RESULT") -> Optional[dict]:
 
 @beartype
 def _count_sobol_or_completed(this_csv_file_path: str, _type: str) -> int:
-    if _type not in ["Sobol", "COMPLETED"]:
-        print_red(f"_type is not in Sobol or COMPLETED, but is '{_type}'")
+    if _type not in ["Sobol", "COMPLETED", "SOBOL"]:
+        print_red(f"_type is not in Sobol, SOBOL or COMPLETED, but is '{_type}'")
         return 0
 
     count = 0
@@ -3649,7 +3615,7 @@ def _count_sobol_or_completed(this_csv_file_path: str, _type: str) -> int:
 
     assert df is not None, "DataFrame should not be None after reading CSV file"
 
-    if _type == "Sobol":
+    if _type == "Sobol" or type == "SOBOL":
         rows = df[df["generation_node"] == _type]
     else:
         rows = df[df["trial_status"] == _type]
@@ -3719,7 +3685,7 @@ def get_plot_types(x_y_combinations: list, _force: bool = False) -> list:
                 "params": "--bubblesize=50 --allow_axes %0 --allow_axes %1",
                 "iterate_through": x_y_combinations,
                 "dpi": 76,
-                "filename": "plot_%0_%1_%2" # omit file ending
+                "filename": "plot_%0_%1_%2"
             }
         )
 
@@ -4030,7 +3996,7 @@ def show_pareto_or_error_msg(res_names: list = arg_result_names, force: bool = F
         try:
             show_pareto_frontier_data(res_names, force)
         except Exception as e:
-            print_red(f"show_pareto_frontier_data() failed with exception {e}")
+            print_red(f"show_pareto_frontier_data() failed with exception '{e}'")
     else:
         print_debug(f"show_pareto_frontier_data will NOT be executed because len(arg_result_names) is {len(arg_result_names)}")
 
@@ -4210,7 +4176,6 @@ def get_ax_param_representation(data: dict) -> dict:
     print_red(f"Unknown data range {data['type']}")
     my_exit(19)
 
-    # only for linter, never reached because of die
     return {}
 
 @beartype
@@ -4330,14 +4295,14 @@ def is_valid_equation(expr: str, allowed_vars: list) -> bool:
                    is_only_allowed_vars(node.operand)
         if isinstance(node, ast.Constant):
             return isinstance(node.value, (int, float))
-        if isinstance(node, ast.Num):  # für Python < 3.8
+        if isinstance(node, ast.Num):
             return isinstance(node.n, (int, float))
         return False
 
     def is_constant_expr(node: Any) -> bool:
         if isinstance(node, ast.Constant):
             return isinstance(node.value, (int, float))
-        if isinstance(node, ast.Num):  # für Python < 3.8
+        if isinstance(node, ast.Num):
             return isinstance(node.n, (int, float))
         if isinstance(node, ast.BinOp):
             return is_valid_op(node.op) and \
@@ -4390,7 +4355,6 @@ def is_ax_compatible_constraint(equation: str, variables: List[str]) -> Union[st
     lhs, rhs = equation.split(operator)
 
     def analyze_expression(expr: str) -> bool:
-        # Zerlege in Terme durch '+' und '-'. Behalte das Vorzeichen.
         terms = re.findall(r"[+-]?[^+-]+", expr)
         for term in terms:
             term = term.strip()
@@ -4408,7 +4372,6 @@ def is_ax_compatible_constraint(equation: str, variables: List[str]) -> Union[st
                 if var not in variables:
                     return False
             else:
-                # Entweder nur Variable (z. B. "abc") oder nur Konstante
                 if term not in variables:
                     if not re.fullmatch(r"[+-]?[0-9.]+(?:[eE][-+]?[0-9]+)?", term):
                         return False
@@ -5275,7 +5238,6 @@ def simulate_load_data_from_existing_run_folders(_paths: List[str]) -> int:
                 trial_status_str = trial_status.__repr__
 
                 if "COMPLETED".lower() not in str(trial_status_str).lower():
-                    # or "MANUAL".lower() in str(trial_status_str).lower()):
                     continue
 
                 _counter += 1
@@ -5305,24 +5267,19 @@ def parse_parameter_type_error(_error_message: Union[str, None]) -> Optional[dic
 
     error_message: str = str(_error_message)
     try:
-        # Defining the regex pattern to match the required parts of the error message
         _pattern: str = r"Value for parameter (?P<parameter_name>\w+): .*? is of type <class '(?P<current_type>\w+)'>, expected\s*<class '(?P<expected_type>\w+)'>."
         match = re.search(_pattern, error_message)
 
-        # Asserting the match is found
         assert match is not None, "Pattern did not match the error message."
 
-        # Extracting values from the match object
         parameter_name = match.group("parameter_name")
         current_type = match.group("current_type")
         expected_type = match.group("expected_type")
 
-        # Asserting the extracted values are correct
         assert parameter_name is not None, "Parameter name not found in the error message."
         assert current_type is not None, "Current type not found in the error message."
         assert expected_type is not None, "Expected type not found in the error message."
 
-        # Returning the parsed values
         return {
             "parameter_name": parameter_name,
             "current_type": current_type,
@@ -5366,6 +5323,54 @@ def parse_csv(csv_path: str) -> Tuple[List, List]:
     return arm_params_list, results_list
 
 @beartype
+def get_generation_node_for_index(this_csv_file_path, arm_params_list, results_list, index):
+    try:
+        if index < 0 or index >= len(arm_params_list) or index >= len(results_list):
+            return "MANUAL"
+
+        target_arm_params = arm_params_list[index]
+        target_result = results_list[index]
+
+        target_combined = {}
+        target_combined.update(target_arm_params)
+        target_combined.update(target_result)
+
+        with open(this_csv_file_path, mode='r', newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            if "generation_node" not in reader.fieldnames:
+                return "MANUAL"
+
+            for row in reader:
+                all_match = True
+                for key, val in target_combined.items():
+                    row_val = row.get(key)
+                    if row_val is None:
+                        all_match = False
+                        break
+
+                    if isinstance(val, (int, float)):
+                        try:
+                            row_val_num = float(row_val)
+                            val_num = float(val)
+                            if abs(row_val_num - val_num) > 1e-8:
+                                all_match = False
+                                break
+                        except ValueError:
+                            all_match = False
+                            break
+                    else:
+                        if str(val) != row_val:
+                            all_match = False
+                            break
+
+                if all_match:
+                    return row["generation_node"]
+    except Exception as e:
+        print(f"Error while get_generation_node_for_index: {e}")
+
+    return "MANUAL"
+
+@beartype
 def insert_jobs_from_csv(this_csv_file_path: str, experiment_parameters: Optional[Union[List[Any], dict]]) -> None:
     if not os.path.exists(this_csv_file_path):
         print_red(f"--load_data_from_existing_jobs: Cannot find {this_csv_file_path}")
@@ -5405,12 +5410,16 @@ def insert_jobs_from_csv(this_csv_file_path: str, experiment_parameters: Optiona
     err_msgs = []
 
     with console.status("[bold green]Loading existing jobs into ax_client...") as __status:
+        i = 0
         for arm_params, result in zip(arm_params_list, results_list):
+
             __status.update(f"[bold green]Loading existing jobs from {this_csv_file_path} into ax_client")
             arm_params = validate_and_convert_params(experiment_parameters, arm_params)
 
             try:
-                if insert_job_into_ax_client(arm_params, result):
+                gen_node_name = get_generation_node_for_index(this_csv_file_path, arm_params_list, results_list, i)
+
+                if insert_job_into_ax_client(arm_params, result, gen_node_name):
                     cnt += 1
 
                     print_debug(f"Inserted one job from {this_csv_file_path}, arm_params: {arm_params}, results: {result}")
@@ -5422,6 +5431,8 @@ def insert_jobs_from_csv(this_csv_file_path: str, experiment_parameters: Optiona
                     print_red(err_msg)
                     err_msgs.append(err_msg)
 
+            i = i + 1
+
     if cnt:
         if cnt == 1:
             print_yellow(f"Inserted one job from {this_csv_file_path}")
@@ -5432,7 +5443,7 @@ def insert_jobs_from_csv(this_csv_file_path: str, experiment_parameters: Optiona
     set_nr_inserted_jobs(NR_INSERTED_JOBS + cnt)
 
 @beartype
-def insert_job_into_ax_client(arm_params: dict, result: dict) -> bool:
+def insert_job_into_ax_client(arm_params: dict, result: dict, new_job_type: str = "MANUAL") -> bool:
     done_converting = False
 
     if ax_client is None or not ax_client:
@@ -5443,8 +5454,19 @@ def insert_job_into_ax_client(arm_params: dict, result: dict) -> bool:
         try:
             if ax_client:
                 new_trial = ax_client.attach_trial(arm_params)
+                if not isinstance(new_trial, tuple) or len(new_trial) < 2:
+                    raise RuntimeError("attach_trial didn't return the expected tuple")
 
                 new_trial_idx = new_trial[1]
+
+                trial = ax_client.experiment.trials.get(new_trial_idx)
+                if trial is None:
+                    raise RuntimeError(f"Trial with index {new_trial_idx} not found")
+
+                arm = Arm(parameters=arm_params, name=f'{new_trial_idx}_0')
+                manual_generator_run = GeneratorRun(arms=[arm], generation_node_name=new_job_type)
+
+                trial._generator_run = manual_generator_run
 
                 ax_client.complete_trial(trial_index=new_trial_idx, raw_data=result)
 
@@ -5818,7 +5840,6 @@ def read_errors_from_file() -> list:
     if os.path.exists(error_file_path):
         with open(error_file_path, mode='r', encoding="utf-8") as file:
             errors = file.readlines()
-        # Entfernen des Zeilenumbruchs am Ende jeder Zeile
         return [error.strip() for error in errors]
     return []
 
@@ -5928,8 +5949,6 @@ def finish_previous_jobs(new_msgs: List[str]) -> None:
         print_debug(f"jobs in finish_previous_jobs: {global_vars['jobs']}")
 
     for job, trial_index in global_vars["jobs"][:]:
-        # Poll if any jobs completed
-        # Local and debug jobs don't run until .result() is called.
         if job is None:
             print_debug(f"finish_previous_jobs: job {job} is None")
             continue
@@ -6137,7 +6156,6 @@ def handle_restart_on_different_node(stdout_path: str, hostname_from_out_file: U
 def handle_exclude_node_and_restart_all(stdout_path: str, hostname_from_out_file: Union[None, str]) -> None:
     if hostname_from_out_file:
         if not is_already_in_defective_nodes(hostname_from_out_file):
-            # TODO: Implement ExcludeNodeAndRestartAll fully
             print_yellow(f"ExcludeNodeAndRestartAll not yet fully implemented. Adding {hostname_from_out_file} to unavailable hosts.")
             count_defective_nodes(None, hostname_from_out_file)
         else:
@@ -6154,7 +6172,6 @@ def _orchestrate(stdout_path: str, trial_index: int) -> None:
 
     hostname_from_out_file = get_hostname_from_outfile(stdout_path)
 
-    # Behavior handler mapping
     behavior_handlers = {
         "ExcludeNode": lambda: handle_exclude_node(stdout_path, hostname_from_out_file),
         "Restart": lambda: handle_restart(stdout_path, trial_index),
@@ -6467,12 +6484,23 @@ def has_no_post_generation_constraints_or_matches_constraints(_post_generation_c
 
     return True
 
+@beartype
+def die_101_if_no_ax_client_or_experiment_or_gs() -> None:
+    if ax_client is None:
+        print_red("Error: ax_client is not defined")
+        my_exit(101)
+    elif ax_client.experiment is None:
+        print_red("Error: ax_client.experiment is not defined")
+        my_exit(101)
+    elif global_gs is None:
+        print_red("Error: global_gs is not defined")
+        my_exit(101)
+
 @disable_logs
 @beartype
 def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optional[Tuple[Dict[int, Any], bool]]:
-    """Attempts to fetch the next trials using the ax_client."""
-
     global global_gs, overwritten_to_random, gotten_jobs
+
     if not ax_client:
         print_red("ax_client was not defined")
         my_exit(9)
@@ -6481,43 +6509,86 @@ def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optio
 
     trial_durations: List[float] = []
 
+    die_101_if_no_ax_client_or_experiment_or_gs()
+
     try:
-        for k in range(nr_of_jobs_to_get):
+        all_start_time = time.time()
+
+        cnt = 0
+
+        batched_arms = []
+
+        max_attempts = 10
+        attempts = 0
+
+        while len(batched_arms) != nr_of_jobs_to_get:
+            if attempts > max_attempts:
+                print_debug(f"_fetch_next_trials: Stopped after {attempts} attempts: could not generate enough arms "
+                            f"(got {len(batched_arms)} out of {nr_of_jobs_to_get}).")
+                break
+
+            remaining = nr_of_jobs_to_get - len(batched_arms)
+            print_debug(f"_fetch_next_trials: Attempt {attempts + 1}: requesting {remaining} more arm(s).")
+
+            batched_generator_run = global_gs.gen(
+                experiment=ax_client.experiment,
+                n=remaining,
+                pending_observations=get_pending_observation_features(experiment=ax_client.experiment)
+            )
+
+            new_arms = batched_generator_run.arms
+            if not new_arms:
+                print_debug("_fetch_next_trials: No new arms were generated in this attempt.")
+            else:
+                print_debug(f"_fetch_next_trials: Generated {len(new_arms)} new arm(s).")
+
+            batched_arms.extend(new_arms)
+            attempts += 1
+
+        print_debug(f"_fetch_next_trials: Finished with {len(batched_arms)} arm(s) after {attempts} attempt(s).")
+
+        for k in range(len(batched_arms)):
+            print_debug(f"_fetch_next_trials: fetching trial {k + 1}/{nr_of_jobs_to_get}...")
             progressbar_description([_get_trials_message(k + 1, nr_of_jobs_to_get, trial_durations)])
 
             start_time = time.time()
 
-            print_debug(f"_fetch_next_trials: fetching trial {k + 1}/{nr_of_jobs_to_get}...")
+            trial_index = ax_client.experiment.num_trials
 
-            if ax_client is not None and ax_client.experiment is not None and global_gs is not None:
-                trial_index = ax_client.experiment.num_trials
+            arm = batched_arms[k]
+            generator_run = GeneratorRun(
+                arms=[arm],
+                generation_node_name=global_gs.current_node_name
+            )
 
-                generator_run = global_gs.gen(
-                    experiment=ax_client.experiment,
-                    n=1,
-                    pending_observations=get_pending_observation_features(experiment=ax_client.experiment)
-                )
+            trial = ax_client.experiment.new_trial(generator_run)
+            params = arm.parameters
 
-                trial = ax_client.experiment.new_trial(generator_run)
-                params = generator_run.arms[0].parameters
+            trials_dict[trial_index] = params
+            gotten_jobs = gotten_jobs + 1
 
-                trials_dict[trial_index] = params
-                gotten_jobs = gotten_jobs + 1
+            print_debug(f"_fetch_next_trials: got trial {k + 1}/{nr_of_jobs_to_get} (trial_index: {trial_index} [gotten_jobs: {gotten_jobs}, k: {k}])")
+            end_time = time.time()
 
-                print_debug(f"_fetch_next_trials: got trial {k + 1}/{nr_of_jobs_to_get} (trial_index: {trial_index} [gotten_jobs: {gotten_jobs}, k: {k}])")
-                end_time = time.time()
+            trial_durations.append(float(end_time - start_time))
 
-                trial_durations.append(float(end_time - start_time))
-
-                if not has_no_post_generation_constraints_or_matches_constraints(post_generation_constraints, params):
-                    print_debug(f"Marking trial as abandoned since it doesn't fit a Post-Generation-constraint: {params}")
-                    trial.mark_abandoned()
-                    abandoned_trial_indices.append(trial_index)
-                else:
-                    trial.mark_running(no_runner_required=True)
+            if not has_no_post_generation_constraints_or_matches_constraints(post_generation_constraints, params):
+                print_debug(f"Marking trial as abandoned since it doesn't fit a Post-Generation-constraint: {params}")
+                trial.mark_abandoned()
+                abandoned_trial_indices.append(trial_index)
             else:
-                print_red("ax_client, ax_client.experiment or global_gs is not defined")
-                my_exit(101)
+                trial.mark_running(no_runner_required=True)
+
+            cnt = cnt + 1
+
+        all_end_time = time.time()
+        all_time = float(all_end_time - all_start_time)
+
+        if cnt:
+            print_debug(f"_fetch_next_trials: Requested {nr_of_jobs_to_get} jobs, got {cnt}, took {all_time / cnt} seconds per job (avg)")
+        else:
+            print_debug(f"_fetch_next_trials: Requested {nr_of_jobs_to_get} jobs, got {cnt}")
+
         return trials_dict, False
     except np.linalg.LinAlgError as e:
         _handle_linalg_error(e)
@@ -6866,7 +6937,6 @@ def create_node(model_name: str, threshold: int, next_model_name: Optional[str])
             )
         ]
     else:
-        # Handle the case where no transition is intended
         trans_crit = [
             MaxTrials(
                 threshold=threshold,
@@ -7530,7 +7600,7 @@ def extract_parameters_and_metrics(rows: List, all_columns: Optional[Sequence[st
     return param_dicts, means, metrics
 
 @beartype
-def create_table(param_dicts: List, means: dict, metrics: List, metric_i: str, metric_j: str) -> Table:
+def create_pareto_front_table(param_dicts: List, means: dict, metrics: List, metric_i: str, metric_j: str) -> Table:
     table = Table(title=f"Pareto-Front for {metric_j}/{metric_i}:", show_lines=True)
 
     headers = list(param_dicts[0].keys()) + metrics
@@ -7558,7 +7628,7 @@ def pareto_front_as_rich_table(param_dicts: list, metrics: list, metric_i: str, 
 
     all_columns, rows = get_csv_data(RESULT_CSV_FILE)
     param_dicts, means, metrics = extract_parameters_and_metrics(rows, all_columns, metrics)
-    return create_table(param_dicts, means, metrics, metric_i, metric_j)
+    return create_pareto_front_table(param_dicts, means, metrics, metric_i, metric_j)
 
 @beartype
 def supports_sixel() -> bool:
@@ -7577,18 +7647,22 @@ def supports_sixel() -> bool:
 
 @beartype
 def plot_pareto_frontier_sixel(data: Any, i: int, j: int) -> None:
-    absolute_metrics = data.absolute_metrics
+    if data is None:
+        print("[italic yellow]The data seems to be empty. Cannot plot pareto frontier.[/]")
+        return
+
+    absolute_metrics = arg_result_names
 
     x_metric = absolute_metrics[i]
     y_metric = absolute_metrics[j]
 
     if not supports_sixel():
-        console.print(f"[italic yellow]Your console does not support sixel-images. Will not print pareto-frontier as a matplotlib-sixel-plot for {x_metric}/{y_metric}.[/]")
+        print(f"[italic yellow]Your console does not support sixel-images. Will not print pareto-frontier as a matplotlib-sixel-plot for {x_metric}/{y_metric}.[/]")
         return
 
     import matplotlib.pyplot as plt
 
-    means = data.means
+    means = data[x_metric][y_metric]["means"]
 
     x_values = means[x_metric]
     y_values = means[y_metric]
@@ -7618,6 +7692,188 @@ def convert_to_serializable(obj: np.ndarray) -> Union[str, list]:
     raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
 @beartype
+def pareto_front_general(x: np.ndarray, y: np.ndarray) -> np.ndarray:
+    is_dominated = np.zeros(len(x), dtype=bool)
+    for i in range(len(x)):
+        for j in range(len(x)):
+            if (x[j] <= x[i] and y[j] <= y[i]) and (x[j] < x[i] or y[j] < y[i]):
+                is_dominated[i] = True
+                break
+    return np.where(~is_dominated)[0]
+
+@beartype
+def _pareto_front_aggregate_data(
+    data: ax.core.data.Data
+) -> Dict[Tuple[int, str], Dict[str, Dict[str, float]]]:
+    records: dict = defaultdict(lambda: {'means': {}, 'sems': {}})
+
+    for row in data.df.itertuples(index=False):
+        trial_index = row.trial_index
+        arm_name = row.arm_name
+        metric = row.metric_name
+        mean = row.mean
+        sem = row.sem
+
+        key = (trial_index, arm_name)
+        records[key]['means'][metric] = mean
+        records[key]['sems'][metric] = sem
+
+    return records
+
+@beartype
+def _pareto_front_filter_complete_points(
+    records: Dict[Tuple[int, str], Dict[str, Dict[str, float]]],
+    primary_name: str,
+    secondary_name: str
+) -> List[Tuple[Tuple[int, str], float, float]]:
+    points = []
+    for key, metrics in records.items():
+        means = metrics['means']
+        if primary_name in means and secondary_name in means:
+            x_val = means[primary_name]
+            y_val = means[secondary_name]
+            points.append((key, x_val, y_val))
+    if len(points) == 0:
+        raise ValueError("No full data points with both objectives found.")
+    return points
+
+@beartype
+def _pareto_front_transform_objectives(
+    points: List[Tuple[Any, float, float]],
+    primary_name: str,
+    secondary_name: str
+) -> Tuple[np.ndarray, np.ndarray]:
+    primary_idx = arg_result_names.index(primary_name)
+    secondary_idx = arg_result_names.index(secondary_name)
+
+    x = np.array([p[1] for p in points])
+    y = np.array([p[2] for p in points])
+
+    if arg_result_min_or_max[primary_idx] == "max":
+        x = -x
+    elif arg_result_min_or_max[primary_idx] != "min":
+        raise ValueError(f"Unknown mode for {primary_name}: {arg_result_min_or_max[primary_idx]}")
+
+    if arg_result_min_or_max[secondary_idx] == "max":
+        y = -y
+    elif arg_result_min_or_max[secondary_idx] != "min":
+        raise ValueError(f"Unknown mode for {secondary_name}: {arg_result_min_or_max[secondary_idx]}")
+
+    return x, y
+
+@beartype
+def _pareto_front_select_pareto_points(
+    x: np.ndarray,
+    y: np.ndarray,
+    points: List[Tuple[Any, float, float]],
+    num_points: int
+) -> List[Tuple[Any, float, float]]:
+    indices = pareto_front_general(x, y)
+    sorted_indices = indices[np.argsort(x[indices])]
+    sorted_indices = sorted_indices[:num_points]
+    selected_points = [points[i] for i in sorted_indices]
+    return selected_points
+
+@beartype
+def _pareto_front_build_return_structure(
+    selected_points: List[Tuple[Any, float, float]],
+    records: Dict[Tuple[int, str], Dict[str, Dict[str, float]]],
+    experiment: ax.core.experiment.Experiment,
+    absolute_metrics: List[str],
+    primary_name: str,
+    secondary_name: str
+) -> dict:
+    param_dicts = []
+    means_dict = defaultdict(list)
+    sems_dict = defaultdict(list)
+
+    for (trial_index, arm_name), _, _ in selected_points:
+        trial = experiment.trials[trial_index]
+        arm = trial.arms_by_name[arm_name]
+        param_dicts.append(arm.parameters)
+
+        for metric in absolute_metrics:
+            means_dict[metric].append(records[(trial_index, arm_name)]['means'].get(metric, float("nan")))
+            sems_dict[metric].append(records[(trial_index, arm_name)]['sems'].get(metric, float("nan")))
+
+    return {
+        primary_name: {
+            secondary_name: {
+                "absolute_metrics": absolute_metrics,
+                "param_dicts": param_dicts,
+                "means": dict(means_dict),
+                "sems": dict(sems_dict),
+            },
+            "absolute_metrics": absolute_metrics
+        }
+    }
+
+@beartype
+def custom_pareto_frontier(
+    experiment: ax.core.experiment.Experiment,
+    data: ax.core.data.Data,
+    primary_objective: ax.core.metric.Metric,
+    secondary_objective: ax.core.metric.Metric,
+    absolute_metrics: List[str],
+    num_points: int
+) -> dict:
+    records = _pareto_front_aggregate_data(data)
+    points = _pareto_front_filter_complete_points(records, primary_objective.name, secondary_objective.name)
+    x, y = _pareto_front_transform_objectives(points, primary_objective.name, secondary_objective.name)
+    selected_points = _pareto_front_select_pareto_points(x, y, points, num_points)
+    result = _pareto_front_build_return_structure(selected_points, records, experiment, absolute_metrics, primary_objective.name, secondary_objective.name)
+
+    return result
+
+@beartype
+def sanitize_json(obj: Any) -> Any:
+    if isinstance(obj, float):
+        if math.isnan(obj) or math.isinf(obj):
+            return None
+        return obj
+    if isinstance(obj, dict):
+        return {k: sanitize_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [sanitize_json(x) for x in obj]
+    return obj
+
+@beartype
+def set_arg_min_or_max_if_required() -> None:
+    global arg_result_names
+    global arg_result_min_or_max
+
+    if args.calculate_pareto_front_of_job:
+        _found_result_min_max = []
+        _default_min_max = "min"
+
+        _found_result_names = []
+
+        _look_for_result_names_file = f"{args.calculate_pareto_front_of_job}/result_names.txt"
+
+        if os.path.exists(_look_for_result_names_file):
+            try:
+                with open(_look_for_result_names_file, 'r', encoding='utf-8') as _file:
+                    _content = _file.read()
+                    _found_result_names = _content.split('\n')
+
+                    if _found_result_names and _found_result_names[-1] == '':
+                        _found_result_names.pop()
+            except FileNotFoundError:
+                print_red(f"Error: The file at '{_look_for_result_names_file}' was not found.")
+            except IOError as e:
+                print_red(f"Error reading file '{_look_for_result_names_file}': {e}")
+        else:
+            print_yellow(f"{_look_for_result_names_file} not found!")
+
+        for _n in range(len(_found_result_names)):
+            _min_max = get_min_max_from_file(args.calculate_pareto_front_of_job, _n, _default_min_max)
+
+            _found_result_min_max.append(_min_max)
+
+        arg_result_names = _found_result_names
+        arg_result_min_or_max = _found_result_min_max
+
+@beartype
 def get_calculated_or_cached_frontier(metric_i: ax.core.metric.Metric, metric_j: ax.core.metric.Metric, res_names: list, force: bool) -> Any:
     if ax_client is None:
         print_red("get_calculated_or_cached_frontier: Cannot get pareto-front. ax_client is undefined.")
@@ -7640,14 +7896,20 @@ def get_calculated_or_cached_frontier(metric_i: ax.core.metric.Metric, metric_j:
                     frontier = pickle.loads(binary_data)
                     return frontier
 
-        frontier = compute_posterior_pareto_frontier(
+        data = ax_client.experiment.fetch_data()
+
+        set_arg_min_or_max_if_required()
+
+        frontier = custom_pareto_frontier(
             experiment=ax_client.experiment,
-            data=ax_client.experiment.fetch_data(),
+            data=data,
             primary_objective=metric_i,
             secondary_objective=metric_j,
             absolute_metrics=res_names,
             num_points=count_done_jobs()
         )
+
+        frontier = sanitize_json(frontier)
 
         pickled_data = pickle.dumps(frontier)
         b64_data = base64.b64encode(pickled_data).decode("utf-8")
@@ -7730,16 +7992,25 @@ def show_pareto_frontier_data(res_names: list, force: bool = False) -> None:
         if metric_i.name not in pareto_front_data:
             pareto_front_data[metric_i.name] = {}
 
+        metric_i_name = metric_i.name
+        metric_j_name = metric_j.name
+
+        cf = calculated_frontier[metric_i_name][metric_j_name]
+
+        _param_dicts = cf["param_dicts"]
+        _means = cf["means"]
+        _sems = cf["sems"]
+
         pareto_front_data[metric_i.name][metric_j.name] = {
-            "param_dicts": calculated_frontier.param_dicts,
-            "means": calculated_frontier.means,
-            "sems": calculated_frontier.sems,
-            "absolute_metrics": calculated_frontier.absolute_metrics
+            "param_dicts": _param_dicts,
+            "means": _means,
+            "sems": _sems,
+            "absolute_metrics": arg_result_names
         }
 
         rich_table = pareto_front_as_rich_table(
-            calculated_frontier.param_dicts,
-            calculated_frontier.absolute_metrics,
+            _param_dicts,
+            arg_result_names,
             metric_j.name,
             metric_i.name
         )
@@ -7747,9 +8018,7 @@ def show_pareto_frontier_data(res_names: list, force: bool = False) -> None:
         if rich_table is not None:
             console.print(rich_table)
 
-            mode = "w" if force else "a"
-
-            with open(f"{get_current_run_folder()}/pareto_front_table.txt", mode=mode, encoding="utf-8") as text_file:
+            with open(f"{get_current_run_folder()}/pareto_front_table.txt", mode="a", encoding="utf-8") as text_file:
                 with console.capture() as capture:
                     console.print(rich_table)
                 text_file.write(capture.get())
@@ -7948,7 +8217,7 @@ def _load_previous_constraints(job_path: str) -> list:
         base64.b64encode(c.encode("utf-8")).decode("utf-8") for c in raw_constraints
     ]
 
-    return [encoded_constraints]  # for historical compatibility
+    return [encoded_constraints]
 
 @beartype
 def _normalize_constraints_list(constraints_list: list) -> List[str]:
@@ -8231,6 +8500,8 @@ def main() -> None:
     for existing_run in args.load_data_from_existing_jobs:
         insert_jobs_from_csv(f"{existing_run}/results.csv", experiment_parameters)
 
+        set_global_generation_strategy()
+
     try:
         run_search_with_progress_bar()
 
@@ -8495,13 +8766,13 @@ def run_tests() -> None:
     nr_errors += is_equal(
         "has_no_post_generation_constraints_or_matches_constraints(['unknown > 0'], {'a': 1})",
         has_no_post_generation_constraints_or_matches_constraints(['unknown > 0'], {'a': 1}),
-        False  # unknown bleibt unersetzt → eval Error
+        False
     )
 
     nr_errors += is_equal(
         "has_no_post_generation_constraints_or_matches_constraints(['a + '], {'a': 1})",
         has_no_post_generation_constraints_or_matches_constraints(['a + '], {'a': 1}),
-        False  # Syntaxfehler
+        False
     )
 
     nr_errors += is_equal('is_valid_equation("abc", ["abc"])',
@@ -8630,8 +8901,8 @@ Exit-Code: 159
     nr_errors += is_equal('get_min_max_from_file("/i/do/not/exist/hopefully/anytime/ever", 0, "-123")', get_min_max_from_file("/i/do/not/exist/hopefully/anytime/ever", 0, "-123"), '-123')
 
     if not SYSTEM_HAS_SBATCH or args.run_tests_that_fail_on_taurus:
-        nr_errors += complex_tests("signal_but_has_output", "Killed", 137, None) # Doesnt show Killed on taurus
-        nr_errors += complex_tests("signal", "Killed", 137, None, True) # Doesnt show Killed on taurus
+        nr_errors += complex_tests("signal_but_has_output", "Killed", 137, None)
+        nr_errors += complex_tests("signal", "Killed", 137, None, True)
     else:
         print_yellow("Ignoring tests complex_tests(signal_but_has_output) and complex_tests(signal) because SLURM is installed and --run_tests_that_fail_on_taurus was not set")
 
@@ -8777,7 +9048,6 @@ Exit-Code: 159
     except ValueError:
         pass
 
-    # Signed Weighted Euclidean Distance
     nr_errors += is_equal(
         "calculate_signed_weighted_euclidean_distance([0.1], '1.0')",
         calculate_signed_weighted_euclidean_distance([0.1], "1.0"),

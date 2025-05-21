@@ -133,15 +133,15 @@ class ProviderArgs:
                `SNOWFLAKE_REQUEST_TIMEOUT` environment variable.
         :param pulumi.Input[builtins.str] role: Specifies the role to use by default for accessing Snowflake objects in the client session. Can also be sourced from the
                `SNOWFLAKE_ROLE` environment variable.
-        :param pulumi.Input[builtins.bool] skip_toml_file_permission_verification: True by default. Skips TOML configuration file permission verification. This flag has no effect on Windows systems, as
-               the permissions are not checked on this platform. We recommend setting this to `false` and setting the proper privileges
-               - see the section below. Can also be sourced from the `SNOWFLAKE_SKIP_TOML_FILE_PERMISSION_VERIFICATION` environment
-               variable.
+        :param pulumi.Input[builtins.bool] skip_toml_file_permission_verification: False by default. Skips TOML configuration file permission verification. This flag has no effect on Windows systems, as
+               the permissions are not checked on this platform. Instead of skipping the permissions verification, we recommend setting
+               the proper privileges - see the section below. Can also be sourced from the
+               `SNOWFLAKE_SKIP_TOML_FILE_PERMISSION_VERIFICATION` environment variable.
         :param pulumi.Input[builtins.str] tmp_directory_path: Sets temporary directory used by the driver for operations like encrypting, compressing etc. Can also be sourced from
                the `SNOWFLAKE_TMP_DIRECTORY_PATH` environment variable.
         :param pulumi.Input[builtins.str] token: Token to use for OAuth and other forms of token based auth. Can also be sourced from the `SNOWFLAKE_TOKEN` environment
                variable.
-        :param pulumi.Input[builtins.bool] use_legacy_toml_file: True by default. When this is set to true, the provider expects the legacy TOML format. Otherwise, it expects the new
+        :param pulumi.Input[builtins.bool] use_legacy_toml_file: False by default. When this is set to true, the provider expects the legacy TOML format. Otherwise, it expects the new
                format. See more in the section below Can also be sourced from the `SNOWFLAKE_USE_LEGACY_TOML_FILE` environment
                variable.
         :param pulumi.Input[builtins.str] user: Username. Required unless using `profile`. Can also be sourced from the `SNOWFLAKE_USER` environment variable.
@@ -693,10 +693,10 @@ class ProviderArgs:
     @pulumi.getter(name="skipTomlFilePermissionVerification")
     def skip_toml_file_permission_verification(self) -> Optional[pulumi.Input[builtins.bool]]:
         """
-        True by default. Skips TOML configuration file permission verification. This flag has no effect on Windows systems, as
-        the permissions are not checked on this platform. We recommend setting this to `false` and setting the proper privileges
-        - see the section below. Can also be sourced from the `SNOWFLAKE_SKIP_TOML_FILE_PERMISSION_VERIFICATION` environment
-        variable.
+        False by default. Skips TOML configuration file permission verification. This flag has no effect on Windows systems, as
+        the permissions are not checked on this platform. Instead of skipping the permissions verification, we recommend setting
+        the proper privileges - see the section below. Can also be sourced from the
+        `SNOWFLAKE_SKIP_TOML_FILE_PERMISSION_VERIFICATION` environment variable.
         """
         return pulumi.get(self, "skip_toml_file_permission_verification")
 
@@ -743,7 +743,7 @@ class ProviderArgs:
     @pulumi.getter(name="useLegacyTomlFile")
     def use_legacy_toml_file(self) -> Optional[pulumi.Input[builtins.bool]]:
         """
-        True by default. When this is set to true, the provider expects the legacy TOML format. Otherwise, it expects the new
+        False by default. When this is set to true, the provider expects the legacy TOML format. Otherwise, it expects the new
         format. See more in the section below Can also be sourced from the `SNOWFLAKE_USE_LEGACY_TOML_FILE` environment
         variable.
         """
@@ -792,6 +792,7 @@ class ProviderArgs:
         pulumi.set(self, "warehouse", value)
 
 
+@pulumi.type_token("pulumi:providers:snowflake")
 class Provider(pulumi.ProviderResource):
     @overload
     def __init__(__self__,
@@ -916,15 +917,15 @@ class Provider(pulumi.ProviderResource):
                `SNOWFLAKE_REQUEST_TIMEOUT` environment variable.
         :param pulumi.Input[builtins.str] role: Specifies the role to use by default for accessing Snowflake objects in the client session. Can also be sourced from the
                `SNOWFLAKE_ROLE` environment variable.
-        :param pulumi.Input[builtins.bool] skip_toml_file_permission_verification: True by default. Skips TOML configuration file permission verification. This flag has no effect on Windows systems, as
-               the permissions are not checked on this platform. We recommend setting this to `false` and setting the proper privileges
-               - see the section below. Can also be sourced from the `SNOWFLAKE_SKIP_TOML_FILE_PERMISSION_VERIFICATION` environment
-               variable.
+        :param pulumi.Input[builtins.bool] skip_toml_file_permission_verification: False by default. Skips TOML configuration file permission verification. This flag has no effect on Windows systems, as
+               the permissions are not checked on this platform. Instead of skipping the permissions verification, we recommend setting
+               the proper privileges - see the section below. Can also be sourced from the
+               `SNOWFLAKE_SKIP_TOML_FILE_PERMISSION_VERIFICATION` environment variable.
         :param pulumi.Input[builtins.str] tmp_directory_path: Sets temporary directory used by the driver for operations like encrypting, compressing etc. Can also be sourced from
                the `SNOWFLAKE_TMP_DIRECTORY_PATH` environment variable.
         :param pulumi.Input[builtins.str] token: Token to use for OAuth and other forms of token based auth. Can also be sourced from the `SNOWFLAKE_TOKEN` environment
                variable.
-        :param pulumi.Input[builtins.bool] use_legacy_toml_file: True by default. When this is set to true, the provider expects the legacy TOML format. Otherwise, it expects the new
+        :param pulumi.Input[builtins.bool] use_legacy_toml_file: False by default. When this is set to true, the provider expects the legacy TOML format. Otherwise, it expects the new
                format. See more in the section below Can also be sourced from the `SNOWFLAKE_USE_LEGACY_TOML_FILE` environment
                variable.
         :param pulumi.Input[builtins.str] user: Username. Required unless using `profile`. Can also be sourced from the `SNOWFLAKE_USER` environment variable.
@@ -1036,7 +1037,7 @@ class Provider(pulumi.ProviderResource):
             __props__.__dict__["okta_url"] = okta_url
             __props__.__dict__["organization_name"] = organization_name
             __props__.__dict__["params"] = pulumi.Output.from_input(params).apply(pulumi.runtime.to_json) if params is not None else None
-            __props__.__dict__["passcode"] = passcode
+            __props__.__dict__["passcode"] = None if passcode is None else pulumi.Output.secret(passcode)
             __props__.__dict__["passcode_in_password"] = pulumi.Output.from_input(passcode_in_password).apply(pulumi.runtime.to_json) if passcode_in_password is not None else None
             if password is None:
                 password = _utilities.get_env('SNOWFLAKE_PASSWORD')
@@ -1067,7 +1068,7 @@ class Provider(pulumi.ProviderResource):
             if warehouse is None:
                 warehouse = _utilities.get_env('SNOWFLAKE_WAREHOUSE')
             __props__.__dict__["warehouse"] = warehouse
-        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["password", "privateKey", "privateKeyPassphrase", "token"])
+        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["passcode", "password", "privateKey", "privateKeyPassphrase", "token"])
         opts = pulumi.ResourceOptions.merge(opts, secret_opts)
         super(Provider, __self__).__init__(
             'snowflake',
@@ -1292,4 +1293,24 @@ class Provider(pulumi.ProviderResource):
         from the `SNOWFLAKE_WAREHOUSE` environment variable.
         """
         return pulumi.get(self, "warehouse")
+
+    @pulumi.output_type
+    class TerraformConfigResult:
+        def __init__(__self__, result=None):
+            if result and not isinstance(result, dict):
+                raise TypeError("Expected argument 'result' to be a dict")
+            pulumi.set(__self__, "result", result)
+
+        @property
+        @pulumi.getter
+        def result(self) -> Mapping[str, Any]:
+            return pulumi.get(self, "result")
+
+    def terraform_config(__self__) -> pulumi.Output['Provider.TerraformConfigResult']:
+        """
+        This function returns a Terraform config object with terraform-namecased keys,to be used with the Terraform Module Provider.
+        """
+        __args__ = dict()
+        __args__['__self__'] = __self__
+        return pulumi.runtime.call('pulumi:providers:snowflake/terraformConfig', __args__, res=__self__, typ=Provider.TerraformConfigResult)
 

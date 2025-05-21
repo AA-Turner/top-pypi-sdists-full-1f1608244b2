@@ -126,6 +126,7 @@ class _TableColumnMaskingPolicyApplicationState:
         pulumi.set(self, "table", value)
 
 
+@pulumi.type_token("snowflake:index/tableColumnMaskingPolicyApplication:TableColumnMaskingPolicyApplication")
 class TableColumnMaskingPolicyApplication(pulumi.CustomResource):
     @overload
     def __init__(__self__,

@@ -143,6 +143,7 @@ class _ExecuteState:
         pulumi.set(self, "revert", value)
 
 
+@pulumi.type_token("snowflake:index/execute:Execute")
 class Execute(pulumi.CustomResource):
     @overload
     def __init__(__self__,

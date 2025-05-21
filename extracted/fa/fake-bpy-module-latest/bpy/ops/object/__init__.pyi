@@ -4001,7 +4001,7 @@ def shape_key_clear(
 def shape_key_copy(
     execution_context: int | str | None = None, undo: bool | None = None
 ):
-    """Duplicate the acive shape key
+    """Duplicate the active shape key
 
     :type execution_context: int | str | None
     :type undo: bool | None

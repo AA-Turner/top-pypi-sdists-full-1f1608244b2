@@ -78,18 +78,16 @@ class AdapterConfig(Mapping):
         Returns the matching config class for the given config dict based on its "architecture" key.
         """
         architecture = config_dict.get("architecture", None)
-        if architecture == "prefix_tuning":
-            cls_new = PrefixTuningConfig
-        elif architecture == "lora":
-            cls_new = LoRAConfig
-        elif architecture == "union":
-            cls_new = ConfigUnion
-        elif architecture == "prompt_tuning":
-            cls_new = PromptTuningConfig
-        elif architecture == "reft":
-            cls_new = ReftConfig
-        else:
-            cls_new = BnConfig
+        arch_to_config = {
+            "prefix_tuning": PrefixTuningConfig,
+            "lora": LoRAConfig,
+            "mtl_lora": MTLLoRAConfig,
+            "union": ConfigUnion,
+            "prompt_tuning": PromptTuningConfig,
+            "reft": ReftConfig,
+            None: BnConfig,
+        }
+        cls_new = arch_to_config[architecture]
 
         return cls_new
 
@@ -157,6 +155,9 @@ class BnConfig(AdapterConfig):
             Defaults to False.
         init_weights (:obj:`str`, optional): Initialization method for the weights of the adapter modules.
             Currently, this can be either "bert" (default) or "mam_adapter" or "houlsby".
+        init_weights_seed (:obj:`int`, optional): The seed to use for the initialization of the adapter weights per layer.
+            Important:  set, the seed will be reset for all adapter modules, meaning that all adapter modules will have the same
+            initialization. If not set, the seed will be set once and each adapter module has random weights initialization. Defaults to None.
         is_parallel (:obj:`bool`, optional): If True, apply adapter transformations in parallel.
             By default (False), sequential application is used.
         scaling (:obj:`float` or :obj:`str`, optional):
@@ -233,6 +234,7 @@ class BnConfig(AdapterConfig):
     ln_before: bool = False
     ln_after: bool = False
     init_weights: str = "bert"
+    init_weights_seed: Optional[int] = None
     is_parallel: bool = False
     scaling: Union[float, str] = 1.0
     use_gating: bool = False
@@ -267,7 +269,11 @@ class BnConfig(AdapterConfig):
             # Now, we have two config keys directly in the adapter config.
             if value:
                 object.__setattr__(self, "inv_adapter", value["block_type"])
-                object.__setattr__(self, "inv_adapter_reduction_factor", value["reduction_factor"])
+                object.__setattr__(
+                    self,
+                    "inv_adapter_reduction_factor",
+                    value["reduction_factor"],
+                )
         else:
             object.__setattr__(self, name, value)
 
@@ -417,6 +423,9 @@ class PrefixTuningConfig(AdapterConfig):
         shared_gating (:
             obj:`bool`, optional): Whether to use a shared gate for the prefixes of all attention matrices. Only
             applicable if `use_gating=True`. Defaults to True.
+        init_weights_seed (:obj:`int`, optional): The seed to use for the initialization of the adapter weights per layer.
+            Important:  set, the seed will be reset for all adapter modules, meaning that all adapter modules will have the same
+            initialization. If not set, the seed will be set once and each adapter module has random weights initialization. Defaults to None.
     """
 
     architecture: Optional[str] = "prefix_tuning"
@@ -432,6 +441,7 @@ class PrefixTuningConfig(AdapterConfig):
     dropout: float = 0.0
     use_gating: bool = False
     shared_gating: bool = True
+    init_weights_seed: Optional[int] = None
 
 
 @dataclass(eq=False)
@@ -450,6 +460,9 @@ class PromptTuningConfig(AdapterConfig):
         combine (str):
             The method used to combine the prompt with the input. Can be either "prefix" or "prefix_after_bos".
             Defaults to "prefix".
+        init_weights_seed (:obj:`int`, optional): The seed to use for the initialization of the adapter weights per layer.
+            Important:  set, the seed will be reset for all adapter modules, meaning that all adapter modules will have the same
+            initialization. If not set, the seed will be set once and each adapter module has random weights initialization. Defaults to None.
     """
 
     architecture: str = "prompt_tuning"
@@ -459,6 +472,7 @@ class PromptTuningConfig(AdapterConfig):
     prompt_init_text: Optional[str] = None
     random_uniform_scale = 0.5
     combine: str = "prefix"
+    init_weights_seed: Optional[int] = None
 
 
 @dataclass(eq=False)
@@ -487,11 +501,23 @@ class LoRAConfig(AdapterConfig):
             (addition of decomposed matrix, as in LoRA) or "scale" (element-wise multiplication of vector, as in
             (IA)^3). "scale" can only be used together with r=1. Defaults to "add".
         init_weights (:obj:`str`, optional): Initialization method for the weights of the LoRA modules.
-            Currently, this can be either "lora" (default) or "bert".
+            Currently, this can be either "lora" (default) or "bert", or "vera".
+        init_weights_seed (:obj:`int`, optional): The seed to use for the initialization of the adapter weights per layer.
+            Important:  set, the seed will be reset for all adapter modules, meaning that all adapter modules will have the same
+            initialization. If not set, the seed will be set once and each adapter module has random weights initialization. Defaults to None.
         use_gating (:obj:`bool`, optional):
             Place a trainable gating module besides the added parameter module to control module activation. This is
             e.g. used for UniPELT. Defaults to False. Note that modules with use_gating=True cannot be merged using
             `merge_adapter()`.
+        vera_d (:obj:`float`, optional):
+            The value of d used in the VeraConfig. Defaults to None. Places a trainable
+            scaling parameter `d` before the decomposition matrix A to allow scaling of the
+            internal weights.
+
+        vera_b (:obj:`float`, optional):
+            The value of b used in the VeraConfig. Defaults to None. Places a trainable
+            scaling parameter `b` before the decomposition matrix B to allow scaling of the
+            internal weights.
         dtype (str, optional): torch dtype for reparametrization tensors. Defaults to None.
     """
 
@@ -508,7 +534,10 @@ class LoRAConfig(AdapterConfig):
     attn_matrices: List[str] = field(default_factory=lambda: ["q", "v"])
     composition_mode: str = "add"
     init_weights: str = "lora"
+    init_weights_seed: Optional[int] = None
     use_gating: bool = False
+    vera_d: Optional[float] = None
+    vera_b: Optional[float] = None
     dtype: Optional[str] = None
 
 
@@ -536,6 +565,62 @@ class IA3Config(LoRAConfig):
 
 
 @dataclass(eq=False)
+class VeraConfig(LoRAConfig):
+    """
+    Lora Config that applies vector-based random matrix adaptation. It adds
+    trainable matrices 'd' and 'b' while keeping the original LoRA matrices
+    frozen, random, and shared across layers. See more through their paper:
+    https://arxiv.org/pdf/2310.11454. Note that `r` will still be supplied
+    since we are still initializing decomposition matrices A and B.
+    The `composition_mode` parameter should also be set to `add`.
+    """
+
+    selfattn_lora: bool = True
+    intermediate_lora: bool = False
+    output_lora: bool = False
+
+    r: int = 8
+    vera_d: Optional[float] = 0.1
+    vera_b: Optional[float] = 0.0
+    init_weights: str = "vera"
+    composition_mode: str = "add"
+    dtype: Optional[str] = None
+
+
+class MultiTaskConfig(AdapterConfig):
+    """
+    Flag class for all multi task adaptation methods.
+    This class does not define specific configuration keys, but only provides
+    some common helper methods.
+    """
+
+    ...
+
+
+@dataclass(eq=False)
+class MTLLoRAConfig(LoRAConfig, MultiTaskConfig):
+    """
+    The MTL-LoRA architecture, proposed by Yang et al. (2024), combine LoRA with multi-task learning. See https://arxiv.org/pdf/2410.09437.pdf.
+    This configuration extends LoRA to support multi-task adaptation, allowing parameter-efficient fine-tuning across
+    multiple tasks while leveraging low-rank reparameterization techniques.
+
+    Args:
+        n_up_projection (int, optional): The number of additional projection layers for task-specific adaptations.
+            Defaults to 1.
+        task_specific_matrix_type (Literal["singular_values", "linear"], optional): The type of task-specific matrix
+            used in adaptation. Can be either "singular_values" (which adapts using singular value decomposition-based
+            transformations) or "linear" (which applies a learned linear transformation). Defaults to "singular_values".
+        weights_sharpness (float, optional): A scaling factor controlling the sharpness of the task-specific weight
+            transformations, influencing how much task adaptation is applied. Defaults to 0.05.
+    """
+
+    architecture: Optional[str] = "mtl_lora"
+    n_up_projection: int = 1
+    task_specific_matrix_type: Literal["singular_values", "linear"] = "singular_values"
+    weights_sharpness: float = 0.05
+
+
+@dataclass(eq=False)
 class ReftConfig(AdapterConfig):
     """
     Base class for Representation Fine-Tuning (ReFT) methods proposed in Wu et al. (2024). See https://arxiv.org/pdf/2404.03592.
@@ -553,6 +638,10 @@ class ReftConfig(AdapterConfig):
         dropout (float): The dropout rate used in the intervention layer.
         non_linearity (str): The activation function used in the intervention layer.
         dtype (str, optional): torch dtype for intervention tensors. Defaults to None.
+        init_weights_seed (:obj:`int`, optional): The seed to use for the initialization of the adapter weights per layer.
+            Important:  set, the seed will be reset for all adapter modules, meaning that all adapter modules will have the same
+            initialization. If not set, the seed will be set once and each adapter module has random weights initialization. Defaults to None.
+
     """
 
     layers: Union[Literal["all"], List[int]]
@@ -569,6 +658,7 @@ class ReftConfig(AdapterConfig):
     architecture: str = "reft"
 
     output_reft: bool = True
+    init_weights_seed: Optional[int] = None
 
 
 @dataclass(eq=False)
@@ -687,7 +777,10 @@ class ConfigUnion(AdapterConfig):
         return all([c_a == c_b for c_a, c_b in zip(self.configs, other.configs)])
 
     def to_dict(self):
-        return {"architecture": self.architecture, "configs": [c.to_dict() for c in self.configs]}
+        return {
+            "architecture": self.architecture,
+            "configs": [c.to_dict() for c in self.configs],
+        }
 
     def replace(self, **changes):
         return ConfigUnion(*[c.replace(**changes) for c in self.configs])
@@ -710,7 +803,11 @@ class MAMConfig(ConfigUnion):
     The Mix-And-Match adapter architecture proposed by He et al. (2021). See https://arxiv.org/pdf/2110.04366.pdf.
     """
 
-    def __init__(self, prefix_tuning: Optional[PrefixTuningConfig] = None, adapter: Optional[BnConfig] = None):
+    def __init__(
+        self,
+        prefix_tuning: Optional[PrefixTuningConfig] = None,
+        adapter: Optional[BnConfig] = None,
+    ):
         prefix_tuning = prefix_tuning or PrefixTuningConfig(bottleneck_size=800)
         adapter = adapter or ParBnConfig()
 
@@ -768,8 +865,10 @@ ADAPTER_CONFIG_MAP = {
     "prefix_tuning": PrefixTuningConfig(),
     "prefix_tuning_flat": PrefixTuningConfig(flat=True),
     "prompt_tuning": PromptTuningConfig(),
+    "mtl_lora": MTLLoRAConfig(),
     "lora": LoRAConfig(),
     "ia3": IA3Config(),
+    "vera": VeraConfig(),
     "loreft": LoReftConfig(),
     "noreft": NoReftConfig(),
     "direft": DiReftConfig(),

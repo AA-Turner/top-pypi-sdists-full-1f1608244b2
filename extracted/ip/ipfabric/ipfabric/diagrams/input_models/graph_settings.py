@@ -1,11 +1,12 @@
 import os
-from typing import Optional, List, Union, Literal, Any
+from typing import Optional, Union, Literal, Any, Annotated
 from uuid import UUID
 
-from pydantic import field_validator, BaseModel, Field, model_serializer
+from pydantic import field_validator, BaseModel, Field, model_serializer, StringConstraints
+from pydantic.functional_validators import AfterValidator
 from pydantic_extra_types.color import ColorType, Color
 
-from ipfabric.tools import valid_snapshot
+from ipfabric.tools.shared import valid_snapshot
 from .constants import (
     VALID_DEV_TYPES,
     DEFAULT_NETWORK,
@@ -21,20 +22,18 @@ PYDANTIC_EXTRAS = os.getenv("IPFABRIC_PYDANTIC_EXTRAS", "allow")
 
 class Style(BaseModel, extra=PYDANTIC_EXTRAS):
     color: Union[ColorType]
-    pattern: Optional[str] = "solid"
-    thicknessThresholds: Optional[List[int]] = [2, 4, 8]
-
-    @field_validator("pattern")
-    @classmethod
-    def _valid_patterns(cls, v):
-        if v.lower() not in ["solid", "dashed", "dotted"]:
-            raise ValueError(f'Pattern "{v}" not in ["solid", "dashed", "dotted"]')
-        return v.lower()
+    pattern: Annotated[str, AfterValidator(lambda s: s.lower()), StringConstraints(pattern=r'solid|dashed|dotted')] = "solid"
+    thicknessThresholds: list[int] = [2, 4, 8]
 
     @field_validator("color")
     @classmethod
     def _parse_color(cls, v) -> str:
         return Color(v).as_hex()
+
+
+class LabelsOptions(BaseModel, extra=PYDANTIC_EXTRAS):
+    wrapCenterLabel: bool = False
+    wrapLinecapLabel: bool = False
 
 
 class Setting(BaseModel, extra=PYDANTIC_EXTRAS):
@@ -44,37 +43,31 @@ class Setting(BaseModel, extra=PYDANTIC_EXTRAS):
     visible: bool = True
     grouped: bool = True
     id: Optional[UUID] = Field(None, exclude=True)
+    labelsOptions: LabelsOptions = Field(default_factory=LabelsOptions)
 
 
 class EdgeSettings(Setting, BaseModel, extra=PYDANTIC_EXTRAS):
     type: Literal["protocol", "pathLookupEdge"]
-    labels: List[str] = ["protocol"]
+    labels: list[str] = ["protocol"]
 
 
 class GroupSettings(Setting, BaseModel, extra=PYDANTIC_EXTRAS):
     label: str
-    children: List[EdgeSettings]
+    children: list[EdgeSettings]
     type: Literal["group"] = "group"
 
 
 class PathLookup(BaseModel, extra=PYDANTIC_EXTRAS):
-    ignoredTopics: Optional[List[str]] = Field(
+    ignoredTopics: list[Literal['ACL', 'FORWARDING', 'NAT44', 'PBR', 'ZONEFW']] = Field(
         default_factory=list,
-        description="List of topics to ignore.  Valid topics are in ['ACL', 'FORWARDING', 'ZONEFW'].",
+        description="List of topics to ignore.  Valid topics are in ['ACL', 'FORWARDING', 'NAT44', 'PBR', 'ZONEFW'].",
     )
     colorDetectedLoops: Optional[bool] = True
 
-    @field_validator("ignoredTopics")
-    @classmethod
-    def _valid_topics(cls, v):
-        if v and not all(t in ["ACL", "FORWARDING", "ZONEFW"] for t in v):
-            raise ValueError(f"Ignored Topics '{v}' must be None or in ['ACL', 'FORWARDING', 'ZONEFW'].")
-        return v
-
 
 class NetworkSettings(BaseModel):
-    edges: Optional[List[GroupSettings]] = None
-    hiddenDeviceTypes: Optional[List[str]] = Field(HIDDEN_DEV_TYPES, description="List of device types to hide.")
+    edges: Optional[list[GroupSettings]] = None
+    hiddenDeviceTypes: list[str] = Field(HIDDEN_DEV_TYPES, description="List of device types to hide.")
 
     def model_post_init(self, __context: Any) -> None:
         if not self.edges:
@@ -88,7 +81,7 @@ class NetworkSettings(BaseModel):
         return v
 
     @staticmethod
-    def _update_edge(children: List[EdgeSettings], name: str, attribute: str, bool_value=False):
+    def _update_edge(children: list[EdgeSettings], name: str, attribute: str, bool_value=False):
         for edge in children:
             if edge.name.lower() == name:
                 setattr(edge, attribute, bool_value)
@@ -178,7 +171,7 @@ class NetworkSettings(BaseModel):
 
 
 class PathLookupSettings(BaseModel):
-    edges: Optional[List[EdgeSettings]] = None
+    edges: Optional[list[EdgeSettings]] = None
     pathLookup: Optional[PathLookup] = Field(default_factory=PathLookup)
 
     def model_post_init(self, __context: Any) -> None:

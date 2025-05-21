@@ -1,8 +1,7 @@
 import logging
-from typing import Any, Optional, List, Union, Dict
+from typing import Any, Optional, Union, Annotated
 
 from pydantic import Field, BaseModel, StringConstraints, field_validator
-from typing_extensions import Annotated
 
 logger = logging.getLogger("ipfabric")
 
@@ -37,12 +36,15 @@ class User(BaseModel):
     ldap_id: Optional[Any] = Field(None, alias="ldapId")
     timezone: Optional[str] = None
     token: Optional[Token] = None
-    _scopes: Optional[List[Scope]] = None
+    _scopes: Optional[list[Scope]] = None
     _snapshots_settings: Optional[bool] = None
 
     def model_post_init(self, __context: Any) -> None:
         if self._snapshots_settings is None and self.is_admin:
             self._snapshots_settings = True
+
+    def __repr__(self):
+        return self.username
 
     @property
     def is_admin(self):
@@ -69,9 +71,9 @@ class User(BaseModel):
         return msg
 
     @property
-    def scopes(self) -> List[Scope]:
+    def scopes(self) -> list[Scope]:
         return self._scopes
 
     @scopes.setter
-    def scopes(self, scopes: List[Union[Scope, Dict[str, str]]]):
+    def scopes(self, scopes: list[Union[Scope, dict[str, str]]]):
         self._scopes = [Scope(**dict(_)) for _ in scopes]

@@ -723,6 +723,7 @@ class _DatabaseState:
         pulumi.set(self, "user_task_timeout_ms", value)
 
 
+@pulumi.type_token("snowflake:index/database:Database")
 class Database(pulumi.CustomResource):
     @overload
     def __init__(__self__,

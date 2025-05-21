@@ -7,11 +7,11 @@ import json
 import logging
 import re
 from copy import deepcopy
-from typing import List, Dict, Union
+from typing import Union
 
 from ipfabric import IPFClient
 from ipfabric.models.global_search import GlobalSearch, RANKED
-from ipfabric.scripts.shared import shared_args
+from ipfabric.scripts.shared import shared_args, load_env
 
 try:
     from rich.console import Console
@@ -24,7 +24,8 @@ logging.basicConfig(format="%(levelname)s: %(message)s")
 LOGGER = logging.getLogger("ipf_global_search")
 
 
-def main() -> Dict[str, Dict[str, Union[str, list]]]:
+def main() -> dict[str, dict[str, Union[str, list]]]:
+    load_env()
     arg_parser = argparse.ArgumentParser(
         description="Search all tables for an IPv4, IPv6, or MAC address. "
         "This does not include IPv4 or IPv6 Route tables as too many results would be returned.",
@@ -86,7 +87,7 @@ Default Tables for MAC Search:
     print_results(list(results.values()), args.address, args)
 
 
-def bold_string(results: List[dict], address: str):
+def bold_string(results: list[dict], address: str):
     regex = re.compile(rf"({address})")
 
     def bold_loop(result):

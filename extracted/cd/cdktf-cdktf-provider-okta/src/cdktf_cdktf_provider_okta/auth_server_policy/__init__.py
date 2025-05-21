@@ -1,7 +1,7 @@
 r'''
 # `okta_auth_server_policy`
 
-Refer to the Terraform Registry for docs: [`okta_auth_server_policy`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy).
+Refer to the Terraform Registry for docs: [`okta_auth_server_policy`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AuthServerPolicy(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.authServerPolicy.AuthServerPolicy",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy okta_auth_server_policy}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy okta_auth_server_policy}.'''
 
     def __init__(
         self,
@@ -66,17 +66,17 @@ class AuthServerPolicy(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy okta_auth_server_policy} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy okta_auth_server_policy} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param auth_server_id: The ID of the Auth Server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#auth_server_id AuthServerPolicy#auth_server_id}
-        :param client_whitelist: The clients to whitelist the policy for. ``[ALL_CLIENTS]`` is a special value that can be used to whitelist all clients, otherwise it is a list of client ids. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#client_whitelist AuthServerPolicy#client_whitelist}
-        :param description: The description of the Auth Server Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#description AuthServerPolicy#description}
-        :param name: The name of the Auth Server Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#name AuthServerPolicy#name}
-        :param priority: Priority of the auth server policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#priority AuthServerPolicy#priority}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#id AuthServerPolicy#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#status AuthServerPolicy#status}
+        :param auth_server_id: The ID of the Auth Server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#auth_server_id AuthServerPolicy#auth_server_id}
+        :param client_whitelist: The clients to whitelist the policy for. ``[ALL_CLIENTS]`` is a special value that can be used to whitelist all clients, otherwise it is a list of client ids. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#client_whitelist AuthServerPolicy#client_whitelist}
+        :param description: The description of the Auth Server Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#description AuthServerPolicy#description}
+        :param name: The name of the Auth Server Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#name AuthServerPolicy#name}
+        :param priority: Priority of the auth server policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#priority AuthServerPolicy#priority}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#id AuthServerPolicy#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#status AuthServerPolicy#status}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -121,7 +121,7 @@ class AuthServerPolicy(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AuthServerPolicy to import.
-        :param import_from_id: The id of the existing AuthServerPolicy that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AuthServerPolicy that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AuthServerPolicy to import is found.
         '''
         if __debug__:
@@ -320,13 +320,13 @@ class AuthServerPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param auth_server_id: The ID of the Auth Server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#auth_server_id AuthServerPolicy#auth_server_id}
-        :param client_whitelist: The clients to whitelist the policy for. ``[ALL_CLIENTS]`` is a special value that can be used to whitelist all clients, otherwise it is a list of client ids. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#client_whitelist AuthServerPolicy#client_whitelist}
-        :param description: The description of the Auth Server Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#description AuthServerPolicy#description}
-        :param name: The name of the Auth Server Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#name AuthServerPolicy#name}
-        :param priority: Priority of the auth server policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#priority AuthServerPolicy#priority}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#id AuthServerPolicy#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#status AuthServerPolicy#status}
+        :param auth_server_id: The ID of the Auth Server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#auth_server_id AuthServerPolicy#auth_server_id}
+        :param client_whitelist: The clients to whitelist the policy for. ``[ALL_CLIENTS]`` is a special value that can be used to whitelist all clients, otherwise it is a list of client ids. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#client_whitelist AuthServerPolicy#client_whitelist}
+        :param description: The description of the Auth Server Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#description AuthServerPolicy#description}
+        :param name: The name of the Auth Server Policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#name AuthServerPolicy#name}
+        :param priority: Priority of the auth server policy. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#priority AuthServerPolicy#priority}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#id AuthServerPolicy#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#status AuthServerPolicy#status}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -440,7 +440,7 @@ class AuthServerPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def auth_server_id(self) -> builtins.str:
         '''The ID of the Auth Server.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#auth_server_id AuthServerPolicy#auth_server_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#auth_server_id AuthServerPolicy#auth_server_id}
         '''
         result = self._values.get("auth_server_id")
         assert result is not None, "Required property 'auth_server_id' is missing"
@@ -452,7 +452,7 @@ class AuthServerPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         ``[ALL_CLIENTS]`` is a special value that can be used to whitelist all clients, otherwise it is a list of client ids.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#client_whitelist AuthServerPolicy#client_whitelist}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#client_whitelist AuthServerPolicy#client_whitelist}
         '''
         result = self._values.get("client_whitelist")
         assert result is not None, "Required property 'client_whitelist' is missing"
@@ -462,7 +462,7 @@ class AuthServerPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def description(self) -> builtins.str:
         '''The description of the Auth Server Policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#description AuthServerPolicy#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#description AuthServerPolicy#description}
         '''
         result = self._values.get("description")
         assert result is not None, "Required property 'description' is missing"
@@ -472,7 +472,7 @@ class AuthServerPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''The name of the Auth Server Policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#name AuthServerPolicy#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#name AuthServerPolicy#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -482,7 +482,7 @@ class AuthServerPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def priority(self) -> jsii.Number:
         '''Priority of the auth server policy.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#priority AuthServerPolicy#priority}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#priority AuthServerPolicy#priority}
         '''
         result = self._values.get("priority")
         assert result is not None, "Required property 'priority' is missing"
@@ -490,7 +490,7 @@ class AuthServerPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#id AuthServerPolicy#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#id AuthServerPolicy#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -502,7 +502,7 @@ class AuthServerPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Default to ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_policy#status AuthServerPolicy#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_policy#status AuthServerPolicy#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)

@@ -1,7 +1,7 @@
 r'''
 # `okta_auth_server_claim`
 
-Refer to the Terraform Registry for docs: [`okta_auth_server_claim`](https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim).
+Refer to the Terraform Registry for docs: [`okta_auth_server_claim`](https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AuthServerClaim(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-okta.authServerClaim.AuthServerClaim",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim okta_auth_server_claim}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim okta_auth_server_claim}.'''
 
     def __init__(
         self,
@@ -69,20 +69,20 @@ class AuthServerClaim(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim okta_auth_server_claim} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim okta_auth_server_claim} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param auth_server_id: ID of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#auth_server_id AuthServerClaim#auth_server_id}
-        :param claim_type: Specifies whether the claim is for an access token ``RESOURCE`` or ID token ``IDENTITY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#claim_type AuthServerClaim#claim_type}
-        :param name: The name of the claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#name AuthServerClaim#name}
-        :param value: The value of the claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#value AuthServerClaim#value}
-        :param always_include_in_token: Specifies whether to include claims in token, by default it is set to ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#always_include_in_token AuthServerClaim#always_include_in_token}
-        :param group_filter_type: Specifies the type of group filter if ``value_type`` is ``GROUPS``. Can be set to one of the following ``STARTS_WITH``, ``EQUALS``, ``CONTAINS``, ``REGEX``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#group_filter_type AuthServerClaim#group_filter_type}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#id AuthServerClaim#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param scopes: The list of scopes the auth server claim is tied to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#scopes AuthServerClaim#scopes}
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#status AuthServerClaim#status}
-        :param value_type: The type of value of the claim. It can be set to ``EXPRESSION`` or ``GROUPS``. It defaults to ``EXPRESSION``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#value_type AuthServerClaim#value_type}
+        :param auth_server_id: ID of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#auth_server_id AuthServerClaim#auth_server_id}
+        :param claim_type: Specifies whether the claim is for an access token ``RESOURCE`` or ID token ``IDENTITY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#claim_type AuthServerClaim#claim_type}
+        :param name: The name of the claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#name AuthServerClaim#name}
+        :param value: The value of the claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#value AuthServerClaim#value}
+        :param always_include_in_token: Specifies whether to include claims in token, by default it is set to ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#always_include_in_token AuthServerClaim#always_include_in_token}
+        :param group_filter_type: Specifies the type of group filter if ``value_type`` is ``GROUPS``. Can be set to one of the following ``STARTS_WITH``, ``EQUALS``, ``CONTAINS``, ``REGEX``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#group_filter_type AuthServerClaim#group_filter_type}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#id AuthServerClaim#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param scopes: The list of scopes the auth server claim is tied to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#scopes AuthServerClaim#scopes}
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#status AuthServerClaim#status}
+        :param value_type: The type of value of the claim. It can be set to ``EXPRESSION`` or ``GROUPS``. It defaults to ``EXPRESSION``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#value_type AuthServerClaim#value_type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -130,7 +130,7 @@ class AuthServerClaim(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AuthServerClaim to import.
-        :param import_from_id: The id of the existing AuthServerClaim that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AuthServerClaim that should be imported. Refer to the {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AuthServerClaim to import is found.
         '''
         if __debug__:
@@ -409,16 +409,16 @@ class AuthServerClaimConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param auth_server_id: ID of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#auth_server_id AuthServerClaim#auth_server_id}
-        :param claim_type: Specifies whether the claim is for an access token ``RESOURCE`` or ID token ``IDENTITY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#claim_type AuthServerClaim#claim_type}
-        :param name: The name of the claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#name AuthServerClaim#name}
-        :param value: The value of the claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#value AuthServerClaim#value}
-        :param always_include_in_token: Specifies whether to include claims in token, by default it is set to ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#always_include_in_token AuthServerClaim#always_include_in_token}
-        :param group_filter_type: Specifies the type of group filter if ``value_type`` is ``GROUPS``. Can be set to one of the following ``STARTS_WITH``, ``EQUALS``, ``CONTAINS``, ``REGEX``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#group_filter_type AuthServerClaim#group_filter_type}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#id AuthServerClaim#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param scopes: The list of scopes the auth server claim is tied to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#scopes AuthServerClaim#scopes}
-        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#status AuthServerClaim#status}
-        :param value_type: The type of value of the claim. It can be set to ``EXPRESSION`` or ``GROUPS``. It defaults to ``EXPRESSION``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#value_type AuthServerClaim#value_type}
+        :param auth_server_id: ID of the authorization server. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#auth_server_id AuthServerClaim#auth_server_id}
+        :param claim_type: Specifies whether the claim is for an access token ``RESOURCE`` or ID token ``IDENTITY``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#claim_type AuthServerClaim#claim_type}
+        :param name: The name of the claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#name AuthServerClaim#name}
+        :param value: The value of the claim. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#value AuthServerClaim#value}
+        :param always_include_in_token: Specifies whether to include claims in token, by default it is set to ``true``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#always_include_in_token AuthServerClaim#always_include_in_token}
+        :param group_filter_type: Specifies the type of group filter if ``value_type`` is ``GROUPS``. Can be set to one of the following ``STARTS_WITH``, ``EQUALS``, ``CONTAINS``, ``REGEX``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#group_filter_type AuthServerClaim#group_filter_type}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#id AuthServerClaim#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param scopes: The list of scopes the auth server claim is tied to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#scopes AuthServerClaim#scopes}
+        :param status: Default to ``ACTIVE``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#status AuthServerClaim#status}
+        :param value_type: The type of value of the claim. It can be set to ``EXPRESSION`` or ``GROUPS``. It defaults to ``EXPRESSION``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#value_type AuthServerClaim#value_type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -542,7 +542,7 @@ class AuthServerClaimConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def auth_server_id(self) -> builtins.str:
         '''ID of the authorization server.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#auth_server_id AuthServerClaim#auth_server_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#auth_server_id AuthServerClaim#auth_server_id}
         '''
         result = self._values.get("auth_server_id")
         assert result is not None, "Required property 'auth_server_id' is missing"
@@ -552,7 +552,7 @@ class AuthServerClaimConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def claim_type(self) -> builtins.str:
         '''Specifies whether the claim is for an access token ``RESOURCE`` or ID token ``IDENTITY``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#claim_type AuthServerClaim#claim_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#claim_type AuthServerClaim#claim_type}
         '''
         result = self._values.get("claim_type")
         assert result is not None, "Required property 'claim_type' is missing"
@@ -562,7 +562,7 @@ class AuthServerClaimConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''The name of the claim.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#name AuthServerClaim#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#name AuthServerClaim#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -572,7 +572,7 @@ class AuthServerClaimConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def value(self) -> builtins.str:
         '''The value of the claim.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#value AuthServerClaim#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#value AuthServerClaim#value}
         '''
         result = self._values.get("value")
         assert result is not None, "Required property 'value' is missing"
@@ -584,7 +584,7 @@ class AuthServerClaimConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Specifies whether to include claims in token, by default it is set to ``true``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#always_include_in_token AuthServerClaim#always_include_in_token}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#always_include_in_token AuthServerClaim#always_include_in_token}
         '''
         result = self._values.get("always_include_in_token")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -595,14 +595,14 @@ class AuthServerClaimConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Can be set to one of the following ``STARTS_WITH``, ``EQUALS``, ``CONTAINS``, ``REGEX``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#group_filter_type AuthServerClaim#group_filter_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#group_filter_type AuthServerClaim#group_filter_type}
         '''
         result = self._values.get("group_filter_type")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#id AuthServerClaim#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#id AuthServerClaim#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -614,7 +614,7 @@ class AuthServerClaimConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def scopes(self) -> typing.Optional[typing.List[builtins.str]]:
         '''The list of scopes the auth server claim is tied to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#scopes AuthServerClaim#scopes}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#scopes AuthServerClaim#scopes}
         '''
         result = self._values.get("scopes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -623,7 +623,7 @@ class AuthServerClaimConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def status(self) -> typing.Optional[builtins.str]:
         '''Default to ``ACTIVE``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#status AuthServerClaim#status}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#status AuthServerClaim#status}
         '''
         result = self._values.get("status")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -632,7 +632,7 @@ class AuthServerClaimConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def value_type(self) -> typing.Optional[builtins.str]:
         '''The type of value of the claim. It can be set to ``EXPRESSION`` or ``GROUPS``. It defaults to ``EXPRESSION``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.18.0/docs/resources/auth_server_claim#value_type AuthServerClaim#value_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/okta/okta/4.19.0/docs/resources/auth_server_claim#value_type AuthServerClaim#value_type}
         '''
         result = self._values.get("value_type")
         return typing.cast(typing.Optional[builtins.str], result)
