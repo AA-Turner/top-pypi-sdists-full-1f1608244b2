@@ -1,24 +1,12 @@
 # cython: language_level=3
 # cython: overflowcheck=False
 # cython: cdivision=True
-
-
-from libc.stdint cimport uint8_t, uint16_t, uint32_t
-from libc.string cimport memcpy
-
-from cpython.bytes cimport PyBytes_FromStringAndSize
-
-from ._utils cimport store_le32, load_le32
+import struct
 
 from numcodecs.abc import Codec
 from numcodecs.compat import ensure_contiguous_ndarray
 
-
-cdef extern from *:
-    """
-    const Py_ssize_t FOOTER_LENGTH = sizeof(uint32_t);
-    """
-    const Py_ssize_t FOOTER_LENGTH
+from libc.stdint cimport uint8_t, uint16_t, uint32_t
 
 
 cdef uint32_t _fletcher32(const uint8_t[::1] _data):
@@ -73,43 +61,25 @@ class Fletcher32(Codec):
     codec_id = "fletcher32"
 
     def encode(self, buf):
-        """Return buffer plus a footer with the fletcher checksum (4-bytes)"""
+        """Return buffer plus 4-byte fletcher checksum"""
         buf = ensure_contiguous_ndarray(buf).ravel().view('uint8')
-        cdef const uint8_t[::1] b_mv = buf
-        cdef uint8_t* b_ptr = &b_mv[0]
-        cdef Py_ssize_t b_len = len(b_mv)
-
-        cdef Py_ssize_t out_len = b_len + FOOTER_LENGTH
-        cdef bytes out = PyBytes_FromStringAndSize(NULL, out_len)
-        cdef uint8_t* out_ptr = <uint8_t*>out
-
-        memcpy(out_ptr, b_ptr, b_len)
-        store_le32(out_ptr + b_len, _fletcher32(b_mv))
-
-        return out
+        cdef const uint8_t[::1] b_ptr = buf
+        val = _fletcher32(b_ptr)
+        return buf.tobytes() + struct.pack("<I", val)
 
     def decode(self, buf, out=None):
         """Check fletcher checksum, and return buffer without it"""
         b = ensure_contiguous_ndarray(buf).view('uint8')
-        cdef const uint8_t[::1] b_mv = b
-        cdef uint8_t* b_ptr = &b_mv[0]
-        cdef Py_ssize_t b_len = len(b_mv)
-
-        val = _fletcher32(b_mv[:-FOOTER_LENGTH])
-        found = load_le32(&b_mv[-FOOTER_LENGTH])
+        cdef const uint8_t[::1] b_ptr = b[:-4]
+        val = _fletcher32(b_ptr)
+        found = b[-4:].view("<u4")[0]
         if val != found:
             raise RuntimeError(
                 f"The fletcher32 checksum of the data ({val}) did not"
                 f" match the expected checksum ({found}).\n"
                 "This could be a sign that the data has been corrupted."
             )
-
-        cdef uint8_t[::1] out_mv
-        cdef uint8_t* out_ptr
         if out is not None:
-            out_mv = ensure_contiguous_ndarray(out).view("uint8")
-            out_ptr = &out_mv[0]
-            memcpy(out_ptr, b_ptr, b_len - FOOTER_LENGTH)
-        else:
-            out = b_mv[:-FOOTER_LENGTH]
-        return out
+            out.view("uint8")[:] = b[:-4]
+            return out
+        return memoryview(b[:-4])

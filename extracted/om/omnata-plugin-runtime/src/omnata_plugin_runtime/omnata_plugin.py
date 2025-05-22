@@ -1546,9 +1546,9 @@ class InboundSyncRequest(SyncRequest):
         Updates the SYNC table to have the latest stream states.
         TODO: This should be done in concert with the results, revisit
         """
-        if self._last_states_update is None or self._latest_states != self._last_states_update:
+        if self._last_states_update is None or json.dumps(self._latest_states) != json.dumps(self._last_states_update):
+            self._last_states_update = json.loads(json.dumps(self._latest_states))
             self._plugin_message(PluginMessageStreamState(stream_state=self._latest_states))
-            self._last_states_update = self._latest_states
         
 
     def _apply_criteria_deletes_dataframe(self, results_df: pandas.DataFrame):

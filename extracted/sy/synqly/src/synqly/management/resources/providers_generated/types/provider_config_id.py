@@ -21,6 +21,11 @@ class ProviderConfigId(str, enum.Enum):
     [MOCK] Armis Centrix™ for Asset Management and Security
     """
 
+    ASSETS_CROWD_STRIKE = "assets_crowdstrike"
+    """
+    CrowdStrike Falcon Spotlight
+    """
+
     ASSETS_NOZOMI_VANTAGE = "assets_nozomi_vantage"
     """
     Nozomi Vantage
@@ -59,6 +64,11 @@ class ProviderConfigId(str, enum.Enum):
     CLOUD_SECURITY_CROWD_STRIKE = "cloudsecurity_crowdstrike"
     """
     CrowdStrike Falcon® Insight EDR
+    """
+
+    CLOUD_SECURITY_DEFENDER = "cloudsecurity_defender"
+    """
+    Microsoft Defender for Cloud
     """
 
     EDR_CROWD_STRIKE = "edr_crowdstrike"
@@ -335,6 +345,7 @@ class ProviderConfigId(str, enum.Enum):
         self,
         assets_armis_centrix: typing.Callable[[], T_Result],
         assets_armis_centrix_mock: typing.Callable[[], T_Result],
+        assets_crowd_strike: typing.Callable[[], T_Result],
         assets_nozomi_vantage: typing.Callable[[], T_Result],
         assets_nozomi_vantage_mock: typing.Callable[[], T_Result],
         assets_qualys_cloud: typing.Callable[[], T_Result],
@@ -343,6 +354,7 @@ class ProviderConfigId(str, enum.Enum):
         assets_service_now_mock: typing.Callable[[], T_Result],
         assets_tanium_cloud: typing.Callable[[], T_Result],
         cloud_security_crowd_strike: typing.Callable[[], T_Result],
+        cloud_security_defender: typing.Callable[[], T_Result],
         edr_crowd_strike: typing.Callable[[], T_Result],
         edr_defender: typing.Callable[[], T_Result],
         edr_malwarebytes: typing.Callable[[], T_Result],
@@ -402,6 +414,8 @@ class ProviderConfigId(str, enum.Enum):
             return assets_armis_centrix()
         if self is ProviderConfigId.ASSETS_ARMIS_CENTRIX_MOCK:
             return assets_armis_centrix_mock()
+        if self is ProviderConfigId.ASSETS_CROWD_STRIKE:
+            return assets_crowd_strike()
         if self is ProviderConfigId.ASSETS_NOZOMI_VANTAGE:
             return assets_nozomi_vantage()
         if self is ProviderConfigId.ASSETS_NOZOMI_VANTAGE_MOCK:
@@ -418,6 +432,8 @@ class ProviderConfigId(str, enum.Enum):
             return assets_tanium_cloud()
         if self is ProviderConfigId.CLOUD_SECURITY_CROWD_STRIKE:
             return cloud_security_crowd_strike()
+        if self is ProviderConfigId.CLOUD_SECURITY_DEFENDER:
+            return cloud_security_defender()
         if self is ProviderConfigId.EDR_CROWD_STRIKE:
             return edr_crowd_strike()
         if self is ProviderConfigId.EDR_DEFENDER:

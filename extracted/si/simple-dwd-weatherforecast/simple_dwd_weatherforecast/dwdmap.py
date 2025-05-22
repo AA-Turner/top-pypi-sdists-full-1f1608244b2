@@ -260,15 +260,7 @@ class ImageLoop:
         now = get_time_last_5_min(datetime.now(timezone.utc))
         self._last_update = now - timedelta(minutes=5) * self._steps
 
-        while now > self._last_update:
-            self._last_update += timedelta(minutes=5)
-            # Lightning in the NCEW_EU layer is only available in the last 5 minutes
-            self._images.append(
-                self._get_image(
-                    self._last_update,
-                    with_lightning=(now - self._last_update) < timedelta(minutes=5),
-                )
-            )
+        self._load_images(now)
 
     def update(self):
         now = get_time_last_5_min(datetime.now(timezone.utc))
@@ -278,11 +270,38 @@ class ImageLoop:
             self._full_reload()
         # Update the buffer and fetch only the new images
         else:
-            while now > self._last_update:
-                self._last_update += timedelta(minutes=5)
-                self._images.append(
-                    self._get_image(self._last_update, with_lightning=True)
+            self._load_images(now)
+
+    def _load_images(self, now):
+        while now > self._last_update:
+            self._last_update += timedelta(minutes=5)
+            # Lightning in the NCEW_EU layer is only available in the last 5 minutes
+            try:
+                image = self._get_image(
+                    self._last_update,
+                    with_lightning=(now - self._last_update) < timedelta(minutes=5),
                 )
+            except ConnectionError as e:
+                raise ConnectionAbortedError(
+                    f"Connection to DWD map servers failed: {e}"
+                )
+            except RuntimeError as e:
+                raise RuntimeError(f"Error: {e}") from e
+            except TypeError:
+                try:
+                    image = self._get_image(
+                        self._last_update,
+                        with_lightning=False,
+                    )
+                except ConnectionError as e:
+                    raise ConnectionAbortedError(
+                        f"Connection to DWD map servers failed: {e}"
+                    )
+                except TypeError as e:
+                    raise TypeError(
+                        f"Unexpected content type: {e}. Please check the DWD map servers."
+                    ) from e
+            self._images.append(image)
 
     def _get_image(
         self,
@@ -325,14 +344,16 @@ class ImageLoop:
             bgcolor = "0x1C1C1C"
         url = f"https://maps.dwd.de/geoserver/dwd/wms?service=WMS&version=1.3.0&request=GetMap&layers={layers}&bbox={self._miny},{self._minx},{self._maxy},{self._maxx}&width={self._image_width}&height={self._image_height}&srs=EPSG:4326&styles=&format=image/png&TIME={date.strftime('%Y-%m-%dT%H:%M:00.0Z')}&bgcolor={bgcolor}"
         request = requests.get(url, stream=True)
-        if request.status_code != 200 or request.headers["content-type"] != "image/png":
+        if request.status_code != 200:
             raise ConnectionError(f"Error during image request from DWD servers: {url}")
+        elif request.headers["content-type"] != "image/png":
+            raise TypeError(
+                f"Unexpected content type: {request.headers['content-type']}"
+            )
         try:
             image = Image.open(BytesIO(request.content))
         except Exception as e:
-            raise RuntimeError(
-                f"Error during image request from DWD servers: {url}"
-            ) from e
+            raise RuntimeError(f"Error during image parsing: {url}") from e
         image = draw_marker(
             image,
             ImageBoundaries(self._minx, self._maxx, self._miny, self._maxy),

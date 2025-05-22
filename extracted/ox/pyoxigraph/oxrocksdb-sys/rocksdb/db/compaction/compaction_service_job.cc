@@ -74,7 +74,9 @@ CompactionJob::ProcessKeyValueCompactionWithCompactionService(
       compaction->column_family_data()->GetName().c_str(), job_id_,
       compaction_input.output_level, input_files_oss.str().c_str());
   CompactionServiceJobInfo info(
-      dbname_, db_id_, db_session_id_, GetCompactionId(sub_compact),
+      dbname_, db_id_, db_session_id_,
+      compaction->column_family_data()->GetID(),
+      compaction->column_family_data()->GetName(), GetCompactionId(sub_compact),
       thread_pri_, compaction->compaction_reason(),
       compaction->is_full_compaction(), compaction->is_manual_compaction(),
       compaction->bottommost_level(), compaction->start_level(),
@@ -113,7 +115,7 @@ CompactionJob::ProcessKeyValueCompactionWithCompactionService(
   }
 
   std::string debug_str_before_wait =
-      compaction->input_version()->DebugString();
+      compaction->input_version()->DebugString(/*hex=*/true);
 
   ROCKS_LOG_INFO(db_options_.info_log,
                  "[%s] [JOB %d] Waiting for remote compaction...",
@@ -124,13 +126,14 @@ CompactionJob::ProcessKeyValueCompactionWithCompactionService(
                                            &compaction_result_binary);
 
   if (compaction_status != CompactionServiceJobStatus::kSuccess) {
-    ROCKS_LOG_ERROR(db_options_.info_log,
-                    "[%s] [JOB %d] Wait() status is not kSuccess. "
-                    "\nDebugString Before Wait():\n%s"
-                    "\nDebugString After Wait():\n%s",
-                    compaction->column_family_data()->GetName().c_str(),
-                    job_id_, debug_str_before_wait.c_str(),
-                    compaction->input_version()->DebugString().c_str());
+    ROCKS_LOG_ERROR(
+        db_options_.info_log,
+        "[%s] [JOB %d] Wait() status is not kSuccess. "
+        "\nDebugString Before Wait():\n%s"
+        "\nDebugString After Wait():\n%s",
+        compaction->column_family_data()->GetName().c_str(), job_id_,
+        debug_str_before_wait.c_str(),
+        compaction->input_version()->DebugString(/*hex=*/true).c_str());
   }
 
   if (compaction_status == CompactionServiceJobStatus::kUseLocal) {

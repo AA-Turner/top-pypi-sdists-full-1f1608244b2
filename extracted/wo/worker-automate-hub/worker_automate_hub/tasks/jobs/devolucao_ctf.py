@@ -1629,17 +1629,44 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                         itens_to_select = natureza_oper_select.texts()
                         nop_to_be_select = ''
 
-                        # for item in itens_to_select:
-                        #     if nop_selected_value in item and (('c/' in item.lower() or 'c /' in item.lower()) and ('s/' in item.lower() or 's /' in item.lower())):
-                        #         nop_to_be_select = item
-                        #         break
+                        for item in itens_to_select:
+                            if nop_selected_value in item and (('c/' in item.lower() or 'c /' in item.lower()) and ('s/' in item.lower() or 's /' in item.lower())):
+                                nop_to_be_select = item
+                                break
 
                         # natureza_oper_select.click()
                         await worker_sleep(1)
 
                         console.print(f"Descrição: {descricao}")
-                        console.print("Selecionando NOP do item: '5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC'")
-                        natureza_oper_select.select("5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC")
+                        if 'gasolina' in descricao.lower() or 'diesel' in descricao.lower() or 'gnv' in descricao.lower() or 'etanol' in descricao.lower():
+                            try:
+                                console.print("Selecionando NOP do item: '5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC'")
+                                natureza_oper_select.select("5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC")
+                            except:
+                                console.print("Selecionando NOP: 5656 - VENDA DE COMB OU LUB ADQ DE TERCEIRO C/ FIN S/ ESTOQUE")
+                                natureza_oper_select.select("5656 - VENDA DE COMB OU LUB ADQ DE TERCEIRO C/ FIN S/ ESTOQUE")
+                        elif 'arla' in descricao.lower():
+                            try:
+                                #PRECISA DO ESPAÇO NO FINAL!!
+                                console.print("Selecionando NOP do item: '5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ ESTOQ C/ FINAN '")
+                                natureza_oper_select.select("5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ ESTOQ C/ FINAN ")
+                            except:
+                                console.print("Selecionando NOP do item: '5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ESTOQ C/ FINAN FE'")
+                                natureza_oper_select.select("5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ESTOQ C/ FINAN FE")
+                        else:
+                            if nop_to_be_select != '':
+                                console.print(f"Selecionando NOP do item: '{nop_to_be_select}'")
+                                natureza_oper_select.select(nop_to_be_select)
+                            else:
+                                retorno = f"Não foi possivel encontrar a nop para o item, nop original {nop_selected} \nEtapas Executadas:\n{steps}"
+                                return RpaRetornoProcessoDTO(
+                                    sucesso=False,
+                                    retorno=retorno,
+                                    status=RpaHistoricoStatusEnum.Falha,
+                                    tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)]
+                                )
+                        # console.print("Selecionando NOP do item: '5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC'")
+                        # natureza_oper_select.select("5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC")
 
 
                         await worker_sleep(1)
@@ -2875,9 +2902,26 @@ async def devolucao_ctf(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                         panel_TGroup_Box= main_window.child_window(class_name="TPanel", found_index=2)
                         natureza_oper_select = panel_TGroup_Box.child_window(class_name="TDBIComboBox", found_index=0)
                         # natureza_oper_select.click()
+
+                        console.print(f"É item arla: {item_arla}")
+                        try:
+                            if item_arla:
+                                #PRECISA DO ESPAÇO NO FINAL!!!
+                                console.print("Selecionando NOP do item: '5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ ESTOQ C/ FINAN '")
+                                natureza_oper_select.select("5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ ESTOQ C/ FINAN ")
+                            else:
+                                console.print("Selecionando NOP do item: '5656 - VENDA DE COMB OU LUB ADQ DE TERCEIRO C/ FIN S/ ESTOQUE'")
+                                natureza_oper_select.select("5656 - VENDA DE COMB OU LUB ADQ DE TERCEIRO C/ FIN S/ ESTOQUE")
+                        except:
+                            if item_arla:
+                                console.print("Selecionando NOP: '5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ESTOQ C/ FINAN FE'")
+                                natureza_oper_select.select("5102 - VENDA MERCAD. ADQ. DE TERCEIRO- 5.102 S/ESTOQ C/ FINAN FE")
+                            else:
+                                console.print("Selecionando NOP: '5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC'")
+                                natureza_oper_select.select("5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC")
                         
-                        console.print("Selecionando NOP: '5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC'")
-                        natureza_oper_select.select("5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC")
+                        # console.print("Selecionando NOP: '5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC'")
+                        # natureza_oper_select.select("5667 - VENDA DE COMB OU LUBRI - SEM ESTOQ E COM FINANC")
                             
 
                         console.print("Natureza da operação selecionado com sucesso, preenchendo os itens...\n")

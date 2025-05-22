@@ -38,6 +38,7 @@ def case_info() -> Case:
         exception_handlers=[],
         handle_errors=True,
         description_data=DescriptionData(
+            app_vendor_domain="test.com",
             user_friendly_name="test_info_cases.py",
             categories=[],
         ),
@@ -63,6 +64,7 @@ def case_info() -> Case:
     expected_info = InfoResponse(
         response=Info(
             app_id="test",
+            app_vendor_domain="test.com",
             version="0.1.0",
             capabilities=[
                 "accio",
@@ -214,6 +216,7 @@ def case_info_with_credentials() -> Case:
         exception_handlers=[],
         handle_errors=True,
         description_data=DescriptionData(
+            app_vendor_domain="test.com",
             user_friendly_name="test_info_cases.py",
             categories=[],
         ),
@@ -240,6 +243,7 @@ def case_info_with_credentials() -> Case:
     expected_info = InfoResponse(
         response=Info(
             app_id="test",
+            app_vendor_domain="test.com",
             version="0.1.0",
             capabilities=[
                 "accio",
@@ -402,6 +406,7 @@ def case_info_with_scopes() -> Case:
         ),
         handle_errors=True,
         description_data=DescriptionData(
+            app_vendor_domain="test.com",
             user_friendly_name="test_info_cases.py",
             categories=[],
         ),
@@ -421,6 +426,7 @@ def case_info_with_scopes() -> Case:
     expected_info = InfoResponse(
         response=Info(
             app_id="test",
+            app_vendor_domain="test.com",
             version="0.1.0",
             capabilities=[
                 StandardCapabilityName.APP_INFO,

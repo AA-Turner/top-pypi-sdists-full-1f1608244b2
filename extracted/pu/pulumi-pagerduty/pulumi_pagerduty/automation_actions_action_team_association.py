@@ -95,6 +95,7 @@ class _AutomationActionsActionTeamAssociationState:
         pulumi.set(self, "team_id", value)
 
 
+@pulumi.type_token("pagerduty:index/automationActionsActionTeamAssociation:AutomationActionsActionTeamAssociation")
 class AutomationActionsActionTeamAssociation(pulumi.CustomResource):
     @overload
     def __init__(__self__,

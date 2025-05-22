@@ -320,6 +320,7 @@ class InsightRuleTypeDef(TypedDict):
     Schema: str
     Definition: str
     ManagedRule: NotRequired[bool]
+    ApplyOnTransformedLogs: NotRequired[bool]
 
 class DimensionFilterTypeDef(TypedDict):
     Name: str
@@ -724,6 +725,7 @@ class PutInsightRuleInputTypeDef(TypedDict):
     RuleDefinition: str
     RuleState: NotRequired[str]
     Tags: NotRequired[Sequence[TagTypeDef]]
+    ApplyOnTransformedLogs: NotRequired[bool]
 
 class TagResourceInputTypeDef(TypedDict):
     ResourceARN: str

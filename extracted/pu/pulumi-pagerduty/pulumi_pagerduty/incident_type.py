@@ -207,6 +207,7 @@ class _IncidentTypeState:
         pulumi.set(self, "type", value)
 
 
+@pulumi.type_token("pagerduty:index/incidentType:IncidentType")
 class IncidentType(pulumi.CustomResource):
     @overload
     def __init__(__self__,

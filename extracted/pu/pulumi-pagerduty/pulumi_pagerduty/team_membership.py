@@ -139,6 +139,7 @@ class _TeamMembershipState:
         pulumi.set(self, "user_id", value)
 
 
+@pulumi.type_token("pagerduty:index/teamMembership:TeamMembership")
 class TeamMembership(pulumi.CustomResource):
     @overload
     def __init__(__self__,

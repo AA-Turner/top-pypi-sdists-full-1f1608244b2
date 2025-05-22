@@ -4,6 +4,36 @@ import System
 import System.Diagnostics.CodeAnalysis
 
 
+class UnscopedRefAttribute(System.Attribute):
+    """Used to indicate a byref escapes and is not scoped."""
+
+    def __init__(self) -> None:
+        """Initializes a new instance of the UnscopedRefAttribute class."""
+        ...
+
+
+class ConstantExpectedAttribute(System.Attribute):
+    """Indicates that the specified method parameter expects a constant."""
+
+    @property
+    def min(self) -> System.Object:
+        """Indicates the minimum bound of the expected constant, inclusive."""
+        ...
+
+    @min.setter
+    def min(self, value: System.Object) -> None:
+        ...
+
+    @property
+    def max(self) -> System.Object:
+        """Indicates the maximum bound of the expected constant, inclusive."""
+        ...
+
+    @max.setter
+    def max(self, value: System.Object) -> None:
+        ...
+
+
 class SuppressMessageAttribute(System.Attribute):
     """Suppresses reporting of a specific code analysis rule violation, allowing multiple suppressions on a single code artifact. Does not apply to compiler diagnostics."""
 
@@ -64,36 +94,6 @@ class ExcludeFromCodeCoverageAttribute(System.Attribute):
         ...
 
     def __init__(self) -> None:
-        ...
-
-
-class ConstantExpectedAttribute(System.Attribute):
-    """Indicates that the specified method parameter expects a constant."""
-
-    @property
-    def min(self) -> System.Object:
-        """Indicates the minimum bound of the expected constant, inclusive."""
-        ...
-
-    @min.setter
-    def min(self, value: System.Object) -> None:
-        ...
-
-    @property
-    def max(self) -> System.Object:
-        """Indicates the maximum bound of the expected constant, inclusive."""
-        ...
-
-    @max.setter
-    def max(self, value: System.Object) -> None:
-        ...
-
-
-class UnscopedRefAttribute(System.Attribute):
-    """Used to indicate a byref escapes and is not scoped."""
-
-    def __init__(self) -> None:
-        """Initializes a new instance of the UnscopedRefAttribute class."""
         ...
 
 

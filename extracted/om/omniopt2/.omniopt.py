@@ -18,6 +18,8 @@ import statistics
 import tempfile
 
 last_progress_bar_desc: str = ""
+job_submit_durations: list[float] = []
+log_gen_times: list[float] = []
 generation_strategy_human_readable: str = ""
 oo_call: str = "./omniopt"
 progress_bar_length: int = 0
@@ -147,6 +149,8 @@ try:
         from tqdm import tqdm
 
         from beartype import beartype
+
+        from statistics import mean, median
     try:
         from pyfiglet import Figlet
         figlet_loaded = True
@@ -444,6 +448,13 @@ class ConfigLoader:
     gridsearch: bool
     auto_exclude_defective_hosts: bool
     debug: bool
+    num_restarts: int
+    raw_samples: int
+    show_generate_time_table: bool
+    max_attempts_for_generation: int
+    dont_warm_start_refitting: bool
+    refit_on_cv: bool
+    fit_out_of_design: bool
     no_sleep: bool
     username: Optional[str]
     max_nr_of_zero_results: int
@@ -474,6 +485,9 @@ class ConfigLoader:
     config_json: Optional[str]
     config_yaml: Optional[str]
     workdir: str
+    jit_compile: bool
+    no_normalize_y: bool
+    no_transform_inputs: bool
     occ: bool
     run_mode: str
 
@@ -497,6 +511,7 @@ class ConfigLoader:
         required = self.parser.add_argument_group('Required arguments', 'These options have to be set')
         required_but_choice = self.parser.add_argument_group('Required arguments that allow a choice', 'Of these arguments, one has to be set to continue')
         optional = self.parser.add_argument_group('Optional', 'These options are optional')
+        speed = self.parser.add_argument_group('Speed', 'These options are for speeding up the Process of Starting Processes or Generating new Points')
         slurm = self.parser.add_argument_group('SLURM', 'Parameters related to SLURM')
         installing = self.parser.add_argument_group('Installing', 'Parameters related to installing')
         debug = self.parser.add_argument_group('Debug', 'These options are mainly useful for debugging')
@@ -546,11 +561,22 @@ class ConfigLoader:
         optional.add_argument('--revert_to_random_when_seemingly_exhausted', help='Generate random steps instead of systematic steps when the search space is (seemingly) exhausted', action='store_true', default=False)
         optional.add_argument('--load_data_from_existing_jobs', type=str, nargs='*', default=[], help='List of job data to load from existing jobs')
         optional.add_argument('--n_estimators_randomforest', help='The number of trees in the forest for RANDOMFOREST (default: 100)', type=int, default=100)
+        optional.add_argument('--max_attempts_for_generation', help='Max. number of attempts for generating sets of new points (default: 20)', type=int, default=20)
         optional.add_argument('--external_generator', help='Programm call for an external generator', type=str, default=None)
         optional.add_argument('--username', help='A username for live share', default=None, type=str)
         optional.add_argument('--max_failed_jobs', help='Maximum number of failed jobs before the search is cancelled. Is defaulted to the value of --max_eval', default=None, type=int)
         optional.add_argument('--num_cpus_main_job', help='Number of CPUs for the main job', default=None, type=int)
         optional.add_argument('--calculate_pareto_front_of_job', help='This can be used to calculate a pareto-front for a multi-objective job that previously has results, but has been cancelled, and has no pareto-front (yet)', default=None, type=str)
+        optional.add_argument('--show_generate_time_table', help='Generate a table at the end, showing how much time was spent trying to generate new points', action='store_true', default=False)
+
+        speed.add_argument('--dont_warm_start_refitting', help='Do not keep Model weights, thus, refit for every generator (may be more accurate, but slower)', action='store_true', default=False)
+        speed.add_argument('--refit_on_cv', help='Refit on Cross-Validation (helps in accuracy, but makes generating new points slower)', action='store_true', default=False)
+        speed.add_argument('--fit_out_of_design', help='Ignore data points outside of the design while creating new points', action='store_true', default=False)
+        speed.add_argument('--jit_compile', help='Enable JIT-compiling the model', action='store_true', default=False)
+        speed.add_argument('--num_restarts', help='num_restarts option for optimizer_options', type=int, default=5)
+        speed.add_argument('--raw_samples', help='raw_samples option for optimizer_options', type=int, default=128)
+        speed.add_argument('--no_transform_inputs', help='Disable input transformations', action='store_true', default=False)
+        speed.add_argument('--no_normalize_y', help='Disable target normalization', action='store_true', default=False)
 
         slurm.add_argument('--num_parallel_jobs', help='Number of parallel SLURM jobs (default: 20)', type=int, default=20)
         slurm.add_argument('--worker_timeout', help='Timeout for SLURM jobs (i.e. for each single point to be optimized)', type=int, default=30)
@@ -1684,8 +1710,37 @@ def log_what_needs_to_be_logged() -> None:
             print_debug(f"Error in log_nr_of_workers: {e}")
 
 @beartype
-def get_line_info() -> Tuple[str, str, int, str, str]:
-    return (inspect.stack()[1][1], ":", inspect.stack()[1][2], ":", inspect.stack()[1][3])
+def get_line_info() -> Any:
+    try:
+        stack = inspect.stack()
+        if len(stack) < 2:
+            return ("<no caller>", ":", -1, ":", "<unknown>")
+
+        frame_info = stack[1]
+
+        # fallbacks bei Problemen mit Encoding oder Zugriffsfehlern
+        try:
+            filename = str(frame_info.filename)
+        except Exception as e:
+            filename = f"<filename error: {e}>"
+
+        try:
+            lineno = int(frame_info.lineno)
+        except Exception as e:
+            lineno = -1
+
+            print_red(f"Error in get_line_info: {e}, using lineno = -1")
+
+        try:
+            function = str(frame_info.function)
+        except Exception as e:
+            function = f"<function error: {e}>"
+
+        return (filename, ":", lineno, ":", function)
+
+    except Exception as e:
+        # finaler Fallback, wenn gar nichts geht
+        return ("<exception in get_line_info>", ":", -1, ":", str(e))
 
 @beartype
 def print_image_to_cli(image_path: str, width: int) -> bool:
@@ -2839,7 +2894,8 @@ def test_gpu_before_evaluate(return_in_case_of_error: dict) -> Union[None, dict]
         try:
             for i in range(torch.cuda.device_count()):
                 tmp = torch.cuda.get_device_properties(i).name
-                print_debug(f"Got CUDA device {tmp}")
+
+                fool_linter(tmp)
         except RuntimeError:
             print(f"Node {socket.gethostname()} was detected as faulty. It should have had a GPU, but there is an error initializing the CUDA driver. Adding this node to the --exclude list.")
             count_defective_nodes(None, socket.gethostname())
@@ -4050,6 +4106,8 @@ def end_program(_force: Optional[bool] = False, exit_code: Optional[int] = None)
 
     if exit_code:
         _exit = exit_code
+
+    show_time_debugging_table()
 
     live_share()
 
@@ -6165,6 +6223,7 @@ def handle_exclude_node_and_restart_all(stdout_path: str, hostname_from_out_file
 
 @beartype
 def _orchestrate(stdout_path: str, trial_index: int) -> None:
+    # TODO: Implement ExcludeNodeAndRestartAll fully
     behavs = check_orchestrator(stdout_path, trial_index)
 
     if not behavs or behavs is None:
@@ -6259,7 +6318,7 @@ def execute_evaluation(_params: list) -> Optional[int]:
         mark_trial_stage("mark_running", "Marking the trial as running failed")
         trial_counter += 1
 
-        update_progress()
+        progressbar_description(["started new job"])
     except submitit.core.utils.FailedJobError as error:
         handle_failed_job(error, trial_index, new_job)
         trial_counter += 1
@@ -6327,10 +6386,6 @@ def cancel_failed_job(trial_index: int, new_job: Job) -> None:
         save_results_csv()
     else:
         print_debug("cancel_failed_job: new_job was undefined")
-
-@beartype
-def update_progress() -> None:
-    progressbar_description(["started new job"])
 
 @beartype
 def handle_exit_signal() -> None:
@@ -6496,6 +6551,15 @@ def die_101_if_no_ax_client_or_experiment_or_gs() -> None:
         print_red("Error: global_gs is not defined")
         my_exit(101)
 
+@beartype
+def get_acquisition_options() -> dict:
+    return {
+        "optimizer_options": {
+            "num_restarts": args.num_restarts,
+            "raw_samples": args.raw_samples
+        }
+    }
+
 @disable_logs
 @beartype
 def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optional[Tuple[Dict[int, Any], bool]]:
@@ -6518,11 +6582,10 @@ def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optio
 
         batched_arms = []
 
-        max_attempts = 10
         attempts = 0
 
         while len(batched_arms) != nr_of_jobs_to_get:
-            if attempts > max_attempts:
+            if attempts > args.max_attempts_for_generation:
                 print_debug(f"_fetch_next_trials: Stopped after {attempts} attempts: could not generate enough arms "
                             f"(got {len(batched_arms)} out of {nr_of_jobs_to_get}).")
                 break
@@ -6584,10 +6647,12 @@ def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optio
         all_end_time = time.time()
         all_time = float(all_end_time - all_start_time)
 
+        log_gen_times.append(all_time)
+
         if cnt:
-            print_debug(f"_fetch_next_trials: Requested {nr_of_jobs_to_get} jobs, got {cnt}, took {all_time / cnt} seconds per job (avg)")
+            progressbar_description([f"requested {nr_of_jobs_to_get} jobs, got {cnt}, {all_time / cnt} s/job"])
         else:
-            print_debug(f"_fetch_next_trials: Requested {nr_of_jobs_to_get} jobs, got {cnt}")
+            progressbar_description([f"requested {nr_of_jobs_to_get} jobs, got {cnt}"])
 
         return trials_dict, False
     except np.linalg.LinAlgError as e:
@@ -6610,7 +6675,23 @@ def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optio
                     nodes=[
                         GenerationNode(
                             node_name="Sobol",
-                            model_specs=[GeneratorSpec(Models.SOBOL, model_gen_kwargs={"random_seed": args.seed})]
+                            model_specs=[
+                                GeneratorSpec(
+                                    Models.SOBOL,
+                                    model_gen_kwargs={
+                                        "normalize_y": not args.no_normalize_y,
+                                        "transform_inputs": not args.no_transform_inputs,
+                                        "acquisition_options": get_acquisition_options(),
+                                        'optimizer_kwargs': get_optimizer_kwargs(),
+                                        "torch_device": get_torch_device_str(),
+                                        "random_seed": args.seed,
+                                        "warm_start_refitting": not args.dont_warm_start_refitting,
+                                        "jit_compile": args.jit_compile,
+                                        "refit_on_cv": args.refit_on_cv,
+                                        "fit_out_of_design": args.fit_out_of_design
+                                    }
+                                )
+                            ]
                         )
                     ]
             )
@@ -6622,6 +6703,118 @@ def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optio
             return _fetch_next_trials(nr_of_jobs_to_get, True)
 
     return {}, True
+
+@beartype
+def save_table_as_text(table: Table, filepath: str) -> None:
+    try:
+        with open(filepath, "w", encoding="utf-8") as file:
+            from io import StringIO
+            sio = StringIO()
+            console_for_save = Console(file=sio, force_terminal=True, width=120)
+            console_for_save.print(table)
+            text_output = sio.getvalue()
+            file.write(text_output)
+    except Exception as e:
+        print_debug(f"save_table_as_text: error at writing the file '{filepath}': {e}")
+
+@beartype
+def show_time_debugging_table() -> None:
+    generate_time_table_rich()
+    generate_job_submit_table_rich()
+
+    live_share()
+
+@beartype
+def generate_time_table_rich() -> None:
+    if not isinstance(log_gen_times, list):
+        print_debug("generate_time_table_rich: Error: log_gen_times is not a list.")
+        return
+
+    if len(log_gen_times) == 0:
+        print_debug("generate_time_table_rich: No times to display.")
+        return
+
+    for i, val in enumerate(log_gen_times):
+        try:
+            float(val)
+        except (ValueError, TypeError):
+            print_debug(f"generate_time_table_rich: Error: Element at index {i} is not a valid float.")
+            return
+
+    table = Table(show_header=True, header_style="bold", title="Model generation times")
+    table.add_column("Iteration", justify="right")
+    table.add_column("Seconds", justify="right")
+
+    for idx, time_val in enumerate(log_gen_times, start=1):
+        table.add_row(str(idx), f"{float(time_val):.3f}")
+
+    times_float: List[float] = [float(t) for t in log_gen_times]
+    avg_time = mean(times_float)
+    median_time = median(times_float)
+    total_time = sum(times_float)
+    max_time = max(times_float)
+    min_time = min(times_float)
+
+    table.add_row("", "")
+    table.add_row("Model generation times Average", f"{avg_time:.3f}")
+    table.add_row("Model generation times Median", f"{median_time:.3f}")
+    table.add_row("Model generation times Total", f"{total_time:.3f}")
+    table.add_row("Model generation times Max", f"{max_time:.3f}")
+    table.add_row("Model generation times Min", f"{min_time:.3f}")
+
+    if args.show_generate_time_table:
+        console.print(table)
+
+    folder = get_current_run_folder()
+    filename = "generation_times.txt"
+    filepath = os.path.join(folder, filename)
+    save_table_as_text(table, filepath)
+
+@beartype
+def generate_job_submit_table_rich() -> None:
+    if not isinstance(job_submit_durations, list):
+        print_debug("generate_job_submit_table_rich: Error: job_submit_durations is not a list.")
+        return
+
+    if len(job_submit_durations) == 0:
+        print_debug("generate_job_submit_table_rich: No durations to display.")
+        return
+
+    for i, val in enumerate(job_submit_durations):
+        try:
+            float(val)
+        except (ValueError, TypeError):
+            print_debug(f"generate_job_submit_table_rich: Error: Element at index {i} is not a valid float.")
+            return
+
+    table = Table(show_header=True, header_style="bold", title="Job submission durations")
+    table.add_column("Batch", justify="right")
+    table.add_column("Seconds", justify="right")
+
+    for idx, time_val in enumerate(job_submit_durations, start=1):
+        table.add_row(str(idx), f"{float(time_val):.3f}")
+
+    times_float: List[float] = [float(t) for t in job_submit_durations]
+    avg_time = mean(times_float)
+    median_time = median(times_float)
+    total_time = sum(times_float)
+    max_time = max(times_float)
+    min_time = min(times_float)
+
+    table.add_row("", "")
+    table.add_row("Job submission durations Average", f"{avg_time:.3f}")
+    table.add_row("Job submission durations Median", f"{median_time:.3f}")
+    table.add_row("Job submission durations Total", f"{total_time:.3f}")
+    table.add_row("Job submission durations Max", f"{max_time:.3f}")
+    table.add_row("Job submission durations Min", f"{min_time:.3f}")
+
+    if args.show_generate_time_table:
+        console.print(table)
+
+    folder = get_current_run_folder()
+    filename = "job_submit_durations.txt"
+    filepath = os.path.join(folder, filename)
+    save_table_as_text(table, filepath)
 
 @beartype
 def _handle_linalg_error(error: Union[None, str, Exception]) -> None:
@@ -6897,6 +7090,19 @@ def join_with_comma_and_then(items: list) -> str:
     return ", ".join(items[:-1]) + " and then " + items[-1]
 
 @beartype
+def get_torch_device_str() -> str:
+    try:
+        if torch.cuda.is_available():
+            return "cuda"
+        if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+            return "mps"
+
+        return "cpu"
+    except Exception as e:
+        print_debug(f"Error detecting device: {e}")
+        return "cpu"
+
+@beartype
 def create_node(model_name: str, threshold: int, next_model_name: Optional[str]) -> Union[RandomForestGenerationNode, GenerationNode]:
     if model_name == "RANDOMFOREST":
         if len(arg_result_names) != 1:
@@ -6951,10 +7157,19 @@ def create_node(model_name: str, threshold: int, next_model_name: Optional[str])
         GeneratorSpec(
             selected_model,
             model_gen_kwargs={
+                "normalize_y": not args.no_normalize_y,
+                "transform_inputs": not args.no_transform_inputs,
+                "acquisition_options": get_acquisition_options(),
+                'optimizer_kwargs': get_optimizer_kwargs(),
+                "torch_device": get_torch_device_str(),
                 "random_seed": args.seed,
                 "fallback_to_sample_polytope": True,
                 "check_duplicates": True,
                 "deduplicate_strict": True,
+                "warm_start_refitting": not args.dont_warm_start_refitting,
+                "jit_compile": args.jit_compile,
+                "refit_on_cv": args.refit_on_cv,
+                "fit_out_of_design": args.fit_out_of_design
             }
         )
     ]
@@ -6968,6 +7183,12 @@ def create_node(model_name: str, threshold: int, next_model_name: Optional[str])
     return res
 
 @beartype
+def get_optimizer_kwargs() -> dict:
+    return {
+        "sequential": False
+    }
+
+@beartype
 def create_systematic_step(model: Any, _num_trials: int = -1, index: Optional[int] = None) -> GenerationStep:
     """Creates a generation step for Bayesian optimization."""
     step = GenerationStep(
@@ -6975,7 +7196,16 @@ def create_systematic_step(model: Any, _num_trials: int = -1, index: Optional[in
         num_trials=_num_trials,
         max_parallelism=(1000 * max_eval + 1000),
         model_gen_kwargs={
-            'enforce_num_arms': False
+            "normalize_y": not args.no_normalize_y,
+            "transform_inputs": not args.no_transform_inputs,
+            "acquisition_options": get_acquisition_options(),
+            'optimizer_kwargs': get_optimizer_kwargs(),
+            "torch_device": get_torch_device_str(),
+            'enforce_num_arms': True,
+            "warm_start_refitting": not args.dont_warm_start_refitting,
+            "jit_compile": args.jit_compile,
+            "refit_on_cv": args.refit_on_cv,
+            "fit_out_of_design": args.fit_out_of_design
         },
         should_deduplicate=True,
         index=index
@@ -7115,6 +7345,8 @@ def execute_trials(
         index_param_list.append(_args)
         i += 1
 
+    start_time = time.time()
+
     with ThreadPoolExecutor(max_workers=min(len(index_param_list), 16)) as tp_executor:
         future_to_args = {tp_executor.submit(execute_evaluation, args): args for args in index_param_list}
 
@@ -7125,6 +7357,11 @@ def execute_trials(
             except Exception as exc:
                 print_red(f"execute_trials: Error at executing a trial: {exc}")
                 results.append(None)
+
+    end_time = time.time()
+
+    duration = float(end_time - start_time)
+    job_submit_durations.append(duration)
 
     return results
 
@@ -7611,8 +7848,8 @@ def create_pareto_front_table(param_dicts: List, means: dict, metrics: List, met
         this_table_row = [str(params[k]) for k in params.keys()]
         for metric in metrics:
             try:
-                mean = means[metric][i]
-                this_table_row.append(f"{mean:.3f}")
+                _mean = means[metric][i]
+                this_table_row.append(f"{_mean:.3f}")
             except IndexError:
                 this_table_row.append("")
 
@@ -7711,11 +7948,11 @@ def _pareto_front_aggregate_data(
         trial_index = row.trial_index
         arm_name = row.arm_name
         metric = row.metric_name
-        mean = row.mean
+        _mean = row.mean
         sem = row.sem
 
         key = (trial_index, arm_name)
-        records[key]['means'][metric] = mean
+        records[key]['means'][metric] = _mean
         records[key]['sems'][metric] = sem
 
     return records

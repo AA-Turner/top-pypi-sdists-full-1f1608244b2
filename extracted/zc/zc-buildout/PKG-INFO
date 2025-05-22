@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: zc.buildout
-Version: 4.1.9
+Version: 4.1.10
 Summary: System for managing development buildouts
 Home-page: http://buildout.org
 Author: Jim Fulton
@@ -105,6 +105,18 @@ Change History
    https://github.com/buildout/buildout/blob/master/doc/ADD-A-NEWS-ITEM.rst
 
 .. towncrier release notes start
+
+4.1.10 (2025-05-21)
+-------------------
+
+Bug fixes:
+
+
+- Override `pkg_resources.Environment.can_add` to have better results on Mac.
+  Without this, a freshly created Mac-specific egg may not be considered compatible.
+  This can happen when the Python you use was built on a different Mac OSX version.
+  [maurits] (#609)
+
 
 4.1.9 (2025-04-09)
 ------------------

@@ -3,7 +3,9 @@ from __future__ import annotations
 import copy
 import dataclasses
 import functools
+import inspect
 import re
+from collections.abc import Mapping, MutableMapping
 from datetime import timedelta, datetime
 from enum import Enum
 from typing import (
@@ -70,7 +72,8 @@ class VersionInfo:
     version: int
     maximum: int
     default: int
-    reference: Dict[int, Feature]
+    reference: MutableMapping[int, Feature]
+    explicitly_enumerated: bool # see the `versions` argument to feature.
     base_name: str = ""
 
     def name_for_version(self, version: int) -> str:
@@ -284,9 +287,10 @@ class Feature(Generic[_TPrim, _TRich]):
         group_by_windowed: GroupByWindowed | None = None,
         is_deprecated: bool = False,
         join_type: Literal["has_one", "has_many"] | None = None,
+        # only used for type validation on chalk apply. see `.typ`, '.join`, etc. for the actual join info
         store_online: bool = True,
         store_offline: bool = True,
-        # only used for type validation on chalk apply. see `.typ`, '.join`, etc. for the actual join info
+        version_mapping: Mapping[int, _TRich] | None = None,
     ):
         super().__init__()
         self.is_deprecated = is_deprecated
@@ -329,17 +333,29 @@ class Feature(Generic[_TPrim, _TRich]):
         #         ),
         #         raise_error=ValueError,
         #     )
-
-        self.version: Optional[VersionInfo] = (
-            VersionInfo(
+        self.version: Optional[VersionInfo] = None
+        if version_mapping is not None:
+            if len(version_mapping) == 0:
+                raise ValueError(f"`versions` mapping for feature {namespace}.{name} has no versions.")
+            maximum_version = max(version_mapping.keys())
+            assert isinstance(maximum_version, int)
+            self.version = VersionInfo(
                 version=default_version,
-                maximum=version,
+                maximum=maximum_version,
                 default=default_version,
-                reference={},
+                reference=cast(MutableMapping[int, Feature], dict(version_mapping)),
+                explicitly_enumerated=True,
             )
-            if version is not None
-            else None
-        )
+        elif version is not None:
+            self.version: Optional[VersionInfo] = (
+                VersionInfo(
+                    version=default_version,
+                    maximum=version,
+                    default=default_version,
+                    reference= {},
+                    explicitly_enumerated=False,
+                )
+            )
 
         self.description = description
         self.owner = owner
@@ -1198,6 +1214,7 @@ class Feature(Generic[_TPrim, _TRich]):
             default=versioned_feature.version.default,
             reference=versioned_feature.version.reference,
             version=version,
+            explicitly_enumerated=False,
         )
         copied_versioned_feature.path = tuple(
             (
@@ -1579,6 +1596,7 @@ def feature(
     deprecated: bool = False,
     store_online: bool = True,
     store_offline: bool = True,
+    versions: Optional[Dict[int, _TRich]] = None,
 ) -> _TRich:
     """Add metadata and configuration to a feature.
 
@@ -1754,6 +1772,8 @@ def feature(
         By default `True`. Setting to `False` will prevent this feature from being written to the online store.
     store_offline
         By default `True`. Setting to `False` will prevent this feature from being written to the offline store.
+    versions
+        A map from integer feature version to feature definition. If this argument is used, then no other argument to `features` can be used.
     deprecated
         If `True`, this feature is considered deprecated, which impacts the dashboard, alerts,
         and warnings.
@@ -1836,6 +1856,29 @@ def feature(
     ...         version=2, default_version=2
     ...     )
     """
+    if versions is not None:
+        frame = inspect.currentframe()
+        assert frame is not None
+        _, _, _, values = inspect.getargvalues(frame)
+
+        # Get function's default values
+        sig = inspect.signature(feature)
+        for n, param in sig.parameters.items():
+            if n in ["versions", "version", "default_version"] :
+                continue  # ignore the versions field itself
+            param_default = param.default
+            actual = values[n]
+            # Allow ellipsis and defaults to be compared directly
+            if actual != param_default:
+                raise ValueError(f"When `versions` is provided, no other arguments may be passed in, but `{n}={actual}` was given.")
+        if not isinstance(versions, Mapping): # pyright: ignore[reportUnnecessaryIsInstance]
+            raise ValueError(f"When `versions` is provided, it must be a mapping, but `{versions}` was given.")
+        for key, value in versions.items():
+            if not isinstance(key, int): # pyright: ignore[reportUnnecessaryIsInstance]
+                raise ValueError(f"When `versions` is provided, the keys must be integers, but `{key}` was given.")
+            if not isinstance(value, Feature): # pyright: ignore[reportUnnecessaryIsInstance]
+                raise ValueError(f"When `versions` is provided, the values must be features, but `{value}` was given.")
+
     if cache_nulls == "evict_nulls":
         if cache_defaults == "evict_defaults":
             cache_strategy = CacheStrategy.EVICT_NULLS_AND_DEFAULTS
@@ -1925,6 +1968,7 @@ def feature(
             is_deprecated=deprecated,
             store_online=store_online,
             store_offline=store_offline,
+            version_mapping=versions,
         ),
     )
 

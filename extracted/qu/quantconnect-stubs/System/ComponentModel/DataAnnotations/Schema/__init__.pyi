@@ -6,15 +6,6 @@ import System
 import System.ComponentModel.DataAnnotations.Schema
 
 
-class ComplexTypeAttribute(System.Attribute):
-    """
-    Denotes that the class is a complex type.
-        Complex types are non-scalar properties of entity types that enable scalar properties to be organized within
-        entities.
-        Complex types do not have keys and cannot be managed by the Entity Framework apart from the parent object.
-    """
-
-
 class ForeignKeyAttribute(System.Attribute):
     """
     Denotes a property used as a foreign key in a relationship.
@@ -50,10 +41,6 @@ class DatabaseGeneratedOption(Enum):
 
     COMPUTED = 2
     """The database generates a value when a row is inserted or updated."""
-
-
-class NotMappedAttribute(System.Attribute):
-    """Denotes that a property or class should be excluded from database mapping."""
 
 
 class ColumnAttribute(System.Attribute):
@@ -97,23 +84,6 @@ class ColumnAttribute(System.Attribute):
         ...
 
 
-class DatabaseGeneratedAttribute(System.Attribute):
-    """Specifies how the database generates values for a property."""
-
-    @property
-    def database_generated_option(self) -> System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption:
-        """The pattern used to generate values for the property in the database."""
-        ...
-
-    def __init__(self, database_generated_option: System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption) -> None:
-        """
-        Initializes a new instance of the DatabaseGeneratedAttribute class.
-        
-        :param database_generated_option: The pattern used to generate values for the property in the database.
-        """
-        ...
-
-
 class InversePropertyAttribute(System.Attribute):
     """Specifies the inverse of a navigation property that represents the other end of the same relationship."""
 
@@ -129,6 +99,19 @@ class InversePropertyAttribute(System.Attribute):
         :param property: The navigation property representing the other end of the same relationship.
         """
         ...
+
+
+class NotMappedAttribute(System.Attribute):
+    """Denotes that a property or class should be excluded from database mapping."""
+
+
+class ComplexTypeAttribute(System.Attribute):
+    """
+    Denotes that the class is a complex type.
+        Complex types are non-scalar properties of entity types that enable scalar properties to be organized within
+        entities.
+        Complex types do not have keys and cannot be managed by the Entity Framework apart from the parent object.
+    """
 
 
 class TableAttribute(System.Attribute):
@@ -153,6 +136,23 @@ class TableAttribute(System.Attribute):
         Initializes a new instance of the TableAttribute class.
         
         :param name: The name of the table the class is mapped to.
+        """
+        ...
+
+
+class DatabaseGeneratedAttribute(System.Attribute):
+    """Specifies how the database generates values for a property."""
+
+    @property
+    def database_generated_option(self) -> System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption:
+        """The pattern used to generate values for the property in the database."""
+        ...
+
+    def __init__(self, database_generated_option: System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption) -> None:
+        """
+        Initializes a new instance of the DatabaseGeneratedAttribute class.
+        
+        :param database_generated_option: The pattern used to generate values for the property in the database.
         """
         ...
 

@@ -1,6 +1,9 @@
 # coding=utf-8
 from .._impl import (
+    storage_writer_api_ArrayPoints as ArrayPoints,
+    storage_writer_api_ArrayPointsVisitor as ArrayPointsVisitor,
     storage_writer_api_DirectNominalChannelWriterService as DirectNominalChannelWriterService,
+    storage_writer_api_DoubleArrayPoint as DoubleArrayPoint,
     storage_writer_api_DoublePoint as DoublePoint,
     storage_writer_api_Field as Field,
     storage_writer_api_IntPoint as IntPoint,
@@ -14,6 +17,7 @@ from .._impl import (
     storage_writer_api_PointsVisitor as PointsVisitor,
     storage_writer_api_RecordsBatch as RecordsBatch,
     storage_writer_api_RecordsBatchExternal as RecordsBatchExternal,
+    storage_writer_api_StringArrayPoint as StringArrayPoint,
     storage_writer_api_StringPoint as StringPoint,
     storage_writer_api_TelegrafMetric as TelegrafMetric,
     storage_writer_api_WriteBatchesRequest as WriteBatchesRequest,

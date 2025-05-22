@@ -22,12 +22,15 @@ config = ConformanceSuiteConfig(
             'taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport': 1,
         },
         'G4-1-2_1/index.xml:TC2_valid': {
+            'undefinedLanguageForTextFact': 1,
             'taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport': 1,
         },
         'RTS_Annex_II_Par_1_RTS_Annex_IV_par_7/index.xml:TC2_valid': {
+            'undefinedLanguageForTextFact': 1,
             'taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport': 1,
         },
         'RTS_Annex_II_Par_1_RTS_Annex_IV_par_7/index.xml:TC4_invalid': {
+            'undefinedLanguageForTextFact': 1,
             'taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport': 1,
         },
         'RTS_Annex_IV_Par_1_G3-1-4_1/index.xml:TC2_invalid': {
@@ -42,6 +45,7 @@ config = ConformanceSuiteConfig(
             'message:valueKvKIdentifierScheme': 105,
         },
         'RTS_Annex_IV_Par_6/index.xml:TC2_valid': {
+            'undefinedLanguageForTextFact': 1,
             'taggedTextFactOnlyInLanguagesOtherThanLanguageOfAReport': 1,
         },
     }.items()},
@@ -52,10 +56,6 @@ config = ConformanceSuiteConfig(
 
 
         # Not Implemented
-        'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-2-7_1/index.xml:TC4_invalid',
-        'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-2-7_1/index.xml:TC5_invalid',
-        'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-2-7_1/index.xml:TC6_invalid',
-        'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-2-7_1/index.xml:TC7_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-4-1_1/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-4-1_2/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-4-1_3/index.xml:TC2_invalid',
@@ -70,7 +70,6 @@ config = ConformanceSuiteConfig(
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-5-1_4/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-5-1_5/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-5-1_5/index.xml:TC3_invalid',
-        'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-5-2_1/index.xml:TC3_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-5-3_1/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-5-4_1/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G3-6-2_1/index.xml:TC2_invalid',
@@ -105,9 +104,7 @@ config = ConformanceSuiteConfig(
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G4-4-3_2/index.xml:TC3_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G4-4-5_2/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G4-4-5_2/index.xml:TC3_invalid',
-        'conformance-suite-2024-sbr-domein-handelsregister/tests/G5-1-3_1/index.xml:TC1_valid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G5-1-3_1/index.xml:TC2_invalid',
-        'conformance-suite-2024-sbr-domein-handelsregister/tests/G5-1-3_2/index.xml:TC1_valid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G5-1-3_2/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/G6-1-1_1/index.xml:TC2_invalid',
         'conformance-suite-2024-sbr-domein-handelsregister/tests/RTS_Annex_II_Par_1/index.xml:TC3_invalid',

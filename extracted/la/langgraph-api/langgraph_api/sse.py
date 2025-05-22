@@ -18,7 +18,9 @@ logger = structlog.stdlib.get_logger(__name__)
 class EventSourceResponse(sse_starlette.EventSourceResponse):
     def __init__(
         self,
-        content: AsyncIterator[bytes | tuple[bytes, Any | bytes]],
+        content: AsyncIterator[
+            bytes | tuple[bytes, Any | bytes] | tuple[bytes, Any | bytes, bytes | None]
+        ],
         status_code: int = 200,
         headers: Mapping[str, str] | None = None,
     ) -> None:
@@ -101,11 +103,12 @@ async def sse_heartbeat(send: Send) -> None:
 SEP = b"\r\n"
 EVENT = b"event: "
 DATA = b"data: "
+ID = b"id: "
 BYTES_LIKE = (bytes, bytearray, memoryview)
 
 
-def json_to_sse(event: bytes, data: Any | bytes) -> bytes:
-    return b"".join(
+def json_to_sse(event: bytes, data: Any | bytes, id: bytes | None = None) -> bytes:
+    result = b"".join(
         (
             EVENT,
             event,
@@ -113,6 +116,11 @@ def json_to_sse(event: bytes, data: Any | bytes) -> bytes:
             DATA,
             data if isinstance(data, BYTES_LIKE) else json_dumpb(data),
             SEP,
-            SEP,
         )
     )
+
+    if id is not None:
+        result += b"".join((ID, id, SEP))
+
+    result += SEP
+    return result

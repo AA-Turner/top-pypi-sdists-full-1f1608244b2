@@ -1,10 +1,10 @@
 [build-system]
-requires=["flit_core >=3.2,<4"]
+requires=["flit_core >=3.12,<4"]
 build-backend="flit_core.buildapi"
 
 [project]
 name="pyg-nightly"
-version="2.7.0.dev20250520"
+version="2.7.0.dev20250521"
 authors=[
     {name="Matthias Fey", email="matthias@pyg.org"},
 ]
@@ -18,10 +18,10 @@ keywords=[
     "graph-neural-networks",
     "graph-convolutional-networks",
 ]
-license = {file = "LICENSE"}
+license = "MIT"
+license-files = ["LICENSE"]
 classifiers=[
     "Development Status :: 5 - Production/Stable",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",

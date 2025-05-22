@@ -11,8 +11,8 @@ System_Buffers_StandardFormat = typing.Any
 
 System_Buffers_SearchValues_T = typing.TypeVar("System_Buffers_SearchValues_T")
 System_Buffers_ArrayPool_T = typing.TypeVar("System_Buffers_ArrayPool_T")
-System_Buffers_IMemoryOwner_T = typing.TypeVar("System_Buffers_IMemoryOwner_T")
 System_Buffers_MemoryManager_T = typing.TypeVar("System_Buffers_MemoryManager_T")
+System_Buffers_IMemoryOwner_T = typing.TypeVar("System_Buffers_IMemoryOwner_T")
 
 
 class SearchValues(typing.Generic[System_Buffers_SearchValues_T], System.Object):
@@ -65,6 +65,49 @@ class SearchValues(typing.Generic[System_Buffers_SearchValues_T], System.Object)
         ...
 
 
+class MemoryHandle(System.IDisposable):
+    """A handle for the memory."""
+
+    @property
+    def pointer(self) -> typing.Any:
+        """Returns the pointer to memory, where the memory is assumed to be pinned and hence the address won't change."""
+        ...
+
+    def __init__(self, pointer: typing.Any, handle: System.Runtime.InteropServices.GCHandle = ..., pinnable: System.Buffers.IPinnable = ...) -> None:
+        """
+        Creates a new memory handle for the memory.
+        
+        :param pointer: pointer to memory
+        :param handle: handle used to pin array buffers
+        :param pinnable: reference to manually managed object, or default if there is no memory manager
+        """
+        ...
+
+    def dispose(self) -> None:
+        """Frees the pinned handle and releases IPinnable."""
+        ...
+
+
+class IPinnable(metaclass=abc.ABCMeta):
+    """Provides a mechanism for pinning and unpinning objects to prevent the GC from moving them."""
+
+    def pin(self, element_index: int) -> System.Buffers.MemoryHandle:
+        """
+        Call this method to indicate that the IPinnable object can not be moved by the garbage collector.
+        The address of the pinned object can be taken.
+        
+        :param element_index: The offset to the element within the memory at which the returned MemoryHandle points to.
+        """
+        ...
+
+    def unpin(self) -> None:
+        """
+        Call this method to indicate that the IPinnable object no longer needs to be pinned.
+        The garbage collector is free to move the object now.
+        """
+        ...
+
+
 class ArrayPool(typing.Generic[System_Buffers_ArrayPool_T], System.Object, metaclass=abc.ABCMeta):
     """Provides a resource pool that enables reusing instances of arrays."""
 
@@ -113,46 +156,69 @@ class ArrayPool(typing.Generic[System_Buffers_ArrayPool_T], System.Object, metac
         ...
 
 
-class MemoryHandle(System.IDisposable):
-    """A handle for the memory."""
+class MemoryManager(typing.Generic[System_Buffers_MemoryManager_T], System.Object, System.Buffers.IMemoryOwner[System_Buffers_MemoryManager_T], System.Buffers.IPinnable, metaclass=abc.ABCMeta):
+    """Manager of Memory{T} that provides the implementation."""
 
     @property
-    def pointer(self) -> typing.Any:
-        """Returns the pointer to memory, where the memory is assumed to be pinned and hence the address won't change."""
+    def memory(self) -> System.Memory[System_Buffers_MemoryManager_T]:
+        """Returns a Memory{T}."""
         ...
 
-    def __init__(self, pointer: typing.Any, handle: System.Runtime.InteropServices.GCHandle = ..., pinnable: System.Buffers.IPinnable = ...) -> None:
+    @overload
+    def create_memory(self, length: int) -> System.Memory[System_Buffers_MemoryManager_T]:
         """
-        Creates a new memory handle for the memory.
+        Returns a Memory{T} for the current MemoryManager{T}.
         
-        :param pointer: pointer to memory
-        :param handle: handle used to pin array buffers
-        :param pinnable: reference to manually managed object, or default if there is no memory manager
-        """
-        ...
-
-    def dispose(self) -> None:
-        """Frees the pinned handle and releases IPinnable."""
-        ...
-
-
-class IPinnable(metaclass=abc.ABCMeta):
-    """Provides a mechanism for pinning and unpinning objects to prevent the GC from moving them."""
-
-    def pin(self, element_index: int) -> System.Buffers.MemoryHandle:
-        """
-        Call this method to indicate that the IPinnable object can not be moved by the garbage collector.
-        The address of the pinned object can be taken.
+        This method is protected.
         
-        :param element_index: The offset to the element within the memory at which the returned MemoryHandle points to.
+        :param length: The element count in the memory, starting at offset 0.
+        """
+        ...
+
+    @overload
+    def create_memory(self, start: int, length: int) -> System.Memory[System_Buffers_MemoryManager_T]:
+        """
+        Returns a Memory{T} for the current MemoryManager{T}.
+        
+        This method is protected.
+        
+        :param start: The offset to the element which the returned memory starts at.
+        :param length: The element count in the memory, starting at element offset .
+        """
+        ...
+
+    def dispose(self, disposing: bool) -> None:
+        """
+        Clean up of any leftover managed and unmanaged resources.
+        
+        This method is protected.
+        """
+        ...
+
+    def get_span(self) -> System.Span[System_Buffers_MemoryManager_T]:
+        """Returns a span wrapping the underlying memory."""
+        ...
+
+    def pin(self, element_index: int = 0) -> System.Buffers.MemoryHandle:
+        """
+        Returns a handle to the memory that has been pinned and hence its address can be taken.
+        
+        :param element_index: The offset to the element within the memory at which the returned MemoryHandle points to. (default = 0)
         """
         ...
 
     def unpin(self) -> None:
-        """
-        Call this method to indicate that the IPinnable object no longer needs to be pinned.
-        The garbage collector is free to move the object now.
-        """
+        """Lets the garbage collector know that the object is free to be moved now."""
+        ...
+
+
+class IMemoryOwner(typing.Generic[System_Buffers_IMemoryOwner_T], System.IDisposable, metaclass=abc.ABCMeta):
+    """Owner of MemoryT that is responsible for disposing the underlying memory appropriately."""
+
+    @property
+    @abc.abstractmethod
+    def memory(self) -> System.Memory[System_Buffers_IMemoryOwner_T]:
+        """Returns a MemoryT."""
         ...
 
 
@@ -268,71 +334,5 @@ class OperationStatus(Enum):
     the destination contains the partial result. This guarantees that no additional data appended to the input
     will make the invalid sequence valid.
     """
-
-
-class IMemoryOwner(typing.Generic[System_Buffers_IMemoryOwner_T], System.IDisposable, metaclass=abc.ABCMeta):
-    """Owner of MemoryT that is responsible for disposing the underlying memory appropriately."""
-
-    @property
-    @abc.abstractmethod
-    def memory(self) -> System.Memory[System_Buffers_IMemoryOwner_T]:
-        """Returns a MemoryT."""
-        ...
-
-
-class MemoryManager(typing.Generic[System_Buffers_MemoryManager_T], System.Object, System.Buffers.IMemoryOwner[System_Buffers_MemoryManager_T], System.Buffers.IPinnable, metaclass=abc.ABCMeta):
-    """Manager of Memory{T} that provides the implementation."""
-
-    @property
-    def memory(self) -> System.Memory[System_Buffers_MemoryManager_T]:
-        """Returns a Memory{T}."""
-        ...
-
-    @overload
-    def create_memory(self, length: int) -> System.Memory[System_Buffers_MemoryManager_T]:
-        """
-        Returns a Memory{T} for the current MemoryManager{T}.
-        
-        This method is protected.
-        
-        :param length: The element count in the memory, starting at offset 0.
-        """
-        ...
-
-    @overload
-    def create_memory(self, start: int, length: int) -> System.Memory[System_Buffers_MemoryManager_T]:
-        """
-        Returns a Memory{T} for the current MemoryManager{T}.
-        
-        This method is protected.
-        
-        :param start: The offset to the element which the returned memory starts at.
-        :param length: The element count in the memory, starting at element offset .
-        """
-        ...
-
-    def dispose(self, disposing: bool) -> None:
-        """
-        Clean up of any leftover managed and unmanaged resources.
-        
-        This method is protected.
-        """
-        ...
-
-    def get_span(self) -> System.Span[System_Buffers_MemoryManager_T]:
-        """Returns a span wrapping the underlying memory."""
-        ...
-
-    def pin(self, element_index: int = 0) -> System.Buffers.MemoryHandle:
-        """
-        Returns a handle to the memory that has been pinned and hence its address can be taken.
-        
-        :param element_index: The offset to the element within the memory at which the returned MemoryHandle points to. (default = 0)
-        """
-        ...
-
-    def unpin(self) -> None:
-        """Lets the garbage collector know that the object is free to be moved now."""
-        ...
 
 

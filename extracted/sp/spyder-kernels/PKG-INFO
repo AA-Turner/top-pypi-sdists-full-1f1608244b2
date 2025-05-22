@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: spyder-kernels
-Version: 3.0.4
+Version: 3.0.5
 Summary: Jupyter kernels for Spyder's console
 Home-page: https://github.com/spyder-ide/spyder-kernels
 Download-URL: https://www.spyder-ide.org/#fh5co-download
@@ -31,8 +31,9 @@ Requires-Dist: ipython<8.13,>=8.12.2; python_version == "3.8"
 Requires-Dist: ipython!=8.17.1,<9,>=8.13.0; python_version > "3.8"
 Requires-Dist: jupyter-client<9,>=7.4.9
 Requires-Dist: pyzmq>=24.0.0
-Requires-Dist: wurlitzer>=1.0.3; platform_system != "Windows"
 Requires-Dist: pyxdg>=0.26; platform_system == "Linux"
+Requires-Dist: traitlets>=5.14.3
+Requires-Dist: wurlitzer>=1.0.3; platform_system != "Windows"
 Provides-Extra: test
 Requires-Dist: cython; extra == "test"
 Requires-Dist: dask[distributed]; extra == "test"

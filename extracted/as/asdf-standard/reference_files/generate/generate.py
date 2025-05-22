@@ -9,6 +9,47 @@ except ImportError:
 import numpy as np
 
 
+def ref_scalars(fd):
+    tree = {
+        'int': 42,
+        'float': 3.14,
+        'string': 'foo',
+    }
+    asdf.AsdfFile(tree).write_to(fd)
+
+
+def ref_anchor(fd):
+    nestee = {"abc": 123}
+    tree = {
+        "a": nestee,
+        "b": nestee,
+    }
+    asdf.AsdfFile(tree).write_to(fd)
+
+
+def ref_endian(fd):
+    tree = {
+        'big': np.arange(42, dtype=">i4"),
+        'little': np.arange(42, dtype="<i4"),
+    }
+
+    asdf.AsdfFile(tree).write_to(fd)
+
+
+def ref_structured(fd):
+    tree = {
+        'structured': np.array(
+            [
+                (1, 'a', 3.3),
+                (2, 'b', 6.6),
+            ], dtype=[
+                ('a', np.uint8),
+                ('b', 'S3'),
+                ('c', np.float32),
+            ]),
+    }
+    asdf.AsdfFile(tree).write_to(fd)
+
 def ref_basic(fd):
     tree = {
         'data': np.arange(8)
@@ -155,8 +196,8 @@ def generate(version):
         filename = os.path.join(outdir, name)
         func(filename + ".asdf")
         with asdf.open(filename + ".asdf") as af:
-            af.resolve_and_inline()
-            af.write_to(filename + ".yaml")
+            af.resolve_references()
+            af.write_to(filename + ".yaml", all_array_storage="inline")
 
 
 if __name__ == '__main__':
@@ -165,7 +206,9 @@ if __name__ == '__main__':
         "generate",
         description="Regenerate the ASDF reference files")
     parser.add_argument(
-        "version", type=str, nargs=1, help="The ASDF version")
+        "version", type=str, help="The ASDF version")
     args = parser.parse_args()
 
-    generate(args.version[0])
+    with asdf.config_context() as cfg:
+        cfg.default_version = args.version
+        generate(args.version)

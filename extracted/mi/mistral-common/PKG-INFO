@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.3
 Name: mistral_common
-Version: 1.5.4
+Version: 1.5.5
 Summary: 
 Author: bam4d
 Author-email: bam4d@mistral.ai
@@ -10,6 +10,7 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Provides-Extra: opencv
 Requires-Dist: jsonschema (>=4.21.1)
 Requires-Dist: numpy (>=1.22,<1.25) ; python_version < "3.9"

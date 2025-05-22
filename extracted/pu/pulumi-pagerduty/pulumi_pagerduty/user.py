@@ -400,6 +400,7 @@ class _UserState:
         pulumi.set(self, "time_zone", value)
 
 
+@pulumi.type_token("pagerduty:index/user:User")
 class User(pulumi.CustomResource):
     @overload
     def __init__(__self__,

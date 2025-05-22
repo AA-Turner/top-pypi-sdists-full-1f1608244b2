@@ -43,6 +43,8 @@ MAX_EMAX: Final[int]
 MAX_PREC: Final[int]
 MIN_EMIN: Final[int]
 MIN_ETINY: Final[int]
+if sys.version_info >= (3, 14):
+    IEEE_CONTEXT_MAX_BITS: Final[int]
 
 def setcontext(context: Context, /) -> None:
     """Set a new default context."""
@@ -74,6 +76,9 @@ if sys.version_info >= (3, 11):
 
 else:
     def localcontext(ctx: Context | None = None) -> _ContextManager: ...
+
+if sys.version_info >= (3, 14):
+    def IEEEContext(bits: int, /) -> Context: ...
 
 DefaultContext: Context
 BasicContext: Context

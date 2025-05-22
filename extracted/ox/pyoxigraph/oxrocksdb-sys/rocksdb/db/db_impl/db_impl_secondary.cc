@@ -728,13 +728,13 @@ Status DBImplSecondary::TryCatchUpWithPrimary() {
     // instance
     if (s.ok()) {
       s = FindAndRecoverLogFiles(&cfds_changed, &job_context);
-    }
-    if (s.IsPathNotFound()) {
-      ROCKS_LOG_INFO(
-          immutable_db_options_.info_log,
-          "Secondary tries to read WAL, but WAL file(s) have already "
-          "been purged by primary.");
-      s = Status::OK();
+      if (s.IsPathNotFound()) {
+        ROCKS_LOG_INFO(
+            immutable_db_options_.info_log,
+            "Secondary tries to read WAL, but WAL file(s) have already "
+            "been purged by primary.");
+        s = Status::OK();
+      }
     }
     if (s.ok()) {
       for (auto cfd : cfds_changed) {
@@ -909,7 +909,7 @@ Status DBImplSecondary::CompactWithoutInstallation(
     ROCKS_LOG_ERROR(
         immutable_db_options_.info_log,
         "GetCompactionInputsFromFileNumbers() failed - %s.\n DebugString: %s",
-        s.ToString().c_str(), version->DebugString().c_str());
+        s.ToString().c_str(), version->DebugString(/*hex=*/true).c_str());
     return s;
   }
 

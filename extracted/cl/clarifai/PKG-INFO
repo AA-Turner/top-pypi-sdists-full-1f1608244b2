@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: clarifai
-Version: 11.4.1
+Version: 11.4.2
 Home-page: https://github.com/Clarifai/clarifai-python
 Author: Clarifai
 Author-email: support@clarifai.com
@@ -23,7 +23,6 @@ Requires-Dist: clarifai-grpc>=11.3.4
 Requires-Dist: clarifai-protocol>=0.0.23
 Requires-Dist: numpy>=1.22.0
 Requires-Dist: tqdm>=4.65.0
-Requires-Dist: rich>=13.4.2
 Requires-Dist: PyYAML>=6.0.1
 Requires-Dist: schema==0.7.5
 Requires-Dist: Pillow>=9.5.0

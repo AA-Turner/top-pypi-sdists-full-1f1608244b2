@@ -13,8 +13,8 @@ import System.Reflection
 import System.Reflection.Emit
 import System.Runtime.InteropServices
 
-System_Reflection_Emit_OpCode = typing.Any
 System_Reflection_Emit_Label = typing.Any
+System_Reflection_Emit_OpCode = typing.Any
 
 
 class PEFileKinds(Enum):
@@ -25,187 +25,6 @@ class PEFileKinds(Enum):
     CONSOLE_APPLICATION = ...
 
     WINDOW_APPLICATION = ...
-
-
-class FieldBuilder(System.Reflection.FieldInfo, metaclass=abc.ABCMeta):
-    """This class has no documentation."""
-
-    def __init__(self) -> None:
-        """This method is protected."""
-        ...
-
-    def set_constant(self, default_value: typing.Any) -> None:
-        ...
-
-    def set_constant_core(self, default_value: typing.Any) -> None:
-        """This method is protected."""
-        ...
-
-    @overload
-    def set_custom_attribute(self, con: System.Reflection.ConstructorInfo, binary_attribute: typing.List[int]) -> None:
-        ...
-
-    @overload
-    def set_custom_attribute(self, custom_builder: System.Reflection.Emit.CustomAttributeBuilder) -> None:
-        ...
-
-    def set_custom_attribute_core(self, con: System.Reflection.ConstructorInfo, binary_attribute: System.ReadOnlySpan[int]) -> None:
-        """This method is protected."""
-        ...
-
-    def set_offset(self, i_offset: int) -> None:
-        ...
-
-    def set_offset_core(self, i_offset: int) -> None:
-        """This method is protected."""
-        ...
-
-
-class GenericTypeParameterBuilder(System.Reflection.TypeInfo, metaclass=abc.ABCMeta):
-    """This class has no documentation."""
-
-    def __init__(self) -> None:
-        """This method is protected."""
-        ...
-
-    def set_base_type_constraint(self, base_type_constraint: typing.Type) -> None:
-        ...
-
-    def set_base_type_constraint_core(self, base_type_constraint: typing.Type) -> None:
-        """This method is protected."""
-        ...
-
-    @overload
-    def set_custom_attribute(self, con: System.Reflection.ConstructorInfo, binary_attribute: typing.List[int]) -> None:
-        ...
-
-    @overload
-    def set_custom_attribute(self, custom_builder: System.Reflection.Emit.CustomAttributeBuilder) -> None:
-        ...
-
-    def set_custom_attribute_core(self, con: System.Reflection.ConstructorInfo, binary_attribute: System.ReadOnlySpan[int]) -> None:
-        """This method is protected."""
-        ...
-
-    def set_generic_parameter_attributes(self, generic_parameter_attributes: System.Reflection.GenericParameterAttributes) -> None:
-        ...
-
-    def set_generic_parameter_attributes_core(self, generic_parameter_attributes: System.Reflection.GenericParameterAttributes) -> None:
-        """This method is protected."""
-        ...
-
-    def set_interface_constraints(self, *interface_constraints: typing.Union[typing.Type, typing.Iterable[typing.Type]]) -> None:
-        ...
-
-    def set_interface_constraints_core(self, *interface_constraints: typing.Union[typing.Type, typing.Iterable[typing.Type]]) -> None:
-        """This method is protected."""
-        ...
-
-
-class PackingSize(Enum):
-    """This class has no documentation."""
-
-    UNSPECIFIED = 0
-
-    SIZE_1 = 1
-
-    SIZE_2 = 2
-
-    SIZE_4 = 4
-
-    SIZE_8 = 8
-
-    SIZE_16 = 16
-
-    SIZE_32 = 32
-
-    SIZE_64 = 64
-
-    SIZE_128 = 128
-
-
-class EnumBuilder(System.Reflection.TypeInfo, metaclass=abc.ABCMeta):
-    """This class has no documentation."""
-
-    @property
-    def underlying_field(self) -> System.Reflection.Emit.FieldBuilder:
-        ...
-
-    @property
-    @abc.abstractmethod
-    def underlying_field_core(self) -> System.Reflection.Emit.FieldBuilder:
-        """This property is protected."""
-        ...
-
-    def __init__(self) -> None:
-        """This method is protected."""
-        ...
-
-    def create_type(self) -> typing.Type:
-        ...
-
-    def create_type_info(self) -> System.Reflection.TypeInfo:
-        ...
-
-    def create_type_info_core(self) -> System.Reflection.TypeInfo:
-        """This method is protected."""
-        ...
-
-    def define_literal(self, literal_name: str, literal_value: typing.Any) -> System.Reflection.Emit.FieldBuilder:
-        ...
-
-    def define_literal_core(self, literal_name: str, literal_value: typing.Any) -> System.Reflection.Emit.FieldBuilder:
-        """This method is protected."""
-        ...
-
-    @overload
-    def make_array_type(self) -> typing.Type:
-        ...
-
-    @overload
-    def make_array_type(self, rank: int) -> typing.Type:
-        ...
-
-    def make_by_ref_type(self) -> typing.Type:
-        ...
-
-    def make_pointer_type(self) -> typing.Type:
-        ...
-
-    @overload
-    def set_custom_attribute(self, con: System.Reflection.ConstructorInfo, binary_attribute: typing.List[int]) -> None:
-        ...
-
-    @overload
-    def set_custom_attribute(self, custom_builder: System.Reflection.Emit.CustomAttributeBuilder) -> None:
-        ...
-
-    def set_custom_attribute_core(self, con: System.Reflection.ConstructorInfo, binary_attribute: System.ReadOnlySpan[int]) -> None:
-        """This method is protected."""
-        ...
-
-
-class FlowControl(Enum):
-    """Describes how an instruction alters the flow of control."""
-
-    BRANCH = 0
-
-    BREAK = 1
-
-    CALL = 2
-
-    COND_BRANCH = 3
-
-    META = 4
-
-    NEXT = 5
-
-    PHI = 6
-    """FlowControl.Phi has been deprecated and is not supported."""
-
-    RETURN = 7
-
-    THROW = 8
 
 
 class ParameterBuilder(System.Object, metaclass=abc.ABCMeta):
@@ -320,6 +139,29 @@ class OperandType(Enum):
     SHORT_INLINE_R = 17
 
     SHORT_INLINE_VAR = 18
+
+
+class FlowControl(Enum):
+    """Describes how an instruction alters the flow of control."""
+
+    BRANCH = 0
+
+    BREAK = 1
+
+    CALL = 2
+
+    COND_BRANCH = 3
+
+    META = 4
+
+    NEXT = 5
+
+    PHI = 6
+    """FlowControl.Phi has been deprecated and is not supported."""
+
+    RETURN = 7
+
+    THROW = 8
 
 
 class OpCodeType(Enum):
@@ -658,6 +500,47 @@ class ILGenerator(System.Object, metaclass=abc.ABCMeta):
         ...
 
 
+class GenericTypeParameterBuilder(System.Reflection.TypeInfo, metaclass=abc.ABCMeta):
+    """This class has no documentation."""
+
+    def __init__(self) -> None:
+        """This method is protected."""
+        ...
+
+    def set_base_type_constraint(self, base_type_constraint: typing.Type) -> None:
+        ...
+
+    def set_base_type_constraint_core(self, base_type_constraint: typing.Type) -> None:
+        """This method is protected."""
+        ...
+
+    @overload
+    def set_custom_attribute(self, con: System.Reflection.ConstructorInfo, binary_attribute: typing.List[int]) -> None:
+        ...
+
+    @overload
+    def set_custom_attribute(self, custom_builder: System.Reflection.Emit.CustomAttributeBuilder) -> None:
+        ...
+
+    def set_custom_attribute_core(self, con: System.Reflection.ConstructorInfo, binary_attribute: System.ReadOnlySpan[int]) -> None:
+        """This method is protected."""
+        ...
+
+    def set_generic_parameter_attributes(self, generic_parameter_attributes: System.Reflection.GenericParameterAttributes) -> None:
+        ...
+
+    def set_generic_parameter_attributes_core(self, generic_parameter_attributes: System.Reflection.GenericParameterAttributes) -> None:
+        """This method is protected."""
+        ...
+
+    def set_interface_constraints(self, *interface_constraints: typing.Union[typing.Type, typing.Iterable[typing.Type]]) -> None:
+        ...
+
+    def set_interface_constraints_core(self, *interface_constraints: typing.Union[typing.Type, typing.Iterable[typing.Type]]) -> None:
+        """This method is protected."""
+        ...
+
+
 class MethodBuilder(System.Reflection.MethodInfo, metaclass=abc.ABCMeta):
     """This class has no documentation."""
 
@@ -740,6 +623,123 @@ class MethodBuilder(System.Reflection.MethodInfo, metaclass=abc.ABCMeta):
     def set_signature_core(self, return_type: typing.Type, return_type_required_custom_modifiers: typing.List[typing.Type], return_type_optional_custom_modifiers: typing.List[typing.Type], parameter_types: typing.List[typing.Type], parameter_type_required_custom_modifiers: typing.List[typing.List[typing.Type]], parameter_type_optional_custom_modifiers: typing.List[typing.List[typing.Type]]) -> None:
         """This method is protected."""
         ...
+
+
+class FieldBuilder(System.Reflection.FieldInfo, metaclass=abc.ABCMeta):
+    """This class has no documentation."""
+
+    def __init__(self) -> None:
+        """This method is protected."""
+        ...
+
+    def set_constant(self, default_value: typing.Any) -> None:
+        ...
+
+    def set_constant_core(self, default_value: typing.Any) -> None:
+        """This method is protected."""
+        ...
+
+    @overload
+    def set_custom_attribute(self, con: System.Reflection.ConstructorInfo, binary_attribute: typing.List[int]) -> None:
+        ...
+
+    @overload
+    def set_custom_attribute(self, custom_builder: System.Reflection.Emit.CustomAttributeBuilder) -> None:
+        ...
+
+    def set_custom_attribute_core(self, con: System.Reflection.ConstructorInfo, binary_attribute: System.ReadOnlySpan[int]) -> None:
+        """This method is protected."""
+        ...
+
+    def set_offset(self, i_offset: int) -> None:
+        ...
+
+    def set_offset_core(self, i_offset: int) -> None:
+        """This method is protected."""
+        ...
+
+
+class EnumBuilder(System.Reflection.TypeInfo, metaclass=abc.ABCMeta):
+    """This class has no documentation."""
+
+    @property
+    def underlying_field(self) -> System.Reflection.Emit.FieldBuilder:
+        ...
+
+    @property
+    @abc.abstractmethod
+    def underlying_field_core(self) -> System.Reflection.Emit.FieldBuilder:
+        """This property is protected."""
+        ...
+
+    def __init__(self) -> None:
+        """This method is protected."""
+        ...
+
+    def create_type(self) -> typing.Type:
+        ...
+
+    def create_type_info(self) -> System.Reflection.TypeInfo:
+        ...
+
+    def create_type_info_core(self) -> System.Reflection.TypeInfo:
+        """This method is protected."""
+        ...
+
+    def define_literal(self, literal_name: str, literal_value: typing.Any) -> System.Reflection.Emit.FieldBuilder:
+        ...
+
+    def define_literal_core(self, literal_name: str, literal_value: typing.Any) -> System.Reflection.Emit.FieldBuilder:
+        """This method is protected."""
+        ...
+
+    @overload
+    def make_array_type(self) -> typing.Type:
+        ...
+
+    @overload
+    def make_array_type(self, rank: int) -> typing.Type:
+        ...
+
+    def make_by_ref_type(self) -> typing.Type:
+        ...
+
+    def make_pointer_type(self) -> typing.Type:
+        ...
+
+    @overload
+    def set_custom_attribute(self, con: System.Reflection.ConstructorInfo, binary_attribute: typing.List[int]) -> None:
+        ...
+
+    @overload
+    def set_custom_attribute(self, custom_builder: System.Reflection.Emit.CustomAttributeBuilder) -> None:
+        ...
+
+    def set_custom_attribute_core(self, con: System.Reflection.ConstructorInfo, binary_attribute: System.ReadOnlySpan[int]) -> None:
+        """This method is protected."""
+        ...
+
+
+class PackingSize(Enum):
+    """This class has no documentation."""
+
+    UNSPECIFIED = 0
+
+    SIZE_1 = 1
+
+    SIZE_2 = 2
+
+    SIZE_4 = 4
+
+    SIZE_8 = 8
+
+    SIZE_16 = 16
+
+    SIZE_32 = 32
+
+    SIZE_64 = 64
+
+    SIZE_128 = 128
 
 
 class ConstructorBuilder(System.Reflection.ConstructorInfo, metaclass=abc.ABCMeta):
@@ -1325,98 +1325,6 @@ class ModuleBuilder(System.Reflection.Module, metaclass=abc.ABCMeta):
         ...
 
     def get_type_metadata_token(self, type: typing.Type) -> int:
-        ...
-
-    @overload
-    def set_custom_attribute(self, con: System.Reflection.ConstructorInfo, binary_attribute: typing.List[int]) -> None:
-        ...
-
-    @overload
-    def set_custom_attribute(self, custom_builder: System.Reflection.Emit.CustomAttributeBuilder) -> None:
-        ...
-
-    def set_custom_attribute_core(self, con: System.Reflection.ConstructorInfo, binary_attribute: System.ReadOnlySpan[int]) -> None:
-        """This method is protected."""
-        ...
-
-
-class AssemblyBuilderAccess(Enum):
-    """This class has no documentation."""
-
-    RUN = 1
-
-    RUN_AND_COLLECT = ...
-
-
-class AssemblyBuilder(System.Reflection.Assembly, metaclass=abc.ABCMeta):
-    """This class has no documentation."""
-
-    @property
-    def code_base(self) -> str:
-        """Assembly.CodeBase and Assembly.EscapedCodeBase are only included for .NET Framework compatibility. Use Assembly.Location instead."""
-        warnings.warn("Assembly.CodeBase and Assembly.EscapedCodeBase are only included for .NET Framework compatibility. Use Assembly.Location instead.", DeprecationWarning)
-
-    @property
-    def location(self) -> str:
-        ...
-
-    @property
-    def entry_point(self) -> System.Reflection.MethodInfo:
-        ...
-
-    @property
-    def is_dynamic(self) -> bool:
-        ...
-
-    def __init__(self) -> None:
-        """This method is protected."""
-        ...
-
-    @staticmethod
-    @overload
-    def define_dynamic_assembly(name: System.Reflection.AssemblyName, access: System.Reflection.Emit.AssemblyBuilderAccess) -> System.Reflection.Emit.AssemblyBuilder:
-        ...
-
-    @staticmethod
-    @overload
-    def define_dynamic_assembly(name: System.Reflection.AssemblyName, access: System.Reflection.Emit.AssemblyBuilderAccess, assembly_attributes: System.Collections.Generic.IEnumerable[System.Reflection.Emit.CustomAttributeBuilder]) -> System.Reflection.Emit.AssemblyBuilder:
-        ...
-
-    def define_dynamic_module(self, name: str) -> System.Reflection.Emit.ModuleBuilder:
-        ...
-
-    def define_dynamic_module_core(self, name: str) -> System.Reflection.Emit.ModuleBuilder:
-        """This method is protected."""
-        ...
-
-    def get_dynamic_module(self, name: str) -> System.Reflection.Emit.ModuleBuilder:
-        ...
-
-    def get_dynamic_module_core(self, name: str) -> System.Reflection.Emit.ModuleBuilder:
-        """This method is protected."""
-        ...
-
-    def get_exported_types(self) -> typing.List[typing.Type]:
-        ...
-
-    def get_file(self, name: str) -> System.IO.FileStream:
-        ...
-
-    def get_files(self, get_resource_modules: bool) -> typing.List[System.IO.FileStream]:
-        ...
-
-    def get_manifest_resource_info(self, resource_name: str) -> System.Reflection.ManifestResourceInfo:
-        ...
-
-    def get_manifest_resource_names(self) -> typing.List[str]:
-        ...
-
-    @overload
-    def get_manifest_resource_stream(self, name: str) -> System.IO.Stream:
-        ...
-
-    @overload
-    def get_manifest_resource_stream(self, type: typing.Type, name: str) -> System.IO.Stream:
         ...
 
     @overload
@@ -2037,6 +1945,98 @@ class DynamicMethod(System.Reflection.MethodInfo):
         ...
 
     def to_string(self) -> str:
+        ...
+
+
+class AssemblyBuilderAccess(Enum):
+    """This class has no documentation."""
+
+    RUN = 1
+
+    RUN_AND_COLLECT = ...
+
+
+class AssemblyBuilder(System.Reflection.Assembly, metaclass=abc.ABCMeta):
+    """This class has no documentation."""
+
+    @property
+    def code_base(self) -> str:
+        """Assembly.CodeBase and Assembly.EscapedCodeBase are only included for .NET Framework compatibility. Use Assembly.Location instead."""
+        warnings.warn("Assembly.CodeBase and Assembly.EscapedCodeBase are only included for .NET Framework compatibility. Use Assembly.Location instead.", DeprecationWarning)
+
+    @property
+    def location(self) -> str:
+        ...
+
+    @property
+    def entry_point(self) -> System.Reflection.MethodInfo:
+        ...
+
+    @property
+    def is_dynamic(self) -> bool:
+        ...
+
+    def __init__(self) -> None:
+        """This method is protected."""
+        ...
+
+    @staticmethod
+    @overload
+    def define_dynamic_assembly(name: System.Reflection.AssemblyName, access: System.Reflection.Emit.AssemblyBuilderAccess) -> System.Reflection.Emit.AssemblyBuilder:
+        ...
+
+    @staticmethod
+    @overload
+    def define_dynamic_assembly(name: System.Reflection.AssemblyName, access: System.Reflection.Emit.AssemblyBuilderAccess, assembly_attributes: System.Collections.Generic.IEnumerable[System.Reflection.Emit.CustomAttributeBuilder]) -> System.Reflection.Emit.AssemblyBuilder:
+        ...
+
+    def define_dynamic_module(self, name: str) -> System.Reflection.Emit.ModuleBuilder:
+        ...
+
+    def define_dynamic_module_core(self, name: str) -> System.Reflection.Emit.ModuleBuilder:
+        """This method is protected."""
+        ...
+
+    def get_dynamic_module(self, name: str) -> System.Reflection.Emit.ModuleBuilder:
+        ...
+
+    def get_dynamic_module_core(self, name: str) -> System.Reflection.Emit.ModuleBuilder:
+        """This method is protected."""
+        ...
+
+    def get_exported_types(self) -> typing.List[typing.Type]:
+        ...
+
+    def get_file(self, name: str) -> System.IO.FileStream:
+        ...
+
+    def get_files(self, get_resource_modules: bool) -> typing.List[System.IO.FileStream]:
+        ...
+
+    def get_manifest_resource_info(self, resource_name: str) -> System.Reflection.ManifestResourceInfo:
+        ...
+
+    def get_manifest_resource_names(self) -> typing.List[str]:
+        ...
+
+    @overload
+    def get_manifest_resource_stream(self, name: str) -> System.IO.Stream:
+        ...
+
+    @overload
+    def get_manifest_resource_stream(self, type: typing.Type, name: str) -> System.IO.Stream:
+        ...
+
+    @overload
+    def set_custom_attribute(self, con: System.Reflection.ConstructorInfo, binary_attribute: typing.List[int]) -> None:
+        ...
+
+    @overload
+    def set_custom_attribute(self, custom_builder: System.Reflection.Emit.CustomAttributeBuilder) -> None:
+        ...
+
+    def set_custom_attribute_core(self, con: System.Reflection.ConstructorInfo, binary_attribute: System.ReadOnlySpan[int]) -> None:
+        """This method is protected."""
         ...
 
 

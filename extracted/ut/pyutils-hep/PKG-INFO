@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pyutils_hep
-Version: 0.1.11
+Version: 0.1.12
 Summary: A package with useful python utilities for neutrino physics
 Author-email: Tianlu Yuan <tyuan@icecube.wisc.edu>
 License: MIT License

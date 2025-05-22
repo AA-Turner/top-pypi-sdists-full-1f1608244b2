@@ -5,38 +5,27 @@
 # cython: language_level=3
 
 
+import cython
 cimport cython
-
+from numpy cimport ndarray
+import numpy as np
+from .abc import Codec
+from .compat_ext cimport Buffer
+from .compat_ext import Buffer
+from .compat import ensure_contiguous_ndarray
+from cpython cimport (PyBytes_GET_SIZE, PyBytes_AS_STRING, PyBytes_Check,
+                      PyBytes_FromStringAndSize, PyUnicode_AsUTF8String)
+from cpython.buffer cimport PyBUF_ANY_CONTIGUOUS
 from libc.stdint cimport uint8_t
 from libc.string cimport memcpy
-
-from cpython.buffer cimport PyBuffer_IsContiguous
-from cpython.bytearray cimport (
-    PyByteArray_AS_STRING,
-    PyByteArray_FromStringAndSize,
-)
-from cpython.bytes cimport (
-    PyBytes_AS_STRING,
-    PyBytes_GET_SIZE,
-    PyBytes_Check,
-    PyBytes_FromStringAndSize,
-)
-from cpython.memoryview cimport PyMemoryView_GET_BUFFER
-from cpython.unicode cimport (
-    PyUnicode_AsUTF8String,
-    PyUnicode_Check,
-    PyUnicode_FromStringAndSize,
-)
-
-from numpy cimport ndarray
-
-from .compat_ext cimport ensure_continguous_memoryview
 from ._utils cimport store_le32, load_le32
 
-import numpy as np
 
-from .abc import Codec
-from .compat import ensure_contiguous_ndarray
+cdef extern from "Python.h":
+    bytearray PyByteArray_FromStringAndSize(char *v, Py_ssize_t l)
+    char* PyByteArray_AS_STRING(object string)
+    object PyUnicode_FromStringAndSize(const char *u, Py_ssize_t size)
+    int PyUnicode_Check(object text)
 
 
 # 4 bytes to store number of items
@@ -143,26 +132,23 @@ class VLenUTF8(Codec):
     @cython.boundscheck(False)
     def decode(self, buf, out=None):
         cdef:
-            memoryview buf_mv
-            const Py_buffer* buf_pb
-            const char* data
-            const char* data_end
-            Py_ssize_t i, l, n_items, data_length
+            Buffer input_buffer
+            char* data
+            char* data_end
+            Py_ssize_t i, l, n_items, data_length, input_length
 
-        # obtain memoryview
+        # accept any buffer
         buf = ensure_contiguous_ndarray(buf)
-        buf_mv = memoryview(buf)
-        buf_pb = PyMemoryView_GET_BUFFER(buf_mv)
+        input_buffer = Buffer(buf, PyBUF_ANY_CONTIGUOUS)
+        input_length = input_buffer.nbytes
 
         # sanity checks
-        if not PyBuffer_IsContiguous(buf_pb, b'A'):
-            raise BufferError("`buf` must contain contiguous memory")
-        if buf_pb.len < HEADER_LENGTH:
+        if input_length < HEADER_LENGTH:
             raise ValueError('corrupt buffer, missing or truncated header')
 
         # obtain input data pointer
-        data = <const char*>buf_pb.buf
-        data_end = data + buf_pb.len
+        data = input_buffer.ptr
+        data_end = data + input_length
 
         # load number of items
         n_items = load_le32(<uint8_t*>data)
@@ -274,26 +260,23 @@ class VLenBytes(Codec):
     @cython.boundscheck(False)
     def decode(self, buf, out=None):
         cdef:
-            memoryview buf_mv
-            const Py_buffer* buf_pb
-            const char* data
-            const char* data_end
-            Py_ssize_t i, l, n_items, data_length
+            Buffer input_buffer
+            char* data
+            char* data_end
+            Py_ssize_t i, l, n_items, data_length, input_length
 
-        # obtain memoryview
+        # accept any buffer
         buf = ensure_contiguous_ndarray(buf)
-        buf_mv = memoryview(buf)
-        buf_pb = PyMemoryView_GET_BUFFER(buf_mv)
+        input_buffer = Buffer(buf, PyBUF_ANY_CONTIGUOUS)
+        input_length = input_buffer.nbytes
 
         # sanity checks
-        if not PyBuffer_IsContiguous(buf_pb, b'A'):
-            raise BufferError("`buf` must contain contiguous memory")
-        if buf_pb.len < HEADER_LENGTH:
+        if input_length < HEADER_LENGTH:
             raise ValueError('corrupt buffer, missing or truncated header')
 
         # obtain input data pointer
-        data = <const char*>buf_pb.buf
-        data_end = data + buf_pb.len
+        data = input_buffer.ptr
+        data_end = data + input_length
 
         # load number of items
         n_items = load_le32(<uint8_t*>data)
@@ -369,12 +352,11 @@ class VLenArray(Codec):
             object[:] values
             object[:] normed_values
             int[:] lengths
-            const char* encv
+            char* encv
             bytes b
             bytearray out
             char* data
-            memoryview value_mv
-            const Py_buffer* value_pb
+            Buffer value_buffer
             object v
 
         # normalise input
@@ -416,13 +398,11 @@ class VLenArray(Codec):
             l = lengths[i]
             store_le32(<uint8_t*>data, l)
             data += 4
-
-            value_mv = ensure_continguous_memoryview(normed_values[i])
-            value_pb = PyMemoryView_GET_BUFFER(value_mv)
-            encv = <const char*>value_pb.buf
-
+            value_buffer = Buffer(normed_values[i], PyBUF_ANY_CONTIGUOUS)
+            encv = value_buffer.ptr
             memcpy(data, encv, l)
             data += l
+            value_buffer.release()
 
         return out
 
@@ -430,29 +410,23 @@ class VLenArray(Codec):
     @cython.boundscheck(False)
     def decode(self, buf, out=None):
         cdef:
-            memoryview buf_mv
-            const Py_buffer* buf_pb
-            const char* data
-            const char* data_end
-            object v
-            memoryview v_mv
-            Py_buffer* v_pb
-            Py_ssize_t i, l, n_items, data_length
+            Buffer input_buffer
+            char* data
+            char* data_end
+            Py_ssize_t i, l, n_items, data_length, input_length
 
-        # obtain memoryview
+        # accept any buffer
         buf = ensure_contiguous_ndarray(buf)
-        buf_mv = memoryview(buf)
-        buf_pb = PyMemoryView_GET_BUFFER(buf_mv)
+        input_buffer = Buffer(buf, PyBUF_ANY_CONTIGUOUS)
+        input_length = input_buffer.nbytes
 
         # sanity checks
-        if not PyBuffer_IsContiguous(buf_pb, b'A'):
-            raise BufferError("`buf` must contain contiguous memory")
-        if buf_pb.len < HEADER_LENGTH:
+        if input_length < HEADER_LENGTH:
             raise ValueError('corrupt buffer, missing or truncated header')
 
         # obtain input data pointer
-        data = <const char*>buf_pb.buf
-        data_end = data + buf_pb.len
+        data = input_buffer.ptr
+        data_end = data + input_length
 
         # load number of items
         n_items = load_le32(<uint8_t*>data)
@@ -474,14 +448,7 @@ class VLenArray(Codec):
             data += 4
             if data + l > data_end:
                 raise ValueError('corrupt buffer, data seem truncated')
-
-            # Create & fill array value
-            v = np.empty((l,), dtype="uint8").view(self.dtype)
-            v_mv = memoryview(v)
-            v_pb = PyMemoryView_GET_BUFFER(v_mv)
-            memcpy(v_pb.buf, data, l)
-
-            out[i] = v
+            out[i] = np.frombuffer(data[:l], dtype=self.dtype)
             data += l
 
         return out

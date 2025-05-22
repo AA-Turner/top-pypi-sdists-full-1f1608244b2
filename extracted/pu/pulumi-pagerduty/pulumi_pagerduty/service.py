@@ -576,6 +576,7 @@ Follow the migration guide at https://registry.terraform.io/providers/PagerDuty/
         pulumi.set(self, "type", value)
 
 
+@pulumi.type_token("pagerduty:index/service:Service")
 class Service(pulumi.CustomResource):
     @overload
     def __init__(__self__,

@@ -8,6 +8,9 @@ from autocoder.common import shells
 from autocoder.common.printer import Printer
 from loguru import logger
 import typing   
+from autocoder.common.context_pruner import PruneContext
+from autocoder.rag.token_counter import count_tokens
+from autocoder.common import SourceCode
 from autocoder.common import AutoCoderArgs
 from autocoder.events.event_manager_singleton import get_event_manager
 from autocoder.run_context import get_run_context
@@ -18,9 +21,42 @@ class ExecuteCommandToolResolver(BaseToolResolver):
     def __init__(self, agent: Optional['AgenticEdit'], tool: ExecuteCommandTool, args: AutoCoderArgs):
         super().__init__(agent, tool, args)
         self.tool: ExecuteCommandTool = tool # For type hinting
+        self.context_pruner = PruneContext(
+            max_tokens=self.args.context_prune_safe_zone_tokens,
+            args=self.args,
+            llm=self.agent.context_prune_llm
+        )
 
-    def resolve(self) -> ToolResult:
-        printer = Printer()
+    def _prune_file_content(self, content: str, file_path: str) -> str:
+        """对文件内容进行剪枝处理"""
+        if not self.context_pruner:
+            return content
+
+        # 计算 token 数量
+        tokens = count_tokens(content)
+        if tokens <= self.args.context_prune_safe_zone_tokens:
+            return content
+
+        # 创建 SourceCode 对象
+        source_code = SourceCode(
+            module_name=file_path,
+            source_code=content,
+            tokens=tokens
+        )
+
+        # 使用 context_pruner 进行剪枝
+        pruned_sources = self.context_pruner.handle_overflow(
+            file_sources=[source_code],
+            conversations=self.agent.current_conversations if self.agent else [],
+            strategy=self.args.context_prune_strategy
+        )
+
+        if not pruned_sources:
+            return content
+
+        return pruned_sources[0].source_code    
+
+    def resolve(self) -> ToolResult:        
         command = self.tool.command
         requires_approval = self.tool.requires_approval
         source_dir = self.args.source_dir or "."
@@ -36,11 +72,11 @@ class ExecuteCommandToolResolver(BaseToolResolver):
         # Approval mechanism (simplified)
         if requires_approval:
              # In a real scenario, this would involve user interaction
-             printer.print_str_in_terminal(f"Command requires approval: {command}")
+             logger.info(f"Command requires approval: {command}")
              # For now, let's assume approval is granted in non-interactive mode or handled elsewhere
              pass
 
-        printer.print_str_in_terminal(f"Executing command: {command} in {os.path.abspath(source_dir)}")
+        logger.info(f"Executing command: {command} in {os.path.abspath(source_dir)}")
         try:            
             # 使用封装的run_cmd方法执行命令
             if get_run_context().is_web():
@@ -56,13 +92,17 @@ class ExecuteCommandToolResolver(BaseToolResolver):
             logger.info(f"Command executed: {command}")
             logger.info(f"Return Code: {exit_code}")
             if output:
-                logger.info(f"Output:\n{output}")
+                logger.info(f"Original Output (length: {len(output)} chars)") # Avoid logging potentially huge output directly
+
+            final_output = self._prune_file_content(output, "command_output")
 
             if exit_code == 0:
-                return ToolResult(success=True, message="Command executed successfully.", content=output)
+                return ToolResult(success=True, message="Command executed successfully.", content=final_output)
             else:
-                error_message = f"Command failed with return code {exit_code}.\nOutput:\n{output}"
-                return ToolResult(success=False, message=error_message, content={"output": output, "returncode": exit_code})
+                # For the human-readable error message, we might prefer the original full output.
+                # For the agent-consumable content, we provide the (potentially pruned) final_output.
+                error_message_for_human = f"Command failed with return code {exit_code}.\nOutput:\n{output}"
+                return ToolResult(success=False, message=error_message_for_human, content={"output": final_output, "returncode": exit_code})
 
         except FileNotFoundError:
             return ToolResult(success=False, message=f"Error: The command '{command.split()[0]}' was not found. Please ensure it is installed and in the system's PATH.")

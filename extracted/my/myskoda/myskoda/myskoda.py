@@ -140,24 +140,18 @@ class MySkoda:
     _vehicles: dict[Vin, Vehicle]
     _callbacks: dict[Vin, list[Callable[[], Coroutine[Any, Any, None]]]]
 
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
         session: ClientSession,
         ssl_context: SSLContext | None = None,
         mqtt_enabled: bool = True,
-        mqtt_broker_host: str | None = None,
-        mqtt_broker_port: int | None = None,
-        mqtt_enable_ssl: bool | None = None,
     ) -> None:
         self._callbacks = defaultdict(list)
         self._vehicles: dict[Vin, Vehicle] = {}
         self.session = session
         self.authorization = MySkodaAuthorization(session)
         self.rest_api = RestApi(self.session, self.authorization)
-        self.ssl_context = ssl_context
-        self.mqtt_broker_host = mqtt_broker_host
-        self.mqtt_broker_port = mqtt_broker_port
-        self.mqtt_enable_ssl = mqtt_enable_ssl
+        self.ssl_context = ssl_context  # TODO @dvx76: this isn't used anywhere?
         if mqtt_enabled:
             self.mqtt = self._create_mqtt_client()
 
@@ -235,6 +229,7 @@ class MySkoda:
             CapabilityId.TRIP_STATISTICS,
             CapabilityId.VEHICLE_HEALTH_INSPECTION,
             CapabilityId.DEPARTURE_TIMERS,
+            CapabilityId.READINESS,
         ]
 
         if excluded_capabilities:
@@ -657,6 +652,7 @@ class MySkoda:
             Endpoint.DRIVING_RANGE: self.rest_api.get_driving_range,
             Endpoint.TRIP_STATISTICS: self.rest_api.get_trip_statistics,
             Endpoint.DEPARTURE_INFO: self.rest_api.get_departure_timers,
+            Endpoint.VEHICLE_CONNECTION_STATUS: self.rest_api.get_vehicle_connection_status,
         }
 
         # Look up the method, or raise an error if unsupported
@@ -699,28 +695,61 @@ class MySkoda:
 
     async def _request_capability_data(self, vin: Vin, capa: CapabilityId) -> None:
         """Request specific capability data from MySkoda API."""
+        capa_request_map = {
+            CapabilityId.AIR_CONDITIONING: self._request_air_conditioning,
+            CapabilityId.AUXILIARY_HEATING: self._request_auxiliary_heating,
+            CapabilityId.CHARGING: self._request_charging,
+            CapabilityId.PARKING_POSITION: self._request_positions,
+            CapabilityId.STATE: self._request_state,
+            CapabilityId.TRIP_STATISTICS: self._request_trip_statistics,
+            CapabilityId.VEHICLE_HEALTH_INSPECTION: self._request_health,
+            CapabilityId.DEPARTURE_TIMERS: self._request_departure_info,
+            CapabilityId.READINESS: self._request_connection_status,
+        }
+
         try:
-            match capa:
-                case CapabilityId.AIR_CONDITIONING:
-                    self._vehicles[vin].air_conditioning = await self.get_air_conditioning(vin)
-                case CapabilityId.AUXILIARY_HEATING:
-                    self._vehicles[vin].auxiliary_heating = await self.get_auxiliary_heating(vin)
-                case CapabilityId.CHARGING:
-                    self._vehicles[vin].charging = await self.get_charging(vin)
-                case CapabilityId.PARKING_POSITION:
-                    self._vehicles[vin].positions = await self.get_positions(vin)
-                case CapabilityId.STATE:
-                    self._vehicles[vin].status = await self.get_status(vin)
-                    self._vehicles[vin].driving_range = await self.get_driving_range(vin)
-                    self._vehicles[vin].connection_status = await self.get_connection_status(vin)
-                case CapabilityId.TRIP_STATISTICS:
-                    self._vehicles[vin].trip_statistics = await self.get_trip_statistics(vin)
-                case CapabilityId.VEHICLE_HEALTH_INSPECTION:
-                    self._vehicles[vin].health = await self.get_health(vin)
-                case CapabilityId.DEPARTURE_TIMERS:
-                    self._vehicles[vin].departure_info = await self.get_departure_timers(vin)
+            request_fn = capa_request_map.get(capa)
+            if request_fn:
+                await request_fn(vin)
         except Exception as err:  # noqa: BLE001
             _LOGGER.warning("Requesting %s failed: %s, continue", capa, err)
+
+    async def _request_air_conditioning(self, vin: Vin) -> None:
+        """Update state with air conditioning data."""
+        self._vehicles[vin].air_conditioning = await self.get_air_conditioning(vin)
+
+    async def _request_auxiliary_heating(self, vin: Vin) -> None:
+        """Update state with auxiliary heating data."""
+        self._vehicles[vin].auxiliary_heating = await self.get_auxiliary_heating(vin)
+
+    async def _request_charging(self, vin: Vin) -> None:
+        """Update state with charging data."""
+        self._vehicles[vin].charging = await self.get_charging(vin)
+
+    async def _request_positions(self, vin: Vin) -> None:
+        """Update state with parking position data."""
+        self._vehicles[vin].positions = await self.get_positions(vin)
+
+    async def _request_state(self, vin: Vin) -> None:
+        """Update state with state and driving range data."""
+        self._vehicles[vin].status = await self.get_status(vin)
+        self._vehicles[vin].driving_range = await self.get_driving_range(vin)
+
+    async def _request_trip_statistics(self, vin: Vin) -> None:
+        """Update state with trip statistics data."""
+        self._vehicles[vin].trip_statistics = await self.get_trip_statistics(vin)
+
+    async def _request_health(self, vin: Vin) -> None:
+        """Update state with vehicle health inspection data."""
+        self._vehicles[vin].health = await self.get_health(vin)
+
+    async def _request_departure_info(self, vin: Vin) -> None:
+        """Update state with departure timer data."""
+        self._vehicles[vin].departure_info = await self.get_departure_timers(vin)
+
+    async def _request_connection_status(self, vin: Vin) -> None:
+        """Update state with connection status data."""
+        self._vehicles[vin].connection_status = await self.get_connection_status(vin)
 
     async def _wait_for_operation(self, operation: OperationName) -> None:
         if self.mqtt is None:
@@ -741,13 +770,7 @@ class MySkoda:
                 task.add_done_callback(background_tasks.discard)
 
     def _create_mqtt_client(self) -> MySkodaMqttClient:
-        kwargs = {
-            "authorization": self.authorization,
-            "hostname": self.mqtt_broker_host,
-            "port": self.mqtt_broker_port,
-            "enable_ssl": self.mqtt_enable_ssl,
-        }
-        mqtt = MySkodaMqttClient(**{k: v for k, v in kwargs.items() if v is not None})
+        mqtt = MySkodaMqttClient(authorization=self.authorization)
         mqtt.subscribe(self._on_mqtt_event)
         return mqtt
 

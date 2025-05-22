@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: devstack-cli
-Version: 11.0.144
+Version: 11.0.145
 Summary: Command-line access to Cloud Development Environments (CDEs) created by Cloudomation DevStack
 Author-email: Stefan Mückstein <stefan@cloudomation.com>
 Project-URL: Homepage, https://cloudomation.com/

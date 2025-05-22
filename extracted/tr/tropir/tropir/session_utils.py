@@ -15,6 +15,7 @@ import pickle  # For serializing session context in process pool
 import weakref  # For weak references to prevent memory leaks
 import atexit   # For cleanup on process exit
 import time
+import collections.abc
 
 # Define thread-local storage
 _thread_local = threading.local()
@@ -1033,161 +1034,119 @@ atexit.register(_cleanup_sessions)
 # Force cleanup on import to prevent issues with module reloading
 _cleanup_sessions()
 
-class SessionAwareThreadPoolExecutor(ThreadPoolExecutor):
-    """
-    A ThreadPoolExecutor that automatically captures and applies session context to workers.
-    
-    This ensures that any thread created by this executor will inherit the session context
-    from the creating thread or async task, even in complex async/thread scenarios.
-    """
-    
-    def __init__(self, *args, **kwargs):
-        # Capture the current session context when the executor is created
-        with _session_lock:
-            self.session_context = capture_async_session_context()
-            # Additional tracking for exception safety
-            self._futures = weakref.WeakSet()
-        super().__init__(*args, **kwargs)
-    
-    def submit(self, fn, *args, **kwargs):
-        # Check if we have a current session that's different from when executor was created
-        current_context = capture_async_session_context()
-        # Use most recent context if available
-        context_to_use = current_context or self.session_context
-        
-        # Wrap the function to apply session context before execution
-        @functools.wraps(fn)
-        def session_aware_fn(*fn_args, **fn_kwargs):
-            try:
-                # Apply the captured session context to this worker thread
-                apply_session_context(context_to_use)
-                # Then run the original function
-                return fn(*fn_args, **fn_kwargs)
-            except Exception as e:
-                # Log the exception
-                logging.error(f"Error in session_aware_fn: {str(e)}")
-                # Re-raise
-                raise
-        
-        # Submit the wrapped function
-        future = super().submit(session_aware_fn, *args, **kwargs)
-        # Track for cleanup
-        with _session_lock:
-            self._futures.add(future)
-        return future
-    
-    def shutdown(self, wait=True, cancel_futures=False):
-        """Shutdown the executor, with proper exception handling."""
-        try:
-            if cancel_futures:
-                # Cancel any remaining futures
-                with _session_lock:
-                    for future in self._futures:
-                        if not future.done():
-                            future.cancel()
-            super().shutdown(wait=wait)
-        except Exception as e:
-            logging.error(f"Error shutting down SessionAwareThreadPoolExecutor: {str(e)}")
+# --- SDK Auto-Patching for Session Header Injection ---
 
-class SessionAwareProcessPoolExecutor(ProcessPoolExecutor):
+def _create_patched_init(original_init, headers_kwarg_name="default_headers"):
     """
-    A ProcessPoolExecutor that attempts to pass session context to worker processes.
-    
-    Note: Due to the nature of separate processes, this can only pass the initial
-    session context to workers, but they cannot update the parent's context.
+    Creates a patched __init__ method for an SDK client that injects Tropir session headers.
     """
-    
-    def __init__(self, *args, **kwargs):
-        # Capture the current session context when the executor is created
-        with _session_lock:
-            self.session_context = capture_async_session_context()
-            # Additional tracking for exception safety
-            self._futures = weakref.WeakSet()
-            
-            # Also capture process ID to detect serialization
-            self._created_in_pid = os.getpid()
-        super().__init__(*args, **kwargs)
-    
-    def submit(self, fn, *args, **kwargs):
-        # Check if we have a current session that's different from when executor was created
-        current_context = capture_async_session_context()
-        # Use most recent context if available and if we're in the same process
-        if os.getpid() == self._created_in_pid:
-            context_to_use = current_context or self.session_context
-        else:
-            # We're being called from a different process, create new context
-            context_to_use = current_context
-        
-        # Create a serializable session context
-        if context_to_use:
-            serializable_context = {
-                'session_id': context_to_use.get('session_id'),
-                'session_name': context_to_use.get('session_name'),
-                'origin_pid': os.getpid()
-            }
-        else:
-            serializable_context = None
-        
-        # Wrap the function to apply session context before execution
-        @functools.wraps(fn)
-        def session_aware_fn(*fn_args, **fn_kwargs):
-            try:
-                # Apply the serialized session context to this worker process
-                if serializable_context:
-                    # Create a new session with this info
-                    session_id = serializable_context.get('session_id')
-                    session_name = serializable_context.get('session_name')
-                    if session_id and session_name:
-                        set_session_id(session_id, session_name)
-                
-                # Then run the original function
-                return fn(*fn_args, **fn_kwargs)
-            except Exception as e:
-                # Log the exception
-                logging.error(f"Error in process session_aware_fn: {str(e)}")
-                # Re-raise
-                raise
-        
-        # Submit the wrapped function
-        future = super().submit(session_aware_fn, *args, **kwargs)
-        # Track for cleanup
-        with _session_lock:
-            self._futures.add(future)
-        return future
-    
-    def shutdown(self, wait=True, cancel_futures=False):
-        """Shutdown the executor, with proper exception handling."""
-        try:
-            if cancel_futures:
-                # Cancel any remaining futures
-                with _session_lock:
-                    for future in self._futures:
-                        if not future.done():
-                            future.cancel()
-            super().shutdown(wait=wait)
-        except Exception as e:
-            logging.error(f"Error shutting down SessionAwareProcessPoolExecutor: {str(e)}")
+    @functools.wraps(original_init)
+    def patched_init(self, *args, **kwargs):
+        _init_thread_local()  # Ensure thread-local is set up
+        session_id = get_session_id()
+        session_name = get_session_name()
 
-# Example usage of SessionAwareThreadPoolExecutor:
-#
-# @begin_session("my_session")
-# async def my_async_function():
-#     # This async function has a session context
-#     
-#     # Use SessionAwareThreadPoolExecutor instead of regular ThreadPoolExecutor
-#     with SessionAwareThreadPoolExecutor() as executor:
-#         # These worker threads will inherit the async session context
-#         futures = [
-#             executor.submit(some_work_function, arg1, arg2),
-#             executor.submit(another_function, arg3)
-#         ]
-#         
-#         for future in futures:
-#             result = future.result()
-#             # Process result...
-#
-# def some_work_function(arg1, arg2):
-#     # This will automatically have the same session as the parent async function
-#     # Any calls to session() or session_id-related APIs will use the correct context
-#     session("my_session").add_step({"data": f"Processing {arg1} and {arg2}"})
-#     return process_data(arg1, arg2) 
+        # If there's no active Tropir session, call the original __init__ without changes.
+        if not session_id and not session_name:
+            return original_init(self, *args, **kwargs)
+
+        user_headers_arg = kwargs.get(headers_kwarg_name)
+        
+        final_headers = {}
+        if isinstance(user_headers_arg, collections.abc.Mapping):
+            final_headers.update(user_headers_arg)  # Start with a copy of user's headers
+        elif user_headers_arg is not None:
+            # Log a warning if the header argument is not a Mapping and not None.
+            logging.warning(
+                f"Tropir: SDK client {original_init.__qualname__} "
+                f"initialized with '{headers_kwarg_name}' of type {type(user_headers_arg)}. "
+                f"Expected a Mapping or None. Tropir session headers will not be injected for this client."
+            )
+            return original_init(self, *args, **kwargs) # Call original to avoid breaking client
+
+        # `final_headers` is now a mutable dict:
+        # - Contains a copy of user's headers if they provided a Mapping.
+        # - Is an empty dict if user provided None or did not provide the argument.
+
+        modified_by_tropir = False
+        if session_id:
+            if final_headers.get("X-Session-ID") != str(session_id):
+                if "X-Session-ID" in final_headers:
+                    logging.debug(f"Tropir: Overriding user-set 'X-Session-ID' in '{headers_kwarg_name}' for {original_init.__qualname__} "
+                                  f"with active session ID ({str(session_id)}).")
+                final_headers["X-Session-ID"] = str(session_id)
+                modified_by_tropir = True
+        
+        if session_name:
+            if final_headers.get("X-Session-Name") != str(session_name):
+                if "X-Session-Name" in final_headers:
+                     logging.debug(f"Tropir: Overriding user-set 'X-Session-Name' in '{headers_kwarg_name}' for {original_init.__qualname__} "
+                                   f"with active session name ('{str(session_name)}').")
+                final_headers["X-Session-Name"] = str(session_name)
+                modified_by_tropir = True
+        
+        # Update the headers argument in kwargs.
+        # If user_headers_arg was None, it now becomes a dict with session headers.
+        # If user_headers_arg was a Mapping, it's updated with session headers.
+        kwargs[headers_kwarg_name] = final_headers
+        
+        if modified_by_tropir:
+             logging.debug(f"Tropir: Applied session headers to '{headers_kwarg_name}' for {original_init.__qualname__}. Result: {final_headers}")
+        
+        return original_init(self, *args, **kwargs)
+    
+    # Mark the patched init to avoid re-patching
+    patched_init._tropir_patched = True
+    return patched_init
+
+def _try_patch_sdk(module_name, client_class_name_parts, headers_kwarg_name="default_headers"):
+    """
+    Attempts to import and patch the __init__ method of an SDK client class.
+    client_class_name_parts can be a list for nested classes, e.g., ["OpenAI", "Chat"]
+    """
+    try:
+        module = __import__(module_name, fromlist=[client_class_name_parts[0]])
+        
+        client_class = module
+        for part in client_class_name_parts:
+            client_class = getattr(client_class, part, None)
+            if client_class is None:
+                break
+        
+        if client_class and hasattr(client_class, '__init__'):
+            # Check if already patched
+            if getattr(client_class.__init__, '_tropir_patched', False):
+                logging.debug(f"Tropir: {module_name}.{'.'.join(client_class_name_parts)} __init__ already patched.")
+                return
+
+            original_init = client_class.__init__
+            patched_init_method = _create_patched_init(original_init, headers_kwarg_name)
+            client_class.__init__ = patched_init_method
+            logging.info(f"Tropir: Successfully patched {module_name}.{'.'.join(client_class_name_parts)} to auto-inject session headers.")
+        else:
+            logging.debug(f"Tropir: Could not find {module_name}.{'.'.join(client_class_name_parts)} for patching.")
+
+    except ImportError:
+        logging.debug(f"Tropir: SDK module '{module_name}' not found, skipping patch for {'.'.join(client_class_name_parts)}.")
+    except Exception as e:
+        logging.warning(f"Tropir: Failed to patch {module_name}.{'.'.join(client_class_name_parts)}: {e}", exc_info=False) # exc_info=True for more detail if needed
+
+def _auto_patch_known_sdks():
+    """
+    Automatically attempts to patch known SDKs for session header injection.
+    """
+    logging.debug("Tropir: Attempting to auto-patch known SDKs for session tracking.")
+    # OpenAI
+    _try_patch_sdk("openai", ["OpenAI"], headers_kwarg_name="default_headers")
+    _try_patch_sdk("openai", ["AsyncOpenAI"], headers_kwarg_name="default_headers")
+    
+    # Anthropic
+    _try_patch_sdk("anthropic", ["Anthropic"], headers_kwarg_name="default_headers")
+    _try_patch_sdk("anthropic", ["AsyncAnthropic"], headers_kwarg_name="default_headers")
+    
+    # Add other SDKs here if needed, e.g.:
+    # _try_patch_sdk("google.cloud", ["aiplatform", "gapic", "PredictionServiceClient"], headers_kwarg_name="client_options") # Example, actual arg may vary
+    logging.debug("Tropir: SDK auto-patching attempt finished.")
+
+# Automatically apply patches when this module is imported.
+_auto_patch_known_sdks()

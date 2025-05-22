@@ -7,6 +7,7 @@ Copyright 2022-2025, Levente Hunyadi
 """
 
 import enum
+import functools
 import io
 import json
 import logging
@@ -21,6 +22,7 @@ from urllib.parse import urlencode, urlparse, urlunparse
 import requests
 
 from .converter import ParseError, sanitize_confluence
+from .metadata import ConfluenceSiteMetadata
 from .properties import (
     ArgumentError,
     ConfluenceConnectionProperties,
@@ -76,7 +78,7 @@ def build_url(base_url: str, query: Optional[dict[str, str]] = None) -> str:
 LOGGER = logging.getLogger(__name__)
 
 
-@dataclass
+@dataclass(frozen=True)
 class ConfluenceAttachment:
     id: str
     media_type: str
@@ -84,14 +86,18 @@ class ConfluenceAttachment:
     comment: str
 
 
-@dataclass
-class ConfluencePage:
+@dataclass(frozen=True)
+class ConfluencePageMetadata:
     id: str
     space_id: str
     parent_id: str
     parent_type: Optional[ConfluencePageParentContentType]
     title: str
     version: int
+
+
+@dataclass(frozen=True)
+class ConfluencePage(ConfluencePageMetadata):
     content: str
 
 
@@ -136,10 +142,12 @@ class ConfluenceAPI:
 
 
 class ConfluenceSession:
+    """
+    Information about an open session to a Confluence server.
+    """
+
     session: requests.Session
-    domain: str
-    base_path: str
-    space_key: Optional[str]
+    site: ConfluenceSiteMetadata
 
     _space_id_to_key: dict[str, str]
     _space_key_to_id: dict[str, str]
@@ -152,9 +160,7 @@ class ConfluenceSession:
         space_key: Optional[str] = None,
     ) -> None:
         self.session = session
-        self.domain = domain
-        self.base_path = base_path
-        self.space_key = space_key
+        self.site = ConfluenceSiteMetadata(domain, base_path, space_key)
 
         self._space_id_to_key = {}
         self._space_key_to_id = {}
@@ -178,7 +184,9 @@ class ConfluenceSession:
         :returns: A full URL.
         """
 
-        base_url = f"https://{self.domain}{self.base_path}{version.value}{path}"
+        base_url = (
+            f"https://{self.site.domain}{self.site.base_path}{version.value}{path}"
+        )
         return build_url(base_url, query)
 
     def _invoke(
@@ -250,6 +258,29 @@ class ConfluenceSession:
             self._space_key_to_id[key] = id
 
         return id
+
+    def get_space_id(
+        self, *, space_id: Optional[str] = None, space_key: Optional[str] = None
+    ) -> Optional[str]:
+        """
+        Coalesce a space ID or space key into a space ID, accounting for site default.
+
+        :param space_id: A Confluence space ID.
+        :param space_key: A Confluence space key.
+        """
+
+        if space_id is not None and space_key is not None:
+            raise ConfluenceError("either space ID or space key is required; not both")
+
+        if space_id is not None:
+            return space_id
+
+        space_key = space_key or self.site.space_key
+        if space_key is not None:
+            return self.space_key_to_id(space_key)
+
+        # space ID and key are unset, and no default space is configured
+        return None
 
     def get_attachment_by_name(
         self, page_id: str, filename: str
@@ -393,6 +424,7 @@ class ConfluenceSession:
         self,
         title: str,
         *,
+        space_id: Optional[str] = None,
         space_key: Optional[str] = None,
     ) -> str:
         """
@@ -408,9 +440,9 @@ class ConfluenceSession:
         query = {
             "title": title,
         }
-        coalesced_space_key = space_key or self.space_key
-        if coalesced_space_key is not None:
-            query["space-id"] = self.space_key_to_id(coalesced_space_key)
+        space_id = self.get_space_id(space_id=space_id, space_key=space_key)
+        if space_id is not None:
+            query["space-id"] = space_id
 
         payload = self._invoke(ConfluenceVersion.VERSION_2, path, query)
         payload = typing.cast(dict[str, JsonType], payload)
@@ -425,10 +457,10 @@ class ConfluenceSession:
 
     def get_page(self, page_id: str) -> ConfluencePage:
         """
-        Retrieve Confluence wiki page details.
+        Retrieve Confluence wiki page details and content.
 
         :param page_id: The Confluence page ID.
-        :returns: Confluence page info.
+        :returns: Confluence page info and content.
         """
 
         path = f"/pages/{page_id}"
@@ -451,6 +483,33 @@ class ConfluenceSession:
             title=typing.cast(str, data["title"]),
             version=typing.cast(int, version["number"]),
             content=typing.cast(str, storage["value"]),
+        )
+
+    @functools.cache
+    def get_page_metadata(self, page_id: str) -> ConfluencePageMetadata:
+        """
+        Retrieve Confluence wiki page details.
+
+        :param page_id: The Confluence page ID.
+        :returns: Confluence page info.
+        """
+
+        path = f"/pages/{page_id}"
+        payload = self._invoke(ConfluenceVersion.VERSION_2, path)
+        data = typing.cast(dict[str, JsonType], payload)
+        version = typing.cast(dict[str, JsonType], data["version"])
+
+        return ConfluencePageMetadata(
+            id=page_id,
+            space_id=typing.cast(str, data["spaceId"]),
+            parent_id=typing.cast(str, data["parentId"]),
+            parent_type=(
+                ConfluencePageParentContentType(typing.cast(str, data["parentType"]))
+                if data["parentType"] is not None
+                else None
+            ),
+            title=typing.cast(str, data["title"]),
+            version=typing.cast(int, version["number"]),
         )
 
     def get_page_version(self, page_id: str) -> int:
@@ -507,26 +566,21 @@ class ConfluenceSession:
 
     def create_page(
         self,
-        parent_page_id: str,
+        parent_id: str,
         title: str,
         new_content: str,
-        *,
-        space_key: Optional[str] = None,
     ) -> ConfluencePage:
         """
         Create a new page via Confluence API.
         """
 
-        coalesced_space_key = space_key or self.space_key
-        if coalesced_space_key is None:
-            raise ArgumentError("Confluence space key required for creating a new page")
-
+        parent_page = self.get_page_metadata(parent_id)
         path = "/pages/"
         query = {
-            "spaceId": self.space_key_to_id(coalesced_space_key),
+            "spaceId": parent_page.space_id,
             "status": "current",
             "title": title,
-            "parentId": parent_page_id,
+            "parentId": parent_id,
             "body": {"storage": {"value": new_content, "representation": "storage"}},
         }
 
@@ -584,13 +638,24 @@ class ConfluenceSession:
             response.raise_for_status()
 
     def page_exists(
-        self, title: str, *, space_key: Optional[str] = None
+        self,
+        title: str,
+        *,
+        space_id: Optional[str] = None,
+        space_key: Optional[str] = None,
     ) -> Optional[str]:
+        """
+        Check if a Confluence page exists with the given title.
+
+        :param title: Page title. Pages in the same Confluence space must have a unique title.
+        :param space_key: Identifies the Confluence space.
+        """
+
+        space_id = self.get_space_id(space_id=space_id, space_key=space_key)
         path = "/pages"
-        coalesced_space_key = space_key or self.space_key
         query = {"title": title}
-        if coalesced_space_key is not None:
-            query["space-id"] = self.space_key_to_id(coalesced_space_key)
+        if space_id is not None:
+            query["space-id"] = space_id
 
         LOGGER.info("Checking if page exists with title: %s", title)
 
@@ -609,14 +674,20 @@ class ConfluenceSession:
         else:
             return None
 
-    def get_or_create_page(
-        self, title: str, parent_id: str, *, space_key: Optional[str] = None
-    ) -> ConfluencePage:
-        page_id = self.page_exists(title)
+    def get_or_create_page(self, title: str, parent_id: str) -> ConfluencePage:
+        """
+        Find a page with the given title, or create a new page if no such page exists.
+
+        :param title: Page title. Pages in the same Confluence space must have a unique title.
+        :param parent_id: Identifies the parent page for a new child page.
+        """
+
+        parent_page = self.get_page_metadata(parent_id)
+        page_id = self.page_exists(title, space_id=parent_page.space_id)
 
         if page_id is not None:
             LOGGER.debug("Retrieving existing page: %s", page_id)
             return self.get_page(page_id)
         else:
             LOGGER.debug("Creating new page with title: %s", title)
-            return self.create_page(parent_id, title, "", space_key=space_key)
+            return self.create_page(parent_id, title, "")

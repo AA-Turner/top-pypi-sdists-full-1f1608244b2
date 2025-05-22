@@ -59,6 +59,8 @@ class LineageTableOverride(YamlModelWithValidatorContext):
     column_overrides: Optional[List[LineageColumnOverride]] = None
     column_name_exclusions: Optional[List[str]] = None
     etl_task: Optional[SimpleCustomNode] = None
+    upstream_sub_table_name: Optional[str] = None
+    downstream_sub_table_name: Optional[str] = None
 
 
 class LineageConfiguration(YamlModelWithValidatorContext):
@@ -173,11 +175,20 @@ class SimpleLineageConfigurationFile(
                             table_key = (row['upstream_table_name'], row['downstream_table_name'])
 
                             if table_key not in table_overrides:
+                                # Get the sub table names if available, otherwise use None
+                                upstream_sub_table_name = row.get('upstream_sub_table_name', '')
+                                upstream_sub_table_name = None if not upstream_sub_table_name or upstream_sub_table_name == '' else upstream_sub_table_name
+
+                                downstream_sub_table_name = row.get('downstream_sub_table_name', '')
+                                downstream_sub_table_name = None if not downstream_sub_table_name or downstream_sub_table_name == '' else downstream_sub_table_name
+
                                 table_overrides[table_key] = {
                                     'override': LineageTableOverride(
                                         upstream_table_name=row['upstream_table_name'],
                                         downstream_table_name=row['downstream_table_name'],
-                                        column_overrides=[]
+                                        column_overrides=[],
+                                        upstream_sub_table_name=upstream_sub_table_name,
+                                        downstream_sub_table_name=downstream_sub_table_name
                                     )
                                 }
 

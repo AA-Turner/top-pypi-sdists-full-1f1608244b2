@@ -231,6 +231,27 @@ def open_containing_blend_file(
     :type undo: bool | None
     """
 
+def screenshot_preview(
+    execution_context: int | str | None = None,
+    undo: bool | None = None,
+    /,
+    *,
+    p1: collections.abc.Iterable[int] | None = (0, 0),
+    p2: collections.abc.Iterable[int] | None = (0, 0),
+    force_square: bool | None = True,
+):
+    """Capture a screenshot to use as a preview for the selected asset
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
+    :param p1: Point 1, First point of the screenshot in screenspace
+    :type p1: collections.abc.Iterable[int] | None
+    :param p2: Point 2, Second point of the screenshot in screenspace
+    :type p2: collections.abc.Iterable[int] | None
+    :param force_square: Force Square, If enabled, the screenshot will have the same height as width
+    :type force_square: bool | None
+    """
+
 def tag_add(execution_context: int | str | None = None, undo: bool | None = None):
     """Add a new keyword tag to the active asset
 

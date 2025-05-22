@@ -6,6 +6,7 @@ import typing
 
 from .assets_armis_centrix import AssetsArmisCentrix
 from .assets_armis_centrix_mock import AssetsArmisCentrixMock
+from .assets_crowd_strike import AssetsCrowdStrike
 from .assets_nozomi_vantage import AssetsNozomiVantage
 from .assets_nozomi_vantage_mock import AssetsNozomiVantageMock
 from .assets_qualys_cloud import AssetsQualysCloud
@@ -14,6 +15,7 @@ from .assets_service_now import AssetsServiceNow
 from .assets_service_now_mock import AssetsServiceNowMock
 from .assets_tanium_cloud import AssetsTaniumCloud
 from .cloud_security_crowd_strike import CloudSecurityCrowdStrike
+from .cloud_security_defender import CloudSecurityDefender
 from .edr_crowd_strike import EdrCrowdStrike
 from .edr_defender import EdrDefender
 from .edr_malwarebytes import EdrMalwarebytes
@@ -87,6 +89,15 @@ class ProviderConfig_AssetsArmisCentrixMock(AssetsArmisCentrixMock):
         allow_population_by_field_name = True
 
 
+class ProviderConfig_AssetsCrowdstrike(AssetsCrowdStrike):
+    type: typing.Literal["assets_crowdstrike"]
+
+    class Config:
+        frozen = True
+        smart_union = True
+        allow_population_by_field_name = True
+
+
 class ProviderConfig_AssetsNozomiVantage(AssetsNozomiVantage):
     type: typing.Literal["assets_nozomi_vantage"]
 
@@ -152,6 +163,15 @@ class ProviderConfig_AssetsTaniumCloud(AssetsTaniumCloud):
 
 class ProviderConfig_CloudsecurityCrowdstrike(CloudSecurityCrowdStrike):
     type: typing.Literal["cloudsecurity_crowdstrike"]
+
+    class Config:
+        frozen = True
+        smart_union = True
+        allow_population_by_field_name = True
+
+
+class ProviderConfig_CloudsecurityDefender(CloudSecurityDefender):
+    type: typing.Literal["cloudsecurity_defender"]
 
     class Config:
         frozen = True
@@ -639,6 +659,7 @@ class ProviderConfig_VulnerabilitiesTenableCloud(VulnerabilitiesTenableCloud):
 ProviderConfig = typing.Union[
     ProviderConfig_AssetsArmisCentrix,
     ProviderConfig_AssetsArmisCentrixMock,
+    ProviderConfig_AssetsCrowdstrike,
     ProviderConfig_AssetsNozomiVantage,
     ProviderConfig_AssetsNozomiVantageMock,
     ProviderConfig_AssetsQualysCloud,
@@ -647,6 +668,7 @@ ProviderConfig = typing.Union[
     ProviderConfig_AssetsServicenowMock,
     ProviderConfig_AssetsTaniumCloud,
     ProviderConfig_CloudsecurityCrowdstrike,
+    ProviderConfig_CloudsecurityDefender,
     ProviderConfig_EdrCrowdstrike,
     ProviderConfig_EdrDefender,
     ProviderConfig_EdrMalwarebytes,

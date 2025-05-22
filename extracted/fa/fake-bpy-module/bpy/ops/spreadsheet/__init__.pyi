@@ -52,6 +52,15 @@ def remove_row_filter_rule(
     :type index: int | None
     """
 
+def reorder_columns(
+    execution_context: int | str | None = None, undo: bool | None = None
+):
+    """Change the order of columns
+
+    :type execution_context: int | str | None
+    :type undo: bool | None
+    """
+
 def resize_column(execution_context: int | str | None = None, undo: bool | None = None):
     """Resize a spreadsheet column
 

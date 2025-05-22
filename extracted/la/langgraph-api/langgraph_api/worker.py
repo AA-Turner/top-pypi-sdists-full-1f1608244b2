@@ -83,8 +83,8 @@ async def worker(
         Runs.enter(run_id, main_loop) as done,
     ):
         temporary = run["kwargs"].get("temporary", False)
+        resumable = run["kwargs"].get("resumable", False)
         run_created_at = run["created_at"].isoformat()
-        run["kwargs"]
         lg_logging.set_logging_context(
             {
                 "run_id": str(run_id),
@@ -145,7 +145,10 @@ async def worker(
                     on_checkpoint=on_checkpoint,
                     on_task_result=on_task_result,
                 )
-            await asyncio.wait_for(consume(stream, run_id), BG_JOB_TIMEOUT_SECS)
+            await asyncio.wait_for(
+                consume(stream, run_id, resumable),
+                BG_JOB_TIMEOUT_SECS,
+            )
             run_ended_at = datetime.now(UTC).isoformat()
             await logger.ainfo(
                 "Background run succeeded",

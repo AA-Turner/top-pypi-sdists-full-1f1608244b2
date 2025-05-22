@@ -258,6 +258,7 @@ class _ServiceEventRuleState:
         pulumi.set(self, "variables", value)
 
 
+@pulumi.type_token("pagerduty:index/serviceEventRule:ServiceEventRule")
 class ServiceEventRule(pulumi.CustomResource):
     @overload
     def __init__(__self__,

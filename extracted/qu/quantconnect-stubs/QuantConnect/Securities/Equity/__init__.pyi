@@ -10,19 +10,15 @@ import QuantConnect.Securities
 import QuantConnect.Securities.Equity
 
 
-class EquityDataFilter(QuantConnect.Securities.SecurityDataFilter):
-    """Equity security type data filter"""
+class EquityHolding(QuantConnect.Securities.SecurityHolding):
+    """Holdings class for equities securities: no specific properties here but it is a placeholder for future equities specific behaviours."""
 
-    def __init__(self) -> None:
-        """Initialize Data Filter Class:"""
-        ...
-
-    def filter(self, vehicle: QuantConnect.Securities.Security, data: QuantConnect.Data.BaseData) -> bool:
+    def __init__(self, security: QuantConnect.Securities.Security, currency_converter: QuantConnect.Securities.ICurrencyConverter) -> None:
         """
-        Equity filter the data: true - accept, false - fail.
+        Constructor for equities holdings.
         
-        :param vehicle: Security asset
-        :param data: Data class
+        :param security: The security being held
+        :param currency_converter: A currency converter instance
         """
         ...
 
@@ -54,23 +50,19 @@ class EquityExchange(QuantConnect.Securities.SecurityExchange):
         ...
 
 
-class EquityCache(QuantConnect.Securities.SecurityCache):
-    """Equity cache override."""
+class EquityDataFilter(QuantConnect.Securities.SecurityDataFilter):
+    """Equity security type data filter"""
 
     def __init__(self) -> None:
-        """Start a new Cache for the set Index Code"""
+        """Initialize Data Filter Class:"""
         ...
 
-
-class EquityHolding(QuantConnect.Securities.SecurityHolding):
-    """Holdings class for equities securities: no specific properties here but it is a placeholder for future equities specific behaviours."""
-
-    def __init__(self, security: QuantConnect.Securities.Security, currency_converter: QuantConnect.Securities.ICurrencyConverter) -> None:
+    def filter(self, vehicle: QuantConnect.Securities.Security, data: QuantConnect.Data.BaseData) -> bool:
         """
-        Constructor for equities holdings.
+        Equity filter the data: true - accept, false - fail.
         
-        :param security: The security being held
-        :param currency_converter: A currency converter instance
+        :param vehicle: Security asset
+        :param data: Data class
         """
         ...
 
@@ -119,6 +111,14 @@ class Equity(QuantConnect.Securities.Security):
 
     def set_data_normalization_mode(self, mode: QuantConnect.DataNormalizationMode) -> None:
         """Sets the data normalization mode to be used by this security"""
+        ...
+
+
+class EquityCache(QuantConnect.Securities.SecurityCache):
+    """Equity cache override."""
+
+    def __init__(self) -> None:
+        """Start a new Cache for the set Index Code"""
         ...
 
 

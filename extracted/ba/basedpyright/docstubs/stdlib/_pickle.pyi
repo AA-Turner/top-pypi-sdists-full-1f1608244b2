@@ -1,6 +1,5 @@
 """Optimized C implementation for the Python pickle module."""
 
-import sys
 from _typeshed import ReadableBuffer, SupportsWrite
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from pickle import PickleBuffer as PickleBuffer
@@ -213,10 +212,9 @@ class Pickler:
         re-using picklers.
         """
         ...
-    if sys.version_info >= (3, 13):
-        def persistent_id(self, obj: Any, /) -> Any: ...
-    else:
-        persistent_id: Callable[[Any], Any]
+
+    # this method has no default implementation for Python < 3.13
+    def persistent_id(self, obj: Any, /) -> Any: ...
 
 @type_check_only
 class UnpicklerMemoProxy:
@@ -280,7 +278,6 @@ class Unpickler:
         needed.  Both arguments passed are str objects.
         """
         ...
-    if sys.version_info >= (3, 13):
-        def persistent_load(self, pid: Any, /) -> Any: ...
-    else:
-        persistent_load: Callable[[Any], Any]
+
+    # this method has no default implementation for Python < 3.13
+    def persistent_load(self, pid: Any, /) -> Any: ...

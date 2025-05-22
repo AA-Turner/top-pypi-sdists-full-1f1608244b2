@@ -126,6 +126,7 @@ class _TagAssignmentState:
         pulumi.set(self, "tag_id", value)
 
 
+@pulumi.type_token("pagerduty:index/tagAssignment:TagAssignment")
 class TagAssignment(pulumi.CustomResource):
     @overload
     def __init__(__self__,

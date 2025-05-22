@@ -35,6 +35,29 @@ dev = [
 [tool.hatch.version]
 path = "langgraph_runtime_inmem/__init__.py"
 
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "tests/",
+    "docs/",
+    ".github/",
+    "dist/",
+    "dist*/**",
+    "examples.py",
+    "examples/",
+    ".editorconfig",
+    "db/",
+    "evals/",
+    ".langgraph_api",
+    "*.ipynb",
+    ".python-version",
+    ".editorconfig",
+    ".venv*/**",
+    "pytest.ini",
+    "node_modules/",
+    ".dockerignore",
+]
+
+
 
 [tool.ruff]
 lint.select = ["E", "F", "UP", "B", "I"]

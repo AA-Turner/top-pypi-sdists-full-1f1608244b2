@@ -96,6 +96,7 @@ class _TagState:
         pulumi.set(self, "summary", value)
 
 
+@pulumi.type_token("pagerduty:index/tag:Tag")
 class Tag(pulumi.CustomResource):
     @overload
     def __init__(__self__,

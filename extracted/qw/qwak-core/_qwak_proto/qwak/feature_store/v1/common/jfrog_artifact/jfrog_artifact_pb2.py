@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n@qwak/feature_store/v1/common/jfrog_artifact/jfrog_artifact.proto\x12+qwak.feature.store.v1.common.jfrog_artifact\"/\n\rJfrogArtifact\x12\x0c\n\x04path\x18\x01 \x01(\t\x12\x10\n\x08\x63hecksum\x18\x02 \x01(\tBp\n2com.qwak.ai.feature.store.v1.common.jfrog_artifactP\x01Z8qwak/featurestore/v1/common/jfrog_artifact;jfrogartifactb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n@qwak/feature_store/v1/common/jfrog_artifact/jfrog_artifact.proto\x12+qwak.feature.store.v1.common.jfrog_artifact\"\x1d\n\rJfrogArtifact\x12\x0c\n\x04path\x18\x01 \x01(\tBp\n2com.qwak.ai.feature.store.v1.common.jfrog_artifactP\x01Z8qwak/featurestore/v1/common/jfrog_artifact;jfrogartifactb\x06proto3')
 
 
 
@@ -31,5 +31,5 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'\n2com.qwak.ai.feature.store.v1.common.jfrog_artifactP\001Z8qwak/featurestore/v1/common/jfrog_artifact;jfrogartifact'
   _JFROGARTIFACT._serialized_start=113
-  _JFROGARTIFACT._serialized_end=160
+  _JFROGARTIFACT._serialized_end=142
 # @@protoc_insertion_point(module_scope)

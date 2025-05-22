@@ -774,7 +774,8 @@ class LineageController:
                     upstream_schema = self.get_schemas_from_selector(f'{r.upstream_schema_name}.*')[0]
                     up_schema = upstream_schema.name
                     up_database = upstream_schema.warehouse_name
-                    self._update_search_cache_for_node(upstream_schema.data_node_id, scan_upstream=True)
+                    # Database schemas are too large to request lineage for
+                    # self._update_search_cache_for_node(upstream_schema.data_node_id, scan_upstream=True)
 
                 # If downstream is custom, find or create the custom downstream schema node
                 if r.has_custom_downstream:
@@ -787,12 +788,15 @@ class LineageController:
                     downstream_schema = self.get_schemas_from_selector(f'{r.downstream_schema_name}.*')[0]
                     dn_schema = downstream_schema.name
                     dn_database = downstream_schema.warehouse_name
-                    self._update_search_cache_for_node(downstream_schema.data_node_id, scan_upstream=True)
+                    # Database schemas are too large to request lineage for
+                    # self._update_search_cache_for_node(downstream_schema.data_node_id, scan_upstream=True)
 
                 # For every table override:
                 table_node_ids = []
                 for t_override in r.table_overrides:
                     # If upstream is custom, find or create the custom upstream table node
+                    upstream_sub_table = None
+                    downstream_sub_table = None
                     if r.has_custom_upstream:
                         upstream_table_custom_node = SimpleCustomNode(
                             name=t_override.upstream_table_name,
@@ -800,6 +804,16 @@ class LineageController:
                             container_node_id=upstream_schema.data_node_id,
                         )
                         upstream_table = self._get_or_set_custom_node(upstream_table_custom_node)
+
+                        # Handle sub tables if provided
+                        if t_override.upstream_sub_table_name is not None:
+                            u_sub_table_node = SimpleCustomNode(
+                                name=t_override.upstream_sub_table_name,
+                                container_name=t_override.upstream_table_name,
+                                container_node_id=upstream_table.data_node_id
+                            )
+                            upstream_sub_table = self._get_or_set_custom_node(u_sub_table_node)
+                            table_node_ids.append(upstream_sub_table.data_node_id)
                     else:
                         upstream_table = next(
                             (
@@ -824,6 +838,16 @@ class LineageController:
                             container_node_id=downstream_schema.data_node_id
                         )
                         downstream_table = self._get_or_set_custom_node(downstream_table_custom_node)
+
+                        # Handle sub tables if provided
+                        if t_override.downstream_sub_table_name is not None:
+                            d_sub_table_node = SimpleCustomNode(
+                                name=t_override.downstream_sub_table_name,
+                                container_name=t_override.downstream_table_name,
+                                container_node_id=downstream_table.data_node_id
+                            )
+                            downstream_sub_table = self._get_or_set_custom_node(d_sub_table_node)
+                            table_node_ids.append(downstream_sub_table.data_node_id)
                     else:
                         downstream_table = next(
                             (
@@ -897,10 +921,11 @@ class LineageController:
                     for col_override in t_override.column_overrides:
                         # If upstream is custom, find or create the custom upstream column node (convert to custom_entry)
                         if r.has_custom_upstream:
+                            u_table = upstream_table if upstream_sub_table is None else upstream_sub_table
                             upstream_column_custom_node = SimpleCustomNode(
                                 name=col_override.upstream_column_name,
-                                container_name=upstream_table.name,
-                                container_node_id=upstream_table.data_node_id,
+                                container_name=u_table.name,
+                                container_node_id=u_table.data_node_id,
                                 node_type=DataNodeType.DATA_NODE_TYPE_CUSTOM_ENTRY
                             )
                             upstream_column = self._get_or_set_custom_node(upstream_column_custom_node)
@@ -909,10 +934,11 @@ class LineageController:
 
                         # If downstream is custom, find or create the custom downstream column node (convert to custom_entry)
                         if r.has_custom_downstream:
+                            d_table = downstream_table if downstream_sub_table is None else downstream_sub_table
                             downstream_column_custom_node = SimpleCustomNode(
                                 name=col_override.downstream_column_name,
-                                container_name=downstream_table.name,
-                                container_node_id=downstream_table.data_node_id,
+                                container_name=d_table.name,
+                                container_node_id=d_table.data_node_id,
                                 node_type=DataNodeType.DATA_NODE_TYPE_CUSTOM_ENTRY
                             )
                             downstream_column = self._get_or_set_custom_node(downstream_column_custom_node)

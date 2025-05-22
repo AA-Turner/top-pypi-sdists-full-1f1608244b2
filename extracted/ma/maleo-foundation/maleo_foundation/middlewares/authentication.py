@@ -74,7 +74,7 @@ class Backend(AuthenticationBackend):
                 .decode(parameters=decode_token_parameters)
             )
             if decode_token_result.success:
-                type = BaseEnums.TokenType.ACCESS
+                type = BaseEnums.TokenType.REFRESH
                 payload = decode_token_result.data
                 token = Token(
                     type=type,

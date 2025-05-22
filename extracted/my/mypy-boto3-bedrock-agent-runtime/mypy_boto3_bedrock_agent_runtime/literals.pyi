@@ -36,6 +36,10 @@ __all__ = (
     "FileSourceTypeType",
     "FileUseCaseType",
     "FlowCompletionReasonType",
+    "FlowErrorCodeType",
+    "FlowExecutionErrorTypeType",
+    "FlowExecutionEventTypeType",
+    "FlowExecutionStatusType",
     "GeneratedQueryTypeType",
     "GetAgentMemoryPaginatorName",
     "GuadrailActionType",
@@ -53,10 +57,13 @@ __all__ = (
     "ImageInputFormatType",
     "InputQueryTypeType",
     "InvocationTypeType",
+    "ListFlowExecutionEventsPaginatorName",
+    "ListFlowExecutionsPaginatorName",
     "ListInvocationStepsPaginatorName",
     "ListInvocationsPaginatorName",
     "ListSessionsPaginatorName",
     "MemoryTypeType",
+    "NodeErrorCodeType",
     "NodeTypeType",
     "OrchestrationTypeType",
     "PaginatorName",
@@ -110,6 +117,10 @@ ExternalSourceTypeType = Literal["BYTE_CONTENT", "S3"]
 FileSourceTypeType = Literal["BYTE_CONTENT", "S3"]
 FileUseCaseType = Literal["CHAT", "CODE_INTERPRETER"]
 FlowCompletionReasonType = Literal["INPUT_REQUIRED", "SUCCESS"]
+FlowErrorCodeType = Literal["INTERNAL_SERVER", "NODE_EXECUTION_FAILED", "VALIDATION"]
+FlowExecutionErrorTypeType = Literal["ExecutionTimedOut"]
+FlowExecutionEventTypeType = Literal["Flow", "Node"]
+FlowExecutionStatusType = Literal["Aborted", "Failed", "Running", "Succeeded", "TimedOut"]
 GeneratedQueryTypeType = Literal["REDSHIFT_SQL"]
 GetAgentMemoryPaginatorName = Literal["get_agent_memory"]
 GuadrailActionType = Literal["INTERVENED", "NONE"]
@@ -167,10 +178,13 @@ InvocationTypeType = Literal[
     "FINISH",
     "KNOWLEDGE_BASE",
 ]
+ListFlowExecutionEventsPaginatorName = Literal["list_flow_execution_events"]
+ListFlowExecutionsPaginatorName = Literal["list_flow_executions"]
 ListInvocationStepsPaginatorName = Literal["list_invocation_steps"]
 ListInvocationsPaginatorName = Literal["list_invocations"]
 ListSessionsPaginatorName = Literal["list_sessions"]
 MemoryTypeType = Literal["SESSION_SUMMARY"]
+NodeErrorCodeType = Literal["BAD_GATEWAY", "DEPENDENCY_FAILED", "INTERNAL_SERVER", "VALIDATION"]
 NodeTypeType = Literal[
     "ConditionNode",
     "FlowInputNode",
@@ -518,7 +532,6 @@ ServiceName = Literal[
     "pipes",
     "polly",
     "pricing",
-    "privatenetworks",
     "proton",
     "qapps",
     "qbusiness",
@@ -641,6 +654,8 @@ ResourceServiceName = Literal[
 ]
 PaginatorName = Literal[
     "get_agent_memory",
+    "list_flow_execution_events",
+    "list_flow_executions",
     "list_invocation_steps",
     "list_invocations",
     "list_sessions",

@@ -53,7 +53,7 @@ def is_valid_url(url, base_domain):
     """
     parsed = urlparse(url)
     return parsed.scheme in ('http', 'https') and parsed.netloc == base_domain
-def save_page(url, content,output_dir):
+def get_save_page_path(url, output_dir):
     """
     Save HTML page to local directory.
     """
@@ -66,12 +66,22 @@ def save_page(url, content,output_dir):
         page_path += '.html'
 
     page_full_path = os.path.join(output_dir, page_path)
-    os.makedirs(os.path.dirname(page_full_path), exist_ok=True)
+    return page_full_path
+def save_page(url, content,output_dir):
+    page_full_path = get_save_page_path(url=url,
+                                        output_dir=output_dir)
+    if page_full_path:
+        dirname = os.path.dirname(page_full_path)
+        os.makedirs(dirname, exist_ok=True)
 
-    with open(page_full_path, 'w', encoding='utf-8') as f:
-        f.write(content)
-    print(f"Saved page: {page_full_path}")
-def save_asset(asset_url, base_url,output_dir,downloaded_assets=None,session=None):
+        with open(page_full_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+        print(f"Saved page: {page_full_path}")
+def get_asset_path(asset_url,
+                   base_url,
+                   output_dir,
+                   downloaded_assets=None,
+                   session=None):
     """
     Download and save assets like images, CSS, JS files.
     """
@@ -88,17 +98,29 @@ def save_asset(asset_url, base_url,output_dir,downloaded_assets=None,session=Non
         return  # Skip if asset path is empty
 
     asset_full_path = os.path.join(output_dir, asset_path)
-    os.makedirs(os.path.dirname(asset_full_path), exist_ok=True)
+    return asset_full_path
+def save_asset(asset_url,
+               base_url,
+               output_dir,
+               downloaded_assets=None,
+               session=None):
+    asset_full_path = get_asset_path(asset_url=asset_url,
+                                     base_url=base_url,
+                                     output_dir=output_dir,
+                                     downloaded_assets=downloaded_assets,
+                                     session=session)
+    if asset_full_path:
+        os.makedirs(os.path.dirname(asset_full_path), exist_ok=True)
 
-    try:
-        response = session.get(asset_url, stream=True)
-        response.raise_for_status()
-        with open(asset_full_path, 'wb') as f:
-            shutil.copyfileobj(response.raw, f)
-        print(f"Saved asset: {asset_full_path}")
-    except Exception as e:
-        print(f"Failed to save asset {asset_url}: {e}")
-    return downloaded_assets
+        try:
+            response = session.get(asset_url, stream=True)
+            response.raise_for_status()
+            with open(asset_full_path, 'wb') as f:
+                shutil.copyfileobj(response.raw, f)
+            print(f"Saved asset: {asset_full_path}")
+        except Exception as e:
+            print(f"Failed to save asset {asset_url}: {e}")
+        return downloaded_assets
 class usurpManager():
     def __init__(self,url,output_dir=None,max_depth=None,wait_between_requests=None,operating_system=None, browser=None, version=None,user_agent=None,website_bot=None):
         self.url = url
@@ -135,34 +157,41 @@ class usurpManager():
             response = self.session.get(url)
             #response.raise_for_status()
             content = response.text
+            page_full_path = get_save_page_path(url=url,
+                                        output_dir=self.OUTPUT_DIR)
+            if not os.path.exists(page_full_path):
+                # Use your get_soup_mgr function to get the soup and attributes
+                soup_mgr = get_soup_mgr(url=url)
+                soup = soup_mgr.soup
+                all_attributes = soup_mgr.get_all_attribute_values()
+                # Now you can use all_attributes as needed
+                get_asset_path(asset_url=full_asset_url,
+                               base_url=self.url,
+                               output_dir=self.OUTPUT_DIR,
+                               downloaded_assets=self.downloaded_assets,
+                               session=self.session)
+                # Update asset links to local paths
+                for tag in soup.find_all(['img', 'script', 'link']):
+                    attr = 'src' if tag.name != 'link' else 'href'
+                    asset_url = tag.get(attr)
+                    if asset_url:
+                        full_asset_url = normalize_url(asset_url, url)
+                        parsed_asset_url = urlparse(full_asset_url)
 
-            # Use your get_soup_mgr function to get the soup and attributes
-            soup_mgr = get_soup_mgr(url=url)
-            soup = soup_mgr.soup
-            all_attributes = soup_mgr.get_all_attribute_values()
-            # Now you can use all_attributes as needed
+                        if is_valid_url(full_asset_url, base_domain):
+                            self.downloaded_assets = save_asset(full_asset_url, self.url,self.OUTPUT_DIR,self.downloaded_assets,self.session)
+                            # Update tag to point to the local asset
+                            local_asset_path = '/' + parsed_asset_url.path.lstrip('/')
+                            tag[attr] = local_asset_path
 
-            # Update asset links to local paths
-            for tag in soup.find_all(['img', 'script', 'link']):
-                attr = 'src' if tag.name != 'link' else 'href'
-                asset_url = tag.get(attr)
-                if asset_url:
-                    full_asset_url = normalize_url(asset_url, url)
-                    parsed_asset_url = urlparse(full_asset_url)
-
-                    if is_valid_url(full_asset_url, base_domain):
-                        self.downloaded_assets = save_asset(full_asset_url, self.url,self.OUTPUT_DIR,self.downloaded_assets,self.session)
-                        # Update tag to point to the local asset
-                        local_asset_path = '/' + parsed_asset_url.path.lstrip('/')
-                        tag[attr] = local_asset_path
-
-            # Save the modified page
-            save_page(url, str(soup),self.OUTPUT_DIR)
-
+                # Save the modified page
+                save_page(url, str(soup),self.OUTPUT_DIR)
+            else:
+                print(f"skippinng {page_full_path} because it already exists")
             # Use your linkManager to find all domain links
             link_mgr = linkManager(url=url)
             all_domains = link_mgr.find_all_domain()
-
+            
             # Process each domain link
             for link_url in make_list(all_domains):
                 normalized_link = normalize_url(link_url, url)

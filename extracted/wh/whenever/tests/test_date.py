@@ -649,6 +649,15 @@ class TestSubtract:
         with pytest.raises(TypeError):
             3 - Date(2021, 1, 1)  # type: ignore[operator]
 
+        with pytest.raises(TypeError):
+            DateDelta() - Date(2021, 1, 1)  # type: ignore[operator]
+
+        with pytest.raises(TypeError):
+            Date(2021, 1, 1) - PlainDateTime(2020, 3, 2)  # type: ignore[operator]
+
+        with pytest.raises(TypeError):
+            PlainDateTime(2021, 1, 1) - Date(2020, 3, 2)  # type: ignore[operator]
+
     def test_fuzzing(self):
         for d1, d2 in product(_EXAMPLE_DATES, _EXAMPLE_DATES):
             delta = d1 - d2
@@ -672,6 +681,8 @@ def test_day_of_week():
     assert Date(1915, 7, 23).day_of_week() is Weekday.FRIDAY
     assert Date(1915, 7, 24).day_of_week() is Weekday.SATURDAY
     assert Date(1915, 7, 25).day_of_week() is Weekday.SUNDAY
+
+    assert pickle.loads(pickle.dumps(Weekday.SATURDAY)) is Weekday.SATURDAY
 
 
 def test_pickling():

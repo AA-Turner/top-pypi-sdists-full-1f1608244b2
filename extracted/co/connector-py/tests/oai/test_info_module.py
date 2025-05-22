@@ -19,6 +19,7 @@ async def test_app_info_capability_is_active():
         version="0.1.0",
         credentials=[],
         description_data=DescriptionData(
+            app_vendor_domain="test.com",
             user_friendly_name="Test",
             description="Test description",
             categories=[],
@@ -35,6 +36,7 @@ async def test_app_info_capability_returns_app_info():
         version="0.1.0",
         credentials=[],
         description_data=DescriptionData(
+            app_vendor_domain="test.com",
             user_friendly_name="Test",
             description="Test description",
             categories=[AppCategory.DEVELOPERS],
@@ -75,6 +77,7 @@ async def test_app_info_capability_returns_app_info():
     assert oas["info"]["title"] == "Test"
     assert oas["info"]["version"] == "0.1.0"
     assert oas["info"]["description"] == "Test description"
+    assert oas["info"]["x-app-vendor-domain"] == "test.com"
     assert oas["info"]["x-categories"] == {
         "type": "enum",
         "enum": [AppCategory.DEVELOPERS.value],

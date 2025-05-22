@@ -1787,7 +1787,7 @@ class Runs(Authenticated):
         last_chunk: bytes | None = None
         # wait for the run to complete
         # Rely on this join's auth
-        async for mode, chunk in Runs.Stream.join(
+        async for mode, chunk, _ in Runs.Stream.join(
             run_id, thread_id=thread_id, stream_mode="values", ctx=ctx, ignore_404=True
         ):
             if mode == b"values":
@@ -2034,8 +2034,9 @@ class Runs(Authenticated):
             ignore_404: bool = False,
             cancel_on_disconnect: bool = False,
             stream_mode: StreamMode | asyncio.Queue | None = None,
+            last_event_id: str | None = None,
             ctx: Auth.types.BaseAuthContext | None = None,
-        ) -> AsyncIterator[tuple[bytes, bytes]]:
+        ) -> AsyncIterator[tuple[bytes, bytes, bytes | None]]:
             """Stream the run output."""
             from langgraph_api.asyncio import create_task
 
@@ -2065,22 +2066,40 @@ class Runs(Authenticated):
                     channel_prefix = f"run:{run_id}:stream:"
                     len_prefix = len(channel_prefix.encode())
 
+                    for message in get_stream_manager().restore_messages(
+                        run_id, last_event_id
+                    ):
+                        topic, data, id = message.topic, message.data, message.id
+                        if topic.decode() == f"run:{run_id}:control":
+                            if data == b"done":
+                                return
+                        else:
+                            yield topic[len_prefix:], data, id
+                            logger.debug(
+                                "Replayed run event",
+                                run_id=str(run_id),
+                                message_id=id,
+                                stream_mode=topic[len_prefix:],
+                                data=data,
+                            )
+
                     while True:
                         try:
                             # Wait for messages with a timeout
                             message = await asyncio.wait_for(queue.get(), timeout=0.5)
-                            topic, data = message.topic, message.data
+                            topic, data, id = message.topic, message.data, message.id
 
                             if topic.decode() == f"run:{run_id}:control":
                                 if data == b"done":
                                     break
                             else:
                                 # Extract mode from topic
-                                yield topic[len_prefix:], data
+                                yield topic[len_prefix:], data, id
                                 logger.debug(
                                     "Streamed run event",
                                     run_id=str(run_id),
                                     stream_mode=topic[len_prefix:],
+                                    message_id=id,
                                     data=data,
                                 )
                         except TimeoutError:
@@ -2098,6 +2117,7 @@ class Runs(Authenticated):
                                     HTTPException(
                                         status_code=404, detail="Run not found"
                                     ),
+                                    None,
                                 )
                                 break
                             elif run["status"] not in ("pending", "running"):
@@ -2117,13 +2137,17 @@ class Runs(Authenticated):
             run_id: UUID,
             event: str,
             message: bytes,
+            *,
+            resumable: bool = False,
         ) -> None:
             """Publish a message to all subscribers of the run stream."""
             topic = f"run:{run_id}:stream:{event}".encode()
 
             stream_manager = get_stream_manager()
             # Send to all queues subscribed to this run_id
-            await stream_manager.put(run_id, Message(topic=topic, data=message))
+            await stream_manager.put(
+                run_id, Message(topic=topic, data=message), resumable
+            )
 
 
 async def listen_for_cancellation(queue: asyncio.Queue, run_id: UUID, done: ValueEvent):

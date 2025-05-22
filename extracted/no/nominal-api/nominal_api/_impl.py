@@ -497,6 +497,10 @@ class api_SeriesDataType(ConjureEnumType):
     '''LOG'''
     INT = 'INT'
     '''INT'''
+    DOUBLE_ARRAY = 'DOUBLE_ARRAY'
+    '''DOUBLE_ARRAY'''
+    STRING_ARRAY = 'STRING_ARRAY'
+    '''STRING_ARRAY'''
     UNKNOWN = 'UNKNOWN'
     '''UNKNOWN'''
 
@@ -19171,14 +19175,16 @@ class scout_catalog_AddFileToDataset(ConjureBeanType):
     def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
         return {
             'handle': ConjureFieldDefinition('handle', scout_catalog_Handle),
-            'timestamp_metadata': ConjureFieldDefinition('timestampMetadata', OptionalTypeWrapper[scout_catalog_TimestampMetadata])
+            'timestamp_metadata': ConjureFieldDefinition('timestampMetadata', OptionalTypeWrapper[scout_catalog_TimestampMetadata]),
+            'origin_file_handles': ConjureFieldDefinition('originFileHandles', OptionalTypeWrapper[List[scout_catalog_S3Handle]])
         }
 
-    __slots__: List[str] = ['_handle', '_timestamp_metadata']
+    __slots__: List[str] = ['_handle', '_timestamp_metadata', '_origin_file_handles']
 
-    def __init__(self, handle: "scout_catalog_Handle", timestamp_metadata: Optional["scout_catalog_TimestampMetadata"] = None) -> None:
+    def __init__(self, handle: "scout_catalog_Handle", origin_file_handles: Optional[List["scout_catalog_S3Handle"]] = None, timestamp_metadata: Optional["scout_catalog_TimestampMetadata"] = None) -> None:
         self._handle = handle
         self._timestamp_metadata = timestamp_metadata
+        self._origin_file_handles = origin_file_handles
 
     @builtins.property
     def handle(self) -> "scout_catalog_Handle":
@@ -19187,6 +19193,10 @@ class scout_catalog_AddFileToDataset(ConjureBeanType):
     @builtins.property
     def timestamp_metadata(self) -> Optional["scout_catalog_TimestampMetadata"]:
         return self._timestamp_metadata
+
+    @builtins.property
+    def origin_file_handles(self) -> Optional[List["scout_catalog_S3Handle"]]:
+        return self._origin_file_handles
 
 
 scout_catalog_AddFileToDataset.__name__ = "AddFileToDataset"
@@ -20307,12 +20317,13 @@ class scout_catalog_DatasetFile(ConjureBeanType):
             'uploaded_at': ConjureFieldDefinition('uploadedAt', str),
             'ingested_at': ConjureFieldDefinition('ingestedAt', OptionalTypeWrapper[str]),
             'ingest_status': ConjureFieldDefinition('ingestStatus', api_IngestStatusV2),
-            'timestamp_metadata': ConjureFieldDefinition('timestampMetadata', OptionalTypeWrapper[scout_catalog_TimestampMetadata])
+            'timestamp_metadata': ConjureFieldDefinition('timestampMetadata', OptionalTypeWrapper[scout_catalog_TimestampMetadata]),
+            'origin_file_paths': ConjureFieldDefinition('originFilePaths', OptionalTypeWrapper[List[str]])
         }
 
-    __slots__: List[str] = ['_id', '_dataset_rid', '_name', '_handle', '_bounds', '_uploaded_at', '_ingested_at', '_ingest_status', '_timestamp_metadata']
+    __slots__: List[str] = ['_id', '_dataset_rid', '_name', '_handle', '_bounds', '_uploaded_at', '_ingested_at', '_ingest_status', '_timestamp_metadata', '_origin_file_paths']
 
-    def __init__(self, dataset_rid: str, handle: "scout_catalog_Handle", id: str, ingest_status: "api_IngestStatusV2", name: str, uploaded_at: str, bounds: Optional["scout_catalog_Bounds"] = None, ingested_at: Optional[str] = None, timestamp_metadata: Optional["scout_catalog_TimestampMetadata"] = None) -> None:
+    def __init__(self, dataset_rid: str, handle: "scout_catalog_Handle", id: str, ingest_status: "api_IngestStatusV2", name: str, uploaded_at: str, bounds: Optional["scout_catalog_Bounds"] = None, ingested_at: Optional[str] = None, origin_file_paths: Optional[List[str]] = None, timestamp_metadata: Optional["scout_catalog_TimestampMetadata"] = None) -> None:
         self._id = id
         self._dataset_rid = dataset_rid
         self._name = name
@@ -20322,6 +20333,7 @@ class scout_catalog_DatasetFile(ConjureBeanType):
         self._ingested_at = ingested_at
         self._ingest_status = ingest_status
         self._timestamp_metadata = timestamp_metadata
+        self._origin_file_paths = origin_file_paths
 
     @builtins.property
     def id(self) -> str:
@@ -20365,6 +20377,10 @@ ingested for any reason or is still being processed, then this value will be emp
     @builtins.property
     def timestamp_metadata(self) -> Optional["scout_catalog_TimestampMetadata"]:
         return self._timestamp_metadata
+
+    @builtins.property
+    def origin_file_paths(self) -> Optional[List[str]]:
+        return self._origin_file_paths
 
 
 scout_catalog_DatasetFile.__name__ = "DatasetFile"
@@ -76235,6 +76251,10 @@ class storage_series_api_NominalDataType(ConjureEnumType):
     '''LOG'''
     INT64 = 'INT64'
     '''INT64'''
+    DOUBLE_ARRAY = 'DOUBLE_ARRAY'
+    '''DOUBLE_ARRAY'''
+    STRING_ARRAY = 'STRING_ARRAY'
+    '''STRING_ARRAY'''
     UNKNOWN = 'UNKNOWN'
     '''UNKNOWN'''
 
@@ -76245,6 +76265,84 @@ class storage_series_api_NominalDataType(ConjureEnumType):
 storage_series_api_NominalDataType.__name__ = "NominalDataType"
 storage_series_api_NominalDataType.__qualname__ = "NominalDataType"
 storage_series_api_NominalDataType.__module__ = "nominal_api.storage_series_api"
+
+
+class storage_writer_api_ArrayPoints(ConjureUnionType):
+    """Array points for the internal API for directly writing points which supports all points types."""
+    _double: Optional[List["storage_writer_api_DoubleArrayPoint"]] = None
+    _string: Optional[List["storage_writer_api_StringArrayPoint"]] = None
+
+    @builtins.classmethod
+    def _options(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'double': ConjureFieldDefinition('double', List[storage_writer_api_DoubleArrayPoint]),
+            'string': ConjureFieldDefinition('string', List[storage_writer_api_StringArrayPoint])
+        }
+
+    def __init__(
+            self,
+            double: Optional[List["storage_writer_api_DoubleArrayPoint"]] = None,
+            string: Optional[List["storage_writer_api_StringArrayPoint"]] = None,
+            type_of_union: Optional[str] = None
+            ) -> None:
+        if type_of_union is None:
+            if (double is not None) + (string is not None) != 1:
+                raise ValueError('a union must contain a single member')
+
+            if double is not None:
+                self._double = double
+                self._type = 'double'
+            if string is not None:
+                self._string = string
+                self._type = 'string'
+
+        elif type_of_union == 'double':
+            if double is None:
+                raise ValueError('a union value must not be None')
+            self._double = double
+            self._type = 'double'
+        elif type_of_union == 'string':
+            if string is None:
+                raise ValueError('a union value must not be None')
+            self._string = string
+            self._type = 'string'
+
+    @builtins.property
+    def double(self) -> Optional[List["storage_writer_api_DoubleArrayPoint"]]:
+        return self._double
+
+    @builtins.property
+    def string(self) -> Optional[List["storage_writer_api_StringArrayPoint"]]:
+        return self._string
+
+    def accept(self, visitor) -> Any:
+        if not isinstance(visitor, storage_writer_api_ArrayPointsVisitor):
+            raise ValueError('{} is not an instance of storage_writer_api_ArrayPointsVisitor'.format(visitor.__class__.__name__))
+        if self._type == 'double' and self.double is not None:
+            return visitor._double(self.double)
+        if self._type == 'string' and self.string is not None:
+            return visitor._string(self.string)
+
+
+storage_writer_api_ArrayPoints.__name__ = "ArrayPoints"
+storage_writer_api_ArrayPoints.__qualname__ = "ArrayPoints"
+storage_writer_api_ArrayPoints.__module__ = "nominal_api.storage_writer_api"
+
+
+class storage_writer_api_ArrayPointsVisitor:
+
+    @abstractmethod
+    def _double(self, double: List["storage_writer_api_DoubleArrayPoint"]) -> Any:
+        pass
+
+    @abstractmethod
+    def _string(self, string: List["storage_writer_api_StringArrayPoint"]) -> Any:
+        pass
+
+
+storage_writer_api_ArrayPointsVisitor.__name__ = "ArrayPointsVisitor"
+storage_writer_api_ArrayPointsVisitor.__qualname__ = "ArrayPointsVisitor"
+storage_writer_api_ArrayPointsVisitor.__module__ = "nominal_api.storage_writer_api"
 
 
 class storage_writer_api_DirectNominalChannelWriterService(Service):
@@ -76291,6 +76389,35 @@ durable queue. This results in lower latency, but also consequently lower durabi
 storage_writer_api_DirectNominalChannelWriterService.__name__ = "DirectNominalChannelWriterService"
 storage_writer_api_DirectNominalChannelWriterService.__qualname__ = "DirectNominalChannelWriterService"
 storage_writer_api_DirectNominalChannelWriterService.__module__ = "nominal_api.storage_writer_api"
+
+
+class storage_writer_api_DoubleArrayPoint(ConjureBeanType):
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'timestamp': ConjureFieldDefinition('timestamp', api_Timestamp),
+            'value': ConjureFieldDefinition('value', List[float])
+        }
+
+    __slots__: List[str] = ['_timestamp', '_value']
+
+    def __init__(self, timestamp: "api_Timestamp", value: List[float]) -> None:
+        self._timestamp = timestamp
+        self._value = value
+
+    @builtins.property
+    def timestamp(self) -> "api_Timestamp":
+        return self._timestamp
+
+    @builtins.property
+    def value(self) -> List[float]:
+        return self._value
+
+
+storage_writer_api_DoubleArrayPoint.__name__ = "DoubleArrayPoint"
+storage_writer_api_DoubleArrayPoint.__qualname__ = "DoubleArrayPoint"
+storage_writer_api_DoubleArrayPoint.__module__ = "nominal_api.storage_writer_api"
 
 
 class storage_writer_api_DoublePoint(ConjureBeanType):
@@ -76685,6 +76812,7 @@ Logs specifically are supported externally via a separate endpoint."""
     _double: Optional[List["storage_writer_api_DoublePoint"]] = None
     _log: Optional[List["storage_writer_api_LogPoint"]] = None
     _int_: Optional[List["storage_writer_api_IntPoint"]] = None
+    _array: Optional["storage_writer_api_ArrayPoints"] = None
 
     @builtins.classmethod
     def _options(cls) -> Dict[str, ConjureFieldDefinition]:
@@ -76692,7 +76820,8 @@ Logs specifically are supported externally via a separate endpoint."""
             'string': ConjureFieldDefinition('string', List[storage_writer_api_StringPoint]),
             'double': ConjureFieldDefinition('double', List[storage_writer_api_DoublePoint]),
             'log': ConjureFieldDefinition('log', List[storage_writer_api_LogPoint]),
-            'int_': ConjureFieldDefinition('int', List[storage_writer_api_IntPoint])
+            'int_': ConjureFieldDefinition('int', List[storage_writer_api_IntPoint]),
+            'array': ConjureFieldDefinition('array', storage_writer_api_ArrayPoints)
         }
 
     def __init__(
@@ -76701,10 +76830,11 @@ Logs specifically are supported externally via a separate endpoint."""
             double: Optional[List["storage_writer_api_DoublePoint"]] = None,
             log: Optional[List["storage_writer_api_LogPoint"]] = None,
             int_: Optional[List["storage_writer_api_IntPoint"]] = None,
+            array: Optional["storage_writer_api_ArrayPoints"] = None,
             type_of_union: Optional[str] = None
             ) -> None:
         if type_of_union is None:
-            if (string is not None) + (double is not None) + (log is not None) + (int_ is not None) != 1:
+            if (string is not None) + (double is not None) + (log is not None) + (int_ is not None) + (array is not None) != 1:
                 raise ValueError('a union must contain a single member')
 
             if string is not None:
@@ -76719,6 +76849,9 @@ Logs specifically are supported externally via a separate endpoint."""
             if int_ is not None:
                 self._int_ = int_
                 self._type = 'int'
+            if array is not None:
+                self._array = array
+                self._type = 'array'
 
         elif type_of_union == 'string':
             if string is None:
@@ -76740,6 +76873,11 @@ Logs specifically are supported externally via a separate endpoint."""
                 raise ValueError('a union value must not be None')
             self._int_ = int_
             self._type = 'int'
+        elif type_of_union == 'array':
+            if array is None:
+                raise ValueError('a union value must not be None')
+            self._array = array
+            self._type = 'array'
 
     @builtins.property
     def string(self) -> Optional[List["storage_writer_api_StringPoint"]]:
@@ -76757,6 +76895,10 @@ Logs specifically are supported externally via a separate endpoint."""
     def int_(self) -> Optional[List["storage_writer_api_IntPoint"]]:
         return self._int_
 
+    @builtins.property
+    def array(self) -> Optional["storage_writer_api_ArrayPoints"]:
+        return self._array
+
     def accept(self, visitor) -> Any:
         if not isinstance(visitor, storage_writer_api_PointsVisitor):
             raise ValueError('{} is not an instance of storage_writer_api_PointsVisitor'.format(visitor.__class__.__name__))
@@ -76768,6 +76910,8 @@ Logs specifically are supported externally via a separate endpoint."""
             return visitor._log(self.log)
         if self._type == 'int' and self.int_ is not None:
             return visitor._int(self.int_)
+        if self._type == 'array' and self.array is not None:
+            return visitor._array(self.array)
 
 
 storage_writer_api_Points.__name__ = "Points"
@@ -76791,6 +76935,10 @@ class storage_writer_api_PointsVisitor:
 
     @abstractmethod
     def _int(self, int_: List["storage_writer_api_IntPoint"]) -> Any:
+        pass
+
+    @abstractmethod
+    def _array(self, array: "storage_writer_api_ArrayPoints") -> Any:
         pass
 
 
@@ -76965,6 +77113,35 @@ class storage_writer_api_RecordsBatchExternal(ConjureBeanType):
 storage_writer_api_RecordsBatchExternal.__name__ = "RecordsBatchExternal"
 storage_writer_api_RecordsBatchExternal.__qualname__ = "RecordsBatchExternal"
 storage_writer_api_RecordsBatchExternal.__module__ = "nominal_api.storage_writer_api"
+
+
+class storage_writer_api_StringArrayPoint(ConjureBeanType):
+
+    @builtins.classmethod
+    def _fields(cls) -> Dict[str, ConjureFieldDefinition]:
+        return {
+            'timestamp': ConjureFieldDefinition('timestamp', api_Timestamp),
+            'value': ConjureFieldDefinition('value', List[str])
+        }
+
+    __slots__: List[str] = ['_timestamp', '_value']
+
+    def __init__(self, timestamp: "api_Timestamp", value: List[str]) -> None:
+        self._timestamp = timestamp
+        self._value = value
+
+    @builtins.property
+    def timestamp(self) -> "api_Timestamp":
+        return self._timestamp
+
+    @builtins.property
+    def value(self) -> List[str]:
+        return self._value
+
+
+storage_writer_api_StringArrayPoint.__name__ = "StringArrayPoint"
+storage_writer_api_StringArrayPoint.__qualname__ = "StringArrayPoint"
+storage_writer_api_StringArrayPoint.__module__ = "nominal_api.storage_writer_api"
 
 
 class storage_writer_api_StringPoint(ConjureBeanType):

@@ -17,7 +17,7 @@ from typing import (
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class AuditLog(_message.Message):
-    __slots__ = ("agent", "description", "endpoint", "at", "trace_id", "code", "request", "response", "ip")
+    __slots__ = ("agent", "description", "endpoint", "at", "trace_id", "code", "request", "response", "ip", "error")
     class RequestEntry(_message.Message):
         __slots__ = ("key", "value")
         KEY_FIELD_NUMBER: _ClassVar[int]
@@ -47,6 +47,7 @@ class AuditLog(_message.Message):
     REQUEST_FIELD_NUMBER: _ClassVar[int]
     RESPONSE_FIELD_NUMBER: _ClassVar[int]
     IP_FIELD_NUMBER: _ClassVar[int]
+    ERROR_FIELD_NUMBER: _ClassVar[int]
     agent: _agent_pb2.Agent
     description: str
     endpoint: str
@@ -56,6 +57,7 @@ class AuditLog(_message.Message):
     request: _containers.MessageMap[str, _struct_pb2.Value]
     response: _containers.MessageMap[str, _struct_pb2.Value]
     ip: str
+    error: str
     def __init__(
         self,
         agent: _Optional[_Union[_agent_pb2.Agent, _Mapping]] = ...,
@@ -67,11 +69,23 @@ class AuditLog(_message.Message):
         request: _Optional[_Mapping[str, _struct_pb2.Value]] = ...,
         response: _Optional[_Mapping[str, _struct_pb2.Value]] = ...,
         ip: _Optional[str] = ...,
+        error: _Optional[str] = ...,
     ) -> None: ...
 
 class GetAuditLogsRequest(_message.Message):
-    __slots__ = ()
-    def __init__(self) -> None: ...
+    __slots__ = ("start_time", "end_time", "endpoint_filter")
+    START_TIME_FIELD_NUMBER: _ClassVar[int]
+    END_TIME_FIELD_NUMBER: _ClassVar[int]
+    ENDPOINT_FILTER_FIELD_NUMBER: _ClassVar[int]
+    start_time: _timestamp_pb2.Timestamp
+    end_time: _timestamp_pb2.Timestamp
+    endpoint_filter: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(
+        self,
+        start_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...,
+        end_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...,
+        endpoint_filter: _Optional[_Iterable[str]] = ...,
+    ) -> None: ...
 
 class GetAuditLogsResponse(_message.Message):
     __slots__ = ("logs",)

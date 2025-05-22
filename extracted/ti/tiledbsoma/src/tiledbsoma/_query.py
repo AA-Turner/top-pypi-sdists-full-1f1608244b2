@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import enum
 import warnings
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -51,10 +51,13 @@ from somacore.query.query import (
 from somacore.query.types import IndexFactory, IndexLike
 from typing_extensions import Self
 
+from ._constants import SPATIAL_DISCLAIMER
+from ._dask.load import SOMADaskConfig, load_daskarray
+from ._exception import SOMAError
+
 if TYPE_CHECKING:
     from ._experiment import Experiment
-from ._constants import SPATIAL_DISCLAIMER
-from ._exception import SOMAError
+
 from ._fastercsx import CompressedMatrix
 from ._measurement import Measurement
 from ._sparse_nd_array import SparseNDArray
@@ -88,8 +91,7 @@ class AxisName(enum.Enum):
 
 @attrs.define
 class AxisIndexer(query.AxisIndexer):
-    """
-    Given a query, provides index-building services for obs/var axis.
+    """Given a query, provides index-building services for obs/var axis.
 
     Lifecycle: maturing
     """
@@ -328,6 +330,7 @@ class ExperimentAxisQuery(query.ExperimentAxisQuery):
 
     def obsm(self, layer: str) -> SparseRead:
         """Returns an ``obsm`` layer as a sparse read.
+
         Lifecycle: maturing
         """
         return self._get_annotation_layer("obsm", layer).read(
@@ -336,6 +339,7 @@ class ExperimentAxisQuery(query.ExperimentAxisQuery):
 
     def varm(self, layer: str) -> SparseRead:
         """Returns a ``varm`` layer as a sparse read.
+
         Lifecycle: maturing
         """
         return self._get_annotation_layer("varm", layer).read(
@@ -343,8 +347,7 @@ class ExperimentAxisQuery(query.ExperimentAxisQuery):
         )
 
     def obs_scene_ids(self) -> pa.Array:
-        """Returns a pyarrow array with scene ids that contain obs from this
-        query.
+        """Returns a pyarrow array with scene ids that contain obs from this query.
 
         Lifecycle: experimental
         """
@@ -406,6 +409,7 @@ class ExperimentAxisQuery(query.ExperimentAxisQuery):
         varm_layers: Sequence[str] = (),
         varp_layers: Sequence[str] = (),
         drop_levels: bool = False,
+        dask: SOMADaskConfig | None = None,
     ) -> AnnData:
         """Exports the query to an in-memory ``AnnData`` object.
 
@@ -427,8 +431,12 @@ class ExperimentAxisQuery(query.ExperimentAxisQuery):
             drop_levels:
                 If true, drop unused categories from the ``obs`` and ``var`` dataframes.
                 Defaults to ``False``.
-        """
+            dask:
+                If not ``None``, load the X layer as a Dask array. See
+                :class:`DaskConfig` for details.
 
+        Lifecycle: experimental
+        """
         if column_names is None:
             column_names = AxisColumnNames(obs=None, var=None)
 
@@ -457,13 +465,21 @@ class ExperimentAxisQuery(query.ExperimentAxisQuery):
         var_joinids = self.var_joinids()
 
         x_matrices = {
-            _xname: tp.submit(
-                _read_as_csr,
-                layer,
-                obs_joinids,
-                var_joinids,
-                self._indexer.by_obs,
-                self._indexer.by_var,
+            _xname: (
+                tp.submit(
+                    _read_as_csr,
+                    layer,
+                    obs_joinids,
+                    var_joinids,
+                    self._indexer.by_obs,
+                    self._indexer.by_var,
+                )
+                if not dask
+                else load_daskarray(
+                    layer=layer,
+                    coords=(obs_joinids, var_joinids),
+                    **dask,
+                )
             )
             for _xname, layer in all_x_arrays.items()
         }
@@ -526,7 +542,7 @@ class ExperimentAxisQuery(query.ExperimentAxisQuery):
                     var[name] = var[name].cat.remove_unused_categories()
 
         return AnnData(
-            X=x_future.result(),
+            X=x_future.result() if isinstance(x_future, Future) else x_future,
             obs=obs,
             var=var,
             obsm=(_resolve_futures(obsm_future) or None),
@@ -548,8 +564,9 @@ class ExperimentAxisQuery(query.ExperimentAxisQuery):
         varp_layers: Sequence[str] = (),
         drop_levels: bool = False,
         scene_presence_mode: str = "obs",
+        dask: SOMADaskConfig | None = None,
     ):
-        """Returns a SpatialData object containing the query results
+        """Returns a SpatialData object containing the query results.
 
         This is a low-level routine intended to be used by loaders for other
         in-core formats, such as AnnData, which can be created from the
@@ -571,7 +588,6 @@ class ExperimentAxisQuery(query.ExperimentAxisQuery):
                 dataframe) and ``var`` (use ``var_spatial_presence`` dataframe).
                 Defaults to ``obs``.
         """
-
         from .io.spatial._spatialdata_util import _spatial_to_spatialdata
 
         warnings.warn(SPATIAL_DISCLAIMER)
@@ -597,6 +613,7 @@ class ExperimentAxisQuery(query.ExperimentAxisQuery):
             varm_layers=varm_layers,
             varp_layers=varp_layers,
             drop_levels=drop_levels,
+            dask=dask,
         )
 
         return _spatial_to_spatialdata(
@@ -715,9 +732,9 @@ class ExperimentAxisQuery(query.ExperimentAxisQuery):
 
     @property
     def _threadpool(self) -> ThreadPoolExecutor:
+        """Returns the threadpool provided by the experiment's context.
+        If not available, creates a thread pool just in time.
         """
-        Returns the threadpool provided by the experiment's context.
-        If not available, creates a thread pool just in time."""
         return self.experiment.context.threadpool
 
 
@@ -814,9 +831,10 @@ def _read_as_csr(
     d0_joinids = d0_joinids_arr.to_numpy()
     d1_joinids = d1_joinids_arr.to_numpy()
     try:
-        nnz: int | None = matrix._handle._handle.nnz(raise_if_slow=True)
+        # frag_cell_count is >= nnz, as it does not account for deletes and double-counts updates
+        frag_cell_count: int | None = matrix._handle._handle.fragment_cell_count()
     except SOMAError:
-        nnz = None
+        frag_cell_count = None
 
     # if able, downcast from int64 - reduces working memory
     index_dtype = (
@@ -863,8 +881,12 @@ def _read_as_csr(
     fallback_row_count = 32768
     # compute partition size from array density and target point count, rounding to nearest 1024.
     partition_size = (
-        max(1024 * round(approx_X_shape[0] * target_point_count / nnz / 1024), 1024)
-        if nnz is not None and nnz > 0
+        max(
+            1024
+            * round(approx_X_shape[0] * target_point_count / frag_cell_count / 1024),
+            1024,
+        )
+        if frag_cell_count is not None and frag_cell_count > 0
         else min(fallback_row_count, approx_X_shape[0])
     )
     splits = list(

@@ -9,6 +9,10 @@ import QuantConnect.Securities
 import QuantConnect.Securities.Cfd
 
 
+class CfdCache(QuantConnect.Securities.SecurityCache):
+    """CFD specific caching support"""
+
+
 class Cfd(QuantConnect.Securities.Security):
     """CFD Security Object Implementation for CFD Assets"""
 
@@ -77,10 +81,6 @@ class CfdHolding(QuantConnect.Securities.SecurityHolding):
         ...
 
 
-class CfdDataFilter(QuantConnect.Securities.SecurityDataFilter):
-    """CFD packet by packet data filtering mechanism for dynamically detecting bad ticks."""
-
-
 class CfdExchange(QuantConnect.Securities.SecurityExchange):
     """CFD exchange class - information and helper tools for CFD exchange properties"""
 
@@ -99,7 +99,7 @@ class CfdExchange(QuantConnect.Securities.SecurityExchange):
         ...
 
 
-class CfdCache(QuantConnect.Securities.SecurityCache):
-    """CFD specific caching support"""
+class CfdDataFilter(QuantConnect.Securities.SecurityDataFilter):
+    """CFD packet by packet data filtering mechanism for dynamically detecting bad ticks."""
 
 

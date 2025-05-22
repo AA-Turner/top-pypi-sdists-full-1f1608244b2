@@ -224,6 +224,7 @@ class _IncidentWorkflowTriggerState:
         pulumi.set(self, "workflow", value)
 
 
+@pulumi.type_token("pagerduty:index/incidentWorkflowTrigger:IncidentWorkflowTrigger")
 class IncidentWorkflowTrigger(pulumi.CustomResource):
     @overload
     def __init__(__self__,

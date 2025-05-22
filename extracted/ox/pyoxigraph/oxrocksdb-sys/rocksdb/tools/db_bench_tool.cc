@@ -1284,6 +1284,9 @@ DEFINE_uint32(memtable_op_scan_flush_trigger,
                   .memtable_op_scan_flush_trigger,
               "Setting for CF option memtable_op_scan_flush_trigger.");
 
+DEFINE_bool(verify_compression, false,
+            "See BlockBasedTableOptions::verify_compression");
+
 static enum ROCKSDB_NAMESPACE::CompressionType StringToCompressionType(
     const char* ctype) {
   assert(ctype);
@@ -2830,8 +2833,8 @@ class Benchmark {
                             const Slice& input, std::string* compressed) {
     constexpr uint32_t compress_format_version = 2;
 
-    return CompressData(input, compression_info, compress_format_version,
-                        compressed);
+    return OLD_CompressData(input, compression_info, compress_format_version,
+                            compressed);
   }
 
   void PrintHeader(const Options& options) {
@@ -2914,8 +2917,7 @@ class Benchmark {
       CompressionOptions opts;
       CompressionContext context(FLAGS_compression_type_e, opts);
       CompressionInfo info(opts, context, CompressionDict::GetEmptyDict(),
-                           FLAGS_compression_type_e,
-                           FLAGS_sample_for_compression);
+                           FLAGS_compression_type_e);
       bool result = CompressSlice(info, Slice(input_str), &compressed);
 
       if (!result) {
@@ -4135,8 +4137,7 @@ class Benchmark {
     opts.level = FLAGS_compression_level;
     CompressionContext context(FLAGS_compression_type_e, opts);
     CompressionInfo info(opts, context, CompressionDict::GetEmptyDict(),
-                         FLAGS_compression_type_e,
-                         FLAGS_sample_for_compression);
+                         FLAGS_compression_type_e);
     // Compress 1G
     while (ok && bytes < int64_t(1) << 30) {
       compressed.clear();
@@ -4166,9 +4167,9 @@ class Benchmark {
     compression_opts.level = FLAGS_compression_level;
     CompressionContext compression_ctx(FLAGS_compression_type_e,
                                        compression_opts);
-    CompressionInfo compression_info(
-        compression_opts, compression_ctx, CompressionDict::GetEmptyDict(),
-        FLAGS_compression_type_e, FLAGS_sample_for_compression);
+    CompressionInfo compression_info(compression_opts, compression_ctx,
+                                     CompressionDict::GetEmptyDict(),
+                                     FLAGS_compression_type_e);
     UncompressionContext uncompression_ctx(FLAGS_compression_type_e);
     UncompressionInfo uncompression_info(uncompression_ctx,
                                          UncompressionDict::GetEmptyDict(),
@@ -4180,7 +4181,7 @@ class Benchmark {
     while (ok && bytes < 1024 * 1048576) {
       constexpr uint32_t compress_format_version = 2;
 
-      CacheAllocationPtr uncompressed = UncompressData(
+      CacheAllocationPtr uncompressed = OLD_UncompressData(
           uncompression_info, compressed.data(), compressed.size(),
           &uncompressed_size, compress_format_version);
 
@@ -4484,6 +4485,7 @@ class Benchmark {
           FLAGS_initial_auto_readahead_size;
       block_based_options.num_file_reads_for_auto_readahead =
           FLAGS_num_file_reads_for_auto_readahead;
+      block_based_options.verify_compression = FLAGS_verify_compression;
       BlockBasedTableOptions::PrepopulateBlockCache prepopulate_block_cache =
           block_based_options.prepopulate_block_cache;
       switch (FLAGS_prepopulate_block_cache) {

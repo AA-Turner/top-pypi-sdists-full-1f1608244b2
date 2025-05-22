@@ -458,7 +458,7 @@ def pa_cast_col(col: pa.Array, expected_type: pa.DataType) -> pa.Array:
         return struct_array
     if pa.types.is_list(expected_type) or pa.types.is_large_list(expected_type):
         assert isinstance(expected_type, (pa.LargeListType, pa.ListType))
-        assert isinstance(col, (pa.ListArray, pa.LargeListArray))
+        assert isinstance(col, (pa.ListArray, pa.LargeListArray, pa.FixedSizeListArray))
         flattened = col.flatten()
         tbl = pa.Table.from_arrays([flattened], names=[expected_type.value_field.name])
         tbl = pa_cast(tbl, pa.schema([expected_type.value_field]))
@@ -491,7 +491,6 @@ def pa_cast_col(col: pa.Array, expected_type: pa.DataType) -> pa.Array:
             assert isinstance(offsets, pa.Int32Array)
 
             ans = pa.ListArray.from_arrays(offsets, casted_col)
-
         else:
             assert pa.types.is_large_list(expected_type)
             if not isinstance(offsets, pa.Int64Array):
@@ -503,7 +502,7 @@ def pa_cast_col(col: pa.Array, expected_type: pa.DataType) -> pa.Array:
         return ans
     if pa.types.is_fixed_size_list(expected_type):
         # Cast the elements of the input column, and then reconstruct an outer list.
-        assert isinstance(col, (pa.ListArray, pa.LargeListArray))
+        assert isinstance(col, (pa.ListArray, pa.LargeListArray, pa.FixedSizeListArray))
         if isinstance(col, pa.ListArray):
             col_items_converted = pa_cast_col(col.values, expected_type=expected_type.value_type)
             rebuilt_col = pa.ListArray.from_arrays(
@@ -527,6 +526,22 @@ def pa_cast_col(col: pa.Array, expected_type: pa.DataType) -> pa.Array:
                 offsets=col.offsets,
                 values=col_items_converted,
                 type=pa.large_list(expected_type.value_type),
+            )
+            if col.null_count != 0:
+                # Pyarrow does not allow `mask` to be set if `offset` is non-zero.
+                # To support this case, null out the missing lists with `if_else`.
+
+                # Note: we are missing type stubs for `pc.if_else`
+                rebuilt_col = pc.if_else(  # pyright: ignore[reportAttributeAccessIssue]
+                    col.is_null(),
+                    pa.nulls(len(rebuilt_col), rebuilt_col.type),
+                    rebuilt_col,
+                )
+        elif isinstance(col, pa.FixedSizeListArray):
+            col_items_converted = pa_cast_col(col.values, expected_type=expected_type.value_type)
+            rebuilt_col = pa.FixedSizeListArray.from_arrays(
+                values=col_items_converted,
+                type=pa.list_(expected_type.value_type, col.type.list_size),
             )
             if col.null_count != 0:
                 # Pyarrow does not allow `mask` to be set if `offset` is non-zero.

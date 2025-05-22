@@ -1,7 +1,7 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.2
 Name: imgui-bundle
-Version: 1.6.2
-Summary: Dear ImGui Bundle: easily create ImGui applications in Python and C++. Batteries included!
+Version: 1.6.3
+Summary: Dear ImGui Bundle: From expressive code to powerful GUIs in no time. A fast, feature-rich, cross-platform toolkit for C++ and Python.
 Author-Email: Pascal Thomet <pthomet@gmail.com>
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: License :: OSI Approved :: MIT License
@@ -24,8 +24,8 @@ Requires-Dist: glfw
 Requires-Dist: PyOpenGL
 Requires-Dist: pillow
 Requires-Dist: pydantic
-Requires-Dist: pytest; extra == "test"
 Provides-Extra: test
+Requires-Dist: pytest; extra == "test"
 Description-Content-Type: text/markdown
 
 *Note: You can find a more complete version of this document in the

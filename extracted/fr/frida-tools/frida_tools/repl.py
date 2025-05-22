@@ -293,6 +293,8 @@ class REPLApplication(ConsoleApplication):
         self._script = script
 
         def on_message(message: Mapping[Any, Any], data: Any) -> None:
+            if self.try_handle_bridge_request(message, self._script):
+                return
             self._reactor.schedule(lambda: self._process_message(message, data))
 
         script.on("message", on_message)
@@ -714,7 +716,9 @@ class REPLApplication(ConsoleApplication):
         raw_fragments = []
 
         data_dir = Path(__file__).parent
-        raw_fragments.append((data_dir / "repl_agent.js").read_text(encoding="utf-8"))
+        raw_fragments.append(
+            (data_dir / "repl_agent.js").read_text(encoding="utf-8").replace("/agent.js", "/frida/repl/agent.js", 1)
+        )
 
         if self._codeshare_script is not None:
             raw_fragments.append(

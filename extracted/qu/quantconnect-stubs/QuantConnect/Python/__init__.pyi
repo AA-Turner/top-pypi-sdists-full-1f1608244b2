@@ -34,183 +34,68 @@ QuantConnect_Python__EventContainer_Callable = typing.TypeVar("QuantConnect_Pyth
 QuantConnect_Python__EventContainer_ReturnType = typing.TypeVar("QuantConnect_Python__EventContainer_ReturnType")
 
 
-class PythonQuandl(QuantConnect.DataSource.NasdaqDataLink):
-    """Dynamic data class for Python algorithms."""
-
-    def __init__(self) -> None:
-        """Constructor for initialising the PythonQuandl class"""
-        ...
-
-
-class BuyingPowerModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Securities.IBuyingPowerModel], QuantConnect.Securities.IBuyingPowerModel):
-    """Wraps a PyObject object that represents a security's model of buying power"""
+class FeeModelPythonWrapper(QuantConnect.Orders.Fees.FeeModel):
+    """Provides an order fee model that wraps a PyObject object that represents a model that simulates order fees"""
 
     def __init__(self, model: typing.Any) -> None:
         """
-        Constructor for initializing the BuyingPowerModelPythonWrapper class with wrapped PyObject object
+        Constructor for initialising the FeeModelPythonWrapper class with wrapped PyObject object
         
-        :param model: Represents a security's model of buying power
+        :param model: Represents a model that simulates order fees
         """
         ...
 
-    def get_buying_power(self, parameters: QuantConnect.Securities.BuyingPowerParameters) -> QuantConnect.Securities.BuyingPower:
+    def get_order_fee(self, parameters: QuantConnect.Orders.Fees.OrderFeeParameters) -> QuantConnect.Orders.Fees.OrderFee:
         """
-        Gets the buying power available for a trade
+        Get the fee for this order
         
-        :param parameters: A parameters object containing the algorithm's potrfolio, security, and order direction
-        :returns: The buying power available for the trade.
-        """
-        ...
-
-    def get_initial_margin_required_for_order(self, parameters: QuantConnect.Securities.InitialMarginRequiredForOrderParameters) -> QuantConnect.Securities.InitialMargin:
-        """
-        Gets the total margin required to execute the specified order in units of the account currency including fees
-        
-        :param parameters: An object containing the portfolio, the security and the order
-        :returns: The total margin in terms of the currency quoted in the order.
-        """
-        ...
-
-    def get_initial_margin_requirement(self, parameters: QuantConnect.Securities.InitialMarginParameters) -> QuantConnect.Securities.InitialMargin:
-        """
-        The margin that must be held in order to increase the position by the provided quantity
-        
-        :param parameters: An object containing the security and quantity
-        :returns: The initial margin required for the provided security and quantity.
-        """
-        ...
-
-    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
-        """
-        Gets the current leverage of the security
-        
-        :param security: The security to get leverage for
-        :returns: The current leverage in the security.
-        """
-        ...
-
-    def get_maintenance_margin(self, parameters: QuantConnect.Securities.MaintenanceMarginParameters) -> QuantConnect.Securities.MaintenanceMargin:
-        """
-        Gets the margin currently allocated to the specified holding
-        
-        :param parameters: An object containing the security
-        :returns: The maintenance margin required for the provided holdings quantity/cost/value.
-        """
-        ...
-
-    def get_maximum_order_quantity_for_delta_buying_power(self, parameters: QuantConnect.Securities.GetMaximumOrderQuantityForDeltaBuyingPowerParameters) -> QuantConnect.Securities.GetMaximumOrderQuantityResult:
-        """
-        Get the maximum market order quantity to obtain a delta in the buying power used by a security.
-        The deltas sign defines the position side to apply it to, positive long, negative short.
-        
-        :param parameters: An object containing the portfolio, the security and the delta buying power
-        :returns: Returns the maximum allowed market order quantity and if zero, also the reason.
-        """
-        ...
-
-    def get_maximum_order_quantity_for_target_buying_power(self, parameters: QuantConnect.Securities.GetMaximumOrderQuantityForTargetBuyingPowerParameters) -> QuantConnect.Securities.GetMaximumOrderQuantityResult:
-        """
-        Get the maximum market order quantity to obtain a position with a given buying power percentage.
-        Will not take into account free buying power.
-        
-        :param parameters: An object containing the portfolio, the security and the target signed buying power percentage
-        :returns: Returns the maximum allowed market order quantity and if zero, also the reason.
-        """
-        ...
-
-    def get_reserved_buying_power_for_position(self, parameters: QuantConnect.Securities.ReservedBuyingPowerForPositionParameters) -> QuantConnect.Securities.ReservedBuyingPowerForPosition:
-        """
-        Gets the amount of buying power reserved to maintain the specified position
-        
-        :param parameters: A parameters object containing the security
-        :returns: The reserved buying power in account currency.
-        """
-        ...
-
-    def has_sufficient_buying_power_for_order(self, parameters: QuantConnect.Securities.HasSufficientBuyingPowerForOrderParameters) -> QuantConnect.Securities.HasSufficientBuyingPowerForOrderResult:
-        """
-        Check if there is sufficient buying power to execute this order.
-        
-        :param parameters: An object containing the portfolio, the security and the order
-        :returns: Returns buying power information for an order.
-        """
-        ...
-
-    def set_leverage(self, security: QuantConnect.Securities.Security, leverage: float) -> None:
-        """
-        Sets the leverage for the applicable securities, i.e, equities
-        
-        :param security: The security to set leverage for
-        :param leverage: The new leverage
+        :param parameters: A OrderFeeParameters object containing the security and order
+        :returns: The cost of the order in units of the account currency.
         """
         ...
 
 
-class RiskFreeInterestRateModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Data.IRiskFreeInterestRateModel], QuantConnect.Data.IRiskFreeInterestRateModel):
-    """Wraps a PyObject object that represents a risk-free interest rate model"""
+class SlippageModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Orders.Slippage.ISlippageModel], QuantConnect.Orders.Slippage.ISlippageModel):
+    """Wraps a PyObject object that represents a model that simulates market order slippage"""
 
     def __init__(self, model: typing.Any) -> None:
         """
-        Constructor for initializing the RiskFreeInterestRateModelPythonWrapper class with wrapped PyObject object
+        Constructor for initialising the SlippageModelPythonWrapper class with wrapped PyObject object
         
-        :param model: Represents a security's model of buying power
+        :param model: Represents a model that simulates market order slippage
         """
         ...
 
-    @staticmethod
-    def from_py_object(model: typing.Any) -> QuantConnect.Data.IRiskFreeInterestRateModel:
+    def get_slippage_approximation(self, asset: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order) -> float:
         """
-        Converts a PyObject object into a IRiskFreeInterestRateModel object, wrapping it if necessary
+        Slippage Model. Return a decimal cash slippage approximation on the order.
         
-        :param model: The Python model
-        :returns: The converted IRiskFreeInterestRateModel instance.
-        """
-        ...
-
-    def get_interest_rate(self, date: typing.Union[datetime.datetime, datetime.date]) -> float:
-        """
-        Get interest rate by a given date
-        
-        :param date: The date
-        :returns: Interest rate on the given date.
+        :param asset: The security matching the order
+        :param order: The order to compute slippage for
+        :returns: The slippage of the order in units of the account currency.
         """
         ...
 
 
-class SettlementModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Securities.ISettlementModel], QuantConnect.Securities.ISettlementModel):
-    """Provides an implementation of ISettlementModel that wraps a PyObject object"""
+class OptionAssignmentModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Securities.Option.IOptionAssignmentModel], QuantConnect.Securities.Option.IOptionAssignmentModel):
+    """Python wrapper for custom option assignment models"""
 
     def __init__(self, model: typing.Any) -> None:
         """
-        Constructor for initialising the SettlementModelPythonWrapper class with wrapped PyObject object
+        Creates a new instance
         
-        :param model: Settlement Python Model
+        :param model: The python model to wrapp
         """
         ...
 
-    def apply_funds(self, apply_funds_parameters: QuantConnect.Securities.ApplyFundsSettlementModelParameters) -> None:
+    def get_assignment(self, parameters: QuantConnect.Securities.Option.OptionAssignmentParameters) -> QuantConnect.Securities.Option.OptionAssignmentResult:
         """
-        Applies cash settlement rules using the method defined in the Python class
+        Get's the option assignments to generate if any
         
-        :param apply_funds_parameters: The funds application parameters
+        :param parameters: The option assignment parameters data transfer class
+        :returns: The option assignment result.
         """
         ...
-
-    def get_unsettled_cash(self) -> QuantConnect.Securities.CashAmount:
-        """Gets the unsettled cash amount for the security"""
-        ...
-
-    def scan(self, settlement_parameters: QuantConnect.Securities.ScanSettlementModelParameters) -> None:
-        """
-        Scan for pending settlements using the method defined in the Python class
-        
-        :param settlement_parameters: The settlement parameters
-        """
-        ...
-
-
-class PandasIgnoreMembersAttribute(System.Attribute):
-    """Attribute to indicate the pandas converter to ignore all members of the class when converting an instance to a pandas DataFrame row."""
 
 
 class PandasConverter(System.Object):
@@ -327,14 +212,46 @@ class PandasData(System.Object):
         ...
 
 
-class SignalExportTargetPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Interfaces.ISignalExportTarget], QuantConnect.Interfaces.ISignalExportTarget):
-    """Provides an implementation of ISignalExportTarget that wraps a PyObject object"""
+class DataConsolidatorPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Data.Consolidators.IDataConsolidator], QuantConnect.Data.Consolidators.IDataConsolidator):
+    """Provides an Data Consolidator that wraps a PyObject object that represents a custom Python consolidator"""
 
-    def __init__(self, instance: typing.Any) -> None:
+    @property
+    def consolidated(self) -> QuantConnect.Data.IBaseData:
         """
-        Constructor for initialising the SignalExportTargetPythonWrapper class with wrapped PyObject object
+        Gets the most recently consolidated piece of data. This will be null if this consolidator
+        has not produced any data yet.
+        """
+        ...
+
+    @property
+    def working_data(self) -> QuantConnect.Data.IBaseData:
+        """Gets a clone of the data being currently consolidated"""
+        ...
+
+    @property
+    def input_type(self) -> typing.Type:
+        """Gets the type consumed by this consolidator"""
+        ...
+
+    @property
+    def output_type(self) -> typing.Type:
+        """Gets the type produced by this consolidator"""
+        ...
+
+    @property
+    def data_consolidated(self) -> _EventContainer[typing.Callable[[System.Object, QuantConnect.Data.IBaseData], None], None]:
+        """Event handler that fires when a new piece of data is produced"""
+        ...
+
+    @data_consolidated.setter
+    def data_consolidated(self, value: _EventContainer[typing.Callable[[System.Object, QuantConnect.Data.IBaseData], None], None]) -> None:
+        ...
+
+    def __init__(self, consolidator: typing.Any) -> None:
+        """
+        Constructor for initialising the DataConsolidatorPythonWrapper class with wrapped PyObject object
         
-        :param instance: The underlying python instance
+        :param consolidator: Represents a custom python consolidator
         """
         ...
 
@@ -342,94 +259,23 @@ class SignalExportTargetPythonWrapper(QuantConnect.Python.BasePythonWrapper[Quan
         """Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources."""
         ...
 
-    def send(self, parameters: QuantConnect.Algorithm.Framework.Portfolio.SignalExports.SignalExportTargetParameters) -> bool:
-        """Interface to send positions holdings to different 3rd party API's"""
+    def reset(self) -> None:
+        """Resets the consolidator"""
         ...
 
-
-class PandasNonExpandableAttribute(System.Attribute):
-    """
-    Attribute to mark a class, field or property as non-expandable by the pandas converter.
-    The instance will be added to the dataframe as it is, without unwrapping its fields and properties into columns.
-    """
-
-
-class MarginInterestRateModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Securities.IMarginInterestRateModel], QuantConnect.Securities.IMarginInterestRateModel):
-    """Wraps a PyObject object that represents a security's margin interest rate model"""
-
-    def __init__(self, model: typing.Any) -> None:
+    def scan(self, current_local_time: typing.Union[datetime.datetime, datetime.date]) -> None:
         """
-        Constructor for initializing the MarginInterestRateModelPythonWrapper class with wrapped PyObject object
+        Scans this consolidator to see if it should emit a bar due to time passing
         
-        :param model: Represents a security's model of buying power
+        :param current_local_time: The current time in the local time zone (same as BaseData.Time)
         """
         ...
 
-    def apply_margin_interest_rate(self, margin_interest_rate_parameters: QuantConnect.Securities.MarginInterestRateParameters) -> None:
+    def update(self, data: QuantConnect.Data.IBaseData) -> None:
         """
-        Apply margin interest rates to the portfolio
+        Updates this consolidator with the specified data
         
-        :param margin_interest_rate_parameters: The parameters to use
-        """
-        ...
-
-
-class MarginCallModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Securities.IMarginCallModel], QuantConnect.Securities.IMarginCallModel):
-    """Provides a margin call model that wraps a PyObject object that represents the model responsible for picking which orders should be executed during a margin call"""
-
-    def __init__(self, model: typing.Any) -> None:
-        """
-        Constructor for initialising the MarginCallModelPythonWrapper class with wrapped PyObject object
-        
-        :param model: Represents the model responsible for picking which orders should be executed during a margin call
-        """
-        ...
-
-    def execute_margin_call(self, generated_margin_call_orders: typing.List[QuantConnect.Orders.SubmitOrderRequest]) -> typing.List[QuantConnect.Orders.OrderTicket]:
-        """
-        Executes synchronous orders to bring the account within margin requirements.
-        
-        :param generated_margin_call_orders: These are the margin call orders that were generated by individual security margin models.
-        :returns: The list of orders that were actually executed.
-        """
-        ...
-
-    def get_margin_call_orders(self, issue_margin_call_warning: typing.Optional[bool]) -> typing.Tuple[typing.List[QuantConnect.Orders.SubmitOrderRequest], bool]:
-        """
-        Scan the portfolio and the updated data for a potential margin call situation which may get the holdings below zero!
-        If there is a margin call, liquidate the portfolio immediately before the portfolio gets sub zero.
-        
-        :param issue_margin_call_warning: Set to true if a warning should be issued to the algorithm
-        :returns: True for a margin call on the holdings.
-        """
-        ...
-
-
-class BrokerageMessageHandlerPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Brokerages.IBrokerageMessageHandler], QuantConnect.Brokerages.IBrokerageMessageHandler):
-    """Provides a wrapper for IBrokerageMessageHandler implementations written in python"""
-
-    def __init__(self, model: typing.Any) -> None:
-        """
-        Initializes a new instance of the BrokerageMessageHandlerPythonWrapper class
-        
-        :param model: The python implementation of IBrokerageMessageHandler
-        """
-        ...
-
-    def handle_message(self, message: QuantConnect.Brokerages.BrokerageMessageEvent) -> None:
-        """
-        Handles the message
-        
-        :param message: The message to be handled
-        """
-        ...
-
-    def handle_order(self, event_args: QuantConnect.Brokerages.NewBrokerageOrderNotificationEventArgs) -> bool:
-        """
-        Handles a new order placed manually in the brokerage side
-        
-        :param event_args: The new order event
-        :returns: Whether the order should be added to the transaction handler.
+        :param data: The new data for the consolidator
         """
         ...
 
@@ -620,22 +466,270 @@ class BasePythonWrapper(typing.Generic[QuantConnect_Python_BasePythonWrapper_TIn
         ...
 
 
-class SecurityInitializerPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Securities.ISecurityInitializer], QuantConnect.Securities.ISecurityInitializer):
-    """Wraps a PyObject object that represents a type capable of initializing a new security"""
+class CommandPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Commands.Command]):
+    """Python wrapper for a python defined command type"""
 
-    def __init__(self, model: typing.Any) -> None:
+    def __init__(self, type: typing.Any, data: str = None) -> None:
         """
-        Constructor for initialising the SecurityInitializerPythonWrapper class with wrapped PyObject object
+        Constructor for initialising the CommandPythonWrapper class with wrapped PyObject object
         
-        :param model: Represents a type capable of initializing a new security
+        :param type: Python command type
+        :param data: Command data
         """
         ...
 
-    def initialize(self, security: QuantConnect.Securities.Security) -> None:
+    def run(self, algorithm: QuantConnect.Interfaces.IAlgorithm) -> typing.Optional[bool]:
         """
-        Initializes the specified security
+        Run this command using the target algorithm
         
-        :param security: The security to be initialized
+        :param algorithm: The algorithm instance
+        :returns: True if success, false otherwise. Returning null will disable command feedback.
+        """
+        ...
+
+    @staticmethod
+    def serialize(command: typing.Any) -> str:
+        """Helper method to serialize a command instance"""
+        ...
+
+
+class VolatilityModelPythonWrapper(QuantConnect.Securities.Volatility.BaseVolatilityModel):
+    """Provides a volatility model that wraps a PyObject object that represents a model that computes the volatility of a security"""
+
+    @property
+    def volatility(self) -> float:
+        """Gets the volatility of the security as a percentage"""
+        ...
+
+    def __init__(self, model: typing.Any) -> None:
+        """
+        Constructor for initialising the VolatilityModelPythonWrapper class with wrapped PyObject object
+        
+        :param model: Represents a model that computes the volatility of a security
+        """
+        ...
+
+    def get_history_requirements(self, security: QuantConnect.Securities.Security, utc_time: typing.Union[datetime.datetime, datetime.date]) -> typing.Iterable[QuantConnect.Data.HistoryRequest]:
+        """
+        Returns history requirements for the volatility model expressed in the form of history request
+        
+        :param security: The security of the request
+        :param utc_time: The date/time of the request
+        :returns: History request object list, or empty if no requirements.
+        """
+        ...
+
+    def set_subscription_data_config_provider(self, subscription_data_config_provider: QuantConnect.Interfaces.ISubscriptionDataConfigProvider) -> None:
+        """
+        Sets the ISubscriptionDataConfigProvider instance to use.
+        
+        :param subscription_data_config_provider: Provides access to registered SubscriptionDataConfig
+        """
+        ...
+
+    def update(self, security: QuantConnect.Securities.Security, data: QuantConnect.Data.BaseData) -> None:
+        """
+        Updates this model using the new price information in
+        the specified security instance
+        
+        :param security: The security to calculate volatility for
+        :param data: The new data used to update the model
+        """
+        ...
+
+
+class BrokerageMessageHandlerPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Brokerages.IBrokerageMessageHandler], QuantConnect.Brokerages.IBrokerageMessageHandler):
+    """Provides a wrapper for IBrokerageMessageHandler implementations written in python"""
+
+    def __init__(self, model: typing.Any) -> None:
+        """
+        Initializes a new instance of the BrokerageMessageHandlerPythonWrapper class
+        
+        :param model: The python implementation of IBrokerageMessageHandler
+        """
+        ...
+
+    def handle_message(self, message: QuantConnect.Brokerages.BrokerageMessageEvent) -> None:
+        """
+        Handles the message
+        
+        :param message: The message to be handled
+        """
+        ...
+
+    def handle_order(self, event_args: QuantConnect.Brokerages.NewBrokerageOrderNotificationEventArgs) -> bool:
+        """
+        Handles a new order placed manually in the brokerage side
+        
+        :param event_args: The new order event
+        :returns: Whether the order should be added to the transaction handler.
+        """
+        ...
+
+
+class PythonActivator(System.Object):
+    """Provides methods for creating new instances of python custom data objects"""
+
+    @property
+    def type(self) -> typing.Type:
+        """System.Type of the object we wish to create"""
+        ...
+
+    @property
+    def factory(self) -> typing.Callable[[typing.List[System.Object]], System.Object]:
+        """Method to return an instance of object"""
+        ...
+
+    def __init__(self, type: typing.Type, value: typing.Any) -> None:
+        """
+        Creates a new instance of PythonActivator
+        
+        :param type: System.Type of the object we wish to create
+        :param value: PyObject that contains the python type
+        """
+        ...
+
+
+class PandasIgnoreMembersAttribute(System.Attribute):
+    """Attribute to indicate the pandas converter to ignore all members of the class when converting an instance to a pandas DataFrame row."""
+
+
+class PandasIgnoreAttribute(System.Attribute):
+    """
+    Attribute to mark a property or field as ignored when converting an instance to a pandas DataFrame row.
+    No column will be created for this property or field.
+    """
+
+
+class PythonData(QuantConnect.Data.DynamicData):
+    """
+    Dynamic data class for Python algorithms.
+    Stores properties of python instances in DynamicData dictionary
+    """
+
+    @property
+    def end_time(self) -> datetime.datetime:
+        """
+        The end time of this data. Some data covers spans (trade bars)
+        and as such we want to know the entire time span covered
+        """
+        ...
+
+    @end_time.setter
+    def end_time(self, value: datetime.datetime) -> None:
+        ...
+
+    def __getitem__(self, index: str) -> typing.Any:
+        """
+        Indexes into this PythonData, where index is key to the dynamic property
+        
+        :param index: the index
+        :returns: Dynamic property of a given index.
+        """
+        ...
+
+    @overload
+    def __init__(self, python_data: typing.Any) -> None:
+        """Constructor for initializing the PythonData class with wrapped PyObject"""
+        ...
+
+    @overload
+    def __init__(self) -> None:
+        """Constructor for initializing the PythonData class"""
+        ...
+
+    def __setitem__(self, index: str, value: typing.Any) -> None:
+        """
+        Indexes into this PythonData, where index is key to the dynamic property
+        
+        :param index: the index
+        :returns: Dynamic property of a given index.
+        """
+        ...
+
+    def default_resolution(self) -> QuantConnect.Resolution:
+        """Gets the default resolution for this data and security type"""
+        ...
+
+    def get_source(self, config: QuantConnect.Data.SubscriptionDataConfig, date: datetime.datetime, is_live_mode: bool) -> QuantConnect.Data.SubscriptionDataSource:
+        """
+        Source Locator for algorithm written in Python.
+        
+        :param config: Subscription configuration object
+        :param date: Date of the data file we're looking for
+        :param is_live_mode: true if we're in live mode, false for backtesting mode
+        :returns: STRING API Url.
+        """
+        ...
+
+    def is_of_type(self, type: typing.Type) -> bool:
+        """
+        Helper method to determine if the current instance is of the provided type
+        
+        :param type: Target type to check against
+        :returns: True if this instance is of the provided type.
+        """
+        ...
+
+    def is_sparse_data(self) -> bool:
+        """
+        Indicates that the data set is expected to be sparse
+        
+        :returns: True if the data set represented by this type is expected to be sparse.
+        """
+        ...
+
+    def reader(self, config: QuantConnect.Data.SubscriptionDataConfig, line: str, date: datetime.datetime, is_live_mode: bool) -> QuantConnect.Data.BaseData:
+        """
+        Generic Reader Implementation for Python Custom Data.
+        
+        :param config: Subscription configuration
+        :param line: CSV line of data from the source
+        :param date: Date of the requested line
+        :param is_live_mode: true if we're in live mode, false for backtesting mode
+        """
+        ...
+
+    def requires_mapping(self) -> bool:
+        """
+        Indicates if there is support for mapping
+        
+        :returns: True indicates mapping should be used.
+        """
+        ...
+
+    def supported_resolutions(self) -> typing.List[QuantConnect.Resolution]:
+        """Gets the supported resolution for this data and security type"""
+        ...
+
+
+class RiskFreeInterestRateModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Data.IRiskFreeInterestRateModel], QuantConnect.Data.IRiskFreeInterestRateModel):
+    """Wraps a PyObject object that represents a risk-free interest rate model"""
+
+    def __init__(self, model: typing.Any) -> None:
+        """
+        Constructor for initializing the RiskFreeInterestRateModelPythonWrapper class with wrapped PyObject object
+        
+        :param model: Represents a security's model of buying power
+        """
+        ...
+
+    @staticmethod
+    def from_py_object(model: typing.Any) -> QuantConnect.Data.IRiskFreeInterestRateModel:
+        """
+        Converts a PyObject object into a IRiskFreeInterestRateModel object, wrapping it if necessary
+        
+        :param model: The Python model
+        :returns: The converted IRiskFreeInterestRateModel instance.
+        """
+        ...
+
+    def get_interest_rate(self, date: typing.Union[datetime.datetime, datetime.date]) -> float:
+        """
+        Get interest rate by a given date
+        
+        :param date: The date
+        :returns: Interest rate on the given date.
         """
         ...
 
@@ -844,340 +938,6 @@ class BrokerageModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantCon
         ...
 
 
-class PythonActivator(System.Object):
-    """Provides methods for creating new instances of python custom data objects"""
-
-    @property
-    def type(self) -> typing.Type:
-        """System.Type of the object we wish to create"""
-        ...
-
-    @property
-    def factory(self) -> typing.Callable[[typing.List[System.Object]], System.Object]:
-        """Method to return an instance of object"""
-        ...
-
-    def __init__(self, type: typing.Type, value: typing.Any) -> None:
-        """
-        Creates a new instance of PythonActivator
-        
-        :param type: System.Type of the object we wish to create
-        :param value: PyObject that contains the python type
-        """
-        ...
-
-
-class DividendYieldModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Data.IDividendYieldModel], QuantConnect.Data.IDividendYieldModel):
-    """Wraps a PyObject object that represents a dividend yield model"""
-
-    def __init__(self, model: typing.Any) -> None:
-        """
-        Constructor for initializing the DividendYieldModelPythonWrapper class with wrapped PyObject object
-        
-        :param model: Represents a security's model of dividend yield
-        """
-        ...
-
-    @staticmethod
-    def from_py_object(model: typing.Any) -> QuantConnect.Data.IDividendYieldModel:
-        """
-        Converts a PyObject object into a IDividendYieldModel object, wrapping it if necessary
-        
-        :param model: The Python model
-        :returns: The converted IDividendYieldModel instance.
-        """
-        ...
-
-    @overload
-    def get_dividend_yield(self, date: typing.Union[datetime.datetime, datetime.date]) -> float:
-        """
-        Get dividend yield by a given date of a given symbol
-        
-        :param date: The date
-        :returns: Dividend yield on the given date of the given symbol.
-        """
-        ...
-
-    @overload
-    def get_dividend_yield(self, date: typing.Union[datetime.datetime, datetime.date], security_price: float) -> float:
-        """
-        Get dividend yield at given date and security price
-        
-        :param date: The date
-        :param security_price: The security price at the given date
-        :returns: Dividend yield on the given date of the given symbol.
-        """
-        ...
-
-
-class PythonWrapper(System.Object):
-    """Provides extension methods for managing python wrapper classes"""
-
-    @staticmethod
-    def invoke(method: typing.Any, *args: typing.Union[System.Object, typing.Iterable[System.Object]]) -> typing.Any:
-        """
-        Invokes the given PyObject method with the specified arguments
-        
-        :param method: The method to invoke
-        :param args: The arguments to call the method with
-        """
-        ...
-
-    @staticmethod
-    def invoke_method(model: typing.Any, method_name: str, *args: typing.Union[System.Object, typing.Iterable[System.Object]]) -> None:
-        """
-        Invokes the specified method on the provided PyObject instance with the specified arguments
-        
-        :param model: The PyObject instance
-        :param method_name: The name of the method to invoke
-        :param args: The arguments to call the method with
-        """
-        ...
-
-
-class SlippageModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Orders.Slippage.ISlippageModel], QuantConnect.Orders.Slippage.ISlippageModel):
-    """Wraps a PyObject object that represents a model that simulates market order slippage"""
-
-    def __init__(self, model: typing.Any) -> None:
-        """
-        Constructor for initialising the SlippageModelPythonWrapper class with wrapped PyObject object
-        
-        :param model: Represents a model that simulates market order slippage
-        """
-        ...
-
-    def get_slippage_approximation(self, asset: QuantConnect.Securities.Security, order: QuantConnect.Orders.Order) -> float:
-        """
-        Slippage Model. Return a decimal cash slippage approximation on the order.
-        
-        :param asset: The security matching the order
-        :param order: The order to compute slippage for
-        :returns: The slippage of the order in units of the account currency.
-        """
-        ...
-
-
-class PythonConsolidator(System.Object):
-    """Provides a base class for python consolidators, necessary to use event handler."""
-
-    @property
-    def data_consolidated(self) -> _EventContainer[typing.Callable[[System.Object, QuantConnect.Data.IBaseData], None], None]:
-        """Event handler that fires when a new piece of data is produced"""
-        ...
-
-    @data_consolidated.setter
-    def data_consolidated(self, value: _EventContainer[typing.Callable[[System.Object, QuantConnect.Data.IBaseData], None], None]) -> None:
-        ...
-
-    def on_data_consolidated(self, consolidator: typing.Any, data: QuantConnect.Data.IBaseData) -> None:
-        """
-        Function to invoke the event handler
-        
-        :param consolidator: Reference to the consolidator itself
-        :param data: The finished data from the consolidator
-        """
-        ...
-
-    def reset(self) -> None:
-        """Resets the consolidator"""
-        ...
-
-
-class VolatilityModelPythonWrapper(QuantConnect.Securities.Volatility.BaseVolatilityModel):
-    """Provides a volatility model that wraps a PyObject object that represents a model that computes the volatility of a security"""
-
-    @property
-    def volatility(self) -> float:
-        """Gets the volatility of the security as a percentage"""
-        ...
-
-    def __init__(self, model: typing.Any) -> None:
-        """
-        Constructor for initialising the VolatilityModelPythonWrapper class with wrapped PyObject object
-        
-        :param model: Represents a model that computes the volatility of a security
-        """
-        ...
-
-    def get_history_requirements(self, security: QuantConnect.Securities.Security, utc_time: typing.Union[datetime.datetime, datetime.date]) -> typing.Iterable[QuantConnect.Data.HistoryRequest]:
-        """
-        Returns history requirements for the volatility model expressed in the form of history request
-        
-        :param security: The security of the request
-        :param utc_time: The date/time of the request
-        :returns: History request object list, or empty if no requirements.
-        """
-        ...
-
-    def set_subscription_data_config_provider(self, subscription_data_config_provider: QuantConnect.Interfaces.ISubscriptionDataConfigProvider) -> None:
-        """
-        Sets the ISubscriptionDataConfigProvider instance to use.
-        
-        :param subscription_data_config_provider: Provides access to registered SubscriptionDataConfig
-        """
-        ...
-
-    def update(self, security: QuantConnect.Securities.Security, data: QuantConnect.Data.BaseData) -> None:
-        """
-        Updates this model using the new price information in
-        the specified security instance
-        
-        :param security: The security to calculate volatility for
-        :param data: The new data used to update the model
-        """
-        ...
-
-
-class PythonData(QuantConnect.Data.DynamicData):
-    """
-    Dynamic data class for Python algorithms.
-    Stores properties of python instances in DynamicData dictionary
-    """
-
-    @property
-    def end_time(self) -> datetime.datetime:
-        """
-        The end time of this data. Some data covers spans (trade bars)
-        and as such we want to know the entire time span covered
-        """
-        ...
-
-    @end_time.setter
-    def end_time(self, value: datetime.datetime) -> None:
-        ...
-
-    def __getitem__(self, index: str) -> typing.Any:
-        """
-        Indexes into this PythonData, where index is key to the dynamic property
-        
-        :param index: the index
-        :returns: Dynamic property of a given index.
-        """
-        ...
-
-    @overload
-    def __init__(self, python_data: typing.Any) -> None:
-        """Constructor for initializing the PythonData class with wrapped PyObject"""
-        ...
-
-    @overload
-    def __init__(self) -> None:
-        """Constructor for initializing the PythonData class"""
-        ...
-
-    def __setitem__(self, index: str, value: typing.Any) -> None:
-        """
-        Indexes into this PythonData, where index is key to the dynamic property
-        
-        :param index: the index
-        :returns: Dynamic property of a given index.
-        """
-        ...
-
-    def default_resolution(self) -> QuantConnect.Resolution:
-        """Gets the default resolution for this data and security type"""
-        ...
-
-    def get_source(self, config: QuantConnect.Data.SubscriptionDataConfig, date: datetime.datetime, is_live_mode: bool) -> QuantConnect.Data.SubscriptionDataSource:
-        """
-        Source Locator for algorithm written in Python.
-        
-        :param config: Subscription configuration object
-        :param date: Date of the data file we're looking for
-        :param is_live_mode: true if we're in live mode, false for backtesting mode
-        :returns: STRING API Url.
-        """
-        ...
-
-    def is_of_type(self, type: typing.Type) -> bool:
-        """
-        Helper method to determine if the current instance is of the provided type
-        
-        :param type: Target type to check against
-        :returns: True if this instance is of the provided type.
-        """
-        ...
-
-    def is_sparse_data(self) -> bool:
-        """
-        Indicates that the data set is expected to be sparse
-        
-        :returns: True if the data set represented by this type is expected to be sparse.
-        """
-        ...
-
-    def reader(self, config: QuantConnect.Data.SubscriptionDataConfig, line: str, date: datetime.datetime, is_live_mode: bool) -> QuantConnect.Data.BaseData:
-        """
-        Generic Reader Implementation for Python Custom Data.
-        
-        :param config: Subscription configuration
-        :param line: CSV line of data from the source
-        :param date: Date of the requested line
-        :param is_live_mode: true if we're in live mode, false for backtesting mode
-        """
-        ...
-
-    def requires_mapping(self) -> bool:
-        """
-        Indicates if there is support for mapping
-        
-        :returns: True indicates mapping should be used.
-        """
-        ...
-
-    def supported_resolutions(self) -> typing.List[QuantConnect.Resolution]:
-        """Gets the supported resolution for this data and security type"""
-        ...
-
-
-class FeeModelPythonWrapper(QuantConnect.Orders.Fees.FeeModel):
-    """Provides an order fee model that wraps a PyObject object that represents a model that simulates order fees"""
-
-    def __init__(self, model: typing.Any) -> None:
-        """
-        Constructor for initialising the FeeModelPythonWrapper class with wrapped PyObject object
-        
-        :param model: Represents a model that simulates order fees
-        """
-        ...
-
-    def get_order_fee(self, parameters: QuantConnect.Orders.Fees.OrderFeeParameters) -> QuantConnect.Orders.Fees.OrderFee:
-        """
-        Get the fee for this order
-        
-        :param parameters: A OrderFeeParameters object containing the security and order
-        :returns: The cost of the order in units of the account currency.
-        """
-        ...
-
-
-class CommandPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Commands.Command]):
-    """Python wrapper for a python defined command type"""
-
-    def __init__(self, type: typing.Any, data: str = None) -> None:
-        """
-        Constructor for initialising the CommandPythonWrapper class with wrapped PyObject object
-        
-        :param type: Python command type
-        :param data: Command data
-        """
-        ...
-
-    def run(self, algorithm: QuantConnect.Interfaces.IAlgorithm) -> typing.Optional[bool]:
-        """
-        Run this command using the target algorithm
-        
-        :param algorithm: The algorithm instance
-        :returns: True if success, false otherwise. Returning null will disable command feedback.
-        """
-        ...
-
-    @staticmethod
-    def serialize(command: typing.Any) -> str:
-        """Helper method to serialize a command instance"""
-        ...
-
-
 class BenchmarkPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Benchmarks.IBenchmark], QuantConnect.Benchmarks.IBenchmark):
     """Provides an implementation of IBenchmark that wraps a PyObject object"""
 
@@ -1197,13 +957,6 @@ class BenchmarkPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.
         :returns: The value of the benchmark at the specified time.
         """
         ...
-
-
-class PandasIgnoreAttribute(System.Attribute):
-    """
-    Attribute to mark a property or field as ignored when converting an instance to a pandas DataFrame row.
-    No column will be created for this property or field.
-    """
 
 
 class FillModelPythonWrapper(QuantConnect.Orders.Fills.FillModel):
@@ -1348,31 +1101,28 @@ class FillModelPythonWrapper(QuantConnect.Orders.Fills.FillModel):
         ...
 
 
-class DataConsolidatorPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Data.Consolidators.IDataConsolidator], QuantConnect.Data.Consolidators.IDataConsolidator):
-    """Provides an Data Consolidator that wraps a PyObject object that represents a custom Python consolidator"""
+class MarginInterestRateModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Securities.IMarginInterestRateModel], QuantConnect.Securities.IMarginInterestRateModel):
+    """Wraps a PyObject object that represents a security's margin interest rate model"""
 
-    @property
-    def consolidated(self) -> QuantConnect.Data.IBaseData:
+    def __init__(self, model: typing.Any) -> None:
         """
-        Gets the most recently consolidated piece of data. This will be null if this consolidator
-        has not produced any data yet.
+        Constructor for initializing the MarginInterestRateModelPythonWrapper class with wrapped PyObject object
+        
+        :param model: Represents a security's model of buying power
         """
         ...
 
-    @property
-    def working_data(self) -> QuantConnect.Data.IBaseData:
-        """Gets a clone of the data being currently consolidated"""
+    def apply_margin_interest_rate(self, margin_interest_rate_parameters: QuantConnect.Securities.MarginInterestRateParameters) -> None:
+        """
+        Apply margin interest rates to the portfolio
+        
+        :param margin_interest_rate_parameters: The parameters to use
+        """
         ...
 
-    @property
-    def input_type(self) -> typing.Type:
-        """Gets the type consumed by this consolidator"""
-        ...
 
-    @property
-    def output_type(self) -> typing.Type:
-        """Gets the type produced by this consolidator"""
-        ...
+class PythonConsolidator(System.Object):
+    """Provides a base class for python consolidators, necessary to use event handler."""
 
     @property
     def data_consolidated(self) -> _EventContainer[typing.Callable[[System.Object, QuantConnect.Data.IBaseData], None], None]:
@@ -1383,11 +1133,290 @@ class DataConsolidatorPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantC
     def data_consolidated(self, value: _EventContainer[typing.Callable[[System.Object, QuantConnect.Data.IBaseData], None], None]) -> None:
         ...
 
-    def __init__(self, consolidator: typing.Any) -> None:
+    def on_data_consolidated(self, consolidator: typing.Any, data: QuantConnect.Data.IBaseData) -> None:
         """
-        Constructor for initialising the DataConsolidatorPythonWrapper class with wrapped PyObject object
+        Function to invoke the event handler
         
-        :param consolidator: Represents a custom python consolidator
+        :param consolidator: Reference to the consolidator itself
+        :param data: The finished data from the consolidator
+        """
+        ...
+
+    def reset(self) -> None:
+        """Resets the consolidator"""
+        ...
+
+
+class MarginCallModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Securities.IMarginCallModel], QuantConnect.Securities.IMarginCallModel):
+    """Provides a margin call model that wraps a PyObject object that represents the model responsible for picking which orders should be executed during a margin call"""
+
+    def __init__(self, model: typing.Any) -> None:
+        """
+        Constructor for initialising the MarginCallModelPythonWrapper class with wrapped PyObject object
+        
+        :param model: Represents the model responsible for picking which orders should be executed during a margin call
+        """
+        ...
+
+    def execute_margin_call(self, generated_margin_call_orders: typing.List[QuantConnect.Orders.SubmitOrderRequest]) -> typing.List[QuantConnect.Orders.OrderTicket]:
+        """
+        Executes synchronous orders to bring the account within margin requirements.
+        
+        :param generated_margin_call_orders: These are the margin call orders that were generated by individual security margin models.
+        :returns: The list of orders that were actually executed.
+        """
+        ...
+
+    def get_margin_call_orders(self, issue_margin_call_warning: typing.Optional[bool]) -> typing.Tuple[typing.List[QuantConnect.Orders.SubmitOrderRequest], bool]:
+        """
+        Scan the portfolio and the updated data for a potential margin call situation which may get the holdings below zero!
+        If there is a margin call, liquidate the portfolio immediately before the portfolio gets sub zero.
+        
+        :param issue_margin_call_warning: Set to true if a warning should be issued to the algorithm
+        :returns: True for a margin call on the holdings.
+        """
+        ...
+
+
+class BuyingPowerModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Securities.IBuyingPowerModel], QuantConnect.Securities.IBuyingPowerModel):
+    """Wraps a PyObject object that represents a security's model of buying power"""
+
+    def __init__(self, model: typing.Any) -> None:
+        """
+        Constructor for initializing the BuyingPowerModelPythonWrapper class with wrapped PyObject object
+        
+        :param model: Represents a security's model of buying power
+        """
+        ...
+
+    def get_buying_power(self, parameters: QuantConnect.Securities.BuyingPowerParameters) -> QuantConnect.Securities.BuyingPower:
+        """
+        Gets the buying power available for a trade
+        
+        :param parameters: A parameters object containing the algorithm's potrfolio, security, and order direction
+        :returns: The buying power available for the trade.
+        """
+        ...
+
+    def get_initial_margin_required_for_order(self, parameters: QuantConnect.Securities.InitialMarginRequiredForOrderParameters) -> QuantConnect.Securities.InitialMargin:
+        """
+        Gets the total margin required to execute the specified order in units of the account currency including fees
+        
+        :param parameters: An object containing the portfolio, the security and the order
+        :returns: The total margin in terms of the currency quoted in the order.
+        """
+        ...
+
+    def get_initial_margin_requirement(self, parameters: QuantConnect.Securities.InitialMarginParameters) -> QuantConnect.Securities.InitialMargin:
+        """
+        The margin that must be held in order to increase the position by the provided quantity
+        
+        :param parameters: An object containing the security and quantity
+        :returns: The initial margin required for the provided security and quantity.
+        """
+        ...
+
+    def get_leverage(self, security: QuantConnect.Securities.Security) -> float:
+        """
+        Gets the current leverage of the security
+        
+        :param security: The security to get leverage for
+        :returns: The current leverage in the security.
+        """
+        ...
+
+    def get_maintenance_margin(self, parameters: QuantConnect.Securities.MaintenanceMarginParameters) -> QuantConnect.Securities.MaintenanceMargin:
+        """
+        Gets the margin currently allocated to the specified holding
+        
+        :param parameters: An object containing the security
+        :returns: The maintenance margin required for the provided holdings quantity/cost/value.
+        """
+        ...
+
+    def get_maximum_order_quantity_for_delta_buying_power(self, parameters: QuantConnect.Securities.GetMaximumOrderQuantityForDeltaBuyingPowerParameters) -> QuantConnect.Securities.GetMaximumOrderQuantityResult:
+        """
+        Get the maximum market order quantity to obtain a delta in the buying power used by a security.
+        The deltas sign defines the position side to apply it to, positive long, negative short.
+        
+        :param parameters: An object containing the portfolio, the security and the delta buying power
+        :returns: Returns the maximum allowed market order quantity and if zero, also the reason.
+        """
+        ...
+
+    def get_maximum_order_quantity_for_target_buying_power(self, parameters: QuantConnect.Securities.GetMaximumOrderQuantityForTargetBuyingPowerParameters) -> QuantConnect.Securities.GetMaximumOrderQuantityResult:
+        """
+        Get the maximum market order quantity to obtain a position with a given buying power percentage.
+        Will not take into account free buying power.
+        
+        :param parameters: An object containing the portfolio, the security and the target signed buying power percentage
+        :returns: Returns the maximum allowed market order quantity and if zero, also the reason.
+        """
+        ...
+
+    def get_reserved_buying_power_for_position(self, parameters: QuantConnect.Securities.ReservedBuyingPowerForPositionParameters) -> QuantConnect.Securities.ReservedBuyingPowerForPosition:
+        """
+        Gets the amount of buying power reserved to maintain the specified position
+        
+        :param parameters: A parameters object containing the security
+        :returns: The reserved buying power in account currency.
+        """
+        ...
+
+    def has_sufficient_buying_power_for_order(self, parameters: QuantConnect.Securities.HasSufficientBuyingPowerForOrderParameters) -> QuantConnect.Securities.HasSufficientBuyingPowerForOrderResult:
+        """
+        Check if there is sufficient buying power to execute this order.
+        
+        :param parameters: An object containing the portfolio, the security and the order
+        :returns: Returns buying power information for an order.
+        """
+        ...
+
+    def set_leverage(self, security: QuantConnect.Securities.Security, leverage: float) -> None:
+        """
+        Sets the leverage for the applicable securities, i.e, equities
+        
+        :param security: The security to set leverage for
+        :param leverage: The new leverage
+        """
+        ...
+
+
+class SettlementModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Securities.ISettlementModel], QuantConnect.Securities.ISettlementModel):
+    """Provides an implementation of ISettlementModel that wraps a PyObject object"""
+
+    def __init__(self, model: typing.Any) -> None:
+        """
+        Constructor for initialising the SettlementModelPythonWrapper class with wrapped PyObject object
+        
+        :param model: Settlement Python Model
+        """
+        ...
+
+    def apply_funds(self, apply_funds_parameters: QuantConnect.Securities.ApplyFundsSettlementModelParameters) -> None:
+        """
+        Applies cash settlement rules using the method defined in the Python class
+        
+        :param apply_funds_parameters: The funds application parameters
+        """
+        ...
+
+    def get_unsettled_cash(self) -> QuantConnect.Securities.CashAmount:
+        """Gets the unsettled cash amount for the security"""
+        ...
+
+    def scan(self, settlement_parameters: QuantConnect.Securities.ScanSettlementModelParameters) -> None:
+        """
+        Scan for pending settlements using the method defined in the Python class
+        
+        :param settlement_parameters: The settlement parameters
+        """
+        ...
+
+
+class SecurityInitializerPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Securities.ISecurityInitializer], QuantConnect.Securities.ISecurityInitializer):
+    """Wraps a PyObject object that represents a type capable of initializing a new security"""
+
+    def __init__(self, model: typing.Any) -> None:
+        """
+        Constructor for initialising the SecurityInitializerPythonWrapper class with wrapped PyObject object
+        
+        :param model: Represents a type capable of initializing a new security
+        """
+        ...
+
+    def initialize(self, security: QuantConnect.Securities.Security) -> None:
+        """
+        Initializes the specified security
+        
+        :param security: The security to be initialized
+        """
+        ...
+
+
+class PandasNonExpandableAttribute(System.Attribute):
+    """
+    Attribute to mark a class, field or property as non-expandable by the pandas converter.
+    The instance will be added to the dataframe as it is, without unwrapping its fields and properties into columns.
+    """
+
+
+class PythonWrapper(System.Object):
+    """Provides extension methods for managing python wrapper classes"""
+
+    @staticmethod
+    def invoke(method: typing.Any, *args: typing.Union[System.Object, typing.Iterable[System.Object]]) -> typing.Any:
+        """
+        Invokes the given PyObject method with the specified arguments
+        
+        :param method: The method to invoke
+        :param args: The arguments to call the method with
+        """
+        ...
+
+    @staticmethod
+    def invoke_method(model: typing.Any, method_name: str, *args: typing.Union[System.Object, typing.Iterable[System.Object]]) -> None:
+        """
+        Invokes the specified method on the provided PyObject instance with the specified arguments
+        
+        :param model: The PyObject instance
+        :param method_name: The name of the method to invoke
+        :param args: The arguments to call the method with
+        """
+        ...
+
+
+class DividendYieldModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Data.IDividendYieldModel], QuantConnect.Data.IDividendYieldModel):
+    """Wraps a PyObject object that represents a dividend yield model"""
+
+    def __init__(self, model: typing.Any) -> None:
+        """
+        Constructor for initializing the DividendYieldModelPythonWrapper class with wrapped PyObject object
+        
+        :param model: Represents a security's model of dividend yield
+        """
+        ...
+
+    @staticmethod
+    def from_py_object(model: typing.Any) -> QuantConnect.Data.IDividendYieldModel:
+        """
+        Converts a PyObject object into a IDividendYieldModel object, wrapping it if necessary
+        
+        :param model: The Python model
+        :returns: The converted IDividendYieldModel instance.
+        """
+        ...
+
+    @overload
+    def get_dividend_yield(self, date: typing.Union[datetime.datetime, datetime.date]) -> float:
+        """
+        Get dividend yield by a given date of a given symbol
+        
+        :param date: The date
+        :returns: Dividend yield on the given date of the given symbol.
+        """
+        ...
+
+    @overload
+    def get_dividend_yield(self, date: typing.Union[datetime.datetime, datetime.date], security_price: float) -> float:
+        """
+        Get dividend yield at given date and security price
+        
+        :param date: The date
+        :param security_price: The security price at the given date
+        :returns: Dividend yield on the given date of the given symbol.
+        """
+        ...
+
+
+class SignalExportTargetPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Interfaces.ISignalExportTarget], QuantConnect.Interfaces.ISignalExportTarget):
+    """Provides an implementation of ISignalExportTarget that wraps a PyObject object"""
+
+    def __init__(self, instance: typing.Any) -> None:
+        """
+        Constructor for initialising the SignalExportTargetPythonWrapper class with wrapped PyObject object
+        
+        :param instance: The underlying python instance
         """
         ...
 
@@ -1395,45 +1424,16 @@ class DataConsolidatorPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantC
         """Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources."""
         ...
 
-    def reset(self) -> None:
-        """Resets the consolidator"""
-        ...
-
-    def scan(self, current_local_time: typing.Union[datetime.datetime, datetime.date]) -> None:
-        """
-        Scans this consolidator to see if it should emit a bar due to time passing
-        
-        :param current_local_time: The current time in the local time zone (same as BaseData.Time)
-        """
-        ...
-
-    def update(self, data: QuantConnect.Data.IBaseData) -> None:
-        """
-        Updates this consolidator with the specified data
-        
-        :param data: The new data for the consolidator
-        """
+    def send(self, parameters: QuantConnect.Algorithm.Framework.Portfolio.SignalExports.SignalExportTargetParameters) -> bool:
+        """Interface to send positions holdings to different 3rd party API's"""
         ...
 
 
-class OptionAssignmentModelPythonWrapper(QuantConnect.Python.BasePythonWrapper[QuantConnect.Securities.Option.IOptionAssignmentModel], QuantConnect.Securities.Option.IOptionAssignmentModel):
-    """Python wrapper for custom option assignment models"""
+class PythonQuandl(QuantConnect.DataSource.NasdaqDataLink):
+    """Dynamic data class for Python algorithms."""
 
-    def __init__(self, model: typing.Any) -> None:
-        """
-        Creates a new instance
-        
-        :param model: The python model to wrapp
-        """
-        ...
-
-    def get_assignment(self, parameters: QuantConnect.Securities.Option.OptionAssignmentParameters) -> QuantConnect.Securities.Option.OptionAssignmentResult:
-        """
-        Get's the option assignments to generate if any
-        
-        :param parameters: The option assignment parameters data transfer class
-        :returns: The option assignment result.
-        """
+    def __init__(self) -> None:
+        """Constructor for initialising the PythonQuandl class"""
         ...
 
 

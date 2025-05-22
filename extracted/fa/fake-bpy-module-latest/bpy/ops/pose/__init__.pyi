@@ -656,7 +656,16 @@ def select_grouped(
     /,
     *,
     extend: bool | None = False,
-    type: typing.Literal["COLLECTION", "COLOR", "KEYINGSET"] | None = "COLLECTION",
+    type: typing.Literal[
+        "COLLECTION",
+        "COLOR",
+        "KEYINGSET",
+        "CHILDREN",
+        "CHILDREN_IMMEDIATE",
+        "PARENT",
+        "SIBILINGS",
+    ]
+    | None = "COLLECTION",
 ):
     """Select all visible bones grouped by similar properties
 
@@ -674,7 +683,19 @@ def select_grouped(
 
     KEYINGSET
     Keying Set -- All bones affected by active Keying Set.
-        :type type: typing.Literal['COLLECTION','COLOR','KEYINGSET'] | None
+
+    CHILDREN
+    Children -- Select all children of currently selected bones.
+
+    CHILDREN_IMMEDIATE
+    Immediate Children -- Select direct children of currently selected bones.
+
+    PARENT
+    Parents -- Select the parents of currently selected bones.
+
+    SIBILINGS
+    Siblings -- Select all bones that have the same parent as currently selected bones.
+        :type type: typing.Literal['COLLECTION','COLOR','KEYINGSET','CHILDREN','CHILDREN_IMMEDIATE','PARENT','SIBILINGS'] | None
     """
 
 def select_hierarchy(

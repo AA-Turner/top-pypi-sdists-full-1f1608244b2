@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: omnata-plugin-runtime
-Version: 0.10.22
+Version: 0.10.24
 Summary: Classes and common runtime components for building and running Omnata Plugins
 Author: James Weakley
 Author-email: james.weakley@omnata.com

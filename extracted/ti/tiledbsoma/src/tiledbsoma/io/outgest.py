@@ -13,6 +13,7 @@ from __future__ import annotations
 import json
 from concurrent.futures import Future
 from typing import (
+    TYPE_CHECKING,
     Any,
     KeysView,
     Sequence,
@@ -37,6 +38,7 @@ from .. import (
     logging,
 )
 from .._constants import SOMA_JOINID
+from .._dask.load import SOMADaskConfig, load_daskarray
 from .._exception import SOMAError
 from .._types import NPNDArray, Path
 from .._util import MISSING, Sentinel, _resolve_futures
@@ -106,14 +108,16 @@ def _read_partitioned_sparse(X: SparseNDArray, d0_size: int) -> pa.Table:
     # density of matrix. Magic number determined empirically, as a tradeoff
     # between concurrency and fixed query overhead.
     tgt_point_count = 96 * 1024**2
+    fallback_row_count = 32768
     try:
-        nnz: int | None = X._handle._handle.nnz(raise_if_slow=True)
+        # frag_cell_count is >= nnz, as it does not account for deletes and double-counts updates
+        frag_cell_count: int | None = X._handle._handle.fragment_cell_count()
     except SOMAError:
-        nnz = None
+        frag_cell_count = None
     partition_sz = (
-        max(1024 * round(d0_size * tgt_point_count / nnz / 1024), 1024)
-        if nnz is not None and nnz > 0
-        else d0_size  # i.e, no partitioning
+        max(1024 * round(d0_size * tgt_point_count / frag_cell_count / 1024), 1024)
+        if frag_cell_count is not None and frag_cell_count > 0
+        else min(fallback_row_count, d0_size)
     )
     partitions = [
         slice(st, min(st + partition_sz - 1, d0_size - 1))
@@ -132,10 +136,21 @@ def _read_partitioned_sparse(X: SparseNDArray, d0_size: int) -> pa.Table:
         return _read_sparse_X(X, partitions[0])
 
 
+if TYPE_CHECKING:
+    try:
+        import dask.array as da
+    except ImportError:
+        pass
+
+
 def _extract_X_key(
-    measurement: Measurement, X_layer_name: str, nobs: int, nvar: int
-) -> Future[Matrix]:
-    """Helper function for to_anndata"""
+    measurement: Measurement,
+    X_layer_name: str,
+    nobs: int,
+    nvar: int,
+    dask: SOMADaskConfig | None = None,
+) -> Union[Future[Matrix], "da.Array"]:
+    """Helper function for to_anndata."""
     if X_layer_name not in measurement.X:
         raise ValueError(
             f"X_layer_name {X_layer_name} not found in data: {measurement.X.keys()}"
@@ -145,8 +160,14 @@ def _extract_X_key(
     X = measurement.X[X_layer_name]
     tp = X.context.threadpool
 
+    if dask:
+        return load_daskarray(
+            layer=X,
+            coords=None,
+            **dask,
+        )
     # Read data from SOMA into memory
-    if isinstance(X, DenseNDArray):
+    elif isinstance(X, DenseNDArray):
 
         def _read_dense_X(A: DenseNDArray) -> Matrix:
             return A.read((slice(None), slice(None))).to_numpy()
@@ -237,6 +258,7 @@ def to_anndata(
     var_id_name: str | None = None,
     obsm_varm_width_hints: dict[str, dict[str, int]] | None = None,
     uns_keys: Sequence[str] | None = None,
+    dask: SOMADaskConfig | None = None,
 ) -> ad.AnnData:
     """Converts the experiment group to AnnData format.
 
@@ -284,10 +306,12 @@ def to_anndata(
     are extracted.  The default is to extract them all.  Use ``uns_keys=[]``
     to not outgest any ``uns`` keys.
 
+    If ``dask`` is present, the ``X`` matrix is returned as a Dask array, and the ``dask`` configs apply to that
+    conversion and resulting array (lifecycle: experimental).
+
     Lifecycle:
         Maturing.
     """
-
     s = _util.get_start_stamp()
     logging.log_io(None, "START  Experiment.to_anndata")
 
@@ -344,26 +368,37 @@ def to_anndata(
     # * We could use **kwargs -- but that would bork the online help docs.
     # * Our consolation: check if the layer name is the _default_,
     #   and the experiment doesn't have it.
-    anndata_X_future: Future[Matrix] | None = None
+    anndata_X_future: Future[Matrix] | "da.Array" | None = None
 
     if X_layer_name == MISSING:
         if "data" in measurement.X:
-            anndata_X_future = _extract_X_key(measurement, "data", nobs, nvar)
+            anndata_X_future = _extract_X_key(
+                measurement, "data", nobs, nvar, dask=dask
+            )
     elif X_layer_name is not None:
         if X_layer_name not in measurement.X:
             raise ValueError(
                 f"X_layer_name '{X_layer_name}' not found in measurement: {measurement.X.keys()}"
             )
         anndata_X_future = _extract_X_key(
-            measurement, cast(str, X_layer_name), nobs, nvar
+            measurement=measurement,
+            X_layer_name=cast(str, X_layer_name),
+            nobs=nobs,
+            nvar=nvar,
+            dask=dask,
         )
 
     if extra_X_layer_names is not None:
         for extra_X_layer_name in extra_X_layer_names:
             if extra_X_layer_name == X_layer_name:
                 continue
-            assert extra_X_layer_name is not None  # appease linter; already checked
-            data = _extract_X_key(measurement, extra_X_layer_name, nobs, nvar)
+            data = _extract_X_key(
+                measurement=measurement,
+                X_layer_name=extra_X_layer_name,
+                nobs=nobs,
+                nvar=nvar,
+                dask=dask,
+            )
             anndata_layers_futures[extra_X_layer_name] = data
 
     if obsm_varm_width_hints is None:
@@ -441,7 +476,11 @@ def to_anndata(
     varm = _resolve_futures(varm)
     obsp = _resolve_futures(obsp)
     varp = _resolve_futures(varp)
-    anndata_X = anndata_X_future.result() if anndata_X_future else None
+    anndata_X = (
+        anndata_X_future.result()
+        if isinstance(anndata_X_future, Future)
+        else anndata_X_future
+    )
     anndata_layers = _resolve_futures(anndata_layers_futures)
     uns: UnsDict = (
         _resolve_futures(uns_future.result(), deep=True)
@@ -474,10 +513,7 @@ def _extract_obsm_or_varm(
     num_rows: int,
     width_configs: dict[str, int],
 ) -> Matrix:
-    """
-    This is a helper function for ``to_anndata`` of ``obsm`` and ``varm`` elements.
-    """
-
+    """This is a helper function for ``to_anndata`` of ``obsm`` and ``varm`` elements."""
     # SOMA shape is capacity/domain -- not what AnnData wants.
     # But here do check the array is truly 2D.
     shape = soma_nd_array.shape
@@ -558,9 +594,7 @@ def _extract_uns(
     uns_keys: Sequence[str] | None = None,
     level: int = 0,
 ) -> dict[str, FutureUnsDictNode]:
-    """
-    This is a helper function for ``to_anndata`` of ``uns`` elements.
-    """
+    """This is a helper function for ``to_anndata`` of ``uns`` elements."""
     extracted: dict[str, FutureUnsDictNode] = {}
     tp = collection.context.threadpool
     for key in collection.keys():
@@ -613,7 +647,7 @@ def _extract_uns(
 
 
 def _outgest_uns_1d_string_array(pdf: pd.DataFrame, uri_for_logging: str) -> NPNDArray:
-    """Helper methods for _extract_uns"""
+    """Helper methods for _extract_uns."""
     num_rows, num_cols = pdf.shape
     # An array like ["a", "b", "c"] had become a DataFrame like
     # soma_joinid value
@@ -628,7 +662,7 @@ def _outgest_uns_1d_string_array(pdf: pd.DataFrame, uri_for_logging: str) -> NPN
 
 
 def _outgest_uns_2d_string_array(pdf: pd.DataFrame, uri_for_logging: str) -> NPNDArray:
-    """Helper methods for _extract_uns"""
+    """Helper methods for _extract_uns."""
     num_rows, num_cols = pdf.shape
     if num_cols < 2:
         raise SOMAError(f"Expected 2 columns in {uri_for_logging}; got {num_cols}")

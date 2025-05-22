@@ -199,118 +199,6 @@ class CrunchDAOSignalExport(QuantConnect.Algorithm.Framework.Portfolio.SignalExp
         ...
 
 
-class SignalExportManager(System.Object):
-    """
-    Class manager to send portfolio targets to different 3rd party API's
-    For example, it allows Collective2, CrunchDAO and Numerai signal export providers
-    """
-
-    @property
-    def automatic_export_time_span(self) -> typing.Optional[datetime.timedelta]:
-        """
-        Gets the maximim time span elapsed to export signals after an order event
-        If null, disable automatic export.
-        """
-        ...
-
-    @automatic_export_time_span.setter
-    def automatic_export_time_span(self, value: typing.Optional[datetime.timedelta]) -> None:
-        ...
-
-    def __init__(self, algorithm: QuantConnect.Interfaces.IAlgorithm) -> None:
-        """
-        SignalExportManager Constructor, obtains the entry information needed to send signals
-        and initializes the fields to be used
-        
-        :param algorithm: Algorithm being run
-        """
-        ...
-
-    @overload
-    def add_signal_export_provider(self, signal_export: typing.Any) -> None:
-        """
-        Adds a new signal exports provider
-        
-        :param signal_export: Signal export provider
-        """
-        ...
-
-    @overload
-    def add_signal_export_provider(self, signal_export: QuantConnect.Interfaces.ISignalExportTarget) -> None:
-        """
-        Adds a new signal exports provider
-        
-        :param signal_export: Signal export provider
-        """
-        ...
-
-    @overload
-    def add_signal_export_providers(self, signal_exports: typing.Any) -> None:
-        """
-        Adds one or more new signal exports providers
-        
-        :param signal_exports: One or more signal export provider
-        """
-        ...
-
-    @overload
-    def add_signal_export_providers(self, *signal_exports: typing.Union[QuantConnect.Interfaces.ISignalExportTarget, typing.Iterable[QuantConnect.Interfaces.ISignalExportTarget]]) -> None:
-        """
-        Adds one or more new signal exports providers
-        
-        :param signal_exports: One or more signal export provider
-        """
-        ...
-
-    def flush(self, current_time_utc: typing.Union[datetime.datetime, datetime.date]) -> None:
-        """
-        Set the target portfolio after order events.
-        
-        :param current_time_utc: The current time of synchronous events
-        """
-        ...
-
-    def get_portfolio_targets(self, targets: typing.Optional[typing.List[QuantConnect.Algorithm.Framework.Portfolio.PortfolioTarget]]) -> typing.Tuple[bool, typing.List[QuantConnect.Algorithm.Framework.Portfolio.PortfolioTarget]]:
-        """
-        Obtains an array of portfolio targets from algorithm's Portfolio and returns them.
-        See  PortfolioTarget.Percent(IAlgorithm, Symbol, decimal, bool, string) for more
-        information about how each symbol quantity was calculated
-        
-        This method is protected.
-        
-        :param targets: An array of portfolio targets from the algorithm's Portfolio
-        :returns: True if TotalPortfolioValue was bigger than zero, false otherwise.
-        """
-        ...
-
-    def on_order_event(self, order_event: QuantConnect.Orders.OrderEvent) -> None:
-        """
-        New order event handler: on order status changes (filled, partially filled, cancelled etc).
-        
-        :param order_event: Event information
-        """
-        ...
-
-    def set_target_portfolio(self, *portfolio_targets: typing.Union[QuantConnect.Algorithm.Framework.Portfolio.PortfolioTarget, typing.Iterable[QuantConnect.Algorithm.Framework.Portfolio.PortfolioTarget]]) -> bool:
-        """
-        Sets the portfolio targets with the given entries and sends them with the algorithm
-        being ran to the signal exports providers set, as long as the algorithm is in live mode
-        
-        :param portfolio_targets: One or more portfolio targets to be sent to the defined signal export providers
-        :returns: True if the portfolio targets could be sent to the different signal export providers successfully, false otherwise.
-        """
-        ...
-
-    def set_target_portfolio_from_portfolio(self) -> bool:
-        """
-        Sets the portfolio targets from the algorihtm's Portfolio and sends them with the
-        algorithm being ran to the signal exports providers already set
-        
-        :returns: True if the target list could be obtained from the algorithm's Portfolio and they were successfully sent to the signal export providers.
-        """
-        ...
-
-
 class Collective2SignalExport(QuantConnect.Algorithm.Framework.Portfolio.SignalExports.BaseSignalExport):
     """
     Exports signals of desired positions to Collective2 API using JSON and HTTPS.
@@ -500,6 +388,118 @@ class Collective2SignalExport(QuantConnect.Algorithm.Framework.Portfolio.SignalE
         
         :param parameters: A list of holdings from the portfolio expected to be sent to Collective2 API and the algorithm being ran
         :returns: True if the positions were sent correctly and Collective2 sent no errors, false otherwise.
+        """
+        ...
+
+
+class SignalExportManager(System.Object):
+    """
+    Class manager to send portfolio targets to different 3rd party API's
+    For example, it allows Collective2, CrunchDAO and Numerai signal export providers
+    """
+
+    @property
+    def automatic_export_time_span(self) -> typing.Optional[datetime.timedelta]:
+        """
+        Gets the maximim time span elapsed to export signals after an order event
+        If null, disable automatic export.
+        """
+        ...
+
+    @automatic_export_time_span.setter
+    def automatic_export_time_span(self, value: typing.Optional[datetime.timedelta]) -> None:
+        ...
+
+    def __init__(self, algorithm: QuantConnect.Interfaces.IAlgorithm) -> None:
+        """
+        SignalExportManager Constructor, obtains the entry information needed to send signals
+        and initializes the fields to be used
+        
+        :param algorithm: Algorithm being run
+        """
+        ...
+
+    @overload
+    def add_signal_export_provider(self, signal_export: typing.Any) -> None:
+        """
+        Adds a new signal exports provider
+        
+        :param signal_export: Signal export provider
+        """
+        ...
+
+    @overload
+    def add_signal_export_provider(self, signal_export: QuantConnect.Interfaces.ISignalExportTarget) -> None:
+        """
+        Adds a new signal exports provider
+        
+        :param signal_export: Signal export provider
+        """
+        ...
+
+    @overload
+    def add_signal_export_providers(self, signal_exports: typing.Any) -> None:
+        """
+        Adds one or more new signal exports providers
+        
+        :param signal_exports: One or more signal export provider
+        """
+        ...
+
+    @overload
+    def add_signal_export_providers(self, *signal_exports: typing.Union[QuantConnect.Interfaces.ISignalExportTarget, typing.Iterable[QuantConnect.Interfaces.ISignalExportTarget]]) -> None:
+        """
+        Adds one or more new signal exports providers
+        
+        :param signal_exports: One or more signal export provider
+        """
+        ...
+
+    def flush(self, current_time_utc: typing.Union[datetime.datetime, datetime.date]) -> None:
+        """
+        Set the target portfolio after order events.
+        
+        :param current_time_utc: The current time of synchronous events
+        """
+        ...
+
+    def get_portfolio_targets(self, targets: typing.Optional[typing.List[QuantConnect.Algorithm.Framework.Portfolio.PortfolioTarget]]) -> typing.Tuple[bool, typing.List[QuantConnect.Algorithm.Framework.Portfolio.PortfolioTarget]]:
+        """
+        Obtains an array of portfolio targets from algorithm's Portfolio and returns them.
+        See  PortfolioTarget.Percent(IAlgorithm, Symbol, decimal, bool, string) for more
+        information about how each symbol quantity was calculated
+        
+        This method is protected.
+        
+        :param targets: An array of portfolio targets from the algorithm's Portfolio
+        :returns: True if TotalPortfolioValue was bigger than zero, false otherwise.
+        """
+        ...
+
+    def on_order_event(self, order_event: QuantConnect.Orders.OrderEvent) -> None:
+        """
+        New order event handler: on order status changes (filled, partially filled, cancelled etc).
+        
+        :param order_event: Event information
+        """
+        ...
+
+    def set_target_portfolio(self, *portfolio_targets: typing.Union[QuantConnect.Algorithm.Framework.Portfolio.PortfolioTarget, typing.Iterable[QuantConnect.Algorithm.Framework.Portfolio.PortfolioTarget]]) -> bool:
+        """
+        Sets the portfolio targets with the given entries and sends them with the algorithm
+        being ran to the signal exports providers set, as long as the algorithm is in live mode
+        
+        :param portfolio_targets: One or more portfolio targets to be sent to the defined signal export providers
+        :returns: True if the portfolio targets could be sent to the different signal export providers successfully, false otherwise.
+        """
+        ...
+
+    def set_target_portfolio_from_portfolio(self) -> bool:
+        """
+        Sets the portfolio targets from the algorihtm's Portfolio and sends them with the
+        algorithm being ran to the signal exports providers already set
+        
+        :returns: True if the target list could be obtained from the algorithm's Portfolio and they were successfully sent to the signal export providers.
         """
         ...
 

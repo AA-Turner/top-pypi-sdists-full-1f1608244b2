@@ -219,6 +219,16 @@ def get_kwargs_from_header(f: dict, click_params: list):
     multiple=True,
     help="VM type to use. Specify multiple times to provide multiple options.",
 )
+@click.option(
+    "--scheduler-vm-type",
+    default=[],
+    multiple=True,
+    help=(
+        "VM type to use specifically for scheduler. "
+        "Default is to use small VM if scheduler is not running tasks, "
+        "or use same VM type(s) for all nodes if scheduler node is running tasks."
+    ),
+)
 @click.option("--arm", default=None, is_flag=True, help="Use ARM VM type.")
 @click.option("--cpu", default=None, type=str, help="Number of cores per VM.")
 @click.option("--memory", default=None, type=str, help="Memory per VM.")
@@ -571,6 +581,10 @@ def _batch_run(default_kwargs, logger=None, from_cli=False, **kwargs) -> dict:
             "scheduler_disk_size": kwargs["disk_size"],
             "scheduler_gpu": kwargs["gpu"],
         }
+
+    if kwargs["scheduler_vm_type"]:
+        # user explicitly requested scheduler vm type, so override whatever would be default
+        cluster_kwargs["scheduler_vm_types"] = kwargs["scheduler_vm_type"]
 
     with coiled.Cloud(workspace=kwargs["workspace"]) as cloud:
         # Create a job
