@@ -9,14 +9,6 @@ import QuantConnect.Util.RateLimit
 import System
 
 
-class IRefillStrategy(metaclass=abc.ABCMeta):
-    """Provides a strategy for making tokens available for consumption in the ITokenBucket"""
-
-    def refill(self) -> int:
-        """Computes the number of new tokens made available, typically via the passing of time."""
-        ...
-
-
 class ISleepStrategy(metaclass=abc.ABCMeta):
     """
     Defines a strategy for sleeping the current thread of execution. This is currently used via the
@@ -27,6 +19,41 @@ class ISleepStrategy(metaclass=abc.ABCMeta):
         """
         Sleeps the current thread in an implementation specific way
         and for an implementation specific amount of time
+        """
+        ...
+
+
+class ThreadSleepStrategy(System.Object, QuantConnect.Util.RateLimit.ISleepStrategy):
+    """
+    Provides a CPU non-intensive means of waiting for more tokens to be available in ITokenBucket.
+    This strategy should be the most commonly used as it either sleeps or yields the currently executing thread,
+    allowing for other threads to execute while the current thread is blocked and waiting for new tokens to become
+    available in the bucket for consumption.
+    """
+
+    YIELDING: QuantConnect.Util.RateLimit.ISleepStrategy = ...
+    """Gets an instance of ISleepStrategy that yields the current thread"""
+
+    def __init__(self, milliseconds: int) -> None:
+        """
+        Initializes a new instance of the ThreadSleepStrategy using the specified
+        number of  for each Sleep invocation.
+        
+        :param milliseconds: The duration of time to sleep, in milliseconds
+        """
+        ...
+
+    def sleep(self) -> None:
+        """Sleeps the current thread using the initialized number of milliseconds"""
+        ...
+
+    @staticmethod
+    def sleeping(milliseconds: int) -> QuantConnect.Util.RateLimit.ISleepStrategy:
+        """
+        Gets an instance of ISleepStrategy that sleeps the current thread for
+        the specified number of milliseconds
+        
+        :param milliseconds: The duration of time to sleep, in milliseconds
         """
         ...
 
@@ -81,6 +108,14 @@ class ITokenBucket(metaclass=abc.ABCMeta):
         ...
 
 
+class IRefillStrategy(metaclass=abc.ABCMeta):
+    """Provides a strategy for making tokens available for consumption in the ITokenBucket"""
+
+    def refill(self) -> int:
+        """Computes the number of new tokens made available, typically via the passing of time."""
+        ...
+
+
 class TokenBucket(System.Object):
     """
     Provides extension methods for interacting with ITokenBucket instances as well
@@ -118,41 +153,6 @@ class FixedIntervalRefillStrategy(System.Object, QuantConnect.Util.RateLimit.IRe
         Computes the number of new tokens made available to the bucket for consumption by determining the
         number of time intervals that have passed and multiplying by the number of tokens to refill for
         each time interval.
-        """
-        ...
-
-
-class ThreadSleepStrategy(System.Object, QuantConnect.Util.RateLimit.ISleepStrategy):
-    """
-    Provides a CPU non-intensive means of waiting for more tokens to be available in ITokenBucket.
-    This strategy should be the most commonly used as it either sleeps or yields the currently executing thread,
-    allowing for other threads to execute while the current thread is blocked and waiting for new tokens to become
-    available in the bucket for consumption.
-    """
-
-    YIELDING: QuantConnect.Util.RateLimit.ISleepStrategy = ...
-    """Gets an instance of ISleepStrategy that yields the current thread"""
-
-    def __init__(self, milliseconds: int) -> None:
-        """
-        Initializes a new instance of the ThreadSleepStrategy using the specified
-        number of  for each Sleep invocation.
-        
-        :param milliseconds: The duration of time to sleep, in milliseconds
-        """
-        ...
-
-    def sleep(self) -> None:
-        """Sleeps the current thread using the initialized number of milliseconds"""
-        ...
-
-    @staticmethod
-    def sleeping(milliseconds: int) -> QuantConnect.Util.RateLimit.ISleepStrategy:
-        """
-        Gets an instance of ISleepStrategy that sleeps the current thread for
-        the specified number of milliseconds
-        
-        :param milliseconds: The duration of time to sleep, in milliseconds
         """
         ...
 

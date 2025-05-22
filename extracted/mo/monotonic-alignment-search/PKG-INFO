@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: monotonic-alignment-search
-Version: 0.1.1
+Version: 0.2.0
 Summary: Monotonically align text and speech
 Author-email: Jaehyeon Kim <jaywalnut310@gmail.com>
 Maintainer-email: Enno Hermann <enno.hermann@gmail.com>
@@ -26,14 +26,12 @@ Classifier: Topic :: Multimedia :: Sound/Audio :: Speech
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: numpy>=1.21.6; python_version < "3.11"
-Requires-Dist: numpy>=1.24.4; python_version == "3.11"
-Requires-Dist: numpy>=1.26.4; python_version == "3.12"
-Requires-Dist: numpy>=2.1.3; python_version == "3.13"
-Requires-Dist: torch>=1.12.1; python_version < "3.11"
-Requires-Dist: torch>=2.1.1; python_version == "3.11"
-Requires-Dist: torch>=2.2; python_version == "3.12"
-Requires-Dist: torch>=2.5.1; python_version == "3.13"
+Requires-Dist: numpy>=1.21.6
+Provides-Extra: cpu
+Requires-Dist: torch>=1.12.1; extra == "cpu"
+Provides-Extra: cuda
+Requires-Dist: torch>=1.12.1; extra == "cuda"
+Dynamic: license-file
 
 <!--
 SPDX-FileCopyrightText: Enno Hermann
@@ -58,7 +56,14 @@ for easy reuse in other projects.
 pip install monotonic-alignment-search
 ```
 
-Wheels are provided for Linux, Mac, and Windows.
+Wheels are provided for Linux, Mac, and Windows. Pytorch is not installed by
+default. You either first need to install it yourself, or install one of the
+following extras with [uv](https://docs.astral.sh/uv/):
+
+```bash
+uv add monotonic-alignment-search[cpu]
+uv add monotonic-alignment-search[cuda]
+```
 
 ## Usage
 

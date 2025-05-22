@@ -17,7 +17,11 @@ class SiemCrowdstrike(pydantic.BaseModel):
     Configuration for CrowdStrike Falcon NextGen SIEM
     """
 
-    credential: CrowdStrikeCredential
+    credential: CrowdStrikeCredential = pydantic.Field()
+    """
+    The credential to use for the CrowdStrike Falcon NextGen SIEM tenant.
+    """
+
     url: typing.Optional[str] = pydantic.Field(default=None)
     """
     The root domain where your CrowdStrike Falcon NextGen SIEM tenant is located.

@@ -900,24 +900,80 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
 
         await worker_sleep(15)
 
-        # Transmitir a nota
-        console.print("Transmitindo a nota...\n", style="bold green")
-        pyautogui.click(875, 596)
-        logger.info("\nNota Transmitida")
-        console.print("\nNota Transmitida", style="bold green")
+        max_retries = 3
+        retry_count = 0
+        nf_sucesso = False
+        log_msg = ''
+        msg_retorno = ''
 
-        await worker_sleep(50)
+        while retry_count < max_retries:
+            console.print(f"Tentativa {retry_count + 1} de transmissão da NF-e", style="bold yellow")
 
-        # aguardando nota ser transmitida
-        nf_ready = await wait_nf_ready()
-        if nf_ready['sucesso'] == True:
+            # Transmitir a nota
+            console.print("Transmitindo a nota...\n", style="bold green")
+            pyautogui.click(875, 596)
+            logger.info("\nNota Transmitida")
+            console.print("\nNota Transmitida", style="bold green")
+
+            await worker_sleep(50)
+
+            # aguardando nota ser transmitida
+            nf_ready = await wait_nf_ready()
+
             # Clica em ok "processo finalizado"
             await worker_sleep(3)
             pyautogui.click(957, 556)
             # Clica em fechar
             await worker_sleep(3)
             pyautogui.click(1200, 667)
-            log_msg = f"Nota lançada com sucesso! Número da nota: {nota_fiscal} | Valor: {valor_nota}"
+
+
+            if nf_ready['sucesso'] == True:
+                nf_sucesso = True
+                console.print("NF-e transmitida com sucesso", style="bold green")
+                log_msg = f"Nota lançada com sucesso! Número da nota: {nota_fiscal} | Valor: {valor_nota}"
+                break
+            else:
+                msg_retorno = nf_ready["retorno"]
+                if 'duplicidade' in msg_retorno.lower():
+                    app = Application().connect(class_name="TFrmGerenciadorNFe2", timeout=10)
+                    main_window = app["TFrmGerenciadorNFe2"]
+                    main_window.set_focus()
+
+
+                    console.print("Obtendo informacao da tela para o botao Transfimitir\n")
+                    tpanel_footer = main_window.child_window(class_name="TPanel", found_index=1)
+                    btn_consultar_sefaz = tpanel_footer.child_window(class_name="TBitBtn", found_index=4)
+                    btn_consultar_sefaz.click()
+                    await worker_sleep(30)
+
+                    # Aguardar nota ser transmitida
+                    resultado_nf = await wait_nf_ready()
+
+                    await worker_sleep(3)
+                    # Clica em ok "processo finalizado"
+                    await worker_sleep(3)
+                    pyautogui.click(957, 556)
+                    # Clica em fechar
+                    await worker_sleep(3)
+                    pyautogui.click(1200, 667)
+
+                    if resultado_nf["sucesso"]:
+                        nf_sucesso = True
+                        console.print("NF-e transmitida com sucesso", style="bold green")
+                        log_msg = f"Nota lançada com sucesso! Número da nota: {nota_fiscal} | Valor: {valor_nota}" + (f" | Itens com quantidade zerada: {itens_zero_qtd}" if itens_zero_qtd else "")
+                        break
+                    else:
+                        console.print(f"Falha na transmissão: {msg_retorno}", style="bold red")
+                        retry_count += 1
+                        await worker_sleep(10)
+                else:
+                    console.print(f"Falha na transmissão: {msg_retorno}", style="bold red")
+                    retry_count += 1
+                    await worker_sleep(10)
+
+
+        if nf_sucesso:
             await api_simplifica(
                 task.configEntrada["urlRetorno"],
                 "SUCESSO",
@@ -931,7 +987,7 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                 sucesso=True, retorno=log_msg, status=RpaHistoricoStatusEnum.Sucesso
             )
         else:
-            log_msg = f"{nf_ready['retorno']}. Número da nota: {nota_fiscal} | Valor: {valor_nota}"
+            log_msg = f"{msg_retorno}. Número da nota: {nota_fiscal} | Valor: {valor_nota}"
             console.print(log_msg)
             logger.error(log_msg)
             await api_simplifica(

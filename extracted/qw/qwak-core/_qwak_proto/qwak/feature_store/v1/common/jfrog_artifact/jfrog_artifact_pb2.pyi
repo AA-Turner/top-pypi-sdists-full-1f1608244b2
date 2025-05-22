@@ -18,17 +18,13 @@ class JfrogArtifact(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     PATH_FIELD_NUMBER: builtins.int
-    CHECKSUM_FIELD_NUMBER: builtins.int
     path: builtins.str
     """artifact path"""
-    checksum: builtins.str
-    """artifact checksum"""
     def __init__(
         self,
         *,
         path: builtins.str = ...,
-        checksum: builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["checksum", b"checksum", "path", b"path"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["path", b"path"]) -> None: ...
 
 global___JfrogArtifact = JfrogArtifact

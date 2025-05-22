@@ -15,8 +15,8 @@ from codeflash.models.models import TestFiles, TestType
 if TYPE_CHECKING:
     from codeflash.models.models import TestFiles
 
-BEHAVIORAL_BLOCKLISTED_PLUGINS = ["benchmark"]
-BENCHMARKING_BLOCKLISTED_PLUGINS = ["codspeed", "cov", "benchmark", "profiling"]
+BEHAVIORAL_BLOCKLISTED_PLUGINS = ["benchmark", "codspeed", "xdist", "sugar"]
+BENCHMARKING_BLOCKLISTED_PLUGINS = ["codspeed", "cov", "benchmark", "profiling", "xdist", "sugar"]
 
 
 def execute_test_subprocess(
@@ -65,7 +65,7 @@ def run_behavioral_tests(
             "--codeflash_loops_scope=session",
             "--codeflash_min_loops=1",
             "--codeflash_max_loops=1",
-            f"--codeflash_seconds={pytest_target_runtime_seconds}",  # TODO : This is unnecessary, update the plugin to not ask for this  # noqa: E501
+            f"--codeflash_seconds={pytest_target_runtime_seconds}",  # TODO : This is unnecessary, update the plugin to not ask for this
         ]
 
         result_file_path = get_run_tmp_file(Path("pytest_results.xml"))
@@ -141,6 +141,7 @@ def run_behavioral_tests(
         coverage_config_file if enable_coverage else None,
     )
 
+
 def run_line_profile_tests(
     test_paths: TestFiles,
     pytest_cmd: str,
@@ -149,12 +150,11 @@ def run_line_profile_tests(
     test_framework: str,
     *,
     pytest_target_runtime_seconds: float = TOTAL_LOOPING_TIME,
-    verbose: bool = False,
+    verbose: bool = False,  # noqa: ARG001
     pytest_timeout: int | None = None,
-    pytest_min_loops: int = 5,
-    pytest_max_loops: int = 100_000,
+    pytest_min_loops: int = 5,  # noqa: ARG001
+    pytest_max_loops: int = 100_000,  # noqa: ARG001
     line_profiler_output_file: Path | None = None,
-
 ) -> tuple[Path, subprocess.CompletedProcess]:
     if test_framework == "pytest":
         pytest_cmd_list = (
@@ -191,7 +191,7 @@ def run_line_profile_tests(
         pytest_test_env = test_env.copy()
         pytest_test_env["PYTEST_PLUGINS"] = "codeflash.verification.pytest_plugin"
         blocklist_args = [f"-p no:{plugin}" for plugin in BENCHMARKING_BLOCKLISTED_PLUGINS]
-        pytest_test_env["LINE_PROFILE"]="1"
+        pytest_test_env["LINE_PROFILE"] = "1"
         results = execute_test_subprocess(
             pytest_cmd_list + pytest_args + blocklist_args + result_args + test_files,
             cwd=cwd,
@@ -202,6 +202,7 @@ def run_line_profile_tests(
         msg = f"Unsupported test framework: {test_framework}"
         raise ValueError(msg)
     return line_profiler_output_file, results
+
 
 def run_benchmarking_tests(
     test_paths: TestFiles,

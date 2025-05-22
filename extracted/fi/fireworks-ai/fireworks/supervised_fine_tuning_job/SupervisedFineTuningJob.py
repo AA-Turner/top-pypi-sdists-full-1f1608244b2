@@ -193,6 +193,7 @@ class SupervisedFineTuningJob:
         name: str,
         llm: LLM,
         dataset_or_id: Union[Dataset, str],
+        id: Optional[str] = None,
         api_key: Optional[str] = None,
         epochs: Optional[int] = None,
         learning_rate: Optional[float] = None,
@@ -216,6 +217,7 @@ class SupervisedFineTuningJob:
         created_by: Optional[str] = None,
         output_model: Optional[str] = None,
     ):
+        self.id = id
         self.name = name
         self.llm = llm
         self.epochs = epochs
@@ -350,9 +352,11 @@ class SupervisedFineTuningJob:
             list_response = self._gateway.list_supervised_fine_tuning_jobs_sync(request)
             for job_proto in list_response.supervised_fine_tuning_jobs:
                 if job_proto.display_name == self.name:
+                    id = job_proto.name.split("/")[-1]
                     return SupervisedFineTuningJob(
                         name=job_proto.display_name,
                         llm=self.llm,
+                        id=id,
                         dataset_or_id=self.dataset_or_id,
                         api_key=self._api_key,
                         state=job_state_proto_to_literal(job_proto.state),

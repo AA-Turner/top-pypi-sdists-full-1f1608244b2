@@ -3,12 +3,18 @@ from contextlib import AsyncExitStack, asynccontextmanager
 from pathlib import Path
 from typing import Any, cast
 
+import anyio
 import mcp.types
 from exceptiongroup import catch
 from mcp import ClientSession
 from pydantic import AnyUrl
 
-from fastmcp.client.logging import LogHandler, MessageHandler, default_log_handler
+from fastmcp.client.logging import (
+    LogHandler,
+    MessageHandler,
+    create_log_callback,
+    default_log_handler,
+)
 from fastmcp.client.progress import ProgressHandler, default_progress_handler
 from fastmcp.client.roots import (
     RootsHandler,
@@ -19,6 +25,7 @@ from fastmcp.client.sampling import SamplingHandler, create_sampling_callback
 from fastmcp.exceptions import ToolError
 from fastmcp.server import FastMCP
 from fastmcp.utilities.exceptions import get_catch_handlers
+from fastmcp.utilities.mcp_config import MCPConfig
 
 from .transports import ClientTransport, SessionKwargs, infer_transport
 
@@ -47,6 +54,7 @@ class Client:
             - FastMCP: In-process FastMCP server
             - AnyUrl | str: URL to connect to
             - Path: File path for local socket
+            - MCPConfig: MCP server configuration
             - dict: Transport configuration
         roots: Optional RootsList or RootsHandler for filesystem access
         sampling_handler: Optional handler for sampling requests
@@ -71,7 +79,13 @@ class Client:
 
     def __init__(
         self,
-        transport: ClientTransport | FastMCP | AnyUrl | Path | dict[str, Any] | str,
+        transport: ClientTransport
+        | FastMCP
+        | AnyUrl
+        | Path
+        | MCPConfig
+        | dict[str, Any]
+        | str,
         # Common args
         roots: RootsList | RootsHandler | None = None,
         sampling_handler: SamplingHandler | None = None,
@@ -100,7 +114,7 @@ class Client:
         self._session_kwargs: SessionKwargs = {
             "sampling_callback": None,
             "list_roots_callback": None,
-            "logging_callback": log_handler,
+            "logging_callback": create_log_callback(log_handler),
             "message_handler": message_handler,
             "read_timeout_seconds": timeout,
         }
@@ -153,10 +167,12 @@ class Client:
             ) as session:
                 self._session = session
                 # Initialize the session
-                self._initialize_result = await self._session.initialize()
-
                 try:
+                    with anyio.fail_after(1):
+                        self._initialize_result = await self._session.initialize()
                     yield
+                except TimeoutError:
+                    raise RuntimeError("Failed to initialize server session")
                 finally:
                     self._exit_stack = None
                     self._session = None

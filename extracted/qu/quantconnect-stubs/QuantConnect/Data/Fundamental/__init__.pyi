@@ -7265,36 +7265,6 @@ class FundamentalProperty(Enum):
     ASSET_CLASSIFICATION_CANNAICS = 3621
 
 
-class FundamentalTimeDependentProperty(ReusuableCLRObject, metaclass=abc.ABCMeta):
-    """Simple base class shared by top layer fundamental properties which depend on a time provider"""
-
-    @property
-    def _time_provider(self) -> QuantConnect.ITimeProvider:
-        """
-        The time provider instance to use
-        
-        This property is protected.
-        """
-        ...
-
-    @property
-    def _security_identifier(self) -> QuantConnect.SecurityIdentifier:
-        """
-        The SID instance to use
-        
-        This property is protected.
-        """
-        ...
-
-    def __init__(self, time_provider: QuantConnect.ITimeProvider, security_identifier: QuantConnect.SecurityIdentifier) -> None:
-        """Creates a new instance for the given time and security"""
-        ...
-
-    def clone(self, time_provider: QuantConnect.ITimeProvider) -> QuantConnect.Data.Fundamental.FundamentalTimeDependentProperty:
-        """Clones this instance"""
-        ...
-
-
 class Period(System.Object):
     """Period constants for multi-period fields"""
 
@@ -7332,14 +7302,11 @@ class Period(System.Object):
     """Period constant for ten years"""
 
 
-class MultiPeriodField(typing.Generic[QuantConnect_Data_Fundamental_MultiPeriodField_T], ReusuableCLRObject, metaclass=abc.ABCMeta):
-    """Abstract base class for multi-period fields"""
-
-    NO_VALUE: QuantConnect_Data_Fundamental_MultiPeriodField_T
-    """No Value"""
+class FundamentalTimeDependentProperty(ReusuableCLRObject, metaclass=abc.ABCMeta):
+    """Simple base class shared by top layer fundamental properties which depend on a time provider"""
 
     @property
-    def time_provider(self) -> QuantConnect.ITimeProvider:
+    def _time_provider(self) -> QuantConnect.ITimeProvider:
         """
         The time provider instance to use
         
@@ -7348,118 +7315,20 @@ class MultiPeriodField(typing.Generic[QuantConnect_Data_Fundamental_MultiPeriodF
         ...
 
     @property
-    @abc.abstractmethod
-    def default_period(self) -> str:
+    def _security_identifier(self) -> QuantConnect.SecurityIdentifier:
         """
-        The default period
+        The SID instance to use
         
         This property is protected.
         """
         ...
 
-    @property
-    def security_identifier(self) -> QuantConnect.SecurityIdentifier:
-        """
-        The target security identifier
-        
-        This property is protected.
-        """
-        ...
-
-    @security_identifier.setter
-    def security_identifier(self, value: QuantConnect.SecurityIdentifier) -> None:
-        ...
-
-    @property
-    @abc.abstractmethod
-    def has_value(self) -> bool:
-        """Returns true if the field contains a value for the default period"""
-        ...
-
-    @property
-    def value(self) -> QuantConnect_Data_Fundamental_MultiPeriodField_T:
-        """Returns the default value for the field"""
-        ...
-
-    @overload
-    def __init__(self) -> None:
-        """
-        Creates an empty instance
-        
-        This method is protected.
-        """
-        ...
-
-    @overload
     def __init__(self, time_provider: QuantConnect.ITimeProvider, security_identifier: QuantConnect.SecurityIdentifier) -> None:
-        """
-        Creates a new instance
-        
-        This method is protected.
-        """
+        """Creates a new instance for the given time and security"""
         ...
 
-    def convert_period(self, period: str) -> str:
-        """
-        Returns a string that represents the current object.
-        
-        This method is protected.
-        """
-        ...
-
-    def get_period_names(self) -> typing.Iterable[str]:
-        """Gets the list of available period names for the field"""
-        ...
-
-    def get_period_value(self, period: str) -> QuantConnect_Data_Fundamental_MultiPeriodField_T:
-        """
-        Gets the value of the field for the requested period
-        
-        :param period: The requested period
-        :returns: The value for the period.
-        """
-        ...
-
-    def get_period_values(self) -> System.Collections.Generic.IReadOnlyDictionary[str, QuantConnect_Data_Fundamental_MultiPeriodField_T]:
-        """Gets a dictionary of period names and values for the field"""
-        ...
-
-    def has_period_value(self, period: str) -> bool:
-        """
-        Returns true if the field contains a value for the requested period
-        
-        :returns: True if the field contains a value for the requested period.
-        """
-        ...
-
-    def has_values(self) -> bool:
-        """Returns true if the field has at least one value for one period"""
-        ...
-
-    def to_string(self) -> str:
-        """Returns a string that represents the current object."""
-        ...
-
-
-class MultiPeriodFieldLong(QuantConnect.Data.Fundamental.MultiPeriodField[int], metaclass=abc.ABCMeta):
-    """Abstract class for multi-period fields long"""
-
-    @overload
-    def __init__(self) -> None:
-        """
-        Creates an empty instance
-        
-        This method is protected.
-        """
-        ...
-
-    @overload
-    def __init__(self, time_provider: QuantConnect.ITimeProvider, security_identifier: QuantConnect.SecurityIdentifier) -> None:
-        """
-        Creates a new instance
-        
-        This method is protected.
-        """
+    def clone(self, time_provider: QuantConnect.ITimeProvider) -> QuantConnect.Data.Fundamental.FundamentalTimeDependentProperty:
+        """Clones this instance"""
         ...
 
 
@@ -70220,83 +70089,6 @@ class FineFundamental(QuantConnect.Data.UniverseSelection.CoarseFundamental):
         ...
 
 
-class Fundamental(QuantConnect.Data.Fundamental.FineFundamental):
-    """Lean fundamental data class"""
-
-    @property
-    def dollar_volume(self) -> float:
-        """Gets the day's dollar volume for this symbol"""
-        ...
-
-    @property
-    def volume(self) -> int:
-        """Gets the day's total volume"""
-        ...
-
-    @property
-    def has_fundamental_data(self) -> bool:
-        """Returns whether the symbol has fundamental data for the given date"""
-        ...
-
-    @property
-    def price_factor(self) -> float:
-        """Gets the price factor for the given date"""
-        ...
-
-    @property
-    def split_factor(self) -> float:
-        """Gets the split factor for the given date"""
-        ...
-
-    @property
-    def value(self) -> float:
-        """Gets the raw price"""
-        ...
-
-    @overload
-    def __init__(self) -> None:
-        """Creates a new empty instance"""
-        ...
-
-    @overload
-    def __init__(self, time: typing.Union[datetime.datetime, datetime.date], symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> None:
-        """
-        Creates a new instance
-        
-        :param time: The current time
-        :param symbol: The associated symbol
-        """
-        ...
-
-    def clone(self) -> QuantConnect.Data.BaseData:
-        """
-        Will clone the current instance
-        
-        :returns: The cloned instance.
-        """
-        ...
-
-    def default_resolution(self) -> QuantConnect.Resolution:
-        """Gets the default resolution for this data and security type"""
-        ...
-
-    def get_source(self, config: QuantConnect.Data.SubscriptionDataConfig, date: datetime.datetime, is_live_mode: bool) -> QuantConnect.Data.SubscriptionDataSource:
-        """Return the URL string source of the file. This will be converted to a stream"""
-        ...
-
-    def reader(self, config: QuantConnect.Data.SubscriptionDataConfig, line: str, date: datetime.datetime, is_live_mode: bool) -> QuantConnect.Data.BaseData:
-        """
-        Will read a new instance from the given line
-        
-        :param config: The associated requested configuration
-        :param line: The line to parse
-        :param date: The current time
-        :param is_live_mode: True if live mode
-        :returns: A new instance or null.
-        """
-        ...
-
-
 class StockType(System.Object):
     """Helper class for the AssetClassification's StockType field AssetClassification.StockType"""
 
@@ -71501,6 +71293,214 @@ class MorningstarIndustryCode(System.Object):
 
     SOLAR: int = 31130030
     """Companies that design, manufacture, market, or install solar power systems and components."""
+
+
+class MultiPeriodField(typing.Generic[QuantConnect_Data_Fundamental_MultiPeriodField_T], ReusuableCLRObject, metaclass=abc.ABCMeta):
+    """Abstract base class for multi-period fields"""
+
+    NO_VALUE: QuantConnect_Data_Fundamental_MultiPeriodField_T
+    """No Value"""
+
+    @property
+    def time_provider(self) -> QuantConnect.ITimeProvider:
+        """
+        The time provider instance to use
+        
+        This property is protected.
+        """
+        ...
+
+    @property
+    @abc.abstractmethod
+    def default_period(self) -> str:
+        """
+        The default period
+        
+        This property is protected.
+        """
+        ...
+
+    @property
+    def security_identifier(self) -> QuantConnect.SecurityIdentifier:
+        """
+        The target security identifier
+        
+        This property is protected.
+        """
+        ...
+
+    @security_identifier.setter
+    def security_identifier(self, value: QuantConnect.SecurityIdentifier) -> None:
+        ...
+
+    @property
+    @abc.abstractmethod
+    def has_value(self) -> bool:
+        """Returns true if the field contains a value for the default period"""
+        ...
+
+    @property
+    def value(self) -> QuantConnect_Data_Fundamental_MultiPeriodField_T:
+        """Returns the default value for the field"""
+        ...
+
+    @overload
+    def __init__(self) -> None:
+        """
+        Creates an empty instance
+        
+        This method is protected.
+        """
+        ...
+
+    @overload
+    def __init__(self, time_provider: QuantConnect.ITimeProvider, security_identifier: QuantConnect.SecurityIdentifier) -> None:
+        """
+        Creates a new instance
+        
+        This method is protected.
+        """
+        ...
+
+    def convert_period(self, period: str) -> str:
+        """
+        Returns a string that represents the current object.
+        
+        This method is protected.
+        """
+        ...
+
+    def get_period_names(self) -> typing.Iterable[str]:
+        """Gets the list of available period names for the field"""
+        ...
+
+    def get_period_value(self, period: str) -> QuantConnect_Data_Fundamental_MultiPeriodField_T:
+        """
+        Gets the value of the field for the requested period
+        
+        :param period: The requested period
+        :returns: The value for the period.
+        """
+        ...
+
+    def get_period_values(self) -> System.Collections.Generic.IReadOnlyDictionary[str, QuantConnect_Data_Fundamental_MultiPeriodField_T]:
+        """Gets a dictionary of period names and values for the field"""
+        ...
+
+    def has_period_value(self, period: str) -> bool:
+        """
+        Returns true if the field contains a value for the requested period
+        
+        :returns: True if the field contains a value for the requested period.
+        """
+        ...
+
+    def has_values(self) -> bool:
+        """Returns true if the field has at least one value for one period"""
+        ...
+
+    def to_string(self) -> str:
+        """Returns a string that represents the current object."""
+        ...
+
+
+class MultiPeriodFieldLong(QuantConnect.Data.Fundamental.MultiPeriodField[int], metaclass=abc.ABCMeta):
+    """Abstract class for multi-period fields long"""
+
+    @overload
+    def __init__(self) -> None:
+        """
+        Creates an empty instance
+        
+        This method is protected.
+        """
+        ...
+
+    @overload
+    def __init__(self, time_provider: QuantConnect.ITimeProvider, security_identifier: QuantConnect.SecurityIdentifier) -> None:
+        """
+        Creates a new instance
+        
+        This method is protected.
+        """
+        ...
+
+
+class Fundamental(QuantConnect.Data.Fundamental.FineFundamental):
+    """Lean fundamental data class"""
+
+    @property
+    def dollar_volume(self) -> float:
+        """Gets the day's dollar volume for this symbol"""
+        ...
+
+    @property
+    def volume(self) -> int:
+        """Gets the day's total volume"""
+        ...
+
+    @property
+    def has_fundamental_data(self) -> bool:
+        """Returns whether the symbol has fundamental data for the given date"""
+        ...
+
+    @property
+    def price_factor(self) -> float:
+        """Gets the price factor for the given date"""
+        ...
+
+    @property
+    def split_factor(self) -> float:
+        """Gets the split factor for the given date"""
+        ...
+
+    @property
+    def value(self) -> float:
+        """Gets the raw price"""
+        ...
+
+    @overload
+    def __init__(self) -> None:
+        """Creates a new empty instance"""
+        ...
+
+    @overload
+    def __init__(self, time: typing.Union[datetime.datetime, datetime.date], symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> None:
+        """
+        Creates a new instance
+        
+        :param time: The current time
+        :param symbol: The associated symbol
+        """
+        ...
+
+    def clone(self) -> QuantConnect.Data.BaseData:
+        """
+        Will clone the current instance
+        
+        :returns: The cloned instance.
+        """
+        ...
+
+    def default_resolution(self) -> QuantConnect.Resolution:
+        """Gets the default resolution for this data and security type"""
+        ...
+
+    def get_source(self, config: QuantConnect.Data.SubscriptionDataConfig, date: datetime.datetime, is_live_mode: bool) -> QuantConnect.Data.SubscriptionDataSource:
+        """Return the URL string source of the file. This will be converted to a stream"""
+        ...
+
+    def reader(self, config: QuantConnect.Data.SubscriptionDataConfig, line: str, date: datetime.datetime, is_live_mode: bool) -> QuantConnect.Data.BaseData:
+        """
+        Will read a new instance from the given line
+        
+        :param config: The associated requested configuration
+        :param line: The line to parse
+        :param date: The current time
+        :param is_live_mode: True if live mode
+        :returns: A new instance or null.
+        """
+        ...
 
 
 class FundamentalUniverse(QuantConnect.Data.UniverseSelection.BaseDataCollection):

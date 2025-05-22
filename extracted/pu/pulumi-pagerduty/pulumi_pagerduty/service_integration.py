@@ -434,6 +434,7 @@ class _ServiceIntegrationState:
         pulumi.set(self, "vendor", value)
 
 
+@pulumi.type_token("pagerduty:index/serviceIntegration:ServiceIntegration")
 class ServiceIntegration(pulumi.CustomResource):
     @overload
     def __init__(__self__,

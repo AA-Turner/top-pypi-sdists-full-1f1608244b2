@@ -26,6 +26,7 @@ import yaml
 from lxml.builder import ElementMaker
 
 from .mermaid import render_diagram
+from .metadata import ConfluencePageMetadata, ConfluenceSiteMetadata
 from .properties import PageError
 
 namespaces = {
@@ -142,8 +143,8 @@ def _elements_from_strings(dtd_path: Path, items: list[str]) -> ET._Element:
 
     try:
         return ET.fromstringlist(data, parser=parser)
-    except ET.XMLSyntaxError as e:
-        raise ParseError(e)
+    except ET.XMLSyntaxError as ex:
+        raise ParseError() from ex
 
 
 def elements_from_strings(items: list[str]) -> ET._Element:
@@ -238,20 +239,6 @@ _languages = [
     "xquery",
     "yaml",
 ]
-
-
-@dataclass
-class ConfluenceSiteMetadata:
-    domain: str
-    base_path: str
-    space_key: Optional[str]
-
-
-@dataclass
-class ConfluencePageMetadata:
-    page_id: str
-    space_key: Optional[str]
-    title: str
 
 
 class NodeVisitor:
@@ -975,6 +962,14 @@ def extract_value(pattern: str, text: str) -> tuple[Optional[str], str]:
 
 
 @dataclass
+class ConfluencePageID:
+    page_id: str
+
+    def __init__(self, page_id: str):
+        self.page_id = page_id
+
+
+@dataclass
 class ConfluenceQualifiedID:
     page_id: str
     space_key: Optional[str] = None
@@ -1048,11 +1043,15 @@ class ConfluenceDocumentOptions:
     ignore_invalid_url: bool = False
     heading_anchors: bool = False
     generated_by: Optional[str] = "This page has been generated with a tool."
-    root_page_id: Optional[str] = None
+    root_page_id: Optional[ConfluencePageID] = None
     keep_hierarchy: bool = False
     render_mermaid: bool = False
     diagram_output_format: Literal["png", "svg"] = "png"
     webui_links: bool = False
+
+
+class ConversionError(RuntimeError):
+    "Raised when a Markdown document cannot be converted to Confluence Storage Format."
 
 
 class ConfluenceDocument:
@@ -1107,32 +1106,42 @@ class ConfluenceDocument:
         self.options = options
         self.id = qualified_id
 
+        # extract frontmatter
+        self.title, text = extract_frontmatter_title(text)
+
         # extract 'generated-by' tag text
         generated_by_tag, text = extract_value(
             r"<!--\s+generated-by:\s*(.*)\s+-->", text
         )
-
-        # extract frontmatter
-        self.title, text = extract_frontmatter_title(text)
 
         # convert to HTML
         html = markdown_to_html(text)
 
         # parse Markdown document
         if self.options.generated_by is not None:
-            generated_by = self.options.generated_by
             if generated_by_tag is not None:
-                generated_by = generated_by_tag
+                generated_by_text = generated_by_tag
+            else:
+                generated_by_text = self.options.generated_by
+        else:
+            generated_by_text = None
+
+        if generated_by_text is not None:
+            generated_by_html = markdown_to_html(generated_by_text)
 
             content = [
                 '<ac:structured-macro ac:name="info" ac:schema-version="1">',
-                f"<ac:rich-text-body><p>{generated_by}</p></ac:rich-text-body>",
+                f"<ac:rich-text-body>{generated_by_html}</ac:rich-text-body>",
                 "</ac:structured-macro>",
                 html,
             ]
         else:
             content = [html]
-        self.root = elements_from_strings(content)
+
+        try:
+            self.root = elements_from_strings(content)
+        except ParseError as ex:
+            raise ConversionError(path) from ex
 
         converter = ConfluenceStorageFormatConverter(
             ConfluenceConverterOptions(

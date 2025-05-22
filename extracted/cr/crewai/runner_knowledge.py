@@ -35,8 +35,16 @@ crew = Crew(
     output_log_file="output.json",
     # memory=True,
 )
-result = crew.kickoff(
-    inputs={"task-to-answer": "what are some large reasoning models?"}
+result = crew.test(
+    inputs={"task-to-answer": "what are some large reasoning models?"},
+    n_iterations=1,
+    eval_llm=LLM(
+        model="gpt-4o",
+        api_key=os.getenv("OPENAI_API_KEY"),
+    ),
 )
+# result = crew.kickoff(
+#     inputs={"task-to-answer": "what are some large reasoning models?"}
+# )
 print(result)
-print("usage metrics", result.token_usage)
+# print("usage metrics", result.token_usage)

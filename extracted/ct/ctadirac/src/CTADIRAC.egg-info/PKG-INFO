@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: CTADIRAC
-Version: 2.2.74
+Version: 2.2.75
 Summary: CTADIRAC is an extension of the DIRAC interware for dedicated CTA usage.
 Author-email: Luisa Arrabito <arrabito@in2p3.fr>
 License: BSD 3-Clause License
@@ -75,8 +75,11 @@ To contribute to CTADIRAC, please check out the full [DIRAC developers guide](ht
 
 ```bash
 # Clone the CTADIRAC repository:
-git clone git@gitlab.cta-observatory.org:cta-computing/dpps/workload/CTADIRAC.git
+git clone --recurse-submodules git@gitlab.cta-observatory.org:cta-computing/dpps/workload/CTADIRAC.git
 cd CTADIRAC
+
+# If you already had a clone of the repo, update the submodules:
+git submodule update --init --recursive
 
 # Create the mamba environment:
 mamba env create --file environment.yml

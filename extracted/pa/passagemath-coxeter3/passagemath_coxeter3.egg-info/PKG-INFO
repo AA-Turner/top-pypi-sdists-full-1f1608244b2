@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: passagemath-coxeter3
-Version: 10.5.36
+Version: 10.5.37
 Summary: passagemath: Coxeter groups, Bruhat ordering, Kazhdan-Lusztig polynomials with coxeter3
 Author-email: The Sage Developers <sage-support@googlegroups.com>
 Maintainer: Matthias Köppe, passagemath contributors
@@ -85,7 +85,7 @@ so compilation from source is triggered for those.
 About this pip-installable distribution package
 -----------------------------------------------
 
-This pip-installable source distribution ``sagemath-coxeter3`` is a small
-optional distribution for use with ``sagemath-standard``.
+This pip-installable source distribution ``passagemath-coxeter3`` is a small
+optional distribution for use with ``passagemath-standard``.
 
 It provides a Cython interface to the ``coxeter3`` library.

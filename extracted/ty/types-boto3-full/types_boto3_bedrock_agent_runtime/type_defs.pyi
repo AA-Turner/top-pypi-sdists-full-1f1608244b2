@@ -36,6 +36,9 @@ from .literals import (
     FileSourceTypeType,
     FileUseCaseType,
     FlowCompletionReasonType,
+    FlowErrorCodeType,
+    FlowExecutionEventTypeType,
+    FlowExecutionStatusType,
     GuadrailActionType,
     GuardrailActionType,
     GuardrailContentFilterConfidenceType,
@@ -45,6 +48,7 @@ from .literals import (
     ImageFormatType,
     ImageInputFormatType,
     InvocationTypeType,
+    NodeErrorCodeType,
     NodeTypeType,
     OrchestrationTypeType,
     ParameterTypeType,
@@ -113,6 +117,7 @@ __all__ = (
     "CodeInterpreterInvocationOutputTypeDef",
     "CollaboratorConfigurationTypeDef",
     "CollaboratorTypeDef",
+    "ConditionResultEventTypeDef",
     "ConflictExceptionTypeDef",
     "ContentBlockTypeDef",
     "ContentBodyOutputTypeDef",
@@ -141,12 +146,21 @@ __all__ = (
     "FilterAttributeTypeDef",
     "FinalResponseTypeDef",
     "FlowCompletionEventTypeDef",
+    "FlowExecutionContentTypeDef",
+    "FlowExecutionErrorTypeDef",
+    "FlowExecutionEventTypeDef",
+    "FlowExecutionInputEventTypeDef",
+    "FlowExecutionOutputEventTypeDef",
+    "FlowExecutionSummaryTypeDef",
+    "FlowFailureEventTypeDef",
     "FlowInputContentTypeDef",
+    "FlowInputFieldTypeDef",
     "FlowInputTypeDef",
     "FlowMultiTurnInputContentTypeDef",
     "FlowMultiTurnInputRequestEventTypeDef",
     "FlowOutputContentTypeDef",
     "FlowOutputEventTypeDef",
+    "FlowOutputFieldTypeDef",
     "FlowResponseStreamTypeDef",
     "FlowTraceConditionNodeResultEventTypeDef",
     "FlowTraceConditionTypeDef",
@@ -174,6 +188,10 @@ __all__ = (
     "GetAgentMemoryRequestPaginateTypeDef",
     "GetAgentMemoryRequestTypeDef",
     "GetAgentMemoryResponseTypeDef",
+    "GetExecutionFlowSnapshotRequestTypeDef",
+    "GetExecutionFlowSnapshotResponseTypeDef",
+    "GetFlowExecutionRequestTypeDef",
+    "GetFlowExecutionResponseTypeDef",
     "GetInvocationStepRequestTypeDef",
     "GetInvocationStepResponseTypeDef",
     "GetSessionRequestTypeDef",
@@ -246,6 +264,12 @@ __all__ = (
     "KnowledgeBaseTypeDef",
     "KnowledgeBaseVectorSearchConfigurationPaginatorTypeDef",
     "KnowledgeBaseVectorSearchConfigurationTypeDef",
+    "ListFlowExecutionEventsRequestPaginateTypeDef",
+    "ListFlowExecutionEventsRequestTypeDef",
+    "ListFlowExecutionEventsResponseTypeDef",
+    "ListFlowExecutionsRequestPaginateTypeDef",
+    "ListFlowExecutionsRequestTypeDef",
+    "ListFlowExecutionsResponseTypeDef",
     "ListInvocationStepsRequestPaginateTypeDef",
     "ListInvocationStepsRequestTypeDef",
     "ListInvocationStepsResponseTypeDef",
@@ -266,6 +290,12 @@ __all__ = (
     "ModelInvocationInputTypeDef",
     "ModelNotReadyExceptionTypeDef",
     "ModelPerformanceConfigurationTypeDef",
+    "NodeExecutionContentTypeDef",
+    "NodeFailureEventTypeDef",
+    "NodeInputEventTypeDef",
+    "NodeInputFieldTypeDef",
+    "NodeOutputEventTypeDef",
+    "NodeOutputFieldTypeDef",
     "ObservationTypeDef",
     "OptimizePromptRequestTypeDef",
     "OptimizePromptResponseTypeDef",
@@ -352,10 +382,15 @@ __all__ = (
     "S3LocationTypeDef",
     "S3ObjectDocTypeDef",
     "S3ObjectFileTypeDef",
+    "SatisfiedConditionTypeDef",
     "ServiceQuotaExceededExceptionTypeDef",
     "SessionStateTypeDef",
     "SessionSummaryTypeDef",
     "SpanTypeDef",
+    "StartFlowExecutionRequestTypeDef",
+    "StartFlowExecutionResponseTypeDef",
+    "StopFlowExecutionRequestTypeDef",
+    "StopFlowExecutionResponseTypeDef",
     "StreamingConfigurationsTypeDef",
     "TagResourceRequestTypeDef",
     "TextInferenceConfigTypeDef",
@@ -443,6 +478,9 @@ class GuardrailConfigurationWithArnTypeDef(TypedDict):
     guardrailIdentifier: str
     guardrailVersion: str
 
+class SatisfiedConditionTypeDef(TypedDict):
+    conditionName: str
+
 class ConflictExceptionTypeDef(TypedDict):
     message: NotRequired[str]
 
@@ -523,6 +561,34 @@ class FilterAttributeTypeDef(TypedDict):
 
 class FlowCompletionEventTypeDef(TypedDict):
     completionReason: FlowCompletionReasonType
+
+class FlowExecutionContentTypeDef(TypedDict):
+    document: NotRequired[Dict[str, Any]]
+
+class FlowExecutionErrorTypeDef(TypedDict):
+    error: NotRequired[Literal["ExecutionTimedOut"]]
+    message: NotRequired[str]
+    nodeName: NotRequired[str]
+
+class FlowFailureEventTypeDef(TypedDict):
+    errorCode: FlowErrorCodeType
+    errorMessage: str
+    timestamp: datetime
+
+class NodeFailureEventTypeDef(TypedDict):
+    errorCode: NodeErrorCodeType
+    errorMessage: str
+    nodeName: str
+    timestamp: datetime
+
+class FlowExecutionSummaryTypeDef(TypedDict):
+    createdAt: datetime
+    executionArn: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+    flowVersion: str
+    status: FlowExecutionStatusType
+    endedAt: NotRequired[datetime]
 
 class FlowInputContentTypeDef(TypedDict):
     document: NotRequired[Mapping[str, Any]]
@@ -608,6 +674,16 @@ class GetAgentMemoryRequestTypeDef(TypedDict):
     memoryType: Literal["SESSION_SUMMARY"]
     maxItems: NotRequired[int]
     nextToken: NotRequired[str]
+
+class GetExecutionFlowSnapshotRequestTypeDef(TypedDict):
+    executionIdentifier: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+
+class GetFlowExecutionRequestTypeDef(TypedDict):
+    executionIdentifier: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
 
 class GetInvocationStepRequestTypeDef(TypedDict):
     invocationIdentifier: str
@@ -728,6 +804,20 @@ class StreamingConfigurationsTypeDef(TypedDict):
 class KnowledgeBaseQueryTypeDef(TypedDict):
     text: str
 
+class ListFlowExecutionEventsRequestTypeDef(TypedDict):
+    eventType: FlowExecutionEventTypeType
+    executionIdentifier: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+    maxResults: NotRequired[int]
+    nextToken: NotRequired[str]
+
+class ListFlowExecutionsRequestTypeDef(TypedDict):
+    flowIdentifier: str
+    flowAliasIdentifier: NotRequired[str]
+    maxResults: NotRequired[int]
+    nextToken: NotRequired[str]
+
 class ListInvocationStepsRequestTypeDef(TypedDict):
     sessionIdentifier: str
     invocationIdentifier: NotRequired[str]
@@ -766,6 +856,9 @@ class UsageTypeDef(TypedDict):
 
 class ModelNotReadyExceptionTypeDef(TypedDict):
     message: NotRequired[str]
+
+class NodeExecutionContentTypeDef(TypedDict):
+    document: NotRequired[Dict[str, Any]]
 
 class RepromptResponseTypeDef(TypedDict):
     source: NotRequired[SourceType]
@@ -853,6 +946,11 @@ class SpanTypeDef(TypedDict):
     end: NotRequired[int]
     start: NotRequired[int]
 
+class StopFlowExecutionRequestTypeDef(TypedDict):
+    executionIdentifier: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+
 class TagResourceRequestTypeDef(TypedDict):
     resourceArn: str
     tags: Mapping[str, str]
@@ -911,6 +1009,11 @@ ImageInputSourceTypeDef = TypedDict(
     },
 )
 
+class ConditionResultEventTypeDef(TypedDict):
+    nodeName: str
+    satisfiedConditions: List[SatisfiedConditionTypeDef]
+    timestamp: datetime
+
 class MessageTypeDef(TypedDict):
     content: Sequence[ContentBlockTypeDef]
     role: ConversationRoleType
@@ -934,6 +1037,15 @@ class EndSessionResponseTypeDef(TypedDict):
     sessionStatus: SessionStatusType
     ResponseMetadata: ResponseMetadataTypeDef
 
+class GetExecutionFlowSnapshotResponseTypeDef(TypedDict):
+    customerEncryptionKeyArn: str
+    definition: str
+    executionRoleArn: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+    flowVersion: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
 class GetSessionResponseTypeDef(TypedDict):
     createdAt: datetime
     encryptionKeyArn: str
@@ -950,6 +1062,15 @@ class ListTagsForResourceResponseTypeDef(TypedDict):
 
 class PutInvocationStepResponseTypeDef(TypedDict):
     invocationStepId: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StartFlowExecutionResponseTypeDef(TypedDict):
+    executionArn: str
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class StopFlowExecutionResponseTypeDef(TypedDict):
+    executionArn: str
+    status: FlowExecutionStatusType
     ResponseMetadata: ResponseMetadataTypeDef
 
 class UpdateSessionResponseTypeDef(TypedDict):
@@ -1014,6 +1135,30 @@ RetrievalFilterTypeDef = TypedDict(
     },
 )
 
+class FlowInputFieldTypeDef(TypedDict):
+    content: FlowExecutionContentTypeDef
+    name: str
+
+class FlowOutputFieldTypeDef(TypedDict):
+    content: FlowExecutionContentTypeDef
+    name: str
+
+class GetFlowExecutionResponseTypeDef(TypedDict):
+    endedAt: datetime
+    errors: List[FlowExecutionErrorTypeDef]
+    executionArn: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+    flowVersion: str
+    startedAt: datetime
+    status: FlowExecutionStatusType
+    ResponseMetadata: ResponseMetadataTypeDef
+
+class ListFlowExecutionsResponseTypeDef(TypedDict):
+    flowExecutionSummaries: List[FlowExecutionSummaryTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
+
 class FlowInputTypeDef(TypedDict):
     content: FlowInputContentTypeDef
     nodeName: str
@@ -1066,6 +1211,18 @@ class GetAgentMemoryRequestPaginateTypeDef(TypedDict):
     agentId: str
     memoryId: str
     memoryType: Literal["SESSION_SUMMARY"]
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+class ListFlowExecutionEventsRequestPaginateTypeDef(TypedDict):
+    eventType: FlowExecutionEventTypeType
+    executionIdentifier: str
+    flowAliasIdentifier: str
+    flowIdentifier: str
+    PaginationConfig: NotRequired[PaginatorConfigTypeDef]
+
+class ListFlowExecutionsRequestPaginateTypeDef(TypedDict):
+    flowIdentifier: str
+    flowAliasIdentifier: NotRequired[str]
     PaginationConfig: NotRequired[PaginatorConfigTypeDef]
 
 class ListInvocationStepsRequestPaginateTypeDef(TypedDict):
@@ -1172,6 +1329,14 @@ class MetadataTypeDef(TypedDict):
     totalTimeMs: NotRequired[int]
     usage: NotRequired[UsageTypeDef]
 
+class NodeInputFieldTypeDef(TypedDict):
+    content: NodeExecutionContentTypeDef
+    name: str
+
+class NodeOutputFieldTypeDef(TypedDict):
+    content: NodeExecutionContentTypeDef
+    name: str
+
 class ReasoningContentBlockTypeDef(TypedDict):
     reasoningText: NotRequired[ReasoningTextBlockTypeDef]
     redactedContent: NotRequired[bytes]
@@ -1275,12 +1440,29 @@ class MetadataConfigurationForRerankingTypeDef(TypedDict):
     selectionMode: RerankingMetadataSelectionModeType
     selectiveModeConfiguration: NotRequired[RerankingMetadataSelectiveModeConfigurationTypeDef]
 
+class FlowExecutionInputEventTypeDef(TypedDict):
+    fields: List[FlowInputFieldTypeDef]
+    nodeName: str
+    timestamp: datetime
+
+class FlowExecutionOutputEventTypeDef(TypedDict):
+    fields: List[FlowOutputFieldTypeDef]
+    nodeName: str
+    timestamp: datetime
+
 class InvokeFlowRequestTypeDef(TypedDict):
     flowAliasIdentifier: str
     flowIdentifier: str
     inputs: Sequence[FlowInputTypeDef]
     enableTrace: NotRequired[bool]
     executionId: NotRequired[str]
+    modelPerformanceConfiguration: NotRequired[ModelPerformanceConfigurationTypeDef]
+
+class StartFlowExecutionRequestTypeDef(TypedDict):
+    flowAliasIdentifier: str
+    flowIdentifier: str
+    inputs: Sequence[FlowInputTypeDef]
+    flowExecutionName: NotRequired[str]
     modelPerformanceConfiguration: NotRequired[ModelPerformanceConfigurationTypeDef]
 
 class FlowTraceNodeInputEventTypeDef(TypedDict):
@@ -1393,6 +1575,16 @@ class RoutingClassifierModelInvocationOutputTypeDef(TypedDict):
     metadata: NotRequired[MetadataTypeDef]
     rawResponse: NotRequired[RawResponseTypeDef]
     traceId: NotRequired[str]
+
+class NodeInputEventTypeDef(TypedDict):
+    fields: List[NodeInputFieldTypeDef]
+    nodeName: str
+    timestamp: datetime
+
+class NodeOutputEventTypeDef(TypedDict):
+    fields: List[NodeOutputFieldTypeDef]
+    nodeName: str
+    timestamp: datetime
 
 class OrchestrationModelInvocationOutputTypeDef(TypedDict):
     metadata: NotRequired[MetadataTypeDef]
@@ -1534,6 +1726,15 @@ class OptimizedPromptStreamTypeDef(TypedDict):
     throttlingException: NotRequired[ThrottlingExceptionTypeDef]
     validationException: NotRequired[ValidationExceptionTypeDef]
 
+class FlowExecutionEventTypeDef(TypedDict):
+    conditionResultEvent: NotRequired[ConditionResultEventTypeDef]
+    flowFailureEvent: NotRequired[FlowFailureEventTypeDef]
+    flowInputEvent: NotRequired[FlowExecutionInputEventTypeDef]
+    flowOutputEvent: NotRequired[FlowExecutionOutputEventTypeDef]
+    nodeFailureEvent: NotRequired[NodeFailureEventTypeDef]
+    nodeInputEvent: NotRequired[NodeInputEventTypeDef]
+    nodeOutputEvent: NotRequired[NodeOutputEventTypeDef]
+
 class PostProcessingTraceTypeDef(TypedDict):
     modelInvocationInput: NotRequired[ModelInvocationInputTypeDef]
     modelInvocationOutput: NotRequired[PostProcessingModelInvocationOutputTypeDef]
@@ -1604,6 +1805,11 @@ class InvocationStepPayloadTypeDef(TypedDict):
 class OptimizePromptResponseTypeDef(TypedDict):
     optimizedPrompt: EventStream[OptimizedPromptStreamTypeDef]
     ResponseMetadata: ResponseMetadataTypeDef
+
+class ListFlowExecutionEventsResponseTypeDef(TypedDict):
+    flowExecutionEvents: List[FlowExecutionEventTypeDef]
+    ResponseMetadata: ResponseMetadataTypeDef
+    nextToken: NotRequired[str]
 
 class RerankRequestPaginateTypeDef(TypedDict):
     queries: Sequence[RerankQueryTypeDef]

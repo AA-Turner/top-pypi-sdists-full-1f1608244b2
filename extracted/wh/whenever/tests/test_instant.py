@@ -593,7 +593,7 @@ class TestFromPyDatetime:
             def utcoffset(self, _):
                 return None
 
-        with pytest.raises(ValueError, match="utcoffset.*"):
+        with pytest.raises(ValueError, match="naive"):
             Instant.from_py_datetime(py_datetime(2020, 8, 15, tzinfo=MyTz()))  # type: ignore[abstract]
 
 
@@ -709,6 +709,9 @@ class TestShiftOperators:
 
         with pytest.raises(TypeError, match="unsupported operand type"):
             PlainDateTime(2020, 1, 1) + d  # type: ignore[operator]
+
+        with pytest.raises(TypeError, match="unsupported operand type"):
+            d + PlainDateTime(2020, 1, 1)  # type: ignore[operator]
 
 
 class TestDifference:

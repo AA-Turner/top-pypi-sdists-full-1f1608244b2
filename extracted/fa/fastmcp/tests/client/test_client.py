@@ -9,7 +9,9 @@ from pydantic import AnyUrl
 from fastmcp.client import Client
 from fastmcp.client.transports import (
     FastMCPTransport,
+    MCPConfigTransport,
     SSETransport,
+    StdioTransport,
     StreamableHttpTransport,
     infer_transport,
 )
@@ -640,3 +642,51 @@ class TestInferTransport:
     def test_url_returns_streamable_http_transport(self, url):
         """Test that URLs without /sse/ pattern return StreamableHttpTransport."""
         assert isinstance(infer_transport(url), StreamableHttpTransport)
+
+    def test_infer_remote_transport_from_config(self):
+        config = {
+            "mcpServers": {
+                "test_server": {
+                    "url": "http://localhost:8000/sse",
+                    "headers": {"Authorization": "Bearer 123"},
+                },
+            }
+        }
+        transport = infer_transport(config)
+        assert isinstance(transport, MCPConfigTransport)
+        assert isinstance(transport.transport, SSETransport)
+        assert transport.transport.url == "http://localhost:8000/sse"
+        assert transport.transport.headers == {"Authorization": "Bearer 123"}
+
+    def test_infer_local_transport_from_config(self):
+        config = {
+            "mcpServers": {
+                "test_server": {
+                    "command": "echo",
+                    "args": ["hello"],
+                },
+            }
+        }
+        transport = infer_transport(config)
+        assert isinstance(transport, MCPConfigTransport)
+        assert isinstance(transport.transport, StdioTransport)
+        assert transport.transport.command == "echo"
+        assert transport.transport.args == ["hello"]
+
+    def test_infer_composite_client(config):
+        config = {
+            "mcpServers": {
+                "local": {
+                    "command": "echo",
+                    "args": ["hello"],
+                },
+                "remote": {
+                    "url": "http://localhost:8000/sse",
+                    "headers": {"Authorization": "Bearer 123"},
+                },
+            }
+        }
+        transport = infer_transport(config)
+        assert isinstance(transport, MCPConfigTransport)
+        assert isinstance(transport.transport, FastMCPTransport)
+        assert len(transport.transport.server._mounted_servers) == 2

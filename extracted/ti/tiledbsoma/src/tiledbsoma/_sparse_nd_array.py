@@ -2,20 +2,22 @@
 #
 # Licensed under the MIT License.
 
-"""
-Implementation of SOMA SparseNDArray.
-"""
+"""Implementation of SOMA SparseNDArray."""
 
 from __future__ import annotations
 
-from typing import Sequence, cast
+from typing import (
+    TYPE_CHECKING,
+    Sequence,
+    cast,
+)
 
 import numpy as np
 import pyarrow as pa
 import somacore
 from somacore import options
 from somacore.options import PlatformConfig
-from typing_extensions import Self
+from typing_extensions import Self, Unpack
 
 from . import _util
 
@@ -23,6 +25,7 @@ from . import _util
 from . import pytiledbsoma as clib
 from ._arrow_types import pyarrow_to_carrow_type
 from ._common_nd_array import NDArray
+from ._dask.util import SOMADaskConfig
 from ._exception import SOMAError, map_exception_for_create
 from ._read_iters import (
     BlockwiseScipyReadIter,
@@ -33,6 +36,7 @@ from ._read_iters import (
 )
 from ._tdb_handles import SparseNDArrayWrapper
 from ._types import NTuple, OpenTimestamp
+from ._util import from_clib_result_order
 from .options._soma_tiledb_context import (
     SOMATileDBContext,
     _validate_soma_tiledb_context,
@@ -42,12 +46,19 @@ from .options._tiledb_create_write_options import (
     TileDBWriteOptions,
 )
 
+if TYPE_CHECKING:
+    try:
+        import dask.array as da
+    except ImportError:
+        pass
+
+
 _UNBATCHED = options.BatchSize()
 
 
 class SparseNDArray(NDArray, somacore.SparseNDArray):
-    """:class:`SparseNDArray` is a sparse, N-dimensional array, with offset
-    (zero-based) integer indexing on each dimension.
+    """:class:`SparseNDArray` is a sparse, N-dimensional array, with offset (zero-based) integer indexing on each dimension.
+
     :class:`SparseNDArray` has a user-defined schema, which includes:
 
     * The element type, expressed as an
@@ -205,8 +216,7 @@ class SparseNDArray(NDArray, somacore.SparseNDArray):
 
     @property
     def nnz(self) -> int:
-        """
-        The number of stored values in the array, including explicitly stored zeros.
+        """The number of stored values in the array, including explicitly stored zeros.
 
         Lifecycle:
             Maturing.
@@ -274,8 +284,7 @@ class SparseNDArray(NDArray, somacore.SparseNDArray):
         *,
         platform_config: PlatformConfig | None = None,
     ) -> Self:
-        """
-        Writes an Arrow object to the SparseNDArray.
+        """Writes an Arrow object to the SparseNDArray.
 
         `Arrow SparseTensor <https://arrow.apache.org/docs/cpp/api/tensor.html>`_:
         the coordinates in the Arrow SparseTensor are interpreted as the
@@ -296,7 +305,6 @@ class SparseNDArray(NDArray, somacore.SparseNDArray):
         Lifecycle:
             Maturing.
         """
-
         write_options: TileDBCreateOptions | TileDBWriteOptions
         sort_coords = None
         if isinstance(platform_config, TileDBCreateOptions):
@@ -416,7 +424,7 @@ class SparseNDArray(NDArray, somacore.SparseNDArray):
 
 
 class _SparseNDArrayReadBase(somacore.SparseRead):
-    """Base class for sparse reads"""
+    """Base class for sparse reads."""
 
     def __init__(
         self,
@@ -425,9 +433,8 @@ class _SparseNDArrayReadBase(somacore.SparseRead):
         result_order: clib.ResultOrder,
         platform_config: options.PlatformConfig | None,
     ):
-        """
-        Lifecycle:
-            Maturing.
+        """Lifecycle:
+        Maturing.
         """
         self.array = array
         self.coords = coords
@@ -446,16 +453,36 @@ class SparseNDArrayRead(_SparseNDArrayReadBase):
     complete "blocks" for any given user-specified dimension, eg., all coordinates in a given row in one
     iteration step. NB: `blockwise` iterators may utilize additional disk or network IO.
 
-    See also:
+    See Also:
         somacore.data.SparseRead
 
     Lifecycle:
         Maturing.
     """
 
-    def coos(self, shape: NTuple | None = None) -> SparseCOOTensorReadIter:
+    def dask_array(
+        self,
+        **config: Unpack[SOMADaskConfig],
+    ) -> "da.Array":
+        """Load a TileDB-SOMA X layer as a Dask array.
+
+        The returned Array is effectively read-only; writes to it will not be persisted back to the
+        underlying TileDB-SOMA SparseNDArray.
+
+        Lifecycle: experimental
         """
-        Returns an iterator of
+        from tiledbsoma._dask.load import load_daskarray
+
+        return load_daskarray(
+            layer=self.array,
+            coords=self.coords,
+            result_order=from_clib_result_order(self.result_order),
+            platform_config=self.platform_config,
+            **config,
+        )
+
+    def coos(self, shape: NTuple | None = None) -> SparseCOOTensorReadIter:
+        """Returns an iterator of
         `Arrow SparseCOOTensor <https://arrow.apache.org/docs/cpp/api/tensor.html>`_.
 
         Args:
@@ -476,8 +503,7 @@ class SparseNDArrayRead(_SparseNDArrayReadBase):
         )
 
     def tables(self) -> TableReadIter:
-        """
-        Returns an iterator of
+        """Returns an iterator of
         `Arrow Table <https://arrow.apache.org/docs/python/generated/pyarrow.Table.html>`_.
 
         Lifecycle:
@@ -500,8 +526,7 @@ class SparseNDArrayRead(_SparseNDArrayReadBase):
         reindex_disable_on_axis: int | Sequence[int] | None = None,
         eager: bool = True,
     ) -> SparseNDArrayBlockwiseRead:
-        """
-        Returns an intermediate type to choose a blockwise iterator of a specific format.
+        """Returns an intermediate type to choose a blockwise iterator of a specific format.
 
         Blockwise iterators yield results grouped by a user-specified axis. For example, a
         blockwise iterator with `axis=0` will yield results containing all coordinates for
@@ -535,7 +560,6 @@ class SparseNDArrayRead(_SparseNDArrayReadBase):
                 consumption, at the cost of additional processing time.
 
         Examples:
-
             A simple example iterating over the first 10000 elements of the first dimension, into
             blocks of SciPy sparse matrices:
 
@@ -593,9 +617,7 @@ class SparseNDArrayBlockwiseRead(_SparseNDArrayReadBase):
         self.eager = eager
 
     def tables(self) -> BlockwiseTableReadIter:
-        """
-        Returns a blockwise iterator of
-        `Arrow Table <https://arrow.apache.org/docs/python/generated/pyarrow.Table.html>`_.
+        """Returns a blockwise iterator of `Arrow Table <https://arrow.apache.org/docs/python/generated/pyarrow.Table.html>`_.
 
         Yields:
             The iterator will yield a tuple of:
@@ -618,18 +640,16 @@ class SparseNDArrayBlockwiseRead(_SparseNDArrayReadBase):
         )
 
     def coos(self) -> somacore.ReadIter[None]:
-        """
-        Unimplemented due to ARROW-17933, https://issues.apache.org/jira/browse/ARROW-17933,
-        which causes failure on empty tensors (which are commonly yielded by blockwise
-        iterators). Also tracked as https://github.com/single-cell-data/TileDB-SOMA/issues/668
+        """Unimplemented due to ARROW-17933, https://issues.apache.org/jira/browse/ARROW-17933, which causes failure on empty tensors (which are commonly yielded by blockwise iterators).
+
+        Also tracked as https://github.com/single-cell-data/TileDB-SOMA/issues/668
         """
         raise NotImplementedError(
             "Blockwise SparseCOOTensor not implemented due to ARROW-17933."
         )
 
     def scipy(self, *, compress: bool = True) -> BlockwiseScipyReadIter:
-        """
-        Returns a blockwise iterator of
+        """Returns a blockwise iterator of
         `SciPy sparse matrix` <https://docs.scipy.org/doc/scipy/reference/sparse.html>
         over a 2D SparseNDArray.
 

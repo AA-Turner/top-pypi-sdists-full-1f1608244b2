@@ -65,8 +65,8 @@ _intel_endpoints = [
       {
         "type": "string",
         "description": "Filter your query by specifying FQL filter parameters. Filter parameters "
-        "include:\n\nactor_type, capabilities, capability, capability.id, capability.slug, capability.value, "
-        "created_date, description, ecrime_kill_chain.attribution, ecrime_kill_chain.crimes, "
+        "include:\n\nactor_type, animal_classifier, capabilities, capability, capability.id, capability.slug, "
+        "capability.value, created_date, description, ecrime_kill_chain.attribution, ecrime_kill_chain.crimes, "
         "ecrime_kill_chain.customers, ecrime_kill_chain.marketing, ecrime_kill_chain.monetization, "
         "ecrime_kill_chain.services_offered, ecrime_kill_chain.services_used, ecrime_kill_chain.technical_tradecraft, "
         "ecrime_kill_chain.victims, first_activity_date, group, group.id, group.slug, group.value, id, "
@@ -183,12 +183,13 @@ _intel_endpoints = [
       {
         "type": "string",
         "description": "Filter your query by specifying FQL filter parameters. Filter parameters "
-        "include:\n\nactors, actors.id, actors.name, actors.slug, actors.url, created_date, description, id, "
-        "last_modified_date, malware, malware.community_identifiers, malware.family_name, malware.slug, motivations, "
-        "motivations.id, motivations.slug, motivations.value, name, name.raw, short_description, slug, sub_type, "
-        "sub_type.id, sub_type.name, sub_type.slug, tags, tags.id, tags.slug, tags.value, target_countries, "
-        "target_countries.id, target_countries.slug, target_countries.value, target_industries, target_industries.id, "
-        "target_industries.slug, target_industries.value, type, type.id, type.name, type.slug, url.",
+        "include:\n\nactors, actors.animal_classifier, actors.id, actors.name, actors.slug, actors.url, created_date, "
+        "description, id, last_modified_date, malware, malware.community_identifiers, malware.family_name, "
+        "malware.slug, motivations, motivations.id, motivations.slug, motivations.value, name, name.raw, "
+        "short_description, slug, sub_type, sub_type.id, sub_type.name, sub_type.slug, tags, tags.id, tags.slug, "
+        "tags.value, target_countries, target_countries.id, target_countries.slug, target_countries.value, "
+        "target_industries, target_industries.id, target_industries.slug, target_industries.value, type, type.id, "
+        "type.name, type.slug, url.",
         "name": "filter",
         "in": "query"
       },
@@ -525,8 +526,8 @@ _intel_endpoints = [
       {
         "type": "string",
         "description": "Filter your query by specifying FQL filter parameters. Filter parameters "
-        "include:\n\nactor_type, capabilities, capability, capability.id, capability.slug, capability.value, "
-        "created_date, description, ecrime_kill_chain.attribution, ecrime_kill_chain.crimes, "
+        "include:\n\nactor_type, animal_classifier, capabilities, capability, capability.id, capability.slug, "
+        "capability.value, created_date, description, ecrime_kill_chain.attribution, ecrime_kill_chain.crimes, "
         "ecrime_kill_chain.customers, ecrime_kill_chain.marketing, ecrime_kill_chain.monetization, "
         "ecrime_kill_chain.services_offered, ecrime_kill_chain.services_used, ecrime_kill_chain.technical_tradecraft, "
         "ecrime_kill_chain.victims, first_activity_date, group, group.id, group.slug, group.value, id, "
@@ -718,12 +719,13 @@ _intel_endpoints = [
       {
         "type": "string",
         "description": "Filter your query by specifying FQL filter parameters. Filter parameters "
-        "include:\n\nactors, actors.id, actors.name, actors.slug, actors.url, created_date, description, id, "
-        "last_modified_date, malware, malware.community_identifiers, malware.family_name, malware.slug, motivations, "
-        "motivations.id, motivations.slug, motivations.value, name, name.raw, short_description, slug, sub_type, "
-        "sub_type.id, sub_type.name, sub_type.slug, tags, tags.id, tags.slug, tags.value, target_countries, "
-        "target_countries.id, target_countries.slug, target_countries.value, target_industries, target_industries.id, "
-        "target_industries.slug, target_industries.value, type, type.id, type.name, type.slug, url.",
+        "include:\n\nactors, actors.animal_classifier, actors.id, actors.name, actors.slug, actors.url, created_date, "
+        "description, id, last_modified_date, malware, malware.community_identifiers, malware.family_name, "
+        "malware.slug, motivations, motivations.id, motivations.slug, motivations.value, name, name.raw, "
+        "short_description, slug, sub_type, sub_type.id, sub_type.name, sub_type.slug, tags, tags.id, tags.slug, "
+        "tags.value, target_countries, target_countries.id, target_countries.slug, target_countries.value, "
+        "target_industries, target_industries.id, target_industries.slug, target_industries.value, type, type.id, "
+        "type.name, type.slug, url.",
         "name": "filter",
         "in": "query"
       },

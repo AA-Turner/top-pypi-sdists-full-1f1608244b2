@@ -39,7 +39,10 @@ async def create_run(request: ApiRequest):
             payload,
             request.headers,
         )
-    return ApiResponse(run)
+    return ApiResponse(
+        run,
+        headers={"Content-Location": f"/threads/{thread_id}/runs/{run['run_id']}"},
+    )
 
 
 @retry_db
@@ -53,7 +56,10 @@ async def create_stateless_run(request: ApiRequest):
             payload,
             request.headers,
         )
-    return ApiResponse(run)
+    return ApiResponse(
+        run,
+        headers={"Content-Location": f"/runs/{run['run_id']}"},
+    )
 
 
 async def create_stateless_run_batch(request: ApiRequest):
@@ -107,8 +113,12 @@ async def stream_run(
             thread_id=thread_id,
             cancel_on_disconnect=on_disconnect == "cancel",
             stream_mode=await sub,
+            last_event_id=None,
         ),
-        headers={"Location": f"/threads/{thread_id}/runs/{run['run_id']}/stream"},
+        headers={
+            "Location": f"/threads/{thread_id}/runs/{run['run_id']}/stream",
+            "Content-Location": f"/threads/{thread_id}/runs/{run['run_id']}",
+        },
     )
 
 
@@ -143,9 +153,11 @@ async def stream_run_stateless(
             ignore_404=True,
             cancel_on_disconnect=on_disconnect == "cancel",
             stream_mode=await sub,
+            last_event_id=None,
         ),
         headers={
-            "Location": f"/threads/{run['thread_id']}/runs/{run['run_id']}/stream"
+            "Location": f"/runs/{run['run_id']}/stream",
+            "Content-Location": f"/runs/{run['run_id']}",
         },
     )
 
@@ -182,7 +194,7 @@ async def wait_run(request: ApiRequest):
                 run["run_id"], thread_id=run["thread_id"], stream_mode=await sub
             )
         ) as stream:
-            async for mode, chunk in stream:
+            async for mode, chunk, _ in stream:
                 if mode == b"values":
                     vchunk = chunk
                 elif mode == b"error":
@@ -216,7 +228,10 @@ async def wait_run(request: ApiRequest):
     return StreamingResponse(
         body(),
         media_type="application/json",
-        headers={"Location": f"/threads/{thread_id}/runs/{run['run_id']}/join"},
+        headers={
+            "Location": f"/threads/{thread_id}/runs/{run['run_id']}/join",
+            "Content-Location": f"/threads/{thread_id}/runs/{run['run_id']}",
+        },
     )
 
 
@@ -251,7 +266,7 @@ async def wait_run_stateless(request: ApiRequest):
                 run["run_id"], thread_id=run["thread_id"], stream_mode=await sub
             )
         ) as stream:
-            async for mode, chunk in stream:
+            async for mode, chunk, _ in stream:
                 if mode == b"values":
                     vchunk = chunk
                 elif mode == b"error":
@@ -280,7 +295,10 @@ async def wait_run_stateless(request: ApiRequest):
     return StreamingResponse(
         body(),
         media_type="application/json",
-        headers={"Location": f"/threads/{run['thread_id']}/runs/{run['run_id']}/join"},
+        headers={
+            "Location": f"/threads/{run['thread_id']}/runs/{run['run_id']}/join",
+            "Content-Location": f"/threads/{run['thread_id']}/runs/{run['run_id']}",
+        },
     )
 
 
@@ -358,13 +376,15 @@ async def join_run_stream(request: ApiRequest):
     validate_uuid(thread_id, "Invalid thread ID: must be a UUID")
     validate_uuid(run_id, "Invalid run ID: must be a UUID")
     stream_mode = request.query_params.get("stream_mode") or None
+    last_event_id = request.headers.get("last-event-id") or None
     return EventSourceResponse(
         Runs.Stream.join(
             run_id,
             thread_id=thread_id,
             cancel_on_disconnect=cancel_on_disconnect,
             stream_mode=stream_mode,
-        )
+            last_event_id=last_event_id,
+        ),
     )
 
 

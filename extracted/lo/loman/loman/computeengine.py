@@ -16,10 +16,10 @@ import networkx as nx
 import pandas as pd
 
 from .compat import get_signature
-from .consts import NodeAttributes, EdgeAttributes, SystemTags, States
+from .consts import NodeAttributes, EdgeAttributes, SystemTags, States, NodeTransformations
 from .exception import MapException, LoopDetectedException, NonExistentNodeException, NodeAlreadyExistsException, \
-    ComputationException
-from .path_parser import to_path, Path
+    ComputationException, CannotInsertToPlaceholderNodeException
+from .path_parser import to_path, Path, PathType
 from .structs import node_keys_to_names, InputName, NodeKey, InputNames, Names, Name, names_to_node_keys
 from .util import AttributeView, apply_n, apply1, as_iterable, value_eq
 from .visualization import NodeFormatter, GraphView
@@ -312,26 +312,30 @@ class Computation:
                             self.dag.add_node(input_vertex_node_key, **{NodeAttributes.STATE: States.PLACEHOLDER})
                             self._state_map[States.PLACEHOLDER].add(input_vertex_node_key)
                         self.dag.add_edge(input_vertex_node_key, node_key, **{EdgeAttributes.PARAM: (_ParameterType.ARG, i)})
+            param_map = {}
             if inspect:
                 signature = get_signature(func)
-                param_names = set()
                 if not signature.has_var_args:
-                    param_names.update(signature.kwd_params[args_count:])
+                    for param_name in signature.kwd_params[args_count:]:
+                        if kwds is not None and param_name in kwds:
+                            param_source = kwds[param_name]
+                        else:
+                            param_source = node_key.group_path.join(param_name)
+                        param_map[param_name] = param_source
                 if signature.has_var_kwds and kwds is not None:
-                    param_names.update(kwds.keys())
+                    for param_name, param_source in kwds.items():
+                        param_map[param_name] = param_source
                 default_names = signature.default_params
             else:
-                if kwds is None:
-                    param_names = []
-                else:
-                    param_names = kwds.keys()
+                if kwds is not None:
+                    for param_name, param_source in kwds.items():
+                        param_map[param_name] = param_source
                 default_names = []
-            for param_name in param_names:
-                value_source = kwds.get(param_name, param_name) if kwds else param_name
-                if isinstance(value_source, ConstantValue):
-                    node[NodeAttributes.KWDS][param_name] = value_source.value
+            for param_name, param_source in param_map.items():
+                if isinstance(param_source, ConstantValue):
+                    node[NodeAttributes.KWDS][param_name] = param_source.value
                 else:
-                    in_node_name = value_source
+                    in_node_name = param_source
                     in_node_key = NodeKey.from_name(in_node_name)
                     if not self.dag.has_node(in_node_key):
                         if param_name in default_names:
@@ -519,10 +523,15 @@ class Computation:
         if not self.dag.has_node(node_key):
             raise NonExistentNodeException(f'Node {node_key} does not exist')
 
+        state = self._state_one(name)
+        if state == States.PLACEHOLDER:
+            raise CannotInsertToPlaceholderNodeException("Cannot insert into placeholder node. Use add_node to create the node first")
+
         if not force:
-            node_data = self.__getitem__(node_key)
-            if node_data.state == States.UPTODATE and value_eq(value, node_data.value):
-                return
+            if state == States.UPTODATE:
+                current_value = self._value_one(name)
+                if value_eq(value, current_value):
+                    return
 
         self._set_state_and_value(node_key, States.UPTODATE, value)
         self._set_descendents(node_key, States.STALE)
@@ -1341,13 +1350,14 @@ class Computation:
             return results
         self.add_node(result_node, f, kwds={'xs': input_node})
 
-    def prepend_path(self, path, prefix):
+    def prepend_path(self, path, prefix_path: Path):
         if isinstance(path, ConstantValue):
             return path
         path = to_path(path)
-        return to_path(prefix).join(path)
+        return prefix_path.join(path)
 
-    def add_block(self, base_path: Union[str, Path], block: 'Computation'):
+    def add_block(self, base_path: PathType, block: 'Computation', *, keep_values: Optional[bool] = True, links: Optional[dict] = None):
+        base_path = to_path(base_path)
         for node_name in block.nodes():
             node_key = NodeKey.from_name(node_name)
             node_data = block.dag.nodes[node_key]
@@ -1362,17 +1372,32 @@ class Computation:
             converter = node_data.get(NodeAttributes.CONVERTER, None)
             new_node_name = self.prepend_path(node_name, base_path)
             self.add_node(new_node_name, func, args=args, kwds=kwds, converter=converter, serialize=False, inspect=False, group=group, tags=tags, style=style, executor=executor)
+            if keep_values:
+                new_node_key = NodeKey.from_name(new_node_name)
+                self._set_state_and_literal_value(new_node_key, node_data[NodeAttributes.STATE], node_data[NodeAttributes.VALUE])
+        if links is not None:
+            for target, source in links.items():
+                self.link(base_path.join(target), source)
 
     def link(self, target: InputName, source: InputName):
+        target = NodeKey.from_name(target)
+        source = NodeKey.from_name(source)
+        if target == source:
+            return
         self.add_node(target, identity_function, kwds={'x': source})
 
     def _repr_svg_(self):
         return GraphView(self).svg()
 
-    def draw(self, *, cmap=None, colors='state', shapes=None, graph_attr=None, node_attr=None, edge_attr=None, show_expansion=False):
+    def draw(self, root: Optional[PathType] = None, *,
+             node_transformations: Optional[dict] = None,
+             cmap=None, colors='state', shapes=None,
+             graph_attr=None, node_attr=None, edge_attr=None,
+             show_expansion=False):
         """
         Draw a computation's current state using the GraphViz utility
 
+        :param root: Optional PathType. Sub-block to draw
         :param cmap: Default: None
         :param colors: 'state' - colors indicate state. 'timing' - colors indicate execution time. Default: 'state'.
         :param shapes: None - ovals. 'type' - shapes indicate type. Default: None.
@@ -1382,10 +1407,13 @@ class Computation:
         :param show_expansion: Whether to show expansion nodes (i.e. named tuple expansion nodes) if they are not referenced by other nodes
         """
         node_formatter = NodeFormatter.create(cmap, colors, shapes)
-        nodes_to_contract = self.nodes_by_tag(SystemTags.EXPANSION) if not show_expansion else None
-        v = GraphView(self, node_formatter=node_formatter,
+        node_transformations = node_transformations.copy() if node_transformations is not None else {}
+        if not show_expansion:
+            for nodekey in self.nodes_by_tag(SystemTags.EXPANSION):
+                node_transformations[nodekey] = NodeTransformations.CONTRACT
+        v = GraphView(self, root=root, node_formatter=node_formatter,
                       graph_attr=graph_attr, node_attr=node_attr, edge_attr=edge_attr,
-                      nodes_to_contract=nodes_to_contract)
+                      node_transformations=node_transformations)
         return v
 
     def view(self, cmap=None, colors='state', shapes=None):
@@ -1412,4 +1440,27 @@ class Computation:
         populate_computation_from_class(comp, definition_class, obj, ignore_self=ignore_self)
         return comp
 
+    def inject_dependencies(self, dependencies: dict, *, force: bool = False):
+        """
+        Injects dependencies into the nodes of the current computation where nodes are in a placeholder state
+        (or all possible nodes when the 'force' parameter is set to True), using values
+        provided in the 'dependencies' dictionary.
 
+        Each key in the 'dependencies' dictionary corresponds to a node identifier, and the associated
+        value is the dependency object to inject. If the value is a callable, it will be added as a calc node.
+
+        :param dependencies: A dictionary where each key-value pair consists of a node identifier and
+                             its corresponding dependency object or a callable that returns the dependency object.
+        :param force: A boolean flag that, when set to True, forces the replacement of existing node values
+                      with the ones provided in 'dependencies', regardless of their current state. Defaults to False.
+        :return: None
+        """
+        for n in self.nodes():
+            if force or self.s[n] == States.PLACEHOLDER:
+                obj = dependencies.get(n)
+                if obj is None:
+                    continue
+                if callable(obj):
+                    self.add_node(n, obj)
+                else:
+                    self.add_node(n, value=obj)

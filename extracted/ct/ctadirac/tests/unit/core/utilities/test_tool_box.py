@@ -87,21 +87,21 @@ def test_run_number_from_filename_corsika_log():
 
 def test_run_number_from_filename_evndisplay_tid():
     filename = "/path/to/file_tid000456.anything"
-    package = "evndisplay"
+    package = "evndisplay_dl1"
     assert extract_run_number_from_evndisplay(filename) == 456
     assert run_number_from_filename(filename, package) == 456
 
 
 def test_run_number_from_filename_evndisplay_dl1_root():
     filename = "/path/to/run000456___cta.DL1.root"
-    package = "evndisplay"
+    package = "evndisplay_dl1"
     assert extract_run_number_from_evndisplay(filename) == 456
     assert run_number_from_filename(filename, package) == 456
 
 
 def test_run_number_from_filename_evndisplay_dl1_tar_gz():
     filename = "/path/to/run000456___cta.DL1.tar.gz"
-    package = "evndisplay"
+    package = "evndisplay_dl1"
     assert extract_run_number_from_evndisplay(filename) == 456
     assert run_number_from_filename(filename, package) == 456
 

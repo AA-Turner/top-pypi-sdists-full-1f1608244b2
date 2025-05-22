@@ -25,6 +25,29 @@ class TradeDirection(Enum):
     """Short direction (1)"""
 
 
+class FillGroupingMethod(Enum):
+    """The method used to group order fills into trades"""
+
+    FILL_TO_FILL = 0
+    """A Trade is defined by a fill that establishes or increases a position and an offsetting fill that reduces the position size (0)"""
+
+    FLAT_TO_FLAT = 1
+    """A Trade is defined by a sequence of fills, from a flat position to a non-zero position which may increase or decrease in quantity, and back to a flat position (1)"""
+
+    FLAT_TO_REDUCED = 2
+    """A Trade is defined by a sequence of fills, from a flat position to a non-zero position and an offsetting fill that reduces the position size (2)"""
+
+
+class FillMatchingMethod(Enum):
+    """The method used to match offsetting order fills"""
+
+    FIFO = 0
+    """First In First Out fill matching method (0)"""
+
+    LIFO = 1
+    """Last In Last Out fill matching method (1)"""
+
+
 class Trade(System.Object):
     """Represents a closed trade"""
 
@@ -147,499 +170,65 @@ class Trade(System.Object):
         ...
 
 
-class PerformanceMetrics(System.Object):
-    """PerformanceMetrics contains the names of the various performance metrics used for evaluation purposes."""
-
-    ALPHA: str = "Alpha"
-    """Algorithm "Alpha" statistic - abnormal returns over the risk free rate and the relationshio (beta) with the benchmark returns."""
-
-    ANNUAL_STANDARD_DEVIATION: str = "Annual Standard Deviation"
-    """Annualized standard deviation"""
-
-    ANNUAL_VARIANCE: str = "Annual Variance"
-    """Annualized variance statistic calculation using the daily performance variance and trading days per year."""
-
-    AVERAGE_LOSS: str = "Average Loss"
-    """The average rate of return for losing trades"""
-
-    AVERAGE_WIN: str = "Average Win"
-    """The average rate of return for winning trades"""
-
-    BETA: str = "Beta"
-    """Algorithm "beta" statistic - the covariance between the algorithm and benchmark performance, divided by benchmark's variance"""
-
-    COMPOUNDING_ANNUAL_RETURN: str = "Compounding Annual Return"
-    """Annual compounded returns statistic based on the final-starting capital and years."""
-
-    DRAWDOWN: str = "Drawdown"
-    """Drawdown maximum percentage."""
-
-    ESTIMATED_STRATEGY_CAPACITY: str = "Estimated Strategy Capacity"
-    """Total capacity of the algorithm"""
-
-    EXPECTANCY: str = "Expectancy"
-    """The expected value of the rate of return"""
-
-    START_EQUITY: str = "Start Equity"
-    """Initial Equity Total Value"""
-
-    END_EQUITY: str = "End Equity"
-    """Final Equity Total Value"""
-
-    INFORMATION_RATIO: str = "Information Ratio"
-    """Information ratio - risk adjusted return"""
-
-    LOSS_RATE: str = "Loss Rate"
-    """The ratio of the number of losing trades to the total number of trades"""
-
-    NET_PROFIT: str = "Net Profit"
-    """Total net profit percentage"""
-
-    PROBABILISTIC_SHARPE_RATIO: str = "Probabilistic Sharpe Ratio"
-    """
-    Probabilistic Sharpe Ratio is a probability measure associated with the Sharpe ratio.
-    It informs us of the probability that the estimated Sharpe ratio is greater than a chosen benchmark
-    """
-
-    PROFIT_LOSS_RATIO: str = "Profit-Loss Ratio"
-    """The ratio of the average win rate to the average loss rate"""
-
-    SHARPE_RATIO: str = "Sharpe Ratio"
-    """Sharpe ratio with respect to risk free rate: measures excess of return per unit of risk."""
-
-    SORTINO_RATIO: str = "Sortino Ratio"
-    """Sortino ratio with respect to risk free rate: measures excess of return per unit of downside risk."""
-
-    TOTAL_FEES: str = "Total Fees"
-    """Total amount of fees in the account currency"""
-
-    TOTAL_ORDERS: str = "Total Orders"
-    """Total amount of orders in the algorithm"""
-
-    TRACKING_ERROR: str = "Tracking Error"
-    """Tracking error volatility (TEV) statistic - a measure of how closely a portfolio follows the index to which it is benchmarked"""
-
-    TREYNOR_RATIO: str = "Treynor Ratio"
-    """Treynor ratio statistic is a measurement of the returns earned in excess of that which could have been earned on an investment that has no diversifiable risk"""
-
-    WIN_RATE: str = "Win Rate"
-    """The ratio of the number of winning trades to the total number of trades"""
-
-    LOWEST_CAPACITY_ASSET: str = "Lowest Capacity Asset"
-    """Provide a reference to the lowest capacity symbol used in scaling down the capacity for debugging."""
-
-    PORTFOLIO_TURNOVER: str = "Portfolio Turnover"
-    """The average Portfolio Turnover"""
-
-
-class PortfolioStatistics(System.Object):
-    """The PortfolioStatistics class represents a set of statistics calculated from equity and benchmark samples"""
+class TradeBuilder(System.Object, QuantConnect.Interfaces.ITradeBuilder):
+    """The TradeBuilder class generates trades from executions and market price updates"""
 
     @property
-    def average_win_rate(self) -> float:
-        """The average rate of return for winning trades"""
+    def closed_trades(self) -> typing.List[QuantConnect.Statistics.Trade]:
+        """The list of closed trades"""
         ...
 
-    @average_win_rate.setter
-    def average_win_rate(self, value: float) -> None:
+    def __init__(self, grouping_method: QuantConnect.Statistics.FillGroupingMethod, matching_method: QuantConnect.Statistics.FillMatchingMethod) -> None:
+        """Initializes a new instance of the TradeBuilder class"""
         ...
 
-    @property
-    def average_loss_rate(self) -> float:
-        """The average rate of return for losing trades"""
-        ...
-
-    @average_loss_rate.setter
-    def average_loss_rate(self, value: float) -> None:
-        ...
-
-    @property
-    def profit_loss_ratio(self) -> float:
-        """The ratio of the average win rate to the average loss rate"""
-        ...
-
-    @profit_loss_ratio.setter
-    def profit_loss_ratio(self, value: float) -> None:
-        ...
-
-    @property
-    def win_rate(self) -> float:
-        """The ratio of the number of winning trades to the total number of trades"""
-        ...
-
-    @win_rate.setter
-    def win_rate(self, value: float) -> None:
-        ...
-
-    @property
-    def loss_rate(self) -> float:
-        """The ratio of the number of losing trades to the total number of trades"""
-        ...
-
-    @loss_rate.setter
-    def loss_rate(self, value: float) -> None:
-        ...
-
-    @property
-    def expectancy(self) -> float:
-        """The expected value of the rate of return"""
-        ...
-
-    @expectancy.setter
-    def expectancy(self, value: float) -> None:
-        ...
-
-    @property
-    def start_equity(self) -> float:
-        """Initial Equity Total Value"""
-        ...
-
-    @start_equity.setter
-    def start_equity(self, value: float) -> None:
-        ...
-
-    @property
-    def end_equity(self) -> float:
-        """Final Equity Total Value"""
-        ...
-
-    @end_equity.setter
-    def end_equity(self, value: float) -> None:
-        ...
-
-    @property
-    def compounding_annual_return(self) -> float:
-        """Annual compounded returns statistic based on the final-starting capital and years."""
-        ...
-
-    @compounding_annual_return.setter
-    def compounding_annual_return(self, value: float) -> None:
-        ...
-
-    @property
-    def drawdown(self) -> float:
-        """Drawdown maximum percentage."""
-        ...
-
-    @drawdown.setter
-    def drawdown(self, value: float) -> None:
-        ...
-
-    @property
-    def total_net_profit(self) -> float:
-        """The total net profit percentage."""
-        ...
-
-    @total_net_profit.setter
-    def total_net_profit(self, value: float) -> None:
-        ...
-
-    @property
-    def sharpe_ratio(self) -> float:
-        """Sharpe ratio with respect to risk free rate: measures excess of return per unit of risk."""
-        ...
-
-    @sharpe_ratio.setter
-    def sharpe_ratio(self, value: float) -> None:
-        ...
-
-    @property
-    def probabilistic_sharpe_ratio(self) -> float:
+    def apply_split(self, split: QuantConnect.Data.Market.Split, live_mode: bool, data_normalization_mode: QuantConnect.DataNormalizationMode) -> None:
         """
-        Probabilistic Sharpe Ratio is a probability measure associated with the Sharpe ratio.
-        It informs us of the probability that the estimated Sharpe ratio is greater than a chosen benchmark
-        """
-        ...
-
-    @probabilistic_sharpe_ratio.setter
-    def probabilistic_sharpe_ratio(self, value: float) -> None:
-        ...
-
-    @property
-    def sortino_ratio(self) -> float:
-        """Sortino ratio with respect to risk free rate: measures excess of return per unit of downside risk."""
-        ...
-
-    @sortino_ratio.setter
-    def sortino_ratio(self, value: float) -> None:
-        ...
-
-    @property
-    def alpha(self) -> float:
-        """Algorithm "Alpha" statistic - abnormal returns over the risk free rate and the relationshio (beta) with the benchmark returns."""
-        ...
-
-    @alpha.setter
-    def alpha(self, value: float) -> None:
-        ...
-
-    @property
-    def beta(self) -> float:
-        """Algorithm "beta" statistic - the covariance between the algorithm and benchmark performance, divided by benchmark's variance"""
-        ...
-
-    @beta.setter
-    def beta(self, value: float) -> None:
-        ...
-
-    @property
-    def annual_standard_deviation(self) -> float:
-        """Annualized standard deviation"""
-        ...
-
-    @annual_standard_deviation.setter
-    def annual_standard_deviation(self, value: float) -> None:
-        ...
-
-    @property
-    def annual_variance(self) -> float:
-        """Annualized variance statistic calculation using the daily performance variance and trading days per year."""
-        ...
-
-    @annual_variance.setter
-    def annual_variance(self, value: float) -> None:
-        ...
-
-    @property
-    def information_ratio(self) -> float:
-        """Information ratio - risk adjusted return"""
-        ...
-
-    @information_ratio.setter
-    def information_ratio(self, value: float) -> None:
-        ...
-
-    @property
-    def tracking_error(self) -> float:
-        """Tracking error volatility (TEV) statistic - a measure of how closely a portfolio follows the index to which it is benchmarked"""
-        ...
-
-    @tracking_error.setter
-    def tracking_error(self, value: float) -> None:
-        ...
-
-    @property
-    def treynor_ratio(self) -> float:
-        """Treynor ratio statistic is a measurement of the returns earned in excess of that which could have been earned on an investment that has no diversifiable risk"""
-        ...
-
-    @treynor_ratio.setter
-    def treynor_ratio(self, value: float) -> None:
-        ...
-
-    @property
-    def portfolio_turnover(self) -> float:
-        """The average Portfolio Turnover"""
-        ...
-
-    @portfolio_turnover.setter
-    def portfolio_turnover(self, value: float) -> None:
-        ...
-
-    @property
-    def value_at_risk_99(self) -> float:
-        """
-        The 1-day VaR for the portfolio, using the Variance-covariance approach.
-        Assumes a 99% confidence level, 1 year lookback period, and that the returns are normally distributed.
-        """
-        ...
-
-    @value_at_risk_99.setter
-    def value_at_risk_99(self, value: float) -> None:
-        ...
-
-    @property
-    def value_at_risk_95(self) -> float:
-        """
-        The 1-day VaR for the portfolio, using the Variance-covariance approach.
-        Assumes a 95% confidence level, 1 year lookback period, and that the returns are normally distributed.
-        """
-        ...
-
-    @value_at_risk_95.setter
-    def value_at_risk_95(self, value: float) -> None:
-        ...
-
-    @overload
-    def __init__(self, profit_loss: System.Collections.Generic.SortedDictionary[datetime.datetime, float], equity: System.Collections.Generic.SortedDictionary[datetime.datetime, float], portfolio_turnover: System.Collections.Generic.SortedDictionary[datetime.datetime, float], list_performance: typing.List[float], list_benchmark: typing.List[float], starting_capital: float, risk_free_interest_rate_model: QuantConnect.Data.IRiskFreeInterestRateModel, trading_days_per_year: int, win_count: typing.Optional[int] = None, loss_count: typing.Optional[int] = None) -> None:
-        """
-        Initializes a new instance of the PortfolioStatistics class
+        Applies a split to the trade builder
         
-        :param profit_loss: Trade record of profits and losses
-        :param equity: The list of daily equity values
-        :param portfolio_turnover: The algorithm portfolio turnover
-        :param list_performance: The list of algorithm performance values
-        :param list_benchmark: The list of benchmark values
-        :param starting_capital: The algorithm starting capital
-        :param risk_free_interest_rate_model: The risk free interest rate model to use
-        :param trading_days_per_year: The number of trading days per year
-        :param win_count: The number of wins, including ITM options with profit_loss less than 0. If this and  are null, they will be calculated from
-        :param loss_count: The number of losses
+        :param split: The split to be applied
+        :param live_mode: True if live mode, false for backtest
+        :param data_normalization_mode: The DataNormalizationMode for this security
         """
         ...
 
-    @overload
-    def __init__(self) -> None:
-        """Initializes a new instance of the PortfolioStatistics class"""
-        ...
-
-
-class Statistics(System.Object):
-    """Calculate all the statistics required from the backtest, based on the equity curve and the profit loss statement."""
-
-    @staticmethod
-    def annual_downside_standard_deviation(performance: typing.List[float], trading_days_per_year: float, minimum_acceptable_return: float = 0) -> float:
+    def has_open_position(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> bool:
         """
-        Annualized downside standard deviation
+        Returns true if there is an open position for the symbol
         
-        :param performance: Collection of double values for daily performance
-        :param trading_days_per_year: Number of trading days for the assets in portfolio to get annualize standard deviation.
-        :param minimum_acceptable_return: Minimum acceptable return
-        :returns: Value for annual downside standard deviation.
+        :param symbol: The symbol
+        :returns: true if there is an open position for the symbol.
         """
         ...
 
-    @staticmethod
-    def annual_downside_variance(performance: typing.List[float], trading_days_per_year: float, minimum_acceptable_return: float = 0) -> float:
+    def process_fill(self, fill: QuantConnect.Orders.OrderEvent, security_conversion_rate: float, fee_in_account_currency: float, multiplier: float = 1.0) -> None:
         """
-        Annualized variance statistic calculation using the daily performance variance and trading days per year.
+        Processes a new fill, eventually creating new trades
         
-        :param minimum_acceptable_return: Minimum acceptable return
-        :returns: Annual variance value.
+        :param fill: The new fill order event
+        :param security_conversion_rate: The current security market conversion rate into the account currency
+        :param fee_in_account_currency: The current order fee in the account currency
+        :param multiplier: The contract multiplier
         """
         ...
 
-    @staticmethod
-    def annual_performance(performance: typing.List[float], trading_days_per_year: float) -> float:
+    def set_live_mode(self, live: bool) -> None:
         """
-        Annualized return statistic calculated as an average of daily trading performance multiplied by the number of trading days per year.
+        Sets the live mode flag
         
-        :param performance: Dictionary collection of double performance values
-        :param trading_days_per_year: Trading days per year for the assets in portfolio
-        :returns: Double annual performance percentage.
+        :param live: The live mode flag
         """
         ...
 
-    @staticmethod
-    def annual_standard_deviation(performance: typing.List[float], trading_days_per_year: float) -> float:
+    def set_market_price(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract], price: float) -> None:
+        """Sets the current market price for the symbol"""
+        ...
+
+    def set_security_manager(self, securities: QuantConnect.Securities.SecurityManager) -> None:
         """
-        Annualized standard deviation
+        Sets the security manager instance
         
-        :param performance: Collection of double values for daily performance
-        :param trading_days_per_year: Number of trading days for the assets in portfolio to get annualize standard deviation.
-        :returns: Value for annual standard deviation.
-        """
-        ...
-
-    @staticmethod
-    def annual_variance(performance: typing.List[float], trading_days_per_year: float) -> float:
-        """
-        Annualized variance statistic calculation using the daily performance variance and trading days per year.
-        
-        :returns: Annual variance value.
-        """
-        ...
-
-    @staticmethod
-    def compounding_annual_performance(starting_capital: float, final_capital: float, years: float) -> float:
-        """
-        Annual compounded returns statistic based on the final-starting capital and years.
-        
-        :param starting_capital: Algorithm starting capital
-        :param final_capital: Algorithm final capital
-        :param years: Years trading
-        :returns: Decimal fraction for annual compounding performance.
-        """
-        ...
-
-    @staticmethod
-    @overload
-    def drawdown_percent(equity_over_time: System.Collections.Generic.SortedDictionary[datetime.datetime, float], rounding: int = 2) -> float:
-        """Drawdown maximum percentage."""
-        ...
-
-    @staticmethod
-    @overload
-    def drawdown_percent(current: float, high: float, rounding_decimals: int = 2) -> float:
-        """
-        Calculate the drawdown between a high and current value
-        
-        :param current: Current value
-        :param high: Latest maximum
-        :param rounding_decimals: Digits to round the result too
-        :returns: Drawdown percentage.
-        """
-        ...
-
-    @staticmethod
-    def observed_sharpe_ratio(list_performance: typing.List[float]) -> float:
-        """
-        Calculates the observed sharpe ratio
-        
-        :param list_performance: The performance samples to use
-        :returns: The observed sharpe ratio.
-        """
-        ...
-
-    @staticmethod
-    def probabilistic_sharpe_ratio(list_performance: typing.List[float], benchmark_sharpe_ratio: float) -> float:
-        """
-        Helper method to calculate the probabilistic sharpe ratio
-        
-        :param list_performance: The list of algorithm performance values
-        :param benchmark_sharpe_ratio: The benchmark sharpe ratio to use
-        :returns: Probabilistic Sharpe Ratio.
-        """
-        ...
-
-    @staticmethod
-    @overload
-    def sharpe_ratio(average_performance: float, standard_deviation: float, risk_free_rate: float) -> float:
-        """
-        Sharpe ratio with respect to risk free rate: measures excess of return per unit of risk.
-        
-        :param average_performance: Average daily performance
-        :param standard_deviation: Standard deviation of the daily performance
-        :param risk_free_rate: The risk free rate
-        :returns: Value for sharpe ratio.
-        """
-        ...
-
-    @staticmethod
-    @overload
-    def sharpe_ratio(algo_performance: typing.List[float], risk_free_rate: float, trading_days_per_year: float) -> float:
-        """
-        Sharpe ratio with respect to risk free rate: measures excess of return per unit of risk.
-        
-        :param algo_performance: Collection of double values for the algorithm daily performance
-        :param risk_free_rate: The risk free rate
-        :param trading_days_per_year: Trading days per year for the assets in portfolio
-        :returns: Value for sharpe ratio.
-        """
-        ...
-
-    @staticmethod
-    def sortino_ratio(algo_performance: typing.List[float], risk_free_rate: float, trading_days_per_year: float, minimum_acceptable_return: float = 0) -> float:
-        """
-        Sortino ratio with respect to risk free rate: measures excess of return per unit of downside risk.
-        
-        :param algo_performance: Collection of double values for the algorithm daily performance
-        :param risk_free_rate: The risk free rate
-        :param trading_days_per_year: Trading days per year for the assets in portfolio
-        :param minimum_acceptable_return: Minimum acceptable return for Sortino ratio calculation
-        :returns: Value for Sortino ratio.
-        """
-        ...
-
-    @staticmethod
-    def tracking_error(algo_performance: typing.List[float], benchmark_performance: typing.List[float], trading_days_per_year: float) -> float:
-        """
-        Tracking error volatility (TEV) statistic - a measure of how closely a portfolio follows the index to which it is benchmarked
-        
-        :param algo_performance: Double collection of algorithm daily performance values
-        :param benchmark_performance: Double collection of benchmark daily performance values
-        :param trading_days_per_year: Number of trading days per year
-        :returns: Value for tracking error.
+        :param securities: The security manager
         """
         ...
 
@@ -1031,6 +620,258 @@ class TradeStatistics(System.Object):
         ...
 
 
+class PortfolioStatistics(System.Object):
+    """The PortfolioStatistics class represents a set of statistics calculated from equity and benchmark samples"""
+
+    @property
+    def average_win_rate(self) -> float:
+        """The average rate of return for winning trades"""
+        ...
+
+    @average_win_rate.setter
+    def average_win_rate(self, value: float) -> None:
+        ...
+
+    @property
+    def average_loss_rate(self) -> float:
+        """The average rate of return for losing trades"""
+        ...
+
+    @average_loss_rate.setter
+    def average_loss_rate(self, value: float) -> None:
+        ...
+
+    @property
+    def profit_loss_ratio(self) -> float:
+        """The ratio of the average win rate to the average loss rate"""
+        ...
+
+    @profit_loss_ratio.setter
+    def profit_loss_ratio(self, value: float) -> None:
+        ...
+
+    @property
+    def win_rate(self) -> float:
+        """The ratio of the number of winning trades to the total number of trades"""
+        ...
+
+    @win_rate.setter
+    def win_rate(self, value: float) -> None:
+        ...
+
+    @property
+    def loss_rate(self) -> float:
+        """The ratio of the number of losing trades to the total number of trades"""
+        ...
+
+    @loss_rate.setter
+    def loss_rate(self, value: float) -> None:
+        ...
+
+    @property
+    def expectancy(self) -> float:
+        """The expected value of the rate of return"""
+        ...
+
+    @expectancy.setter
+    def expectancy(self, value: float) -> None:
+        ...
+
+    @property
+    def start_equity(self) -> float:
+        """Initial Equity Total Value"""
+        ...
+
+    @start_equity.setter
+    def start_equity(self, value: float) -> None:
+        ...
+
+    @property
+    def end_equity(self) -> float:
+        """Final Equity Total Value"""
+        ...
+
+    @end_equity.setter
+    def end_equity(self, value: float) -> None:
+        ...
+
+    @property
+    def compounding_annual_return(self) -> float:
+        """Annual compounded returns statistic based on the final-starting capital and years."""
+        ...
+
+    @compounding_annual_return.setter
+    def compounding_annual_return(self, value: float) -> None:
+        ...
+
+    @property
+    def drawdown(self) -> float:
+        """Drawdown maximum percentage."""
+        ...
+
+    @drawdown.setter
+    def drawdown(self, value: float) -> None:
+        ...
+
+    @property
+    def total_net_profit(self) -> float:
+        """The total net profit percentage."""
+        ...
+
+    @total_net_profit.setter
+    def total_net_profit(self, value: float) -> None:
+        ...
+
+    @property
+    def sharpe_ratio(self) -> float:
+        """Sharpe ratio with respect to risk free rate: measures excess of return per unit of risk."""
+        ...
+
+    @sharpe_ratio.setter
+    def sharpe_ratio(self, value: float) -> None:
+        ...
+
+    @property
+    def probabilistic_sharpe_ratio(self) -> float:
+        """
+        Probabilistic Sharpe Ratio is a probability measure associated with the Sharpe ratio.
+        It informs us of the probability that the estimated Sharpe ratio is greater than a chosen benchmark
+        """
+        ...
+
+    @probabilistic_sharpe_ratio.setter
+    def probabilistic_sharpe_ratio(self, value: float) -> None:
+        ...
+
+    @property
+    def sortino_ratio(self) -> float:
+        """Sortino ratio with respect to risk free rate: measures excess of return per unit of downside risk."""
+        ...
+
+    @sortino_ratio.setter
+    def sortino_ratio(self, value: float) -> None:
+        ...
+
+    @property
+    def alpha(self) -> float:
+        """Algorithm "Alpha" statistic - abnormal returns over the risk free rate and the relationshio (beta) with the benchmark returns."""
+        ...
+
+    @alpha.setter
+    def alpha(self, value: float) -> None:
+        ...
+
+    @property
+    def beta(self) -> float:
+        """Algorithm "beta" statistic - the covariance between the algorithm and benchmark performance, divided by benchmark's variance"""
+        ...
+
+    @beta.setter
+    def beta(self, value: float) -> None:
+        ...
+
+    @property
+    def annual_standard_deviation(self) -> float:
+        """Annualized standard deviation"""
+        ...
+
+    @annual_standard_deviation.setter
+    def annual_standard_deviation(self, value: float) -> None:
+        ...
+
+    @property
+    def annual_variance(self) -> float:
+        """Annualized variance statistic calculation using the daily performance variance and trading days per year."""
+        ...
+
+    @annual_variance.setter
+    def annual_variance(self, value: float) -> None:
+        ...
+
+    @property
+    def information_ratio(self) -> float:
+        """Information ratio - risk adjusted return"""
+        ...
+
+    @information_ratio.setter
+    def information_ratio(self, value: float) -> None:
+        ...
+
+    @property
+    def tracking_error(self) -> float:
+        """Tracking error volatility (TEV) statistic - a measure of how closely a portfolio follows the index to which it is benchmarked"""
+        ...
+
+    @tracking_error.setter
+    def tracking_error(self, value: float) -> None:
+        ...
+
+    @property
+    def treynor_ratio(self) -> float:
+        """Treynor ratio statistic is a measurement of the returns earned in excess of that which could have been earned on an investment that has no diversifiable risk"""
+        ...
+
+    @treynor_ratio.setter
+    def treynor_ratio(self, value: float) -> None:
+        ...
+
+    @property
+    def portfolio_turnover(self) -> float:
+        """The average Portfolio Turnover"""
+        ...
+
+    @portfolio_turnover.setter
+    def portfolio_turnover(self, value: float) -> None:
+        ...
+
+    @property
+    def value_at_risk_99(self) -> float:
+        """
+        The 1-day VaR for the portfolio, using the Variance-covariance approach.
+        Assumes a 99% confidence level, 1 year lookback period, and that the returns are normally distributed.
+        """
+        ...
+
+    @value_at_risk_99.setter
+    def value_at_risk_99(self, value: float) -> None:
+        ...
+
+    @property
+    def value_at_risk_95(self) -> float:
+        """
+        The 1-day VaR for the portfolio, using the Variance-covariance approach.
+        Assumes a 95% confidence level, 1 year lookback period, and that the returns are normally distributed.
+        """
+        ...
+
+    @value_at_risk_95.setter
+    def value_at_risk_95(self, value: float) -> None:
+        ...
+
+    @overload
+    def __init__(self, profit_loss: System.Collections.Generic.SortedDictionary[datetime.datetime, float], equity: System.Collections.Generic.SortedDictionary[datetime.datetime, float], portfolio_turnover: System.Collections.Generic.SortedDictionary[datetime.datetime, float], list_performance: typing.List[float], list_benchmark: typing.List[float], starting_capital: float, risk_free_interest_rate_model: QuantConnect.Data.IRiskFreeInterestRateModel, trading_days_per_year: int, win_count: typing.Optional[int] = None, loss_count: typing.Optional[int] = None) -> None:
+        """
+        Initializes a new instance of the PortfolioStatistics class
+        
+        :param profit_loss: Trade record of profits and losses
+        :param equity: The list of daily equity values
+        :param portfolio_turnover: The algorithm portfolio turnover
+        :param list_performance: The list of algorithm performance values
+        :param list_benchmark: The list of benchmark values
+        :param starting_capital: The algorithm starting capital
+        :param risk_free_interest_rate_model: The risk free interest rate model to use
+        :param trading_days_per_year: The number of trading days per year
+        :param win_count: The number of wins, including ITM options with profit_loss less than 0. If this and  are null, they will be calculated from
+        :param loss_count: The number of losses
+        """
+        ...
+
+    @overload
+    def __init__(self) -> None:
+        """Initializes a new instance of the PortfolioStatistics class"""
+        ...
+
+
 class AlgorithmPerformance(System.Object):
     """The AlgorithmPerformance class is a wrapper for TradeStatistics and PortfolioStatistics"""
 
@@ -1170,92 +1011,6 @@ class StatisticsBuilder(System.Object):
         ...
 
 
-class FillGroupingMethod(Enum):
-    """The method used to group order fills into trades"""
-
-    FILL_TO_FILL = 0
-    """A Trade is defined by a fill that establishes or increases a position and an offsetting fill that reduces the position size (0)"""
-
-    FLAT_TO_FLAT = 1
-    """A Trade is defined by a sequence of fills, from a flat position to a non-zero position which may increase or decrease in quantity, and back to a flat position (1)"""
-
-    FLAT_TO_REDUCED = 2
-    """A Trade is defined by a sequence of fills, from a flat position to a non-zero position and an offsetting fill that reduces the position size (2)"""
-
-
-class FillMatchingMethod(Enum):
-    """The method used to match offsetting order fills"""
-
-    FIFO = 0
-    """First In First Out fill matching method (0)"""
-
-    LIFO = 1
-    """Last In Last Out fill matching method (1)"""
-
-
-class TradeBuilder(System.Object, QuantConnect.Interfaces.ITradeBuilder):
-    """The TradeBuilder class generates trades from executions and market price updates"""
-
-    @property
-    def closed_trades(self) -> typing.List[QuantConnect.Statistics.Trade]:
-        """The list of closed trades"""
-        ...
-
-    def __init__(self, grouping_method: QuantConnect.Statistics.FillGroupingMethod, matching_method: QuantConnect.Statistics.FillMatchingMethod) -> None:
-        """Initializes a new instance of the TradeBuilder class"""
-        ...
-
-    def apply_split(self, split: QuantConnect.Data.Market.Split, live_mode: bool, data_normalization_mode: QuantConnect.DataNormalizationMode) -> None:
-        """
-        Applies a split to the trade builder
-        
-        :param split: The split to be applied
-        :param live_mode: True if live mode, false for backtest
-        :param data_normalization_mode: The DataNormalizationMode for this security
-        """
-        ...
-
-    def has_open_position(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract]) -> bool:
-        """
-        Returns true if there is an open position for the symbol
-        
-        :param symbol: The symbol
-        :returns: true if there is an open position for the symbol.
-        """
-        ...
-
-    def process_fill(self, fill: QuantConnect.Orders.OrderEvent, security_conversion_rate: float, fee_in_account_currency: float, multiplier: float = 1.0) -> None:
-        """
-        Processes a new fill, eventually creating new trades
-        
-        :param fill: The new fill order event
-        :param security_conversion_rate: The current security market conversion rate into the account currency
-        :param fee_in_account_currency: The current order fee in the account currency
-        :param multiplier: The contract multiplier
-        """
-        ...
-
-    def set_live_mode(self, live: bool) -> None:
-        """
-        Sets the live mode flag
-        
-        :param live: The live mode flag
-        """
-        ...
-
-    def set_market_price(self, symbol: typing.Union[QuantConnect.Symbol, str, QuantConnect.Data.Market.BaseContract], price: float) -> None:
-        """Sets the current market price for the symbol"""
-        ...
-
-    def set_security_manager(self, securities: QuantConnect.Securities.SecurityManager) -> None:
-        """
-        Sets the security manager instance
-        
-        :param securities: The security manager
-        """
-        ...
-
-
 class IStatisticsService(metaclass=abc.ABCMeta):
     """This interface exposes methods for accessing algorithm statistics results at runtime."""
 
@@ -1275,5 +1030,250 @@ class IStatisticsService(metaclass=abc.ABCMeta):
         :returns: The current statistics.
         """
         ...
+
+
+class Statistics(System.Object):
+    """Calculate all the statistics required from the backtest, based on the equity curve and the profit loss statement."""
+
+    @staticmethod
+    def annual_downside_standard_deviation(performance: typing.List[float], trading_days_per_year: float, minimum_acceptable_return: float = 0) -> float:
+        """
+        Annualized downside standard deviation
+        
+        :param performance: Collection of double values for daily performance
+        :param trading_days_per_year: Number of trading days for the assets in portfolio to get annualize standard deviation.
+        :param minimum_acceptable_return: Minimum acceptable return
+        :returns: Value for annual downside standard deviation.
+        """
+        ...
+
+    @staticmethod
+    def annual_downside_variance(performance: typing.List[float], trading_days_per_year: float, minimum_acceptable_return: float = 0) -> float:
+        """
+        Annualized variance statistic calculation using the daily performance variance and trading days per year.
+        
+        :param minimum_acceptable_return: Minimum acceptable return
+        :returns: Annual variance value.
+        """
+        ...
+
+    @staticmethod
+    def annual_performance(performance: typing.List[float], trading_days_per_year: float) -> float:
+        """
+        Annualized return statistic calculated as an average of daily trading performance multiplied by the number of trading days per year.
+        
+        :param performance: Dictionary collection of double performance values
+        :param trading_days_per_year: Trading days per year for the assets in portfolio
+        :returns: Double annual performance percentage.
+        """
+        ...
+
+    @staticmethod
+    def annual_standard_deviation(performance: typing.List[float], trading_days_per_year: float) -> float:
+        """
+        Annualized standard deviation
+        
+        :param performance: Collection of double values for daily performance
+        :param trading_days_per_year: Number of trading days for the assets in portfolio to get annualize standard deviation.
+        :returns: Value for annual standard deviation.
+        """
+        ...
+
+    @staticmethod
+    def annual_variance(performance: typing.List[float], trading_days_per_year: float) -> float:
+        """
+        Annualized variance statistic calculation using the daily performance variance and trading days per year.
+        
+        :returns: Annual variance value.
+        """
+        ...
+
+    @staticmethod
+    def compounding_annual_performance(starting_capital: float, final_capital: float, years: float) -> float:
+        """
+        Annual compounded returns statistic based on the final-starting capital and years.
+        
+        :param starting_capital: Algorithm starting capital
+        :param final_capital: Algorithm final capital
+        :param years: Years trading
+        :returns: Decimal fraction for annual compounding performance.
+        """
+        ...
+
+    @staticmethod
+    @overload
+    def drawdown_percent(equity_over_time: System.Collections.Generic.SortedDictionary[datetime.datetime, float], rounding: int = 2) -> float:
+        """Drawdown maximum percentage."""
+        ...
+
+    @staticmethod
+    @overload
+    def drawdown_percent(current: float, high: float, rounding_decimals: int = 2) -> float:
+        """
+        Calculate the drawdown between a high and current value
+        
+        :param current: Current value
+        :param high: Latest maximum
+        :param rounding_decimals: Digits to round the result too
+        :returns: Drawdown percentage.
+        """
+        ...
+
+    @staticmethod
+    def observed_sharpe_ratio(list_performance: typing.List[float]) -> float:
+        """
+        Calculates the observed sharpe ratio
+        
+        :param list_performance: The performance samples to use
+        :returns: The observed sharpe ratio.
+        """
+        ...
+
+    @staticmethod
+    def probabilistic_sharpe_ratio(list_performance: typing.List[float], benchmark_sharpe_ratio: float) -> float:
+        """
+        Helper method to calculate the probabilistic sharpe ratio
+        
+        :param list_performance: The list of algorithm performance values
+        :param benchmark_sharpe_ratio: The benchmark sharpe ratio to use
+        :returns: Probabilistic Sharpe Ratio.
+        """
+        ...
+
+    @staticmethod
+    @overload
+    def sharpe_ratio(average_performance: float, standard_deviation: float, risk_free_rate: float) -> float:
+        """
+        Sharpe ratio with respect to risk free rate: measures excess of return per unit of risk.
+        
+        :param average_performance: Average daily performance
+        :param standard_deviation: Standard deviation of the daily performance
+        :param risk_free_rate: The risk free rate
+        :returns: Value for sharpe ratio.
+        """
+        ...
+
+    @staticmethod
+    @overload
+    def sharpe_ratio(algo_performance: typing.List[float], risk_free_rate: float, trading_days_per_year: float) -> float:
+        """
+        Sharpe ratio with respect to risk free rate: measures excess of return per unit of risk.
+        
+        :param algo_performance: Collection of double values for the algorithm daily performance
+        :param risk_free_rate: The risk free rate
+        :param trading_days_per_year: Trading days per year for the assets in portfolio
+        :returns: Value for sharpe ratio.
+        """
+        ...
+
+    @staticmethod
+    def sortino_ratio(algo_performance: typing.List[float], risk_free_rate: float, trading_days_per_year: float, minimum_acceptable_return: float = 0) -> float:
+        """
+        Sortino ratio with respect to risk free rate: measures excess of return per unit of downside risk.
+        
+        :param algo_performance: Collection of double values for the algorithm daily performance
+        :param risk_free_rate: The risk free rate
+        :param trading_days_per_year: Trading days per year for the assets in portfolio
+        :param minimum_acceptable_return: Minimum acceptable return for Sortino ratio calculation
+        :returns: Value for Sortino ratio.
+        """
+        ...
+
+    @staticmethod
+    def tracking_error(algo_performance: typing.List[float], benchmark_performance: typing.List[float], trading_days_per_year: float) -> float:
+        """
+        Tracking error volatility (TEV) statistic - a measure of how closely a portfolio follows the index to which it is benchmarked
+        
+        :param algo_performance: Double collection of algorithm daily performance values
+        :param benchmark_performance: Double collection of benchmark daily performance values
+        :param trading_days_per_year: Number of trading days per year
+        :returns: Value for tracking error.
+        """
+        ...
+
+
+class PerformanceMetrics(System.Object):
+    """PerformanceMetrics contains the names of the various performance metrics used for evaluation purposes."""
+
+    ALPHA: str = "Alpha"
+    """Algorithm "Alpha" statistic - abnormal returns over the risk free rate and the relationshio (beta) with the benchmark returns."""
+
+    ANNUAL_STANDARD_DEVIATION: str = "Annual Standard Deviation"
+    """Annualized standard deviation"""
+
+    ANNUAL_VARIANCE: str = "Annual Variance"
+    """Annualized variance statistic calculation using the daily performance variance and trading days per year."""
+
+    AVERAGE_LOSS: str = "Average Loss"
+    """The average rate of return for losing trades"""
+
+    AVERAGE_WIN: str = "Average Win"
+    """The average rate of return for winning trades"""
+
+    BETA: str = "Beta"
+    """Algorithm "beta" statistic - the covariance between the algorithm and benchmark performance, divided by benchmark's variance"""
+
+    COMPOUNDING_ANNUAL_RETURN: str = "Compounding Annual Return"
+    """Annual compounded returns statistic based on the final-starting capital and years."""
+
+    DRAWDOWN: str = "Drawdown"
+    """Drawdown maximum percentage."""
+
+    ESTIMATED_STRATEGY_CAPACITY: str = "Estimated Strategy Capacity"
+    """Total capacity of the algorithm"""
+
+    EXPECTANCY: str = "Expectancy"
+    """The expected value of the rate of return"""
+
+    START_EQUITY: str = "Start Equity"
+    """Initial Equity Total Value"""
+
+    END_EQUITY: str = "End Equity"
+    """Final Equity Total Value"""
+
+    INFORMATION_RATIO: str = "Information Ratio"
+    """Information ratio - risk adjusted return"""
+
+    LOSS_RATE: str = "Loss Rate"
+    """The ratio of the number of losing trades to the total number of trades"""
+
+    NET_PROFIT: str = "Net Profit"
+    """Total net profit percentage"""
+
+    PROBABILISTIC_SHARPE_RATIO: str = "Probabilistic Sharpe Ratio"
+    """
+    Probabilistic Sharpe Ratio is a probability measure associated with the Sharpe ratio.
+    It informs us of the probability that the estimated Sharpe ratio is greater than a chosen benchmark
+    """
+
+    PROFIT_LOSS_RATIO: str = "Profit-Loss Ratio"
+    """The ratio of the average win rate to the average loss rate"""
+
+    SHARPE_RATIO: str = "Sharpe Ratio"
+    """Sharpe ratio with respect to risk free rate: measures excess of return per unit of risk."""
+
+    SORTINO_RATIO: str = "Sortino Ratio"
+    """Sortino ratio with respect to risk free rate: measures excess of return per unit of downside risk."""
+
+    TOTAL_FEES: str = "Total Fees"
+    """Total amount of fees in the account currency"""
+
+    TOTAL_ORDERS: str = "Total Orders"
+    """Total amount of orders in the algorithm"""
+
+    TRACKING_ERROR: str = "Tracking Error"
+    """Tracking error volatility (TEV) statistic - a measure of how closely a portfolio follows the index to which it is benchmarked"""
+
+    TREYNOR_RATIO: str = "Treynor Ratio"
+    """Treynor ratio statistic is a measurement of the returns earned in excess of that which could have been earned on an investment that has no diversifiable risk"""
+
+    WIN_RATE: str = "Win Rate"
+    """The ratio of the number of winning trades to the total number of trades"""
+
+    LOWEST_CAPACITY_ASSET: str = "Lowest Capacity Asset"
+    """Provide a reference to the lowest capacity symbol used in scaling down the capacity for debugging."""
+
+    PORTFOLIO_TURNOVER: str = "Portfolio Turnover"
+    """The average Portfolio Turnover"""
 
 

@@ -43,7 +43,6 @@ dependencies = [
     "mmh3>=4.1.0",
     "betterproto-fw[compiler]>=2.0.3",
     "asyncstdlib-fw>=3.13.2",
-    "greenlet>=3.2.2",
     "grpcio>=1.71.0",
     "protobuf==5.29.4",
 ]
@@ -58,7 +57,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Development Status :: 3 - Alpha",
 ]
-version = "0.17.6"
+version = "0.17.8"
 
 [project.license]
 text = "MIT"

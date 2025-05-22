@@ -13,6 +13,7 @@ from worker_automate_hub.models.dto.rpa_processo_entrada_dto import (
 )
 from rich.console import Console
 import re
+import os
 from pywinauto.keyboard import send_keys
 from worker_automate_hub.utils.util import login_emsys
 import warnings
@@ -33,6 +34,7 @@ import pyautogui
 from worker_automate_hub.utils.logger import logger
 from worker_automate_hub.utils.utils_nfe_entrada import EMSys
 
+ASSETS_BASE_PATH = "assets/cte_xml/"
 emsys = EMSys()
 
 console = Console()
@@ -64,12 +66,33 @@ async def importar_xml_conhecimento():
         )
         aquisicao_servico.select("1353 - AQUISICAO DE SERVICO DE TRANSPORTE D/E")
 
+        await worker_sleep(2)
+
         # Clicar em rodoviário
         rodoviario = main_window.child_window(class_name="TDBIComboBox", found_index=0)
         rodoviario.select("RODOVIARIO")
 
+        await worker_sleep(2)
+
         # Clicar em OK
-        main_window.child_window(class_name="TBitBtn", found_index=1).click()
+        max_tentativas = 3
+        for tentativa in range(max_tentativas):
+            try:
+                botao = main_window.child_window(class_name="TBitBtn", found_index=1)
+                botao.wait("enabled", timeout=5)
+                botao.click()
+
+                await worker_sleep(1)
+
+                janela_filha = botao.top_level_parent()
+                if not janela_filha.exists(timeout=2):
+                    print("Janela filha fechada com sucesso.")
+                    break
+
+            except Exception as e:
+                print(f"Erro na tentativa {tentativa + 1}: {e}")
+        else:
+            print("A janela não foi fechada após várias tentativas.")
 
     except Exception as e:
         # console.print(f"Erro ao conectar a janela {window_title}")
@@ -77,7 +100,7 @@ async def importar_xml_conhecimento():
 
 
 async def selecionar_xml(cte):
-    await worker_sleep(7)
+    await worker_sleep(5)
     nota = cte["chaveCte"]
     nota_cte = f"{nota}.xml"
     username = getpass.getuser()
@@ -85,11 +108,32 @@ async def selecionar_xml(cte):
     app = Application(backend="win32").connect(title="Abrir", found_index=0)
     main_window = app["Abrir"]
 
+    await worker_sleep(2)
+
     #  Selecionar nota baixada
     send_keys(path_to_xml)
 
-    # Clicar em abrir
-    main_window.child_window(class_name="Button", found_index=0).click()
+    await worker_sleep(2)
+
+    # Tenta clicar no botão abrir apos digitar caminho do XML
+    max_tentativas = 3
+    for tentativa in range(max_tentativas):
+        try:
+            botao = main_window.child_window(class_name="Button", found_index=0)
+            botao.wait("enabled", timeout=5)
+            botao.click()
+
+            await worker_sleep(1)
+
+            janela_filha = botao.top_level_parent()
+            if not janela_filha.exists(timeout=2):
+                print("Janela filha fechada com sucesso.")
+                break
+
+        except Exception as e:
+            print(f"Erro na tentativa {tentativa + 1}: {e}")
+    else:
+        print("A janela não foi fechada após várias tentativas.")
 
 
 def calcular_vencimento_333(data_emissao):
@@ -235,6 +279,33 @@ async def janela_conhecimento_frete(cte):
         vencimento = calcular_vencimento_1353(data_emissao)
     elif natureza == "333":
         vencimento = calcular_vencimento_333(data_emissao)
+
+    try:
+        # Clicar no botão - para apagar registro se existir
+        btn_salvar = main_window.child_window(
+            class_name="TDBIBitBtn", found_index=4
+        ).click()
+
+        await worker_sleep(2)
+
+        # Clicar em sim para excluir registro
+        pyautogui.click(953, 601)
+        await worker_sleep(2)
+
+        app = Application(backend="win32").connect(title="Informação", found_index=0)
+        main_window = app["Informação"]
+
+        # Clicar em OK
+        main_window.child_window(title="OK", found_index=0).click()
+        await worker_sleep(2)
+    except:
+        pass
+
+    # Voltar pra janela conhecimento de frete
+    app = Application(backend="win32").connect(
+        title="Conhecimento de Frete", found_index=0
+    )
+    main_window = app["Conhecimento de Frete"]
 
     # Inserir data de vencimento
     data_vencimento = main_window.child_window(

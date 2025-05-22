@@ -7,6 +7,8 @@ import pytest
 from pytest import approx
 
 from whenever import (
+    DateDelta,
+    PlainDateTime,
     TimeDelta,
     hours,
     microseconds,
@@ -129,6 +131,7 @@ class TestInit:
             dict(minutes=float("inf")),
             dict(seconds=float("-inf")),
             dict(milliseconds=float("nan")),
+            dict(milliseconds=1e273),
         ],
     )
     def test_invalid_out_of_range(self, kwargs):
@@ -376,6 +379,14 @@ INVALID_TDELTAS = [
     "PT5H.9S",  # wrong fraction
     "PT5H13.S",  # wrong fraction
     "PT𝟙H",  # non-ascii
+    "PT0.0001",
+    "PT.0001",
+    "PT.S",
+    "PT0.0000",
+    "PT0.123456789",
+    "PT0.123456789Sbla",
+    "PT4M0.",
+    "PT4M0.S",
     # spacing
     "PT 3M",
     "PT-3M",
@@ -520,6 +531,12 @@ class TestDivision:
 
         with pytest.raises(TypeError):
             "invalid" / d  # type: ignore[operator]
+
+        with pytest.raises(TypeError):
+            PlainDateTime(2020, 3, 1) / d  # type: ignore[operator]
+
+        with pytest.raises(TypeError):
+            DateDelta(days=5) / d  # type: ignore[operator]
 
 
 class TestFloorDiv:
@@ -861,6 +878,9 @@ def test_from_py_timedelta():
 
     with pytest.raises(ValueError, match="range"):
         TimeDelta.from_py_timedelta(py_timedelta.max)
+
+    with pytest.raises(ValueError, match="range"):
+        TimeDelta.from_py_timedelta(py_timedelta.min)
 
 
 def test_as_hrs_mins_secs_nanos():

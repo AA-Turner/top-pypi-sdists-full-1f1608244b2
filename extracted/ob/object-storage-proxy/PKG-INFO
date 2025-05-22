@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: object-storage-proxy
-Version: 0.4.1
+Version: 0.4.2
 Classifier: License :: Other/Proprietary License
 Classifier: Programming Language :: Rust
 Classifier: Programming Language :: Python :: Implementation :: CPython
@@ -104,11 +104,13 @@ cos_map = {
 }
 ```
 
-The Python callables take two arguments: 
-    TODO: add prefix for fine-grained validation
+The Python callables take two or three arguments: 
 
     - token: parsed from the original aws request's authorization header
     - bucket: parsed from the uri path
+
+    the validator may also take a third optional argument
+    - request: dict of the original request (method, path, query, ...)
 
 ```python
     def your_credentials_fetcher(token: str, bucket: str) -> str

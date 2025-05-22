@@ -253,6 +253,7 @@ class _SlackConnectionState:
         pulumi.set(self, "workspace_id", value)
 
 
+@pulumi.type_token("pagerduty:index/slackConnection:SlackConnection")
 class SlackConnection(pulumi.CustomResource):
     @overload
     def __init__(__self__,

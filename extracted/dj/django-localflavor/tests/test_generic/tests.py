@@ -127,10 +127,12 @@ class IBANTests(TestCase):
 
         iban_validator = IBANValidator()
         for iban in valid:
-            iban_validator(iban)
+            with self.subTest(iban=iban):
+                iban_validator(iban)
 
         for iban in invalid:
-            self.assertRaisesMessage(ValidationError, invalid[iban], IBANValidator(), iban)
+            with self.subTest(iban=iban):
+                self.assertRaisesMessage(ValidationError, invalid[iban], IBANValidator(), iban)
 
     def test_iban_validator_deconstruct(self):
         # Call to the required deconstruct method to see if it exists and
@@ -145,9 +147,10 @@ class IBANTests(TestCase):
         ]
 
         for test_case in test_cases:
-            iban1 = IBANValidator(**test_case)
-            iban2 = IBANValidator(**test_case)
-            self.assertEqual(iban1, iban2, msg="IBAN validators with equal parameters are not equal.")
+            with self.subTest(test_case=test_case):
+                iban1 = IBANValidator(**test_case)
+                iban2 = IBANValidator(**test_case)
+                self.assertEqual(iban1, iban2, msg="IBAN validators with equal parameters are not equal.")
 
     def test_iban_fields(self):
         """Test the IBAN model and form field."""
@@ -177,12 +180,8 @@ class IBANTests(TestCase):
             'NL91ABNB0417164300': ['Not a valid IBAN.'],
             'NL91 ABNB 0417 1643 00': ['Not a valid IBAN.'],
 
-            'MU17BOMM0101101030300200000MUR12345': [
-                'MU IBANs must contain 30 characters.',
-                'Ensure this value has at most 34 characters (it has 35).'],
-            'MU17 BOMM 0101 1010 3030 0200 000M UR12 345': [
-                'MU IBANs must contain 30 characters.',
-                'Ensure this value has at most 34 characters (it has 35).'],
+            'MU17BOMM0101101030300200000MUR12345': ['MU IBANs must contain 30 characters.'],
+            'MU17 BOMM 0101 1010 3030 0200 000M UR12 345': ['MU IBANs must contain 30 characters.'],
 
             # This IBAN should only be valid only if the Nordea extensions are turned on.
             'BJ11B00610100400271101192591': ['BJ is not a valid country code for IBAN.'],
@@ -194,17 +193,30 @@ class IBANTests(TestCase):
         # Test valid inputs for model field.
         iban_model_field = IBANField()
         for input, output in valid.items():
-            self.assertEqual(iban_model_field.clean(input, None), output)
+            with self.subTest(input=input, output=output):
+                self.assertEqual(iban_model_field.clean(input, None), output)
 
         self.assertIsNone(iban_model_field.to_python(None))
 
         # Invalid inputs for model field.
+
+        # The model field has max_length set which means the max length validator is used, unlike the form.
+        invalid['MU17BOMM0101101030300200000MUR12345'] = [
+            'MU IBANs must contain 30 characters.',
+            'Ensure this value has at most 34 characters (it has 35).'
+        ]
+        invalid['MU17 BOMM 0101 1010 3030 0200 000M UR12 345'] = [
+            'MU IBANs must contain 30 characters.',
+            'Ensure this value has at most 34 characters (it has 35).',
+        ]
+
         for input, errors in invalid.items():
-            with self.assertRaises(ValidationError) as context_manager:
-                iban_model_field.clean(input, None)
-            # The error messages for models are in a different order.
-            errors.reverse()
-            self.assertEqual(context_manager.exception.messages, errors)
+            with self.subTest(input=input, errors=errors):
+                with self.assertRaises(ValidationError) as context_manager:
+                    iban_model_field.clean(input, None)
+                # The error messages for models are in a different order.
+                errors.reverse()
+                self.assertEqual(context_manager.exception.messages, errors)
 
     def test_nordea_extensions(self):
         """Test a valid IBAN in the Nordea extensions."""
@@ -249,15 +261,17 @@ class IBANTests(TestCase):
         # Test valid inputs for model field.
         iban_model_field = IBANField(include_countries=include_countries)
         for input, output in valid.items():
-            self.assertEqual(iban_model_field.clean(input, None), output)
+            with self.subTest(input=input, output=output):
+                self.assertEqual(iban_model_field.clean(input, None), output)
 
         # Invalid inputs for model field.
         for input, errors in invalid.items():
-            with self.assertRaises(ValidationError) as context_manager:
-                iban_model_field.clean(input, None)
-            # The error messages for models are in a different order.
-            errors.reverse()
-            self.assertEqual(context_manager.exception.messages, errors)
+            with self.subTest(input=input, errors=errors):
+                with self.assertRaises(ValidationError) as context_manager:
+                    iban_model_field.clean(input, None)
+                # The error messages for models are in a different order.
+                errors.reverse()
+                self.assertEqual(context_manager.exception.messages, errors)
 
     def test_misconfigured_include_countries(self):
         """Test that an IBAN field or model raises an error when asked to validate a country not part of IBAN."""
@@ -297,7 +311,22 @@ class IBANTests(TestCase):
         name, path, args, kwargs = test_instance.deconstruct()
         new_instance = IBANField(*args, **kwargs)
         for attr in ('include_countries', 'use_nordea_extensions'):
-            self.assertEqual(getattr(test_instance, attr), getattr(new_instance, attr))
+            with self.subTest(attr=attr):
+                self.assertEqual(getattr(test_instance, attr), getattr(new_instance, attr))
+
+    def test_model_form_input_max_length(self):
+        form = UseNordeaExtensionsForm({
+            "iban": "RU03 0445 2522 5408 1781 0538 0913 1041 9",
+        })
+        self.assertEqual(None, form.fields["iban"].max_length)
+        self.assertEqual(42, form.fields["iban"].widget.attrs["max_length"])
+
+        form.save()  # Not validation error raised.
+
+    def test_form_field_input_max_length_without_model_form(self):
+        form_field = IBANFormField()
+        self.assertEqual(None, form_field.max_length)
+        self.assertEqual(42, form_field.widget.attrs["max_length"])
 
 
 class BICTests(TestCase):
@@ -370,15 +399,17 @@ class BICTests(TestCase):
 
         # Test valid inputs for model field.
         for input, output in valid.items():
-            self.assertEqual(bic_model_field.clean(input, None), output)
+            with self.subTest(input=input, output=output):
+                self.assertEqual(bic_model_field.clean(input, None), output)
 
         self.assertIsNone(bic_model_field.to_python(None))
 
         # Invalid inputs for model field.
         for input, errors in invalid.items():
-            with self.assertRaises(ValidationError) as context_manager:
-                bic_model_field.clean(input, None)
-            self.assertEqual(errors, context_manager.exception.messages)
+            with self.subTest(input=input, errors=errors):
+                with self.assertRaises(ValidationError) as context_manager:
+                    bic_model_field.clean(input, None)
+                self.assertEqual(errors, context_manager.exception.messages)
 
     def test_default_form(self):
         bic_model_field = BICField()
@@ -408,10 +439,12 @@ class EANTests(TestCase):
 
         validator = EANValidator()
         for value in valid:
-            validator(value)
+            with self.subTest(value=value):
+                validator(value)
 
         for value in invalid:
-            self.assertRaisesMessage(ValidationError,  error_message, validator, value)
+            with self.subTest(value=value):
+                self.assertRaisesMessage(ValidationError,  error_message, validator, value)
 
     def test_ean_validator_deconstruct(self):
         # Call to the required deconstruct method to see if it exists and
@@ -426,9 +459,10 @@ class EANTests(TestCase):
         ]
 
         for test_case in test_cases:
-            ean1 = EANValidator(**test_case)
-            ean2 = EANValidator(**test_case)
-            self.assertEqual(ean1, ean2, msg="EAN validators with equal parameters are not equal.")
+            with self.subTest(test_case=test_case):
+                ean1 = EANValidator(**test_case)
+                ean2 = EANValidator(**test_case)
+                self.assertEqual(ean1, ean2, msg="EAN validators with equal parameters are not equal.")
 
     def test_ean_validator_strip_nondigits(self):
         valid = [
@@ -456,7 +490,9 @@ class EANTests(TestCase):
 
         validator = EANValidator(strip_nondigits=True)
         for value in valid:
-            validator(value)
+            with self.subTest(value=value):
+                validator(value)
 
         for value in invalid:
-            self.assertRaisesMessage(ValidationError,  error_message, validator, value)
+            with self.subTest(value=value):
+                self.assertRaisesMessage(ValidationError,  error_message, validator, value)

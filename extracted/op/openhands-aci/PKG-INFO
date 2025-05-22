@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: openhands-aci
-Version: 0.2.13
+Version: 0.2.14
 Summary: An Agent-Computer Interface (ACI) designed for software development agents OpenHands.
 License: MIT
 Author: OpenHands
@@ -15,12 +15,16 @@ Requires-Dist: charset-normalizer (>=3.4.1,<4.0.0)
 Requires-Dist: flake8
 Requires-Dist: gitpython
 Requires-Dist: grep-ast (==0.3.3)
+Requires-Dist: libcst (==1.5.0)
+Requires-Dist: llama-index (>=0.12.29,<0.13.0)
+Requires-Dist: llama-index-core (>=0.12.29,<0.13.0)
+Requires-Dist: llama-index-retrievers-bm25 (>=0.5.2,<0.6.0)
+Requires-Dist: matplotlib (>=3.10.3,<4.0.0)
+Requires-Dist: networkx (>=3.4.2,<4.0.0)
 Requires-Dist: pydantic (>=2.11.3,<3.0.0)
+Requires-Dist: rapidfuzz (>=3.13.0,<4.0.0)
 Requires-Dist: tree-sitter (>=0.24.0,<0.25.0)
-Requires-Dist: tree-sitter-javascript (>=0.23.1,<0.24.0)
-Requires-Dist: tree-sitter-python (>=0.23.6,<0.24.0)
-Requires-Dist: tree-sitter-ruby (>=0.23.1,<0.24.0)
-Requires-Dist: tree-sitter-typescript (>=0.23.2,<0.24.0)
+Requires-Dist: tree-sitter-language-pack (==0.7.3)
 Requires-Dist: whatthepatch (>=1.0.6,<2.0.0)
 Description-Content-Type: text/markdown
 

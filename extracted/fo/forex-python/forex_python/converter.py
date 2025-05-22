@@ -7,7 +7,7 @@ import simplejson as json
 
 class RatesNotAvailableError(Exception):
     """
-    Custome Exception when https://theforexapi.com is Down and not available for currency rates
+    Custom exception when https://theratesapi.com is down and not available for currency rates
     """
     pass
 
@@ -25,7 +25,7 @@ class Common:
         self._force_decimal = force_decimal
 
     def _source_url(self):
-        return "https://theforexapi.com/api/"
+        return "https://theratesapi.com/api/"
 
     def _get_date_string(self, date_obj):
         if date_obj is None:
@@ -99,6 +99,9 @@ class CurrencyRates(Common):
             if not rate:
                 raise RatesNotAvailableError("Currency {0} => {1} rate not available for Date {2}.".format(
                     source_url, dest_cur, date_str))
+            # Ensure rate is numeric
+            if isinstance(rate, str):
+                rate = Decimal(rate) if use_decimal else float(rate)
             try:
                 converted_amount = rate * amount
                 return converted_amount
@@ -124,7 +127,7 @@ class CurrencyCodes:
     def _currency_data(self):
         if self.__currency_data is None:
             file_path = os.path.dirname(os.path.abspath(__file__))
-            with open(file_path + '/raw_data/currencies.json') as f:
+            with open(file_path + '/raw_data/currencies.json', encoding="utf-8") as f:
                 self.__currency_data = json.loads(f.read())
         return self.__currency_data
 

@@ -193,6 +193,7 @@ class _AlertGroupingSettingState:
         pulumi.set(self, "type", value)
 
 
+@pulumi.type_token("pagerduty:index/alertGroupingSetting:AlertGroupingSetting")
 class AlertGroupingSetting(pulumi.CustomResource):
     @overload
     def __init__(__self__,

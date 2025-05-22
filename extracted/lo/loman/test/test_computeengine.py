@@ -4,12 +4,14 @@ from time import sleep
 
 import pandas as pd
 
-from loman import Computation, States, MapException, LoopDetectedException, NonExistentNodeException, node, C
+from loman import (Computation, States, MapException, LoopDetectedException, NonExistentNodeException, node, C,
+                   CannotInsertToPlaceholderNodeException)
 from collections import namedtuple
 import random
 import pytest
 
 from loman.computeengine import NodeData, NodeKey
+from loman.path_parser import Path
 
 
 def test_basic():
@@ -1163,6 +1165,36 @@ def test_link():
     assert comp.v.b == 5
 
 
+def test_self_link():
+    comp = Computation()
+    comp.add_node('a')
+    comp.add_node('b', lambda a: a+1)
+    comp.insert('a', 5)
+    comp.compute_all()
+    assert comp.v.b == 6
+    comp.link('b', 'b')
+    comp.compute_all()
+    assert comp.v.b == 6
+
+
+def test_self_link_with_paths():
+    comp = Computation()
+    comp.add_node('foo/a')
+    comp.add_node('foo/b', lambda a: a+1)
+    comp.insert('foo/a', 5)
+    comp.compute_all()
+    assert comp.v['foo/b'] == 6
+    comp.link('foo/b', 'foo/b')
+    comp.compute_all()
+    assert comp.v['foo/b'] == 6
+    comp.link(Path(('foo', 'b')), 'foo/b')
+    comp.compute_all()
+    assert comp.v['foo/b'] == 6
+    comp.link('foo/b', Path(('foo', 'b')))
+    comp.compute_all()
+    assert comp.v['foo/b'] == 6
+
+
 def test_args_kwds():
     comp = Computation()
     comp.add_node('a', value=1)
@@ -1181,3 +1213,10 @@ def test_args_kwds():
     assert comp.get_definition_args_kwds('c') == ([C(3), 'a'], {})
     assert comp.get_definition_args_kwds('d') == ([], {'x': C(4), 'y': 'a'})
     assert comp.get_definition_args_kwds('e') == ([], {'y': C(5), 'x': 'a'})
+
+
+def test_insert_fails_for_placeholder():
+    comp = Computation()
+    comp.add_node('b', lambda a: a + 1)
+    with pytest.raises(CannotInsertToPlaceholderNodeException):
+        comp.insert('a', value=1)

@@ -145,6 +145,12 @@ class DescriptionData:
     categories: list[AppCategory]
     description: str | None = None
     logo_url: str | None = None
+    """
+    The domain name of the company or organization that provides the application.
+    Used to identify the external vendor associated with the app.
+    For Example: "aws.amazon.com" for an "aws-sso" app.
+    """
+    app_vendor_domain: str | None = None
 
 
 @dataclass
@@ -694,6 +700,7 @@ class Integration:
                 version=self.version,
                 capabilities=capability_names,
                 capability_schema=capability_schema,
+                app_vendor_domain=self.description_data.app_vendor_domain,
                 logo_url=self.description_data.logo_url,
                 user_friendly_name=self.description_data.user_friendly_name,
                 description=self.description_data.description,

@@ -299,7 +299,7 @@ class CellposeModel():
             x = transforms.normalize_img(x, **normalize_params)
             do_normalization = False # do not normalize again
         else:
-            if normalize_params["norm3D"] and nimg > 1:
+            if normalize_params["norm3D"] and nimg > 1 and do_normalization:
                 models_logger.warning(
                     "normalize_params['norm3D'] is True but do_3D is False and stitch_threshold=0, so setting to False"
                 )
@@ -339,8 +339,8 @@ class CellposeModel():
         
         masks, dP, cellprob = masks.squeeze(), dP.squeeze(), cellprob.squeeze()
 
-        # undo diameter resizing:
-        if image_scaling is not None:
+        # undo resizing:
+        if image_scaling is not None or anisotropy is not None:
             if do_3D:
                 # Rescale xy then xz:
                 masks = transforms.resize_image(masks, Ly=Ly_0, Lx=Lx_0, no_channels=True, interpolation=cv2.INTER_NEAREST)

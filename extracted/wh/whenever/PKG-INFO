@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: whenever
-Version: 0.8.0
+Version: 0.8.2
 Summary: Modern datetime library for Python
 Author-email: Arie Bovenberg <a.c.bovenberg@gmail.com>
 Maintainer-email: Arie Bovenberg <a.c.bovenberg@gmail.com>
@@ -155,6 +155,7 @@ while many serious and long-standing issues remain unaddressed.
 - 💎 Thoroughly tested and documented
 - 📆 Support for date arithmetic
 - ⏱️ Nanosecond precision
+- 🪃 Pydantic support (preview)
 - 🦀 Rust!—but with a [pure-Python option](https://whenever.readthedocs.io/en/latest/faq.html#how-can-i-use-the-pure-python-version)
 - 🚀 Supports per-interpreter GIL
 

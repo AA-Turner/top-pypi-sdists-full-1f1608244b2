@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: gliner
-Version: 0.2.19
+Version: 0.2.20
 Summary: Generalist model for NER (Extract any entity types from texts)
 Author: Urchade Zaratiana, Nadi Tomeh, Pierre Holat, Thierry Charnois
 Maintainer: Urchade Zaratiana

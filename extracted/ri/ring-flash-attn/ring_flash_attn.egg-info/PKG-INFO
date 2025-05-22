@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: ring-flash-attn
-Version: 0.1.4
+Version: 0.1.5
 Summary: Ring attention implementation with flash attention.
 Home-page: https://github.com/zhuzilin/ring-flash-attention
 Author: zhuzilin
@@ -15,6 +15,7 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Dynamic: author
 Dynamic: home-page
+Dynamic: license-file
 
 ## Ring Flash Attention
 

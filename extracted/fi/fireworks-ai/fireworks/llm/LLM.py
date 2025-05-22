@@ -2,9 +2,10 @@ from collections import defaultdict, deque
 from datetime import timedelta
 import inspect
 import re
+import os
+import sys
 import time
 
-from fireworks._async import asyncf
 import grpc
 from ._list_fireworks_models_response_cached import models
 from fireworks.client.api_client import FireworksClient
@@ -58,7 +59,6 @@ from fireworks.control_plane.generated.protos.gateway import (
 from fireworks.supervised_fine_tuning_job.SupervisedFineTuningJob import SupervisedFineTuningJobWeightPrecisionLiteral
 import asyncio
 import logging
-import os
 import atexit
 from openai.types.chat.chat_completion import ChatCompletion as OpenAIChatCompletion
 from openai.types.chat.chat_completion_chunk import ChatCompletionChunk
@@ -409,9 +409,15 @@ class LLM:
 
         Args:
             model: The model to use.
+            deployment_type: The deployment type to use. Must be one of
+                "serverless", "on-demand", or "auto". For experimentation on
+                quality, we recommend using "auto" to default to the most
+                cost-effective option. If you plan to run large evaluation jobs or
+                have workloads that would benefit from dedicated resources, we
+                recommend using "on-demand". Otherwise, you can enforce that you
+                only use "serverless" by setting this parameter to "serverless".
             api_key: The API key to use.
             base_url: The base URL to use.
-            deployment_type: The deployment type to use.
             accelerator_type: The accelerator type to use.
             scale_up_window: The scale up window to use.
             scale_down_window: The scale down window to use.
@@ -423,6 +429,8 @@ class LLM:
         """
         if not model:
             raise ValueError("model is required")
+        if deployment_type is None:
+            raise ValueError('deployment_type is required - must be one of "serverless", "on-demand", or "auto"')
         self._client = FireworksClient(api_key=api_key, base_url=base_url)
         if name is not None and name == "":
             raise ValueError("name must be non-empty")
@@ -547,9 +555,26 @@ class LLM:
         """
         If a name was specified, deployment name will be the specified name.
         Otherwise, the deployment name will be generated from the filename of the caller where this LLM was instantiated.
+
+        In Jupyter notebooks, we'll use the actual notebook filename rather than the temporary execution file.
         """
         if self._name is not None:
             return self._name
+
+        # Check if running in a Jupyter notebook environment
+        try:
+            # Check for Jupyter environment via environment variable
+            notebook_path = os.environ.get("JPY_SESSION_NAME")
+
+            if notebook_path:
+                logger.debug(f"Found notebook path from environment: {notebook_path}")
+                notebook_filename = os.path.basename(notebook_path)
+                logger.debug(f"Extracted notebook filename: {notebook_filename}")
+                return notebook_filename
+        except Exception as e:
+            logger.debug(f"Error getting notebook name from environment: {str(e)}")
+            pass
+
         # Get fireworks package path and Python stdlib path
         import fireworks
 
@@ -965,7 +990,10 @@ class LLM:
             batch_size=batch_size,
         )
         job = job.sync()
-        logger.info(f'Synced fine-tuning job "{name}". See https://fireworks.ai/dashboard/fine-tuning/{job.name}.')
+        if job.id is not None:
+            logger.info(f'Synced fine-tuning job "{name}". See https://fireworks.ai/dashboard/fine-tuning/{job.id}.')
+        else:
+            logger.info(f'Synced fine-tuning job "{name}".')
         # poll until job is COMPLETED
         while job.state != JobState.COMPLETED:
             if job.state == JobState.FAILED:

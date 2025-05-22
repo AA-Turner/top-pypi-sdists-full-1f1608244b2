@@ -3,14 +3,11 @@ name = 'asdf_standard'
 description = 'The ASDF Standard schemas'
 readme = 'README.md'
 requires-python = '>=3.9'
-license = { file = 'LICENSE' }
+license-files = ['LICENSE']
 authors = [{ name = 'The ASDF Developers', email = 'help@stsci.edu' }]
 classifiers = [
     'Programming Language :: Python',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.9',
-    'Programming Language :: Python :: 3.10',
-    'Programming Language :: Python :: 3.11',
     'Development Status :: 5 - Production/Stable',
 ]
 dependencies = [
@@ -25,7 +22,7 @@ docs = [
     'graphviz',
     'matplotlib',
     'docutils',
-    'sphinx-rtd-theme > 1.2.0',
+    'furo',
 ]
 test = [
     'pytest',
@@ -36,7 +33,7 @@ test = [
 
 [project.urls]
 'tracker' = 'https://github.com/asdf-format/asdf-standard/issues'
-'documentation' = 'https://asdf-standard.readthedocs.io/en/stable'
+'documentation' = 'https://www.asdf-format.org/projects/asdf-standard/en/latest'
 'repository' = 'https://github.com/asdf-format/asdf-standard'
 
 [project.entry-points]
@@ -44,7 +41,7 @@ test = [
 
 [build-system]
 requires = [
-    "setuptools >=61",
+    "setuptools >=77",
     "setuptools_scm[toml] >=3.4",
     "wheel",
 ]
@@ -53,15 +50,14 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools_scm]
 write_to = "src/asdf_standard/_version.py"
 
-[tool.setuptools]
-packages = ["asdf_standard", "asdf_standard.resources"]
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.setuptools.package-data]
-"asdf_standard.resources" = ["resources/**/*.yaml"]
-
-[tool.setuptools.package-dir]
-"" = "src"
-"asdf_standard.resources" = "resources"
+"asdf_standard.resources" = [
+    "manifests/**/*.yaml",
+    "schemas/**/*.yaml",
+]
 
 [tool.pytest.ini_options]
 asdf_schema_root = 'resources/schemas'

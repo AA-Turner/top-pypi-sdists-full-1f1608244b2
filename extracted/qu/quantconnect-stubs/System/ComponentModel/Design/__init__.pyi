@@ -32,63 +32,61 @@ class TypeDescriptionProviderService(System.Object, metaclass=abc.ABCMeta):
         ...
 
 
-class HelpKeywordType(Enum):
-    """Specifies identifiers that can be used to indicate the type of a help keyword."""
+class ITypeResolutionService(metaclass=abc.ABCMeta):
+    """The type resolution service is used to load types at design time."""
 
-    F_1_KEYWORD = 0
-    """Indicates the keyword is a word F1 was pressed to request help regarding."""
-
-    GENERAL_KEYWORD = 1
-    """Indicates the keyword is a general keyword."""
-
-    FILTER_KEYWORD = 2
-    """Indicates the keyword is a filter keyword."""
-
-
-class HelpContextType(Enum):
-    """This class has no documentation."""
-
-    AMBIENT = 0
-
-    WINDOW = 1
-
-    SELECTION = 2
-
-    TOOL_WINDOW_SELECTION = 3
-
-
-class IHelpService(metaclass=abc.ABCMeta):
-    """
-    Provides the Integrated Development Environment (IDE) help
-    system with contextual information for the current task.
-    """
-
-    def add_context_attribute(self, name: str, value: str, keyword_type: System.ComponentModel.Design.HelpKeywordType) -> None:
-        """Adds a context attribute to the document."""
+    @overload
+    def get_assembly(self, name: System.Reflection.AssemblyName) -> System.Reflection.Assembly:
+        """Retrieves the requested assembly."""
         ...
 
-    def clear_context_attributes(self) -> None:
-        """Clears all existing context attributes from the document."""
+    @overload
+    def get_assembly(self, name: System.Reflection.AssemblyName, throw_on_error: bool) -> System.Reflection.Assembly:
+        """Retrieves the requested assembly."""
         ...
 
-    def create_local_context(self, context_type: System.ComponentModel.Design.HelpContextType) -> System.ComponentModel.Design.IHelpService:
-        """Creates a Local IHelpService to manage subcontexts."""
+    def get_path_of_assembly(self, name: System.Reflection.AssemblyName) -> str:
+        """Returns the path to the file name from which the assembly was loaded."""
         ...
 
-    def remove_context_attribute(self, name: str, value: str) -> None:
-        """Removes a previously added context attribute."""
+    @overload
+    def get_type(self, name: str) -> typing.Type:
+        """Loads a type with the given name."""
         ...
 
-    def remove_local_context(self, local_context: System.ComponentModel.Design.IHelpService) -> None:
-        """Removes a context that was created with CreateLocalContext"""
+    @overload
+    def get_type(self, name: str, throw_on_error: bool) -> typing.Type:
+        """Loads a type with the given name."""
         ...
 
-    def show_help_from_keyword(self, help_keyword: str) -> None:
-        """Shows the help topic that corresponds to the specified keyword."""
+    @overload
+    def get_type(self, name: str, throw_on_error: bool, ignore_case: bool) -> typing.Type:
+        """Loads a type with the given name."""
         ...
 
-    def show_help_from_url(self, help_url: str) -> None:
-        """Shows the help topic that corresponds with the specified Url and topic navigation ID."""
+    def reference_assembly(self, name: System.Reflection.AssemblyName) -> None:
+        """
+        References the given assembly name. Once an assembly has
+        been referenced types may be loaded from it without
+        qualifying them with the assembly.
+        """
+        ...
+
+
+class IInheritanceService(metaclass=abc.ABCMeta):
+    """Provides a set of utilities for analyzing and identifying inherited components."""
+
+    def add_inherited_components(self, component: System.ComponentModel.IComponent, container: System.ComponentModel.IContainer) -> None:
+        """Adds inherited components from the specified component to the specified container."""
+        ...
+
+    def get_inheritance_attribute(self, component: System.ComponentModel.IComponent) -> System.ComponentModel.InheritanceAttribute:
+        """
+        Gets the inheritance attribute of the specified
+        component. If the component is not being inherited, this method will return the
+        value System.ComponentModel.InheritanceAttribute.NotInherited.
+        Otherwise it will return the inheritance attribute for this component.
+        """
         ...
 
 
@@ -306,64 +304,6 @@ class DesignerVerbCollection(System.Collections.CollectionBase):
         ...
 
 
-class IDesigner(System.IDisposable, metaclass=abc.ABCMeta):
-    """
-    Provides the basic framework for building a custom designer.
-    This interface stores the verbs available to the designer, as well as basic
-    services for the designer.
-    """
-
-    @property
-    @abc.abstractmethod
-    def component(self) -> System.ComponentModel.IComponent:
-        """Gets or sets the base component this designer is designing."""
-        ...
-
-    @property
-    @abc.abstractmethod
-    def verbs(self) -> System.ComponentModel.Design.DesignerVerbCollection:
-        """Gets or sets the design-time verbs supported by the designer."""
-        ...
-
-    def do_default_action(self) -> None:
-        """Performs the default action for this designer."""
-        ...
-
-    def initialize(self, component: System.ComponentModel.IComponent) -> None:
-        """Initializes the designer with the given component."""
-        ...
-
-
-class DesignerTransactionCloseEventArgs(System.EventArgs):
-    """This class has no documentation."""
-
-    @property
-    def transaction_committed(self) -> bool:
-        ...
-
-    @property
-    def last_transaction(self) -> bool:
-        ...
-
-    @overload
-    def __init__(self, commit: bool, last_transaction: bool) -> None:
-        """
-        Creates a new event args. Commit is true if the transaction is committed, and
-        last_transaction is true if this is the last transaction to close.
-        """
-        ...
-
-    @overload
-    def __init__(self, commit: bool) -> None:
-        """
-        Creates a new event args. Commit is true if the transaction is committed. This
-        defaults the LastTransaction property to true.
-        
-        This constructor has been deprecated. Use DesignerTransactionCloseEventArgs(bool, bool) instead.
-        """
-        ...
-
-
 class IMenuCommandService(metaclass=abc.ABCMeta):
     """
     Provides an interface for a designer to add menu items to the Visual Studio
@@ -411,22 +351,550 @@ class IMenuCommandService(metaclass=abc.ABCMeta):
         ...
 
 
-class IDictionaryService(metaclass=abc.ABCMeta):
+class ComponentEventArgs(System.EventArgs):
     """
-    Provides a generic dictionary service that a designer can use
-    to store user-defined data on the site.
+    Provides data for the System.ComponentModel.Design.IComponentChangeService.ComponentEvent
+    event raised for component-level events.
     """
 
-    def get_key(self, value: typing.Any) -> System.Object:
-        """Gets the key corresponding to the specified value."""
+    @property
+    def component(self) -> System.ComponentModel.IComponent:
+        """Gets or sets the component associated with the event."""
         ...
 
-    def get_value(self, key: typing.Any) -> System.Object:
-        """Gets the value corresponding to the specified key."""
+    def __init__(self, component: System.ComponentModel.IComponent) -> None:
+        """Initializes a new instance of the System.ComponentModel.Design.ComponentEventArgs class."""
         ...
 
-    def set_value(self, key: typing.Any, value: typing.Any) -> None:
-        """Sets the specified key-value pair."""
+
+class ComponentChangedEventArgs(System.EventArgs):
+    """Provides data for the System.ComponentModel.Design.IComponentChangeService.ComponentChanged event."""
+
+    @property
+    def component(self) -> System.Object:
+        """Gets or sets the component that is the cause of this event."""
+        ...
+
+    @property
+    def member(self) -> System.ComponentModel.MemberDescriptor:
+        """Gets or sets the member that is about to change."""
+        ...
+
+    @property
+    def new_value(self) -> System.Object:
+        """Gets or sets the new value of the changed member."""
+        ...
+
+    @property
+    def old_value(self) -> System.Object:
+        """Gets or sets the old value of the changed member."""
+        ...
+
+    def __init__(self, component: typing.Any, member: System.ComponentModel.MemberDescriptor, old_value: typing.Any, new_value: typing.Any) -> None:
+        """Initializes a new instance of the System.ComponentModel.Design.ComponentChangedEventArgs class."""
+        ...
+
+
+class ComponentChangingEventArgs(System.EventArgs):
+    """Provides data for the System.ComponentModel.Design.IComponentChangeService.ComponentChanging event."""
+
+    @property
+    def component(self) -> System.Object:
+        """Gets or sets the component that is being changed or that is the parent container of the member being changed."""
+        ...
+
+    @property
+    def member(self) -> System.ComponentModel.MemberDescriptor:
+        """Gets or sets the member of the component that is about to be changed."""
+        ...
+
+    def __init__(self, component: typing.Any, member: System.ComponentModel.MemberDescriptor) -> None:
+        """Initializes a new instance of the System.ComponentModel.Design.ComponentChangingEventArgs class."""
+        ...
+
+
+class ComponentRenameEventArgs(System.EventArgs):
+    """Provides data for the System.ComponentModel.Design.IComponentChangeService.ComponentRename event."""
+
+    @property
+    def component(self) -> System.Object:
+        """Gets or sets the component that is being renamed."""
+        ...
+
+    @property
+    def old_name(self) -> str:
+        """Gets or sets the name of the component before the rename."""
+        ...
+
+    @property
+    def new_name(self) -> str:
+        """Gets or sets the current name of the component."""
+        ...
+
+    def __init__(self, component: typing.Any, old_name: str, new_name: str) -> None:
+        """
+        Initializes a new instance of the System.ComponentModel.Design.ComponentRenameEventArgs
+        class.
+        """
+        ...
+
+
+class IComponentChangeService(metaclass=abc.ABCMeta):
+    """Provides an interface to add and remove the event handlers for System.ComponentModel.Design.IComponentChangeService.ComponentAdded, System.ComponentModel.Design.IComponentChangeService.ComponentAdding, System.ComponentModel.Design.IComponentChangeService.ComponentChanged, System.ComponentModel.Design.IComponentChangeService.ComponentChanging, System.ComponentModel.Design.IComponentChangeService.ComponentRemoved, System.ComponentModel.Design.IComponentChangeService.ComponentRemoving, and System.ComponentModel.Design.IComponentChangeService.ComponentRename events."""
+
+    @property
+    @abc.abstractmethod
+    def component_added(self) -> _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]:
+        """Adds an event handler for the System.ComponentModel.Design.IComponentChangeService.ComponentAdded event."""
+        ...
+
+    @component_added.setter
+    def component_added(self, value: _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]) -> None:
+        ...
+
+    @property
+    @abc.abstractmethod
+    def component_adding(self) -> _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]:
+        """Adds an event handler for the System.ComponentModel.Design.IComponentChangeService.ComponentAdding event."""
+        ...
+
+    @component_adding.setter
+    def component_adding(self, value: _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]) -> None:
+        ...
+
+    @property
+    @abc.abstractmethod
+    def component_changed(self) -> _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentChangedEventArgs], None], None]:
+        """Adds an event handler for the System.ComponentModel.Design.IComponentChangeService.ComponentChanged event."""
+        ...
+
+    @component_changed.setter
+    def component_changed(self, value: _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentChangedEventArgs], None], None]) -> None:
+        ...
+
+    @property
+    @abc.abstractmethod
+    def component_changing(self) -> _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentChangingEventArgs], None], None]:
+        """Adds an event handler for the System.ComponentModel.Design.IComponentChangeService.ComponentChanging event."""
+        ...
+
+    @component_changing.setter
+    def component_changing(self, value: _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentChangingEventArgs], None], None]) -> None:
+        ...
+
+    @property
+    @abc.abstractmethod
+    def component_removed(self) -> _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]:
+        """Adds an event handler for the System.ComponentModel.Design.IComponentChangeService.OnComponentRemoved event."""
+        ...
+
+    @component_removed.setter
+    def component_removed(self, value: _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]) -> None:
+        ...
+
+    @property
+    @abc.abstractmethod
+    def component_removing(self) -> _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]:
+        """Adds an event handler for the System.ComponentModel.Design.IComponentChangeService.OnComponentRemoving event."""
+        ...
+
+    @component_removing.setter
+    def component_removing(self, value: _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]) -> None:
+        ...
+
+    @property
+    @abc.abstractmethod
+    def component_rename(self) -> _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentRenameEventArgs], None], None]:
+        """Adds an event handler for the System.ComponentModel.Design.IComponentChangeService.OnComponentRename event."""
+        ...
+
+    @component_rename.setter
+    def component_rename(self, value: _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentRenameEventArgs], None], None]) -> None:
+        ...
+
+    def on_component_changed(self, component: typing.Any, member: System.ComponentModel.MemberDescriptor, old_value: typing.Any, new_value: typing.Any) -> None:
+        """Announces to the component change service that a particular component has changed."""
+        ...
+
+    def on_component_changing(self, component: typing.Any, member: System.ComponentModel.MemberDescriptor) -> None:
+        """Announces to the component change service that a particular component is changing."""
+        ...
+
+
+class StandardToolWindows(System.Object):
+    """
+    Defines GUID specifiers that contain GUIDs which reference the standard set of tool windows that are available in
+    the design environment.
+    """
+
+    OBJECT_BROWSER: System.Guid = ...
+    """Gets the GUID for the object browser."""
+
+    OUTPUT_WINDOW: System.Guid = ...
+    """Gets the GUID for the output window."""
+
+    PROJECT_EXPLORER: System.Guid = ...
+    """Gets the GUID for the project explorer."""
+
+    PROPERTY_BROWSER: System.Guid = ...
+    """Gets the GUID for the properties window."""
+
+    RELATED_LINKS: System.Guid = ...
+    """Gets the GUID for the related links frame."""
+
+    SERVER_EXPLORER: System.Guid = ...
+    """Gets the GUID for the server explorer."""
+
+    TASK_LIST: System.Guid = ...
+    """Gets the GUID for the task list."""
+
+    TOOLBOX: System.Guid = ...
+    """Gets the GUID for the toolbox."""
+
+
+class DesigntimeLicenseContext(System.ComponentModel.LicenseContext):
+    """Provides design-time support for licensing."""
+
+    @property
+    def usage_mode(self) -> System.ComponentModel.LicenseUsageMode:
+        """Gets or sets the license usage mode."""
+        ...
+
+    def get_saved_license_key(self, type: typing.Type, resource_assembly: System.Reflection.Assembly) -> str:
+        """Gets a saved license key."""
+        ...
+
+    def set_saved_license_key(self, type: typing.Type, key: str) -> None:
+        """Sets a saved license key."""
+        ...
+
+
+class DesigntimeLicenseContextSerializer(System.Object):
+    """Provides support for design-time license context serialization."""
+
+    @staticmethod
+    def serialize(o: System.IO.Stream, crypto_key: str, context: System.ComponentModel.Design.DesigntimeLicenseContext) -> None:
+        """
+        Serializes the licenses within the specified design-time license context
+        using the specified key and output stream.
+        """
+        ...
+
+
+class StandardCommands(System.Object):
+    """
+    Specifies identifiers for the standard set of commands that are available to
+    most applications.
+    """
+
+    ALIGN_BOTTOM: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the AlignBottom command. Read only."""
+
+    ALIGN_HORIZONTAL_CENTERS: System.ComponentModel.Design.CommandID = ...
+    """
+    Gets the GUID/integer value pair for the AlignHorizontalCenters command. Read
+    only.
+    """
+
+    ALIGN_LEFT: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the AlignLeft command. Read only."""
+
+    ALIGN_RIGHT: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the AlignRight command. Read only."""
+
+    ALIGN_TO_GRID: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the AlignToGrid command. Read only."""
+
+    ALIGN_TOP: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the AlignTop command. Read only."""
+
+    ALIGN_VERTICAL_CENTERS: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the AlignVerticalCenters command. Read only."""
+
+    ARRANGE_BOTTOM: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the ArrangeBottom command. Read only."""
+
+    ARRANGE_RIGHT: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the ArrangeRight command. Read only."""
+
+    BRING_FORWARD: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the BringForward command. Read only."""
+
+    BRING_TO_FRONT: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the BringToFront command. Read only."""
+
+    CENTER_HORIZONTALLY: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the CenterHorizontally command. Read only."""
+
+    CENTER_VERTICALLY: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the CenterVertically command. Read only."""
+
+    VIEW_CODE: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the Code command. Read only."""
+
+    DOCUMENT_OUTLINE: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the DocumentOutline command. Read only."""
+
+    COPY: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the Copy command. Read only."""
+
+    CUT: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the Cut command. Read only."""
+
+    DELETE: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the Delete command. Read only."""
+
+    GROUP: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the Group command. Read only."""
+
+    HORIZ_SPACE_CONCATENATE: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the HorizSpaceConcatenate command. Read only."""
+
+    HORIZ_SPACE_DECREASE: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the HorizSpaceDecrease command. Read only."""
+
+    HORIZ_SPACE_INCREASE: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the HorizSpaceIncrease command. Read only."""
+
+    HORIZ_SPACE_MAKE_EQUAL: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the HorizSpaceMakeEqual command. Read only."""
+
+    PASTE: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the Paste command. Read only."""
+
+    PROPERTIES: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the Properties command. Read only."""
+
+    REDO: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the Redo command. Read only."""
+
+    MULTI_LEVEL_REDO: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the MultiLevelRedo command. Read only."""
+
+    SELECT_ALL: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the SelectAll command. Read only."""
+
+    SEND_BACKWARD: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the SendBackward command. Read only."""
+
+    SEND_TO_BACK: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the SendToBack command. Read only."""
+
+    SIZE_TO_CONTROL: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the SizeToControl command. Read only."""
+
+    SIZE_TO_CONTROL_HEIGHT: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the SizeToControlHeight command. Read only."""
+
+    SIZE_TO_CONTROL_WIDTH: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the SizeToControlWidth command. Read only."""
+
+    SIZE_TO_FIT: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the SizeToFit command. Read only."""
+
+    SIZE_TO_GRID: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the SizeToGrid command. Read only."""
+
+    SNAP_TO_GRID: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the SnapToGrid command. Read only."""
+
+    TAB_ORDER: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the TabOrder command. Read only."""
+
+    UNDO: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the Undo command. Read only."""
+
+    MULTI_LEVEL_UNDO: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the MultiLevelUndo command. Read only."""
+
+    UNGROUP: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the Ungroup command. Read only."""
+
+    VERT_SPACE_CONCATENATE: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the VertSpaceConcatenate command. Read only."""
+
+    VERT_SPACE_DECREASE: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the VertSpaceDecrease command. Read only."""
+
+    VERT_SPACE_INCREASE: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the VertSpaceIncrease command. Read only."""
+
+    VERT_SPACE_MAKE_EQUAL: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the VertSpaceMakeEqual command. Read only."""
+
+    SHOW_GRID: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the ShowGrid command. Read only."""
+
+    VIEW_GRID: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the ViewGrid command. Read only."""
+
+    REPLACE: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the Replace command. Read only."""
+
+    PROPERTIES_WINDOW: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the PropertiesWindow command. Read only."""
+
+    LOCK_CONTROLS: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the LockControls command. Read only."""
+
+    F_1_HELP: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the F1Help command. Read only."""
+
+    ARRANGE_ICONS: System.ComponentModel.Design.CommandID = ...
+
+    LINEUP_ICONS: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the LineupIcons command. Read only."""
+
+    SHOW_LARGE_ICONS: System.ComponentModel.Design.CommandID = ...
+    """Gets the GUID/integer value pair for the ShowLargeIcons command. Read only."""
+
+    VERB_FIRST: System.ComponentModel.Design.CommandID = ...
+    """Gets the first of a set of verbs. Read only."""
+
+    VERB_LAST: System.ComponentModel.Design.CommandID = ...
+    """Gets the last of a set of verbs.Read only."""
+
+
+class ITypeDescriptorFilterService(metaclass=abc.ABCMeta):
+    """Modifies the set of type descriptors that a component provides."""
+
+    def filter_attributes(self, component: System.ComponentModel.IComponent, attributes: System.Collections.IDictionary) -> bool:
+        """Provides a way to filter the attributes from a component that are displayed to the user."""
+        ...
+
+    def filter_events(self, component: System.ComponentModel.IComponent, events: System.Collections.IDictionary) -> bool:
+        """Provides a way to filter the events from a component that are displayed to the user."""
+        ...
+
+    def filter_properties(self, component: System.ComponentModel.IComponent, properties: System.Collections.IDictionary) -> bool:
+        """Provides a way to filter the properties from a component that are displayed to the user."""
+        ...
+
+
+class IDesignerOptionService(metaclass=abc.ABCMeta):
+    """Provides access to get and set option values for a designer."""
+
+    def get_option_value(self, page_name: str, value_name: str) -> System.Object:
+        """Gets the value of an option defined in this package."""
+        ...
+
+    def set_option_value(self, page_name: str, value_name: str, value: typing.Any) -> None:
+        """Sets the value of an option defined in this package."""
+        ...
+
+
+class DesignerOptionService(System.Object, System.ComponentModel.Design.IDesignerOptionService, metaclass=abc.ABCMeta):
+    """Provides access to get and set option values for a designer."""
+
+    class DesignerOptionCollection(System.Object, System.Collections.IList):
+        """
+        The DesignerOptionCollection class is a collection that contains
+        other DesignerOptionCollection objects. This forms a tree of options,
+        with each branch of the tree having a name and a possible collection of
+        properties. Each parent branch of the tree contains a union of the
+        properties if all the branch's children.
+        """
+
+        @property
+        def count(self) -> int:
+            """The count of child options collections this collection contains."""
+            ...
+
+        @property
+        def name(self) -> str:
+            """
+            The name of this collection. Names are programmatic names and are not
+            localized. A name search is case insensitive.
+            """
+            ...
+
+        @property
+        def parent(self) -> System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection:
+            """Returns the parent collection object, or null if there is no parent."""
+            ...
+
+        @property
+        def properties(self) -> System.ComponentModel.PropertyDescriptorCollection:
+            """
+            The collection of properties that this OptionCollection, along with all of
+            its children, offers. PropertyDescriptors are taken directly from the
+            value passed to CreateObjectCollection and wrapped in an additional property
+            descriptor that hides the value object from the user. This means that any
+            value may be passed into the "component" parameter of the various
+            PropertyDescriptor methods. The value is ignored and is replaced with
+            the correct value internally.
+            """
+            ...
+
+        @overload
+        def __getitem__(self, index: int) -> System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection:
+            """Retrieves the child collection at the given index."""
+            ...
+
+        @overload
+        def __getitem__(self, name: str) -> System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection:
+            """
+            Retrieves the child collection at the given name. The name search is case
+            insensitive.
+            """
+            ...
+
+        def copy_to(self, array: System.Array, index: int) -> None:
+            """Copies this collection to an array."""
+            ...
+
+        def get_enumerator(self) -> System.Collections.IEnumerator:
+            """Returns an enumerator that can be used to iterate this collection."""
+            ...
+
+        def index_of(self, value: System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection) -> int:
+            """Returns the numerical index of the given value."""
+            ...
+
+        def show_dialog(self) -> bool:
+            """
+            Displays a dialog-based user interface that allows the user to
+            configure the various options.
+            """
+            ...
+
+    @property
+    def options(self) -> System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection:
+        """
+        Returns the options collection for this service. There is
+        always a global options collection that contains child collections.
+        """
+        ...
+
+    def create_option_collection(self, parent: System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection, name: str, value: typing.Any) -> System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection:
+        """
+        Creates a new DesignerOptionCollection with the given name, and adds it to
+        the given parent. The "value" parameter specifies an object whose public
+        properties will be used in the Properties collection of the option collection.
+        The value parameter can be null if this options collection does not offer
+        any properties. Properties will be wrapped in such a way that passing
+        anything into the component parameter of the property descriptor will be
+        ignored and the value object will be substituted.
+        
+        This method is protected.
+        """
+        ...
+
+    def populate_option_collection(self, options: System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection) -> None:
+        """
+        This method is called on demand the first time a user asks for child
+        options or properties of an options collection.
+        
+        This method is protected.
+        """
+        ...
+
+    def show_dialog(self, options: System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection, option_object: typing.Any) -> bool:
+        """
+        This method must be implemented to show the options dialog UI for the given object.
+        
+        This method is protected.
+        """
         ...
 
 
@@ -527,6 +995,64 @@ class DesignerTransaction(System.Object, System.IDisposable, metaclass=abc.ABCMe
         committing a transaction.
         
         This method is protected.
+        """
+        ...
+
+
+class IDesigner(System.IDisposable, metaclass=abc.ABCMeta):
+    """
+    Provides the basic framework for building a custom designer.
+    This interface stores the verbs available to the designer, as well as basic
+    services for the designer.
+    """
+
+    @property
+    @abc.abstractmethod
+    def component(self) -> System.ComponentModel.IComponent:
+        """Gets or sets the base component this designer is designing."""
+        ...
+
+    @property
+    @abc.abstractmethod
+    def verbs(self) -> System.ComponentModel.Design.DesignerVerbCollection:
+        """Gets or sets the design-time verbs supported by the designer."""
+        ...
+
+    def do_default_action(self) -> None:
+        """Performs the default action for this designer."""
+        ...
+
+    def initialize(self, component: System.ComponentModel.IComponent) -> None:
+        """Initializes the designer with the given component."""
+        ...
+
+
+class DesignerTransactionCloseEventArgs(System.EventArgs):
+    """This class has no documentation."""
+
+    @property
+    def transaction_committed(self) -> bool:
+        ...
+
+    @property
+    def last_transaction(self) -> bool:
+        ...
+
+    @overload
+    def __init__(self, commit: bool, last_transaction: bool) -> None:
+        """
+        Creates a new event args. Commit is true if the transaction is committed, and
+        last_transaction is true if this is the last transaction to close.
+        """
+        ...
+
+    @overload
+    def __init__(self, commit: bool) -> None:
+        """
+        Creates a new event args. Commit is true if the transaction is committed. This
+        defaults the LastTransaction property to true.
+        
+        This constructor has been deprecated. Use DesignerTransactionCloseEventArgs(bool, bool) instead.
         """
         ...
 
@@ -732,496 +1258,6 @@ class DesignerCollection(System.Object, System.Collections.ICollection):
         ...
 
 
-class CheckoutException(System.Runtime.InteropServices.ExternalException):
-    """
-    The exception thrown when an attempt is made to edit a file that is checked into
-    a source control program.
-    """
-
-    CANCELED: System.ComponentModel.Design.CheckoutException = ...
-    """
-    Initializes a System.ComponentModel.Design.CheckoutException that specifies that the checkout
-    was canceled. This field is read-only.
-    """
-
-    @overload
-    def __init__(self) -> None:
-        """
-        Initializes a new instance of the System.ComponentModel.Design.CheckoutException class with
-        no associated message or error code.
-        """
-        ...
-
-    @overload
-    def __init__(self, message: str) -> None:
-        """
-        Initializes a new instance of the System.ComponentModel.Design.CheckoutException
-        class with the specified message.
-        """
-        ...
-
-    @overload
-    def __init__(self, message: str, error_code: int) -> None:
-        """
-        Initializes a new instance of the System.ComponentModel.Design.CheckoutException
-        class with the specified message and error code.
-        """
-        ...
-
-    @overload
-    def __init__(self, message: str, inner_exception: System.Exception) -> None:
-        """
-        Initializes a new instance of the Exception class with a specified error message and a
-        reference to the inner exception that is the cause of this exception.
-        FxCop CA1032: Multiple constructors are required to correctly implement a custom exception.
-        """
-        ...
-
-    @overload
-    def __init__(self, info: System.Runtime.Serialization.SerializationInfo, context: System.Runtime.Serialization.StreamingContext) -> None:
-        """
-        Need this constructor since Exception implements ISerializable. We don't have any fields,
-        so just forward this to base.
-        
-        This method is protected.
-        
-        Obsoletions.LegacyFormatterImplMessage
-        """
-        ...
-
-
-class IDesignerOptionService(metaclass=abc.ABCMeta):
-    """Provides access to get and set option values for a designer."""
-
-    def get_option_value(self, page_name: str, value_name: str) -> System.Object:
-        """Gets the value of an option defined in this package."""
-        ...
-
-    def set_option_value(self, page_name: str, value_name: str, value: typing.Any) -> None:
-        """Sets the value of an option defined in this package."""
-        ...
-
-
-class DesignerOptionService(System.Object, System.ComponentModel.Design.IDesignerOptionService, metaclass=abc.ABCMeta):
-    """Provides access to get and set option values for a designer."""
-
-    class DesignerOptionCollection(System.Object, System.Collections.IList):
-        """
-        The DesignerOptionCollection class is a collection that contains
-        other DesignerOptionCollection objects. This forms a tree of options,
-        with each branch of the tree having a name and a possible collection of
-        properties. Each parent branch of the tree contains a union of the
-        properties if all the branch's children.
-        """
-
-        @property
-        def count(self) -> int:
-            """The count of child options collections this collection contains."""
-            ...
-
-        @property
-        def name(self) -> str:
-            """
-            The name of this collection. Names are programmatic names and are not
-            localized. A name search is case insensitive.
-            """
-            ...
-
-        @property
-        def parent(self) -> System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection:
-            """Returns the parent collection object, or null if there is no parent."""
-            ...
-
-        @property
-        def properties(self) -> System.ComponentModel.PropertyDescriptorCollection:
-            """
-            The collection of properties that this OptionCollection, along with all of
-            its children, offers. PropertyDescriptors are taken directly from the
-            value passed to CreateObjectCollection and wrapped in an additional property
-            descriptor that hides the value object from the user. This means that any
-            value may be passed into the "component" parameter of the various
-            PropertyDescriptor methods. The value is ignored and is replaced with
-            the correct value internally.
-            """
-            ...
-
-        @overload
-        def __getitem__(self, index: int) -> System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection:
-            """Retrieves the child collection at the given index."""
-            ...
-
-        @overload
-        def __getitem__(self, name: str) -> System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection:
-            """
-            Retrieves the child collection at the given name. The name search is case
-            insensitive.
-            """
-            ...
-
-        def copy_to(self, array: System.Array, index: int) -> None:
-            """Copies this collection to an array."""
-            ...
-
-        def get_enumerator(self) -> System.Collections.IEnumerator:
-            """Returns an enumerator that can be used to iterate this collection."""
-            ...
-
-        def index_of(self, value: System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection) -> int:
-            """Returns the numerical index of the given value."""
-            ...
-
-        def show_dialog(self) -> bool:
-            """
-            Displays a dialog-based user interface that allows the user to
-            configure the various options.
-            """
-            ...
-
-    @property
-    def options(self) -> System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection:
-        """
-        Returns the options collection for this service. There is
-        always a global options collection that contains child collections.
-        """
-        ...
-
-    def create_option_collection(self, parent: System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection, name: str, value: typing.Any) -> System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection:
-        """
-        Creates a new DesignerOptionCollection with the given name, and adds it to
-        the given parent. The "value" parameter specifies an object whose public
-        properties will be used in the Properties collection of the option collection.
-        The value parameter can be null if this options collection does not offer
-        any properties. Properties will be wrapped in such a way that passing
-        anything into the component parameter of the property descriptor will be
-        ignored and the value object will be substituted.
-        
-        This method is protected.
-        """
-        ...
-
-    def populate_option_collection(self, options: System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection) -> None:
-        """
-        This method is called on demand the first time a user asks for child
-        options or properties of an options collection.
-        
-        This method is protected.
-        """
-        ...
-
-    def show_dialog(self, options: System.ComponentModel.Design.DesignerOptionService.DesignerOptionCollection, option_object: typing.Any) -> bool:
-        """
-        This method must be implemented to show the options dialog UI for the given object.
-        
-        This method is protected.
-        """
-        ...
-
-
-class IComponentInitializer(metaclass=abc.ABCMeta):
-    """
-    IComponentInitializer can be implemented on an object that also implements IDesigner.
-    This interface allows a newly created component to be given some stock default values,
-    such as a caption, default size, or other values. Recommended default values for
-    the component's properties are passed in as a dictionary.
-    """
-
-    def initialize_existing_component(self, default_values: System.Collections.IDictionary) -> None:
-        """
-        This method is called when an existing component is being re-initialized. This may occur after
-        dragging a component to another container, for example. The default_values
-        property contains a name/value dictionary of default values that should be applied
-        to properties. This dictionary may be null if no default values are specified.
-        You may use the default_values dictionary to apply recommended defaults to properties
-        but you should not modify component properties beyond what is stored in the
-        dictionary, because this is an existing component that may already have properties
-        set on it.
-        """
-        ...
-
-    def initialize_new_component(self, default_values: System.Collections.IDictionary) -> None:
-        """
-        This method is called when a component is first initialized, typically after being first added
-        to a design surface. The default_values property contains a name/value dictionary of default
-        values that should be applied to properties. This dictionary may be null if no default values
-        are specified. You may perform any initialization of this component that you like, and you
-        may even ignore the default_values dictionary altogether if you wish.
-        """
-        ...
-
-
-class ITypeResolutionService(metaclass=abc.ABCMeta):
-    """The type resolution service is used to load types at design time."""
-
-    @overload
-    def get_assembly(self, name: System.Reflection.AssemblyName) -> System.Reflection.Assembly:
-        """Retrieves the requested assembly."""
-        ...
-
-    @overload
-    def get_assembly(self, name: System.Reflection.AssemblyName, throw_on_error: bool) -> System.Reflection.Assembly:
-        """Retrieves the requested assembly."""
-        ...
-
-    def get_path_of_assembly(self, name: System.Reflection.AssemblyName) -> str:
-        """Returns the path to the file name from which the assembly was loaded."""
-        ...
-
-    @overload
-    def get_type(self, name: str) -> typing.Type:
-        """Loads a type with the given name."""
-        ...
-
-    @overload
-    def get_type(self, name: str, throw_on_error: bool) -> typing.Type:
-        """Loads a type with the given name."""
-        ...
-
-    @overload
-    def get_type(self, name: str, throw_on_error: bool, ignore_case: bool) -> typing.Type:
-        """Loads a type with the given name."""
-        ...
-
-    def reference_assembly(self, name: System.Reflection.AssemblyName) -> None:
-        """
-        References the given assembly name. Once an assembly has
-        been referenced types may be loaded from it without
-        qualifying them with the assembly.
-        """
-        ...
-
-
-class StandardToolWindows(System.Object):
-    """
-    Defines GUID specifiers that contain GUIDs which reference the standard set of tool windows that are available in
-    the design environment.
-    """
-
-    OBJECT_BROWSER: System.Guid = ...
-    """Gets the GUID for the object browser."""
-
-    OUTPUT_WINDOW: System.Guid = ...
-    """Gets the GUID for the output window."""
-
-    PROJECT_EXPLORER: System.Guid = ...
-    """Gets the GUID for the project explorer."""
-
-    PROPERTY_BROWSER: System.Guid = ...
-    """Gets the GUID for the properties window."""
-
-    RELATED_LINKS: System.Guid = ...
-    """Gets the GUID for the related links frame."""
-
-    SERVER_EXPLORER: System.Guid = ...
-    """Gets the GUID for the server explorer."""
-
-    TASK_LIST: System.Guid = ...
-    """Gets the GUID for the task list."""
-
-    TOOLBOX: System.Guid = ...
-    """Gets the GUID for the toolbox."""
-
-
-class ComponentEventArgs(System.EventArgs):
-    """
-    Provides data for the System.ComponentModel.Design.IComponentChangeService.ComponentEvent
-    event raised for component-level events.
-    """
-
-    @property
-    def component(self) -> System.ComponentModel.IComponent:
-        """Gets or sets the component associated with the event."""
-        ...
-
-    def __init__(self, component: System.ComponentModel.IComponent) -> None:
-        """Initializes a new instance of the System.ComponentModel.Design.ComponentEventArgs class."""
-        ...
-
-
-class ComponentChangedEventArgs(System.EventArgs):
-    """Provides data for the System.ComponentModel.Design.IComponentChangeService.ComponentChanged event."""
-
-    @property
-    def component(self) -> System.Object:
-        """Gets or sets the component that is the cause of this event."""
-        ...
-
-    @property
-    def member(self) -> System.ComponentModel.MemberDescriptor:
-        """Gets or sets the member that is about to change."""
-        ...
-
-    @property
-    def new_value(self) -> System.Object:
-        """Gets or sets the new value of the changed member."""
-        ...
-
-    @property
-    def old_value(self) -> System.Object:
-        """Gets or sets the old value of the changed member."""
-        ...
-
-    def __init__(self, component: typing.Any, member: System.ComponentModel.MemberDescriptor, old_value: typing.Any, new_value: typing.Any) -> None:
-        """Initializes a new instance of the System.ComponentModel.Design.ComponentChangedEventArgs class."""
-        ...
-
-
-class ComponentChangingEventArgs(System.EventArgs):
-    """Provides data for the System.ComponentModel.Design.IComponentChangeService.ComponentChanging event."""
-
-    @property
-    def component(self) -> System.Object:
-        """Gets or sets the component that is being changed or that is the parent container of the member being changed."""
-        ...
-
-    @property
-    def member(self) -> System.ComponentModel.MemberDescriptor:
-        """Gets or sets the member of the component that is about to be changed."""
-        ...
-
-    def __init__(self, component: typing.Any, member: System.ComponentModel.MemberDescriptor) -> None:
-        """Initializes a new instance of the System.ComponentModel.Design.ComponentChangingEventArgs class."""
-        ...
-
-
-class ComponentRenameEventArgs(System.EventArgs):
-    """Provides data for the System.ComponentModel.Design.IComponentChangeService.ComponentRename event."""
-
-    @property
-    def component(self) -> System.Object:
-        """Gets or sets the component that is being renamed."""
-        ...
-
-    @property
-    def old_name(self) -> str:
-        """Gets or sets the name of the component before the rename."""
-        ...
-
-    @property
-    def new_name(self) -> str:
-        """Gets or sets the current name of the component."""
-        ...
-
-    def __init__(self, component: typing.Any, old_name: str, new_name: str) -> None:
-        """
-        Initializes a new instance of the System.ComponentModel.Design.ComponentRenameEventArgs
-        class.
-        """
-        ...
-
-
-class IComponentChangeService(metaclass=abc.ABCMeta):
-    """Provides an interface to add and remove the event handlers for System.ComponentModel.Design.IComponentChangeService.ComponentAdded, System.ComponentModel.Design.IComponentChangeService.ComponentAdding, System.ComponentModel.Design.IComponentChangeService.ComponentChanged, System.ComponentModel.Design.IComponentChangeService.ComponentChanging, System.ComponentModel.Design.IComponentChangeService.ComponentRemoved, System.ComponentModel.Design.IComponentChangeService.ComponentRemoving, and System.ComponentModel.Design.IComponentChangeService.ComponentRename events."""
-
-    @property
-    @abc.abstractmethod
-    def component_added(self) -> _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]:
-        """Adds an event handler for the System.ComponentModel.Design.IComponentChangeService.ComponentAdded event."""
-        ...
-
-    @component_added.setter
-    def component_added(self, value: _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]) -> None:
-        ...
-
-    @property
-    @abc.abstractmethod
-    def component_adding(self) -> _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]:
-        """Adds an event handler for the System.ComponentModel.Design.IComponentChangeService.ComponentAdding event."""
-        ...
-
-    @component_adding.setter
-    def component_adding(self, value: _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]) -> None:
-        ...
-
-    @property
-    @abc.abstractmethod
-    def component_changed(self) -> _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentChangedEventArgs], None], None]:
-        """Adds an event handler for the System.ComponentModel.Design.IComponentChangeService.ComponentChanged event."""
-        ...
-
-    @component_changed.setter
-    def component_changed(self, value: _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentChangedEventArgs], None], None]) -> None:
-        ...
-
-    @property
-    @abc.abstractmethod
-    def component_changing(self) -> _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentChangingEventArgs], None], None]:
-        """Adds an event handler for the System.ComponentModel.Design.IComponentChangeService.ComponentChanging event."""
-        ...
-
-    @component_changing.setter
-    def component_changing(self, value: _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentChangingEventArgs], None], None]) -> None:
-        ...
-
-    @property
-    @abc.abstractmethod
-    def component_removed(self) -> _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]:
-        """Adds an event handler for the System.ComponentModel.Design.IComponentChangeService.OnComponentRemoved event."""
-        ...
-
-    @component_removed.setter
-    def component_removed(self, value: _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]) -> None:
-        ...
-
-    @property
-    @abc.abstractmethod
-    def component_removing(self) -> _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]:
-        """Adds an event handler for the System.ComponentModel.Design.IComponentChangeService.OnComponentRemoving event."""
-        ...
-
-    @component_removing.setter
-    def component_removing(self, value: _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentEventArgs], None], None]) -> None:
-        ...
-
-    @property
-    @abc.abstractmethod
-    def component_rename(self) -> _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentRenameEventArgs], None], None]:
-        """Adds an event handler for the System.ComponentModel.Design.IComponentChangeService.OnComponentRename event."""
-        ...
-
-    @component_rename.setter
-    def component_rename(self, value: _EventContainer[typing.Callable[[System.Object, System.ComponentModel.Design.ComponentRenameEventArgs], None], None]) -> None:
-        ...
-
-    def on_component_changed(self, component: typing.Any, member: System.ComponentModel.MemberDescriptor, old_value: typing.Any, new_value: typing.Any) -> None:
-        """Announces to the component change service that a particular component has changed."""
-        ...
-
-    def on_component_changing(self, component: typing.Any, member: System.ComponentModel.MemberDescriptor) -> None:
-        """Announces to the component change service that a particular component is changing."""
-        ...
-
-
-class DesignerEventArgs(System.EventArgs):
-    """
-    Provides data for the System.ComponentModel.Design.IDesignerEventService.DesignerEvent
-    event that is generated when a document is created or disposed.
-    """
-
-    @property
-    def designer(self) -> System.ComponentModel.Design.IDesignerHost:
-        """Gets or sets the host of the document."""
-        ...
-
-    def __init__(self, host: System.ComponentModel.Design.IDesignerHost) -> None:
-        """
-        Initializes a new instance of the System.ComponentModel.Design.DesignerEventArgs
-        class.
-        """
-        ...
-
-
-class IExtenderProviderService(metaclass=abc.ABCMeta):
-    """Provides an interface to add and remove extender providers."""
-
-    def add_extender_provider(self, provider: System.ComponentModel.IExtenderProvider) -> None:
-        """Adds an extender provider."""
-        ...
-
-    def remove_extender_provider(self, provider: System.ComponentModel.IExtenderProvider) -> None:
-        """Removes an extender provider."""
-        ...
-
-
 class ActiveDesignerEventArgs(System.EventArgs):
     """
     Provides data for the System.ComponentModel.Design.IDesignerEventService.ActiveDesigner
@@ -1246,32 +1282,22 @@ class ActiveDesignerEventArgs(System.EventArgs):
         ...
 
 
-class IReferenceService(metaclass=abc.ABCMeta):
+class DesignerEventArgs(System.EventArgs):
     """
-    Provides an interface to get names and references to objects. These
-    methods can search using the specified name or reference.
+    Provides data for the System.ComponentModel.Design.IDesignerEventService.DesignerEvent
+    event that is generated when a document is created or disposed.
     """
 
-    def get_component(self, reference: typing.Any) -> System.ComponentModel.IComponent:
-        """Gets the base component that anchors this reference."""
+    @property
+    def designer(self) -> System.ComponentModel.Design.IDesignerHost:
+        """Gets or sets the host of the document."""
         ...
 
-    def get_name(self, reference: typing.Any) -> str:
-        """Gets the name for this reference."""
-        ...
-
-    def get_reference(self, name: str) -> System.Object:
-        """Gets a reference for the specified name."""
-        ...
-
-    @overload
-    def get_references(self) -> typing.List[System.Object]:
-        """Gets all available references."""
-        ...
-
-    @overload
-    def get_references(self, base_type: typing.Type) -> typing.List[System.Object]:
-        """Gets all available references of this type."""
+    def __init__(self, host: System.ComponentModel.Design.IDesignerHost) -> None:
+        """
+        Initializes a new instance of the System.ComponentModel.Design.DesignerEventArgs
+        class.
+        """
         ...
 
 
@@ -1328,6 +1354,141 @@ class IDesignerEventService(metaclass=abc.ABCMeta):
 
     @selection_changed.setter
     def selection_changed(self, value: _EventContainer[typing.Callable[[System.Object, System.EventArgs], None], None]) -> None:
+        ...
+
+
+class IDesignerHostTransactionState(metaclass=abc.ABCMeta):
+    """Methods for the Designer host to report on the state of transactions."""
+
+    @property
+    @abc.abstractmethod
+    def is_closing_transaction(self) -> bool:
+        ...
+
+
+class IResourceService(metaclass=abc.ABCMeta):
+    """Provides designers a way to access a resource for the current design-time object."""
+
+    def get_resource_reader(self, info: System.Globalization.CultureInfo) -> System.Resources.IResourceReader:
+        """
+        Locates the resource reader for the specified culture and
+        returns it.
+        """
+        ...
+
+    def get_resource_writer(self, info: System.Globalization.CultureInfo) -> typing.Any:
+        """
+        Locates the resource writer for the specified culture
+        and returns it. This will create a new resource for
+        the specified culture and destroy any existing resource,
+        should it exist.
+        """
+        ...
+
+
+class HelpKeywordType(Enum):
+    """Specifies identifiers that can be used to indicate the type of a help keyword."""
+
+    F_1_KEYWORD = 0
+    """Indicates the keyword is a word F1 was pressed to request help regarding."""
+
+    GENERAL_KEYWORD = 1
+    """Indicates the keyword is a general keyword."""
+
+    FILTER_KEYWORD = 2
+    """Indicates the keyword is a filter keyword."""
+
+
+class IComponentDiscoveryService(metaclass=abc.ABCMeta):
+    """
+    This service allows design-time enumeration of components across the toolbox
+    and other available types at design-time.
+    """
+
+    def get_component_types(self, designer_host: System.ComponentModel.Design.IDesignerHost, base_type: typing.Type) -> System.Collections.ICollection:
+        """
+        Retrieves the list of available component types, i.e. types implementing
+        IComponent. If base_type is null, all components are retrieved; otherwise
+        only component types derived from the specified base_type are returned.
+        """
+        ...
+
+
+class ServiceContainer(System.Object, System.ComponentModel.Design.IServiceContainer, System.IDisposable):
+    """This is a simple implementation of IServiceContainer."""
+
+    @property
+    def default_services(self) -> typing.List[typing.Type]:
+        """
+        This property returns the default services that are implemented directly on this IServiceContainer.
+        the default implementation of this property is to return the IServiceContainer and ServiceContainer
+        types. You may override this property and return your own types, modifying the default behavior
+        of GetService.
+        
+        This property is protected.
+        """
+        ...
+
+    @overload
+    def __init__(self) -> None:
+        """Creates a new service object container."""
+        ...
+
+    @overload
+    def __init__(self, parent_provider: typing.Optional[IServiceProvider]) -> None:
+        """Creates a new service object container."""
+        ...
+
+    @overload
+    def add_service(self, service_type: typing.Type, service_instance: typing.Any) -> None:
+        """Adds the given service to the service container."""
+        ...
+
+    @overload
+    def add_service(self, service_type: typing.Type, service_instance: typing.Any, promote: bool) -> None:
+        """Adds the given service to the service container."""
+        ...
+
+    @overload
+    def add_service(self, service_type: typing.Type, callback: typing.Callable[[System.ComponentModel.Design.IServiceContainer, typing.Type], System.Object]) -> None:
+        """Adds the given service to the service container."""
+        ...
+
+    @overload
+    def add_service(self, service_type: typing.Type, callback: typing.Callable[[System.ComponentModel.Design.IServiceContainer, typing.Type], System.Object], promote: bool) -> None:
+        """Adds the given service to the service container."""
+        ...
+
+    @overload
+    def dispose(self) -> None:
+        """
+        Disposes this service container. This also walks all instantiated services within the container
+        and disposes any that implement IDisposable, and clears the service list.
+        """
+        ...
+
+    @overload
+    def dispose(self, disposing: bool) -> None:
+        """
+        Disposes this service container. This also walks all instantiated services within the container
+        and disposes any that implement IDisposable, and clears the service list.
+        
+        This method is protected.
+        """
+        ...
+
+    def get_service(self, service_type: typing.Type) -> System.Object:
+        """Retrieves the requested service."""
+        ...
+
+    @overload
+    def remove_service(self, service_type: typing.Type) -> None:
+        """Removes the given service type from the service container."""
+        ...
+
+    @overload
+    def remove_service(self, service_type: typing.Type, promote: bool) -> None:
+        """Removes the given service type from the service container."""
         ...
 
 
@@ -1482,296 +1643,50 @@ class ISelectionService(metaclass=abc.ABCMeta):
         ...
 
 
-class IResourceService(metaclass=abc.ABCMeta):
-    """Provides designers a way to access a resource for the current design-time object."""
+class HelpContextType(Enum):
+    """This class has no documentation."""
 
-    def get_resource_reader(self, info: System.Globalization.CultureInfo) -> System.Resources.IResourceReader:
-        """
-        Locates the resource reader for the specified culture and
-        returns it.
-        """
-        ...
+    AMBIENT = 0
 
-    def get_resource_writer(self, info: System.Globalization.CultureInfo) -> typing.Any:
-        """
-        Locates the resource writer for the specified culture
-        and returns it. This will create a new resource for
-        the specified culture and destroy any existing resource,
-        should it exist.
-        """
-        ...
+    WINDOW = 1
+
+    SELECTION = 2
+
+    TOOL_WINDOW_SELECTION = 3
 
 
-class ITreeDesigner(System.ComponentModel.Design.IDesigner, metaclass=abc.ABCMeta):
+class IHelpService(metaclass=abc.ABCMeta):
     """
-    ITreeDesigner is a variation of IDesigner that provides support for
-    generically indicating parent / child relationships within a designer.
+    Provides the Integrated Development Environment (IDE) help
+    system with contextual information for the current task.
     """
 
-    @property
-    @abc.abstractmethod
-    def children(self) -> System.Collections.ICollection:
-        """
-        Retrieves the children of this designer. This will return an empty collection
-        if this designer has no children.
-        """
+    def add_context_attribute(self, name: str, value: str, keyword_type: System.ComponentModel.Design.HelpKeywordType) -> None:
+        """Adds a context attribute to the document."""
         ...
 
-    @property
-    @abc.abstractmethod
-    def parent(self) -> System.ComponentModel.Design.IDesigner:
-        """
-        Retrieves the parent designer for this designer. This may return null if
-        there is no parent.
-        """
+    def clear_context_attributes(self) -> None:
+        """Clears all existing context attributes from the document."""
         ...
 
-
-class IInheritanceService(metaclass=abc.ABCMeta):
-    """Provides a set of utilities for analyzing and identifying inherited components."""
-
-    def add_inherited_components(self, component: System.ComponentModel.IComponent, container: System.ComponentModel.IContainer) -> None:
-        """Adds inherited components from the specified component to the specified container."""
+    def create_local_context(self, context_type: System.ComponentModel.Design.HelpContextType) -> System.ComponentModel.Design.IHelpService:
+        """Creates a Local IHelpService to manage subcontexts."""
         ...
 
-    def get_inheritance_attribute(self, component: System.ComponentModel.IComponent) -> System.ComponentModel.InheritanceAttribute:
-        """
-        Gets the inheritance attribute of the specified
-        component. If the component is not being inherited, this method will return the
-        value System.ComponentModel.InheritanceAttribute.NotInherited.
-        Otherwise it will return the inheritance attribute for this component.
-        """
+    def remove_context_attribute(self, name: str, value: str) -> None:
+        """Removes a previously added context attribute."""
         ...
 
-
-class DesigntimeLicenseContext(System.ComponentModel.LicenseContext):
-    """Provides design-time support for licensing."""
-
-    @property
-    def usage_mode(self) -> System.ComponentModel.LicenseUsageMode:
-        """Gets or sets the license usage mode."""
+    def remove_local_context(self, local_context: System.ComponentModel.Design.IHelpService) -> None:
+        """Removes a context that was created with CreateLocalContext"""
         ...
 
-    def get_saved_license_key(self, type: typing.Type, resource_assembly: System.Reflection.Assembly) -> str:
-        """Gets a saved license key."""
+    def show_help_from_keyword(self, help_keyword: str) -> None:
+        """Shows the help topic that corresponds to the specified keyword."""
         ...
 
-    def set_saved_license_key(self, type: typing.Type, key: str) -> None:
-        """Sets a saved license key."""
-        ...
-
-
-class DesigntimeLicenseContextSerializer(System.Object):
-    """Provides support for design-time license context serialization."""
-
-    @staticmethod
-    def serialize(o: System.IO.Stream, crypto_key: str, context: System.ComponentModel.Design.DesigntimeLicenseContext) -> None:
-        """
-        Serializes the licenses within the specified design-time license context
-        using the specified key and output stream.
-        """
-        ...
-
-
-class IEventBindingService(metaclass=abc.ABCMeta):
-    """Provides a set of useful methods for binding System.ComponentModel.EventDescriptor objects to user code."""
-
-    def create_unique_method_name(self, component: System.ComponentModel.IComponent, e: System.ComponentModel.EventDescriptor) -> str:
-        """
-        This creates a name for an event handling method for the given component
-        and event. The name that is created is guaranteed to be unique in the user's source
-        code.
-        """
-        ...
-
-    def get_compatible_methods(self, e: System.ComponentModel.EventDescriptor) -> System.Collections.ICollection:
-        """
-        Retrieves a collection of strings. Each string is the name of a method
-        in user code that has a signature that is compatible with the given event.
-        """
-        ...
-
-    def get_event(self, property: System.ComponentModel.PropertyDescriptor) -> System.ComponentModel.EventDescriptor:
-        """
-        For properties that are representing events, this will return the event
-        that the property represents.
-        """
-        ...
-
-    def get_event_properties(self, events: System.ComponentModel.EventDescriptorCollection) -> System.ComponentModel.PropertyDescriptorCollection:
-        """Converts a set of event descriptors to a set of property descriptors."""
-        ...
-
-    def get_event_property(self, e: System.ComponentModel.EventDescriptor) -> System.ComponentModel.PropertyDescriptor:
-        """Converts a single event to a property."""
-        ...
-
-    @overload
-    def show_code(self) -> bool:
-        """
-        Displays the user code for the designer. This will return true if the user
-        code could be displayed, or false otherwise.
-        """
-        ...
-
-    @overload
-    def show_code(self, line_number: int) -> bool:
-        """
-        Displays the user code for the designer. This will return true if the user
-        code could be displayed, or false otherwise.
-        """
-        ...
-
-    @overload
-    def show_code(self, component: System.ComponentModel.IComponent, e: System.ComponentModel.EventDescriptor) -> bool:
-        """
-        Displays the user code for the given event. This will return true if the user
-        code could be displayed, or false otherwise.
-        """
-        ...
-
-
-class ServiceContainer(System.Object, System.ComponentModel.Design.IServiceContainer, System.IDisposable):
-    """This is a simple implementation of IServiceContainer."""
-
-    @property
-    def default_services(self) -> typing.List[typing.Type]:
-        """
-        This property returns the default services that are implemented directly on this IServiceContainer.
-        the default implementation of this property is to return the IServiceContainer and ServiceContainer
-        types. You may override this property and return your own types, modifying the default behavior
-        of GetService.
-        
-        This property is protected.
-        """
-        ...
-
-    @overload
-    def __init__(self) -> None:
-        """Creates a new service object container."""
-        ...
-
-    @overload
-    def __init__(self, parent_provider: typing.Optional[IServiceProvider]) -> None:
-        """Creates a new service object container."""
-        ...
-
-    @overload
-    def add_service(self, service_type: typing.Type, service_instance: typing.Any) -> None:
-        """Adds the given service to the service container."""
-        ...
-
-    @overload
-    def add_service(self, service_type: typing.Type, service_instance: typing.Any, promote: bool) -> None:
-        """Adds the given service to the service container."""
-        ...
-
-    @overload
-    def add_service(self, service_type: typing.Type, callback: typing.Callable[[System.ComponentModel.Design.IServiceContainer, typing.Type], System.Object]) -> None:
-        """Adds the given service to the service container."""
-        ...
-
-    @overload
-    def add_service(self, service_type: typing.Type, callback: typing.Callable[[System.ComponentModel.Design.IServiceContainer, typing.Type], System.Object], promote: bool) -> None:
-        """Adds the given service to the service container."""
-        ...
-
-    @overload
-    def dispose(self) -> None:
-        """
-        Disposes this service container. This also walks all instantiated services within the container
-        and disposes any that implement IDisposable, and clears the service list.
-        """
-        ...
-
-    @overload
-    def dispose(self, disposing: bool) -> None:
-        """
-        Disposes this service container. This also walks all instantiated services within the container
-        and disposes any that implement IDisposable, and clears the service list.
-        
-        This method is protected.
-        """
-        ...
-
-    def get_service(self, service_type: typing.Type) -> System.Object:
-        """Retrieves the requested service."""
-        ...
-
-    @overload
-    def remove_service(self, service_type: typing.Type) -> None:
-        """Removes the given service type from the service container."""
-        ...
-
-    @overload
-    def remove_service(self, service_type: typing.Type, promote: bool) -> None:
-        """Removes the given service type from the service container."""
-        ...
-
-
-class ITypeDiscoveryService(metaclass=abc.ABCMeta):
-    """
-    The type discovery service is used to discover available types at design time,
-    when the consumer doesn't know the names of existing types or referenced assemblies.
-    """
-
-    def get_types(self, base_type: typing.Type, exclude_global_types: bool) -> System.Collections.ICollection:
-        """
-        Retrieves the list of available types. If base_type is null, all
-        types are returned. Otherwise, only types deriving from the
-        specified base type are returned. If bool exclude_global_types is false,
-        types from all referenced assemblies are checked. Otherwise,
-        only types from non-GAC referenced assemblies are checked.
-        """
-        ...
-
-
-class IDesignerFilter(metaclass=abc.ABCMeta):
-    """
-    Provides access to, and an interface for filtering, the dictionaries that store the
-    properties, attributes, or events of a component.
-    """
-
-    def post_filter_attributes(self, attributes: System.Collections.IDictionary) -> None:
-        """
-        Allows a designer to filter the set of attributes the component being designed will expose
-        through the System.ComponentModel.TypeDescriptor object.
-        """
-        ...
-
-    def post_filter_events(self, events: System.Collections.IDictionary) -> None:
-        """
-        Allows a designer to filter the set of events the component being designed will expose
-        through the System.ComponentModel.TypeDescriptor object.
-        """
-        ...
-
-    def post_filter_properties(self, properties: System.Collections.IDictionary) -> None:
-        """
-        Allows a designer to filter the set of properties the component being designed will expose
-        through the System.ComponentModel.TypeDescriptor object.
-        """
-        ...
-
-    def pre_filter_attributes(self, attributes: System.Collections.IDictionary) -> None:
-        """
-        Allows a designer to filter the set of attributes the component being designed will expose
-        through the System.ComponentModel.TypeDescriptor object.
-        """
-        ...
-
-    def pre_filter_events(self, events: System.Collections.IDictionary) -> None:
-        """
-        Allows a designer to filter the set of events the component being designed will expose
-        through the System.ComponentModel.TypeDescriptor object.
-        """
-        ...
-
-    def pre_filter_properties(self, properties: System.Collections.IDictionary) -> None:
-        """
-        Allows a designer to filter the set of properties the component being designed will expose
-        through the System.ComponentModel.TypeDescriptor object.
-        """
+    def show_help_from_url(self, help_url: str) -> None:
+        """Shows the help topic that corresponds with the specified Url and topic navigation ID."""
         ...
 
 
@@ -1810,15 +1725,6 @@ class ViewTechnology(Enum):
     view object for the Windows Forms designer is a Control instance, while the
     default view object for the Avalon designer is an Element instance.
     """
-
-
-class IDesignerHostTransactionState(metaclass=abc.ABCMeta):
-    """Methods for the Designer host to report on the state of transactions."""
-
-    @property
-    @abc.abstractmethod
-    def is_closing_transaction(self) -> bool:
-        ...
 
 
 class HelpKeywordAttribute(System.Attribute):
@@ -1894,186 +1800,94 @@ class HelpKeywordAttribute(System.Attribute):
         ...
 
 
-class IExtenderListService(metaclass=abc.ABCMeta):
-    """Provides an interface to list extender providers."""
+class IDesignerFilter(metaclass=abc.ABCMeta):
+    """
+    Provides access to, and an interface for filtering, the dictionaries that store the
+    properties, attributes, or events of a component.
+    """
 
-    def get_extender_providers(self) -> typing.List[System.ComponentModel.IExtenderProvider]:
-        """Gets the set of extender providers for the component."""
+    def post_filter_attributes(self, attributes: System.Collections.IDictionary) -> None:
+        """
+        Allows a designer to filter the set of attributes the component being designed will expose
+        through the System.ComponentModel.TypeDescriptor object.
+        """
+        ...
+
+    def post_filter_events(self, events: System.Collections.IDictionary) -> None:
+        """
+        Allows a designer to filter the set of events the component being designed will expose
+        through the System.ComponentModel.TypeDescriptor object.
+        """
+        ...
+
+    def post_filter_properties(self, properties: System.Collections.IDictionary) -> None:
+        """
+        Allows a designer to filter the set of properties the component being designed will expose
+        through the System.ComponentModel.TypeDescriptor object.
+        """
+        ...
+
+    def pre_filter_attributes(self, attributes: System.Collections.IDictionary) -> None:
+        """
+        Allows a designer to filter the set of attributes the component being designed will expose
+        through the System.ComponentModel.TypeDescriptor object.
+        """
+        ...
+
+    def pre_filter_events(self, events: System.Collections.IDictionary) -> None:
+        """
+        Allows a designer to filter the set of events the component being designed will expose
+        through the System.ComponentModel.TypeDescriptor object.
+        """
+        ...
+
+    def pre_filter_properties(self, properties: System.Collections.IDictionary) -> None:
+        """
+        Allows a designer to filter the set of properties the component being designed will expose
+        through the System.ComponentModel.TypeDescriptor object.
+        """
         ...
 
 
-class StandardCommands(System.Object):
+class IReferenceService(metaclass=abc.ABCMeta):
     """
-    Specifies identifiers for the standard set of commands that are available to
-    most applications.
-    """
-
-    ALIGN_BOTTOM: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the AlignBottom command. Read only."""
-
-    ALIGN_HORIZONTAL_CENTERS: System.ComponentModel.Design.CommandID = ...
-    """
-    Gets the GUID/integer value pair for the AlignHorizontalCenters command. Read
-    only.
+    Provides an interface to get names and references to objects. These
+    methods can search using the specified name or reference.
     """
 
-    ALIGN_LEFT: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the AlignLeft command. Read only."""
+    def get_component(self, reference: typing.Any) -> System.ComponentModel.IComponent:
+        """Gets the base component that anchors this reference."""
+        ...
 
-    ALIGN_RIGHT: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the AlignRight command. Read only."""
+    def get_name(self, reference: typing.Any) -> str:
+        """Gets the name for this reference."""
+        ...
 
-    ALIGN_TO_GRID: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the AlignToGrid command. Read only."""
+    def get_reference(self, name: str) -> System.Object:
+        """Gets a reference for the specified name."""
+        ...
 
-    ALIGN_TOP: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the AlignTop command. Read only."""
+    @overload
+    def get_references(self) -> typing.List[System.Object]:
+        """Gets all available references."""
+        ...
 
-    ALIGN_VERTICAL_CENTERS: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the AlignVerticalCenters command. Read only."""
+    @overload
+    def get_references(self, base_type: typing.Type) -> typing.List[System.Object]:
+        """Gets all available references of this type."""
+        ...
 
-    ARRANGE_BOTTOM: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the ArrangeBottom command. Read only."""
 
-    ARRANGE_RIGHT: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the ArrangeRight command. Read only."""
+class IExtenderProviderService(metaclass=abc.ABCMeta):
+    """Provides an interface to add and remove extender providers."""
 
-    BRING_FORWARD: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the BringForward command. Read only."""
+    def add_extender_provider(self, provider: System.ComponentModel.IExtenderProvider) -> None:
+        """Adds an extender provider."""
+        ...
 
-    BRING_TO_FRONT: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the BringToFront command. Read only."""
-
-    CENTER_HORIZONTALLY: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the CenterHorizontally command. Read only."""
-
-    CENTER_VERTICALLY: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the CenterVertically command. Read only."""
-
-    VIEW_CODE: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the Code command. Read only."""
-
-    DOCUMENT_OUTLINE: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the DocumentOutline command. Read only."""
-
-    COPY: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the Copy command. Read only."""
-
-    CUT: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the Cut command. Read only."""
-
-    DELETE: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the Delete command. Read only."""
-
-    GROUP: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the Group command. Read only."""
-
-    HORIZ_SPACE_CONCATENATE: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the HorizSpaceConcatenate command. Read only."""
-
-    HORIZ_SPACE_DECREASE: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the HorizSpaceDecrease command. Read only."""
-
-    HORIZ_SPACE_INCREASE: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the HorizSpaceIncrease command. Read only."""
-
-    HORIZ_SPACE_MAKE_EQUAL: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the HorizSpaceMakeEqual command. Read only."""
-
-    PASTE: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the Paste command. Read only."""
-
-    PROPERTIES: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the Properties command. Read only."""
-
-    REDO: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the Redo command. Read only."""
-
-    MULTI_LEVEL_REDO: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the MultiLevelRedo command. Read only."""
-
-    SELECT_ALL: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the SelectAll command. Read only."""
-
-    SEND_BACKWARD: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the SendBackward command. Read only."""
-
-    SEND_TO_BACK: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the SendToBack command. Read only."""
-
-    SIZE_TO_CONTROL: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the SizeToControl command. Read only."""
-
-    SIZE_TO_CONTROL_HEIGHT: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the SizeToControlHeight command. Read only."""
-
-    SIZE_TO_CONTROL_WIDTH: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the SizeToControlWidth command. Read only."""
-
-    SIZE_TO_FIT: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the SizeToFit command. Read only."""
-
-    SIZE_TO_GRID: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the SizeToGrid command. Read only."""
-
-    SNAP_TO_GRID: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the SnapToGrid command. Read only."""
-
-    TAB_ORDER: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the TabOrder command. Read only."""
-
-    UNDO: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the Undo command. Read only."""
-
-    MULTI_LEVEL_UNDO: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the MultiLevelUndo command. Read only."""
-
-    UNGROUP: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the Ungroup command. Read only."""
-
-    VERT_SPACE_CONCATENATE: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the VertSpaceConcatenate command. Read only."""
-
-    VERT_SPACE_DECREASE: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the VertSpaceDecrease command. Read only."""
-
-    VERT_SPACE_INCREASE: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the VertSpaceIncrease command. Read only."""
-
-    VERT_SPACE_MAKE_EQUAL: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the VertSpaceMakeEqual command. Read only."""
-
-    SHOW_GRID: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the ShowGrid command. Read only."""
-
-    VIEW_GRID: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the ViewGrid command. Read only."""
-
-    REPLACE: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the Replace command. Read only."""
-
-    PROPERTIES_WINDOW: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the PropertiesWindow command. Read only."""
-
-    LOCK_CONTROLS: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the LockControls command. Read only."""
-
-    F_1_HELP: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the F1Help command. Read only."""
-
-    ARRANGE_ICONS: System.ComponentModel.Design.CommandID = ...
-
-    LINEUP_ICONS: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the LineupIcons command. Read only."""
-
-    SHOW_LARGE_ICONS: System.ComponentModel.Design.CommandID = ...
-    """Gets the GUID/integer value pair for the ShowLargeIcons command. Read only."""
-
-    VERB_FIRST: System.ComponentModel.Design.CommandID = ...
-    """Gets the first of a set of verbs. Read only."""
-
-    VERB_LAST: System.ComponentModel.Design.CommandID = ...
-    """Gets the last of a set of verbs.Read only."""
+    def remove_extender_provider(self, provider: System.ComponentModel.IExtenderProvider) -> None:
+        """Removes an extender provider."""
+        ...
 
 
 class IRootDesigner(System.ComponentModel.Design.IDesigner, metaclass=abc.ABCMeta):
@@ -2106,33 +1920,219 @@ class IRootDesigner(System.ComponentModel.Design.IDesigner, metaclass=abc.ABCMet
         ...
 
 
-class ITypeDescriptorFilterService(metaclass=abc.ABCMeta):
-    """Modifies the set of type descriptors that a component provides."""
+class IExtenderListService(metaclass=abc.ABCMeta):
+    """Provides an interface to list extender providers."""
 
-    def filter_attributes(self, component: System.ComponentModel.IComponent, attributes: System.Collections.IDictionary) -> bool:
-        """Provides a way to filter the attributes from a component that are displayed to the user."""
-        ...
-
-    def filter_events(self, component: System.ComponentModel.IComponent, events: System.Collections.IDictionary) -> bool:
-        """Provides a way to filter the events from a component that are displayed to the user."""
-        ...
-
-    def filter_properties(self, component: System.ComponentModel.IComponent, properties: System.Collections.IDictionary) -> bool:
-        """Provides a way to filter the properties from a component that are displayed to the user."""
+    def get_extender_providers(self) -> typing.List[System.ComponentModel.IExtenderProvider]:
+        """Gets the set of extender providers for the component."""
         ...
 
 
-class IComponentDiscoveryService(metaclass=abc.ABCMeta):
+class IComponentInitializer(metaclass=abc.ABCMeta):
     """
-    This service allows design-time enumeration of components across the toolbox
-    and other available types at design-time.
+    IComponentInitializer can be implemented on an object that also implements IDesigner.
+    This interface allows a newly created component to be given some stock default values,
+    such as a caption, default size, or other values. Recommended default values for
+    the component's properties are passed in as a dictionary.
     """
 
-    def get_component_types(self, designer_host: System.ComponentModel.Design.IDesignerHost, base_type: typing.Type) -> System.Collections.ICollection:
+    def initialize_existing_component(self, default_values: System.Collections.IDictionary) -> None:
         """
-        Retrieves the list of available component types, i.e. types implementing
-        IComponent. If base_type is null, all components are retrieved; otherwise
-        only component types derived from the specified base_type are returned.
+        This method is called when an existing component is being re-initialized. This may occur after
+        dragging a component to another container, for example. The default_values
+        property contains a name/value dictionary of default values that should be applied
+        to properties. This dictionary may be null if no default values are specified.
+        You may use the default_values dictionary to apply recommended defaults to properties
+        but you should not modify component properties beyond what is stored in the
+        dictionary, because this is an existing component that may already have properties
+        set on it.
+        """
+        ...
+
+    def initialize_new_component(self, default_values: System.Collections.IDictionary) -> None:
+        """
+        This method is called when a component is first initialized, typically after being first added
+        to a design surface. The default_values property contains a name/value dictionary of default
+        values that should be applied to properties. This dictionary may be null if no default values
+        are specified. You may perform any initialization of this component that you like, and you
+        may even ignore the default_values dictionary altogether if you wish.
+        """
+        ...
+
+
+class ITreeDesigner(System.ComponentModel.Design.IDesigner, metaclass=abc.ABCMeta):
+    """
+    ITreeDesigner is a variation of IDesigner that provides support for
+    generically indicating parent / child relationships within a designer.
+    """
+
+    @property
+    @abc.abstractmethod
+    def children(self) -> System.Collections.ICollection:
+        """
+        Retrieves the children of this designer. This will return an empty collection
+        if this designer has no children.
+        """
+        ...
+
+    @property
+    @abc.abstractmethod
+    def parent(self) -> System.ComponentModel.Design.IDesigner:
+        """
+        Retrieves the parent designer for this designer. This may return null if
+        there is no parent.
+        """
+        ...
+
+
+class IEventBindingService(metaclass=abc.ABCMeta):
+    """Provides a set of useful methods for binding System.ComponentModel.EventDescriptor objects to user code."""
+
+    def create_unique_method_name(self, component: System.ComponentModel.IComponent, e: System.ComponentModel.EventDescriptor) -> str:
+        """
+        This creates a name for an event handling method for the given component
+        and event. The name that is created is guaranteed to be unique in the user's source
+        code.
+        """
+        ...
+
+    def get_compatible_methods(self, e: System.ComponentModel.EventDescriptor) -> System.Collections.ICollection:
+        """
+        Retrieves a collection of strings. Each string is the name of a method
+        in user code that has a signature that is compatible with the given event.
+        """
+        ...
+
+    def get_event(self, property: System.ComponentModel.PropertyDescriptor) -> System.ComponentModel.EventDescriptor:
+        """
+        For properties that are representing events, this will return the event
+        that the property represents.
+        """
+        ...
+
+    def get_event_properties(self, events: System.ComponentModel.EventDescriptorCollection) -> System.ComponentModel.PropertyDescriptorCollection:
+        """Converts a set of event descriptors to a set of property descriptors."""
+        ...
+
+    def get_event_property(self, e: System.ComponentModel.EventDescriptor) -> System.ComponentModel.PropertyDescriptor:
+        """Converts a single event to a property."""
+        ...
+
+    @overload
+    def show_code(self) -> bool:
+        """
+        Displays the user code for the designer. This will return true if the user
+        code could be displayed, or false otherwise.
+        """
+        ...
+
+    @overload
+    def show_code(self, line_number: int) -> bool:
+        """
+        Displays the user code for the designer. This will return true if the user
+        code could be displayed, or false otherwise.
+        """
+        ...
+
+    @overload
+    def show_code(self, component: System.ComponentModel.IComponent, e: System.ComponentModel.EventDescriptor) -> bool:
+        """
+        Displays the user code for the given event. This will return true if the user
+        code could be displayed, or false otherwise.
+        """
+        ...
+
+
+class IDictionaryService(metaclass=abc.ABCMeta):
+    """
+    Provides a generic dictionary service that a designer can use
+    to store user-defined data on the site.
+    """
+
+    def get_key(self, value: typing.Any) -> System.Object:
+        """Gets the key corresponding to the specified value."""
+        ...
+
+    def get_value(self, key: typing.Any) -> System.Object:
+        """Gets the value corresponding to the specified key."""
+        ...
+
+    def set_value(self, key: typing.Any, value: typing.Any) -> None:
+        """Sets the specified key-value pair."""
+        ...
+
+
+class ITypeDiscoveryService(metaclass=abc.ABCMeta):
+    """
+    The type discovery service is used to discover available types at design time,
+    when the consumer doesn't know the names of existing types or referenced assemblies.
+    """
+
+    def get_types(self, base_type: typing.Type, exclude_global_types: bool) -> System.Collections.ICollection:
+        """
+        Retrieves the list of available types. If base_type is null, all
+        types are returned. Otherwise, only types deriving from the
+        specified base type are returned. If bool exclude_global_types is false,
+        types from all referenced assemblies are checked. Otherwise,
+        only types from non-GAC referenced assemblies are checked.
+        """
+        ...
+
+
+class CheckoutException(System.Runtime.InteropServices.ExternalException):
+    """
+    The exception thrown when an attempt is made to edit a file that is checked into
+    a source control program.
+    """
+
+    CANCELED: System.ComponentModel.Design.CheckoutException = ...
+    """
+    Initializes a System.ComponentModel.Design.CheckoutException that specifies that the checkout
+    was canceled. This field is read-only.
+    """
+
+    @overload
+    def __init__(self) -> None:
+        """
+        Initializes a new instance of the System.ComponentModel.Design.CheckoutException class with
+        no associated message or error code.
+        """
+        ...
+
+    @overload
+    def __init__(self, message: str) -> None:
+        """
+        Initializes a new instance of the System.ComponentModel.Design.CheckoutException
+        class with the specified message.
+        """
+        ...
+
+    @overload
+    def __init__(self, message: str, error_code: int) -> None:
+        """
+        Initializes a new instance of the System.ComponentModel.Design.CheckoutException
+        class with the specified message and error code.
+        """
+        ...
+
+    @overload
+    def __init__(self, message: str, inner_exception: System.Exception) -> None:
+        """
+        Initializes a new instance of the Exception class with a specified error message and a
+        reference to the inner exception that is the cause of this exception.
+        FxCop CA1032: Multiple constructors are required to correctly implement a custom exception.
+        """
+        ...
+
+    @overload
+    def __init__(self, info: System.Runtime.Serialization.SerializationInfo, context: System.Runtime.Serialization.StreamingContext) -> None:
+        """
+        Need this constructor since Exception implements ISerializable. We don't have any fields,
+        so just forward this to base.
+        
+        This method is protected.
+        
+        Obsoletions.LegacyFormatterImplMessage
         """
         ...
 

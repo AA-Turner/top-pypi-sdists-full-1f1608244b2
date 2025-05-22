@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pybit7z
-Version: 0.3.5
+Version: 0.4.0
 Summary: A wrapper based on bit7z.
 Author-Email: "l.feng" <msclock@126.com>
 License: Apache-2.0

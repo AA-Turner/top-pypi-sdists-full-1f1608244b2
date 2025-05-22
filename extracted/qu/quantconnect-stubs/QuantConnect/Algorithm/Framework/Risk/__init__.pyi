@@ -48,6 +48,30 @@ class RiskManagementModel(System.Object, QuantConnect.Algorithm.Framework.Risk.I
         ...
 
 
+class TrailingStopRiskManagementModel(QuantConnect.Algorithm.Framework.Risk.RiskManagementModel):
+    """
+    Provides an implementation of IRiskManagementModel that limits the maximum possible loss
+    measured from the highest unrealized profit
+    """
+
+    def __init__(self, maximum_drawdown_percent: float = 0.05) -> None:
+        """
+        Initializes a new instance of the TrailingStopRiskManagementModel class
+        
+        :param maximum_drawdown_percent: The maximum percentage relative drawdown allowed for algorithm portfolio compared with the highest unrealized profit, defaults to 5% drawdown per security
+        """
+        ...
+
+    def manage_risk(self, algorithm: QuantConnect.Algorithm.QCAlgorithm, targets: typing.List[QuantConnect.Algorithm.Framework.Portfolio.IPortfolioTarget]) -> typing.Iterable[QuantConnect.Algorithm.Framework.Portfolio.IPortfolioTarget]:
+        """
+        Manages the algorithm's risk at each time step
+        
+        :param algorithm: The algorithm instance
+        :param targets: The current portfolio targets to be assessed for risk
+        """
+        ...
+
+
 class MaximumUnrealizedProfitPercentPerSecurity(QuantConnect.Algorithm.Framework.Risk.RiskManagementModel):
     """
     Provides an implementation of IRiskManagementModel that limits the unrealized profit
@@ -154,43 +178,6 @@ class MaximumSectorExposureRiskManagementModel(QuantConnect.Algorithm.Framework.
         ...
 
 
-class TrailingStopRiskManagementModel(QuantConnect.Algorithm.Framework.Risk.RiskManagementModel):
-    """
-    Provides an implementation of IRiskManagementModel that limits the maximum possible loss
-    measured from the highest unrealized profit
-    """
-
-    def __init__(self, maximum_drawdown_percent: float = 0.05) -> None:
-        """
-        Initializes a new instance of the TrailingStopRiskManagementModel class
-        
-        :param maximum_drawdown_percent: The maximum percentage relative drawdown allowed for algorithm portfolio compared with the highest unrealized profit, defaults to 5% drawdown per security
-        """
-        ...
-
-    def manage_risk(self, algorithm: QuantConnect.Algorithm.QCAlgorithm, targets: typing.List[QuantConnect.Algorithm.Framework.Portfolio.IPortfolioTarget]) -> typing.Iterable[QuantConnect.Algorithm.Framework.Portfolio.IPortfolioTarget]:
-        """
-        Manages the algorithm's risk at each time step
-        
-        :param algorithm: The algorithm instance
-        :param targets: The current portfolio targets to be assessed for risk
-        """
-        ...
-
-
-class NullRiskManagementModel(QuantConnect.Algorithm.Framework.Risk.RiskManagementModel):
-    """Provides an implementation of IRiskManagementModel that does nothing"""
-
-    def manage_risk(self, algorithm: QuantConnect.Algorithm.QCAlgorithm, targets: typing.List[QuantConnect.Algorithm.Framework.Portfolio.IPortfolioTarget]) -> typing.Iterable[QuantConnect.Algorithm.Framework.Portfolio.IPortfolioTarget]:
-        """
-        Manages the algorithm's risk at each time step
-        
-        :param algorithm: The algorithm instance
-        :param targets: The current portfolio targets to be assessed for risk
-        """
-        ...
-
-
 class CompositeRiskManagementModel(QuantConnect.Algorithm.Framework.Risk.RiskManagementModel):
     """
     Provides an implementation of IRiskManagementModel that combines multiple risk
@@ -269,6 +256,19 @@ class CompositeRiskManagementModel(QuantConnect.Algorithm.Framework.Risk.RiskMan
         
         :param algorithm: The algorithm instance that experienced the change in securities
         :param changes: The security additions and removals from the algorithm
+        """
+        ...
+
+
+class NullRiskManagementModel(QuantConnect.Algorithm.Framework.Risk.RiskManagementModel):
+    """Provides an implementation of IRiskManagementModel that does nothing"""
+
+    def manage_risk(self, algorithm: QuantConnect.Algorithm.QCAlgorithm, targets: typing.List[QuantConnect.Algorithm.Framework.Portfolio.IPortfolioTarget]) -> typing.Iterable[QuantConnect.Algorithm.Framework.Portfolio.IPortfolioTarget]:
+        """
+        Manages the algorithm's risk at each time step
+        
+        :param algorithm: The algorithm instance
+        :param targets: The current portfolio targets to be assessed for risk
         """
         ...
 

@@ -138,7 +138,6 @@ class BaseMiddleware(BaseHTTPMiddleware):
             response.headers["X-Signature"] = sign_result.data.signature
         if (authentication.user.is_authenticated
             and authentication.credentials.token.type == BaseEnums.TokenType.REFRESH
-            and authentication.credentials.token.payload is not None
             and (response.status_code >= 200 and response.status_code < 300)
         ):
             #* Regenerate new authorization
@@ -238,7 +237,7 @@ class BaseMiddleware(BaseHTTPMiddleware):
         if not authentication.user.is_authenticated:
             authentication_info = "| Unauthenticated"
         else:
-            authentication_info = f"| Username: {authentication.user.display_name} | Email:{authentication.user.identity}"
+            authentication_info = f"| Token type: {authentication.credentials.token.type} | Username: {authentication.user.display_name} | Email:{authentication.user.identity}"
 
         try:
             #* 1. Rate limit check

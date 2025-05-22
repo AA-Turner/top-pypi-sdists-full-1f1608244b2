@@ -46,20 +46,6 @@ class ResourceConsumptionAttribute(System.Attribute):
         ...
 
 
-class VersioningHelper(System.Object):
-    """This class has no documentation."""
-
-    @staticmethod
-    @overload
-    def make_version_safe_name(name: str, _from: System.Runtime.Versioning.ResourceScope, to: System.Runtime.Versioning.ResourceScope) -> str:
-        ...
-
-    @staticmethod
-    @overload
-    def make_version_safe_name(name: str, _from: System.Runtime.Versioning.ResourceScope, to: System.Runtime.Versioning.ResourceScope, type: typing.Type) -> str:
-        ...
-
-
 class ComponentGuaranteesOptions(Enum):
     """This class has no documentation."""
 
@@ -80,6 +66,25 @@ class ComponentGuaranteesAttribute(System.Attribute):
         ...
 
     def __init__(self, guarantees: System.Runtime.Versioning.ComponentGuaranteesOptions) -> None:
+        ...
+
+
+class TargetFrameworkAttribute(System.Attribute):
+    """Identifies the version of .NET that a particular assembly was compiled against."""
+
+    @property
+    def framework_name(self) -> str:
+        ...
+
+    @property
+    def framework_display_name(self) -> str:
+        ...
+
+    @framework_display_name.setter
+    def framework_display_name(self, value: str) -> None:
+        ...
+
+    def __init__(self, framework_name: str) -> None:
         ...
 
 
@@ -146,22 +151,17 @@ class FrameworkName(System.Object, System.IEquatable[System_Runtime_Versioning_F
         ...
 
 
-class TargetFrameworkAttribute(System.Attribute):
-    """Identifies the version of .NET that a particular assembly was compiled against."""
+class VersioningHelper(System.Object):
+    """This class has no documentation."""
 
-    @property
-    def framework_name(self) -> str:
+    @staticmethod
+    @overload
+    def make_version_safe_name(name: str, _from: System.Runtime.Versioning.ResourceScope, to: System.Runtime.Versioning.ResourceScope) -> str:
         ...
 
-    @property
-    def framework_display_name(self) -> str:
-        ...
-
-    @framework_display_name.setter
-    def framework_display_name(self, value: str) -> None:
-        ...
-
-    def __init__(self, framework_name: str) -> None:
+    @staticmethod
+    @overload
+    def make_version_safe_name(name: str, _from: System.Runtime.Versioning.ResourceScope, to: System.Runtime.Versioning.ResourceScope, type: typing.Type) -> str:
         ...
 
 

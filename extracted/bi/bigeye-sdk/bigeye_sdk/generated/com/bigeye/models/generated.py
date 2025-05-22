@@ -121,6 +121,7 @@ class WarehouseType(betterproto.Enum):
     DATABASE_TYPE_AVATICA = 15
     DATABASE_TYPE_DB2 = 16
     DATABASE_TYPE_TERADATA = 17
+    DATABASE_TYPE_NETEZZA = 18
 
 
 class ConfigValueType(betterproto.Enum):
@@ -923,6 +924,20 @@ class SchedulingMechanism(betterproto.Enum):
     SCHEDULING_MECHANISM_UNSPECIFIED = 0
     SCHEDULING_MECHANISM_SCHEDULER = 1
     SCHEDULING_MECHANISM_TEMPORAL = 2
+
+
+class JoinType(betterproto.Enum):
+    JOIN_TYPE_UNSPECIFIED = 0
+    JOIN_TYPE_INNER = 1
+    JOIN_TYPE_LEFT = 2
+    JOIN_TYPE_RIGHT = 3
+    JOIN_TYPE_FULL = 4
+
+
+class CustomRuleType(betterproto.Enum):
+    CUSTOM_RULE_TYPE_UNSPECIFIED = 0
+    CUSTOM_RULE_TYPE_VIRTUAL_TABLE = 1
+    CUSTOM_RULE_TYPE_CROSS_JOIN = 2
 
 
 class CustomRulesThresholdType(betterproto.Enum):
@@ -2455,6 +2470,12 @@ class Schema(betterproto.Message):
     warehouse_name: str = betterproto.string_field(11)
     database_type: "WarehouseType" = betterproto.enum_field(12)
     tags: List["Tag"] = betterproto.message_field(13)
+    index_by_table: bool = betterproto.bool_field(14)
+
+
+@dataclass
+class UpdateSchemaRequest(betterproto.Message):
+    index_by_table: bool = betterproto.bool_field(1)
 
 
 @dataclass
@@ -3290,6 +3311,13 @@ class Issue(betterproto.Message):
     etl_analysis: str = betterproto.string_field(32)
     issue_resolution_steps: List["IssueResolutionStep"] = betterproto.message_field(33)
     previous_resolution_summary: str = betterproto.string_field(34)
+    alerting_metrics_with_label: List["AlertingMetric"] = betterproto.message_field(35)
+
+
+@dataclass
+class AlertingMetric(betterproto.Message):
+    metric: "IdAndDisplayName" = betterproto.message_field(1)
+    label: "MetricRunLabel" = betterproto.enum_field(2)
 
 
 @dataclass
@@ -5337,6 +5365,12 @@ class CustomRule(betterproto.Message):
     owner: "User" = betterproto.message_field(8)
     metric_schedule: "MetricSchedule" = betterproto.message_field(9)
     tags: List["Tag"] = betterproto.message_field(10)
+    custom_rule_type: "CustomRuleType" = betterproto.enum_field(11)
+    description: str = betterproto.string_field(12)
+    join: "Join" = betterproto.message_field(13)
+    join_type: "JoinType" = betterproto.enum_field(14)
+    left_alias: str = betterproto.string_field(15)
+    right_alias: str = betterproto.string_field(16)
 
 
 @dataclass
@@ -5378,6 +5412,64 @@ class GetCustomRuleListResponse(betterproto.Message):
 @dataclass
 class SinglePathParamCustomRuleIdRequest(betterproto.Message):
     custom_rule_id: int = betterproto.int32_field(1)
+
+
+@dataclass
+class GetMetricObservedColumnBulkRequest(betterproto.Message):
+    metric_ids: List[int] = betterproto.int32_field(1)
+    column_ids: List[int] = betterproto.int32_field(2)
+
+
+@dataclass
+class MetricObservedColumnRequest(betterproto.Message):
+    column_id: int = betterproto.int32_field(1)
+    metric_id: int = betterproto.int32_field(2)
+    comments: str = betterproto.string_field(3)
+
+
+@dataclass
+class MetricObservedColumnResponse(betterproto.Message):
+    column: "ColumnWithTable" = betterproto.message_field(1)
+    metric: "MetricInfo" = betterproto.message_field(2)
+    comments: str = betterproto.string_field(3)
+    entity_info: "EntityInfo" = betterproto.message_field(4)
+
+
+@dataclass
+class MessageObservedColumnListResponse(betterproto.Message):
+    metric_observed_columns: List["MetricObservedColumnResponse"] = (
+        betterproto.message_field(1)
+    )
+
+
+@dataclass
+class JoinColumnPairing(betterproto.Message):
+    left_column: "TableColumn" = betterproto.message_field(1)
+    right_column: "TableColumn" = betterproto.message_field(2)
+
+
+@dataclass
+class Join(betterproto.Message):
+    id: int = betterproto.int32_field(1)
+    left_table: "Table" = betterproto.message_field(2)
+    right_table: "Table" = betterproto.message_field(3)
+    key_columns: List["JoinColumnPairing"] = betterproto.message_field(4)
+    named_schedule: "IdAndDisplayName" = betterproto.message_field(5)
+    entity_info: "EntityInfo" = betterproto.message_field(6)
+
+
+@dataclass
+class GetJoinsRequest(betterproto.Message):
+    source_id: int = betterproto.int32_field(1)
+    schema_id: int = betterproto.int32_field(2)
+    table_id: int = betterproto.int32_field(3)
+    column_id: int = betterproto.int32_field(4)
+    search: str = betterproto.string_field(5)
+
+
+@dataclass
+class GetJoinsResponse(betterproto.Message):
+    joins: List["Join"] = betterproto.message_field(1)
 
 
 @dataclass
@@ -5429,6 +5521,20 @@ class SearchType(betterproto.Message):
 @dataclass
 class AvailableSearchTypesResponse(betterproto.Message):
     available_types: List["SearchType"] = betterproto.message_field(1)
+
+
+@dataclass
+class GetObjectOwnerRequest(betterproto.Message):
+    """Request messages"""
+
+    ownable_type: str = betterproto.string_field(1)
+    ownable_id: int = betterproto.int32_field(2)
+
+
+@dataclass
+class DeleteObjectOwnerRequest(betterproto.Message):
+    ownable_type: str = betterproto.string_field(1)
+    ownable_id: int = betterproto.int32_field(2)
 
 
 @dataclass
@@ -9948,4 +10054,52 @@ class CompanyServiceStub(betterproto.ServiceStub):
             "/com.bigeye.models.generated.CompanyService/FakeUpdateCompany",
             request,
             Empty,
+        )
+
+
+class ObjectOwnerServiceStub(betterproto.ServiceStub):
+    async def get_object_owner(
+        self, *, ownable_type: str = "", ownable_id: int = 0
+    ) -> ObjectOwnerResponse:
+        """Get object owner"""
+
+        request = GetObjectOwnerRequest()
+        request.ownable_type = ownable_type
+        request.ownable_id = ownable_id
+
+        return await self._unary_unary(
+            "/com.bigeye.models.generated.ObjectOwnerService/GetObjectOwner",
+            request,
+            ObjectOwnerResponse,
+        )
+
+    async def set_object_owner(
+        self, *, ownable_type: "OwnableType" = 0, ownable_id: int = 0, owner: int = 0
+    ) -> ObjectOwnerResponse:
+        """Set object owner"""
+
+        request = SetObjectOwnerRequest()
+        request.ownable_type = ownable_type
+        request.ownable_id = ownable_id
+        request.owner = owner
+
+        return await self._unary_unary(
+            "/com.bigeye.models.generated.ObjectOwnerService/SetObjectOwner",
+            request,
+            ObjectOwnerResponse,
+        )
+
+    async def delete_object_owner(
+        self, *, ownable_type: str = "", ownable_id: int = 0
+    ) -> ObjectOwnerResponse:
+        """Delete object owner"""
+
+        request = DeleteObjectOwnerRequest()
+        request.ownable_type = ownable_type
+        request.ownable_id = ownable_id
+
+        return await self._unary_unary(
+            "/com.bigeye.models.generated.ObjectOwnerService/DeleteObjectOwner",
+            request,
+            ObjectOwnerResponse,
         )

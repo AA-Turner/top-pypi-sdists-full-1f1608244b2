@@ -2,12 +2,21 @@ from __future__ import annotations
 
 import ast
 import os
+import shutil
 import site
 from functools import lru_cache
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from codeflash.cli_cmds.console import logger
+
+
+def encoded_tokens_len(s: str) -> int:
+    """Return the approximate length of the encoded tokens.
+
+    It's an approximation of BPE encoding (https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf).
+    """
+    return int(len(s) * 0.25)
 
 
 def get_qualified_name(module_name: str, full_qualified_name: str) -> str:
@@ -118,4 +127,8 @@ def has_any_async_functions(code: str) -> bool:
 
 def cleanup_paths(paths: list[Path]) -> None:
     for path in paths:
-        path.unlink(missing_ok=True)
+        if path and path.exists():
+            if path.is_dir():
+                shutil.rmtree(path, ignore_errors=True)
+            else:
+                path.unlink(missing_ok=True)

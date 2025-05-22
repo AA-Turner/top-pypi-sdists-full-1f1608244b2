@@ -10,6 +10,7 @@ from enum import Enum
 import httpx
 from sqlglot import parse_one, exp
 
+import domolibrary.client.ResponseGetData as rgd
 import domolibrary.client.DomoAuth as dmda
 import domolibrary.client.DomoError as dmde
 
@@ -228,12 +229,15 @@ class StreamConfig:
 
         self.parent.configuration_query = self.value
 
-        for table in parse_one(self.value).find_all(exp.Table):
+        try:
+            for table in parse_one(self.value).find_all(exp.Table):
 
-            self.parent.configuration_tables.append(table.name.lower())
-            self.parent.configuration_tables = sorted(
-                list(set(self.parent.configuration_tables))
-            )
+                self.parent.configuration_tables.append(table.name.lower())
+                self.parent.configuration_tables = sorted(
+                    list(set(self.parent.configuration_tables))
+                )
+        except:
+            return None
 
         return self.parent.configuration_tables
 
@@ -348,6 +352,7 @@ class DomoStream:
         cls,
         auth: dmda.DomoAuth,
         stream_id: str,
+        is_suppress_errros: bool = False,
         debug_num_stacks_to_drop=2,
         debug_api: bool = False,
         return_raw: bool = False,

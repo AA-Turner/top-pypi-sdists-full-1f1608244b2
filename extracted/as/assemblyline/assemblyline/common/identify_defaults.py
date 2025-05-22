@@ -422,8 +422,6 @@ trusted_mimes = {
     "application/vnd.ms-cab-compressed": "archive/cabinet",
     "application/zstd": "archive/zstd",
     "application/x-zstd": "archive/zstd",
-    # Inspired by https://github.com/CAPESandbox/sflock/blob/1fe3cf32d01d66c4ad38696c609b13d4f4bc9ea3/sflock/ident.py#L116
-    "application/x-7z-compressed": "archive/7-zip",
     "application/x-bzip2": "archive/bzip2",
     "application/java-archive": "java/jar",
     # JAVA Class
@@ -435,7 +433,6 @@ trusted_mimes = {
     "message/rfc822": "document/email",
     "text/calendar": "text/calendar",
     "application/x-mach-binary": "executable/mach-o",
-    "application/x-iso9660-image": "archive/iso",
     "application/x-gettext-translation": "resource/mo",
     "application/x-hwp": "document/office/hwp",
     "application/vnd.iccprofile": "metadata/iccprofile",
@@ -451,6 +448,7 @@ trusted_mimes = {
 # LibMagic mimetypes that we will fallback to when we can't determine a type
 untrusted_mimes = {
     "application/javascript": "code/javascript",
+    "application/x-powershell": "code/ps1",
     "text/x-java": "code/java",
     "text/html": "code/html",
     "text/x-c++": "code/c++",

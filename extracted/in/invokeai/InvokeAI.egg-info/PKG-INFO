@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: InvokeAI
-Version: 5.11.0
+Version: 5.12.0
 Summary: An implementation of Stable Diffusion which provides various new features and options to aid the image generation process
 Author-email: The InvokeAI Project <lincoln.stein@gmail.com>
 License:                                  Apache License
@@ -223,7 +223,7 @@ Requires-Dist: opencv-python==4.9.0.80
 Requires-Dist: safetensors
 Requires-Dist: sentencepiece
 Requires-Dist: spandrel
-Requires-Dist: torch~=2.6.0
+Requires-Dist: torch~=2.7.0
 Requires-Dist: torchsde
 Requires-Dist: torchvision
 Requires-Dist: transformers

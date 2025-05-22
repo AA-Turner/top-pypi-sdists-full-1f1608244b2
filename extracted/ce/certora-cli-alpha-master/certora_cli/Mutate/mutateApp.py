@@ -44,7 +44,9 @@ from CertoraProver.certoraContextValidator import KEY_ENV_VAR
 from Mutate import mutateConstants as MConstants
 from Shared import certoraUtils as Util
 from Shared.certoraLogging import LoggingManager
-from certoraRun import run_certora, CertoraRunResult, CertoraFoundViolations
+from certoraRun import run_certora
+from Shared.proverCommon import CertoraRunResult, CertoraFoundViolations
+from certoraSorobanProver import run_soroban_prover
 from Shared import certoraValidateFuncs as Vf
 from CertoraProver.Compiler.CompilerCollectorFactory import get_relevant_compiler
 from Mutate import mutateUtil as MutUtil
@@ -1416,7 +1418,10 @@ class MutateApp:
             certora_args.extend(["--disable_local_typechecking"])
         mutation_logger.debug(f"Running the Prover: {certora_args}")
         try:
-            certora_run_result = run_certora(certora_args)
+            if self.is_soroban_run():
+                certora_run_result = run_soroban_prover(certora_args)
+            else:
+                certora_run_result = run_certora(certora_args)
         except CertoraFoundViolations as e:
             assert e.results, "expect e.results not to be None"
             certora_run_result = e.results

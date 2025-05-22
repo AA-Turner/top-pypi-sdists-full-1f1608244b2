@@ -57,12 +57,39 @@ class NodeKey:
         else:
             return self.path
 
+    def drop_root(self, root):
+        path = self.path.drop_root(root)
+        if path is None:
+            return None
+        return NodeKey(path, self.obj)
+
+    def join(self, *parts):
+        if len(parts) == 0:
+            return self
+        if self.obj is not None:
+            raise Exception('Cannot join a node key with an object path')
+        last_part = parts[-1]
+        try:
+            to_path(last_part)
+            return NodeKey(self.path.join(*parts), None)
+        except ValueError:
+            return NodeKey(self.path.join(*parts[:-1]), last_part)
+
+    def is_descendent_of(self, other: 'NodeKey'):
+        if other.obj is None:
+            return self.path.is_descendent_of(other.path)
+        else:
+            return self.path == other.path
+
     def __repr__(self):
         path_str = str(self.path)
         quoted_path_str = repr(path_str)
         if self.obj is None:
             return f'{self.__class__.__name__}({quoted_path_str})'
         return f'{self.__class__.__name__}({quoted_path_str}, {self.obj})'
+
+    def __eq__(self, other):
+        return self.path.parts == other.path.parts and self.obj == other.obj
 
 
 def names_to_node_keys(names: Union[InputName, InputNames]) -> List[NodeKey]:

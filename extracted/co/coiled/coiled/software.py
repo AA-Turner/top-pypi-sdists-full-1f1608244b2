@@ -10,8 +10,8 @@ from pip_requirements_parser import RequirementsFile
 from yaml import safe_load
 
 from coiled.pypi_conda_map import CONDA_TO_PYPI
-from coiled.software_utils import get_index_urls
-from coiled.types import CondaEnvSchema, PackageSchema, SoftwareEnvSpec
+from coiled.software_utils import get_index_urls, set_auth_for_url
+from coiled.types import CondaEnvSchema, PackageSchema, SoftwareEnvSpec, parse_conda_channel
 
 logger = getLogger(__file__)
 
@@ -47,11 +47,11 @@ def parse_conda(
     else:
         schema = conda
     if "channels" not in schema:
-        schema["channels"] = ["conda-forge"]
+        schema["channels"] = ["https://conda.anaconda.org/conda-forge"]
     if "dependencies" not in schema:
         raise TypeError("No dependencies in conda spec")
     raw_conda: CondaEnvSchema = {
-        "channels": schema["channels"],
+        "channels": [set_auth_for_url(parse_conda_channel("", channel, "noarch")[1]) for channel in schema["channels"]],
         "dependencies": schema["dependencies"],
     }
     packages: List[PackageSchema] = []
@@ -68,8 +68,12 @@ def parse_conda(
             if not match:
                 continue
             dep, specifier = match.groups()
+            pkg_name = CONDA_TO_PYPI.get(dep, dep)
+            if channel is not None:
+                channel = set_auth_for_url(parse_conda_channel(pkg_name, channel, "noarch")[1])
+                raw_conda["channels"].append(channel)
             packages.append({
-                "name": CONDA_TO_PYPI.get(dep, dep),
+                "name": pkg_name,
                 "source": "conda",
                 "channel": channel,
                 "conda_name": dep,
@@ -80,6 +84,7 @@ def parse_conda(
             })
 
     raw_conda["dependencies"] = deps
+    raw_conda["channels"] = list(set(raw_conda["channels"]))
     return packages, raw_conda, raw_pip
 
 
@@ -145,7 +150,10 @@ async def create_env_spec(
         spec["packages"].extend(packages)
     if not conda:
         python_version = platform.python_version()
-        spec["raw_conda"] = {"channels": ["conda-forge", "pkgs/main"], "dependencies": [f"python=={python_version}"]}
+        spec["raw_conda"] = {
+            "channels": ["https://conda.anaconda.org/conda-forge", "https://repo.anaconda.com/pkgs/main"],
+            "dependencies": [f"python=={python_version}"],
+        }
         spec["packages"].append({
             "name": "python",
             "source": "conda",
@@ -186,13 +194,18 @@ async def create_env_spec(
     has_pip_installed_package = any(p for p in spec["packages"] if p["source"] == "pip")
     if not conda_installed_pip and has_pip_installed_package:
         if not spec["raw_conda"]:
-            spec["raw_conda"] = {"channels": ["conda-forge", "pkgs/main"], "dependencies": ["pip"]}
+            spec["raw_conda"] = {
+                "channels": ["https://conda.anaconda.org/conda-forge", "https://repo.anaconda.com/pkgs/main"],
+                "dependencies": ["pip"],
+            }
         else:
             assert "dependencies" in spec["raw_conda"]  # make pyright happy
             assert "channels" in spec["raw_conda"]
             spec["raw_conda"]["dependencies"].append("pip")
-            if "pkgs/main" not in spec["raw_conda"]["channels"] and "conda-forge" not in spec["raw_conda"]["channels"]:
-                spec["raw_conda"]["channels"].append("pkgs/main")
+            if not any(
+                chan.rstrip("/").endswith(("/pkgs/main", "/conda-forge")) for chan in spec["raw_conda"]["channels"]
+            ):
+                spec["raw_conda"]["channels"].append("https://repo.anaconda.com/pkgs/main")
         spec["packages"].append({
             "name": "pip",
             "source": "conda",

@@ -1,6 +1,6 @@
-Metadata-Version: 2.4
+Metadata-Version: 2.2
 Name: numcodecs
-Version: 0.16.0
+Version: 0.15.1
 Summary: A Python package providing buffer compression and transformation codecs for use in data storage and communication applications.
 Maintainer-email: Alistair Miles <alimanfoo@googlemail.com>
 License: MIT
@@ -22,7 +22,7 @@ Requires-Python: >=3.11
 Description-Content-Type: text/x-rst
 License-File: LICENSE.txt
 Requires-Dist: numpy>=1.24
-Requires-Dist: typing_extensions
+Requires-Dist: deprecated
 Provides-Extra: docs
 Requires-Dist: sphinx; extra == "docs"
 Requires-Dist: sphinx-issues; extra == "docs"
@@ -42,7 +42,6 @@ Provides-Extra: pcodec
 Requires-Dist: pcodec<0.4,>=0.3; extra == "pcodec"
 Provides-Extra: crc32c
 Requires-Dist: crc32c>=2.7; extra == "crc32c"
-Dynamic: license-file
 
 Numcodecs
 =========

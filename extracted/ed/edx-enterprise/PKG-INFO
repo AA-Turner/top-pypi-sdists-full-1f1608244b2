@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: edx-enterprise
-Version: 5.13.7
+Version: 6.0.1
 Summary: Your project description goes here
 Home-page: https://github.com/openedx/edx-enterprise
 Author: edX
@@ -14,7 +14,6 @@ Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)
 Classifier: Natural Language :: English
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.11
 Provides-Extra: braze
 License-File: LICENSE
@@ -108,6 +107,14 @@ Change Log
 Unreleased
 ----------
 * nothing unreleased
+
+[6.0.1]
+--------
+* feat: adding EnterpriseCustomerAdmin creation to post save signal
+
+[6.0.0]
+--------
+* chore: add python 3.12 support and drop python 3.8 support
 
 [5.13.7]
 ---------

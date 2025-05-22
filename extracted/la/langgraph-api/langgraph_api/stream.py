@@ -87,6 +87,7 @@ async def astream_state(
     # extract args from run
     kwargs = run["kwargs"].copy()
     kwargs.pop("webhook", None)
+    kwargs.pop("resumable", False)
     subgraphs = kwargs.get("subgraphs", False)
     temporary = kwargs.pop("temporary", False)
     config = kwargs.pop("config")
@@ -278,19 +279,25 @@ async def astream_state(
         yield "feedback", feedback_urls
 
 
-async def consume(stream: AnyStream, run_id: str) -> None:
+async def consume(stream: AnyStream, run_id: str, resumable: bool = False) -> None:
     async with aclosing(stream):
         try:
             async for mode, payload in stream:
                 await Runs.Stream.publish(
-                    run_id, mode, await run_in_executor(None, json_dumpb, payload)
+                    run_id,
+                    mode,
+                    await run_in_executor(None, json_dumpb, payload),
+                    resumable=resumable,
                 )
         except Exception as e:
             g = e
             if isinstance(e, ExceptionGroup):
                 e = e.exceptions[0]
             await Runs.Stream.publish(
-                run_id, "error", await run_in_executor(None, json_dumpb, e)
+                run_id,
+                "error",
+                await run_in_executor(None, json_dumpb, e),
+                resumable=resumable,
             )
             raise e from g
 

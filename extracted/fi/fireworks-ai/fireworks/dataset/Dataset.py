@@ -294,12 +294,6 @@ class Dataset:
         # Ensure the hash is positive by using the unsigned value (& with MAXINT)
         return mmh3.hash(content) & 0x7FFFFFFF
 
-    def __del__(self):
-        """Clean up file handles when the object is destroyed"""
-        if self._file_stream is not None and not self._file_stream.closed:
-            self._file_stream.close()
-        self._gateway._channel.close()
-
     def delete(self):
         """
         Delete this dataset from Fireworks

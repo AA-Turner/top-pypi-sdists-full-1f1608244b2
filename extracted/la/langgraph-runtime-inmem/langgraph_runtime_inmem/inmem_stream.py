@@ -1,16 +1,22 @@
 import asyncio
 import logging
 from collections import defaultdict
+from collections.abc import Iterator
 from dataclasses import dataclass
 from uuid import UUID
 
 logger = logging.getLogger(__name__)
 
 
+def _ensure_uuid(id: str | UUID) -> UUID:
+    return UUID(id) if isinstance(id, str) else id
+
+
 @dataclass
 class Message:
     topic: bytes
     data: bytes
+    id: bytes | None = None
 
 
 class ContextQueue(asyncio.Queue):
@@ -38,10 +44,21 @@ class StreamManager:
         self.queues = defaultdict(list)  # Dict[UUID, List[asyncio.Queue]]
         self.control_queues = defaultdict(list)
 
-    def get_queues(self, run_id: UUID) -> list[asyncio.Queue]:
+        self.message_stores = defaultdict(list)  # Dict[UUID, List[Message]]
+        self.message_next_idx = defaultdict(int)  # Dict[UUID, int]
+
+    def get_queues(self, run_id: UUID | str) -> list[asyncio.Queue]:
+        run_id = _ensure_uuid(run_id)
         return self.queues[run_id]
 
-    async def put(self, run_id: UUID, message: Message) -> None:
+    async def put(
+        self, run_id: UUID | str, message: Message, resumable: bool = False
+    ) -> None:
+        run_id = _ensure_uuid(run_id)
+        message.id = str(self.message_next_idx[run_id]).encode()
+        self.message_next_idx[run_id] += 1
+        if resumable:
+            self.message_stores[run_id].append(message)
         topic = message.topic.decode()
         if "control" in topic:
             self.control_queues[run_id].append(message)
@@ -52,7 +69,8 @@ class StreamManager:
             if isinstance(result, Exception):
                 logger.exception(f"Failed to put message in queue: {result}")
 
-    async def add_queue(self, run_id: UUID) -> asyncio.Queue:
+    async def add_queue(self, run_id: UUID | str) -> asyncio.Queue:
+        run_id = _ensure_uuid(run_id)
         queue = ContextQueue()
         self.queues[run_id].append(queue)
         for control_msg in self.control_queues[run_id]:
@@ -65,11 +83,28 @@ class StreamManager:
 
         return queue
 
-    async def remove_queue(self, run_id: UUID, queue: asyncio.Queue):
+    async def remove_queue(self, run_id: UUID | str, queue: asyncio.Queue):
+        run_id = _ensure_uuid(run_id)
         if run_id in self.queues:
             self.queues[run_id].remove(queue)
             if not self.queues[run_id]:
                 del self.queues[run_id]
+                if run_id in self.message_stores:
+                    del self.message_stores[run_id]
+
+    def restore_messages(
+        self, run_id: UUID | str, message_id: str | None
+    ) -> Iterator[Message]:
+        """Get a stored message by ID for resumable streams."""
+        run_id = _ensure_uuid(run_id)
+        message_idx = int(message_id) + 1 if message_id else None
+
+        if message_idx is None:
+            yield from []
+            return
+
+        if run_id in self.message_stores:
+            yield from self.message_stores[run_id][message_idx:]
 
 
 # Global instance
@@ -102,6 +137,7 @@ async def stop_stream() -> None:
     # Clear all stored data
     stream_manager.queues.clear()
     stream_manager.control_queues.clear()
+    stream_manager.message_stores.clear()
 
 
 def get_stream_manager() -> StreamManager:

@@ -267,10 +267,9 @@ Status BlobFileBuilder::CompressBlobIfNeeded(
   // TODO: allow user CompressionOptions, including max_compressed_bytes_per_kb
   CompressionOptions opts;
   CompressionContext context(blob_compression_type_, opts);
-  constexpr uint64_t sample_for_compression = 0;
 
   CompressionInfo info(opts, context, CompressionDict::GetEmptyDict(),
-                       blob_compression_type_, sample_for_compression);
+                       blob_compression_type_);
 
   constexpr uint32_t compression_format_version = 2;
 
@@ -279,8 +278,8 @@ Status BlobFileBuilder::CompressBlobIfNeeded(
   {
     StopWatch stop_watch(immutable_options_->clock, immutable_options_->stats,
                          BLOB_DB_COMPRESSION_MICROS);
-    success =
-        CompressData(*blob, info, compression_format_version, compressed_blob);
+    success = OLD_CompressData(*blob, info, compression_format_version,
+                               compressed_blob);
   }
 
   if (!success) {

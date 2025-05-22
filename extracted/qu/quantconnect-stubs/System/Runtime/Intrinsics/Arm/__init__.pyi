@@ -6814,82 +6814,6 @@ class Sve(System.Runtime.Intrinsics.Arm.AdvSimd, metaclass=abc.ABCMeta):
         ...
 
 
-class Aes(System.Runtime.Intrinsics.Arm.ArmBase, metaclass=abc.ABCMeta):
-    """Provides access to the ARM AES hardware instructions via intrinsics."""
-
-    class Arm64(System.Runtime.Intrinsics.Arm.ArmBase.Arm64, metaclass=abc.ABCMeta):
-        """Provides access to the ARM AES hardware instructions, that are only available to 64-bit processes, via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-    IS_SUPPORTED: bool
-    """Gets a value that indicates whether the APIs in this class are supported."""
-
-    @staticmethod
-    def decrypt(value: System.Runtime.Intrinsics.Vector128[int], round_key: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint8x16_t vaesdq_u8 (uint8x16_t data, uint8x16_t key)  A32: AESD.8 Qd, Qm  A64: AESD Vd.16B, Vn.16B"""
-        ...
-
-    @staticmethod
-    def encrypt(value: System.Runtime.Intrinsics.Vector128[int], round_key: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint8x16_t vaeseq_u8 (uint8x16_t data, uint8x16_t key)  A32: AESE.8 Qd, Qm  A64: AESE Vd.16B, Vn.16B"""
-        ...
-
-    @staticmethod
-    def inverse_mix_columns(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint8x16_t vaesimcq_u8 (uint8x16_t data)  A32: AESIMC.8 Qd, Qm  A64: AESIMC Vd.16B, Vn.16B"""
-        ...
-
-    @staticmethod
-    def mix_columns(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint8x16_t vaesmcq_u8 (uint8x16_t data)  A32: AESMC.8 Qd, Qm  A64: AESMC V>.16B, Vn.16B"""
-        ...
-
-    @staticmethod
-    def polynomial_multiply_widening_lower(left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """poly128_t vmull_p64 (poly64_t a, poly64_t b)  A32: VMULL.P8 Qd, Dn, Dm  A64: PMULL Vd.1Q, Vn.1D, Vm.1D"""
-        ...
-
-    @staticmethod
-    def polynomial_multiply_widening_upper(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """poly128_t vmull_high_p64 (poly64x2_t a, poly64x2_t b)  A32: VMULL.P8 Qd, Dn+1, Dm+1  A64: PMULL2 Vd.1Q, Vn.2D, Vm.2D"""
-        ...
-
-
-class Sha256(System.Runtime.Intrinsics.Arm.ArmBase, metaclass=abc.ABCMeta):
-    """Provides access to the ARM SHA256 hardware instructions via intrinsics."""
-
-    class Arm64(System.Runtime.Intrinsics.Arm.ArmBase.Arm64, metaclass=abc.ABCMeta):
-        """Provides access to the ARM SHA256 hardware instructions, that are only available to 64-bit processes, via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-    IS_SUPPORTED: bool
-    """Gets a value that indicates whether the APIs in this class are supported."""
-
-    @staticmethod
-    def hash_update_1(hash_abcd: System.Runtime.Intrinsics.Vector128[int], hash_efgh: System.Runtime.Intrinsics.Vector128[int], wk: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint32x4_t vsha256hq_u32 (uint32x4_t hash_abcd, uint32x4_t hash_efgh, uint32x4_t wk)  A32: SHA256H.32 Qd, Qn, Qm  A64: SHA256H Qd, Qn, Vm.4S"""
-        ...
-
-    @staticmethod
-    def hash_update_2(hash_efgh: System.Runtime.Intrinsics.Vector128[int], hash_abcd: System.Runtime.Intrinsics.Vector128[int], wk: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint32x4_t vsha256h2q_u32 (uint32x4_t hash_efgh, uint32x4_t hash_abcd, uint32x4_t wk)  A32: SHA256H2.32 Qd, Qn, Qm  A64: SHA256H2 Qd, Qn, Vm.4S"""
-        ...
-
-    @staticmethod
-    def schedule_update_0(w_0_3: System.Runtime.Intrinsics.Vector128[int], w_4_7: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint32x4_t vsha256su0q_u32 (uint32x4_t w_0_3, uint32x4_t w_4_7)  A32: SHA256SU0.32 Qd, Qm  A64: SHA256SU0 Vd.4S, Vn.4S"""
-        ...
-
-    @staticmethod
-    def schedule_update_1(w_0_3: System.Runtime.Intrinsics.Vector128[int], w_8_11: System.Runtime.Intrinsics.Vector128[int], w_12_15: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
-        """uint32x4_t vsha256su1q_u32 (uint32x4_t w_0_3, uint32x4_t w_8_11, uint32x4_t w_12_15)  A32: SHA256SU1.32 Qd, Qn, Qm  A64: SHA256SU1 Vd.4S, Vn.4S, Vm.4S"""
-        ...
-
-
 class Sha1(System.Runtime.Intrinsics.Arm.ArmBase, metaclass=abc.ABCMeta):
     """Provides access to the ARM SHA1 hardware instructions via intrinsics."""
 
@@ -6930,39 +6854,6 @@ class Sha1(System.Runtime.Intrinsics.Arm.ArmBase, metaclass=abc.ABCMeta):
     @staticmethod
     def schedule_update_1(tw_0_3: System.Runtime.Intrinsics.Vector128[int], w_12_15: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
         """uint32x4_t vsha1su1q_u32 (uint32x4_t tw_0_3, uint32x4_t w_12_15)  A32: SHA1SU1.32 Qd, Qm  A64: SHA1SU1 Vd.4S, Vn.4S"""
-        ...
-
-
-class Crc32(System.Runtime.Intrinsics.Arm.ArmBase, metaclass=abc.ABCMeta):
-    """Provides access to the ARM Crc32 hardware instructions via intrinsics."""
-
-    class Arm64(System.Runtime.Intrinsics.Arm.ArmBase.Arm64, metaclass=abc.ABCMeta):
-        """Provides access to the ARM Crc32 hardware instructions, that are only available to 64-bit processes, via intrinsics."""
-
-        IS_SUPPORTED: bool
-        """Gets a value that indicates whether the APIs in this class are supported."""
-
-        @staticmethod
-        def compute_crc_32(crc: int, data: int) -> int:
-            """uint32_t __crc32d (uint32_t a, uint64_t b)  A64: CRC32X Wd, Wn, Xm"""
-            ...
-
-        @staticmethod
-        def compute_crc_32c(crc: int, data: int) -> int:
-            """uint32_t __crc32cd (uint32_t a, uint64_t b)  A64: CRC32CX Wd, Wn, Xm"""
-            ...
-
-    IS_SUPPORTED: bool
-    """Gets a value that indicates whether the APIs in this class are supported."""
-
-    @staticmethod
-    def compute_crc_32(crc: int, data: int) -> int:
-        """uint32_t __crc32b (uint32_t a, uint8_t b)  A32: CRC32B Rd, Rn, Rm  A64: CRC32B Wd, Wn, Wm"""
-        ...
-
-    @staticmethod
-    def compute_crc_32c(crc: int, data: int) -> int:
-        """uint32_t __crc32cb (uint32_t a, uint8_t b)  A32: CRC32CB Rd, Rn, Rm  A64: CRC32CB Wd, Wn, Wm"""
         ...
 
 
@@ -7082,6 +6973,142 @@ class Rdm(System.Runtime.Intrinsics.Arm.AdvSimd, metaclass=abc.ABCMeta):
     @overload
     def multiply_rounded_doubling_by_selected_scalar_and_subtract_saturate_high(minuend: System.Runtime.Intrinsics.Vector128[int], left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int], right_index: int) -> System.Runtime.Intrinsics.Vector128[int]:
         """int16x8_t vqrdmlshq_laneq_s16 (int16x8_t a, int16x8_t b, int16x8_t v, const int lane)  A32: VQRDMLSH.S16 Qd, Qn, Dm[lane]  A64: SQRDMLSH Vd.8H, Vn.8H, Vm.H[lane]"""
+        ...
+
+
+class Sha256(System.Runtime.Intrinsics.Arm.ArmBase, metaclass=abc.ABCMeta):
+    """Provides access to the ARM SHA256 hardware instructions via intrinsics."""
+
+    class Arm64(System.Runtime.Intrinsics.Arm.ArmBase.Arm64, metaclass=abc.ABCMeta):
+        """Provides access to the ARM SHA256 hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+    IS_SUPPORTED: bool
+    """Gets a value that indicates whether the APIs in this class are supported."""
+
+    @staticmethod
+    def hash_update_1(hash_abcd: System.Runtime.Intrinsics.Vector128[int], hash_efgh: System.Runtime.Intrinsics.Vector128[int], wk: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint32x4_t vsha256hq_u32 (uint32x4_t hash_abcd, uint32x4_t hash_efgh, uint32x4_t wk)  A32: SHA256H.32 Qd, Qn, Qm  A64: SHA256H Qd, Qn, Vm.4S"""
+        ...
+
+    @staticmethod
+    def hash_update_2(hash_efgh: System.Runtime.Intrinsics.Vector128[int], hash_abcd: System.Runtime.Intrinsics.Vector128[int], wk: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint32x4_t vsha256h2q_u32 (uint32x4_t hash_efgh, uint32x4_t hash_abcd, uint32x4_t wk)  A32: SHA256H2.32 Qd, Qn, Qm  A64: SHA256H2 Qd, Qn, Vm.4S"""
+        ...
+
+    @staticmethod
+    def schedule_update_0(w_0_3: System.Runtime.Intrinsics.Vector128[int], w_4_7: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint32x4_t vsha256su0q_u32 (uint32x4_t w_0_3, uint32x4_t w_4_7)  A32: SHA256SU0.32 Qd, Qm  A64: SHA256SU0 Vd.4S, Vn.4S"""
+        ...
+
+    @staticmethod
+    def schedule_update_1(w_0_3: System.Runtime.Intrinsics.Vector128[int], w_8_11: System.Runtime.Intrinsics.Vector128[int], w_12_15: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint32x4_t vsha256su1q_u32 (uint32x4_t w_0_3, uint32x4_t w_8_11, uint32x4_t w_12_15)  A32: SHA256SU1.32 Qd, Qn, Qm  A64: SHA256SU1 Vd.4S, Vn.4S, Vm.4S"""
+        ...
+
+
+class Crc32(System.Runtime.Intrinsics.Arm.ArmBase, metaclass=abc.ABCMeta):
+    """Provides access to the ARM Crc32 hardware instructions via intrinsics."""
+
+    class Arm64(System.Runtime.Intrinsics.Arm.ArmBase.Arm64, metaclass=abc.ABCMeta):
+        """Provides access to the ARM Crc32 hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+        @staticmethod
+        def compute_crc_32(crc: int, data: int) -> int:
+            """uint32_t __crc32d (uint32_t a, uint64_t b)  A64: CRC32X Wd, Wn, Xm"""
+            ...
+
+        @staticmethod
+        def compute_crc_32c(crc: int, data: int) -> int:
+            """uint32_t __crc32cd (uint32_t a, uint64_t b)  A64: CRC32CX Wd, Wn, Xm"""
+            ...
+
+    IS_SUPPORTED: bool
+    """Gets a value that indicates whether the APIs in this class are supported."""
+
+    @staticmethod
+    def compute_crc_32(crc: int, data: int) -> int:
+        """uint32_t __crc32b (uint32_t a, uint8_t b)  A32: CRC32B Rd, Rn, Rm  A64: CRC32B Wd, Wn, Wm"""
+        ...
+
+    @staticmethod
+    def compute_crc_32c(crc: int, data: int) -> int:
+        """uint32_t __crc32cb (uint32_t a, uint8_t b)  A32: CRC32CB Rd, Rn, Rm  A64: CRC32CB Wd, Wn, Wm"""
+        ...
+
+
+class Sve2(System.Runtime.Intrinsics.Arm.Sve, metaclass=abc.ABCMeta):
+    """This class provides access to the ARM SVE hardware instructions via intrinsics"""
+
+    class Arm64(System.Runtime.Intrinsics.Arm.Sve.Arm64, metaclass=abc.ABCMeta):
+        """This class has no documentation."""
+
+        IS_SUPPORTED: bool
+
+    IS_SUPPORTED: bool
+
+    @staticmethod
+    def bitwise_clear_xor(xor: System.Numerics.Vector[int], value: System.Numerics.Vector[int], mask: System.Numerics.Vector[int]) -> System.Numerics.Vector[int]:
+        """
+        svuint8_t svbcax[_u8](svuint8_t op1, svuint8_t op2, svuint8_t op3)
+          BCAX Ztied1.D, Ztied1.D, Zop2.D, Zop3.D
+        """
+        ...
+
+    @staticmethod
+    def shift_left_and_insert(left: System.Numerics.Vector[int], right: System.Numerics.Vector[int], shift: int) -> System.Numerics.Vector[int]:
+        """
+        svuint8_t svsli[_n_u8](svuint8_t op1, svuint8_t op2, uint64_t imm3)
+          SLI Ztied1.B, Zop2.B, #imm3
+        """
+        ...
+
+
+class Aes(System.Runtime.Intrinsics.Arm.ArmBase, metaclass=abc.ABCMeta):
+    """Provides access to the ARM AES hardware instructions via intrinsics."""
+
+    class Arm64(System.Runtime.Intrinsics.Arm.ArmBase.Arm64, metaclass=abc.ABCMeta):
+        """Provides access to the ARM AES hardware instructions, that are only available to 64-bit processes, via intrinsics."""
+
+        IS_SUPPORTED: bool
+        """Gets a value that indicates whether the APIs in this class are supported."""
+
+    IS_SUPPORTED: bool
+    """Gets a value that indicates whether the APIs in this class are supported."""
+
+    @staticmethod
+    def decrypt(value: System.Runtime.Intrinsics.Vector128[int], round_key: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint8x16_t vaesdq_u8 (uint8x16_t data, uint8x16_t key)  A32: AESD.8 Qd, Qm  A64: AESD Vd.16B, Vn.16B"""
+        ...
+
+    @staticmethod
+    def encrypt(value: System.Runtime.Intrinsics.Vector128[int], round_key: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint8x16_t vaeseq_u8 (uint8x16_t data, uint8x16_t key)  A32: AESE.8 Qd, Qm  A64: AESE Vd.16B, Vn.16B"""
+        ...
+
+    @staticmethod
+    def inverse_mix_columns(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint8x16_t vaesimcq_u8 (uint8x16_t data)  A32: AESIMC.8 Qd, Qm  A64: AESIMC Vd.16B, Vn.16B"""
+        ...
+
+    @staticmethod
+    def mix_columns(value: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """uint8x16_t vaesmcq_u8 (uint8x16_t data)  A32: AESMC.8 Qd, Qm  A64: AESMC V>.16B, Vn.16B"""
+        ...
+
+    @staticmethod
+    def polynomial_multiply_widening_lower(left: System.Runtime.Intrinsics.Vector64[int], right: System.Runtime.Intrinsics.Vector64[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """poly128_t vmull_p64 (poly64_t a, poly64_t b)  A32: VMULL.P8 Qd, Dn, Dm  A64: PMULL Vd.1Q, Vn.1D, Vm.1D"""
+        ...
+
+    @staticmethod
+    def polynomial_multiply_widening_upper(left: System.Runtime.Intrinsics.Vector128[int], right: System.Runtime.Intrinsics.Vector128[int]) -> System.Runtime.Intrinsics.Vector128[int]:
+        """poly128_t vmull_high_p64 (poly64x2_t a, poly64x2_t b)  A32: VMULL.P8 Qd, Dn+1, Dm+1  A64: PMULL2 Vd.1Q, Vn.2D, Vm.2D"""
         ...
 
 

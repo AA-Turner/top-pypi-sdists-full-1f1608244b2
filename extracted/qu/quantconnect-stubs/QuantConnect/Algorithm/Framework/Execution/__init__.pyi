@@ -277,21 +277,15 @@ class NullExecutionModel(QuantConnect.Algorithm.Framework.Execution.ExecutionMod
         ...
 
 
-class ExecutionModelPythonWrapper(QuantConnect.Algorithm.Framework.Execution.ExecutionModel):
-    """Provides an implementation of IExecutionModel that wraps a PyObject object"""
-
-    def __init__(self, model: typing.Any) -> None:
-        """
-        Constructor for initialising the IExecutionModel class with wrapped PyObject object
-        
-        :param model: Model defining how to execute trades to reach a portfolio target
-        """
-        ...
+class ImmediateExecutionModel(QuantConnect.Algorithm.Framework.Execution.ExecutionModel):
+    """
+    Provides an implementation of IExecutionModel that immediately submits
+    market orders to achieve the desired portfolio targets
+    """
 
     def execute(self, algorithm: QuantConnect.Algorithm.QCAlgorithm, targets: typing.List[QuantConnect.Algorithm.Framework.Portfolio.IPortfolioTarget]) -> None:
         """
-        Submit orders for the specified portfolio targets.
-        This model is free to delay or spread out these orders as it sees fit
+        Immediately submits orders for the specified portfolio targets.
         
         :param algorithm: The algorithm instance
         :param targets: The portfolio targets to be ordered
@@ -308,15 +302,21 @@ class ExecutionModelPythonWrapper(QuantConnect.Algorithm.Framework.Execution.Exe
         ...
 
 
-class ImmediateExecutionModel(QuantConnect.Algorithm.Framework.Execution.ExecutionModel):
-    """
-    Provides an implementation of IExecutionModel that immediately submits
-    market orders to achieve the desired portfolio targets
-    """
+class ExecutionModelPythonWrapper(QuantConnect.Algorithm.Framework.Execution.ExecutionModel):
+    """Provides an implementation of IExecutionModel that wraps a PyObject object"""
+
+    def __init__(self, model: typing.Any) -> None:
+        """
+        Constructor for initialising the IExecutionModel class with wrapped PyObject object
+        
+        :param model: Model defining how to execute trades to reach a portfolio target
+        """
+        ...
 
     def execute(self, algorithm: QuantConnect.Algorithm.QCAlgorithm, targets: typing.List[QuantConnect.Algorithm.Framework.Portfolio.IPortfolioTarget]) -> None:
         """
-        Immediately submits orders for the specified portfolio targets.
+        Submit orders for the specified portfolio targets.
+        This model is free to delay or spread out these orders as it sees fit
         
         :param algorithm: The algorithm instance
         :param targets: The portfolio targets to be ordered

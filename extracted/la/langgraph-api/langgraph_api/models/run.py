@@ -77,6 +77,8 @@ class RunCreateDict(TypedDict):
     """
     stream_subgraphs: bool | None
     """Stream output from subgraphs. By default, streams only the top graph."""
+    stream_resumable: bool | None
+    """Whether to persist the stream chunks in order to resume the stream later."""
     feedback_keys: list[str] | None
     """Pass one or more feedback_keys if you want to request short-lived signed URLs
     for submitting feedback to LangSmith with this key for this run."""
@@ -305,6 +307,7 @@ async def create_valid_run(
             "feedback_keys": payload.get("feedback_keys"),
             "temporary": temporary,
             "subgraphs": payload.get("stream_subgraphs", False),
+            "resumable": payload.get("stream_resumable", False),
             "checkpoint_during": payload.get("checkpoint_during", True),
         },
         metadata=payload.get("metadata"),

@@ -31,6 +31,7 @@ class Info(BaseModel):
     Provides information about the connector.
     """ # noqa: E501
     app_id: StrictStr = Field(description="A unique ID for this connector, that computers read.")
+    app_vendor_domain: Optional[StrictStr] = Field(default=None, description="The domain name of the company or organization that provides the third-party app. Used to identify the external vendor associated with the app.")
     version: StrictStr = Field(description="A version string unique to a build of this connector.  This may look like semantic versioning, but that may change in the future.")
     capabilities: List[StrictStr] = Field(description="All capabilities provided by this connector.")
     capability_schema: Dict[str, CapabilitySchema] = Field(description="A map of capability names to schemas (how to call them, what they return)")
@@ -44,7 +45,7 @@ class Info(BaseModel):
     entitlement_types: List[EntitlementType] = Field(description="A list of entitlement types supported by this connector.")
     resource_types: List[ResourceType] = Field(description="A list of resource types supported by this connector.")
     request_settings_schema: Dict[str, Any] = Field(description="A JSON schema that tells clients how to send request.settings for this app.")
-    __properties: ClassVar[List[str]] = ["app_id", "version", "capabilities", "capability_schema", "oauth_scopes", "authentication_schema", "credentials_schema", "logo_url", "user_friendly_name", "description", "categories", "entitlement_types", "resource_types", "request_settings_schema"]
+    __properties: ClassVar[List[str]] = ["app_id", "app_vendor_domain", "version", "capabilities", "capability_schema", "oauth_scopes", "authentication_schema", "credentials_schema", "logo_url", "user_friendly_name", "description", "categories", "entitlement_types", "resource_types", "request_settings_schema"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -119,6 +120,7 @@ class Info(BaseModel):
 
         _obj = cls.model_validate({
             "app_id": obj.get("app_id"),
+            "app_vendor_domain": obj.get("app_vendor_domain"),
             "version": obj.get("version"),
             "capabilities": obj.get("capabilities"),
             "capability_schema": dict(

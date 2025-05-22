@@ -22,7 +22,8 @@ scripts_dir_path = Path(__file__).parent.resolve()  # containing directory
 sys.path.insert(0, str(scripts_dir_path))
 
 import CertoraProver.certoraContextAttributes as Attrs
-from certoraRun import run_certora, CertoraRunResult
+from Shared.proverCommon import CertoraRunResult
+from certoraRun import run_certora
 from typing import List, Optional
 
 

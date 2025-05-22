@@ -195,6 +195,7 @@ class _IncidentWorkflowState:
         pulumi.set(self, "team", value)
 
 
+@pulumi.type_token("pagerduty:index/incidentWorkflow:IncidentWorkflow")
 class IncidentWorkflow(pulumi.CustomResource):
     @overload
     def __init__(__self__,

@@ -160,7 +160,7 @@ impl<'a> AwsSign<'a, HashMap<String, String>> {
         //     })
         //     .collect();
         
-        debug!("{:#?}", &url);
+        dbg!("{:#?}", &url);
         let url: Url = url.parse().unwrap();
         // let headers: HashMap<String, String> = headers
         //     .iter()
@@ -1263,6 +1263,8 @@ mod tests {
             port: 443,
             api_key: None,
             ttl: None,
+            tls: Some(true),
+            addressing_style: Some("path".to_string()),
         }
     }
 

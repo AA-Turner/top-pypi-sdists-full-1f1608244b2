@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: squareup
-Version: 42.0.0.20250416
+Version: 42.1.0.20250521
 Summary: 
 License: MIT
 Requires-Python: >=3.8,<4.0
@@ -38,6 +38,12 @@ The Square Python library provides convenient access to the Square API from Pyth
 ```sh
 pip install squareup
 ```
+
+## Requirements
+
+Use of the Square Python SDK requires:
+
+* Python 3.8+
 
 ## Usage
 
@@ -160,6 +166,27 @@ for item in response:
 # Alternatively, you can paginate page-by-page.
 for page in response.iter_pages():
     yield page
+```
+
+## File Uploads
+
+Files are uploaded with the [File](./src/square/core/file.py) type, which is constructed as a tuple in
+a variety of formats. You can customize the filename and `Content-Type` of the individual `multipart/form-data`
+part like so:
+
+```python
+invoice_pdf = client.invoices.create_invoice_attachment(
+    invoice_id="inv:0-ChA4-3sU9GPd-uOC3HgvFjMWEL4N",
+    image_file=(
+         os.path.basename(pdf_filepath), # The filename to include in the `multipart/form-data` part.
+         open(pdf_filepath, "rb"),       # The file stream, read as binary data.
+         "application/pdf"               # The Content-Type for this particular file.
+    ),
+    request={
+        "idempotency_key": str(uuid.uuid4()),
+        "description": f"Invoice-{pdf_filepath}",
+    }
+)
 ```
 
 ## Exception Handling

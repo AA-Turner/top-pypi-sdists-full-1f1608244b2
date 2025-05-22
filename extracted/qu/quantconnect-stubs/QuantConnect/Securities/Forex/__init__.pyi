@@ -9,31 +9,6 @@ import QuantConnect.Securities
 import QuantConnect.Securities.Forex
 
 
-class ForexCache(QuantConnect.Securities.SecurityCache):
-    """Forex specific caching support"""
-
-    def __init__(self) -> None:
-        """Initialize forex cache"""
-        ...
-
-
-class ForexDataFilter(QuantConnect.Securities.SecurityDataFilter):
-    """Forex packet by packet data filtering mechanism for dynamically detecting bad ticks."""
-
-    def __init__(self) -> None:
-        """Initialize forex data filter class:"""
-        ...
-
-    def filter(self, vehicle: QuantConnect.Securities.Security, data: QuantConnect.Data.BaseData) -> bool:
-        """
-        Forex data filter: a true value means accept the packet, a false means fail.
-        
-        :param vehicle: Security asset
-        :param data: Data object we're scanning to filter
-        """
-        ...
-
-
 class Forex(QuantConnect.Securities.Security, QuantConnect.Securities.IBaseCurrencySymbol):
     """FOREX Security Object Implementation for FOREX Assets"""
 
@@ -106,6 +81,23 @@ class ForexHolding(QuantConnect.Securities.SecurityHolding):
         ...
 
 
+class ForexDataFilter(QuantConnect.Securities.SecurityDataFilter):
+    """Forex packet by packet data filtering mechanism for dynamically detecting bad ticks."""
+
+    def __init__(self) -> None:
+        """Initialize forex data filter class:"""
+        ...
+
+    def filter(self, vehicle: QuantConnect.Securities.Security, data: QuantConnect.Data.BaseData) -> bool:
+        """
+        Forex data filter: a true value means accept the packet, a false means fail.
+        
+        :param vehicle: Security asset
+        :param data: Data object we're scanning to filter
+        """
+        ...
+
+
 class ForexExchange(QuantConnect.Securities.SecurityExchange):
     """Forex exchange class - information and helper tools for forex exchange properties"""
 
@@ -130,6 +122,14 @@ class ForexExchange(QuantConnect.Securities.SecurityExchange):
         
         :param exchange_hours: Contains the weekly exchange schedule plus holidays
         """
+        ...
+
+
+class ForexCache(QuantConnect.Securities.SecurityCache):
+    """Forex specific caching support"""
+
+    def __init__(self) -> None:
+        """Initialize forex cache"""
         ...
 
 

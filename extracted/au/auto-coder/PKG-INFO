@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: auto-coder
-Version: 0.1.379
+Version: 0.1.381
 Summary: AutoCoder: AutoCoder
 Author: allwefantasy
 Classifier: Programming Language :: Python :: 3.10
@@ -43,6 +43,7 @@ Requires-Dist: python-docx
 Requires-Dist: docx2txt
 Requires-Dist: pdf2image
 Requires-Dist: docx2pdf
+Requires-Dist: pypdf
 Requires-Dist: pyperclip
 Requires-Dist: colorama
 Requires-Dist: pylint

@@ -23,6 +23,7 @@ def case_add_module() -> Case:
         auth=BasicCredential,
         exception_handlers=[],
         description_data=DescriptionData(
+            app_vendor_domain="test.com",
             user_friendly_name="test_modules_cases.py",
             categories=[],
         ),
@@ -42,6 +43,7 @@ def case_register_module_capabilities() -> Case:
         auth=BasicCredential,
         exception_handlers=[],
         description_data=DescriptionData(
+            app_vendor_domain="test.com",
             user_friendly_name="test_modules_cases.py",
             categories=[],
         ),

@@ -7,10 +7,12 @@ from transformers import AutoModel, AutoConfig
 
 from .layers import LayersFuser
 from ..utils import is_module_available, MissedPackageException
+from typing import Optional, Union
 
 IS_LLM2VEC = is_module_available('llm2vec')
 IS_PEFT = is_module_available('peft')
 IS_TURBOT5 = is_module_available('turbot5')
+IS_FLASHDEBERTA = is_module_available('flashdeberta')
 
 if IS_LLM2VEC:
     from llm2vec.models import MistralBiModel, LlamaBiModel, GemmaBiModel, Qwen2BiModel
@@ -28,23 +30,39 @@ if IS_TURBOT5:
 else:
     from transformers import T5EncoderModel
 
+if IS_FLASHDEBERTA:
+    from flashdeberta import FlashDebertaV2Model as DebertaV2Model
+else:
+    from transformers import DebertaV2Model
+
 if IS_PEFT:
     from peft import LoraConfig, get_peft_model
 
 class Transformer(nn.Module):
-    def __init__(self, model_name, config, from_pretrained=False, labels_encoder = False):
+    def __init__(
+        self, 
+        model_name, 
+        config, 
+        from_pretrained=False, 
+        labels_encoder = False, 
+        cache_dir:Optional[Union[str, Path]] = None
+    ):
         super().__init__()
         if labels_encoder:
             encoder_config = config.labels_encoder_config
         else:
             encoder_config = config.encoder_config
         if encoder_config is None:
-            encoder_config = AutoConfig.from_pretrained(model_name)
+            encoder_config = AutoConfig.from_pretrained(model_name, cache_dir=cache_dir)
             if config.vocab_size!=-1:
                 encoder_config.vocab_size = config.vocab_size
 
+        if config._attn_implementation is not None and not labels_encoder:
+            encoder_config._attn_implementation = config._attn_implementation
+
         config_name = encoder_config.__class__.__name__
 
+        kwargs = {}
         if config_name in DECODER_MODEL_MAPPING:
             if not IS_LLM2VEC:
                 raise MissedPackageException(f"The llm2vec package must be installed to use this decoder model: {config_name}")
@@ -52,14 +70,14 @@ class Transformer(nn.Module):
                 print('Loading decoder model using LLM2Vec...')
                 ModelClass = DECODER_MODEL_MAPPING[config_name]
             custom = True
-            kwargs = {}
         elif config_name in {'T5Config', 'MT5Config'}:
             custom = True
             ModelClass = T5EncoderModel
             if IS_TURBOT5:
                 kwargs = {"attention_type": 'flash'}
-            else:
-                kwargs = {}
+        elif config_name in {'DebertaV2Config'}:
+            custom = True
+            ModelClass = DebertaV2Model
         else:
             custom = False
             ModelClass = AutoModel
@@ -107,11 +125,11 @@ class Transformer(nn.Module):
         return encoder_layer
     
 class Encoder(nn.Module):
-    def __init__(self, config, from_pretrained: bool = False):
+    def __init__(self, config, from_pretrained: bool = False, cache_dir: Optional[Union[str, Path]]= None):
         super().__init__()
 
         self.bert_layer = Transformer( #transformer_model
-            config.model_name, config, from_pretrained,
+            config.model_name, config, from_pretrained, cache_dir = cache_dir
         )
 
         bert_hidden_size = self.bert_layer.model.config.hidden_size
@@ -137,11 +155,11 @@ class Encoder(nn.Module):
         return token_embeddings
 
 class BiEncoder(Encoder):
-    def __init__(self, config, from_pretrained: bool = False):
+    def __init__(self, config, from_pretrained: bool = False, cache_dir:Optional[Union[str, Path]] = None):
         super().__init__(config, from_pretrained)
         if config.labels_encoder is not None:
             self.labels_encoder = Transformer( #transformer_model
-                config.labels_encoder, config, from_pretrained, True
+                config.labels_encoder, config, from_pretrained, True, cache_dir=cache_dir
             )
             le_hidden_size = self.labels_encoder.model.config.hidden_size
 

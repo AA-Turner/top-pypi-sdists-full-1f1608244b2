@@ -588,6 +588,7 @@ class InfoModule(BaseIntegrationModule):
             "info": {
                 "x-app-id": app.app_id,
                 "x-app-logo-url": app.description_data.logo_url,
+                "x-app-vendor-domain": app.description_data.app_vendor_domain,
                 "title": app.description_data.user_friendly_name,
                 "description": app.description_data.description,
                 "version": app.version,
