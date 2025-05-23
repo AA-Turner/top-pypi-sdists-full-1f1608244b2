@@ -1,13 +1,21 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 import typing  # noqa: F401
-import numbers # noqa: F401
 from typing_extensions import TypedDict, NotRequired, Literal # noqa: F401
-from dash.development.base_component import Component
-try:
-    from dash.development.base_component import ComponentType # noqa: F401
-except ImportError:
-    ComponentType = typing.TypeVar("ComponentType", bound=Component)
+from dash.development.base_component import Component, _explicitize_args
+
+ComponentType = typing.Union[
+    str,
+    int,
+    float,
+    Component,
+    None,
+    typing.Sequence[typing.Union[str, int, float, Component, None]],
+]
+
+NumberType = typing.Union[
+    typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex
+]
 
 
 class RadioButton(Component):
@@ -89,7 +97,6 @@ Keyword arguments:
     _namespace = 'dash_bootstrap_components'
     _type = 'RadioButton'
 
-    _explicitize_dash_init = True
 
     def __init__(
         self,
@@ -101,12 +108,12 @@ Keyword arguments:
         style: typing.Optional[typing.Any] = None,
         input_style: typing.Optional[dict] = None,
         input_class_name: typing.Optional[str] = None,
-        label: typing.Optional[typing.Union[str, int, float, ComponentType, typing.Sequence[typing.Union[str, int, float, ComponentType]]]] = None,
+        label: typing.Optional[ComponentType] = None,
         label_id: typing.Optional[str] = None,
         label_style: typing.Optional[dict] = None,
         label_class_name: typing.Optional[str] = None,
         name: typing.Optional[str] = None,
-        persistence: typing.Optional[typing.Union[bool, str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        persistence: typing.Optional[typing.Union[bool, str, NumberType]] = None,
         persisted_props: typing.Optional[typing.Sequence[Literal["value"]]] = None,
         persistence_type: typing.Optional[Literal["local", "session", "memory"]] = None,
         className: typing.Optional[str] = None,
@@ -126,3 +133,5 @@ Keyword arguments:
         args = {k: _locals[k] for k in _explicit_args}
 
         super(RadioButton, self).__init__(**args)
+
+setattr(RadioButton, "__init__", _explicitize_args(RadioButton.__init__))

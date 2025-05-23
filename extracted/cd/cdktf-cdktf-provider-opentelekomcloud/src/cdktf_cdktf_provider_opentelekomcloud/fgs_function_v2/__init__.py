@@ -1,7 +1,7 @@
 r'''
 # `opentelekomcloud_fgs_function_v2`
 
-Refer to the Terraform Registry for docs: [`opentelekomcloud_fgs_function_v2`](https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2).
+Refer to the Terraform Registry for docs: [`opentelekomcloud_fgs_function_v2`](https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class FgsFunctionV2(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-opentelekomcloud.fgsFunctionV2.FgsFunctionV2",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2 opentelekomcloud_fgs_function_v2}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2 opentelekomcloud_fgs_function_v2}.'''
 
     def __init__(
         self,
@@ -96,47 +96,47 @@ class FgsFunctionV2(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2 opentelekomcloud_fgs_function_v2} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2 opentelekomcloud_fgs_function_v2} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param memory_size: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#memory_size FgsFunctionV2#memory_size}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.
-        :param runtime: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#runtime FgsFunctionV2#runtime}.
-        :param timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#timeout FgsFunctionV2#timeout}.
-        :param agency: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#agency FgsFunctionV2#agency}.
-        :param app: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#app FgsFunctionV2#app}.
-        :param app_agency: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#app_agency FgsFunctionV2#app_agency}.
-        :param code_filename: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#code_filename FgsFunctionV2#code_filename}.
-        :param code_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#code_type FgsFunctionV2#code_type}.
-        :param code_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#code_url FgsFunctionV2#code_url}.
-        :param concurrency_num: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#concurrency_num FgsFunctionV2#concurrency_num}.
-        :param custom_image: custom_image block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#custom_image FgsFunctionV2#custom_image}
-        :param depend_list: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#depend_list FgsFunctionV2#depend_list}.
-        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#description FgsFunctionV2#description}.
-        :param encrypted_user_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#encrypted_user_data FgsFunctionV2#encrypted_user_data}.
-        :param func_code: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#func_code FgsFunctionV2#func_code}.
-        :param func_mounts: func_mounts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#func_mounts FgsFunctionV2#func_mounts}
-        :param functiongraph_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#functiongraph_version FgsFunctionV2#functiongraph_version}.
-        :param gpu_memory: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#gpu_memory FgsFunctionV2#gpu_memory}.
-        :param handler: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#handler FgsFunctionV2#handler}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#id FgsFunctionV2#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param initializer_handler: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#initializer_handler FgsFunctionV2#initializer_handler}.
-        :param initializer_timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#initializer_timeout FgsFunctionV2#initializer_timeout}.
-        :param log_group_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#log_group_id FgsFunctionV2#log_group_id}.
-        :param log_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#log_group_name FgsFunctionV2#log_group_name}.
-        :param log_topic_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#log_topic_id FgsFunctionV2#log_topic_id}.
-        :param log_topic_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#log_topic_name FgsFunctionV2#log_topic_name}.
-        :param max_instance_num: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#max_instance_num FgsFunctionV2#max_instance_num}.
-        :param mount_user_group_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#mount_user_group_id FgsFunctionV2#mount_user_group_id}.
-        :param mount_user_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#mount_user_id FgsFunctionV2#mount_user_id}.
-        :param network_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#network_id FgsFunctionV2#network_id}.
-        :param reserved_instances: reserved_instances block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#reserved_instances FgsFunctionV2#reserved_instances}
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#tags FgsFunctionV2#tags}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#timeouts FgsFunctionV2#timeouts}
-        :param user_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#user_data FgsFunctionV2#user_data}.
-        :param versions: versions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#versions FgsFunctionV2#versions}
-        :param vpc_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#vpc_id FgsFunctionV2#vpc_id}.
+        :param memory_size: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#memory_size FgsFunctionV2#memory_size}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.
+        :param runtime: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#runtime FgsFunctionV2#runtime}.
+        :param timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#timeout FgsFunctionV2#timeout}.
+        :param agency: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#agency FgsFunctionV2#agency}.
+        :param app: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#app FgsFunctionV2#app}.
+        :param app_agency: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#app_agency FgsFunctionV2#app_agency}.
+        :param code_filename: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#code_filename FgsFunctionV2#code_filename}.
+        :param code_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#code_type FgsFunctionV2#code_type}.
+        :param code_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#code_url FgsFunctionV2#code_url}.
+        :param concurrency_num: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#concurrency_num FgsFunctionV2#concurrency_num}.
+        :param custom_image: custom_image block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#custom_image FgsFunctionV2#custom_image}
+        :param depend_list: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#depend_list FgsFunctionV2#depend_list}.
+        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#description FgsFunctionV2#description}.
+        :param encrypted_user_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#encrypted_user_data FgsFunctionV2#encrypted_user_data}.
+        :param func_code: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#func_code FgsFunctionV2#func_code}.
+        :param func_mounts: func_mounts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#func_mounts FgsFunctionV2#func_mounts}
+        :param functiongraph_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#functiongraph_version FgsFunctionV2#functiongraph_version}.
+        :param gpu_memory: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#gpu_memory FgsFunctionV2#gpu_memory}.
+        :param handler: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#handler FgsFunctionV2#handler}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#id FgsFunctionV2#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param initializer_handler: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#initializer_handler FgsFunctionV2#initializer_handler}.
+        :param initializer_timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#initializer_timeout FgsFunctionV2#initializer_timeout}.
+        :param log_group_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#log_group_id FgsFunctionV2#log_group_id}.
+        :param log_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#log_group_name FgsFunctionV2#log_group_name}.
+        :param log_topic_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#log_topic_id FgsFunctionV2#log_topic_id}.
+        :param log_topic_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#log_topic_name FgsFunctionV2#log_topic_name}.
+        :param max_instance_num: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#max_instance_num FgsFunctionV2#max_instance_num}.
+        :param mount_user_group_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#mount_user_group_id FgsFunctionV2#mount_user_group_id}.
+        :param mount_user_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#mount_user_id FgsFunctionV2#mount_user_id}.
+        :param network_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#network_id FgsFunctionV2#network_id}.
+        :param reserved_instances: reserved_instances block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#reserved_instances FgsFunctionV2#reserved_instances}
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#tags FgsFunctionV2#tags}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#timeouts FgsFunctionV2#timeouts}
+        :param user_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#user_data FgsFunctionV2#user_data}.
+        :param versions: versions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#versions FgsFunctionV2#versions}
+        :param vpc_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#vpc_id FgsFunctionV2#vpc_id}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -211,7 +211,7 @@ class FgsFunctionV2(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the FgsFunctionV2 to import.
-        :param import_from_id: The id of the existing FgsFunctionV2 that should be imported. Refer to the {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing FgsFunctionV2 that should be imported. Refer to the {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the FgsFunctionV2 to import is found.
         '''
         if __debug__:
@@ -232,10 +232,10 @@ class FgsFunctionV2(
         working_dir: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#url FgsFunctionV2#url}.
-        :param args: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#args FgsFunctionV2#args}.
-        :param command: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#command FgsFunctionV2#command}.
-        :param working_dir: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#working_dir FgsFunctionV2#working_dir}.
+        :param url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#url FgsFunctionV2#url}.
+        :param args: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#args FgsFunctionV2#args}.
+        :param command: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#command FgsFunctionV2#command}.
+        :param working_dir: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#working_dir FgsFunctionV2#working_dir}.
         '''
         value = FgsFunctionV2CustomImage(
             url=url, args=args, command=command, working_dir=working_dir
@@ -277,8 +277,8 @@ class FgsFunctionV2(
         delete: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#create FgsFunctionV2#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#delete FgsFunctionV2#delete}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#create FgsFunctionV2#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#delete FgsFunctionV2#delete}.
         '''
         value = FgsFunctionV2Timeouts(create=create, delete=delete)
 
@@ -1177,43 +1177,43 @@ class FgsFunctionV2Config(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param memory_size: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#memory_size FgsFunctionV2#memory_size}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.
-        :param runtime: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#runtime FgsFunctionV2#runtime}.
-        :param timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#timeout FgsFunctionV2#timeout}.
-        :param agency: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#agency FgsFunctionV2#agency}.
-        :param app: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#app FgsFunctionV2#app}.
-        :param app_agency: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#app_agency FgsFunctionV2#app_agency}.
-        :param code_filename: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#code_filename FgsFunctionV2#code_filename}.
-        :param code_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#code_type FgsFunctionV2#code_type}.
-        :param code_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#code_url FgsFunctionV2#code_url}.
-        :param concurrency_num: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#concurrency_num FgsFunctionV2#concurrency_num}.
-        :param custom_image: custom_image block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#custom_image FgsFunctionV2#custom_image}
-        :param depend_list: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#depend_list FgsFunctionV2#depend_list}.
-        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#description FgsFunctionV2#description}.
-        :param encrypted_user_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#encrypted_user_data FgsFunctionV2#encrypted_user_data}.
-        :param func_code: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#func_code FgsFunctionV2#func_code}.
-        :param func_mounts: func_mounts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#func_mounts FgsFunctionV2#func_mounts}
-        :param functiongraph_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#functiongraph_version FgsFunctionV2#functiongraph_version}.
-        :param gpu_memory: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#gpu_memory FgsFunctionV2#gpu_memory}.
-        :param handler: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#handler FgsFunctionV2#handler}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#id FgsFunctionV2#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param initializer_handler: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#initializer_handler FgsFunctionV2#initializer_handler}.
-        :param initializer_timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#initializer_timeout FgsFunctionV2#initializer_timeout}.
-        :param log_group_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#log_group_id FgsFunctionV2#log_group_id}.
-        :param log_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#log_group_name FgsFunctionV2#log_group_name}.
-        :param log_topic_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#log_topic_id FgsFunctionV2#log_topic_id}.
-        :param log_topic_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#log_topic_name FgsFunctionV2#log_topic_name}.
-        :param max_instance_num: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#max_instance_num FgsFunctionV2#max_instance_num}.
-        :param mount_user_group_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#mount_user_group_id FgsFunctionV2#mount_user_group_id}.
-        :param mount_user_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#mount_user_id FgsFunctionV2#mount_user_id}.
-        :param network_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#network_id FgsFunctionV2#network_id}.
-        :param reserved_instances: reserved_instances block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#reserved_instances FgsFunctionV2#reserved_instances}
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#tags FgsFunctionV2#tags}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#timeouts FgsFunctionV2#timeouts}
-        :param user_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#user_data FgsFunctionV2#user_data}.
-        :param versions: versions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#versions FgsFunctionV2#versions}
-        :param vpc_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#vpc_id FgsFunctionV2#vpc_id}.
+        :param memory_size: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#memory_size FgsFunctionV2#memory_size}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.
+        :param runtime: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#runtime FgsFunctionV2#runtime}.
+        :param timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#timeout FgsFunctionV2#timeout}.
+        :param agency: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#agency FgsFunctionV2#agency}.
+        :param app: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#app FgsFunctionV2#app}.
+        :param app_agency: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#app_agency FgsFunctionV2#app_agency}.
+        :param code_filename: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#code_filename FgsFunctionV2#code_filename}.
+        :param code_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#code_type FgsFunctionV2#code_type}.
+        :param code_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#code_url FgsFunctionV2#code_url}.
+        :param concurrency_num: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#concurrency_num FgsFunctionV2#concurrency_num}.
+        :param custom_image: custom_image block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#custom_image FgsFunctionV2#custom_image}
+        :param depend_list: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#depend_list FgsFunctionV2#depend_list}.
+        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#description FgsFunctionV2#description}.
+        :param encrypted_user_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#encrypted_user_data FgsFunctionV2#encrypted_user_data}.
+        :param func_code: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#func_code FgsFunctionV2#func_code}.
+        :param func_mounts: func_mounts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#func_mounts FgsFunctionV2#func_mounts}
+        :param functiongraph_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#functiongraph_version FgsFunctionV2#functiongraph_version}.
+        :param gpu_memory: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#gpu_memory FgsFunctionV2#gpu_memory}.
+        :param handler: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#handler FgsFunctionV2#handler}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#id FgsFunctionV2#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param initializer_handler: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#initializer_handler FgsFunctionV2#initializer_handler}.
+        :param initializer_timeout: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#initializer_timeout FgsFunctionV2#initializer_timeout}.
+        :param log_group_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#log_group_id FgsFunctionV2#log_group_id}.
+        :param log_group_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#log_group_name FgsFunctionV2#log_group_name}.
+        :param log_topic_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#log_topic_id FgsFunctionV2#log_topic_id}.
+        :param log_topic_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#log_topic_name FgsFunctionV2#log_topic_name}.
+        :param max_instance_num: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#max_instance_num FgsFunctionV2#max_instance_num}.
+        :param mount_user_group_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#mount_user_group_id FgsFunctionV2#mount_user_group_id}.
+        :param mount_user_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#mount_user_id FgsFunctionV2#mount_user_id}.
+        :param network_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#network_id FgsFunctionV2#network_id}.
+        :param reserved_instances: reserved_instances block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#reserved_instances FgsFunctionV2#reserved_instances}
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#tags FgsFunctionV2#tags}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#timeouts FgsFunctionV2#timeouts}
+        :param user_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#user_data FgsFunctionV2#user_data}.
+        :param versions: versions block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#versions FgsFunctionV2#versions}
+        :param vpc_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#vpc_id FgsFunctionV2#vpc_id}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1420,71 +1420,71 @@ class FgsFunctionV2Config(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def memory_size(self) -> jsii.Number:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#memory_size FgsFunctionV2#memory_size}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#memory_size FgsFunctionV2#memory_size}.'''
         result = self._values.get("memory_size")
         assert result is not None, "Required property 'memory_size' is missing"
         return typing.cast(jsii.Number, result)
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def runtime(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#runtime FgsFunctionV2#runtime}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#runtime FgsFunctionV2#runtime}.'''
         result = self._values.get("runtime")
         assert result is not None, "Required property 'runtime' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def timeout(self) -> jsii.Number:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#timeout FgsFunctionV2#timeout}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#timeout FgsFunctionV2#timeout}.'''
         result = self._values.get("timeout")
         assert result is not None, "Required property 'timeout' is missing"
         return typing.cast(jsii.Number, result)
 
     @builtins.property
     def agency(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#agency FgsFunctionV2#agency}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#agency FgsFunctionV2#agency}.'''
         result = self._values.get("agency")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def app(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#app FgsFunctionV2#app}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#app FgsFunctionV2#app}.'''
         result = self._values.get("app")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def app_agency(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#app_agency FgsFunctionV2#app_agency}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#app_agency FgsFunctionV2#app_agency}.'''
         result = self._values.get("app_agency")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def code_filename(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#code_filename FgsFunctionV2#code_filename}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#code_filename FgsFunctionV2#code_filename}.'''
         result = self._values.get("code_filename")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def code_type(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#code_type FgsFunctionV2#code_type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#code_type FgsFunctionV2#code_type}.'''
         result = self._values.get("code_type")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def code_url(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#code_url FgsFunctionV2#code_url}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#code_url FgsFunctionV2#code_url}.'''
         result = self._values.get("code_url")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def concurrency_num(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#concurrency_num FgsFunctionV2#concurrency_num}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#concurrency_num FgsFunctionV2#concurrency_num}.'''
         result = self._values.get("concurrency_num")
         return typing.cast(typing.Optional[jsii.Number], result)
 
@@ -1492,32 +1492,32 @@ class FgsFunctionV2Config(_cdktf_9a9027ec.TerraformMetaArguments):
     def custom_image(self) -> typing.Optional["FgsFunctionV2CustomImage"]:
         '''custom_image block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#custom_image FgsFunctionV2#custom_image}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#custom_image FgsFunctionV2#custom_image}
         '''
         result = self._values.get("custom_image")
         return typing.cast(typing.Optional["FgsFunctionV2CustomImage"], result)
 
     @builtins.property
     def depend_list(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#depend_list FgsFunctionV2#depend_list}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#depend_list FgsFunctionV2#depend_list}.'''
         result = self._values.get("depend_list")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def description(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#description FgsFunctionV2#description}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#description FgsFunctionV2#description}.'''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def encrypted_user_data(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#encrypted_user_data FgsFunctionV2#encrypted_user_data}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#encrypted_user_data FgsFunctionV2#encrypted_user_data}.'''
         result = self._values.get("encrypted_user_data")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def func_code(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#func_code FgsFunctionV2#func_code}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#func_code FgsFunctionV2#func_code}.'''
         result = self._values.get("func_code")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1527,32 +1527,32 @@ class FgsFunctionV2Config(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FgsFunctionV2FuncMounts"]]]:
         '''func_mounts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#func_mounts FgsFunctionV2#func_mounts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#func_mounts FgsFunctionV2#func_mounts}
         '''
         result = self._values.get("func_mounts")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FgsFunctionV2FuncMounts"]]], result)
 
     @builtins.property
     def functiongraph_version(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#functiongraph_version FgsFunctionV2#functiongraph_version}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#functiongraph_version FgsFunctionV2#functiongraph_version}.'''
         result = self._values.get("functiongraph_version")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def gpu_memory(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#gpu_memory FgsFunctionV2#gpu_memory}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#gpu_memory FgsFunctionV2#gpu_memory}.'''
         result = self._values.get("gpu_memory")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def handler(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#handler FgsFunctionV2#handler}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#handler FgsFunctionV2#handler}.'''
         result = self._values.get("handler")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#id FgsFunctionV2#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#id FgsFunctionV2#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1562,61 +1562,61 @@ class FgsFunctionV2Config(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def initializer_handler(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#initializer_handler FgsFunctionV2#initializer_handler}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#initializer_handler FgsFunctionV2#initializer_handler}.'''
         result = self._values.get("initializer_handler")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def initializer_timeout(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#initializer_timeout FgsFunctionV2#initializer_timeout}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#initializer_timeout FgsFunctionV2#initializer_timeout}.'''
         result = self._values.get("initializer_timeout")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def log_group_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#log_group_id FgsFunctionV2#log_group_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#log_group_id FgsFunctionV2#log_group_id}.'''
         result = self._values.get("log_group_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def log_group_name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#log_group_name FgsFunctionV2#log_group_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#log_group_name FgsFunctionV2#log_group_name}.'''
         result = self._values.get("log_group_name")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def log_topic_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#log_topic_id FgsFunctionV2#log_topic_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#log_topic_id FgsFunctionV2#log_topic_id}.'''
         result = self._values.get("log_topic_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def log_topic_name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#log_topic_name FgsFunctionV2#log_topic_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#log_topic_name FgsFunctionV2#log_topic_name}.'''
         result = self._values.get("log_topic_name")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def max_instance_num(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#max_instance_num FgsFunctionV2#max_instance_num}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#max_instance_num FgsFunctionV2#max_instance_num}.'''
         result = self._values.get("max_instance_num")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def mount_user_group_id(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#mount_user_group_id FgsFunctionV2#mount_user_group_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#mount_user_group_id FgsFunctionV2#mount_user_group_id}.'''
         result = self._values.get("mount_user_group_id")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def mount_user_id(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#mount_user_id FgsFunctionV2#mount_user_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#mount_user_id FgsFunctionV2#mount_user_id}.'''
         result = self._values.get("mount_user_id")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def network_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#network_id FgsFunctionV2#network_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#network_id FgsFunctionV2#network_id}.'''
         result = self._values.get("network_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1626,14 +1626,14 @@ class FgsFunctionV2Config(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FgsFunctionV2ReservedInstances"]]]:
         '''reserved_instances block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#reserved_instances FgsFunctionV2#reserved_instances}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#reserved_instances FgsFunctionV2#reserved_instances}
         '''
         result = self._values.get("reserved_instances")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FgsFunctionV2ReservedInstances"]]], result)
 
     @builtins.property
     def tags(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#tags FgsFunctionV2#tags}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#tags FgsFunctionV2#tags}.'''
         result = self._values.get("tags")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -1641,14 +1641,14 @@ class FgsFunctionV2Config(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["FgsFunctionV2Timeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#timeouts FgsFunctionV2#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#timeouts FgsFunctionV2#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["FgsFunctionV2Timeouts"], result)
 
     @builtins.property
     def user_data(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#user_data FgsFunctionV2#user_data}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#user_data FgsFunctionV2#user_data}.'''
         result = self._values.get("user_data")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1658,14 +1658,14 @@ class FgsFunctionV2Config(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FgsFunctionV2Versions"]]]:
         '''versions block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#versions FgsFunctionV2#versions}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#versions FgsFunctionV2#versions}
         '''
         result = self._values.get("versions")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FgsFunctionV2Versions"]]], result)
 
     @builtins.property
     def vpc_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#vpc_id FgsFunctionV2#vpc_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#vpc_id FgsFunctionV2#vpc_id}.'''
         result = self._values.get("vpc_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1701,10 +1701,10 @@ class FgsFunctionV2CustomImage:
         working_dir: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#url FgsFunctionV2#url}.
-        :param args: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#args FgsFunctionV2#args}.
-        :param command: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#command FgsFunctionV2#command}.
-        :param working_dir: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#working_dir FgsFunctionV2#working_dir}.
+        :param url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#url FgsFunctionV2#url}.
+        :param args: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#args FgsFunctionV2#args}.
+        :param command: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#command FgsFunctionV2#command}.
+        :param working_dir: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#working_dir FgsFunctionV2#working_dir}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__d1259cc2700c686c31207bc07d6520b12e9e62c845abcfe1598845dba90751c6)
@@ -1724,26 +1724,26 @@ class FgsFunctionV2CustomImage:
 
     @builtins.property
     def url(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#url FgsFunctionV2#url}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#url FgsFunctionV2#url}.'''
         result = self._values.get("url")
         assert result is not None, "Required property 'url' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def args(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#args FgsFunctionV2#args}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#args FgsFunctionV2#args}.'''
         result = self._values.get("args")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def command(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#command FgsFunctionV2#command}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#command FgsFunctionV2#command}.'''
         result = self._values.get("command")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def working_dir(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#working_dir FgsFunctionV2#working_dir}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#working_dir FgsFunctionV2#working_dir}.'''
         result = self._values.get("working_dir")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1892,10 +1892,10 @@ class FgsFunctionV2FuncMounts:
         mount_type: builtins.str,
     ) -> None:
         '''
-        :param local_mount_path: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#local_mount_path FgsFunctionV2#local_mount_path}.
-        :param mount_resource: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#mount_resource FgsFunctionV2#mount_resource}.
-        :param mount_share_path: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#mount_share_path FgsFunctionV2#mount_share_path}.
-        :param mount_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#mount_type FgsFunctionV2#mount_type}.
+        :param local_mount_path: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#local_mount_path FgsFunctionV2#local_mount_path}.
+        :param mount_resource: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#mount_resource FgsFunctionV2#mount_resource}.
+        :param mount_share_path: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#mount_share_path FgsFunctionV2#mount_share_path}.
+        :param mount_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#mount_type FgsFunctionV2#mount_type}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__1fa3547ab9b17d65d041982262c8ff1266215add4d14370434ee5b7c2a600909)
@@ -1912,28 +1912,28 @@ class FgsFunctionV2FuncMounts:
 
     @builtins.property
     def local_mount_path(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#local_mount_path FgsFunctionV2#local_mount_path}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#local_mount_path FgsFunctionV2#local_mount_path}.'''
         result = self._values.get("local_mount_path")
         assert result is not None, "Required property 'local_mount_path' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def mount_resource(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#mount_resource FgsFunctionV2#mount_resource}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#mount_resource FgsFunctionV2#mount_resource}.'''
         result = self._values.get("mount_resource")
         assert result is not None, "Required property 'mount_resource' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def mount_share_path(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#mount_share_path FgsFunctionV2#mount_share_path}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#mount_share_path FgsFunctionV2#mount_share_path}.'''
         result = self._values.get("mount_share_path")
         assert result is not None, "Required property 'mount_share_path' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def mount_type(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#mount_type FgsFunctionV2#mount_type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#mount_type FgsFunctionV2#mount_type}.'''
         result = self._values.get("mount_type")
         assert result is not None, "Required property 'mount_type' is missing"
         return typing.cast(builtins.str, result)
@@ -2174,11 +2174,11 @@ class FgsFunctionV2ReservedInstances:
         tactics_config: typing.Optional[typing.Union["FgsFunctionV2ReservedInstancesTacticsConfig", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param count: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#count FgsFunctionV2#count}.
-        :param qualifier_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#qualifier_name FgsFunctionV2#qualifier_name}.
-        :param qualifier_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#qualifier_type FgsFunctionV2#qualifier_type}.
-        :param idle_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#idle_mode FgsFunctionV2#idle_mode}.
-        :param tactics_config: tactics_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#tactics_config FgsFunctionV2#tactics_config}
+        :param count: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#count FgsFunctionV2#count}.
+        :param qualifier_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#qualifier_name FgsFunctionV2#qualifier_name}.
+        :param qualifier_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#qualifier_type FgsFunctionV2#qualifier_type}.
+        :param idle_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#idle_mode FgsFunctionV2#idle_mode}.
+        :param tactics_config: tactics_config block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#tactics_config FgsFunctionV2#tactics_config}
         '''
         if isinstance(tactics_config, dict):
             tactics_config = FgsFunctionV2ReservedInstancesTacticsConfig(**tactics_config)
@@ -2201,21 +2201,21 @@ class FgsFunctionV2ReservedInstances:
 
     @builtins.property
     def count(self) -> jsii.Number:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#count FgsFunctionV2#count}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#count FgsFunctionV2#count}.'''
         result = self._values.get("count")
         assert result is not None, "Required property 'count' is missing"
         return typing.cast(jsii.Number, result)
 
     @builtins.property
     def qualifier_name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#qualifier_name FgsFunctionV2#qualifier_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#qualifier_name FgsFunctionV2#qualifier_name}.'''
         result = self._values.get("qualifier_name")
         assert result is not None, "Required property 'qualifier_name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def qualifier_type(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#qualifier_type FgsFunctionV2#qualifier_type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#qualifier_type FgsFunctionV2#qualifier_type}.'''
         result = self._values.get("qualifier_type")
         assert result is not None, "Required property 'qualifier_type' is missing"
         return typing.cast(builtins.str, result)
@@ -2224,7 +2224,7 @@ class FgsFunctionV2ReservedInstances:
     def idle_mode(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#idle_mode FgsFunctionV2#idle_mode}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#idle_mode FgsFunctionV2#idle_mode}.'''
         result = self._values.get("idle_mode")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -2234,7 +2234,7 @@ class FgsFunctionV2ReservedInstances:
     ) -> typing.Optional["FgsFunctionV2ReservedInstancesTacticsConfig"]:
         '''tactics_config block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#tactics_config FgsFunctionV2#tactics_config}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#tactics_config FgsFunctionV2#tactics_config}
         '''
         result = self._values.get("tactics_config")
         return typing.cast(typing.Optional["FgsFunctionV2ReservedInstancesTacticsConfig"], result)
@@ -2377,7 +2377,7 @@ class FgsFunctionV2ReservedInstancesOutputReference(
         cron_configs: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["FgsFunctionV2ReservedInstancesTacticsConfigCronConfigs", typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
-        :param cron_configs: cron_configs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#cron_configs FgsFunctionV2#cron_configs}
+        :param cron_configs: cron_configs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#cron_configs FgsFunctionV2#cron_configs}
         '''
         value = FgsFunctionV2ReservedInstancesTacticsConfig(cron_configs=cron_configs)
 
@@ -2508,7 +2508,7 @@ class FgsFunctionV2ReservedInstancesTacticsConfig:
         cron_configs: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.Sequence[typing.Union["FgsFunctionV2ReservedInstancesTacticsConfigCronConfigs", typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
         '''
-        :param cron_configs: cron_configs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#cron_configs FgsFunctionV2#cron_configs}
+        :param cron_configs: cron_configs block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#cron_configs FgsFunctionV2#cron_configs}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__96c50a593c7612d11b214611755ea624cfea5928030e1f1439f2bca4929ebea1)
@@ -2523,7 +2523,7 @@ class FgsFunctionV2ReservedInstancesTacticsConfig:
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FgsFunctionV2ReservedInstancesTacticsConfigCronConfigs"]]]:
         '''cron_configs block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#cron_configs FgsFunctionV2#cron_configs}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#cron_configs FgsFunctionV2#cron_configs}
         '''
         result = self._values.get("cron_configs")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["FgsFunctionV2ReservedInstancesTacticsConfigCronConfigs"]]], result)
@@ -2562,11 +2562,11 @@ class FgsFunctionV2ReservedInstancesTacticsConfigCronConfigs:
         start_time: jsii.Number,
     ) -> None:
         '''
-        :param count: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#count FgsFunctionV2#count}.
-        :param cron: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#cron FgsFunctionV2#cron}.
-        :param expired_time: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#expired_time FgsFunctionV2#expired_time}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.
-        :param start_time: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#start_time FgsFunctionV2#start_time}.
+        :param count: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#count FgsFunctionV2#count}.
+        :param cron: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#cron FgsFunctionV2#cron}.
+        :param expired_time: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#expired_time FgsFunctionV2#expired_time}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.
+        :param start_time: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#start_time FgsFunctionV2#start_time}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__8fb0847412d7b9eb20a51b38b30218152c11af06738b4a2946c32ec623a20d85)
@@ -2585,35 +2585,35 @@ class FgsFunctionV2ReservedInstancesTacticsConfigCronConfigs:
 
     @builtins.property
     def count(self) -> jsii.Number:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#count FgsFunctionV2#count}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#count FgsFunctionV2#count}.'''
         result = self._values.get("count")
         assert result is not None, "Required property 'count' is missing"
         return typing.cast(jsii.Number, result)
 
     @builtins.property
     def cron(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#cron FgsFunctionV2#cron}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#cron FgsFunctionV2#cron}.'''
         result = self._values.get("cron")
         assert result is not None, "Required property 'cron' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def expired_time(self) -> jsii.Number:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#expired_time FgsFunctionV2#expired_time}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#expired_time FgsFunctionV2#expired_time}.'''
         result = self._values.get("expired_time")
         assert result is not None, "Required property 'expired_time' is missing"
         return typing.cast(jsii.Number, result)
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def start_time(self) -> jsii.Number:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#start_time FgsFunctionV2#start_time}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#start_time FgsFunctionV2#start_time}.'''
         result = self._values.get("start_time")
         assert result is not None, "Required property 'start_time' is missing"
         return typing.cast(jsii.Number, result)
@@ -2934,8 +2934,8 @@ class FgsFunctionV2Timeouts:
         delete: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#create FgsFunctionV2#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#delete FgsFunctionV2#delete}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#create FgsFunctionV2#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#delete FgsFunctionV2#delete}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__ce0a3c0451b594328753fee14d65befb2381e71fba6fbafeaa945af986915817)
@@ -2949,13 +2949,13 @@ class FgsFunctionV2Timeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#create FgsFunctionV2#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#create FgsFunctionV2#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#delete FgsFunctionV2#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#delete FgsFunctionV2#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -3064,8 +3064,8 @@ class FgsFunctionV2Versions:
         aliases: typing.Optional[typing.Union["FgsFunctionV2VersionsAliases", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
-        :param name: The version name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#name FgsFunctionV2#name}
-        :param aliases: aliases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#aliases FgsFunctionV2#aliases}
+        :param name: The version name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#name FgsFunctionV2#name}
+        :param aliases: aliases block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#aliases FgsFunctionV2#aliases}
         '''
         if isinstance(aliases, dict):
             aliases = FgsFunctionV2VersionsAliases(**aliases)
@@ -3083,7 +3083,7 @@ class FgsFunctionV2Versions:
     def name(self) -> builtins.str:
         '''The version name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#name FgsFunctionV2#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#name FgsFunctionV2#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -3093,7 +3093,7 @@ class FgsFunctionV2Versions:
     def aliases(self) -> typing.Optional["FgsFunctionV2VersionsAliases"]:
         '''aliases block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#aliases FgsFunctionV2#aliases}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#aliases FgsFunctionV2#aliases}
         '''
         result = self._values.get("aliases")
         return typing.cast(typing.Optional["FgsFunctionV2VersionsAliases"], result)
@@ -3123,8 +3123,8 @@ class FgsFunctionV2VersionsAliases:
         description: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.
-        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#description FgsFunctionV2#description}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.
+        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#description FgsFunctionV2#description}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__c309b89db2c0727ae5b7a278abb2e8066746ebf789f6e39a12910f60111967f4)
@@ -3138,14 +3138,14 @@ class FgsFunctionV2VersionsAliases:
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def description(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#description FgsFunctionV2#description}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#description FgsFunctionV2#description}.'''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -3359,8 +3359,8 @@ class FgsFunctionV2VersionsOutputReference(
         description: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.
-        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/fgs_function_v2#description FgsFunctionV2#description}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#name FgsFunctionV2#name}.
+        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/fgs_function_v2#description FgsFunctionV2#description}.
         '''
         value = FgsFunctionV2VersionsAliases(name=name, description=description)
 

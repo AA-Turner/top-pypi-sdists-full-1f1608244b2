@@ -104,7 +104,12 @@ class HoldsCommandData(Protocol, Generic[T]):
 
 
 class CommandEvent(PersistedExponentEvent):
-    data: CommandDataType = Field(..., discriminator="type")
+    data: CommandDataType
+    require_confirmation: bool = False
+
+
+class MultiCommandEvent(PersistedExponentEvent):
+    data: list[CommandDataType]
     require_confirmation: bool = False
 
 

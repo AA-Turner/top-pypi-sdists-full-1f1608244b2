@@ -1,13 +1,21 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 import typing  # noqa: F401
-import numbers # noqa: F401
 from typing_extensions import TypedDict, NotRequired, Literal # noqa: F401
-from dash.development.base_component import Component
-try:
-    from dash.development.base_component import ComponentType # noqa: F401
-except ImportError:
-    ComponentType = typing.TypeVar("ComponentType", bound=Component)
+from dash.development.base_component import Component, _explicitize_args
+
+ComponentType = typing.Union[
+    str,
+    int,
+    float,
+    Component,
+    None,
+    typing.Sequence[typing.Union[str, int, float, Component, None]],
+]
+
+NumberType = typing.Union[
+    typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex
+]
 
 
 class Input(Component):
@@ -247,15 +255,14 @@ Keyword arguments:
     _namespace = 'dash_bootstrap_components'
     _type = 'Input'
 
-    _explicitize_dash_init = True
 
     def __init__(
         self,
         id: typing.Optional[typing.Union[str, dict]] = None,
         *,
-        value: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
-        n_submit: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
-        n_blur: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
+        value: typing.Optional[typing.Union[str, NumberType]] = None,
+        n_submit: typing.Optional[NumberType] = None,
+        n_blur: typing.Optional[NumberType] = None,
         size: typing.Optional[str] = None,
         valid: typing.Optional[bool] = None,
         invalid: typing.Optional[bool] = None,
@@ -263,32 +270,32 @@ Keyword arguments:
         style: typing.Optional[typing.Any] = None,
         class_name: typing.Optional[str] = None,
         type: typing.Optional[Literal["text", "number", "password", "email", "range", "search", "tel", "url", "hidden", "time"]] = None,
-        step: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        step: typing.Optional[typing.Union[str, NumberType]] = None,
         disabled: typing.Optional[bool] = None,
-        placeholder: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
-        debounce: typing.Optional[typing.Union[bool, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        placeholder: typing.Optional[typing.Union[str, NumberType]] = None,
+        debounce: typing.Optional[typing.Union[bool, NumberType]] = None,
         html_size: typing.Optional[str] = None,
         autocomplete: typing.Optional[str] = None,
         autofocus: typing.Optional[typing.Union[Literal["autoFocus", "autofocus", "AUTOFOCUS"], bool]] = None,
         inputmode: typing.Optional[Literal["verbatim", "latin", "latin-name", "latin-prose", "full-width-latin", "kana", "katakana", "numeric", "tel", "email", "url"]] = None,
         list: typing.Optional[str] = None,
-        max: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
-        maxlength: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
-        min: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
-        minlength: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        max: typing.Optional[typing.Union[str, NumberType]] = None,
+        maxlength: typing.Optional[typing.Union[str, NumberType]] = None,
+        min: typing.Optional[typing.Union[str, NumberType]] = None,
+        minlength: typing.Optional[typing.Union[str, NumberType]] = None,
         required: typing.Optional[typing.Union[Literal["required", "REQUIRED"], bool]] = None,
         readonly: typing.Optional[typing.Union[bool, Literal["readOnly", "readonly", "READONLY"]]] = None,
         name: typing.Optional[str] = None,
         pattern: typing.Optional[str] = None,
         tabindex: typing.Optional[str] = None,
-        persistence: typing.Optional[typing.Union[bool, str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        persistence: typing.Optional[typing.Union[bool, str, NumberType]] = None,
         persisted_props: typing.Optional[typing.Sequence[Literal["value"]]] = None,
         persistence_type: typing.Optional[Literal["local", "session", "memory"]] = None,
         key: typing.Optional[str] = None,
         className: typing.Optional[str] = None,
         tabIndex: typing.Optional[str] = None,
-        maxLength: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
-        minLength: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        maxLength: typing.Optional[typing.Union[str, NumberType]] = None,
+        minLength: typing.Optional[typing.Union[str, NumberType]] = None,
         inputMode: typing.Optional[Literal["verbatim", "latin", "latin-name", "latin-prose", "full-width-latin", "kana", "katakana", "numeric", "tel", "email", "url"]] = None,
         autoComplete: typing.Optional[str] = None,
         autoFocus: typing.Optional[typing.Union[Literal["autoFocus", "autofocus", "AUTOFOCUS"], bool]] = None,
@@ -304,3 +311,5 @@ Keyword arguments:
         args = {k: _locals[k] for k in _explicit_args}
 
         super(Input, self).__init__(**args)
+
+setattr(Input, "__init__", _explicitize_args(Input.__init__))

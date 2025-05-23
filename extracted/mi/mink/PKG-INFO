@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: mink
-Version: 0.0.10
+Version: 0.0.11
 Summary: mink: MuJoCo inverse kinematics.
 Keywords: inverse,kinematics,mujoco
 Author-email: Kevin Zakka <zakka@berkeley.edu>
@@ -16,6 +16,7 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Scientific/Engineering
 License-File: LICENSE
 Requires-Dist: mujoco >= 3.1.6
@@ -27,7 +28,6 @@ Requires-Dist: black ; extra == "dev"
 Requires-Dist: mink[test] ; extra == "dev"
 Requires-Dist: mypy ; extra == "dev"
 Requires-Dist: ruff ; extra == "dev"
-Requires-Dist: dm_control >= 1.0.20 ; extra == "examples"
 Requires-Dist: loop-rate-limiters >= 0.1.0 ; extra == "examples"
 Requires-Dist: qpsolvers[daqp] >= 4.3.1 ; extra == "examples"
 Requires-Dist: osqp >=0.6.2,<1 ; extra == "examples"
@@ -66,14 +66,14 @@ For usage and API reference, see the [documentation](https://kevinzakka.github.i
 If you use mink in your research, please cite it as follows:
 
 ```bibtex
-@software{Zakka_Mink_Python_inverse_2024,
+@software{Zakka_Mink_Python_inverse_2025,
   author = {Zakka, Kevin},
-  license = {Apache-2.0},
-  month = jul,
   title = {{Mink: Python inverse kinematics based on MuJoCo}},
+  year = {2025},
+  month = may,
+  version = {0.0.11},
   url = {https://github.com/kevinzakka/mink},
-  version = {0.0.4},
-  year = {2024}
+  license = {Apache-2.0}
 }
 ```
 

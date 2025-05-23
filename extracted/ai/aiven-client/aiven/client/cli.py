@@ -303,16 +303,22 @@ class AivenCLI(argx.CommandLineTool):
         answer = input(prompt)
         return is_truthy(answer)
 
-    def get_project(self, raise_if_none: bool = True) -> str:
+    def get_project(self, raise_if_none: bool = True, fallback_to_default_project: bool = True) -> str:
         """Return project given as cmdline argument or the default project from config file"""
         if getattr(self.args, "project", None) and self.args.project:
             return self.args.project
-        default_project = self.config.get("default_project", "")
-        if raise_if_none and not default_project:
-            raise argx.UserError(
-                "Specify project: use --project in the command line or the default_project item in the config file."
-            )
-        return default_project
+
+        if fallback_to_default_project:
+            default_project = self.config.get("default_project", "")
+            if raise_if_none and not default_project:
+                raise argx.UserError(
+                    "Specify project: use --project in the command line or the default_project item in the config file."
+                )
+            return default_project
+        elif raise_if_none:
+            raise argx.UserError("A project is required. Use --project in the command line.")
+
+        return ""
 
     @no_auth
     @arg("pattern", nargs="*", help="command search pattern")
@@ -2860,6 +2866,8 @@ ssl.truststore.type=JKS
     @arg.remote_storage_disable
     @arg.local_retention_ms
     @arg.local_retention_bytes
+    @arg.inkless_enable
+    @arg.inkless_disable
     @arg.tag
     @arg(
         "--cleanup-policy",
@@ -2890,6 +2898,7 @@ ssl.truststore.type=JKS
             remote_storage_enable=self._remote_storage_enable(),
             local_retention_ms=self.args.local_retention_ms,
             local_retention_bytes=self.args.local_retention_bytes,
+            inkless_enable=self._inkless_enable(),
             tags=tags,
         )
         print(response)
@@ -2952,6 +2961,16 @@ ssl.truststore.type=JKS
         if self.args.remote_storage_enable:
             return True
         elif self.args.remote_storage_disable:
+            return False
+        else:
+            return None
+
+    def _inkless_enable(self) -> bool | None:
+        if self.args.inkless_enable and self.args.inkless_disable:
+            raise argx.UserError("Only set at most one of --inkless-enable and --inkless-disable")
+        if self.args.inkless_enable:
+            return True
+        elif self.args.inkless_disable:
             return False
         else:
             return None
@@ -4025,7 +4044,7 @@ ssl.truststore.type=JKS
         requested_version = self._extract_user_config_version(service_type, user_config)
 
         if requested_version:
-            self._do_version_eol_check(service_type, requested_version)
+            self._do_version_eol_check(service_type, requested_version, project=project)
 
         service_integrations = []
 
@@ -4101,8 +4120,16 @@ ssl.truststore.type=JKS
 
         return service_def["user_config_schema"]
 
-    def _get_service_version_info(self, service_type: str, version: str) -> Mapping[str, Any]:
-        service_versions = self.client.get_service_versions()
+    def _get_service_versions(self, project: str | None = None) -> Sequence[Mapping[str, Any]]:
+        account_id = None
+        if project:
+            project_data = self.client.get_project(project=project)
+            account_id = project_data["account_id"]
+
+        return self.client.get_service_versions(account_id=account_id)
+
+    def _get_service_version_info(self, service_type: str, version: str, project: str | None = None) -> Mapping[str, Any]:
+        service_versions = self._get_service_versions(project=project)
 
         for service_version in service_versions:
             if service_version["service_type"] == service_type and service_version["major_version"] == version:
@@ -4132,9 +4159,9 @@ ssl.truststore.type=JKS
 
         return user_config.get(service_version_key)
 
-    def _do_version_eol_check(self, service_type: str, requested_version: str) -> None:
+    def _do_version_eol_check(self, service_type: str, requested_version: str, project: str | None = None) -> None:
         """Checks the specified service version against EOL times."""
-        service_version = self._get_service_version_info(service_type, requested_version)
+        service_version = self._get_service_version_info(service_type, requested_version, project=project)
         current_time = get_current_date()
 
         if not service_version["aiven_end_of_life_time"]:
@@ -4276,7 +4303,7 @@ ssl.truststore.type=JKS
         requested_version = self._extract_user_config_version(service_type, user_config)
 
         if requested_version:
-            self._do_version_eol_check(service_type, requested_version)
+            self._do_version_eol_check(service_type, requested_version, project=project)
 
         maintenance = self._get_maintainance()
         project_vpc_id = self._get_service_project_vpc_id()
@@ -5193,9 +5220,11 @@ server_encryption_options:
         self.print_response(result=tickets, table_layout=layout, json=self.args.json)
 
     @arg.json
+    @arg.project
     def service__versions(self) -> None:
         """List service versions"""
-        service_versions = self.client.get_service_versions()
+        project = self.get_project(raise_if_none=False, fallback_to_default_project=False)
+        service_versions = self._get_service_versions(project=project)
         layout = [
             "service_type",
             "major_version",

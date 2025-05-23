@@ -39,9 +39,13 @@ from ai.backend.common import msgpack
 from ai.backend.common.asyncio import current_loop
 from ai.backend.common.docker import ImageRef
 from ai.backend.common.enum_extension import StringSetFlag
-from ai.backend.common.events import (
+from ai.backend.common.events.dispatcher import (
     EventProducer,
+)
+from ai.backend.common.events.kernel import (
     KernelLifecycleEventReason,
+)
+from ai.backend.common.events.model_serving import (
     ModelServiceStatusEvent,
 )
 from ai.backend.common.json import dump_json, load_json
@@ -328,7 +332,7 @@ class AbstractKernel(UserDict, aobject, metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    async def accept_file(self, container_path: os.PathLike | str, filedata) -> None:
+    async def accept_file(self, container_path: os.PathLike | str, filedata: bytes) -> None:
         """
         Put the uploaded file to the designated container path.
         The path should be inside /home/work of the container.

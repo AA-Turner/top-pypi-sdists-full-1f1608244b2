@@ -36,6 +36,7 @@ from music21.musicxml.m21ToXml import (
     GeneralObjectExporter, ScoreExporter,
     MusicXMLWarning, MusicXMLExportException
 )
+from music21.musicxml.xmlToM21 import MeasureParser
 
 def stripInnerSpaces(txt: str):
     '''
@@ -304,6 +305,34 @@ class Test(unittest.TestCase):
         self.assertEqual(ly2.findall('text')[0].text, 'd')
         self.assertEqual(ly2.findall('syllabic')[1].text, 'end')
         self.assertEqual(ly2.findall('text')[1].text, 'e')
+
+    def testExportChordSymbolWithInversions(self):
+        '''
+        This test checks for the issue in 1756 where a chord symbol imported
+        with both inversion and bass would not have them both set.
+
+        There were multiple bugs fixed, so important to check.
+        '''
+        explicitFm6 = harmony.ChordSymbol(root='F', bass='A-', inversion=1, kind='minor')
+        et = self.getET(explicitFm6)
+        harmonyEls = et.findall('part/measure/harmony')
+        self.assertEqual(len(harmonyEls), 1)
+        harmonyEl = harmonyEls[0]
+        # helpers.dump(harmonyEl)
+        root = harmonyEl.find('root')
+        rootStep = root.find('root-step')
+        self.assertEqual(rootStep.text, 'F')
+        self.assertEqual(harmonyEl.find('kind').text, 'minor')
+        self.assertEqual(harmonyEl.find('inversion').text, '1')
+        self.assertEqual(harmonyEl.find('bass/bass-step').text, 'A')
+        self.assertEqual(harmonyEl.find('bass/bass-alter').text, '-1')
+
+        # test round trip
+        mp = MeasureParser()
+        cs = mp.xmlToChordSymbol(harmonyEl)
+        self.assertEqual(explicitFm6.bass(find=False), cs.bass(find=False))
+        self.assertEqual(explicitFm6.root(find=False), cs.root(find=False))
+        self.assertEqual(explicitFm6.inversion(), cs.inversion())
 
     def testExportNC(self):
         s = stream.Score()
@@ -683,6 +712,86 @@ class Test(unittest.TestCase):
         self.assertEqual(
             int(tree.findall('.//direction/offset')[0].text),
             defaults.divisionsPerQuarter)
+
+    def testPedals(self):
+        expectedResults1 = (
+            {
+                'type': 'start',
+                'line': 'yes',
+                'number': '1',
+            },
+            {
+                'type': 'change',
+                'line': 'yes',
+            },
+            {
+                'type': 'discontinue',
+                'line': 'yes',
+            },
+            {
+                'type': 'resume',
+                'line': 'yes',
+            },
+            {
+                'type': 'change',
+                'line': 'yes',
+            },
+            {
+                'type': 'stop',
+                'line': 'yes',
+                'number': '1',
+            },
+        )
+        s = converter.parse(testPrimitive.pedalLines)
+        x = self.getET(s)
+        mxPart = x.find('part')
+        for i, mxPedal in enumerate(mxPart.findall('.//pedal')):
+            with self.subTest(pedal_index=i):
+                for k in expectedResults1[i]:
+                    self.assertEqual(mxPedal.get(k, ''), expectedResults1[i][k])
+
+        startIdx = len(expectedResults1)
+
+        expectedResults2 = (
+            {
+                'type': 'start',
+                'sign': 'yes',
+                'number': '1',
+            },
+            {
+                'type': 'resume',
+                'line': 'yes',
+            },
+            {
+                'type': 'change',
+                'line': 'yes',
+            },
+            {
+                'type': 'discontinue',
+                'line': 'yes',
+            },
+            {
+                'type': 'resume',
+                'line': 'yes',
+            },
+            {
+                'type': 'change',
+                'line': 'yes',
+            },
+            {
+                'type': 'stop',
+                'line': 'yes',
+                'number': '1',
+            },
+        )
+
+        s = converter.parse(testPrimitive.pedalSymLines)
+        x = self.getET(s)
+        mxPart = x.find('part')
+        for i, mxPedal in enumerate(mxPart.findall('.//pedal')):
+            with self.subTest(pedal_index=startIdx + i):
+                for k in expectedResults2[i]:
+                    self.assertEqual(mxPedal.get(k, ''), expectedResults2[i][k])
 
     def testArpeggios(self):
         expectedResults = (

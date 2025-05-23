@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from scope_client.api_bindings.models.alert_bound import AlertBound
+from scope_client.api_bindings.models.alert_rule_interval import AlertRuleInterval
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -33,8 +34,9 @@ class PatchAlertRule(BaseModel):
     bound: Optional[AlertBound] = None
     query: Optional[StrictStr] = None
     metric_name: Optional[StrictStr] = None
+    interval: Optional[AlertRuleInterval] = None
     notification_webhook_ids: Optional[List[StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["name", "description", "threshold", "bound", "query", "metric_name", "notification_webhook_ids"]
+    __properties: ClassVar[List[str]] = ["name", "description", "threshold", "bound", "query", "metric_name", "interval", "notification_webhook_ids"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -75,6 +77,9 @@ class PatchAlertRule(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of interval
+        if self.interval:
+            _dict['interval'] = self.interval.to_dict()
         # set to None if name (nullable) is None
         # and model_fields_set contains the field
         if self.name is None and "name" in self.model_fields_set:
@@ -105,6 +110,11 @@ class PatchAlertRule(BaseModel):
         if self.metric_name is None and "metric_name" in self.model_fields_set:
             _dict['metric_name'] = None
 
+        # set to None if interval (nullable) is None
+        # and model_fields_set contains the field
+        if self.interval is None and "interval" in self.model_fields_set:
+            _dict['interval'] = None
+
         # set to None if notification_webhook_ids (nullable) is None
         # and model_fields_set contains the field
         if self.notification_webhook_ids is None and "notification_webhook_ids" in self.model_fields_set:
@@ -128,6 +138,7 @@ class PatchAlertRule(BaseModel):
             "bound": obj.get("bound"),
             "query": obj.get("query"),
             "metric_name": obj.get("metric_name"),
+            "interval": AlertRuleInterval.from_dict(obj["interval"]) if obj.get("interval") is not None else None,
             "notification_webhook_ids": obj.get("notification_webhook_ids")
         })
         return _obj

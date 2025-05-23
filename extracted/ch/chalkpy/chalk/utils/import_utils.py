@@ -3,7 +3,8 @@ import importlib
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, Optional, Set, Tuple
+from types import ModuleType
+from typing import Any, Dict, Optional, Set, Tuple, Union
 
 from chalk.utils.cached_type_hints import cached_get_type_hints
 from chalk.utils.log_with_context import get_logger
@@ -195,3 +196,23 @@ def get_detailed_type_hint_errors(
             errors[attr_name] = e
 
     return errors
+
+
+def check_if_subpackage(base_package: Union[ModuleType, str], submodule_name: str) -> bool:
+    if isinstance(base_package, str):
+        try:
+            base_package = importlib.import_module(base_package)
+        except ImportError:
+            return False
+    assert isinstance(base_package, ModuleType)
+
+    base_package_name = base_package.__name__
+    if base_package_name == submodule_name:
+        return True
+    if not submodule_name.startswith(base_package_name):
+        return False
+    try:
+        importlib.import_module(submodule_name.removeprefix(base_package_name), package=base_package_name)
+    except ImportError:
+        return False
+    return True

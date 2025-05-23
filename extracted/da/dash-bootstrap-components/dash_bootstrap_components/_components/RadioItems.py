@@ -1,13 +1,21 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 import typing  # noqa: F401
-import numbers # noqa: F401
 from typing_extensions import TypedDict, NotRequired, Literal # noqa: F401
-from dash.development.base_component import Component
-try:
-    from dash.development.base_component import ComponentType # noqa: F401
-except ImportError:
-    ComponentType = typing.TypeVar("ComponentType", bound=Component)
+from dash.development.base_component import Component, _explicitize_args
+
+ComponentType = typing.Union[
+    str,
+    int,
+    float,
+    Component,
+    None,
+    typing.Sequence[typing.Union[str, int, float, Component, None]],
+]
+
+NumberType = typing.Union[
+    typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex
+]
 
 
 class RadioItems(Component):
@@ -171,20 +179,19 @@ Keyword arguments:
     Options = TypedDict(
         "Options",
             {
-            "label": typing.Union[str, int, float, ComponentType, typing.Sequence[typing.Union[str, int, float, ComponentType]]],
-            "value": typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]],
+            "label": ComponentType,
+            "value": typing.Union[str, NumberType],
             "disabled": NotRequired[bool],
             "input_id": NotRequired[str],
             "label_id": NotRequired[str]
         }
     )
 
-    _explicitize_dash_init = True
 
     def __init__(
         self,
-        options: typing.Optional[typing.Union[typing.Sequence[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]], dict, typing.Sequence["Options"]]] = None,
-        value: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        options: typing.Optional[typing.Union[typing.Sequence[typing.Union[str, NumberType]], dict, typing.Sequence["Options"]]] = None,
+        value: typing.Optional[typing.Union[str, NumberType]] = None,
         id: typing.Optional[typing.Union[str, dict]] = None,
         *,
         inline: typing.Optional[bool] = None,
@@ -200,7 +207,7 @@ Keyword arguments:
         label_checked_style: typing.Optional[dict] = None,
         label_checked_class_name: typing.Optional[str] = None,
         name: typing.Optional[str] = None,
-        persistence: typing.Optional[typing.Union[bool, str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        persistence: typing.Optional[typing.Union[bool, str, NumberType]] = None,
         persisted_props: typing.Optional[typing.Sequence[Literal["value"]]] = None,
         persistence_type: typing.Optional[Literal["local", "session", "memory"]] = None,
         key: typing.Optional[str] = None,
@@ -225,3 +232,5 @@ Keyword arguments:
         args = {k: _locals[k] for k in _explicit_args}
 
         super(RadioItems, self).__init__(**args)
+
+setattr(RadioItems, "__init__", _explicitize_args(RadioItems.__init__))

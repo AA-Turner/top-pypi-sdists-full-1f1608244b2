@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: chonkie
-Version: 1.0.7
+Version: 1.0.8
 Summary: 🦛 CHONK your texts with Chonkie ✨ - The no-nonsense chunking library
 Author-email: Bhavnick Minhas <bhavnick@chonkie.ai>, Shreyash Nigam <shreyash@chonkie.ai>
 Maintainer-email: Bhavnick Minhas <bhavnick@chonkie.ai>, Shreyash Nigam <shreyash@chonkie.ai>
@@ -58,6 +58,9 @@ Provides-Extra: code
 Requires-Dist: tree-sitter>=0.20.0; extra == "code"
 Requires-Dist: tree-sitter-language-pack>=0.7.0; extra == "code"
 Requires-Dist: magika<0.7.0,>=0.6.0; extra == "code"
+Provides-Extra: neural
+Requires-Dist: transformers>=4.0.0; extra == "neural"
+Requires-Dist: torch<3.0,>=2.0.0; extra == "neural"
 Provides-Extra: model2vec
 Requires-Dist: model2vec>=0.3.0; extra == "model2vec"
 Requires-Dist: numpy<3.0,>=2.0.0; extra == "model2vec"
@@ -81,21 +84,18 @@ Requires-Dist: numpy<3.0,>=2.0.0; extra == "jina"
 Provides-Extra: semantic
 Requires-Dist: model2vec>=0.3.0; extra == "semantic"
 Requires-Dist: numpy<3.0,>=2.0.0; extra == "semantic"
-Provides-Extra: neural
-Requires-Dist: transformers>=4.0.0; extra == "neural"
-Requires-Dist: torch<3.0,>=2.0.0; extra == "neural"
 Provides-Extra: gemini
 Requires-Dist: pydantic>=2.0.0; extra == "gemini"
 Requires-Dist: google-genai>=1.0.0; extra == "gemini"
-Provides-Extra: genie
-Requires-Dist: pydantic>=2.0.0; extra == "genie"
-Requires-Dist: google-genai>=1.0.0; extra == "genie"
 Provides-Extra: chroma
 Requires-Dist: chromadb>=1.0.0; extra == "chroma"
 Provides-Extra: qdrant
 Requires-Dist: qdrant-client>=1.0.0; extra == "qdrant"
 Provides-Extra: tpuf
 Requires-Dist: turbopuffer[fast]>=0.2.0; extra == "tpuf"
+Provides-Extra: genie
+Requires-Dist: pydantic>=2.0.0; extra == "genie"
+Requires-Dist: google-genai>=1.0.0; extra == "genie"
 Provides-Extra: all
 Requires-Dist: rich>=13.0.0; extra == "all"
 Requires-Dist: tree-sitter>=0.20.0; extra == "all"

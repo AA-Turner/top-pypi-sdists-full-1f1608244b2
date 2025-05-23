@@ -9,11 +9,19 @@ from .constants import (
     SUPPORTED_FRAMES,
 )
 from .exceptions import (
+    IntegrationTimestepNotSet,
+    InvalidConstraint,
+    InvalidDamping,
     InvalidFrame,
+    InvalidGain,
     InvalidKeyframe,
     InvalidMocapBody,
+    InvalidTarget,
+    LimitDefinitionError,
     MinkError,
     NotWithinConfigurationLimits,
+    TargetNotSet,
+    TaskDefinitionError,
     UnsupportedFrame,
 )
 from .lie import SE3, SO3, MatrixLieGroup
@@ -30,10 +38,10 @@ from .tasks import (
     DampingTask,
     EqualityConstraintTask,
     FrameTask,
+    KineticEnergyRegularizationTask,
     Objective,
     PostureTask,
     RelativeFrameTask,
-    TargetNotSet,
     Task,
 )
 from .utils import (
@@ -55,6 +63,7 @@ __all__ = (
     "RelativeFrameTask",
     "PostureTask",
     "Task",
+    "KineticEnergyRegularizationTask",
     "EqualityConstraintTask",
     "Objective",
     "ConfigurationLimit",
@@ -72,6 +81,13 @@ __all__ = (
     "NotWithinConfigurationLimits",
     "TargetNotSet",
     "InvalidMocapBody",
+    "InvalidConstraint",
+    "InvalidDamping",
+    "InvalidGain",
+    "InvalidTarget",
+    "LimitDefinitionError",
+    "TaskDefinitionError",
+    "IntegrationTimestepNotSet",
     "SUPPORTED_FRAMES",
     "FRAME_TO_ENUM",
     "FRAME_TO_JAC_FUNC",

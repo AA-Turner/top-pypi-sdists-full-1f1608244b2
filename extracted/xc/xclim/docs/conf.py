@@ -174,13 +174,14 @@ napoleon_use_ivar = True
 numpydoc_class_members_toctree = False
 
 intersphinx_mapping = {
-    "clisops": ("https://clisops.readthedocs.io/en/latest/", None),
+    "clisops": ("https://clisops.readthedocs.io/en/stable/", None),
     "flox": ("https://flox.readthedocs.io/en/latest/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
     "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
     "sklearn": ("https://scikit-learn.org/stable/", None),
     "statsmodels": ("https://www.statsmodels.org/stable/", None),
+    "xsdba": ("https://xsdba.readthedocs.io/en/stable/", None),
 }
 extlinks = {
     "issue": ("https://github.com/Ouranosinc/xclim/issues/%s", "GH/%s"),
@@ -263,13 +264,13 @@ language = "en"
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
 exclude_patterns = [
-    "_build",
-    "Thumbs.db",
+    "**.ipynb_checkpoints",
     ".DS_Store",
+    "Thumbs.db",
+    "_build",
     "notebooks/benchmarks",
     "notebooks/xclim_training",
     "paper/paper.md",
-    "**.ipynb_checkpoints",
 ]
 
 # The name of the Pygments (syntax highlighting) style to use for light and dark themes.

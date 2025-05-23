@@ -5,6 +5,8 @@
 
 from __future__ import annotations
 
+import io
+import logging
 import pathlib
 import re
 import socket
@@ -17,6 +19,7 @@ from PIL import Image, UnidentifiedImageError
 from deprecation import deprecated
 
 from adbutils._deprecated import DeprecatedExtension
+from adbutils._proto import ShellReturnRaw
 from adbutils.install import InstallExtension
 from adbutils.screenrecord import ScreenrecordExtension
 from adbutils.screenshot import ScreenshotExtesion
@@ -33,6 +36,7 @@ from adbutils.sync import Sync
 
 _DEFAULT_SOCKET_TIMEOUT = 600  # 10 minutes
 
+logger = logging.getLogger(__name__)
 
 class BaseDevice:
     """Basic operation for a device"""
@@ -50,6 +54,7 @@ class BaseDevice:
         self._serial = serial
         self._transport_id = transport_id
         self._properties = {}  # store properties data
+        self._features = {}
 
         if not serial and not transport_id:
             raise AdbError("serial, transport_id must set atleast one")
@@ -113,7 +118,9 @@ class BaseDevice:
         Return example:
             'abb_exec,fixed_push_symlink_timestamp,abb,stat_v2,apex,shell_v2,fixed_push_mkdir,cmd'
         """
-        return self._get_with_command("features")
+        features = self._get_with_command("features")
+        self._features = set(features.split(','))
+        return features
 
     @property
     def info(self) -> dict:
@@ -154,6 +161,36 @@ class BaseDevice:
                 raise EnvironmentError(
                     "subprocess", cmds, e.output.decode("utf-8", errors="ignore")
                 )
+
+    def __shell(
+        self,
+        cmdargs: str | list | tuple,
+        stream: bool = False,
+        timeout: Optional[float] = _DEFAULT_SOCKET_TIMEOUT,
+        encoding: str | None = "utf-8",
+        rstrip=False,
+        shell_v2=False
+    ) -> typing.Union[AdbConnection, ShellReturn]:
+        if isinstance(cmdargs, (list, tuple)):
+            cmdargs = list2cmdline(cmdargs)
+        if stream:
+            timeout = None
+        c = self.open_transport(timeout=timeout)
+        c.send_command(f"shell{',v2'*shell_v2}:" + cmdargs)
+        c.check_okay()
+        if stream:
+            return c
+        stdout, stderr, exit_code = "", None, -1
+        if shell_v2:
+            stdout, stderr, exit_code = c.read_shell_v2_protocol_until_close(encoding=encoding)
+        else:
+            stdout = c.read_until_close(encoding=encoding)
+        c.close()
+        if encoding:
+            stdout = stdout.rstrip() if rstrip else stdout
+            if stderr:
+                stderr = stderr.rstrip() if rstrip else stderr
+        return ShellReturn(command=cmdargs, returncode=exit_code, output=stdout, stderr=stderr)
 
     def shell(
         self,
@@ -206,7 +243,8 @@ class BaseDevice:
         timeout: Optional[float] = _DEFAULT_SOCKET_TIMEOUT,
         encoding: str | None = "utf-8",
         rstrip=False,
-    ) -> ShellReturn:
+        v2=False,
+    ) -> Union[ShellReturn, ShellReturnRaw]:
         """
         Run shell command with detail output
         Args:
@@ -214,6 +252,7 @@ class BaseDevice:
             timeout (float): set shell timeout, seconds
             encoding (str): set output encoding (Default: utf-8), set None to make return bytes
             rstrip (bool): strip the last empty line, only work when encoding is set
+            shell_v2 (bool): attempt to use the shell_v2 protocol (and fail if not supported by device)
 
         Returns:
             ShellOutput
@@ -223,18 +262,78 @@ class BaseDevice:
         """
         if isinstance(cmdargs, (list, tuple)):
             cmdargs = list2cmdline(cmdargs)
+
+        if v2:
+            if not self._features:
+                self._features = set(self.get_features().split(','))
+            if "shell_v2" not in self._features:
+                v2 = False
+                logger.warning("shell_v2 specified but not supported by device")
+
+        if v2:
+            result = self._shell_v2(cmdargs, timeout)
+        else:
+            result = self._shell_v1(cmdargs, timeout)
+
+        if encoding:
+            result = ShellReturn(
+                command=result.command,
+                returncode=result.returncode,
+                output=result.output.decode(encoding, errors="replace"),
+                stderr=result.stderr.decode(encoding, errors="replace"),
+                stdout=result.stdout.decode(encoding, errors="replace"),
+            )
+            if rstrip:
+                result.output = result.output.rstrip()
+                result.stderr = result.stderr.rstrip()
+                result.stdout = result.stdout.rstrip()
+        return result
+    
+    def _shell_v1(self, cmdargs: str, timeout: Optional[float] = _DEFAULT_SOCKET_TIMEOUT) -> ShellReturnRaw:
         assert isinstance(cmdargs, str)
         MAGIC = "X4EXIT:"
         newcmd = cmdargs + f"; echo {MAGIC}$?"
-        output = self.shell(newcmd, timeout=timeout, encoding=encoding, rstrip=True)
-        rindex = output.rfind(MAGIC if encoding else MAGIC.encode())
+        output: bytes = self.shell(newcmd, timeout=timeout, encoding=None, rstrip=False) # type: ignore
+        rindex = output.rfind(MAGIC.encode())
         if rindex == -1:  # normally will not possible
             raise AdbError("shell output invalid", newcmd, output)
-        returncoode = int(output[rindex + len(MAGIC) :])
+        returncode = int(output[rindex + len(MAGIC) :])
         output = output[:rindex]
-        if rstrip and encoding:
-            output = output.rstrip()
-        return ShellReturn(command=cmdargs, returncode=returncoode, output=output)
+        return ShellReturnRaw(command=cmdargs, returncode=returncode, output=output)
+
+    def _shell_v2(self, cmdargs: str, timeout: Optional[float] = _DEFAULT_SOCKET_TIMEOUT) -> ShellReturnRaw:
+        c = self.open_transport(timeout=timeout)
+        c.send_command(f"shell,v2:{cmdargs}")
+        c.check_okay()
+        stdout_buffer = io.BytesIO()
+        stderr_buffer = io.BytesIO()
+        output_buffer = io.BytesIO()
+        exit_code = 255
+
+        while True:
+            header = c.read_exact(5)
+            msg_id = header[0]
+            length = int.from_bytes(header[1:5], byteorder="little")
+            if length == 0:
+                continue
+
+            data = c.read_exact(length)
+            if msg_id == 1:
+                stdout_buffer.write(data)
+                output_buffer.write(data)
+            elif msg_id == 2:
+                stderr_buffer.write(data)
+                output_buffer.write(data)
+            elif msg_id == 3:
+                exit_code = data[0]
+                break
+        return ShellReturnRaw(
+            command=cmdargs,
+            returncode=exit_code,
+            output=output_buffer.getvalue(),
+            stderr=stderr_buffer.getvalue(),
+            stdout=stdout_buffer.getvalue(),
+        )
 
     def forward(self, local: str, remote: str, norebind: bool = False):
         self._client.forward(self._serial, local, remote, norebind)

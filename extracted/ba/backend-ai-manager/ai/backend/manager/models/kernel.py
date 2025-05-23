@@ -5,7 +5,7 @@ import logging
 import uuid
 from collections.abc import Container, Mapping
 from contextlib import asynccontextmanager as actxmgr
-from datetime import datetime
+from datetime import datetime, tzinfo
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -17,7 +17,7 @@ from typing import (
 )
 
 import sqlalchemy as sa
-from dateutil.tz import tzfile, tzutc
+from dateutil.tz import tzutc
 from redis.asyncio import Redis
 from redis.asyncio.client import Pipeline
 from sqlalchemy.dialects import postgresql as pgsql
@@ -40,7 +40,8 @@ from ai.backend.common.types import (
 )
 from ai.backend.logging import BraceStyleAdapter
 
-from ..api.exceptions import (
+from ..defs import DEFAULT_ROLE
+from ..errors.exceptions import (
     BackendError,
     KernelCreationFailed,
     KernelDestructionFailed,
@@ -49,7 +50,6 @@ from ..api.exceptions import (
     KernelRestartFailed,
     SessionNotFound,
 )
-from ..defs import DEFAULT_ROLE
 from ..exceptions import AgentError
 from .base import (
     GUID,
@@ -520,6 +520,13 @@ class KernelRow(Base):
     # Resource metrics measured upon termination
     num_queries = sa.Column("num_queries", sa.BigInteger(), default=0)
     last_stat = sa.Column("last_stat", pgsql.JSONB(), nullable=True, default=sa.null())
+    last_seen = sa.Column(
+        "last_seen",
+        sa.DateTime(timezone=True),
+        nullable=True,
+        default=sa.null(),
+        server_default=sa.null(),
+    )
 
     __table_args__ = (
         # indexing
@@ -558,7 +565,7 @@ class KernelRow(Base):
             return str(self.terminated_at - self.created_at)
         return None
 
-    def get_used_days(self, local_tz: tzfile) -> Optional[int]:
+    def get_used_days(self, local_tz: tzinfo) -> Optional[int]:
         if self.terminated_at is not None:
             return (
                 self.terminated_at.astimezone(local_tz).toordinal()

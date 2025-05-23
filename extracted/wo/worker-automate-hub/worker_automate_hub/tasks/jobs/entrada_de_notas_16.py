@@ -1,6 +1,8 @@
 import asyncio
+from datetime import datetime
 import getpass
 import os
+import re
 import warnings
 import uuid
 import time
@@ -574,7 +576,24 @@ async def entrada_de_notas_16(task: RpaProcessoEntradaDTO) -> RpaRetornoProcesso
                     status=error_work.status,
                 )
         except:
-            console.print("A Nota fiscal ainda não foi incluída, continuando o processo...")
+            try:
+                app = Application().connect(class_name="TFrmItemBonificacaoNFE")
+                main_window = app["TFrmItemBonificacaoNFE"]
+                main_window.set_focus()
+                console.print("Tela de itens de bonificação")
+                #Selecionando todos itens
+                pyautogui.click(693, 649)
+                #Confirmando
+                pyautogui.click(1084, 649)
+                retorno = await emsys.incluir_registro(chave_nfe=nota.get("nfe"))
+                if retorno.sucesso == True:
+                    return RpaRetornoProcessoDTO(
+                        sucesso=error_work.sucesso,
+                        retorno=error_work.retorno,
+                        status=error_work.status,
+                    )
+            except:
+                console.print("A Nota fiscal ainda não foi incluída, continuando o processo...")
 
         # VERIFICANDO A EXISTENCIA DE ERRO
         erro_pop_up = await is_window_open("Erro")

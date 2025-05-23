@@ -1,8 +1,8 @@
 Metadata-Version: 2.4
 Name: dash-bootstrap-components
-Version: 2.0.2
+Version: 2.0.3
 Summary: Bootstrap themed components for use in Plotly Dash
-Project-URL: Homepage, https://dash-bootstrap-components.opensource.faculty.ai/
+Project-URL: Homepage, https://www.dash-bootstrap-components.com/
 Project-URL: Source, https://github.com/facultyai/dash-bootstrap-components/
 Project-URL: Bug Reports, https://github.com/facultyai/dash-bootstrap-components/issues
 Author: Faculty Science Ltd, Pascal Bugnion
@@ -219,14 +219,14 @@ Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Requires-Python: >=3.9
-Requires-Dist: dash>=3.0.3
+Requires-Dist: dash>=3.0.4
 Provides-Extra: pandas
 Requires-Dist: numpy>=2.0.2; extra == 'pandas'
 Requires-Dist: pandas>=2.2.3; extra == 'pandas'
 Description-Content-Type: text/markdown
 
 <p align="center">
-  <a href="https://dash-bootstrap-components.opensource.faculty.ai/">
+  <a href="https://www.dash-bootstrap-components.com/">
     <img src="https://cdn.jsdelivr.net/gh/facultyai/dash-bootstrap-components@main/readme-images/logo.png" alt="dash-bootstrap-components logo" width="200" height="200">
   </a>
 </p>
@@ -236,7 +236,7 @@ Description-Content-Type: text/markdown
 <p align="center">
   Bootstrap components for Plotly Dash
   <br>
-  <a href="https://dash-bootstrap-components.opensource.faculty.ai/">Explore the documentation</a>
+  <a href="https://www.dash-bootstrap-components.com/">Explore the documentation</a>
   ·
   <a href="https://github.com/facultyai/dash-bootstrap-components/issues/new?template=bug.md">Report a bug</a>
   ·
@@ -336,7 +336,7 @@ Code and documentation is copyright [Faculty Science Ltd.][faculty]
 [dash-homepage]: https://dash.plotly.com/
 [dash-docs-external]: https://dash.plotly.com/external-resources
 [bootstrap-homepage]: https://getbootstrap.com/
-[docs-components]: https://dash-bootstrap-components.opensource.faculty.ai/l/components
+[docs-components]: https://www.dash-bootstrap-components.com/docs/components
 [bootstrapcdn]: https://www.bootstrapcdn.com/
 [faculty]: https://faculty.ai
 [bug-report]: https://github.com/facultyai/dash-bootstrap-components/issues/new?template=bug.md

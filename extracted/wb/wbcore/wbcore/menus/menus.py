@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from django.utils.http import urlencode
 from rest_framework.request import Request
@@ -32,7 +32,7 @@ class MenuItem:
     endpoint: str
     endpoint_args: List[str] = field(default_factory=list)
     endpoint_kwargs: Dict[str, str] = field(default_factory=dict)
-    endpoint_get_parameters: Dict[str, str] = field(default_factory=dict)
+    endpoint_get_parameters: Callable | Dict[str, Any] = field(default_factory=dict)
     reverse: bool = True
 
     permission: Optional[ItemPermission] = None

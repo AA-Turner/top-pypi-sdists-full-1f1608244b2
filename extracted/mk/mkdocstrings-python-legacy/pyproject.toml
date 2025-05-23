@@ -40,7 +40,7 @@ dependencies = [
     "mkdocs-autorefs>=1.1",
     "pytkdocs>=0.14",
 ]
-version = "0.2.6"
+version = "0.2.7"
 
 [project.urls]
 Homepage = "https://mkdocstrings.github.io/python-legacy"
@@ -63,7 +63,6 @@ includes = [
 excludes = [
     "**/.pytest_cache",
     "**/.mypy_cache",
-    "**/__pycache__",
 ]
 source-includes = [
     "config",
@@ -114,7 +113,7 @@ docs = [
     "mkdocs>=1.6",
     "mkdocs-coverage>=1.0",
     "mkdocs-git-revision-date-localized-plugin>=1.2",
-    "mkdocs-llmstxt>=0.1",
+    "mkdocs-llmstxt>=0.2",
     "mkdocs-material>=9.5",
     "mkdocs-minify-plugin>=0.8",
     "mkdocs-section-index>=0.3",

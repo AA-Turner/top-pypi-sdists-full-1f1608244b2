@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: mkdocstrings-python-legacy
-Version: 0.2.6
+Version: 0.2.7
 Summary: A legacy Python handler for mkdocstrings.
 Author-Email: =?utf-8?q?Timoth=C3=A9e_Mazzucotelli?= <dev@pawamoy.fr>
 License-Expression: ISC

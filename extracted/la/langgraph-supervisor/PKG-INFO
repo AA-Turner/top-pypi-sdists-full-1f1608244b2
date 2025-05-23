@@ -1,14 +1,14 @@
 Metadata-Version: 2.4
 Name: langgraph-supervisor
-Version: 0.0.23
+Version: 0.0.25
 Summary: An implementation of a supervisor multi-agent architecture using LangGraph
 Author-Email: Vadym Barda <19161700+vbarda@users.noreply.github.com >
 License-Expression: MIT
 License-File: LICENSE
 Requires-Python: >=3.10
 Requires-Dist: langgraph>=0.3.5
-Requires-Dist: langgraph-prebuilt<0.2.0,>=0.1.7
-Requires-Dist: langchain-core<0.4.0,>=0.3.40
+Requires-Dist: langgraph-prebuilt>=0.1.7
+Requires-Dist: langchain-core>=0.3.40
 Description-Content-Type: text/markdown
 
 # 🤖 LangGraph Multi-Agent Supervisor

@@ -1,7 +1,7 @@
 r'''
 # `opentelekomcloud_cce_cluster_v3`
 
-Refer to the Terraform Registry for docs: [`opentelekomcloud_cce_cluster_v3`](https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3).
+Refer to the Terraform Registry for docs: [`opentelekomcloud_cce_cluster_v3`](https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class CceClusterV3(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-opentelekomcloud.cceClusterV3.CceClusterV3",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3 opentelekomcloud_cce_cluster_v3}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3 opentelekomcloud_cce_cluster_v3}.'''
 
     def __init__(
         self,
@@ -84,6 +84,7 @@ class CceClusterV3(
         ignore_addons: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         ignore_certificate_clusters_data: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         ignore_certificate_users_data: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        ipv6_enable: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         kube_proxy_mode: typing.Optional[builtins.str] = None,
         kubernetes_svc_ip_range: typing.Optional[builtins.str] = None,
         labels: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
@@ -102,53 +103,54 @@ class CceClusterV3(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3 opentelekomcloud_cce_cluster_v3} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3 opentelekomcloud_cce_cluster_v3} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param cluster_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#cluster_type CceClusterV3#cluster_type}.
-        :param container_network_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#container_network_type CceClusterV3#container_network_type}.
-        :param flavor_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#flavor_id CceClusterV3#flavor_id}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#name CceClusterV3#name}.
-        :param subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#subnet_id CceClusterV3#subnet_id}.
-        :param vpc_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#vpc_id CceClusterV3#vpc_id}.
-        :param annotations: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#annotations CceClusterV3#annotations}.
-        :param api_access_trustlist: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#api_access_trustlist CceClusterV3#api_access_trustlist}.
-        :param authenticating_proxy: authenticating_proxy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#authenticating_proxy CceClusterV3#authenticating_proxy}
-        :param authenticating_proxy_ca: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#authenticating_proxy_ca CceClusterV3#authenticating_proxy_ca}.
-        :param authentication_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#authentication_mode CceClusterV3#authentication_mode}.
-        :param billing_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#billing_mode CceClusterV3#billing_mode}.
-        :param cluster_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#cluster_version CceClusterV3#cluster_version}.
-        :param container_network_cidr: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#container_network_cidr CceClusterV3#container_network_cidr}.
-        :param delete_all_network: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_all_network CceClusterV3#delete_all_network}.
-        :param delete_all_storage: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_all_storage CceClusterV3#delete_all_storage}.
-        :param delete_efs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_efs CceClusterV3#delete_efs}.
-        :param delete_eni: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_eni CceClusterV3#delete_eni}.
-        :param delete_evs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_evs CceClusterV3#delete_evs}.
-        :param delete_net: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_net CceClusterV3#delete_net}.
-        :param delete_obs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_obs CceClusterV3#delete_obs}.
-        :param delete_sfs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_sfs CceClusterV3#delete_sfs}.
-        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#description CceClusterV3#description}.
-        :param eip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#eip CceClusterV3#eip}.
-        :param enable_volume_encryption: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#enable_volume_encryption CceClusterV3#enable_volume_encryption}.
-        :param eni_subnet_cidr: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#eni_subnet_cidr CceClusterV3#eni_subnet_cidr}.
-        :param eni_subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#eni_subnet_id CceClusterV3#eni_subnet_id}.
-        :param extend_param: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#extend_param CceClusterV3#extend_param}.
-        :param highway_subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#highway_subnet_id CceClusterV3#highway_subnet_id}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#id CceClusterV3#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param ignore_addons: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#ignore_addons CceClusterV3#ignore_addons}.
-        :param ignore_certificate_clusters_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#ignore_certificate_clusters_data CceClusterV3#ignore_certificate_clusters_data}.
-        :param ignore_certificate_users_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#ignore_certificate_users_data CceClusterV3#ignore_certificate_users_data}.
-        :param kube_proxy_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#kube_proxy_mode CceClusterV3#kube_proxy_mode}.
-        :param kubernetes_svc_ip_range: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#kubernetes_svc_ip_range CceClusterV3#kubernetes_svc_ip_range}.
-        :param labels: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#labels CceClusterV3#labels}.
-        :param masters: masters block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#masters CceClusterV3#masters}
-        :param multi_az: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#multi_az CceClusterV3#multi_az}.
-        :param no_addons: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#no_addons CceClusterV3#no_addons}.
-        :param region: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#region CceClusterV3#region}.
-        :param security_group_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#security_group_id CceClusterV3#security_group_id}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#timeouts CceClusterV3#timeouts}
-        :param timezone: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#timezone CceClusterV3#timezone}.
+        :param cluster_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#cluster_type CceClusterV3#cluster_type}.
+        :param container_network_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#container_network_type CceClusterV3#container_network_type}.
+        :param flavor_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#flavor_id CceClusterV3#flavor_id}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#name CceClusterV3#name}.
+        :param subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#subnet_id CceClusterV3#subnet_id}.
+        :param vpc_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#vpc_id CceClusterV3#vpc_id}.
+        :param annotations: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#annotations CceClusterV3#annotations}.
+        :param api_access_trustlist: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#api_access_trustlist CceClusterV3#api_access_trustlist}.
+        :param authenticating_proxy: authenticating_proxy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#authenticating_proxy CceClusterV3#authenticating_proxy}
+        :param authenticating_proxy_ca: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#authenticating_proxy_ca CceClusterV3#authenticating_proxy_ca}.
+        :param authentication_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#authentication_mode CceClusterV3#authentication_mode}.
+        :param billing_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#billing_mode CceClusterV3#billing_mode}.
+        :param cluster_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#cluster_version CceClusterV3#cluster_version}.
+        :param container_network_cidr: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#container_network_cidr CceClusterV3#container_network_cidr}.
+        :param delete_all_network: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_all_network CceClusterV3#delete_all_network}.
+        :param delete_all_storage: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_all_storage CceClusterV3#delete_all_storage}.
+        :param delete_efs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_efs CceClusterV3#delete_efs}.
+        :param delete_eni: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_eni CceClusterV3#delete_eni}.
+        :param delete_evs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_evs CceClusterV3#delete_evs}.
+        :param delete_net: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_net CceClusterV3#delete_net}.
+        :param delete_obs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_obs CceClusterV3#delete_obs}.
+        :param delete_sfs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_sfs CceClusterV3#delete_sfs}.
+        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#description CceClusterV3#description}.
+        :param eip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#eip CceClusterV3#eip}.
+        :param enable_volume_encryption: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#enable_volume_encryption CceClusterV3#enable_volume_encryption}.
+        :param eni_subnet_cidr: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#eni_subnet_cidr CceClusterV3#eni_subnet_cidr}.
+        :param eni_subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#eni_subnet_id CceClusterV3#eni_subnet_id}.
+        :param extend_param: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#extend_param CceClusterV3#extend_param}.
+        :param highway_subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#highway_subnet_id CceClusterV3#highway_subnet_id}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#id CceClusterV3#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param ignore_addons: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ignore_addons CceClusterV3#ignore_addons}.
+        :param ignore_certificate_clusters_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ignore_certificate_clusters_data CceClusterV3#ignore_certificate_clusters_data}.
+        :param ignore_certificate_users_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ignore_certificate_users_data CceClusterV3#ignore_certificate_users_data}.
+        :param ipv6_enable: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ipv6_enable CceClusterV3#ipv6_enable}.
+        :param kube_proxy_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#kube_proxy_mode CceClusterV3#kube_proxy_mode}.
+        :param kubernetes_svc_ip_range: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#kubernetes_svc_ip_range CceClusterV3#kubernetes_svc_ip_range}.
+        :param labels: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#labels CceClusterV3#labels}.
+        :param masters: masters block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#masters CceClusterV3#masters}
+        :param multi_az: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#multi_az CceClusterV3#multi_az}.
+        :param no_addons: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#no_addons CceClusterV3#no_addons}.
+        :param region: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#region CceClusterV3#region}.
+        :param security_group_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#security_group_id CceClusterV3#security_group_id}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#timeouts CceClusterV3#timeouts}
+        :param timezone: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#timezone CceClusterV3#timezone}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -195,6 +197,7 @@ class CceClusterV3(
             ignore_addons=ignore_addons,
             ignore_certificate_clusters_data=ignore_certificate_clusters_data,
             ignore_certificate_users_data=ignore_certificate_users_data,
+            ipv6_enable=ipv6_enable,
             kube_proxy_mode=kube_proxy_mode,
             kubernetes_svc_ip_range=kubernetes_svc_ip_range,
             labels=labels,
@@ -229,7 +232,7 @@ class CceClusterV3(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the CceClusterV3 to import.
-        :param import_from_id: The id of the existing CceClusterV3 that should be imported. Refer to the {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing CceClusterV3 that should be imported. Refer to the {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the CceClusterV3 to import is found.
         '''
         if __debug__:
@@ -249,9 +252,9 @@ class CceClusterV3(
         private_key: builtins.str,
     ) -> None:
         '''
-        :param ca: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#ca CceClusterV3#ca}.
-        :param cert: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#cert CceClusterV3#cert}.
-        :param private_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#private_key CceClusterV3#private_key}.
+        :param ca: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ca CceClusterV3#ca}.
+        :param cert: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#cert CceClusterV3#cert}.
+        :param private_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#private_key CceClusterV3#private_key}.
         '''
         value = CceClusterV3AuthenticatingProxy(
             ca=ca, cert=cert, private_key=private_key
@@ -280,8 +283,8 @@ class CceClusterV3(
         delete: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#create CceClusterV3#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete CceClusterV3#delete}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#create CceClusterV3#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete CceClusterV3#delete}.
         '''
         value = CceClusterV3Timeouts(create=create, delete=delete)
 
@@ -394,6 +397,10 @@ class CceClusterV3(
     @jsii.member(jsii_name="resetIgnoreCertificateUsersData")
     def reset_ignore_certificate_users_data(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetIgnoreCertificateUsersData", []))
+
+    @jsii.member(jsii_name="resetIpv6Enable")
+    def reset_ipv6_enable(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetIpv6Enable", []))
 
     @jsii.member(jsii_name="resetKubeProxyMode")
     def reset_kube_proxy_mode(self) -> None:
@@ -671,6 +678,13 @@ class CceClusterV3(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "ignoreCertificateUsersDataInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="ipv6EnableInput")
+    def ipv6_enable_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "ipv6EnableInput"))
 
     @builtins.property
     @jsii.member(jsii_name="kubeProxyModeInput")
@@ -1114,6 +1128,21 @@ class CceClusterV3(
         jsii.set(self, "ignoreCertificateUsersData", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
+    @jsii.member(jsii_name="ipv6Enable")
+    def ipv6_enable(self) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "ipv6Enable"))
+
+    @ipv6_enable.setter
+    def ipv6_enable(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c9329da405a54d5cf298d45eaa11a7e8a26ed56037c3a5fccd5d830d7672966c)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "ipv6Enable", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
     @jsii.member(jsii_name="kubeProxyMode")
     def kube_proxy_mode(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "kubeProxyMode"))
@@ -1266,9 +1295,9 @@ class CceClusterV3AuthenticatingProxy:
         private_key: builtins.str,
     ) -> None:
         '''
-        :param ca: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#ca CceClusterV3#ca}.
-        :param cert: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#cert CceClusterV3#cert}.
-        :param private_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#private_key CceClusterV3#private_key}.
+        :param ca: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ca CceClusterV3#ca}.
+        :param cert: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#cert CceClusterV3#cert}.
+        :param private_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#private_key CceClusterV3#private_key}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__1fe6d9daf308f6e57b70233f67c564f06ce549eee7106817f908df0d5766a524)
@@ -1283,21 +1312,21 @@ class CceClusterV3AuthenticatingProxy:
 
     @builtins.property
     def ca(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#ca CceClusterV3#ca}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ca CceClusterV3#ca}.'''
         result = self._values.get("ca")
         assert result is not None, "Required property 'ca' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def cert(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#cert CceClusterV3#cert}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#cert CceClusterV3#cert}.'''
         result = self._values.get("cert")
         assert result is not None, "Required property 'cert' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def private_key(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#private_key CceClusterV3#private_key}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#private_key CceClusterV3#private_key}.'''
         result = self._values.get("private_key")
         assert result is not None, "Required property 'private_key' is missing"
         return typing.cast(builtins.str, result)
@@ -1750,6 +1779,7 @@ class CceClusterV3CertificateUsersOutputReference(
         "ignore_addons": "ignoreAddons",
         "ignore_certificate_clusters_data": "ignoreCertificateClustersData",
         "ignore_certificate_users_data": "ignoreCertificateUsersData",
+        "ipv6_enable": "ipv6Enable",
         "kube_proxy_mode": "kubeProxyMode",
         "kubernetes_svc_ip_range": "kubernetesSvcIpRange",
         "labels": "labels",
@@ -1806,6 +1836,7 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
         ignore_addons: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         ignore_certificate_clusters_data: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         ignore_certificate_users_data: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        ipv6_enable: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         kube_proxy_mode: typing.Optional[builtins.str] = None,
         kubernetes_svc_ip_range: typing.Optional[builtins.str] = None,
         labels: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
@@ -1825,49 +1856,50 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param cluster_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#cluster_type CceClusterV3#cluster_type}.
-        :param container_network_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#container_network_type CceClusterV3#container_network_type}.
-        :param flavor_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#flavor_id CceClusterV3#flavor_id}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#name CceClusterV3#name}.
-        :param subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#subnet_id CceClusterV3#subnet_id}.
-        :param vpc_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#vpc_id CceClusterV3#vpc_id}.
-        :param annotations: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#annotations CceClusterV3#annotations}.
-        :param api_access_trustlist: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#api_access_trustlist CceClusterV3#api_access_trustlist}.
-        :param authenticating_proxy: authenticating_proxy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#authenticating_proxy CceClusterV3#authenticating_proxy}
-        :param authenticating_proxy_ca: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#authenticating_proxy_ca CceClusterV3#authenticating_proxy_ca}.
-        :param authentication_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#authentication_mode CceClusterV3#authentication_mode}.
-        :param billing_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#billing_mode CceClusterV3#billing_mode}.
-        :param cluster_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#cluster_version CceClusterV3#cluster_version}.
-        :param container_network_cidr: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#container_network_cidr CceClusterV3#container_network_cidr}.
-        :param delete_all_network: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_all_network CceClusterV3#delete_all_network}.
-        :param delete_all_storage: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_all_storage CceClusterV3#delete_all_storage}.
-        :param delete_efs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_efs CceClusterV3#delete_efs}.
-        :param delete_eni: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_eni CceClusterV3#delete_eni}.
-        :param delete_evs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_evs CceClusterV3#delete_evs}.
-        :param delete_net: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_net CceClusterV3#delete_net}.
-        :param delete_obs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_obs CceClusterV3#delete_obs}.
-        :param delete_sfs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_sfs CceClusterV3#delete_sfs}.
-        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#description CceClusterV3#description}.
-        :param eip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#eip CceClusterV3#eip}.
-        :param enable_volume_encryption: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#enable_volume_encryption CceClusterV3#enable_volume_encryption}.
-        :param eni_subnet_cidr: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#eni_subnet_cidr CceClusterV3#eni_subnet_cidr}.
-        :param eni_subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#eni_subnet_id CceClusterV3#eni_subnet_id}.
-        :param extend_param: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#extend_param CceClusterV3#extend_param}.
-        :param highway_subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#highway_subnet_id CceClusterV3#highway_subnet_id}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#id CceClusterV3#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param ignore_addons: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#ignore_addons CceClusterV3#ignore_addons}.
-        :param ignore_certificate_clusters_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#ignore_certificate_clusters_data CceClusterV3#ignore_certificate_clusters_data}.
-        :param ignore_certificate_users_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#ignore_certificate_users_data CceClusterV3#ignore_certificate_users_data}.
-        :param kube_proxy_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#kube_proxy_mode CceClusterV3#kube_proxy_mode}.
-        :param kubernetes_svc_ip_range: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#kubernetes_svc_ip_range CceClusterV3#kubernetes_svc_ip_range}.
-        :param labels: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#labels CceClusterV3#labels}.
-        :param masters: masters block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#masters CceClusterV3#masters}
-        :param multi_az: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#multi_az CceClusterV3#multi_az}.
-        :param no_addons: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#no_addons CceClusterV3#no_addons}.
-        :param region: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#region CceClusterV3#region}.
-        :param security_group_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#security_group_id CceClusterV3#security_group_id}.
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#timeouts CceClusterV3#timeouts}
-        :param timezone: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#timezone CceClusterV3#timezone}.
+        :param cluster_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#cluster_type CceClusterV3#cluster_type}.
+        :param container_network_type: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#container_network_type CceClusterV3#container_network_type}.
+        :param flavor_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#flavor_id CceClusterV3#flavor_id}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#name CceClusterV3#name}.
+        :param subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#subnet_id CceClusterV3#subnet_id}.
+        :param vpc_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#vpc_id CceClusterV3#vpc_id}.
+        :param annotations: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#annotations CceClusterV3#annotations}.
+        :param api_access_trustlist: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#api_access_trustlist CceClusterV3#api_access_trustlist}.
+        :param authenticating_proxy: authenticating_proxy block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#authenticating_proxy CceClusterV3#authenticating_proxy}
+        :param authenticating_proxy_ca: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#authenticating_proxy_ca CceClusterV3#authenticating_proxy_ca}.
+        :param authentication_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#authentication_mode CceClusterV3#authentication_mode}.
+        :param billing_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#billing_mode CceClusterV3#billing_mode}.
+        :param cluster_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#cluster_version CceClusterV3#cluster_version}.
+        :param container_network_cidr: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#container_network_cidr CceClusterV3#container_network_cidr}.
+        :param delete_all_network: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_all_network CceClusterV3#delete_all_network}.
+        :param delete_all_storage: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_all_storage CceClusterV3#delete_all_storage}.
+        :param delete_efs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_efs CceClusterV3#delete_efs}.
+        :param delete_eni: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_eni CceClusterV3#delete_eni}.
+        :param delete_evs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_evs CceClusterV3#delete_evs}.
+        :param delete_net: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_net CceClusterV3#delete_net}.
+        :param delete_obs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_obs CceClusterV3#delete_obs}.
+        :param delete_sfs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_sfs CceClusterV3#delete_sfs}.
+        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#description CceClusterV3#description}.
+        :param eip: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#eip CceClusterV3#eip}.
+        :param enable_volume_encryption: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#enable_volume_encryption CceClusterV3#enable_volume_encryption}.
+        :param eni_subnet_cidr: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#eni_subnet_cidr CceClusterV3#eni_subnet_cidr}.
+        :param eni_subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#eni_subnet_id CceClusterV3#eni_subnet_id}.
+        :param extend_param: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#extend_param CceClusterV3#extend_param}.
+        :param highway_subnet_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#highway_subnet_id CceClusterV3#highway_subnet_id}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#id CceClusterV3#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param ignore_addons: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ignore_addons CceClusterV3#ignore_addons}.
+        :param ignore_certificate_clusters_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ignore_certificate_clusters_data CceClusterV3#ignore_certificate_clusters_data}.
+        :param ignore_certificate_users_data: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ignore_certificate_users_data CceClusterV3#ignore_certificate_users_data}.
+        :param ipv6_enable: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ipv6_enable CceClusterV3#ipv6_enable}.
+        :param kube_proxy_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#kube_proxy_mode CceClusterV3#kube_proxy_mode}.
+        :param kubernetes_svc_ip_range: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#kubernetes_svc_ip_range CceClusterV3#kubernetes_svc_ip_range}.
+        :param labels: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#labels CceClusterV3#labels}.
+        :param masters: masters block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#masters CceClusterV3#masters}
+        :param multi_az: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#multi_az CceClusterV3#multi_az}.
+        :param no_addons: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#no_addons CceClusterV3#no_addons}.
+        :param region: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#region CceClusterV3#region}.
+        :param security_group_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#security_group_id CceClusterV3#security_group_id}.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#timeouts CceClusterV3#timeouts}
+        :param timezone: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#timezone CceClusterV3#timezone}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1917,6 +1949,7 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument ignore_addons", value=ignore_addons, expected_type=type_hints["ignore_addons"])
             check_type(argname="argument ignore_certificate_clusters_data", value=ignore_certificate_clusters_data, expected_type=type_hints["ignore_certificate_clusters_data"])
             check_type(argname="argument ignore_certificate_users_data", value=ignore_certificate_users_data, expected_type=type_hints["ignore_certificate_users_data"])
+            check_type(argname="argument ipv6_enable", value=ipv6_enable, expected_type=type_hints["ipv6_enable"])
             check_type(argname="argument kube_proxy_mode", value=kube_proxy_mode, expected_type=type_hints["kube_proxy_mode"])
             check_type(argname="argument kubernetes_svc_ip_range", value=kubernetes_svc_ip_range, expected_type=type_hints["kubernetes_svc_ip_range"])
             check_type(argname="argument labels", value=labels, expected_type=type_hints["labels"])
@@ -2003,6 +2036,8 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["ignore_certificate_clusters_data"] = ignore_certificate_clusters_data
         if ignore_certificate_users_data is not None:
             self._values["ignore_certificate_users_data"] = ignore_certificate_users_data
+        if ipv6_enable is not None:
+            self._values["ipv6_enable"] = ipv6_enable
         if kube_proxy_mode is not None:
             self._values["kube_proxy_mode"] = kube_proxy_mode
         if kubernetes_svc_ip_range is not None:
@@ -2090,42 +2125,42 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def cluster_type(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#cluster_type CceClusterV3#cluster_type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#cluster_type CceClusterV3#cluster_type}.'''
         result = self._values.get("cluster_type")
         assert result is not None, "Required property 'cluster_type' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def container_network_type(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#container_network_type CceClusterV3#container_network_type}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#container_network_type CceClusterV3#container_network_type}.'''
         result = self._values.get("container_network_type")
         assert result is not None, "Required property 'container_network_type' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def flavor_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#flavor_id CceClusterV3#flavor_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#flavor_id CceClusterV3#flavor_id}.'''
         result = self._values.get("flavor_id")
         assert result is not None, "Required property 'flavor_id' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#name CceClusterV3#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#name CceClusterV3#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def subnet_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#subnet_id CceClusterV3#subnet_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#subnet_id CceClusterV3#subnet_id}.'''
         result = self._values.get("subnet_id")
         assert result is not None, "Required property 'subnet_id' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def vpc_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#vpc_id CceClusterV3#vpc_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#vpc_id CceClusterV3#vpc_id}.'''
         result = self._values.get("vpc_id")
         assert result is not None, "Required property 'vpc_id' is missing"
         return typing.cast(builtins.str, result)
@@ -2134,13 +2169,13 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
     def annotations(
         self,
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#annotations CceClusterV3#annotations}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#annotations CceClusterV3#annotations}.'''
         result = self._values.get("annotations")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def api_access_trustlist(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#api_access_trustlist CceClusterV3#api_access_trustlist}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#api_access_trustlist CceClusterV3#api_access_trustlist}.'''
         result = self._values.get("api_access_trustlist")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
@@ -2148,98 +2183,98 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
     def authenticating_proxy(self) -> typing.Optional[CceClusterV3AuthenticatingProxy]:
         '''authenticating_proxy block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#authenticating_proxy CceClusterV3#authenticating_proxy}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#authenticating_proxy CceClusterV3#authenticating_proxy}
         '''
         result = self._values.get("authenticating_proxy")
         return typing.cast(typing.Optional[CceClusterV3AuthenticatingProxy], result)
 
     @builtins.property
     def authenticating_proxy_ca(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#authenticating_proxy_ca CceClusterV3#authenticating_proxy_ca}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#authenticating_proxy_ca CceClusterV3#authenticating_proxy_ca}.'''
         result = self._values.get("authenticating_proxy_ca")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def authentication_mode(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#authentication_mode CceClusterV3#authentication_mode}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#authentication_mode CceClusterV3#authentication_mode}.'''
         result = self._values.get("authentication_mode")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def billing_mode(self) -> typing.Optional[jsii.Number]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#billing_mode CceClusterV3#billing_mode}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#billing_mode CceClusterV3#billing_mode}.'''
         result = self._values.get("billing_mode")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def cluster_version(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#cluster_version CceClusterV3#cluster_version}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#cluster_version CceClusterV3#cluster_version}.'''
         result = self._values.get("cluster_version")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def container_network_cidr(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#container_network_cidr CceClusterV3#container_network_cidr}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#container_network_cidr CceClusterV3#container_network_cidr}.'''
         result = self._values.get("container_network_cidr")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete_all_network(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_all_network CceClusterV3#delete_all_network}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_all_network CceClusterV3#delete_all_network}.'''
         result = self._values.get("delete_all_network")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete_all_storage(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_all_storage CceClusterV3#delete_all_storage}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_all_storage CceClusterV3#delete_all_storage}.'''
         result = self._values.get("delete_all_storage")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete_efs(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_efs CceClusterV3#delete_efs}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_efs CceClusterV3#delete_efs}.'''
         result = self._values.get("delete_efs")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete_eni(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_eni CceClusterV3#delete_eni}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_eni CceClusterV3#delete_eni}.'''
         result = self._values.get("delete_eni")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete_evs(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_evs CceClusterV3#delete_evs}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_evs CceClusterV3#delete_evs}.'''
         result = self._values.get("delete_evs")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete_net(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_net CceClusterV3#delete_net}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_net CceClusterV3#delete_net}.'''
         result = self._values.get("delete_net")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete_obs(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_obs CceClusterV3#delete_obs}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_obs CceClusterV3#delete_obs}.'''
         result = self._values.get("delete_obs")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete_sfs(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete_sfs CceClusterV3#delete_sfs}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete_sfs CceClusterV3#delete_sfs}.'''
         result = self._values.get("delete_sfs")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def description(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#description CceClusterV3#description}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#description CceClusterV3#description}.'''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def eip(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#eip CceClusterV3#eip}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#eip CceClusterV3#eip}.'''
         result = self._values.get("eip")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -2247,19 +2282,19 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
     def enable_volume_encryption(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#enable_volume_encryption CceClusterV3#enable_volume_encryption}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#enable_volume_encryption CceClusterV3#enable_volume_encryption}.'''
         result = self._values.get("enable_volume_encryption")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def eni_subnet_cidr(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#eni_subnet_cidr CceClusterV3#eni_subnet_cidr}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#eni_subnet_cidr CceClusterV3#eni_subnet_cidr}.'''
         result = self._values.get("eni_subnet_cidr")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def eni_subnet_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#eni_subnet_id CceClusterV3#eni_subnet_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#eni_subnet_id CceClusterV3#eni_subnet_id}.'''
         result = self._values.get("eni_subnet_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -2267,19 +2302,19 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
     def extend_param(
         self,
     ) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#extend_param CceClusterV3#extend_param}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#extend_param CceClusterV3#extend_param}.'''
         result = self._values.get("extend_param")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def highway_subnet_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#highway_subnet_id CceClusterV3#highway_subnet_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#highway_subnet_id CceClusterV3#highway_subnet_id}.'''
         result = self._values.get("highway_subnet_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#id CceClusterV3#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#id CceClusterV3#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -2291,7 +2326,7 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
     def ignore_addons(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#ignore_addons CceClusterV3#ignore_addons}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ignore_addons CceClusterV3#ignore_addons}.'''
         result = self._values.get("ignore_addons")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -2299,7 +2334,7 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
     def ignore_certificate_clusters_data(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#ignore_certificate_clusters_data CceClusterV3#ignore_certificate_clusters_data}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ignore_certificate_clusters_data CceClusterV3#ignore_certificate_clusters_data}.'''
         result = self._values.get("ignore_certificate_clusters_data")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -2307,25 +2342,33 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
     def ignore_certificate_users_data(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#ignore_certificate_users_data CceClusterV3#ignore_certificate_users_data}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ignore_certificate_users_data CceClusterV3#ignore_certificate_users_data}.'''
         result = self._values.get("ignore_certificate_users_data")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
+    def ipv6_enable(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#ipv6_enable CceClusterV3#ipv6_enable}.'''
+        result = self._values.get("ipv6_enable")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    @builtins.property
     def kube_proxy_mode(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#kube_proxy_mode CceClusterV3#kube_proxy_mode}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#kube_proxy_mode CceClusterV3#kube_proxy_mode}.'''
         result = self._values.get("kube_proxy_mode")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def kubernetes_svc_ip_range(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#kubernetes_svc_ip_range CceClusterV3#kubernetes_svc_ip_range}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#kubernetes_svc_ip_range CceClusterV3#kubernetes_svc_ip_range}.'''
         result = self._values.get("kubernetes_svc_ip_range")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def labels(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#labels CceClusterV3#labels}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#labels CceClusterV3#labels}.'''
         result = self._values.get("labels")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
@@ -2335,7 +2378,7 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CceClusterV3Masters"]]]:
         '''masters block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#masters CceClusterV3#masters}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#masters CceClusterV3#masters}
         '''
         result = self._values.get("masters")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["CceClusterV3Masters"]]], result)
@@ -2344,7 +2387,7 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
     def multi_az(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#multi_az CceClusterV3#multi_az}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#multi_az CceClusterV3#multi_az}.'''
         result = self._values.get("multi_az")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -2352,19 +2395,19 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
     def no_addons(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#no_addons CceClusterV3#no_addons}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#no_addons CceClusterV3#no_addons}.'''
         result = self._values.get("no_addons")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def region(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#region CceClusterV3#region}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#region CceClusterV3#region}.'''
         result = self._values.get("region")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def security_group_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#security_group_id CceClusterV3#security_group_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#security_group_id CceClusterV3#security_group_id}.'''
         result = self._values.get("security_group_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -2372,14 +2415,14 @@ class CceClusterV3Config(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["CceClusterV3Timeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#timeouts CceClusterV3#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#timeouts CceClusterV3#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["CceClusterV3Timeouts"], result)
 
     @builtins.property
     def timezone(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#timezone CceClusterV3#timezone}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#timezone CceClusterV3#timezone}.'''
         result = self._values.get("timezone")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -2407,7 +2450,7 @@ class CceClusterV3Masters:
         availability_zone: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param availability_zone: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#availability_zone CceClusterV3#availability_zone}.
+        :param availability_zone: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#availability_zone CceClusterV3#availability_zone}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__79692ba17983c0911734b0cf2fef73815b2c6f119e1e4b0e466e2ea4877b8451)
@@ -2418,7 +2461,7 @@ class CceClusterV3Masters:
 
     @builtins.property
     def availability_zone(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#availability_zone CceClusterV3#availability_zone}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#availability_zone CceClusterV3#availability_zone}.'''
         result = self._values.get("availability_zone")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -2602,8 +2645,8 @@ class CceClusterV3Timeouts:
         delete: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#create CceClusterV3#create}.
-        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete CceClusterV3#delete}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#create CceClusterV3#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete CceClusterV3#delete}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__ba781513e5c3394c568f795a2c8bd1a8cd6777880a04a6cc11197678d1cad104)
@@ -2617,13 +2660,13 @@ class CceClusterV3Timeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#create CceClusterV3#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#create CceClusterV3#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def delete(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.38/docs/resources/cce_cluster_v3#delete CceClusterV3#delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/opentelekomcloud/opentelekomcloud/1.36.39/docs/resources/cce_cluster_v3#delete CceClusterV3#delete}.'''
         result = self._values.get("delete")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -2776,6 +2819,7 @@ def _typecheckingstub__32e12eba2304face71ef8e9fdefb3c681346e3305b6644e9bc90d9cfa
     ignore_addons: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ignore_certificate_clusters_data: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ignore_certificate_users_data: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    ipv6_enable: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     kube_proxy_mode: typing.Optional[builtins.str] = None,
     kubernetes_svc_ip_range: typing.Optional[builtins.str] = None,
     labels: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
@@ -2981,6 +3025,12 @@ def _typecheckingstub__db85eaa5d298fae8a20b4a6375b2d020b456ca9d940755bb3aebfc723
     pass
 
 def _typecheckingstub__f33d791c61bde79fd9286897070f836c54fe6f4e7ebb60e7975eda1d08dc18f4(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c9329da405a54d5cf298d45eaa11a7e8a26ed56037c3a5fccd5d830d7672966c(
     value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
 ) -> None:
     """Type checking stubs"""
@@ -3228,6 +3278,7 @@ def _typecheckingstub__0018adff4c4f0557be1ac98a122bacc94570e0375fcf04e887e36283c
     ignore_addons: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ignore_certificate_clusters_data: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ignore_certificate_users_data: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    ipv6_enable: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     kube_proxy_mode: typing.Optional[builtins.str] = None,
     kubernetes_svc_ip_range: typing.Optional[builtins.str] = None,
     labels: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,

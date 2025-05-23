@@ -1850,6 +1850,25 @@ def create_package_sync_software_env(
         return package_sync_env_alias
 
 
+def get_cluster_from_node():
+    """
+    Get ``coiled.Cluster()`` object for the cluster where this is run.
+    """
+    import os
+
+    import coiled
+
+    scheduler_address = os.environ.get("COILED_INTERNAL_DASK_SCHEDULER_ADDRESS")
+    cluster_name = os.environ.get("COILED_CLUSTER_NAME")
+
+    if not scheduler_address or not cluster_name:
+        raise RuntimeError(
+            "Code doesn't appear to be running on node of a Coiled cluster (expected env vars are not set)"
+        )
+
+    return coiled.Cluster(cluster_name)
+
+
 def get_dask_client_from_batch_node():
     """
     Get Dask client for a Coiled Batch cluster.

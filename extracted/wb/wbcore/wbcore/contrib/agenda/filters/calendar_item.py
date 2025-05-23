@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django.utils.translation import gettext_lazy as _
+from psycopg.types.range import DateRange
 
 from wbcore import filters as wb_filters
 from wbcore.contrib.agenda.models import CalendarItem, ConferenceRoom
@@ -34,7 +35,7 @@ class CalendarItemPeriodBaseFilterSet(wb_filters.FilterSet):
         fields = {}
 
 
-def get_calendar_period_default(*args, **kwargs) -> dict:
+def get_calendar_period_default(*args, **kwargs):
     month_start = current_month_date_start(*args, **kwargs)
     last_monday_from_month_start = month_start - timedelta(days=month_start.weekday())
 
@@ -42,8 +43,7 @@ def get_calendar_period_default(*args, **kwargs) -> dict:
     next_week_sunday_after_month = week_after_month + timedelta(
         days=6 - week_after_month.weekday()
     )  # weekday will return value between 0 and 6 so in order to get the next Sunday we need to subtract from 6
-
-    return {"period": f"{last_monday_from_month_start:%Y-%m-%d},{next_week_sunday_after_month:%Y-%m-%d}"}
+    return DateRange(last_monday_from_month_start, next_week_sunday_after_month)
 
 
 class CalendarItemFilter(CalendarItemPeriodBaseFilterSet):
@@ -58,6 +58,7 @@ class CalendarItemFilter(CalendarItemPeriodBaseFilterSet):
         value_key=Entry.get_representation_value_key(),
         label_key=Entry.get_representation_label_key(),
         field_name="entities",
+        initial=lambda field, request, view: request.user.profile.id,
     )
 
     class Meta:

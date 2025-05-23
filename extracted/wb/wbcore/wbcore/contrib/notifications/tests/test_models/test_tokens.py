@@ -19,4 +19,12 @@ class TestNotificationUserToken:
         setting = NotificationTypeSettingModelFactory(
             user=notification_user_token.user, enable_web=True, enable_mobile=True
         )
+        assert setting.enable_web is False
+        assert setting.enable_mobile is False
+        assert not NotificationUserToken.objects.filter_for_user_settings(setting).exists()
+
+        setting.enable_web = True
+        setting.enable_mobile = True
+        setting.save()
+
         assert NotificationUserToken.objects.filter_for_user_settings(setting).first() == notification_user_token  # type: ignore

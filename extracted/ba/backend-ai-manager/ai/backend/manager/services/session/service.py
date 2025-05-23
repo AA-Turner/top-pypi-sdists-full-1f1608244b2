@@ -18,14 +18,24 @@ from dateutil.tz import tzutc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import load_only, noload, selectinload
 
-from ai.backend.common.bgtask import BackgroundTaskManager, ProgressReporter
+from ai.backend.common.bgtask.bgtask import BackgroundTaskManager, ProgressReporter
+from ai.backend.common.bgtask.types import BgtaskStatus
 from ai.backend.common.docker import DEFAULT_KERNEL_FEATURE, ImageRef, KernelFeatures, LabelName
-from ai.backend.common.events import (
-    BgtaskCancelledEvent,
-    BgtaskDoneEvent,
-    BgtaskFailedEvent,
+from ai.backend.common.events.bgtask import (
+    BaseBgtaskDoneEvent,
 )
-from ai.backend.common.exception import BackendError, InvalidAPIParameters, UnknownImageReference
+from ai.backend.common.events.hub.hub import EventHub
+from ai.backend.common.events.hub.propagators.bgtask import BgtaskPropagator
+from ai.backend.common.events.types import (
+    EventDomain,
+)
+from ai.backend.common.exception import (
+    BackendAIError,
+    BgtaskCancelledError,
+    BgtaskFailedError,
+    InvalidAPIParameters,
+    UnknownImageReference,
+)
 from ai.backend.common.json import load_json
 from ai.backend.common.plugin.monitor import ErrorPluginContext
 from ai.backend.common.types import (
@@ -36,7 +46,16 @@ from ai.backend.common.types import (
     SessionTypes,
 )
 from ai.backend.logging.utils import BraceStyleAdapter
-from ai.backend.manager.api.exceptions import (
+from ai.backend.manager.api.scaling_group import query_wsproxy_status
+from ai.backend.manager.api.session import (
+    CustomizedImageVisibilityScope,
+    drop_undefined,
+    find_dependency_sessions,
+    find_dependent_sessions,
+    overwritten_param_check,
+)
+from ai.backend.manager.api.utils import undefined
+from ai.backend.manager.errors.exceptions import (
     AppNotFound,
     GenericForbidden,
     InternalServerError,
@@ -48,15 +67,6 @@ from ai.backend.manager.api.exceptions import (
     TooManySessionsMatched,
     UnknownImageReferenceError,
 )
-from ai.backend.manager.api.scaling_group import query_wsproxy_status
-from ai.backend.manager.api.session import (
-    CustomizedImageVisibilityScope,
-    drop_undefined,
-    find_dependency_sessions,
-    find_dependent_sessions,
-    overwritten_param_check,
-)
-from ai.backend.manager.api.utils import undefined
 from ai.backend.manager.idle import IdleCheckerHost
 from ai.backend.manager.models.container_registry import ContainerRegistryRow
 from ai.backend.manager.models.group import GroupRow, groups
@@ -195,6 +205,7 @@ class SessionServiceArgs:
     db: ExtendedAsyncSAEngine
     agent_registry: AgentRegistry
     background_task_manager: BackgroundTaskManager
+    event_hub: EventHub
     error_monitor: ErrorPluginContext
     idle_checker_host: IdleCheckerHost
 
@@ -203,6 +214,7 @@ class SessionService:
     _db: ExtendedAsyncSAEngine
     _agent_registry: AgentRegistry
     _background_task_manager: BackgroundTaskManager
+    _event_hub: EventHub
     _error_monitor: ErrorPluginContext
     _idle_checker_host: IdleCheckerHost
     _database_ptask_group: aiotools.PersistentTaskGroup
@@ -214,6 +226,7 @@ class SessionService:
     ) -> None:
         self._db = args.db
         self._agent_registry = args.agent_registry
+        self._event_hub = args.event_hub
         self._background_task_manager = args.background_task_manager
         self._error_monitor = args.error_monitor
         self._idle_checker_host = args.idle_checker_host
@@ -243,7 +256,7 @@ class SessionService:
                     self._agent_registry.commit_session_to_file(session, filename),
                 ),
             )
-        except BackendError:
+        except BackendAIError:
             log.exception("COMMIT_SESSION: exception")
             raise
 
@@ -279,7 +292,7 @@ class SessionService:
             )
         except AssertionError:
             raise InvalidAPIParameters
-        except BackendError:
+        except BackendAIError:
             log.exception("COMPLETE: exception")
             raise
         return CompleteActionResult(
@@ -410,9 +423,9 @@ class SessionService:
                     kern_features: list[str]
                     if existing_row:
                         kern_features = existing_row.labels.get(
-                            LabelName.FEATURES.value, DEFAULT_KERNEL_FEATURE
+                            LabelName.FEATURES, DEFAULT_KERNEL_FEATURE
                         ).split()
-                        customized_image_id = existing_row.labels[LabelName.CUSTOMIZED_ID.value]
+                        customized_image_id = existing_row.labels[LabelName.CUSTOMIZED_ID]
                         log.debug("reusing existing customized image ID {}", customized_image_id)
                     else:
                         kern_features = [DEFAULT_KERNEL_FEATURE]
@@ -431,15 +444,15 @@ class SessionService:
                     is_local=base_image_ref.is_local,
                 )
 
-                image_labels = {
-                    LabelName.CUSTOMIZED_OWNER.value: f"{image_visibility.value}:{image_owner_id}",
-                    LabelName.CUSTOMIZED_NAME.value: image_name,
-                    LabelName.CUSTOMIZED_ID.value: customized_image_id,
-                    LabelName.FEATURES.value: " ".join(kern_features),
+                image_labels: dict[str | LabelName, str] = {
+                    LabelName.CUSTOMIZED_OWNER: f"{image_visibility.value}:{image_owner_id}",
+                    LabelName.CUSTOMIZED_NAME: image_name,
+                    LabelName.CUSTOMIZED_ID: customized_image_id,
+                    LabelName.FEATURES: " ".join(kern_features),
                 }
                 match image_visibility:
                     case CustomizedImageVisibilityScope.USER:
-                        image_labels[LabelName.CUSTOMIZED_USER_EMAIL.value] = action.user_email
+                        image_labels[LabelName.CUSTOMIZED_USER_EMAIL] = action.user_email
 
                 # commit image with new tag set
                 resp = await self._agent_registry.commit_session(
@@ -447,17 +460,29 @@ class SessionService:
                     new_image_ref,
                     extra_labels=image_labels,
                 )
-                async for event, _ in self._background_task_manager.poll_bgtask_event(
-                    uuid.UUID(resp["bgtask_id"])
-                ):
-                    match event:
-                        case BgtaskDoneEvent():
-                            await reporter.update(increment=1, message="Committed image")
-                            break
-                        case BgtaskFailedEvent():
-                            raise BackendError(extra_msg=event.message)
-                        case BgtaskCancelledEvent():
-                            raise BackendError(extra_msg="Operation cancelled")
+                bgtask_id = cast(uuid.UUID, resp["bgtask_id"])
+                propagator = BgtaskPropagator(self._background_task_manager)
+                self._event_hub.register_event_propagator(
+                    propagator, [(EventDomain.BGTASK, str(bgtask_id))]
+                )
+                try:
+                    async for event in propagator.receive(bgtask_id):
+                        if not isinstance(event, BaseBgtaskDoneEvent):
+                            log.warning("unexpected event: {}", event)
+                            continue
+                        match event.status():
+                            case BgtaskStatus.DONE | BgtaskStatus.PARTIAL_SUCCESS:
+                                # TODO: PARTIAL_SUCCESS should be handled
+                                await reporter.update(increment=1, message="Committed image")
+                                break
+                            case BgtaskStatus.FAILED:
+                                raise BgtaskFailedError(extra_msg=event.message)
+                            case BgtaskStatus.CANCELLED:
+                                raise BgtaskCancelledError(extra_msg="Operation cancelled")
+                            case _:
+                                log.warning("unexpected bgtask done event: {}", event)
+                finally:
+                    self._event_hub.unregister_event_propagator(propagator.id())
 
                 if not new_image_ref.is_local:
                     # push image to registry from local agent
@@ -472,16 +497,27 @@ class SessionService:
                         new_image_ref,
                         image_registry,
                     )
-                    async for event, _ in self._background_task_manager.poll_bgtask_event(
-                        uuid.UUID(resp["bgtask_id"])
-                    ):
-                        match event:
-                            case BgtaskDoneEvent():
-                                break
-                            case BgtaskFailedEvent():
-                                raise BackendError(extra_msg=event.message)
-                            case BgtaskCancelledEvent():
-                                raise BackendError(extra_msg="Operation cancelled")
+                    bgtask_id = cast(uuid.UUID, resp["bgtask_id"])
+                    propagator = BgtaskPropagator(self._background_task_manager)
+                    self._event_hub.register_event_propagator(
+                        propagator, [(EventDomain.BGTASK, str(bgtask_id))]
+                    )
+                    try:
+                        async for event in propagator.receive(bgtask_id):
+                            if not isinstance(event, BaseBgtaskDoneEvent):
+                                log.warning("unexpected event: {}", event)
+                                continue
+                            match event.status():
+                                case BgtaskStatus.DONE | BgtaskStatus.PARTIAL_SUCCESS:
+                                    break
+                                case BgtaskStatus.FAILED:
+                                    raise BgtaskFailedError(extra_msg=event.message)
+                                case BgtaskStatus.CANCELLED:
+                                    raise BgtaskCancelledError(extra_msg="Operation cancelled")
+                                case _:
+                                    log.warning("unexpected bgtask done event: {}", event)
+                    finally:
+                        self._event_hub.unregister_event_propagator(propagator.id())
 
                 await reporter.update(increment=1, message="Pushed image to registry")
                 # rescan updated image only
@@ -492,11 +528,12 @@ class SessionService:
                     reporter=reporter,
                 )
                 await reporter.update(increment=1, message="Completed")
-            except BackendError:
+            except BackendAIError:
                 log.exception("CONVERT_SESSION_TO_IMAGE: exception")
                 raise
 
         task_id = await self._background_task_manager.start(_commit_and_upload)
+
         return ConvertSessionToImageActionResult(task_id=task_id, session_row=session)
 
     async def create_cluster(self, action: CreateClusterAction) -> CreateClusterActionResult:
@@ -569,7 +606,7 @@ class SessionService:
             return CreateClusterActionResult(result=resp, session_id=resp["kernelId"])
         except TooManySessionsMatched:
             raise SessionAlreadyExists
-        except BackendError:
+        except BackendAIError:
             log.exception("GET_OR_CREATE: exception")
             raise
         except UnknownImageReference:
@@ -667,7 +704,7 @@ class SessionService:
             return CreateFromParamsActionResult(session_id=resp["sessionId"], result=resp)
         except UnknownImageReference:
             raise UnknownImageReferenceError(f"Unknown image reference: {image}")
-        except BackendError:
+        except BackendAIError:
             log.exception("GET_OR_CREATE: exception")
             raise
         except Exception:
@@ -885,7 +922,7 @@ class SessionService:
             return CreateFromTemplateActionResult(session_id=resp["sessionId"], result=resp)
         except UnknownImageReference:
             raise UnknownImageReferenceError(f"Unknown image reference: {image}")
-        except BackendError:
+        except BackendAIError:
             log.exception("GET_OR_CREATE: exception")
             raise
         except Exception:
@@ -979,7 +1016,7 @@ class SessionService:
             result = await self._agent_registry.download_single(session, owner_access_key, file)
         except asyncio.CancelledError:
             raise
-        except BackendError:
+        except BackendAIError:
             log.exception("DOWNLOAD_SINGLE: exception")
             raise
         except (ValueError, FileNotFoundError):
@@ -1017,7 +1054,7 @@ class SessionService:
             log.debug("file(s) inside container retrieved")
         except asyncio.CancelledError:
             raise
-        except BackendError:
+        except BackendAIError:
             log.exception("DOWNLOAD_FILE: exception")
             raise
         except (ValueError, FileNotFoundError):
@@ -1132,7 +1169,7 @@ class SessionService:
         except AssertionError as e:
             log.warning("EXECUTE: invalid/missing parameters: {0!r}", e)
             raise InvalidAPIParameters(extra_msg=e.args[0])
-        except BackendError:
+        except BackendAIError:
             log.exception("EXECUTE: exception")
             raise
 
@@ -1153,7 +1190,7 @@ class SessionService:
                 )
             kernel = session.main_kernel
             report = await self._agent_registry.get_abusing_report(kernel.id)
-        except BackendError:
+        except BackendAIError:
             log.exception("GET_ABUSING_REPORT: exception")
             raise
         return GetAbusingReportActionResult(result=report, session_row=session)
@@ -1171,7 +1208,7 @@ class SessionService:
                     kernel_loading_strategy=KernelLoadingStrategy.MAIN_KERNEL_ONLY,
                 )
             statuses = await self._agent_registry.get_commit_status([session.main_kernel.id])
-        except BackendError:
+        except BackendAIError:
             log.exception("GET_COMMIT_STATUS: exception")
             raise
         resp = {"status": statuses[session.main_kernel.id], "kernel": str(session.main_kernel.id)}
@@ -1360,7 +1397,7 @@ class SessionService:
             log.debug("container file list for {0} retrieved", path)
         except asyncio.CancelledError:
             raise
-        except BackendError:
+        except BackendAIError:
             log.exception("LIST_FILES: exception")
             raise
         except Exception:

@@ -148,6 +148,7 @@ uv sync
 @app.command()
 def setup_dev():
   os.system("uv pip install git+https://github.com/google/adk-python.git@main")
+  os.system("uv pip install --group media --group dev")
 
 
 @app.command()
@@ -185,13 +186,6 @@ def run_short():
     )
 
   asyncio.run(run_task())
-
-
-# @app.command()
-# def mtmagent():
-#   from mtmai.agents.mtmagent import MtmaiAgent
-
-#   asyncio.run(MtmaiAgent().run())
 
 
 if __name__ == "__main__":

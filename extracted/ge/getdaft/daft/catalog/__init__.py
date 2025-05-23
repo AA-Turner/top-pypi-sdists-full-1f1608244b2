@@ -47,12 +47,12 @@ from daft.daft import PyIdentifier
 
 from daft.dataframe import DataFrame
 
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, overload
 
 from daft.logical.schema import Schema
 
 if TYPE_CHECKING:
-    from daft.dataframe.dataframe import ColumnInputType
+    from daft.utils import ColumnInputType
     from daft.convert import InputListType
 
 
@@ -271,16 +271,16 @@ class Catalog(ABC):
     def from_iceberg(catalog: object) -> Catalog:
         """Create a Daft Catalog from a PyIceberg catalog object.
 
-        Example:
-            >>> from pyiceberg.catalog import load_catalog
-            >>> iceberg_catalog = load_catalog("my_iceberg_catalog")
-            >>> catalog = Catalog.from_iceberg(iceberg_catalog)
-
         Args:
             catalog (object): a PyIceberg catalog instance
 
         Returns:
             Catalog: a new Catalog instance backed by the PyIceberg catalog.
+
+        Examples:
+            >>> from pyiceberg.catalog import load_catalog
+            >>> iceberg_catalog = load_catalog("my_iceberg_catalog")
+            >>> catalog = Catalog.from_iceberg(iceberg_catalog)
         """
         try:
             from daft.catalog.__iceberg import IcebergCatalog
@@ -293,16 +293,17 @@ class Catalog(ABC):
     def from_unity(catalog: object) -> Catalog:
         """Create a Daft Catalog from a Unity Catalog client.
 
-        Example:
-            >>> from unity_sdk import UnityCatalogClient
-            >>> unity_client = UnityCatalogClient(...)
-            >>> catalog = Catalog.from_unity(unity_client)
-
         Args:
             catalog (object): a Unity Catalog client instance
 
         Returns:
             Catalog: a new Catalog instance backed by the Unity catalog.
+
+        Examples:
+            >>> from unity_sdk import UnityCatalogClient
+            >>> unity_client = UnityCatalogClient(...)
+            >>> catalog = Catalog.from_unity(unity_client)
+
         """
         try:
             from daft.catalog.__unity import UnityCatalog
@@ -322,11 +323,6 @@ class Catalog(ABC):
         If neither a boto3 client nor session is provided, the Iceberg REST
         client will be used under the hood.
 
-        Example:
-            >>> arn = "arn:aws:s3:::my-s3tables-bucket"
-            >>> catalog = Catalog.from_s3tables(arn)
-            >>> catalog.list_tables()
-
         Args:
             table_bucket_arn (str): ARN of the S3 Tables bucket
             client (object, optional): a boto3 client
@@ -334,6 +330,11 @@ class Catalog(ABC):
 
         Returns:
             Catalog: a new Catalog instance backed by S3 Tables.
+
+        Examples:
+            >>> arn = "arn:aws:s3:::my-s3tables-bucket"
+            >>> catalog = Catalog.from_s3tables(arn)
+            >>> catalog.list_tables()
         """
         try:
             from daft.catalog.__s3tables import S3Catalog
@@ -341,9 +342,9 @@ class Catalog(ABC):
             if client is not None and session is not None:
                 raise ValueError("Can provide either a client or session but not both.")
             elif client is not None:
-                return S3Catalog.from_client(table_bucket_arn, client)
+                return S3Catalog.from_client(table_bucket_arn, client)  # type: ignore
             elif session is not None:
-                return S3Catalog.from_session(table_bucket_arn, session)
+                return S3Catalog.from_session(table_bucket_arn, session)  # type: ignore
             else:
                 return S3Catalog.from_arn(table_bucket_arn)
         except ImportError:
@@ -376,9 +377,9 @@ class Catalog(ABC):
             if client is not None and session is not None:
                 raise ValueError("Can provide either a client or session but not both.")
             elif client is not None:
-                return GlueCatalog.from_client(name, client)
+                return GlueCatalog.from_client(name, client)  # type: ignore
             elif session is not None:
-                return GlueCatalog.from_session(name, session)
+                return GlueCatalog.from_session(name, session)  # type: ignore
             else:
                 raise ValueError("Must provide either a client or session.")
         except ImportError:
@@ -403,7 +404,7 @@ class Catalog(ABC):
     ###
 
     @abstractmethod
-    def create_namespace(self, identifier: Identifier | str):
+    def create_namespace(self, identifier: Identifier | str) -> None:
         """Creates a namespace in this catalog.
 
         Args:
@@ -411,7 +412,7 @@ class Catalog(ABC):
         """
         raise NotImplementedError
 
-    def create_namespace_if_not_exists(self, identifier: Identifier | str):
+    def create_namespace_if_not_exists(self, identifier: Identifier | str) -> None:
         """Creates a namespace in this catalog if it does not already exist.
 
         Args:
@@ -462,7 +463,7 @@ class Catalog(ABC):
     # has_*
     ###
 
-    def has_namespace(self, identifier: Identifier | str):
+    def has_namespace(self, identifier: Identifier | str) -> bool:
         """Returns True if the namespace exists, otherwise False."""
         raise NotImplementedError(f"Catalog implementation {type(self)} does not support has_namespace")
 
@@ -479,10 +480,10 @@ class Catalog(ABC):
     ###
 
     @abstractmethod
-    def drop_namespace(self, identifier: Identifier | str): ...
+    def drop_namespace(self, identifier: Identifier | str) -> None: ...
 
     @abstractmethod
-    def drop_table(self, identifier: Identifier | str): ...
+    def drop_table(self, identifier: Identifier | str) -> None: ...
 
     ###
     # get_*
@@ -529,7 +530,7 @@ class Catalog(ABC):
     # read_*
     ###
 
-    def read_table(self, identifier: Identifier | str, **options) -> DataFrame:
+    def read_table(self, identifier: Identifier | str, **options: dict[str, Any]) -> DataFrame:
         """Returns the table as a DataFrame or raises an exception if it does not exist."""
         return self.get_table(identifier).read(**options)
 
@@ -542,15 +543,15 @@ class Catalog(ABC):
         identifier: Identifier | str,
         df: DataFrame,
         mode: Literal["append", "overwrite"] = "append",
-        **options,
-    ):
+        **options: dict[str, Any],
+    ) -> None:
         return self.get_table(identifier).write(df, mode=mode, **options)
 
     ###
     # python methods
     ###
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Catalog('{self.name}')"
 
     ###
@@ -566,7 +567,7 @@ class Catalog(ABC):
         return self.get_table(name)
 
 
-class Identifier(Sequence):
+class Identifier(Sequence[str]):
     """A reference (path) to a catalog object.
 
     Examples:
@@ -656,11 +657,17 @@ class Identifier(Sequence):
             return False
         return self._ident.eq(other._ident)
 
-    def __getitem__(self, index: int | slice) -> str | Sequence[str]:
-        if isinstance(index, slice):
-            raise IndexError("slicing not supported")
+    @overload
+    def __getitem__(self, index: int, /) -> str: ...
+
+    @overload
+    def __getitem__(self, index: slice, /) -> Sequence[str]: ...
+
+    def __getitem__(self, index: int | slice, /) -> str | Sequence[str]:
         if isinstance(index, int):
             return self._ident.getitem(index)
+        parts = tuple(self)
+        return parts[index]
 
     def __len__(self) -> int:
         return self._ident.__len__()
@@ -781,7 +788,7 @@ class Table(ABC):
         )
 
     @staticmethod
-    def _validate_options(method: str, input: dict[str, Any], valid: set[str]):
+    def _validate_options(method: str, input: dict[str, Any], valid: set[str]) -> None:
         """Validates input options against a set of valid options.
 
         Args:
@@ -801,11 +808,11 @@ class Table(ABC):
     ###
 
     @abstractmethod
-    def read(self, **options: dict[str, Any]) -> DataFrame:
+    def read(self, **options: Any) -> DataFrame:
         """Creates a new DataFrame from this table.
 
         Args:
-            **options (dict[str,Any]): additional format-dependent read options
+            **options (Any): additional format-dependent read options
 
         Returns:
             DataFrame: new DataFrame instance
@@ -838,30 +845,30 @@ class Table(ABC):
     ###
 
     @abstractmethod
-    def write(self, df: DataFrame, mode: Literal["append", "overwrite"] = "append", **options: dict[str, Any]) -> None:
+    def write(self, df: DataFrame, mode: Literal["append", "overwrite"] = "append", **options: Any) -> None:
         """Writes the DataFrame to this table.
 
         Args:
             df (DataFrame): datafram to write
             mode (str): write mode such as 'append' or 'overwrite'
-            **options (dict[str,Any]): additional format-dependent write options
+            **options (Any): additional format-dependent write options
         """
 
-    def append(self, df: DataFrame, **options: dict[str, Any]) -> None:
+    def append(self, df: DataFrame, **options: Any) -> None:
         """Appends the DataFrame to this table.
 
         Args:
             df (DataFrame): dataframe to append
-            **options (dict[str,Any]): additional format-dependent write options
+            **options (Any): additional format-dependent write options
         """
         self.write(df, mode="append", **options)
 
-    def overwrite(self, df: DataFrame, **options: dict[str, Any]) -> None:
+    def overwrite(self, df: DataFrame, **options: Any) -> None:
         """Overwrites this table with the given DataFrame.
 
         Args:
             df (DataFrame): dataframe to overwrite this table with
-            **options: additional format-dependent write options
+            **options (Any): additional format-dependent write options
         """
         self.write(df, mode="overwrite", **options)
 
@@ -869,7 +876,7 @@ class Table(ABC):
     # python methods
     ###
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Table('{self.name}')"
 
     ###

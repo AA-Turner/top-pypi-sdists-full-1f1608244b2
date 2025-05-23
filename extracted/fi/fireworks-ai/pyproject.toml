@@ -57,7 +57,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Development Status :: 3 - Alpha",
 ]
-version = "0.17.8"
+version = "0.17.9"
 
 [project.license]
 text = "MIT"

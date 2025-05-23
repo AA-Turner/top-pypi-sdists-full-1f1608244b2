@@ -4,29 +4,35 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from abc import ABC, abstractmethod
 import argparse
-from collections import OrderedDict
-from dataclasses import dataclass
-from enum import IntEnum
 import importlib.util
 import itertools
 import os
-from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
+from abc import ABC, abstractmethod
+from collections import OrderedDict
+from dataclasses import dataclass
+from enum import IntEnum
+from pathlib import Path
 from types import ModuleType
-from typing import Callable, Dict, List, NoReturn, Optional
+from typing import Callable, NoReturn, Optional
 
 import colorama
 import pykwalify
+
+try:
+    from yaml import CSafeLoader as SafeLoader
+except ImportError:
+    from yaml import SafeLoader  # type: ignore
+
 import yaml
 
 from west.configuration import Configuration
 from west.manifest import Manifest, Project
-from west.util import escapes_directory, quote_sh_list, PathType
+from west.util import PathType, escapes_directory, quote_sh_list
 
 '''\
 This package provides WestCommand, which is the common abstraction all
@@ -41,7 +47,7 @@ _EXT_SCHEMA_PATH = os.path.join(os.path.dirname(__file__),
 
 # Cache which maps files implementing extension commands to their
 # imported modules.
-_EXT_MODULES_CACHE: Dict[str, ModuleType] = {}
+_EXT_MODULES_CACHE: dict[str, ModuleType] = {}
 # Infinite iterator of "fresh" extension command module names.
 _EXT_MODULES_NAME_IT = (f'west.commands.ext.cmd_{i}'
                         for i in itertools.count(1))
@@ -62,7 +68,7 @@ class ExtensionCommandError(CommandError):
 
     def __init__(self, **kwargs):
         self.hint = kwargs.pop('hint', None)
-        super(ExtensionCommandError, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 def _no_topdir_msg(cwd, name):
     return f'''\
@@ -149,7 +155,7 @@ class WestCommand(ABC):
         self.topdir: Optional[str] = None
         self.manifest = None
         self.config = None
-        self._hooks: List[Callable[['WestCommand'], None]] = []
+        self._hooks: list[Callable[[WestCommand], None]] = []
 
     def add_pre_run_hook(self,
                          hook: Callable[['WestCommand'], None]) -> None:
@@ -162,7 +168,7 @@ class WestCommand(ABC):
         '''
         self._hooks.append(hook)
 
-    def run(self, args: argparse.Namespace, unknown: List[str],
+    def run(self, args: argparse.Namespace, unknown: list[str],
             topdir: PathType,
             manifest: Optional[Manifest] = None,
             config: Optional[Configuration] = None) -> None:
@@ -229,7 +235,7 @@ class WestCommand(ABC):
         '''
 
     @abstractmethod
-    def do_run(self, args: argparse.Namespace, unknown: List[str]):
+    def do_run(self, args: argparse.Namespace, unknown: list[str]):
         '''Subclasses must implement; called to run the command.
 
         :param args: ``argparse.Namespace`` of parsed arguments
@@ -647,9 +653,9 @@ def _ext_specs(project):
             continue
 
         # Load the spec file and check the schema.
-        with open(spec_file, 'r') as f:
+        with open(spec_file) as f:
             try:
-                commands_spec = yaml.safe_load(f.read())
+                commands_spec = yaml.load(f.read(), Loader=SafeLoader)
             except yaml.YAMLError as e:
                 raise ExtensionCommandError from e
         try:
@@ -696,8 +702,6 @@ def _commands_module_from_file(file):
     # returned from a cache if the same file is ever imported again,
     # to avoid a double import in case the file maintains module-level
     # state or defines multiple commands.
-    global _EXT_MODULES_CACHE
-    global _EXT_MODULES_NAME_IT
 
     # Use an absolute pathobj to handle canonicalization, e.g.:
     #

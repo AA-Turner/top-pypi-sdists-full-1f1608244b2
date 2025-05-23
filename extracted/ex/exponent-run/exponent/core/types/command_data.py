@@ -1,7 +1,8 @@
+from abc import ABC
 from enum import Enum
-from typing import Any, ClassVar, Literal, Optional, Union
+from typing import Annotated, Any, ClassVar, Literal, Optional, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class CommandType(str, Enum):
@@ -106,15 +107,22 @@ class AskCommandData(CommandData):
     ask_raw: str
 
 
-CommandDataType = Union[
-    FileReadCommandData,
-    ThinkingCommandData,
-    PrototypeCommandData,
-    SummarizeCommandData,  # deprecated
-    DBQueryCommandData,
-    DBGetTableNamesCommandData,
-    DBGetTableSchemaCommandData,
-    StepOutputCommandData,
-    AnswerCommandData,
-    AskCommandData,
+CommandDataType = Annotated[
+    Union[
+        FileReadCommandData,
+        ThinkingCommandData,
+        PrototypeCommandData,
+        SummarizeCommandData,  # deprecated
+        DBQueryCommandData,
+        DBGetTableNamesCommandData,
+        DBGetTableSchemaCommandData,
+        StepOutputCommandData,
+        AnswerCommandData,
+        AskCommandData,
+    ],
+    Field(discriminator="type"),
 ]
+
+
+class CommandImpl(ABC):
+    command_data_type: ClassVar[type[CommandData]]

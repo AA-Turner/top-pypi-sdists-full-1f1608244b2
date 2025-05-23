@@ -2,16 +2,13 @@
 
 from logging import LogRecord
 from typing import Iterable, TYPE_CHECKING, Sequence
-import sys
-import pytest
+
 from pathlib import Path
 
 from pydoctor import epydoc2stan, model
 from pydoctor.templatewriter import IWriter, TemplateLookup
 from pydoctor.linker import NotFoundLinker
 
-posonlyargs = pytest.mark.skipif(sys.version_info < (3, 8), reason="requires python 3.8")
-typecomment = pytest.mark.skipif(sys.version_info < (3, 8), reason="requires python 3.8")
 NotFoundLinker = NotFoundLinker
 
 # Because pytest 6.1 does not yet export types for fixtures, we define
@@ -81,4 +78,3 @@ class InMemoryWriter(IWriter):
 
         for o in ob.contents.values():
             self._writeDocsFor(o)
-        

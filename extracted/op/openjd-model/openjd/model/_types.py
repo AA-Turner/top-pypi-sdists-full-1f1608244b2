@@ -6,7 +6,7 @@ import sys
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Callable, ClassVar, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Callable, ClassVar, Optional, Iterable, Type, Union
 
 from pydantic import ConfigDict, BaseModel
 
@@ -247,14 +247,13 @@ class JobCreationMetadata:
     not be provided values, or kwargs even, for these fields.
     """
 
-    adds_fields: Optional[Callable[[str, "OpenJDModel", SymbolTable], dict[str, Any]]] = field(
+    adds_fields: Optional[Callable[["OpenJDModel", SymbolTable], dict[str, Any]]] = field(
         default=None
     )
     """This property defines a callable that uses the instantiation context (i.e. SymbolTable) and
     can materialize new fields that are not already present in the model.
-        arg0 - The model key where this model was found.
-        arg1 - The model that is adding a value.
-        arg2 - The symbol table used in the instantiation.
+        arg0 - The model that is adding a value.
+        arg1 - The symbol table used in the instantiation.
         Use-case: Transforming Job Parameters from their Template form to Job form; we inject the
             value of the parameter from the SymbolTable into the Job.
     """
@@ -322,3 +321,114 @@ class JobParameterInterface(ABC):
             ValueError if the value does not meet at least one constraint
         """
         pass
+
+
+class RevisionExtensions:
+    """
+    Data class for representing a specific OpenJD Specification Revision and set of extensions
+    in order to evaluate supported capabilities.
+
+    This class encapsulates both the specification revision and the set of extensions that are
+    supported or requested by a template.
+
+    Attributes:
+        spec_rev: The revision of the Open Job Description specification being used.
+        extensions: The set of extension names that are supported or requested.
+    """
+
+    spec_rev: SpecificationRevision
+    """This contains the revision of the Open Job Description being parsed (e.g. "2023-09").
+    By providing it in the context, shared code like the FormatString class can do
+    version-specific processing.
+    """
+
+    extensions: set[str]
+    """When parsing a top-level model instance, this is the set of supported extension names.
+    The 'extensions' field is second in the list of model properties for both the job template
+    and environment template, and when that field is processed it becomes the set of extensions
+    that the template requested.
+    """
+
+    def __init__(
+        self, *, spec_rev: SpecificationRevision, supported_extensions: Optional[Iterable[str]]
+    ) -> None:
+        """
+        Initialize a RevisionExtensions instance.
+
+        Args:
+            spec_rev: The specification revision to use.
+            supported_extensions: An optional iterable of extension names that are supported.
+                                 If None, an empty set will be used.
+        """
+        self.spec_rev = spec_rev
+        self.extensions = set(supported_extensions or [])
+
+
+class ModelParsingContextInterface(ABC):
+    """Context required while parsing an OpenJDModel. A subclass
+    must be provided when calling model_validate.
+
+        OpenJDModelSubclass.model_validate(data, context=ModelParsingContext())
+
+    Individual validators receive this value as ValidationInfo.context.
+
+    This interface defines the contract for model parsing contexts across different
+    specification revisions. It provides access to the specification revision and
+    extensions that are supported or requested by a template, which allows validators
+    to adjust their behavior based on the specification version and enabled extensions.
+    """
+
+    revision_extensions: RevisionExtensions
+    """Contains information about the specification revision and supported extensions.
+    This allows shared code like the FormatString class to perform version-specific
+    processing and extension-dependent validation.
+
+    When fields of a model that depend on an extension are processed, its validators should
+    check whether the needed extension is included in the context and adjust its parsing
+    as written in the specification.
+    """
+
+    @property
+    def spec_rev(self) -> SpecificationRevision:
+        """
+        Get the specification revision being used.
+
+        Returns:
+            The specification revision from the revision_extensions.
+        """
+        return self.revision_extensions.spec_rev
+
+    @property
+    def extensions(self) -> set[str]:
+        """
+        Get the set of supported extensions.
+
+        Returns:
+            The set of extension names from the revision_extensions.
+        """
+        return self.revision_extensions.extensions
+
+    @extensions.setter
+    def extensions(self, extension_set: set[str]):
+        """
+        Set the supported extensions.
+
+        Args:
+            extension_set: The new set of extension names to use.
+        """
+        self.revision_extensions.extensions = extension_set
+
+    def __init__(
+        self, *, spec_rev: SpecificationRevision, supported_extensions: Optional[Iterable[str]]
+    ) -> None:
+        """
+        Initialize a ModelParsingContextInterface instance.
+
+        Args:
+            spec_rev: The specification revision to use.
+            supported_extensions: An optional iterable of extension names that are supported.
+                                 If None, an empty set will be used.
+        """
+        self.revision_extensions = RevisionExtensions(
+            spec_rev=spec_rev, supported_extensions=supported_extensions
+        )

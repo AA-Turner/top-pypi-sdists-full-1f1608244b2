@@ -29,6 +29,7 @@ __all__ = (
     "LoggingConfigurationStatusCodeType",
     "PaginatorName",
     "PrometheusServiceServiceName",
+    "QueryLoggingConfigurationStatusCodeType",
     "RegionName",
     "ResourceServiceName",
     "RuleGroupsNamespaceStatusCodeType",
@@ -50,6 +51,9 @@ ListRuleGroupsNamespacesPaginatorName = Literal["list_rule_groups_namespaces"]
 ListScrapersPaginatorName = Literal["list_scrapers"]
 ListWorkspacesPaginatorName = Literal["list_workspaces"]
 LoggingConfigurationStatusCodeType = Literal[
+    "ACTIVE", "CREATING", "CREATION_FAILED", "DELETING", "UPDATE_FAILED", "UPDATING"
+]
+QueryLoggingConfigurationStatusCodeType = Literal[
     "ACTIVE", "CREATING", "CREATION_FAILED", "DELETING", "UPDATE_FAILED", "UPDATING"
 ]
 RuleGroupsNamespaceStatusCodeType = Literal[

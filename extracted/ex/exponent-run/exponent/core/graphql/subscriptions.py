@@ -27,7 +27,6 @@ CHAT_EVENTS_SUBSCRIPTION = """
     $parentUuid: String
     $model: LiteLLMModels!
     $strategyNameOverride: StrategyName
-    $useToolsConfig: UseToolsMode!
     $depthLimit: Int!
     $requireConfirmation: Boolean
     $readOnly: Boolean
@@ -46,7 +45,6 @@ CHAT_EVENTS_SUBSCRIPTION = """
       chatConfig: {
         chatUuid: $chatUuid
         model: $model
-        useToolsConfig: $useToolsConfig
         requireConfirmation: $requireConfirmation
         readOnly: $readOnly
         strategyNameOverride: $strategyNameOverride

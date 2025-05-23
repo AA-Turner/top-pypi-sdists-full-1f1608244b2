@@ -17,7 +17,7 @@ from kubernetes_asyncio import watch
 
 from ai.backend.agent.utils import get_arch_name
 from ai.backend.common.docker import ImageRef
-from ai.backend.common.events import EventProducer
+from ai.backend.common.events.dispatcher import EventProducer
 from ai.backend.common.utils import current_loop
 from ai.backend.logging import BraceStyleAdapter
 from ai.backend.plugin.entrypoint import scan_entrypoints
@@ -229,15 +229,10 @@ class KubernetesKernel(AbstractKernel):
     @override
     async def accept_file(self, container_path: os.PathLike | str, filedata: bytes) -> None:
         loop = current_loop()
-        container_home_path = PurePosixPath("/home/work")
-        try:
-            home_relpath = PurePosixPath(container_path).relative_to(container_home_path)
-        except ValueError:
-            raise PermissionError("Not allowed to upload files outside /home/work")
         host_work_dir: Path = (
             self.agent_config["container"]["scratch-root"] / str(self.kernel_id) / "work"
         )
-        host_abspath = (host_work_dir / home_relpath).resolve(strict=False)
+        host_abspath = (host_work_dir / container_path).resolve(strict=False)
         if not host_abspath.is_relative_to(host_work_dir):
             raise PermissionError("Not allowed to upload files outside /home/work")
 

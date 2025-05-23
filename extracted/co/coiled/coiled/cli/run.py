@@ -729,7 +729,6 @@ def start_run(
 
                     # set dask config so that cluster started from this cluster will re-use software env
                     runtime_env_dict["DASK_COILED__SOFTWARE"] = cluster._software_environment_name
-                    runtime_env_dict["DASK_COILED__SOFTWARE_REQUIRES_VM_ARCH"] = cluster.arch.vm_arch
                     runtime_env_dict["DASK_COILED__SOFTWARE_IS_GPU_CLUSTER"] = cluster._is_gpu_cluster
 
                     # by default "shutdown on close" is also what enables "keepalive" timeout on clusters,

@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from scope_client.api_bindings.models.alert_rule_interval import AlertRuleInterval
 from scope_client.api_bindings.models.post_metrics_query_time_range import PostMetricsQueryTimeRange
 from scope_client.api_bindings.models.result_filter import ResultFilter
 from typing import Optional, Set
@@ -30,9 +31,10 @@ class PostMetricsQuery(BaseModel):
     """ # noqa: E501
     query: StrictStr = Field(description="Query for retrieving the metrics.")
     time_range: PostMetricsQueryTimeRange = Field(description="Time range to filter the metrics by.")
+    interval: Optional[AlertRuleInterval] = None
     limit: Optional[StrictInt] = Field(default=50, description="Limit the number of metrics returned. Defaults to 50.")
     result_filter: Optional[ResultFilter] = None
-    __properties: ClassVar[List[str]] = ["query", "time_range", "limit", "result_filter"]
+    __properties: ClassVar[List[str]] = ["query", "time_range", "interval", "limit", "result_filter"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -76,9 +78,17 @@ class PostMetricsQuery(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of time_range
         if self.time_range:
             _dict['time_range'] = self.time_range.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of interval
+        if self.interval:
+            _dict['interval'] = self.interval.to_dict()
         # override the default output from pydantic by calling `to_dict()` of result_filter
         if self.result_filter:
             _dict['result_filter'] = self.result_filter.to_dict()
+        # set to None if interval (nullable) is None
+        # and model_fields_set contains the field
+        if self.interval is None and "interval" in self.model_fields_set:
+            _dict['interval'] = None
+
         # set to None if result_filter (nullable) is None
         # and model_fields_set contains the field
         if self.result_filter is None and "result_filter" in self.model_fields_set:
@@ -98,6 +108,7 @@ class PostMetricsQuery(BaseModel):
         _obj = cls.model_validate({
             "query": obj.get("query"),
             "time_range": PostMetricsQueryTimeRange.from_dict(obj["time_range"]) if obj.get("time_range") is not None else None,
+            "interval": AlertRuleInterval.from_dict(obj["interval"]) if obj.get("interval") is not None else None,
             "limit": obj.get("limit") if obj.get("limit") is not None else 50,
             "result_filter": ResultFilter.from_dict(obj["result_filter"]) if obj.get("result_filter") is not None else None
         })

@@ -19,7 +19,11 @@ import asyncio
 def get_python_path() -> str:
     """Get the path to the Python interpreter."""
     try:
-        return subprocess.check_output(["which", "python"]).decode().strip()
+        return (
+            subprocess.check_output(["which", "python"])
+            .decode(errors="replace")
+            .strip()
+        )
     except Exception:
         return "unknown"
 

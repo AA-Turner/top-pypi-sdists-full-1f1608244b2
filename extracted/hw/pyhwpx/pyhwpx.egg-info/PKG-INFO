@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pyhwpx
-Version: 1.0.8
+Version: 1.0.14
 Summary: 아래아한글 자동화를 위한 파이썬 모듈 pyhwpx입니다.
 Home-page: https://martiniifun.github.io/pyhwpx/
 Author: ilco
@@ -27,6 +27,8 @@ Dynamic: requires-python
 Dynamic: summary
 
 ## 🐍 pyhwpx: 파이썬-아래아한글 자동화 모듈
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/martiniifun/pyhwpx)
 
 ![introduction](https://raw.githubusercontent.com/martiniifun/pyhwpx/master/docs/assets/introduce.gif
 )

@@ -407,7 +407,6 @@ def get_min_max_from_file(continue_path: str, n: int, _default_min_max: str) -> 
 class ConfigLoader:
     disable_previous_job_constraint: bool
     run_tests_that_fail_on_taurus: bool
-    enforce_sequential_optimization: bool
     num_random_steps: int
     verbose: bool
     disable_tqdm: bool
@@ -448,6 +447,7 @@ class ConfigLoader:
     gridsearch: bool
     auto_exclude_defective_hosts: bool
     debug: bool
+    acquisition_sequential: bool
     num_restarts: int
     raw_samples: int
     show_generate_time_table: bool
@@ -455,6 +455,7 @@ class ConfigLoader:
     dont_warm_start_refitting: bool
     refit_on_cv: bool
     fit_out_of_design: bool
+    fit_abandoned: bool
     no_sleep: bool
     username: Optional[str]
     max_nr_of_zero_results: int
@@ -485,7 +486,7 @@ class ConfigLoader:
     config_json: Optional[str]
     config_yaml: Optional[str]
     workdir: str
-    jit_compile: bool
+    dont_jit_compile: bool
     no_normalize_y: bool
     no_transform_inputs: bool
     occ: bool
@@ -529,7 +530,6 @@ class ConfigLoader:
         optional.add_argument('--run_dir', help='Directory, in which runs should be saved. Default: runs', default='runs', type=str)
         optional.add_argument('--seed', help='Seed for random number generator', type=int)
         optional.add_argument('--decimalrounding', help='Number of decimal places for rounding', type=int, default=4)
-        optional.add_argument('--enforce_sequential_optimization', help='Enforce sequential optimization (default: false)', action='store_true', default=False)
         optional.add_argument('--verbose_tqdm', help='Show verbose TQDM messages', action='store_true', default=False)
         optional.add_argument('--model', help=f'Use special models for nonrandom steps. Valid models are: {joined_supported_models}', type=str, default=None)
         optional.add_argument('--gridsearch', help='Enable gridsearch', action='store_true', default=False)
@@ -572,11 +572,13 @@ class ConfigLoader:
         speed.add_argument('--dont_warm_start_refitting', help='Do not keep Model weights, thus, refit for every generator (may be more accurate, but slower)', action='store_true', default=False)
         speed.add_argument('--refit_on_cv', help='Refit on Cross-Validation (helps in accuracy, but makes generating new points slower)', action='store_true', default=False)
         speed.add_argument('--fit_out_of_design', help='Ignore data points outside of the design while creating new points', action='store_true', default=False)
-        speed.add_argument('--jit_compile', help='Enable JIT-compiling the model', action='store_true', default=False)
+        speed.add_argument('--fit_abandoned', help='Do not ignore abandoned data points while creating new points', action='store_true', default=False)
+        speed.add_argument('--dont_jit_compile', help='Disable JIT-compiling the model', action='store_true', default=False)
         speed.add_argument('--num_restarts', help='num_restarts option for optimizer_options', type=int, default=5)
         speed.add_argument('--raw_samples', help='raw_samples option for optimizer_options', type=int, default=128)
         speed.add_argument('--no_transform_inputs', help='Disable input transformations', action='store_true', default=False)
         speed.add_argument('--no_normalize_y', help='Disable target normalization', action='store_true', default=False)
+        speed.add_argument('--acquisition_sequential', help='Force sequential acquisition generation', action='store_true', default=False)
 
         slurm.add_argument('--num_parallel_jobs', help='Number of parallel SLURM jobs (default: 20)', type=int, default=20)
         slurm.add_argument('--worker_timeout', help='Timeout for SLURM jobs (i.e. for each single point to be optimized)', type=int, default=30)
@@ -1164,6 +1166,19 @@ class ExternalProgramGenerationNode(ExternalGenerationNode):
 
         return parsed_constraints
 
+    def get_and_create_temp_dir(self: Any) -> str:
+        temp_dir_counter = 0
+        temp_dir = os.path.join(get_current_run_folder(), "external_generator_tmp", str(temp_dir_counter))
+        while os.path.isdir(temp_dir):
+            temp_dir_counter = temp_dir_counter + 1
+            temp_dir = os.path.join(get_current_run_folder(), "external_generator_tmp", str(temp_dir_counter))
+
+        os.makedirs(temp_dir, exist_ok=True)
+
+        print_debug(f"Created temporary directory: {temp_dir}")
+
+        return temp_dir
+
     @beartype
     def get_next_candidate(self: Any, pending_parameters: List[Any]) -> Any:
         if self.parameters is None:
@@ -1172,15 +1187,7 @@ class ExternalProgramGenerationNode(ExternalGenerationNode):
         print_debug("Getting next candidate...")
 
         try:
-            temp_dir_counter = 0
-            temp_dir = os.path.join(get_current_run_folder(), "external_generator_tmp", str(temp_dir_counter))
-            while os.path.isdir(temp_dir):
-                temp_dir_counter = temp_dir_counter + 1
-                temp_dir = os.path.join(get_current_run_folder(), "external_generator_tmp", str(temp_dir_counter))
-
-            os.makedirs(temp_dir, exist_ok=True)
-
-            print_debug(f"Created temporary directory: {temp_dir}")
+            temp_dir = self.get_and_create_temp_dir()
 
             if self.experiment.search_space.parameter_constraints:
                 self.constraints = self.experiment.search_space.parameter_constraints
@@ -4628,12 +4635,15 @@ def get_experiment_parameters(_params: list) -> Tuple[AxClient, Union[list, dict
     cli_params_experiment_parameters, experiment_parameters = _params
 
     continue_previous_job = args.continue_previous_job
-    seed = args.seed
     parameter = args.parameter
 
     experiment_constraints = get_constraints()
 
     global ax_client
+
+    if not ax_client:
+        print_red("Something went wrong with the ax_client")
+        my_exit(9)
 
     gpu_string = ""
     gpu_color = "green"
@@ -4645,6 +4655,9 @@ def get_experiment_parameters(_params: list) -> Tuple[AxClient, Union[list, dict
 
         checkpoint_file: str = f"{continue_previous_job}/state_files/checkpoint.json"
         checkpoint_parameters_filepath: str = f"{continue_previous_job}/state_files/checkpoint.json.parameters.json"
+        original_ax_client_file: str = f"{get_current_run_folder()}/state_files/original_ax_client_before_loading_tmp_one.json"
+        state_files_folder = f"{get_current_run_folder()}/state_files"
+        checkpoint_filepath = f'{state_files_folder}/checkpoint.json'
 
         die_with_47_if_file_doesnt_exists(checkpoint_parameters_filepath)
         die_with_47_if_file_doesnt_exists(checkpoint_file)
@@ -4657,45 +4670,33 @@ def get_experiment_parameters(_params: list) -> Tuple[AxClient, Union[list, dict
 
         replace_parameters_for_continued_jobs(parameter, cli_params_experiment_parameters, experiment_parameters)
 
-        original_ax_client_file = f"{get_current_run_folder()}/state_files/original_ax_client_before_loading_tmp_one.json"
+        ax_client.save_to_json_file(filepath=original_ax_client_file)
 
-        if ax_client:
-            ax_client.save_to_json_file(filepath=original_ax_client_file)
+        with open(original_ax_client_file, encoding="utf-8") as f:
+            loaded_original_ax_client_json = json.load(f)
+            original_generation_strategy = loaded_original_ax_client_json["generation_strategy"]
 
-            with open(original_ax_client_file, encoding="utf-8") as f:
-                loaded_original_ax_client_json = json.load(f)
-                original_generation_strategy = loaded_original_ax_client_json["generation_strategy"]
+            if original_generation_strategy:
+                experiment_parameters["generation_strategy"] = original_generation_strategy
 
-                if original_generation_strategy:
-                    experiment_parameters["generation_strategy"] = original_generation_strategy
+        tmp_file_path = get_tmp_file_from_json(experiment_parameters)
+        ax_client = AxClient.load_from_json_file(tmp_file_path)
+        ax_client = cast(AxClient, ax_client)
+        os.unlink(tmp_file_path)
 
-            tmp_file_path = get_tmp_file_from_json(experiment_parameters)
+        makedirs(state_files_folder)
 
-            ax_client = AxClient.load_from_json_file(tmp_file_path)
+        with open(checkpoint_filepath, mode="w", encoding="utf-8") as outfile:
+            json.dump(experiment_parameters, outfile)
 
-            ax_client = cast(AxClient, ax_client)
+        if not os.path.exists(checkpoint_filepath):
+            print_red(f"{checkpoint_filepath} not found. Cannot continue_previous_job without.")
+            my_exit(47)
 
-            os.unlink(tmp_file_path)
+        with open(f'{get_current_run_folder()}/checkpoint_load_source', mode='w', encoding="utf-8") as f:
+            print(f"Continuation from checkpoint {continue_previous_job}", file=f)
 
-            state_files_folder = f"{get_current_run_folder()}/state_files"
-
-            checkpoint_filepath = f'{state_files_folder}/checkpoint.json'
-            makedirs(state_files_folder)
-
-            with open(checkpoint_filepath, mode="w", encoding="utf-8") as outfile:
-                json.dump(experiment_parameters, outfile)
-
-            if not os.path.exists(checkpoint_filepath):
-                print_red(f"{checkpoint_filepath} not found. Cannot continue_previous_job without.")
-                my_exit(47)
-
-            with open(f'{get_current_run_folder()}/checkpoint_load_source', mode='w', encoding="utf-8") as f:
-                print(f"Continuation from checkpoint {continue_previous_job}", file=f)
-
-            copy_continue_uuid()
-        else:
-            print_red("Something went wrong with the ax_client")
-            my_exit(9)
+        copy_continue_uuid()
 
         if experiment_constraints:
             experiment_args = set_experiment_constraints(experiment_constraints, experiment_args, experiment_parameters["experiment"]["search_space"]["parameters"])
@@ -4709,28 +4710,24 @@ def get_experiment_parameters(_params: list) -> Tuple[AxClient, Union[list, dict
             "choose_generation_strategy_kwargs": {
                 "num_trials": max_eval,
                 "num_initialization_trials": num_parallel_jobs,
-                #"use_batch_trials": True,
+                "use_batch_trials": True,
                 "max_parallelism_override": -1,
-                "random_seed": seed
+                "random_seed": args.seed
             },
         }
 
-        if seed:
-            experiment_args["choose_generation_strategy_kwargs"]["random_seed"] = seed
+        if args.seed:
+            experiment_args["choose_generation_strategy_kwargs"]["random_seed"] = args.seed
 
         experiment_args, gpu_string, gpu_color = set_torch_device_to_experiment_args(experiment_args)
 
         experiment_args = set_experiment_constraints(experiment_constraints, experiment_args, experiment_parameters)
 
         try:
-            if ax_client:
-                ax_client.create_experiment(**experiment_args)
+            ax_client.create_experiment(**experiment_args)
 
-                new_metrics = [Metric(k) for k in arg_result_names if k not in ax_client.metric_names]
-                ax_client.experiment.add_tracking_metrics(new_metrics)
-            else:
-                print_red("ax_client could not be found!")
-                sys.exit(9)
+            new_metrics = [Metric(k) for k in arg_result_names if k not in ax_client.metric_names]
+            ax_client.experiment.add_tracking_metrics(new_metrics)
         except AssertionError as error:
             print_red(f"An error has occurred while creating the experiment (0): {error}. This can happen when you have invalid parameter constraints.")
             my_exit(102)
@@ -6555,15 +6552,49 @@ def die_101_if_no_ax_client_or_experiment_or_gs() -> None:
 def get_acquisition_options() -> dict:
     return {
         "optimizer_options": {
+            "sequential": args.acquisition_sequential,
             "num_restarts": args.num_restarts,
             "raw_samples": args.raw_samples
         }
     }
 
+@beartype
+def get_batched_arms(nr_of_jobs_to_get: int) -> list:
+    batched_arms = []
+    attempts = 0
+
+    while len(batched_arms) != nr_of_jobs_to_get:
+        if attempts > args.max_attempts_for_generation:
+            print_debug(f"_fetch_next_trials: Stopped after {attempts} attempts: could not generate enough arms "
+                        f"(got {len(batched_arms)} out of {nr_of_jobs_to_get}).")
+            break
+
+        remaining = nr_of_jobs_to_get - len(batched_arms)
+        print_debug(f"_fetch_next_trials: Attempt {attempts + 1}: requesting {remaining} more arm(s).")
+
+        batched_generator_run = global_gs.gen(
+            experiment=ax_client.experiment,
+            n=remaining,
+            pending_observations=get_pending_observation_features(experiment=ax_client.experiment)
+        )
+
+        new_arms = batched_generator_run.arms
+        if not new_arms:
+            print_debug("_fetch_next_trials: No new arms were generated in this attempt.")
+        else:
+            print_debug(f"_fetch_next_trials: Generated {len(new_arms)} new arm(s).")
+
+        batched_arms.extend(new_arms)
+        attempts += 1
+
+    print_debug(f"_fetch_next_trials: Finished with {len(batched_arms)} arm(s) after {attempts} attempt(s).")
+
+    return batched_arms
+
 @disable_logs
 @beartype
 def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optional[Tuple[Dict[int, Any], bool]]:
-    global global_gs, overwritten_to_random, gotten_jobs
+    global gotten_jobs
 
     if not ax_client:
         print_red("ax_client was not defined")
@@ -6578,37 +6609,9 @@ def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optio
     try:
         all_start_time = time.time()
 
+        batched_arms = get_batched_arms(nr_of_jobs_to_get)
+
         cnt = 0
-
-        batched_arms = []
-
-        attempts = 0
-
-        while len(batched_arms) != nr_of_jobs_to_get:
-            if attempts > args.max_attempts_for_generation:
-                print_debug(f"_fetch_next_trials: Stopped after {attempts} attempts: could not generate enough arms "
-                            f"(got {len(batched_arms)} out of {nr_of_jobs_to_get}).")
-                break
-
-            remaining = nr_of_jobs_to_get - len(batched_arms)
-            print_debug(f"_fetch_next_trials: Attempt {attempts + 1}: requesting {remaining} more arm(s).")
-
-            batched_generator_run = global_gs.gen(
-                experiment=ax_client.experiment,
-                n=remaining,
-                pending_observations=get_pending_observation_features(experiment=ax_client.experiment)
-            )
-
-            new_arms = batched_generator_run.arms
-            if not new_arms:
-                print_debug("_fetch_next_trials: No new arms were generated in this attempt.")
-            else:
-                print_debug(f"_fetch_next_trials: Generated {len(new_arms)} new arm(s).")
-
-            batched_arms.extend(new_arms)
-            attempts += 1
-
-        print_debug(f"_fetch_next_trials: Finished with {len(batched_arms)} arm(s) after {attempts} attempt(s).")
 
         for k in range(len(batched_arms)):
             print_debug(f"_fetch_next_trials: fetching trial {k + 1}/{nr_of_jobs_to_get}...")
@@ -6670,39 +6673,47 @@ def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optio
         if recursion is False and args.revert_to_random_when_seemingly_exhausted:
             print_debug("The search space seems exhausted. Generating random points from here on.")
 
-            global_gs = GenerationStrategy(
-                    name="Random*",
-                    nodes=[
-                        GenerationNode(
-                            node_name="Sobol",
-                            model_specs=[
-                                GeneratorSpec(
-                                    Models.SOBOL,
-                                    model_gen_kwargs={
-                                        "normalize_y": not args.no_normalize_y,
-                                        "transform_inputs": not args.no_transform_inputs,
-                                        "acquisition_options": get_acquisition_options(),
-                                        'optimizer_kwargs': get_optimizer_kwargs(),
-                                        "torch_device": get_torch_device_str(),
-                                        "random_seed": args.seed,
-                                        "warm_start_refitting": not args.dont_warm_start_refitting,
-                                        "jit_compile": args.jit_compile,
-                                        "refit_on_cv": args.refit_on_cv,
-                                        "fit_out_of_design": args.fit_out_of_design
-                                    }
-                                )
-                            ]
-                        )
-                    ]
-            )
-
-            overwritten_to_random = True
-
-            print_debug(f"New global_gs: {global_gs}")
+            set_global_gs_to_random()
 
             return _fetch_next_trials(nr_of_jobs_to_get, True)
 
     return {}, True
+
+@beartype
+def set_global_gs_to_random() -> None:
+    global global_gs
+    global overwritten_to_random
+
+    global_gs = GenerationStrategy(
+        name="Random*",
+        nodes=[
+            GenerationNode(
+                node_name="Sobol",
+                model_specs=[
+                    GeneratorSpec(
+                        Models.SOBOL,
+                        model_gen_kwargs={
+                            "normalize_y": not args.no_normalize_y,
+                            "transform_inputs": not args.no_transform_inputs,
+                            "acquisition_options": get_acquisition_options(),
+                            "optimizer_kwargs": get_optimizer_kwargs(),
+                            "torch_device": get_torch_device_str(),
+                            "random_seed": args.seed,
+                            "warm_start_refitting": not args.dont_warm_start_refitting,
+                            "jit_compile": not args.dont_jit_compile,
+                            "refit_on_cv": args.refit_on_cv,
+                            "fit_abandoned": args.fit_abandoned,
+                            "fit_out_of_design": args.fit_out_of_design
+                        }
+                    )
+                ]
+            )
+        ]
+    )
+
+    overwritten_to_random = True
+
+    print_debug(f"New global_gs: {global_gs}")
 
 @beartype
 def save_table_as_text(table: Table, filepath: str) -> None:
@@ -7153,26 +7164,51 @@ def create_node(model_name: str, threshold: int, next_model_name: Optional[str])
         ]
 
     selected_model = select_model(model_name)
-    model_spec = [
-        GeneratorSpec(
-            selected_model,
-            model_gen_kwargs={
-                "normalize_y": not args.no_normalize_y,
-                "transform_inputs": not args.no_transform_inputs,
-                "acquisition_options": get_acquisition_options(),
-                'optimizer_kwargs': get_optimizer_kwargs(),
-                "torch_device": get_torch_device_str(),
-                "random_seed": args.seed,
-                "fallback_to_sample_polytope": True,
-                "check_duplicates": True,
-                "deduplicate_strict": True,
-                "warm_start_refitting": not args.dont_warm_start_refitting,
-                "jit_compile": args.jit_compile,
-                "refit_on_cv": args.refit_on_cv,
-                "fit_out_of_design": args.fit_out_of_design
-            }
-        )
-    ]
+
+    if model_name.lower() == "sobol":
+        model_spec = [
+            GeneratorSpec(
+                selected_model,
+                model_gen_kwargs={
+                    "normalize_y": not args.no_normalize_y,
+                    "transform_inputs": not args.no_transform_inputs,
+                    "acquisition_options": get_acquisition_options(),
+                    'optimizer_kwargs': get_optimizer_kwargs(),
+                    "torch_device": get_torch_device_str(),
+                    "random_seed": args.seed,
+                    "fallback_to_sample_polytope": True,
+                    "check_duplicates": True,
+                    "deduplicate_strict": True,
+                    "warm_start_refitting": not args.dont_warm_start_refitting,
+                    "jit_compile": not args.dont_jit_compile,
+                    "refit_on_cv": args.refit_on_cv,
+                    "fit_abandoned": args.fit_abandoned,
+                    "fit_out_of_design": args.fit_out_of_design
+                }
+            )
+        ]
+    else:
+        model_spec = [
+            GeneratorSpec(
+                selected_model,
+                model_gen_kwargs={
+                    "normalize_y": not args.no_normalize_y,
+                    "transform_inputs": not args.no_transform_inputs,
+                    "acquisition_options": get_acquisition_options(),
+                    'optimizer_kwargs': get_optimizer_kwargs(),
+                    "torch_device": get_torch_device_str(),
+                    "random_seed": args.seed,
+                    "fallback_to_sample_polytope": True,
+                    "check_duplicates": True,
+                    "deduplicate_strict": True,
+                    "warm_start_refitting": not args.dont_warm_start_refitting,
+                    "jit_compile": not args.dont_jit_compile,
+                    "refit_on_cv": args.refit_on_cv,
+                    "fit_abandoned": args.fit_abandoned,
+                    "fit_out_of_design": args.fit_out_of_design
+                }
+            )
+        ]
 
     res = GenerationNode(
         node_name=model_name,
@@ -7190,7 +7226,6 @@ def get_optimizer_kwargs() -> dict:
 
 @beartype
 def create_systematic_step(model: Any, _num_trials: int = -1, index: Optional[int] = None) -> GenerationStep:
-    """Creates a generation step for Bayesian optimization."""
     step = GenerationStep(
         model=model,
         num_trials=_num_trials,
@@ -7199,12 +7234,13 @@ def create_systematic_step(model: Any, _num_trials: int = -1, index: Optional[in
             "normalize_y": not args.no_normalize_y,
             "transform_inputs": not args.no_transform_inputs,
             "acquisition_options": get_acquisition_options(),
-            'optimizer_kwargs': get_optimizer_kwargs(),
+            "optimizer_kwargs": get_optimizer_kwargs(),
             "torch_device": get_torch_device_str(),
-            'enforce_num_arms': True,
+            "enforce_num_arms": True,
             "warm_start_refitting": not args.dont_warm_start_refitting,
-            "jit_compile": args.jit_compile,
+            "jit_compile": not args.dont_jit_compile,
             "refit_on_cv": args.refit_on_cv,
+            "fit_abandoned": args.fit_abandoned,
             "fit_out_of_design": args.fit_out_of_design
         },
         should_deduplicate=True,
@@ -7340,7 +7376,7 @@ def execute_trials(
         if break_run_search("create_and_execute_next_runs", _max_eval, _progress_bar):
             break
 
-        progressbar_description(["eval start"])
+        progressbar_description([f"eval #{i}/{len(trial_index_to_param.items())} start"])
         _args = [trial_index, parameters, i, next_nr_steps, phase]
         index_param_list.append(_args)
         i += 1
@@ -8597,9 +8633,7 @@ def post_job_calculate_pareto_front() -> None:
     experiment_parameters = load_experiment_parameters_from_checkpoint_file(checkpoint_file)
 
     tmp_file_path = get_tmp_file_from_json(experiment_parameters)
-
     ax_client = AxClient.load_from_json_file(tmp_file_path)
-
     os.unlink(tmp_file_path)
 
     ax_client = cast(AxClient, ax_client)
@@ -8803,7 +8837,7 @@ def initialize_ax_client() -> None:
     with console.status("[bold green]Initializing ax_client..."):
         ax_client = AxClient(
             verbose_logging=args.verbose,
-            enforce_sequential_optimization=args.enforce_sequential_optimization,
+            enforce_sequential_optimization=False,
             generation_strategy=global_gs
         )
 

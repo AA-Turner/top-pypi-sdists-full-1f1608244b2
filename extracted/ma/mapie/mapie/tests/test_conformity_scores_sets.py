@@ -5,15 +5,15 @@ import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.linear_model import LogisticRegression
 
-from mapie._typing import NDArray
-from mapie.classification import MapieClassifier
+from numpy.typing import NDArray
+from mapie.classification import _MapieClassifier
 from mapie.conformity_scores import BaseClassificationScore
 from mapie.conformity_scores.sets import (
     APSConformityScore, LACConformityScore, NaiveConformityScore,
     RAPSConformityScore, TopKConformityScore
 )
 from mapie.conformity_scores.utils import check_classification_conformity_score
-from mapie.utils import check_alpha
+from mapie.utils import _check_alpha
 
 
 random_state = 42
@@ -69,53 +69,6 @@ def test_check_classification_conformity_score(
     )
 
 
-@pytest.mark.parametrize("method", all_method_list)
-def test_check_classification_method(
-    method: Optional[str]
-) -> None:
-    """
-    Test that the function check_classification_conformity_score returns
-    an instance of BaseClassificationScore when using method.
-    """
-    assert isinstance(
-        check_classification_conformity_score(method=method),
-        BaseClassificationScore
-    )
-
-
-@pytest.mark.parametrize("method", valid_method_list)
-@pytest.mark.parametrize("conformity_score", cs_list)
-def test_check_conflict_parameters(
-    method: Optional[str],
-    conformity_score: Optional[BaseClassificationScore]
-) -> None:
-    """
-    Test that the function check_classification_conformity_score raises
-    a warning when both method and conformity_score are provided.
-    """
-    if conformity_score is None:
-        return
-    with pytest.warns(
-        UserWarning,
-        match="WARNING: the `conformity_score` parameter takes precedence*"
-    ):
-        check_classification_conformity_score(
-            method=method, conformity_score=conformity_score
-        )
-
-
-@pytest.mark.parametrize("method", wrong_method_list)
-def test_check_wrong_classification_method(
-    method: Optional[str]
-) -> None:
-    """
-    Test that the function check_classification_conformity_score raises
-    a ValueError when using a wrong method.
-    """
-    with pytest.raises(ValueError, match="Invalid method.*"):
-        check_classification_conformity_score(method=method)
-
-
 @pytest.mark.parametrize("score", wrong_cs_list)
 def test_check_wrong_classification_score(
     score: Any
@@ -126,24 +79,6 @@ def test_check_wrong_classification_score(
     """
     with pytest.raises(ValueError, match="Invalid conformity_score argument*"):
         check_classification_conformity_score(conformity_score=score)
-
-
-@pytest.mark.parametrize("cv", ['prefit', 'split'])
-@pytest.mark.parametrize("size_raps", [0.2, 0.5, 0.8])
-def test_check_depreciated_size_raps(size_raps: float, cv: str) -> None:
-    """
-    Test that the function check_classification_conformity_score raises
-    a DeprecationWarning when using size_raps.
-    """
-    clf = LogisticRegression().fit(X, y)
-    mapie_clf = MapieClassifier(
-        estimator=clf, conformity_score=RAPSConformityScore(), cv=cv
-    )
-    with pytest.warns(
-        DeprecationWarning,
-        match="The parameter `size_raps` is deprecated.*"
-    ):
-        mapie_clf.fit(X, y, size_raps=size_raps)
 
 
 @pytest.mark.parametrize("k_lambda", REGULARIZATION_PARAMETERS)
@@ -169,7 +104,7 @@ def test_get_true_label_cumsum_proba_shape() -> None:
     clf = LogisticRegression()
     clf.fit(X, y)
     y_pred = clf.predict_proba(X)
-    mapie_clf = MapieClassifier(
+    mapie_clf = _MapieClassifier(
         estimator=clf, random_state=random_state
     )
     mapie_clf.fit(X, y)
@@ -189,7 +124,7 @@ def test_get_true_label_cumsum_proba_result() -> None:
     clf = LogisticRegression()
     clf.fit(X_toy, y_toy)
     y_pred = clf.predict_proba(X_toy)
-    mapie_clf = MapieClassifier(
+    mapie_clf = _MapieClassifier(
         estimator=clf, random_state=random_state
     )
     mapie_clf.fit(X_toy, y_toy)
@@ -226,7 +161,7 @@ def test_get_last_included_proba_shape(k_lambda, include_last_label):
         thresholds = .2
     else:
         thresholds = np.random.rand(len(k))
-    thresholds = cast(NDArray, check_alpha(thresholds))
+    thresholds = cast(NDArray, _check_alpha(thresholds))
     clf = LogisticRegression()
     clf.fit(X, y)
     y_pred_proba = clf.predict_proba(X)

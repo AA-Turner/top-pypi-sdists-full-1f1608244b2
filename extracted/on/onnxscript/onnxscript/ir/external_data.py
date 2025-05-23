@@ -70,7 +70,7 @@ def _all_tensors(
     # Look at constant attributes in nodes
     for node in _traversal.RecursiveGraphIterator(graph):
         for attr in node.attributes.values():
-            if isinstance(attr, _core.RefAttr):
+            if attr.is_ref():
                 continue
             if attr.type == _enums.AttributeType.TENSOR and attr.value is not None:
                 yield attr.value
@@ -341,7 +341,7 @@ def unload_from_model(
     and not make any other modifications to the model.
 
     If any existing external tensor
-    references the provided :param:`external_data` path, it will be invalidated
+    references the provided ``external_data`` path, it will be invalidated
     after the external data is overwritten. To obtain a valid model, use :func:`load`
     to load the newly saved model, or provide a different external data path that
     is not currently referenced by any tensors in the model.
@@ -354,7 +354,7 @@ def unload_from_model(
         size_threshold_bytes: Save to external data if the tensor size in bytes is larger than this threshold.
 
     Returns:
-        An ir.Model with all initializer data equal or above :param:`size_threshold_bytes`
+        An ir.Model with all initializer data equal or above ``size_threshold_bytes``
         converted to external tensors.
     """
     # In-memory or external tensors, if equal to or above the threshold, should be converted to or re-saved as external tensors

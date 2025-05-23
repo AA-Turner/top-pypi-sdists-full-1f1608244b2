@@ -6,7 +6,7 @@ requires = ["poetry-core>=1.0.0"]
 authors = ["Sashank Thupukari <sashank@exponent.run>"]
 description = "Exponent is an AI Pair Programmer"
 name = "exponent-run"
-version = "0.0.88"
+version = "0.0.89"
 packages = [{ include = "exponent" }]
 
 [tool.poetry.scripts]
@@ -42,6 +42,7 @@ certifi = "^2024.8.30"
 eval-type-backport = "^0.2.0"
 pip = "^25.0.1"
 colour = "^0.1.5"
+beautifulsoup4 = {version = "^4.13.4", extras = ["chardet"]}
 
 [tool.poetry.group.dev.dependencies]
 coverage = "^7.6.1"

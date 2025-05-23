@@ -1,11 +1,15 @@
 from dataclasses import dataclass
-from typing import Self
+from typing import Self, override
 
-from ai.backend.common.bgtask import BackgroundTaskManager
+from ai.backend.common.bgtask.bgtask import BackgroundTaskManager
+from ai.backend.common.etcd import AsyncEtcd
+from ai.backend.common.events.dispatcher import EventDispatcher
+from ai.backend.common.events.hub.hub import EventHub
 from ai.backend.common.plugin.monitor import ErrorPluginContext
 from ai.backend.common.types import RedisConnectionInfo
 from ai.backend.manager.actions.monitors.monitor import ActionMonitor
-from ai.backend.manager.config import SharedConfig
+from ai.backend.manager.actions.types import AbstractProcessorPackage, ActionSpec
+from ai.backend.manager.config.provider import ManagerConfigProvider
 from ai.backend.manager.idle import IdleCheckerHost
 from ai.backend.manager.models.storage import StorageSessionManager
 from ai.backend.manager.models.utils import ExtendedAsyncSAEngine
@@ -28,6 +32,16 @@ from ai.backend.manager.services.metric.processors.utilization_metric import (
     UtilizationMetricProcessors,
 )
 from ai.backend.manager.services.metric.root_service import UtilizationMetricService
+from ai.backend.manager.services.model_serving.processors.auto_scaling import (
+    ModelServingAutoScalingProcessors,
+)
+from ai.backend.manager.services.model_serving.processors.model_serving import (
+    ModelServingProcessors,
+)
+from ai.backend.manager.services.model_serving.services.auto_scaling import AutoScalingService
+from ai.backend.manager.services.model_serving.services.model_serving import (
+    ModelServingService,
+)
 from ai.backend.manager.services.project_resource_policy.processors import (
     ProjectResourcePolicyProcessors,
 )
@@ -53,13 +67,16 @@ from ai.backend.manager.services.vfolder.services.vfolder import VFolderService
 @dataclass
 class ServiceArgs:
     db: ExtendedAsyncSAEngine
-    shared_config: SharedConfig
+    etcd: AsyncEtcd
+    config_provider: ManagerConfigProvider
     storage_manager: StorageSessionManager
     redis_stat: RedisConnectionInfo
     background_task_manager: BackgroundTaskManager
+    event_hub: EventHub
     agent_registry: AgentRegistry
     error_monitor: ErrorPluginContext
     idle_checker_host: IdleCheckerHost
+    event_dispatcher: EventDispatcher
 
 
 @dataclass
@@ -79,31 +96,37 @@ class Services:
     project_resource_policy: ProjectResourcePolicyService
     resource_preset: ResourcePresetService
     utilization_metric: UtilizationMetricService
+    model_serving: ModelServingService
+    model_serving_auto_scaling: AutoScalingService
 
     @classmethod
     def create(cls, args: ServiceArgs) -> Self:
         agent_service = AgentService(
             args.db,
+            args.etcd,
             args.agent_registry,
-            args.shared_config,
+            args.config_provider,
         )
         domain_service = DomainService(args.db)
         group_service = GroupService(
-            args.db, args.storage_manager, args.shared_config, args.redis_stat
+            args.db, args.storage_manager, args.config_provider, args.redis_stat
         )
         user_service = UserService(args.db, args.storage_manager, args.redis_stat)
         image_service = ImageService(args.db, args.agent_registry)
         container_registry_service = ContainerRegistryService(args.db)
         vfolder_service = VFolderService(
-            args.db, args.shared_config, args.storage_manager, args.background_task_manager
+            args.db, args.config_provider, args.storage_manager, args.background_task_manager
         )
-        vfolder_file_service = VFolderFileService(args.db, args.shared_config, args.storage_manager)
-        vfolder_invite_service = VFolderInviteService(args.db, args.shared_config)
+        vfolder_file_service = VFolderFileService(
+            args.db, args.config_provider, args.storage_manager
+        )
+        vfolder_invite_service = VFolderInviteService(args.db, args.config_provider)
         session_service = SessionService(
             SessionServiceArgs(
                 db=args.db,
                 agent_registry=args.agent_registry,
                 background_task_manager=args.background_task_manager,
+                event_hub=args.event_hub,
                 error_monitor=args.error_monitor,
                 idle_checker_host=args.idle_checker_host,
             )
@@ -112,9 +135,18 @@ class Services:
         user_resource_policy_service = UserResourcePolicyService(args.db)
         project_resource_policy_service = ProjectResourcePolicyService(args.db)
         resource_preset_service = ResourcePresetService(
-            args.db, args.agent_registry, args.shared_config
+            args.db, args.agent_registry, args.config_provider
         )
-        utilization_metric_service = UtilizationMetricService(args.shared_config)
+        utilization_metric_service = UtilizationMetricService(args.config_provider)
+        model_serving_service = ModelServingService(
+            db=args.db,
+            agent_registry=args.agent_registry,
+            background_task_manager=args.background_task_manager,
+            event_dispatcher=args.event_dispatcher,
+            storage_manager=args.storage_manager,
+            config_provider=args.config_provider,
+        )
+        model_serving_auto_scaling = AutoScalingService(args.db)
 
         return cls(
             agent=agent_service,
@@ -132,6 +164,8 @@ class Services:
             project_resource_policy=project_resource_policy_service,
             resource_preset=resource_preset_service,
             utilization_metric=utilization_metric_service,
+            model_serving=model_serving_service,
+            model_serving_auto_scaling=model_serving_auto_scaling,
         )
 
 
@@ -141,7 +175,7 @@ class ProcessorArgs:
 
 
 @dataclass
-class Processors:
+class Processors(AbstractProcessorPackage):
     agent: AgentProcessors
     domain: DomainProcessors
     group: GroupProcessors
@@ -157,6 +191,8 @@ class Processors:
     project_resource_policy: ProjectResourcePolicyProcessors
     resource_preset: ResourcePresetProcessors
     utilization_metric: UtilizationMetricProcessors
+    model_serving: ModelServingProcessors
+    model_serving_auto_scaling: ModelServingAutoScalingProcessors
 
     @classmethod
     def create(cls, args: ProcessorArgs, action_monitors: list[ActionMonitor]) -> Self:
@@ -187,6 +223,10 @@ class Processors:
         resource_preset_processors = ResourcePresetProcessors(
             services.resource_preset, action_monitors
         )
+        model_serving_processors = ModelServingProcessors(services.model_serving, action_monitors)
+        model_serving_auto_scaling_processors = ModelServingAutoScalingProcessors(
+            services.model_serving_auto_scaling, action_monitors
+        )
         utilization_metric_processors = UtilizationMetricProcessors(
             services.utilization_metric, action_monitors
         )
@@ -206,4 +246,28 @@ class Processors:
             project_resource_policy=project_resource_policy_processors,
             resource_preset=resource_preset_processors,
             utilization_metric=utilization_metric_processors,
+            model_serving=model_serving_processors,
+            model_serving_auto_scaling=model_serving_auto_scaling_processors,
         )
+
+    @override
+    def supported_actions(self) -> list[ActionSpec]:
+        return [
+            *self.agent.supported_actions(),
+            *self.domain.supported_actions(),
+            *self.group.supported_actions(),
+            *self.user.supported_actions(),
+            *self.image.supported_actions(),
+            *self.container_registry.supported_actions(),
+            *self.vfolder.supported_actions(),
+            *self.vfolder_file.supported_actions(),
+            *self.vfolder_invite.supported_actions(),
+            *self.session.supported_actions(),
+            *self.keypair_resource_policy.supported_actions(),
+            *self.user_resource_policy.supported_actions(),
+            *self.project_resource_policy.supported_actions(),
+            *self.resource_preset.supported_actions(),
+            *self.utilization_metric.supported_actions(),
+            *self.model_serving.supported_actions(),
+            *self.model_serving_auto_scaling.supported_actions(),
+        ]

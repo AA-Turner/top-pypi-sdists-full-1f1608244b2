@@ -20,6 +20,16 @@ from sempy_labs.lakehouse._shortcuts import (
 from sempy_labs.lakehouse._blobs import (
     recover_lakehouse_object,
     list_blobs,
+    get_user_delegation_key,
+)
+from sempy_labs.lakehouse._livy_sessions import (
+    list_livy_sessions,
+)
+from sempy_labs.lakehouse._helper import (
+    is_v_ordered,
+    delete_lakehouse,
+    update_lakehouse,
+    load_table,
 )
 
 __all__ = [
@@ -36,4 +46,10 @@ __all__ = [
     "list_shortcuts",
     "recover_lakehouse_object",
     "list_blobs",
+    "list_livy_sessions",
+    "is_v_ordered",
+    "delete_lakehouse",
+    "update_lakehouse",
+    "load_table",
+    "get_user_delegation_key",
 ]

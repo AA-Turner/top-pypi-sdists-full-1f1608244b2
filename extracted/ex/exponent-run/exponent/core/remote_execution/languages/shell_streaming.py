@@ -9,6 +9,7 @@ from typing import Any, Optional, Callable, AsyncGenerator, Union
 from exponent.core.remote_execution.languages.shell import (
     get_rc_file_source_command,
 )
+from exponent.core.remote_execution.utils import smart_decode
 
 
 STDOUT_FD = 1
@@ -19,14 +20,31 @@ MAX_TIMEOUT = 300
 async def read_stream(
     stream: asyncio.StreamReader, fd: int, output: list[tuple[int, str]]
 ) -> AsyncGenerator[StreamedOutputPiece, None]:
+    data: bytes = b""
+    encoding = "utf-8"
+
     while True:
         try:
             data = await stream.read(4096)
             if not data:
                 break
-            chunk = data.decode()
+            chunk = data.decode(encoding=encoding)
             output.append((fd, chunk))
             yield StreamedOutputPiece(content=chunk)
+        except UnicodeDecodeError:
+            decode_result = smart_decode(data)
+
+            if decode_result is None:
+                break
+
+            # Store the detected encoding as a hint for how
+            # to decode the remaining chunks of data
+            chunk, encoding = decode_result
+
+            output.append((fd, chunk))
+            yield StreamedOutputPiece(content=chunk)
+
+            continue
         except asyncio.CancelledError:
             raise
         except Exception:

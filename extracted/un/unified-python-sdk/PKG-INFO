@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: Unified-python-sdk
-Version: 0.45.1
+Version: 0.46.0
 Summary: Python Client SDK for Unified.to
 Author: Unified API Inc.
 Requires-Python: >=3.9.2
@@ -1331,7 +1331,7 @@ with UnifiedTo(
 
     res = unified_to.passthrough.create_passthrough_raw(request={
         "connection_id": "<id>",
-        "path": "/opt/lib",
+        "path": "/var/log",
     })
 
     assert res is not None

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: cosl
-Version: 0.1.0
+Version: 1.0.0
 Summary: Utils for COS Lite charms
 Project-URL: Homepage, https://github.com/canonical/cos-lib
 Project-URL: Bug Tracker, https://github.com/canonical/cos-lib/issues
@@ -216,7 +216,6 @@ Classifier: Programming Language :: Python :: 3.8
 Classifier: Topic :: Utilities
 Classifier: Typing :: Typed
 Requires-Python: >=3.8
-Requires-Dist: lightkube>=v0.15.4
 Requires-Dist: ops
 Requires-Dist: pydantic
 Requires-Dist: pyyaml
@@ -226,6 +225,10 @@ Description-Content-Type: text/markdown
 
 # cosl
 ![PyPI](https://img.shields.io/pypi/v/cosl)
+
+> [!NOTE]
+> The `coordinated_workers` module and its related support files have been removed from `cosl`. This functionality now lives in a standalone [coordinated-workers](https://github.com/canonical/cos-coordinated-workers) PyPI package. Please migrate to that package. 
+
 
 This library provides utilities for
 [COS Lite](https://github.com/canonical/cos-lite-bundle/) charms:

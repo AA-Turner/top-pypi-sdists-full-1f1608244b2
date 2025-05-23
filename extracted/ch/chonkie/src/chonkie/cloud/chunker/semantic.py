@@ -13,7 +13,6 @@ class SemanticChunker(CloudChunker):
 
     BASE_URL = "https://api.chonkie.ai"
     VERSION = "v1"
-    API_KEY = os.getenv("CHONKIE_API_KEY")
 
     def __init__(
         self,
@@ -31,6 +30,8 @@ class SemanticChunker(CloudChunker):
         api_key: Optional[str] = None,
     ) -> None:
         """Initialize the Chonkie Cloud Semantic Chunker."""
+        super().__init__()
+        
         # Get the API key
         self.api_key = api_key or os.getenv("CHONKIE_API_KEY")
         if not self.api_key:

@@ -1,7 +1,7 @@
 from wbcore.contrib.icons.serializers import IconSelectField
 
 from .boolean import BooleanField
-from .choice import ChoiceField, MultipleChoiceField
+from .choice import ChoiceField, MultipleChoiceField, LanguageChoiceField
 from .datetime import (
     DateField,
     DateRangeField,

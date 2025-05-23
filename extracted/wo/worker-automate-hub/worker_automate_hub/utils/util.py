@@ -692,19 +692,20 @@ async def login_emsys(
         )
 
 
-async def api_simplifica(
+async def send_to_webhook(
     urlSimplifica: str,
     status: str,
     observacao: str,
-    uuidsimplifica: str,
+    id_geral: str,
     numero_nota: str,
     valor_nota: str,
+    transferencias: bool = False
 ) -> None:
     """
     Envia notificacao para o simplifica com status e observacao.
 
     Args:
-    urlSimplifica (str): URL do endpoint do simplifica.
+    id_geral (str): URL do endpoint webhook.
     status (str): Status da notificacao.
     observacao (str): Observacao da notificacao.
     uuidsimplifica (str): UUID da notificacao.
@@ -720,11 +721,15 @@ async def api_simplifica(
     if not observacao:
         raise ValueError("Observacao da notificacao esta vazia.")
 
-    if not uuidsimplifica:
+    if not id_geral:
         raise ValueError("UUID da notificacao esta vazio.")
-
+    
+    if transferencias:
+        uuid = "uuid_simplifica"
+    else:
+        uuid = "identificador"
     data = {
-        "uuid_simplifica": uuidsimplifica,
+        uuid: id_geral,
         "status": status,
         "numero_nota": numero_nota,
         "observacao": observacao,
@@ -740,7 +745,7 @@ async def api_simplifica(
                     raise Exception(f"Erro ao enviar notificacao: {response.text()}")
 
                 data = await response.text()
-                log_msg = f"\nSucesso ao enviar {data}\n para o simplifica"
+                log_msg = f"\nSucesso ao enviar {data}\n para o webhook"
                 console.print(
                     log_msg,
                     style="bold green",
@@ -748,7 +753,7 @@ async def api_simplifica(
                 logger.info(log_msg)
 
     except Exception as e:
-        err_msg = f"Erro ao comunicar com endpoint do Simplifica: {e}"
+        err_msg = f"Erro ao comunicar com endpoint do webhoook: {e}"
         console.print(f"\n{err_msg}\n", style="bold red")
         logger.info(err_msg)
 
@@ -1649,7 +1654,7 @@ async def transmitir_nota(
         log_msg = f"Nota não transmitida"
         logger.info(log_msg)
         console.print(log_msg, style="bold red")
-        await api_simplifica(
+        await send_to_webhook(
             task.configEntrada.get("urlRetorno"),
             "ERRO",
             log_msg,
@@ -1886,7 +1891,7 @@ async def faturar_pre_venda(task: RpaProcessoEntradaDTO) -> dict:
     except Exception as e:
 
         err_msg = f"Falha ao selecionar o Modelo {e}"
-        await api_simplifica(
+        await send_to_webhook(
             task.configEntrada.get("urlRetorno"),
             "ERRO",
             err_msg,

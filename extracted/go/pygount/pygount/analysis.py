@@ -30,7 +30,10 @@ import pygount.xmldialect
 from pygount.common import mapped_repr
 from pygount.git_storage import GitStorage, git_remote_url_and_revision_if_any
 
-GIT_REPO_REGEX = re.compile(r"^(https?://|git@)")
+HTTP_URL_REGEX = re.compile(r"^(https?://)")
+_ALLOWED_GIT_PLATFORMS = ["github.com", "bitbucket.org", "gitlab.com"]
+_ALLOWED_GIT_PLATFORM_CHOICES_PATTERN = "|".join(map(re.escape, _ALLOWED_GIT_PLATFORMS))
+GIT_REPO_REGEX = re.compile(rf"^(https?://|git@)({_ALLOWED_GIT_PLATFORM_CHOICES_PATTERN})/[^/]+/[^/]+")
 
 # Attempt to import chardet.
 try:
@@ -48,7 +51,6 @@ DEFAULT_FALLBACK_ENCODING = "cp1252"
 DEFAULT_FOLDER_PATTERNS_TO_SKIP_TEXT = ", ".join(
     [".?*", "_svn", "__pycache__"]  # Subversion hack for Windows  # Python byte code
 )
-
 
 #: Pygments token type; we need to define our own type because pygments' ``_TokenType`` is internal.
 TokenType = type(pygments.token.Token)
@@ -163,6 +165,9 @@ _PLAIN_TEXT_PATTERN = "(^" + "$)|(^".join(_STANDARD_PLAIN_TEXT_NAME_PATTERNS) + 
 #: Regular expression to detect plain text files by name.
 _PLAIN_TEXT_NAME_REGEX = re.compile(_PLAIN_TEXT_PATTERN, re.IGNORECASE)
 
+_MARK_UP_NAME_PATTERN = r"^.*\.(md|rst|txt|\d+)$"
+_MARK_UP_NAME_REGEX = re.compile(_MARK_UP_NAME_PATTERN, re.IGNORECASE)
+
 #: Mapping for file suffixes to lexers for which pygments offers no official one.
 _SUFFIX_TO_FALLBACK_LEXER_MAP = {
     "fex": pygount.lexers.MinimalisticWebFocusLexer(),
@@ -181,6 +186,10 @@ class PathData:
     source_path: str
     group: str
     tmp_dir: Optional[str] = None
+
+
+def is_markup_file(source_path: str) -> bool:
+    return _MARK_UP_NAME_REGEX.match(os.path.basename(source_path)) is not None
 
 
 class DuplicatePool:
@@ -398,7 +407,8 @@ class SourceAnalysis:
                     language = dialect
             _log.info("%s: analyze as %s using encoding %s", source_path, language, encoding)
             mark_to_count_map = {"c": 0, "d": 0, "e": 0, "s": 0}
-            for line_parts in _line_parts(lexer, source_code):
+            is_markup = is_markup_file(source_path)
+            for line_parts in _line_parts(lexer, source_code, is_markup=is_markup):
                 mark_to_increment = "e"
                 for mark_to_check in ("d", "s", "c"):
                     if mark_to_check in line_parts:
@@ -640,30 +650,40 @@ class SourceScanner:
 
     def _source_paths_and_groups_to_analyze(self, source_patterns_to_analyze) -> list[PathData]:
         assert source_patterns_to_analyze is not None
+
         result = []
+
+        def _process_source_pattern(source_pattern: str):
+            remote_url, revision = git_remote_url_and_revision_if_any(source_pattern)
+            if remote_url is not None:
+                git_storage = GitStorage(remote_url, revision)
+                self._git_storages.append(git_storage)
+                git_storage.extract()
+                result.extend(
+                    self._paths_and_group_to_analyze(git_storage.temp_folder, tmp_dir=git_storage.temp_folder)
+                )
+            else:
+                has_url_prefix = re.match(HTTP_URL_REGEX, source_pattern)
+                if has_url_prefix:
+                    is_git_url = re.match(GIT_REPO_REGEX, source_pattern_to_analyze) is not None
+                    if not is_git_url:
+                        raise pygount.Error(
+                            f'URL to git repository {source_pattern} must end with ".git" or must match the pattern '
+                            f"http(s)://({'|'.join(_ALLOWED_GIT_PLATFORMS)})/<...>/<...>.git. "
+                            f"For example: git@github.com:roskakori/pygount.git or "
+                            f"https://github.com/roskakori/pygount.git."
+                        )
+                    source_pattern = source_pattern.rstrip("/")
+                    _process_source_pattern(source_pattern + ".git")
+                else:
+                    result.extend(self._paths_and_group_to_analyze(source_pattern_to_analyze))
+
         # NOTE: We could avoid initializing `source_pattern_to_analyze` here by moving the `try` inside
         #  the loop, but this would incor a performance overhead (ruff's PERF203).
         source_pattern_to_analyze = None
         try:
             for source_pattern_to_analyze in source_patterns_to_analyze:
-                remote_url, revision = git_remote_url_and_revision_if_any(source_pattern_to_analyze)
-                if remote_url is not None:
-                    git_storage = GitStorage(remote_url, revision)
-                    self._git_storages.append(git_storage)
-                    git_storage.extract()
-                    # TODO#113: Find a way to exclude the ugly temp folder from the source path.
-                    result.extend(
-                        self._paths_and_group_to_analyze(git_storage.temp_folder, tmp_dir=git_storage.temp_folder)
-                    )
-                else:
-                    git_url_match = re.match(GIT_REPO_REGEX, source_pattern_to_analyze)
-                    if git_url_match is not None:
-                        raise pygount.Error(
-                            'URL to git repository must end with ".git", for example '
-                            "git@github.com:roskakori/pygount.git or "
-                            "https://github.com/roskakori/pygount.git."
-                        )
-                    result.extend(self._paths_and_group_to_analyze(source_pattern_to_analyze))
+                _process_source_pattern(source_pattern_to_analyze)
         except OSError as error:
             assert source_pattern_to_analyze is not None
             raise OSError(f'cannot scan "{source_pattern_to_analyze}" for source files: {error}') from error
@@ -767,7 +787,7 @@ def _pythonized_comments(tokens: Iterator[tuple[TokenType, str]]) -> Iterator[To
         yield result_token_type, result_token_text
 
 
-def _line_parts(lexer: pygments.lexer.Lexer, text: str) -> Iterator[set[str]]:
+def _line_parts(lexer: pygments.lexer.Lexer, text: str, is_markup: bool = False) -> Iterator[set[str]]:
     line_marks = set()
     tokens = _delined_tokens(lexer.get_tokens(text))
     if lexer.name == "Python":
@@ -788,7 +808,8 @@ def _line_parts(lexer: pygments.lexer.Lexer, text: str) -> Iterator[set[str]]:
         else:
             is_white_text = (token_text.strip() in white_words) or (token_text.rstrip(white_text) == "")
             if not is_white_text:
-                line_marks.add("c")  # 'code'
+                line_mark = "d" if is_markup else "c"
+                line_marks.add(line_mark)
         if token_text.endswith("\n"):
             yield line_marks
             line_marks = set()

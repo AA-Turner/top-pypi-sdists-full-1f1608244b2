@@ -1,29 +1,17 @@
-Metadata-Version: 2.4
+Metadata-Version: 2.1
 Name: pycfmodel
-Version: 1.1.1
-Summary: A python model for Cloud Formation scripts
-Author-email: Skyscanner Security <security@skyscanner.net>
-Project-URL: Homepage, https://github.com/Skyscanner/pycfmodel
-Requires-Python: >=3.9.0
+Version: 1.1.0
+Summary: A python model for CloudFormation scripts
+Home-page: https://github.com/Skyscanner/pycfmodel
+Author: Skyscanner Product Security
+Author-email: security@skyscanner.net
+License: UNKNOWN
+Platform: UNKNOWN
+Requires-Python: >=3.9
 Description-Content-Type: text/markdown
-License-File: LICENSE.md
-Requires-Dist: pydantic~=2.7
 Provides-Extra: dev
-Requires-Dist: black>=22.1.0; extra == "dev"
-Requires-Dist: httpx>=0.14.2; extra == "dev"
-Requires-Dist: isort>=5.4.2; extra == "dev"
-Requires-Dist: pip-tools>=2.0.2; extra == "dev"
-Requires-Dist: pytest>=6.0.1; extra == "dev"
-Requires-Dist: pytest-cov>=2.10.1; extra == "dev"
-Requires-Dist: pytest-repeat==0.9.3; extra == "dev"
-Requires-Dist: ruff; extra == "dev"
 Provides-Extra: docs
-Requires-Dist: AutoMacDoc==0.3; extra == "docs"
-Requires-Dist: livereload==2.7.1; extra == "docs"
-Requires-Dist: mkdocs-material==9.6.11; extra == "docs"
-Requires-Dist: mkdocs==1.6.0; extra == "docs"
-Requires-Dist: mkdocstrings==0.10.0; extra == "docs"
-Dynamic: license-file
+License-File: LICENSE.md
 
 # pycfmodel
 
@@ -148,3 +136,5 @@ AWS Actions:
 ```bash
 python3 scripts/generate_cloudformation_actions_file.py
 ```
+
+

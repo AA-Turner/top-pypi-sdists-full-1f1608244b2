@@ -39,7 +39,7 @@ from ...types import (
     devbox_write_file_contents_params,
 )
 from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
-from ..._utils import extract_files, maybe_transform, deepcopy_minimal, async_maybe_transform
+from ..._utils import is_given, extract_files, maybe_transform, deepcopy_minimal, async_maybe_transform
 from .browsers import (
     BrowsersResource,
     AsyncBrowsersResource,
@@ -80,6 +80,7 @@ from ..._response import (
     async_to_custom_raw_response_wrapper,
     async_to_custom_streamed_response_wrapper,
 )
+from ..._constants import DEFAULT_TIMEOUT
 from ...pagination import (
     SyncDevboxesCursorIDPage,
     AsyncDevboxesCursorIDPage,
@@ -574,11 +575,8 @@ class DevboxesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
         idempotency_key: str | None = None,
     ) -> DevboxTunnelView:
-        """Create a live tunnel to an available port on the Devbox.
-
-        Note the port must be
-        made available using Devbox.create.availablePorts. Otherwise, the tunnel will
-        not connect to any running processes on the Devbox.
+        """
+        Create a live tunnel to an available port on the Devbox.
 
         Args:
           port: Devbox port that tunnel will expose.
@@ -794,6 +792,8 @@ class DevboxesResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not is_given(timeout) and self._client.timeout == DEFAULT_TIMEOUT:
+            timeout = 600
         return self._post(
             f"/v1/devboxes/{id}/execute_sync",
             body=maybe_transform(
@@ -859,6 +859,8 @@ class DevboxesResource(SyncAPIResource):
         *,
         devbox_id: str | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
+        metadata_key: str | NotGiven = NOT_GIVEN,
+        metadata_key_in: str | NotGiven = NOT_GIVEN,
         starting_after: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -868,12 +870,18 @@ class DevboxesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> SyncDiskSnapshotsCursorIDPage[DevboxSnapshotView]:
         """
-        List all snapshots of a Devbox while optionally filtering by Devbox ID.
+        List all snapshots of a Devbox while optionally filtering by Devbox ID and
+        metadata.
 
         Args:
           devbox_id: Devbox ID to filter by.
 
           limit: The limit of items to return. Default is 20.
+
+          metadata_key: Filter snapshots by metadata key-value pair. Can be used multiple times for
+              different keys.
+
+          metadata_key_in: Filter snapshots by metadata key with multiple possible values (OR condition).
 
           starting_after: Load the next page of data starting after the item with the given ID.
 
@@ -897,6 +905,8 @@ class DevboxesResource(SyncAPIResource):
                     {
                         "devbox_id": devbox_id,
                         "limit": limit,
+                        "metadata_key": metadata_key,
+                        "metadata_key_in": metadata_key_in,
                         "starting_after": starting_after,
                     },
                     devbox_list_disk_snapshots_params.DevboxListDiskSnapshotsParams,
@@ -1121,6 +1131,8 @@ class DevboxesResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not is_given(timeout) and self._client.timeout == DEFAULT_TIMEOUT:
+            timeout = 600
         return self._post(
             f"/v1/devboxes/{id}/snapshot_disk",
             body=maybe_transform(
@@ -1760,11 +1772,8 @@ class AsyncDevboxesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
         idempotency_key: str | None = None,
     ) -> DevboxTunnelView:
-        """Create a live tunnel to an available port on the Devbox.
-
-        Note the port must be
-        made available using Devbox.create.availablePorts. Otherwise, the tunnel will
-        not connect to any running processes on the Devbox.
+        """
+        Create a live tunnel to an available port on the Devbox.
 
         Args:
           port: Devbox port that tunnel will expose.
@@ -1980,6 +1989,8 @@ class AsyncDevboxesResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not is_given(timeout) and self._client.timeout == DEFAULT_TIMEOUT:
+            timeout = 600
         return await self._post(
             f"/v1/devboxes/{id}/execute_sync",
             body=await async_maybe_transform(
@@ -2045,6 +2056,8 @@ class AsyncDevboxesResource(AsyncAPIResource):
         *,
         devbox_id: str | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
+        metadata_key: str | NotGiven = NOT_GIVEN,
+        metadata_key_in: str | NotGiven = NOT_GIVEN,
         starting_after: str | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -2054,12 +2067,18 @@ class AsyncDevboxesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> AsyncPaginator[DevboxSnapshotView, AsyncDiskSnapshotsCursorIDPage[DevboxSnapshotView]]:
         """
-        List all snapshots of a Devbox while optionally filtering by Devbox ID.
+        List all snapshots of a Devbox while optionally filtering by Devbox ID and
+        metadata.
 
         Args:
           devbox_id: Devbox ID to filter by.
 
           limit: The limit of items to return. Default is 20.
+
+          metadata_key: Filter snapshots by metadata key-value pair. Can be used multiple times for
+              different keys.
+
+          metadata_key_in: Filter snapshots by metadata key with multiple possible values (OR condition).
 
           starting_after: Load the next page of data starting after the item with the given ID.
 
@@ -2083,6 +2102,8 @@ class AsyncDevboxesResource(AsyncAPIResource):
                     {
                         "devbox_id": devbox_id,
                         "limit": limit,
+                        "metadata_key": metadata_key,
+                        "metadata_key_in": metadata_key_in,
                         "starting_after": starting_after,
                     },
                     devbox_list_disk_snapshots_params.DevboxListDiskSnapshotsParams,
@@ -2307,6 +2328,8 @@ class AsyncDevboxesResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        if not is_given(timeout) and self._client.timeout == DEFAULT_TIMEOUT:
+            timeout = 600
         return await self._post(
             f"/v1/devboxes/{id}/snapshot_disk",
             body=await async_maybe_transform(

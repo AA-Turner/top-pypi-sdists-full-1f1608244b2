@@ -67,6 +67,7 @@ from swarms.utils.pdf_to_text import pdf_to_text
 from swarms.utils.str_to_dict import str_to_dict
 from swarms.prompts.react_base_prompt import REACT_SYS_PROMPT
 from swarms.prompts.max_loop_prompt import generate_reasoning_prompt
+from swarms.prompts.safety_prompt import SAFETY_PROMPT
 
 
 # Utils
@@ -201,7 +202,7 @@ class Agent:
         limit_tokens_from_string (Callable): The function to limit tokens from a string
         custom_tools_prompt (Callable): The custom tools prompt
         tool_schema (ToolUsageType): The tool schema
-        output_type (agent_output_type): The output type
+        output_type (agent_output_type): The output type. Supported: 'str', 'string', 'list', 'json', 'dict', 'yaml', 'xml'.
         function_calling_type (str): The function calling type
         output_cleaner (Callable): The output cleaner function
         function_calling_format_type (str): The function calling format type
@@ -279,7 +280,6 @@ class Agent:
 
     def __init__(
         self,
-        agent_id: Optional[str] = agent_id(),
         id: Optional[str] = agent_id(),
         llm: Optional[Any] = None,
         template: Optional[str] = None,
@@ -399,11 +399,11 @@ class Agent:
         mcp_url: str = None,
         mcp_urls: List[str] = None,
         react_on: bool = False,
+        safety_prompt_on: bool = False,
         *args,
         **kwargs,
     ):
         # super().__init__(*args, **kwargs)
-        self.agent_id = agent_id
         self.id = id
         self.llm = llm
         self.template = template
@@ -522,6 +522,7 @@ class Agent:
         self.mcp_url = mcp_url
         self.mcp_urls = mcp_urls
         self.react_on = react_on
+        self.safety_prompt_on = safety_prompt_on
 
         self._cached_llm = (
             None  # Add this line to cache the LLM instance
@@ -577,6 +578,9 @@ class Agent:
             prompt = f"\n Your Name: {self.agent_name} \n\n Your Description: {self.agent_description} \n\n {self.system_prompt}"
         else:
             prompt = self.system_prompt
+
+        if self.safety_prompt_on is True:
+            prompt += SAFETY_PROMPT
 
         # Initialize the short term memory
         self.short_memory = Conversation(
@@ -1000,7 +1004,7 @@ class Agent:
 
         Returns:
             Any: The output of the agent.
-            (string, list, json, dict, yaml)
+            (string, list, json, dict, yaml, xml)
 
         Examples:
             agent(task="What is the capital of France?")
@@ -1222,6 +1226,7 @@ class Agent:
             if self.autosave:
                 self.save()
 
+            # Output formatting based on output_type
             return history_output_formatter(
                 self.short_memory, type=self.output_type
             )
@@ -2270,7 +2275,7 @@ class Agent:
             time=time.time(),
             tokens=total_tokens,
             response=AgentChatCompletionResponse(
-                id=self.agent_id,
+                id=self.id,
                 agent_name=self.agent_name,
                 object="chat.completion",
                 choices=ChatCompletionResponseChoice(

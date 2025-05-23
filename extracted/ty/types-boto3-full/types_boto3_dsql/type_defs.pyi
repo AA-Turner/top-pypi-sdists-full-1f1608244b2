@@ -20,7 +20,7 @@ import sys
 from datetime import datetime
 from typing import Union
 
-from .literals import ClusterStatusType
+from .literals import ClusterStatusType, EncryptionStatusType, EncryptionTypeType
 
 if sys.version_info >= (3, 9):
     from builtins import dict as Dict
@@ -40,6 +40,7 @@ __all__ = (
     "DeleteClusterInputTypeDef",
     "DeleteClusterOutputTypeDef",
     "EmptyResponseMetadataTypeDef",
+    "EncryptionDetailsTypeDef",
     "GetClusterInputTypeDef",
     "GetClusterInputWaitExtraTypeDef",
     "GetClusterInputWaitTypeDef",
@@ -66,6 +67,11 @@ __all__ = (
 class ClusterSummaryTypeDef(TypedDict):
     identifier: str
     arn: str
+
+class EncryptionDetailsTypeDef(TypedDict):
+    encryptionType: EncryptionTypeType
+    encryptionStatus: EncryptionStatusType
+    kmsKeyArn: NotRequired[str]
 
 class MultiRegionPropertiesOutputTypeDef(TypedDict):
     witnessRegion: NotRequired[str]
@@ -122,6 +128,7 @@ class CreateClusterOutputTypeDef(TypedDict):
     status: ClusterStatusType
     creationTime: datetime
     multiRegionProperties: MultiRegionPropertiesOutputTypeDef
+    encryptionDetails: EncryptionDetailsTypeDef
     deletionProtectionEnabled: bool
     ResponseMetadata: ResponseMetadataTypeDef
 
@@ -143,6 +150,7 @@ class GetClusterOutputTypeDef(TypedDict):
     deletionProtectionEnabled: bool
     multiRegionProperties: MultiRegionPropertiesOutputTypeDef
     tags: Dict[str, str]
+    encryptionDetails: EncryptionDetailsTypeDef
     ResponseMetadata: ResponseMetadataTypeDef
 
 class GetVpcEndpointServiceNameOutputTypeDef(TypedDict):
@@ -182,6 +190,7 @@ MultiRegionPropertiesUnionTypeDef = Union[
 
 class CreateClusterInputTypeDef(TypedDict):
     deletionProtectionEnabled: NotRequired[bool]
+    kmsEncryptionKey: NotRequired[str]
     tags: NotRequired[Mapping[str, str]]
     clientToken: NotRequired[str]
     multiRegionProperties: NotRequired[MultiRegionPropertiesUnionTypeDef]
@@ -189,5 +198,6 @@ class CreateClusterInputTypeDef(TypedDict):
 class UpdateClusterInputTypeDef(TypedDict):
     identifier: str
     deletionProtectionEnabled: NotRequired[bool]
+    kmsEncryptionKey: NotRequired[str]
     clientToken: NotRequired[str]
     multiRegionProperties: NotRequired[MultiRegionPropertiesUnionTypeDef]

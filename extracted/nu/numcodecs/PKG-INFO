@@ -1,9 +1,9 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: numcodecs
-Version: 0.15.1
+Version: 0.16.1
 Summary: A Python package providing buffer compression and transformation codecs for use in data storage and communication applications.
 Maintainer-email: Alistair Miles <alimanfoo@googlemail.com>
-License: MIT
+License-Expression: MIT
 Project-URL: Bug Tracker, https://github.com/zarr-developers/numcodecs/issues
 Project-URL: Changelog, https://numcodecs.readthedocs.io/en/stable/release.html
 Project-URL: Documentation, https://numcodecs.readthedocs.io/
@@ -12,7 +12,6 @@ Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: Information Technology
 Classifier: Intended Audience :: Science/Research
-Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Operating System :: Unix
@@ -21,8 +20,16 @@ Classifier: Programming Language :: Python :: 3 :: Only
 Requires-Python: >=3.11
 Description-Content-Type: text/x-rst
 License-File: LICENSE.txt
+License-File: c-blosc/LICENSE.txt
+License-File: c-blosc/LICENSES/BITSHUFFLE.txt
+License-File: c-blosc/LICENSES/FASTLZ.txt
+License-File: c-blosc/LICENSES/LZ4.txt
+License-File: c-blosc/LICENSES/SNAPPY.txt
+License-File: c-blosc/LICENSES/STDINT.txt
+License-File: c-blosc/LICENSES/ZLIB-NG.txt
+License-File: c-blosc/LICENSES/ZLIB.txt
 Requires-Dist: numpy>=1.24
-Requires-Dist: deprecated
+Requires-Dist: typing_extensions
 Provides-Extra: docs
 Requires-Dist: sphinx; extra == "docs"
 Requires-Dist: sphinx-issues; extra == "docs"
@@ -42,6 +49,7 @@ Provides-Extra: pcodec
 Requires-Dist: pcodec<0.4,>=0.3; extra == "pcodec"
 Provides-Extra: crc32c
 Requires-Dist: crc32c>=2.7; extra == "crc32c"
+Dynamic: license-file
 
 Numcodecs
 =========

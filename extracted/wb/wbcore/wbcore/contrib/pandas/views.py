@@ -65,14 +65,7 @@ class PandasMixin(CacheMixin):
                 ):  # if df is empty with an empty multi-index, the pandas subrountine fails with an IndexError
                     df = df.reset_index(names=field.key)
             if field.key in df.columns:
-                if isinstance(field, fields.FloatField):
-                    df[field.key] = df[field.key].astype("float", errors="ignore")
-                if isinstance(field, fields.CharField) or isinstance(field, fields.TextField):
-                    df[field.key] = df[field.key].astype("string", errors="ignore")
-                if isinstance(field, fields.IntegerField):
-                    df[field.key] = df[field.key].astype("Int64", errors="ignore")
-                elif isinstance(field, fields.DateField):
-                    df[field.key] = pd.to_datetime(df[field.key])
+                df[field.key] = field.to_representation(df[field.key])
         with pd.option_context("future.no_silent_downcasting", True):
             return (
                 df.drop(columns=df.columns.difference(pd_fields.to_dict().keys()))

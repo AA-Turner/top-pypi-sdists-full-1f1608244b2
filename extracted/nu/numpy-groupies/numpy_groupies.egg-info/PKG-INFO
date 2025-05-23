@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: numpy-groupies
-Version: 0.11.2
+Version: 0.11.3
 Summary: Optimised tools for group-indexing operations: aggregated sum and more.
 Author-email: Michael Löffler <ml@occam.com.ua>, Daniel Manson <danielmanson.uk@gmail.com>
 Maintainer-email: Deepak Cherian <dcherian@ucar.edu>
@@ -52,6 +52,7 @@ Provides-Extra: dev
 Requires-Dist: pytest; extra == "dev"
 Requires-Dist: numba; extra == "dev"
 Requires-Dist: pandas; extra == "dev"
+Dynamic: license-file
 
 [![GitHub Workflow CI Status](https://img.shields.io/github/actions/workflow/status/ml31415/numpy-groupies/ci.yaml?branch=master&logo=github&style=flat)](https://github.com/ml31415/numpy-groupies/actions)
 [![PyPI](https://img.shields.io/pypi/v/numpy-groupies.svg?style=flat)](https://pypi.org/project/numpy-groupies/)

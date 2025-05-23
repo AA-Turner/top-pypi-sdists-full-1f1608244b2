@@ -12,11 +12,24 @@ from graphene.types.inputobjecttype import set_input_object_type_default_value
 from graphql import GraphQLError, OperationType, Undefined
 from graphql.type import GraphQLField
 
+from ai.backend.common.exception import (
+    BackendAIError,
+    ErrorCode,
+    PermissionDeniedError,
+)
 from ai.backend.common.metrics.metric import GraphQLMetricObserver
+from ai.backend.manager.config.provider import ManagerConfigProvider
 from ai.backend.manager.models.gql_models.audit_log import (
     AuditLogConnection,
     AuditLogNode,
     AuditLogSchema,
+)
+from ai.backend.manager.models.gql_models.service_config import (
+    AvailableServiceConnection,
+    AvailableServiceNode,
+    ModifyServiceConfigNode,
+    ServiceConfigConnection,
+    ServiceConfigNode,
 )
 from ai.backend.manager.plugin.network import NetworkPluginContext
 from ai.backend.manager.service.base import ServicesContext
@@ -56,7 +69,7 @@ from .container_registry import (
 from .rbac import ContainerRegistryScope
 
 if TYPE_CHECKING:
-    from ai.backend.common.bgtask import BackgroundTaskManager
+    from ai.backend.common.bgtask.bgtask import BackgroundTaskManager
     from ai.backend.common.etcd import AsyncEtcd
     from ai.backend.common.types import (
         AccessKey,
@@ -67,20 +80,19 @@ if TYPE_CHECKING:
     )
 
     from ..api.manager import ManagerStatus
-    from ..config import LocalConfig, SharedConfig
     from ..idle import IdleCheckerHost
     from ..models.utils import ExtendedAsyncSAEngine
     from ..registry import AgentRegistry
     from .storage import StorageSessionManager
 
-from ..api.exceptions import (
+from ..data.image.types import ImageStatus
+from ..errors.exceptions import (
     ImageNotFound,
     InsufficientPrivilege,
     InvalidAPIParameters,
     ObjectNotFound,
     TooManyKernelsFound,
 )
-from ..data.image.types import ImageStatus
 from .acl import PredefinedAtomicPermission
 from .base import DataLoaderManager, PaginatedConnectionField, privileged_query, scoped_query
 from .gql_models.agent import (
@@ -273,12 +285,19 @@ from .vfolder import (
 )
 
 
+def _is_legacy_mutation(mutation_cls: Any) -> bool:
+    """
+    Checks whether the GraphQL mutation is in the legacy format with the fields `ok` and `msg`.
+    """
+    fields = getattr(mutation_cls, "_meta").fields
+    return {"ok", "msg"}.issubset(fields)
+
+
 @attrs.define(auto_attribs=True, slots=True)
 class GraphQueryContext:
     schema: graphene.Schema
     dataloader_manager: DataLoaderManager
-    local_config: LocalConfig
-    shared_config: SharedConfig
+    config_provider: ManagerConfigProvider
     etcd: AsyncEtcd
     user: Mapping[str, Any]  # TODO: express using typed dict
     access_key: str
@@ -374,6 +393,9 @@ class Mutations(graphene.ObjectType):
     create_resource_preset = CreateResourcePreset.Field()
     modify_resource_preset = ModifyResourcePreset.Field()
     delete_resource_preset = DeleteResourcePreset.Field()
+
+    # super-admin only
+    modify_service_config = ModifyServiceConfigNode.Field()
 
     # super-admin only
     create_scaling_group = CreateScalingGroup.Field()
@@ -1167,6 +1189,25 @@ class Queries(graphene.ObjectType):
         description="Added in 25.6.0.",
     )
 
+    available_service = graphene.Field(
+        AvailableServiceNode,
+        description="Added in 25.8.0.",
+    )
+    available_services = PaginatedConnectionField(
+        AvailableServiceConnection,
+        description="Added in 25.8.0.",
+    )
+    service_config = graphene.Field(
+        ServiceConfigNode,
+        service=graphene.String(required=True),
+        description="Added in 25.8.0.",
+    )
+    service_configs = PaginatedConnectionField(
+        ServiceConfigConnection,
+        services=graphene.List(graphene.String, required=True),
+        description="Added in 25.8.0.",
+    )
+
     @staticmethod
     @privileged_query(UserRole.SUPERADMIN)
     async def resolve_agent(
@@ -1239,7 +1280,7 @@ class Queries(graphene.ObjectType):
         scaling_group: str | None = None,
     ) -> AgentSummary:
         ctx: GraphQueryContext = info.context
-        if ctx.local_config["manager"]["hide-agents"]:
+        if ctx.config_provider.config.manager.hide_agents:
             raise ObjectNotFound(object_name="agent")
 
         loader = ctx.dataloader_manager.get_loader_by_func(
@@ -1268,7 +1309,7 @@ class Queries(graphene.ObjectType):
         status: str | None = None,
     ) -> AgentSummaryList:
         ctx: GraphQueryContext = info.context
-        if ctx.local_config["manager"]["hide-agents"]:
+        if ctx.config_provider.config.manager.hide_agents:
             raise ObjectNotFound(object_name="agent")
 
         total_count = await AgentSummary.load_count(
@@ -2976,6 +3017,50 @@ class Queries(graphene.ObjectType):
             last,
         )
 
+    @staticmethod
+    @privileged_query(UserRole.SUPERADMIN)
+    async def resolve_available_service(
+        root: Any,
+        info: graphene.ResolveInfo,
+    ) -> AuditLogSchema:
+        return AvailableServiceNode()
+
+    @staticmethod
+    @privileged_query(UserRole.SUPERADMIN)
+    async def resolve_service_config(
+        root: Any,
+        info: graphene.ResolveInfo,
+        service: str,
+    ) -> ServiceConfigNode:
+        return await ServiceConfigNode.load(info, service)
+
+    @staticmethod
+    @privileged_query(UserRole.SUPERADMIN)
+    async def resolve_service_configs(
+        root: Any,
+        info: graphene.ResolveInfo,
+        services: list[str],
+        *,
+        filter: Optional[str] = None,
+        order: Optional[str] = None,
+        offset: Optional[int] = None,
+        after: Optional[str] = None,
+        first: Optional[int] = None,
+        before: Optional[str] = None,
+        last: Optional[int] = None,
+    ) -> ConnectionResolverResult:
+        return await ServiceConfigNode.get_connection(
+            info,
+            services,
+            filter,
+            order,
+            offset,
+            after,
+            first,
+            before,
+            last,
+        )
+
     async def resolve_model_card(
         root: Any,
         info: graphene.ResolveInfo,
@@ -3111,7 +3196,9 @@ class GQLMutationPrivilegeCheckMiddleware:
             # default is allow nobody.
             allowed_roles = getattr(mutation_cls, "allowed_roles", [])
             if graph_ctx.user["role"] not in allowed_roles:
-                return mutation_cls(False, f"no permission to execute {info.path.key}")  # type: ignore
+                if _is_legacy_mutation(mutation_cls):
+                    return mutation_cls(False, f"no permission to execute {info.path.key}")  # type: ignore
+                raise PermissionDeniedError()
         return next(root, info, **args)
 
 
@@ -3119,11 +3206,19 @@ class GQLExceptionMiddleware:
     def resolve(self, next, root, info: graphene.ResolveInfo, **args) -> Any:
         try:
             res = next(root, info, **args)
+        except BackendAIError as e:
+            raise GraphQLError(
+                message=str(e),
+                extensions={
+                    "code": str(e.error_code()),
+                },
+            )
         except Exception as e:
             raise GraphQLError(
                 message=str(e),
-                # TODO: Add extensions (error_code) after BackendError refactoring
-                # extensions={},
+                extensions={
+                    "code": str(ErrorCode.default()),
+                },
             )
         return res
 
@@ -3146,15 +3241,28 @@ class GQLMetricMiddleware:
                 field_name=field_name,
                 parent_type=parent_type,
                 operation_name=operation_name,
+                error_code=None,
                 success=True,
                 duration=time.perf_counter() - start,
             )
+        except BackendAIError as e:
+            graph_ctx.metric_observer.observe_request(
+                operation_type=operation_type,
+                field_name=field_name,
+                parent_type=parent_type,
+                operation_name=operation_name,
+                error_code=e.error_code(),
+                success=False,
+                duration=time.perf_counter() - start,
+            )
+            raise e
         except BaseException as e:
             graph_ctx.metric_observer.observe_request(
                 operation_type=operation_type,
                 field_name=field_name,
                 parent_type=parent_type,
                 operation_name=operation_name,
+                error_code=ErrorCode.default(),
                 success=False,
                 duration=time.perf_counter() - start,
             )

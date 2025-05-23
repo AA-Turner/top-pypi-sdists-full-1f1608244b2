@@ -71,8 +71,7 @@ TECHNICAL_MARKS = OrderedDict([('up-bow', articulations.UpBow),
                                # in method objectAttachedSpannersToTechnicals of m21ToXml.py
                                # ('hammer-on', articulations.HammerOn),
                                # ('pull-off', articulations.PullOff),
-                               # bend not implemented because it needs many subcomponents
-                               # ('bend', articulations.FretBend),
+                               ('bend', articulations.FretBend),
                                ('tap', articulations.FretTap),
                                ('fret', articulations.FretIndication),
                                ('heel', articulations.OrganHeel),
@@ -134,7 +133,6 @@ class MusicXMLWarning(UserWarning):
 # ------------------------------------------------------------------------------
 # helpers
 STYLE_ATTRIBUTES_YES_NO_TO_BOOL = ('hideObjectOnPrint', )
-STYLE_ATTRIBUTES_STR_NONE_TO_NONE = ('enclosure', )
 
 
 def yesNoToBoolean(value):

@@ -37,13 +37,15 @@ lowest.
 
 import configparser
 import os
-from pathlib import PureWindowsPath, Path
 import platform
-from enum import Enum
-from typing import Any, Dict, Iterable, List, Optional, Tuple, TYPE_CHECKING
 import warnings
+from collections.abc import Iterable
+from enum import Enum
+from pathlib import Path, PureWindowsPath
+from typing import TYPE_CHECKING, Any, Optional, Union
 
-from west.util import WEST_DIR, west_dir, WestNotFound, PathType
+from west.util import WEST_DIR, PathType, WestNotFound, west_dir
+
 
 class MalformedConfig(Exception):
     '''The west configuration was malformed.
@@ -97,8 +99,8 @@ class _InternalCF:
 
         try:
             return getter(section, key)
-        except (configparser.NoOptionError, configparser.NoSectionError):
-            raise KeyError(option)
+        except (configparser.NoOptionError, configparser.NoSectionError) as err:
+            raise KeyError(option) from err
 
     def set(self, option: str, value: Any):
         section, key = _InternalCF.parse_key(option)
@@ -292,7 +294,7 @@ class Configuration:
             self._system.set(option, value)
         else:
             # Shouldn't happen.
-            assert False, configfile
+            raise AssertionError(configfile)
 
     @staticmethod
     def _create(path: Path) -> _InternalCF:
@@ -366,7 +368,7 @@ class Configuration:
             load(self._local)
 
     def items(self, configfile: ConfigFile = ConfigFile.ALL
-              ) -> Iterable[Tuple[str, Any]]:
+              ) -> Iterable[tuple[str, Any]]:
         '''Iterator of option, value pairs.'''
         if configfile == ConfigFile.ALL:
             ret = {}
@@ -399,8 +401,8 @@ class Configuration:
         return self._cf_to_dict(self._local)
 
     @staticmethod
-    def _cf_to_dict(cf: Optional[_InternalCF]) -> Dict[str, Any]:
-        ret: Dict[str, Any] = {}
+    def _cf_to_dict(cf: Optional[_InternalCF]) -> dict[str, Any]:
+        ret: dict[str, Any] = {}
         if cf is None:
             return ret
         for section, contents in cf.cp.items():
@@ -491,7 +493,7 @@ def update_config(section: str, key: str, value: Any,
         config.write(f)
 
 def delete_config(section: str, key: str,
-                  configfile: Optional[ConfigFile] = None,
+                  configfile: Union[Optional[ConfigFile], list[ConfigFile]] = None,
                   topdir: Optional[PathType] = None) -> None:
     '''Delete the option section.key from the given file or files.
 
@@ -626,7 +628,7 @@ def _location(cfg: ConfigFile, topdir: Optional[PathType] = None,
     else:
         raise ValueError(f'invalid configuration file {cfg}')
 
-def _gather_configs(cfg: ConfigFile, topdir: Optional[PathType]) -> List[str]:
+def _gather_configs(cfg: ConfigFile, topdir: Optional[PathType]) -> list[str]:
     # Find the paths to the given configuration files, in increasing
     # precedence order.
     ret = []

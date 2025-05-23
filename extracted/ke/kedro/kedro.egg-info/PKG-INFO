@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: kedro
-Version: 0.19.12
+Version: 0.19.13
 Summary: Kedro helps you build production-ready data and analytics pipelines
 Author: Kedro
 License: Apache Software License (Apache 2.0)
@@ -20,7 +20,7 @@ License-File: LICENSE.md
 Requires-Dist: attrs>=21.3
 Requires-Dist: build>=0.7.0
 Requires-Dist: cachetools>=4.1
-Requires-Dist: click>=4.0
+Requires-Dist: click<8.2.0,>=4.0
 Requires-Dist: cookiecutter<3.0,>=2.1.1
 Requires-Dist: dynaconf<4.0,>=3.1.2
 Requires-Dist: fsspec>=2021.4
@@ -34,7 +34,7 @@ Requires-Dist: parse>=1.19.0
 Requires-Dist: pluggy>=1.0
 Requires-Dist: pre-commit-hooks
 Requires-Dist: PyYAML<7.0,>=4.2
-Requires-Dist: rich<14.0,>=12.0
+Requires-Dist: rich<15.0,>=12.0
 Requires-Dist: rope<2.0,>=0.21
 Requires-Dist: toml>=0.10.0
 Requires-Dist: typing_extensions>=4.0
@@ -42,7 +42,7 @@ Provides-Extra: test
 Requires-Dist: behave==1.2.6; extra == "test"
 Requires-Dist: coverage[toml]; extra == "test"
 Requires-Dist: detect-secrets~=1.5.0; extra == "test"
-Requires-Dist: import-linter==2.2; extra == "test"
+Requires-Dist: import-linter==2.3; extra == "test"
 Requires-Dist: ipylab>=1.0.0; extra == "test"
 Requires-Dist: ipython~=8.10; extra == "test"
 Requires-Dist: jupyterlab_server>=2.11.1; extra == "test"

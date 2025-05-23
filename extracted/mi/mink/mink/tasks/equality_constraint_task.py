@@ -10,7 +10,7 @@ import numpy as np
 import numpy.typing as npt
 
 from ..configuration import Configuration
-from .exceptions import InvalidConstraint, TaskDefinitionError
+from ..exceptions import InvalidConstraint, TaskDefinitionError
 from .task import Task
 
 
@@ -24,20 +24,54 @@ def _get_constraint_dim(constraint: int) -> int:
     }[constraint]
 
 
+def _sparse2dense_fallback(
+    res: np.ndarray,
+    mat: np.ndarray,
+    rownnz: np.ndarray,
+    rowadr: np.ndarray,
+    colind: np.ndarray,
+) -> None:
+    """Fallback implementation of mujoco.mju_sparse2dense for Python 3.8.
+
+    This is a fallback implementation of mujoco.mju_sparse2dense for Python 3.8.
+    It is used when the version of MuJoCo is less than 3.2.5. This is because
+    mujoco.mju_sparse2dense was added Oct 23, 2024 which corresponds to 3.2.5+ and
+    Python 3.8 was dropped in 3.2.4.
+    """
+    # Ref: https://github.com/google-deepmind/mujoco/blob/178fb49c2b2ff48f59653515ab09b9cafca31b7a/src/engine/engine_util_sparse.c#L135
+    for r in range(res.shape[0]):
+        for i in range(rownnz[r]):
+            res[r, colind[rowadr[r] + i]] = mat[rowadr[r] + i]
+
+
 def _get_dense_constraint_jacobian(
     model: mujoco.MjModel, data: mujoco.MjData
 ) -> np.ndarray:
     """Return the dense constraint Jacobian for a model."""
-    if mujoco.mj_isSparse(model):
-        efc_J = np.empty((data.nefc, model.nv))
-        mujoco.mju_sparse2dense(
-            efc_J,
-            data.efc_J,
-            data.efc_J_rownnz,
-            data.efc_J_rowadr,
-            data.efc_J_colind,
-        )
+
+    def _sparse2dense(data: mujoco.MjData) -> np.ndarray:
+        if mujoco.__version__ < "3.2.5":
+            efc_J = np.zeros((data.nefc, model.nv))  # Important to zero out here.
+            _sparse2dense_fallback(
+                efc_J,
+                data.efc_J,
+                data.efc_J_rownnz,
+                data.efc_J_rowadr,
+                data.efc_J_colind,
+            )
+        else:
+            efc_J = np.empty((data.nefc, model.nv))
+            mujoco.mju_sparse2dense(
+                efc_J,
+                data.efc_J,
+                data.efc_J_rownnz,
+                data.efc_J_rowadr,
+                data.efc_J_colind,
+            )
         return efc_J
+
+    if mujoco.mj_isSparse(model):
+        return _sparse2dense(data)
     return data.efc_J.reshape((data.nefc, model.nv)).copy()
 
 
@@ -53,8 +87,17 @@ class EqualityConstraintTask(Task):
     * ``mjEQ_JOINT``: Couple the values of two scalar joints.
     * ``mjEQ_TENDON``: Couple the values of two tendons.
 
-    This task can regulate all equality constraints in a model or a specific subset
+    This task can regulate all equality constraints in the model or a specific subset
     identified by name or ID.
+
+    .. note::
+
+        MuJoCo computes the constraint residual and its Jacobian and stores them in
+        ``data.efc_pos`` and ``data.efc_J`` (potentially in sparse format), respectively.
+        The :func:`compute_error` and :func:`compute_jacobian` methods simply extract the
+        rows corresponding to the active equality constraints specified for this task
+        from ``data.efc_pos`` and ``data.efc_J``. More information on MuJoCo's constraint
+        model can be found in [MuJoCoEqualityConstraints]_.
 
     Attributes:
         equalities: ID or name of the equality constraints to regulate. If not provided,
@@ -126,32 +169,25 @@ class EqualityConstraintTask(Task):
         self.cost = np.repeat(self._cost, repeats)
 
     def compute_error(self, configuration: Configuration) -> np.ndarray:
-        """Compute the equality constraint task error.
+        """Compute the task error (constraint residual) :math:`e(q) = r(q)`.
 
         Args:
             configuration: Robot configuration :math:`q`.
 
         Returns:
-            Equality constraint task error vector :math:`e(q)`. The shape of the
-            error vector is ``(neq_active * constraint_dim,)``, where ``neq_active``
-            is the number of active equality constraints, and ``constraint_dim``
-            depends on the type of equality constraint.
+            Task error vector :math:`e(q)` for the active equality constraints.
         """
         self._update_active_constraints(configuration)
         return configuration.data.efc_pos[self._mask]
 
     def compute_jacobian(self, configuration: Configuration) -> np.ndarray:
-        """Compute the task Jacobian at a given configuration.
+        """Compute the task Jacobian (constraint Jacobian) :math:`J(q) = J_r(q)`.
 
         Args:
             configuration: Robot configuration :math:`q`.
 
         Returns:
-            Equality constraint task jacobian :math:`J(q)`. The shape of the Jacobian
-            is ``(neq_active * constraint_dim, nv)``, where ``neq_active`` is the
-            number of active equality constraints, ``constraint_dim`` depends on the
-            type of equality constraint, and ``nv`` is the dimension of the tangent
-            space.
+            Task jacobian :math:`J(q)` for the active equality constraints.
         """
         self._update_active_constraints(configuration)
         efc_J = _get_dense_constraint_jacobian(configuration.model, configuration.data)

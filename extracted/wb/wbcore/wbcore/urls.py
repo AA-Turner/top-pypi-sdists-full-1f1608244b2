@@ -1,4 +1,6 @@
 from django.urls import include, path
+from dynamic_preferences.api.viewsets import GlobalPreferencesViewSet
+from dynamic_preferences.users.viewsets import UserPreferencesViewSet
 
 from wbcore.cache.views import clear_cache
 from wbcore.shares.views import ShareAPIView
@@ -35,6 +37,8 @@ router.register(
     FrontendUserConfigurationModelViewSet,
     basename="frontenduserconfiguration",
 )
+router.register(r"global_preferences", GlobalPreferencesViewSet, basename="global_preferences")
+router.register(r"user_preferences", UserPreferencesViewSet, basename="user_preferences")
 
 router.register(r"version", VersionModelViewSet, basename="version")
 router.register(r"revision", RevisionModelViewSet, basename="revision")

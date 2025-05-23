@@ -20,7 +20,7 @@ from worker_automate_hub.models.dto.rpa_processo_entrada_dto import (
 from worker_automate_hub.utils.logger import logger
 from worker_automate_hub.utils.toast import show_toast
 from worker_automate_hub.utils.util import (
-    api_simplifica,
+    send_to_webhook,
     extract_nf_number,
     faturar_pre_venda,
     find_element_center,
@@ -196,13 +196,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
         )
         if window_seleciona_endereco_position is not None:
             log_msg = f"Aviso para selecionar Endereço | Número da nota: {nota_fiscal} | Valor: {valor_nota}"
-            await api_simplifica(
+            await send_to_webhook(
                 task.configEntrada["urlRetorno"],
                 "ERRO",
                 log_msg,
                 task.configEntrada["uuidSimplifica"],
                 nota_fiscal,
                 valor_nota,
+                True
             )
             return RpaRetornoProcessoDTO(
                 sucesso=False, retorno=log_msg, status=RpaHistoricoStatusEnum.Falha, tags=[RpaTagDTO(descricao=RpaTagEnum.Negocio)]
@@ -331,13 +332,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
             pyautogui.hotkey("tab")
         else:
             log_msg = f"Campo Modelo na capa da nota não encontrado | Número da nota: {nota_fiscal} | Valor: {valor_nota}"
-            await api_simplifica(
+            await send_to_webhook(
                 task.configEntrada["urlRetorno"],
                 "ERRO",
                 log_msg,
                 task.configEntrada["uuidSimplifica"],
                 nota_fiscal,
                 valor_nota,
+                True
             )
             return RpaRetornoProcessoDTO(
                 sucesso=False, retorno=log_msg, status=RpaHistoricoStatusEnum.Falha, tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
@@ -356,13 +358,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
             pyautogui.click(menu_itens)
         else:
             log_msg = f'Campo "Itens" no menu da pré-venda não encontrado. | Número da nota: {nota_fiscal} | Valor: {valor_nota}'
-            await api_simplifica(
+            await send_to_webhook(
                 task.configEntrada["urlRetorno"],
                 "ERRO",
                 log_msg,
                 task.configEntrada["uuidSimplifica"],
                 nota_fiscal,
                 valor_nota,
+                True
             )
             return RpaRetornoProcessoDTO(
                 sucesso=False, retorno=log_msg, status=RpaHistoricoStatusEnum.Falha, tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
@@ -386,13 +389,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                 console.print("\nClicou em 'Incluir'", style="bold green")
             else:
                 log_msg = f'Botão "Incluir" não encontrado | Número da nota: {nota_fiscal} | Valor: {valor_nota}'
-                await api_simplifica(
+                await send_to_webhook(
                     task.configEntrada["urlRetorno"],
                     "ERRO",
                     log_msg,
                     task.configEntrada["uuidSimplifica"],
                     nota_fiscal,
                     valor_nota,
+                    True
                 )
                 return RpaRetornoProcessoDTO(
                     sucesso=False, retorno=log_msg, status=RpaHistoricoStatusEnum.Falha, tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
@@ -420,13 +424,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                 )
             else:
                 log_msg = f"Campo Almoxarifado não encontrado | Número da nota: {nota_fiscal} | Valor: {valor_nota}"
-                await api_simplifica(
+                await send_to_webhook(
                     task.configEntrada["urlRetorno"],
                     "ERRO",
                     log_msg,
                     task.configEntrada["uuidSimplifica"],
                     nota_fiscal,
                     valor_nota,
+                    True
                 )
                 return RpaRetornoProcessoDTO(
                     sucesso=False, retorno=log_msg, status=RpaHistoricoStatusEnum.Falha, tags=[RpaTagDTO(descricao=RpaTagEnum.Tecnico)]
@@ -462,13 +467,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                 )
                 console.print(f"{observacao}", style="bold green")
                 logger.info(f"{observacao}")
-                await api_simplifica(
+                await send_to_webhook(
                     task.configEntrada["urlRetorno"],
                     "ERRO",
                     observacao,
                     task.configEntrada["uuidSimplifica"],
                     nota_fiscal,
                     valor_nota,
+                    True
                 )
                 return RpaRetornoProcessoDTO(
                     sucesso=False,
@@ -485,13 +491,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
             )
             if warning_price is not None:
                 observacao = f"Item {item['codigoProduto']} não possui preço, verificar erro de estoque ou de bloqueio."
-                await api_simplifica(
+                await send_to_webhook(
                     task.configEntrada["urlRetorno"],
                     "ERRO",
                     observacao,
                     task.configEntrada["uuidSimplifica"],
                     nota_fiscal,
                     valor_nota,
+                    True
                 )
                 return RpaRetornoProcessoDTO(
                     sucesso=False,
@@ -515,13 +522,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                 ).window_text()
             except Exception as error:
                 console.print(f"Erro ao selecionar o Saldo Disponivel: {error}")
-                await api_simplifica(
+                await send_to_webhook(
                     task.configEntrada["urlRetorno"],
                     "ERRO",
                     error,
                     task.configEntrada["uuidSimplifica"],
                     nota_fiscal,
                     valor_nota,
+                    True
                 )
                 return RpaRetornoProcessoDTO(
                     sucesso=False,
@@ -550,13 +558,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                 )
             except Exception as error:
                 console.print(f"Erro ao converter o Saldo Disponível: {error}")
-                await api_simplifica(
+                await send_to_webhook(
                     task.configEntrada["urlRetorno"],
                     "ERRO",
                     error,
                     task.configEntrada["uuidSimplifica"],
                     nota_fiscal,
                     valor_nota,
+                    True
                 )
                 return RpaRetornoProcessoDTO(
                     sucesso=False,
@@ -566,24 +575,26 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
 
             # Verifica se o saldo disponivel é valido para descartar
             if int(amount_avaliable) > 0 and int(amount_avaliable) >= int(item["qtd"]):
-                field_quantidade = (
-                    1047,
-                    606,
-                )  # find_target_position(screenshot_path, "Quantidade", 20, 0, 15)
-                pyautogui.doubleClick(field_quantidade)
-                pyautogui.hotkey("del")
-                pyautogui.write(str(item["qtd"]))
+                # field_quantidade = (1047,606,) 
+                app = Application(backend="win32").connect(class_name="TFrmIncluiItemPreVenda")
+                main_window = app["TFrmIncluiItemPreVenda"]
+                main_window.set_focus()
+                main_window.child_window(class_name="TDBIEditNumber", found_index=8).type_keys(str(item["qtd"]))
+                # pyautogui.doubleClick(field_quantidade)
+                # pyautogui.hotkey("del")
+                # pyautogui.write(str(item["qtd"]))
                 pyautogui.hotkey("tab")
                 await worker_sleep(2)
             else:
                 log_msg = f"Saldo disponivel: '{amount_avaliable}' é menor que '{item['qtd']}' o valor que deveria ser descartado. Item: '{item['codigoProduto']}'"
-                await api_simplifica(
+                await send_to_webhook(
                     task.configEntrada["urlRetorno"],
                     "ERRO",
                     log_msg,
                     task.configEntrada["uuidSimplifica"],
                     nota_fiscal,
                     valor_nota,
+                    True
                 )
                 console.print(log_msg, style="bold red")
                 return RpaRetornoProcessoDTO(
@@ -601,13 +612,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                 await worker_sleep(2)
             else:
                 log_msg = f"Botao 'Incluir' item não encontrado"
-                await api_simplifica(
+                await send_to_webhook(
                     task.configEntrada["urlRetorno"],
                     "ERRO",
                     log_msg,
                     task.configEntrada["uuidSimplifica"],
                     nota_fiscal,
                     valor_nota,
+                    True
                 )
                 console.print(log_msg, style="bold red")
                 return RpaRetornoProcessoDTO(
@@ -625,13 +637,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                 text_custo = custo_window.window_text()
                 if "Warning" in text_custo:
                     log_msg = f"O valor de custo do Item: {item['codigoProduto']} é maior que o valor de venda."
-                    await api_simplifica(
+                    await send_to_webhook(
                         task.configEntrada["urlRetorno"],
                         "ERRO",
                         log_msg,
                         task.configEntrada["uuidSimplifica"],
                         nota_fiscal,
                         valor_nota,
+                        True
                     )
                     return RpaRetornoProcessoDTO(
                         sucesso=False,
@@ -679,13 +692,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                 await worker_sleep(2)
             else:
                 log_msg = f"Botao cancelar para fechar a tela do item nao encontrado"
-                await api_simplifica(
+                await send_to_webhook(
                     task.configEntrada["urlRetorno"],
                     "ERRO",
                     log_msg,
                     task.configEntrada["uuidSimplifica"],
                     nota_fiscal,
                     valor_nota,
+                    True
                 )
                 console.print(log_msg, style="bold red")
                 return RpaRetornoProcessoDTO(
@@ -707,13 +721,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
             console.print("\nLançou Pré-Venda", style="bold green")
         else:
             log_msg = f"Botao lança pre-venda nao encontrado"
-            await api_simplifica(
+            await send_to_webhook(
                 task.configEntrada["urlRetorno"],
                 "ERRO",
                 log_msg,
                 task.configEntrada["uuidSimplifica"],
                 nota_fiscal,
                 valor_nota,
+                True
             )
             console.print(log_msg, style="bold red")
             return RpaRetornoProcessoDTO(
@@ -875,13 +890,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
             console.log(f"Faturou com sucesso!", style="bold green")
             valor_nota = retorno["valor_nota"]
         else:
-            await api_simplifica(
+            await send_to_webhook(
                 task.configEntrada["urlRetorno"],
                 "ERRO",
                 retorno["retorno"],
                 task.configEntrada["uuidSimplifica"],
                 nota_fiscal,
                 valor_nota,
+                True
             )
             return RpaRetornoProcessoDTO(
                 sucesso=False,
@@ -961,7 +977,7 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
                     if resultado_nf["sucesso"]:
                         nf_sucesso = True
                         console.print("NF-e transmitida com sucesso", style="bold green")
-                        log_msg = f"Nota lançada com sucesso! Número da nota: {nota_fiscal} | Valor: {valor_nota}" + (f" | Itens com quantidade zerada: {itens_zero_qtd}" if itens_zero_qtd else "")
+                        log_msg = f"Nota lançada com sucesso! Número da nota: {nota_fiscal} | Valor: {valor_nota}"
                         break
                     else:
                         console.print(f"Falha na transmissão: {msg_retorno}", style="bold red")
@@ -974,13 +990,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
 
 
         if nf_sucesso:
-            await api_simplifica(
+            await send_to_webhook(
                 task.configEntrada["urlRetorno"],
                 "SUCESSO",
                 log_msg,
                 task.configEntrada["uuidSimplifica"],
                 nota_fiscal,
                 valor_nota,
+                True
             )
             show_toast("Sucesso", f"Processo Descartes finalizado com sucesso")
             return RpaRetornoProcessoDTO(
@@ -990,13 +1007,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
             log_msg = f"{msg_retorno}. Número da nota: {nota_fiscal} | Valor: {valor_nota}"
             console.print(log_msg)
             logger.error(log_msg)
-            await api_simplifica(
-            task.configEntrada["urlRetorno"],
-            "ERRO",
-            log_msg,
-            task.configEntrada["uuidSimplifica"],
-            nota_fiscal,
-            valor_nota,
+            await send_to_webhook(
+                task.configEntrada["urlRetorno"],
+                "ERRO",
+                log_msg,
+                task.configEntrada["uuidSimplifica"],
+                nota_fiscal,
+                valor_nota,
+                True
             )
             show_toast("Falha", log_msg)
             return RpaRetornoProcessoDTO(
@@ -1007,13 +1025,14 @@ async def descartes(task: RpaProcessoEntradaDTO) -> RpaRetornoProcessoDTO:
         log_msg = f"Erro Processo Descartes: {ex} | Número da nota: {nota_fiscal} | Valor: {valor_nota}"
         logger.error(log_msg)
         console.print(log_msg, style="bold red")
-        await api_simplifica(
+        await send_to_webhook(
             task.configEntrada["urlRetorno"],
             "ERRO",
             log_msg,
             task.configEntrada["uuidSimplifica"],
             nota_fiscal,
             valor_nota,
+            True
         )
         show_toast("Falha", log_msg)
 

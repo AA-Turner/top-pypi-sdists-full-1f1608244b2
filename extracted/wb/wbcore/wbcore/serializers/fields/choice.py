@@ -54,3 +54,7 @@ class MultipleChoiceField(ListFieldMixin, WBCoreSerializerFieldMixin, ChoiceMixi
         if isinstance(data, set):
             data = list(data)
         return data
+
+
+class LanguageChoiceField(ChoiceField):
+    field_type = WBCoreType.LANGUAGE.value

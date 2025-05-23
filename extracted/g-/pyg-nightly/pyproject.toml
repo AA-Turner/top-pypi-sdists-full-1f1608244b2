@@ -4,7 +4,7 @@ build-backend="flit_core.buildapi"
 
 [project]
 name="pyg-nightly"
-version="2.7.0.dev20250521"
+version="2.7.0.dev20250522"
 authors=[
     {name="Matthias Fey", email="matthias@pyg.org"},
 ]

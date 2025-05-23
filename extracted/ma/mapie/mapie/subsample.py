@@ -9,15 +9,15 @@ from sklearn.model_selection import BaseCrossValidator
 from sklearn.utils import check_random_state, resample
 from sklearn.utils.validation import _num_samples
 
-from ._typing import NDArray
-from .utils import check_n_samples
+from numpy.typing import NDArray
+from .utils import _check_n_samples
 
 
 class Subsample(BaseCrossValidator):
     """
     Generate a sampling method, that resamples the training set with
-    possible bootstraps. It can replace KFold or  LeaveOneOut as cv argument
-    in the MAPIE class.
+    possible bootstraps. It can be used as cv argument in
+    :class:`~mapie.regression.JackknifeAfterBootstrapRegressor`.
 
     Parameters
     ----------
@@ -76,7 +76,7 @@ class Subsample(BaseCrossValidator):
             The testing set indices for that split.
         """
         indices = np.arange(_num_samples(X))
-        n_samples = check_n_samples(X, self.n_samples, indices)
+        n_samples = _check_n_samples(X, self.n_samples, indices)
         random_state = check_random_state(self.random_state)
         for k in range(self.n_resamplings):
             train_index = resample(
@@ -105,7 +105,7 @@ class BlockBootstrap(BaseCrossValidator):  # type: ignore
     """
     Generate a sampling method, that block bootstraps the training set.
     It can replace KFold, LeaveOneOut or SubSample as cv argument in the
-    MapieRegressor class.
+    TimeSeriesRegressor class.
 
     Parameters
     ----------

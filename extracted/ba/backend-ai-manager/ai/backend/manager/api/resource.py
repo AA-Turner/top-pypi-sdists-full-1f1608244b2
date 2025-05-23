@@ -45,8 +45,8 @@ from ai.backend.manager.services.resource_preset.actions.list_presets import (
 from ai.backend.manager.services.user.actions.admin_month_stats import AdminMonthStatsAction
 from ai.backend.manager.services.user.actions.user_month_stats import UserMonthStatsAction
 
+from ..errors.exceptions import InvalidAPIParameters
 from .auth import auth_required, superadmin_required
-from .exceptions import InvalidAPIParameters
 from .manager import READ_ALLOWED, server_status_required
 from .types import CORSOptions, WebMiddleware
 from .utils import check_api_params
@@ -261,11 +261,11 @@ async def get_watcher_info(request: web.Request, agent_id: str) -> dict:
     :return token: agent watcher token ("insecure" if not set in config server)
     """
     root_ctx: RootContext = request.app["_root.context"]
-    token = root_ctx.shared_config["watcher"]["token"]
+    token = root_ctx.config_provider.config.watcher.token
     if token is None:
         token = "insecure"
-    agent_ip = await root_ctx.shared_config.etcd.get(f"nodes/agents/{agent_id}/ip")
-    raw_watcher_port = await root_ctx.shared_config.etcd.get(
+    agent_ip = await root_ctx.etcd.get(f"nodes/agents/{agent_id}/ip")
+    raw_watcher_port = await root_ctx.etcd.get(
         f"nodes/agents/{agent_id}/watcher_port",
     )
     watcher_port = 6099 if raw_watcher_port is None else int(raw_watcher_port)

@@ -11,6 +11,7 @@ class GetSettingsResponse200GitSyncIncludeTypeItem(str, Enum):
     SCHEDULE = "schedule"
     SCRIPT = "script"
     SECRET = "secret"
+    TRIGGER = "trigger"
     USER = "user"
     VARIABLE = "variable"
 

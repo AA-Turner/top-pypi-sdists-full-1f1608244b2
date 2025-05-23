@@ -10,6 +10,7 @@ import os
 from collections.abc import Callable, Coroutine, Iterable
 from typing import Tuple
 from exponent.core.remote_execution.types import ChatSource
+from exponent.core.remote_execution.utils import safe_read_file
 from exponent.utils.version import check_exponent_version_and_upgrade
 from exponent.commands.theme import Theme, fg_color_seq, bg_color_seq, get_theme
 
@@ -184,8 +185,10 @@ def shell(
         require_confirmation=False
     )
 
+    loop = start_background_event_loop()
+
     if not is_running_from_home_directory:  # Prevent double warnings from being shown
-        check_inside_git_repo(settings)
+        asyncio.run_coroutine_threadsafe(check_inside_git_repo(settings), loop).result()
 
     check_ssl()
 
@@ -193,7 +196,6 @@ def shell(
     base_api_url = settings.get_base_api_url()
     base_ws_url = settings.get_base_ws_url()
     gql_client = GraphQLClient(api_key, base_api_url, base_ws_url)
-    loop = start_background_event_loop()
     parent_event_uuid: Optional[str] = None
     checkpoints: list[dict[str, Any]] = []
 
@@ -1811,7 +1813,7 @@ class Chat:
     async def send_prompt(self, prompt: str) -> None:
         self.view.start_turn()
         paths = self.extract_attachment_paths(prompt)
-        attachments = [self.build_attachment(path) for path in paths]
+        attachments = [(await self.build_attachment(path)) for path in paths]
 
         await self.process_chat_subscription(
             {"prompt": {"message": prompt, "attachments": attachments}}
@@ -1825,9 +1827,8 @@ class Chat:
 
         return list(filter(os.path.isfile, paths))
 
-    def build_attachment(self, path: str) -> dict[str, Any]:
-        with open(path, "r") as f:
-            content = f.read()
+    async def build_attachment(self, path: str) -> dict[str, Any]:
+        content = await safe_read_file(path)
 
         return {
             "fileAttachment": {
@@ -1935,7 +1936,6 @@ class Chat:
             "parentUuid": self.parent_uuid,
             "model": self.model,
             "strategyNameOverride": self.strategy,
-            "useToolsConfig": "read_write",
             "requireConfirmation": self.auto_confirm_mode == AutoConfirmMode.OFF,
             "readOnly": self.auto_confirm_mode == AutoConfirmMode.READ_ONLY,
             "depthLimit": self.depth,

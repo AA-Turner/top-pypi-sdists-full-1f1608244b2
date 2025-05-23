@@ -6,30 +6,35 @@
 '''West project commands'''
 
 import argparse
-from functools import partial
 import logging
 import os
-from os.path import abspath, relpath
-from pathlib import PurePath, Path
-import shutil
 import shlex
+import shutil
 import subprocess
 import sys
 import textwrap
 import time
+from functools import partial
+from os.path import abspath, relpath
+from pathlib import Path, PurePath
 from time import perf_counter
 from urllib.parse import urlparse
 
-from west.configuration import Configuration
 from west import util
-from west.commands import WestCommand, CommandError, Verbosity
-from west.manifest import ImportFlag, Manifest, \
-    ManifestProject, _manifest_content_at, ManifestImportFailed
-from west.manifest import is_group as is_project_group
+from west.commands import CommandError, Verbosity, WestCommand
+from west.configuration import Configuration
 from west.manifest import MANIFEST_REV_BRANCH as MANIFEST_REV
-from west.manifest import Submodule
 from west.manifest import QUAL_MANIFEST_REV_BRANCH as QUAL_MANIFEST_REV
 from west.manifest import QUAL_REFS_WEST as QUAL_REFS
+from west.manifest import (
+    ImportFlag,
+    Manifest,
+    ManifestImportFailed,
+    ManifestProject,
+    Submodule,
+    _manifest_content_at,
+)
+from west.manifest import is_group as is_project_group
 
 #
 # Project-related or multi-repo commands, like "init", "update",
@@ -423,6 +428,8 @@ class List(_ProjectCommand):
             epilog=f'''\
 {ACTIVE_PROJECTS_HELP}
 
+Note: To list only inactive projects you can use --inactive.
+
 FORMAT STRINGS
 --------------
 
@@ -448,11 +455,15 @@ The following arguments are available:
   that the project has been cloned.
 - cloned: "cloned" if the project has been cloned, "not-cloned"
   otherwise
+- active: "active" if the project is currently active, "inactive" otherwise
 - clone_depth: project clone depth if specified, "None" otherwise
 - groups: project groups, as a comma-separated list
 ''')
-        parser.add_argument('-a', '--all', action='store_true',
-                            help='include inactive projects'),
+        group = parser.add_mutually_exclusive_group(required=False)
+        group.add_argument('-a', '--all', action='store_true',
+                           help='include inactive projects'),
+        group.add_argument('-i', '--inactive', action='store_true',
+                           help='list only inactive projects'),
         parser.add_argument('--manifest-path-from-yaml', action='store_true',
                             help='''print the manifest repository's path
                             according to the manifest file YAML, which may
@@ -486,15 +497,27 @@ The following arguments are available:
 
             return "cloned" if project.is_cloned() else "not-cloned"
 
+        def active_thunk(project):
+            self.die_if_no_git()
+
+            return "active" if self.manifest.is_active(project) else "inactive"
+
         def delay(func, project):
             return DelayFormat(partial(func, project))
 
+        if args.inactive and args.projects:
+            self.parser.error('-i cannot be combined with an explicit project '
+                              'list')
+
         for project in self._projects(args.projects):
-            # Skip inactive projects unless the user said
+            # Include the project based on the inactive flag. If the flag is
+            # set, include only inactive projects. Otherwise, include only
+            # active ones.
+            include = self.manifest.is_active(project) != bool(args.inactive)
+            # Skip not included projects unless the user said
             # --all or named some projects explicitly.
-            if not (args.all or args.projects or
-                    self.manifest.is_active(project)):
-                self.dbg(f'{project.name}: skipping inactive project')
+            if not (args.all or args.projects or include):
+                self.dbg(f'{project.name}: skipping project')
                 continue
 
             # Spelling out the format keys explicitly here gives us
@@ -533,6 +556,7 @@ The following arguments are available:
                     revision=project.revision or 'N/A',
                     clone_depth=project.clone_depth or "None",
                     cloned=delay(cloned_thunk, project),
+                    active=delay(active_thunk, project),
                     sha=delay(sha_thunk, project),
                     groups=','.join(project.groups))
             except KeyError as e:
@@ -554,7 +578,7 @@ class ManifestCommand(_ProjectCommand):
     # west.manifest.Manifest.
 
     def __init__(self):
-        super(ManifestCommand, self).__init__(
+        super().__init__(
             'manifest',
             'manage the west manifest',
             textwrap.dedent('''\
@@ -579,6 +603,14 @@ class ManifestCommand(_ProjectCommand):
               If this file uses imports, it will not contain all the
               manifest data.
 
+            - --untracked: print all files and directories inside the workspace that
+              are not tracked or managed by west. This effectively means any
+              file or directory that is outside all of the projects' directories on
+              disk (regardless of whether those projects are active or inactive).
+              This is similar to `git status` for untracked files. The
+              output format is relative to the current working directory and is
+              stable and suitable as input for scripting.
+
             If the manifest file does not use imports, and all project
             revisions are SHAs, the --freeze and --resolve output will
             be identical after a "west update".
@@ -599,10 +631,15 @@ class ManifestCommand(_ProjectCommand):
                            exiting with an error if there are issues''')
         group.add_argument('--path', action='store_true',
                            help="print the top level manifest file's path")
+        group.add_argument('--untracked', action='store_true',
+                           help='''print all files and directories not managed or
+                           tracked by west''')
 
         group = parser.add_argument_group('options for --resolve and --freeze')
         group.add_argument('-o', '--out',
                            help='output file, default is standard output')
+        group.add_argument('--active-only', action='store_true',
+                           help='only resolve active projects')
 
         return parser
 
@@ -614,11 +651,15 @@ class ManifestCommand(_ProjectCommand):
         if args.validate:
             pass              # nothing more to do
         elif args.resolve:
-            self._die_if_manifest_project_filter('resolve')
-            self._dump(args, manifest.as_yaml(**dump_kwargs))
+            if not args.active_only:
+                self._die_if_manifest_project_filter('resolve')
+            self._dump(args, manifest.as_yaml(active_only=args.active_only, **dump_kwargs))
         elif args.freeze:
-            self._die_if_manifest_project_filter('freeze')
-            self._dump(args, manifest.as_frozen_yaml(**dump_kwargs))
+            if not args.active_only:
+                self._die_if_manifest_project_filter('freeze')
+            self._dump(args, manifest.as_frozen_yaml(active_only=args.active_only, **dump_kwargs))
+        elif args.untracked:
+            self._untracked()
         elif args.path:
             self.inf(manifest.path)
         else:
@@ -629,11 +670,77 @@ class ManifestCommand(_ProjectCommand):
         if self.config.get('manifest.project-filter') is not None:
             self.die(f'"west manifest --{action}" is not (yet) supported '
                      'when the manifest.project-filter option is set. '
-                     'Please clear the project-filter configuration '
+                     f'Add --active-only to {action} only the projects '
+                     'currently active in the workspace. Alternatively, '
+                     'please clear the project-filter configuration '
                      'option and re-run this command, or contact the '
                      'west developers if you have a use case for resolving '
                      'the manifest while projects are made inactive by the '
                      'project filter.')
+
+    def _untracked(self):
+        ''' "Performs a top-down search of the west topdir,
+        ignoring every directory that corresponds to a west project.
+        '''
+        ppaths = []
+        untracked = []
+        for project in self._projects(None):
+            # We do not check for self.manifest.is_active(project) because
+            # inactive projects are still considered "tracked directories".
+            ppaths.append(Path(project.abspath))
+
+        # Since west tolerates nested projects (i.e. a project inside the directory
+        # of another project) we must sort the project paths to ensure that we
+        # hit the "enclosing" project first when iterating.
+        ppaths.sort()
+
+        def _find_untracked(directory):
+            '''There are three cases for each element in a directory:
+            - It's a project -> Do nothing, ignore the directory.
+            - There are no projects inside -> add to untracked list.
+            - It's not a project directory but there are some projects inside it -> recurse.
+            The directory argument cannot be inside a project, otherwise all bets are off.
+            '''
+            self.dbg(f'looking for untracked files/directories in: {directory}')
+            for e in [e.absolute() for e in directory.iterdir()]:
+                if not e.is_dir() or e.is_symlink():
+                    untracked.append(e)
+                    continue
+                self.dbg(f'processing directory: {e}')
+                for ppath in ppaths:
+                    # We cannot use samefile() because it requires the file
+                    # to exist (not always the case with inactive or even
+                    # uncloned projects).
+                    if ppath == e:
+                        # We hit a project root directory, skip it.
+                        break
+                    elif e in ppath.parents:
+                        self.dbg(f'recursing into: {e}')
+                        _find_untracked(e)
+                        break
+                else:
+                    # This is not a project and there is no project inside.
+                    # Add to untracked elements.
+                    untracked.append(e)
+                    continue
+
+        # Avoid using Path.walk() since that returns all files and directories under
+        # a particular directory, which is overkill in our case. Instead, recurse
+        # only when required.
+        _find_untracked(Path(self.topdir))
+
+        # Exclude the .west directory, which is maintained by west
+        try:
+            untracked.remove((Path(self.topdir) / Path(WEST_DIR)).resolve())
+        except ValueError:
+            self.die(f'Directory {WEST_DIR} not found in workspace')
+
+        # Sort the results for displaying to the user.
+        untracked.sort()
+        for u in untracked:
+            # We cannot use Path.relative_to(p, walk_up=True) because the
+            # walk_up parameter was only added in 3.12
+            self.inf(os.path.relpath(u, Path.cwd()))
 
     def _dump(self, args, to_dump):
         if args.out:
@@ -876,7 +983,10 @@ class Status(_ProjectCommand):
             'status',
             '"git status" for one or more projects',
             '''Runs "git status" for each of the specified projects.
-            Unknown arguments are passed to "git status".''',
+            Unknown arguments are passed to "git status".
+
+            Note: If you are looking to find untracked files and directories
+            in the workspace use "west manifest --untracked".''',
             accepts_unknown_args=True,
         )
 
@@ -1742,7 +1852,8 @@ To get "git grep foo" results from all cloned, active projects:
 
 To do the same with:
 
-- git grep --untracked: west grep --untracked foo
+- git grep --untracked: west grep --untracked foo (see also west manifest --untracked
+  for finding untracked files outside the project directories)
 - ripgrep:              west grep --tool ripgrep foo
 - grep --recursive:     west grep --tool grep foo
 

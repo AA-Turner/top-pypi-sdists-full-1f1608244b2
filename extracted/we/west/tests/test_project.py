@@ -5,18 +5,28 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import textwrap
 from pathlib import Path, PurePath
 
 import pytest
+from conftest import (
+    GIT,
+    WINDOWS,
+    add_commit,
+    add_tag,
+    check_output,
+    check_proj_consistency,
+    cmd,
+    cmd_raises,
+    create_branch,
+    create_repo,
+    create_workspace,
+    rev_parse,
+)
 
-from west import configuration as config
-from west.manifest import Manifest, ManifestProject, Project, \
-    ManifestImportFailed
 from west.manifest import ImportFlag as MIF
-from conftest import create_branch, create_workspace, create_repo, \
-    add_commit, add_tag, check_output, cmd, GIT, rev_parse, \
-    check_proj_consistency, WINDOWS
+from west.manifest import Manifest, ManifestImportFailed, ManifestProject, Project
 
 assert 'TOXTEMPDIR' in os.environ, "you must run these tests using tox"
 
@@ -217,11 +227,22 @@ def test_list_groups(west_init_tmpdir):
            'bar .. path-for-bar',
            'baz .baz-group. baz'])
 
+    check(_list_f('{name} .{groups}. {path} {active}') + ['--inactive'],
+          ['foo .foo-group-1,foo-group-2. foo inactive',
+           'baz .baz-group. baz inactive'])
+
+    check(_list_f("{name} .{groups}. {path} {active}") + ['--all'] + 'foo bar'.split(),
+          ['foo .foo-group-1,foo-group-2. foo inactive',
+           'bar .. path-for-bar active'])
+
+    err_msg = cmd_raises('list -i foo bar', subprocess.CalledProcessError)
+    assert '-i cannot be combined with an explicit project list' in err_msg
+
     cmd('config manifest.group-filter +foo-group-1')
-    check(_list_f('{name} .{groups}. {path}'),
-          ['manifest .. zephyr',
-           'foo .foo-group-1,foo-group-2. foo',
-           'bar .. path-for-bar'])
+    check(_list_f('{name} .{groups}. {path} {active}'),
+          ['manifest .. zephyr active',
+           'foo .foo-group-1,foo-group-2. foo active',
+           'bar .. path-for-bar active'])
 
 
 def test_list_sha(west_update_tmpdir):
@@ -230,6 +251,122 @@ def test_list_sha(west_update_tmpdir):
 
     assert cmd('list -f {sha}').startswith("N/A")
 
+
+def test_manifest_untracked(west_update_tmpdir):
+
+    def check(expected, cwd=None):
+        out_lines = cmd("manifest --untracked", cwd=cwd).splitlines()
+        assert out_lines == expected
+
+    # Ensure that all projects are active
+    projs = cmd('list -f {name}').splitlines()
+    assert projs == ['manifest', 'Kconfiglib', 'tagged_repo', 'net-tools']
+
+    # Disable Kconfiglib
+    cmd('config manifest.group-filter -- -Kconfiglib-group')
+
+    # Ensure that Kconfiglib is inactive
+    projs = cmd('list -f {name}').splitlines()
+    assert projs == ['manifest', 'tagged_repo', 'net-tools']
+    projs = cmd('list --all -f {name}').splitlines()
+    assert projs == ['manifest', 'Kconfiglib', 'tagged_repo', 'net-tools']
+
+    topdir = Path(west_update_tmpdir)
+
+    # No untracked files yet
+    check(list())
+
+    (topdir / "dir").mkdir()
+    # Untracked dir
+    check(['dir'])
+
+    (topdir / "unt").mkdir()
+    (topdir / "unt" / "file.yml").touch()
+    # Ensure we show the dir as untracked, not the file
+    check(['dir', 'unt'])
+
+    # Add a file to see it's displayed correctly as untracked
+    (topdir / "file.txt").touch()
+    check(['dir', 'file.txt', 'unt'])
+    (topdir / 'subdir' / "z.py").touch()
+    check(['dir', 'file.txt', str(Path('subdir/z.py')), 'unt'])
+
+    (topdir / "subdir" / "new").mkdir()
+    (topdir / "subdir" / "new" / "afile.txt").touch()
+    check(['dir', 'file.txt', str(Path('subdir/new')),
+           str(Path('subdir/z.py')), 'unt'])
+
+    # Check relative paths
+    check([str(Path('../dir')), str(Path('../file.txt')),
+           str(Path('../subdir/new')), str(Path('../subdir/z.py')), '.'],
+          cwd=str(Path("unt/")))
+
+    # Add a file to an existing project, ignored by --untracked
+    (topdir / "net-tools" / "test_manifest_untracked.file").touch()
+    check(['dir', 'file.txt', str(Path('subdir/new')), str(Path('subdir/z.py')),
+           'unt'])
+
+    kconfiglib = Path(topdir / "subdir" / "Kconfiglib")
+    # Same but with an inactive project
+    (kconfiglib / "test_manifest_untracked.file").touch()
+    check(['dir', 'file.txt', str(Path('subdir/new')), str(Path('subdir/z.py')),
+           'unt'])
+
+    # Copy (via clone) a full Git repo so we verify that those are also
+    # displayed as untracked.
+    clone(topdir / "net-tools", Path('subdir/acopy'))
+    clone(topdir / "net-tools", Path('tmpcopy'))
+
+    check(['dir', 'file.txt', str(Path('subdir/acopy')), str(Path('subdir/new')),
+           str(Path('subdir/z.py')), 'tmpcopy', 'unt'])
+
+    # Empty a project so it's not a Git repo anymore
+    (topdir / "net-tools" / ".git").rename(topdir / "net-tools" / "former-git")
+    # Should make no difference
+    check(['dir', 'file.txt', str(Path('subdir/acopy')), str(Path('subdir/new')),
+           str(Path('subdir/z.py')), 'tmpcopy', 'unt'])
+
+    # Same with an inactive project
+    (kconfiglib / ".git").rename(kconfiglib / "former-git")
+    # Should make no difference
+    check(['dir', 'file.txt', str(Path('subdir/acopy')), str(Path('subdir/new')),
+           str(Path('subdir/z.py')), 'tmpcopy', 'unt'])
+
+    # Even if we make the whole inactive project disappear it should make no
+    # difference at all, except that the renamed dir will show up.
+    (kconfiglib).rename(topdir / "subdir" / "other")
+    check(['dir', 'file.txt', str(Path('subdir/acopy')), str(Path('subdir/new')),
+           str(Path('subdir/other')), str(Path('subdir/z.py')), 'tmpcopy', 'unt'])
+
+@pytest.mark.skipif(sys.platform.startswith("win"), reason="symbolic links not tested on Windows")
+def test_manifest_untracked_with_symlinks(west_update_tmpdir):
+
+    def check(expected, cwd=None):
+        out_lines = cmd("manifest --untracked", cwd=cwd).splitlines()
+        assert out_lines == expected
+
+    # Disable Kconfiglib to have an inactive project
+    cmd('config manifest.group-filter -- -Kconfiglib-group')
+
+    # Ensure that Kconfiglib is inactive
+    projs = cmd('list -f {name}').splitlines()
+    assert projs == ['manifest', 'tagged_repo', 'net-tools']
+
+    # Create a folder symlink
+    Path('asl').symlink_to(Path('subdir/Kconfiglib'))
+    # Create another one
+    Path('anothersl').symlink_to(Path('../'))
+    # Yet another one
+    Path('subdir/yetanothersl').symlink_to(Path('tagged_repo'))
+    # check that symlinks are displayed like any other regular untracked file or
+    # directory
+    check(['anothersl', 'asl', str(Path('subdir/yetanothersl'))])
+
+    # File symlink tests, should all be displayed as untracked as well
+    Path('filesl.yml').symlink_to(Path('zephyr/west.yml'))
+    Path('subdir/afsl.py').symlink_to(Path('net-tools/scripts/test.py'))
+    check(['anothersl', 'asl', 'filesl.yml', str(Path('subdir/afsl.py')),
+           str(Path('subdir/yetanothersl'))])
 
 def test_manifest_freeze(west_update_tmpdir):
     # We should be able to freeze manifests.
@@ -264,6 +401,77 @@ def test_manifest_freeze(west_update_tmpdir):
                     '^    description: Networking tools.$',
                     '^    url: .*$',
                     '^    revision: [a-f0-9]{40}$',
+                    '^    clone-depth: 1$',
+                    '^    west-commands: scripts/west-commands.yml$',
+                    '^  self:$',
+                    '^    path: zephyr$']
+    _match_multiline_regex(expected_res, actual)
+
+def test_manifest_freeze_active(west_update_tmpdir):
+    # We should be able to freeze manifests with inactive projects.
+    cmd('config manifest.group-filter -- -Kconfiglib-group')
+
+    actual = cmd('manifest --freeze --active-only').splitlines()
+    # Same as test_manifest_freeze but without inactive projects
+    expected_res = ['^manifest:$',
+                    '^  projects:$',
+                    '^  - name: tagged_repo$',
+                    '^    url: .*$',
+                    '^    revision: [a-f0-9]{40}$',
+                    '^  - name: net-tools$',
+                    '^    description: Networking tools.$',
+                    '^    url: .*$',
+                    '^    revision: [a-f0-9]{40}$',
+                    '^    clone-depth: 1$',
+                    '^    west-commands: scripts/west-commands.yml$',
+                    '^  self:$',
+                    '^    path: zephyr$']
+    _match_multiline_regex(expected_res, actual)
+
+def test_manifest_resolve(west_update_tmpdir):
+    # We should be able to resolve manifests.
+    actual = cmd('manifest --resolve').splitlines()
+    # Similar as test_manifest_freeze but with resolved projects
+    expected_res = ['^manifest:$',
+                    '^  projects:$',
+                    '^  - name: Kconfiglib$',
+                    '^    description: |',
+                    '^      Kconfiglib is an implementation of$',
+                    '^      the Kconfig language written in Python.$',
+                    '^    url: .*$',
+                    '^    revision: zephyr$',
+                    '^    path: subdir/Kconfiglib$',
+                    '^    groups:$',
+                    '^    - Kconfiglib-group$',
+                    '^    submodules: true$',
+                    '^  - name: tagged_repo$',
+                    '^    url: .*$',
+                    '^    revision: v1.0$',
+                    '^  - name: net-tools$',
+                    '^    description: Networking tools.$',
+                    '^    url: .*$',
+                    '^    revision: master$',
+                    '^    clone-depth: 1$',
+                    '^    west-commands: scripts/west-commands.yml$',
+                    '^  self:$',
+                    '^    path: zephyr$']
+    _match_multiline_regex(expected_res, actual)
+
+def test_manifest_resolve_active(west_update_tmpdir):
+    # We should be able to resolve manifests with inactive projects.
+    cmd('config manifest.group-filter -- -Kconfiglib-group')
+
+    actual = cmd('manifest --resolve --active-only').splitlines()
+    # Same as test_manifest_resolve but without inactive projects
+    expected_res = ['^manifest:$',
+                    '^  projects:$',
+                    '^  - name: tagged_repo$',
+                    '^    url: .*$',
+                    '^    revision: v1.0$',
+                    '^  - name: net-tools$',
+                    '^    description: Networking tools.$',
+                    '^    url: .*$',
+                    '^    revision: master$',
                     '^    clone-depth: 1$',
                     '^    west-commands: scripts/west-commands.yml$',
                     '^  self:$',
@@ -538,7 +746,7 @@ def test_update_tag_to_tag(west_init_tmpdir):
                 p.revision = 'v2.0'
                 break
         else:
-            assert False, 'no tagged_repo'
+            raise AssertionError('no tagged_repo')
         with open(west_init_tmpdir / 'zephyr' / 'west.yml', 'w') as f:
             f.write(manifest.as_yaml())  # NOT as_frozen_yaml().
 
@@ -1631,7 +1839,6 @@ def test_init_local_with_manifest_filename(repos_tmpdir):
     # success
     cmd(['init', '--mf', 'project.yml', '-l', zephyr_install_dir])
     workspace.chdir()
-    config.read_config()
     cmd('update')
 
 
@@ -1807,7 +2014,7 @@ def test_init_with_manifest_filename(repos_tmpdir):
     west_tmpdir = repos_tmpdir / 'workspace'
     manifest = repos_tmpdir / 'repos' / 'zephyr'
 
-    with open(manifest / 'west.yml', 'r') as f:
+    with open(manifest / 'west.yml') as f:
         manifest_data = f.read()
 
     # also creates a west.yml with a syntax error to verify west doesn't even
@@ -1823,7 +2030,6 @@ def test_init_with_manifest_filename(repos_tmpdir):
     # success
     cmd(['init', '-m', manifest, '--mf', 'project.yml', west_tmpdir])
     west_tmpdir.chdir()
-    config.read_config()
     cmd('update')
 
 def test_init_with_manifest_in_subdir(repos_tmpdir):
@@ -1915,7 +2121,6 @@ def test_extension_command_multiproject(repos_tmpdir):
     zephyr = repos_tmpdir / 'repos' / 'zephyr'
     cmd(['init', '-m', zephyr, west_tmpdir])
     west_tmpdir.chdir()
-    config.read_config()
     cmd('update')
 
     # The newline shenanigans are for Windows.
@@ -1936,8 +2141,10 @@ def test_extension_command_multiproject(repos_tmpdir):
 
 
 def test_extension_command_duplicate(repos_tmpdir):
-    # Test to ensure that in case to subprojects introduces same command, it
-    # will print a warning.
+    # West should disregard an extension command if its name is already taken,
+    # either by a built-in command or another extension command added earlier.
+    # A warning should also appear for each such case.
+
     rr = repos_tmpdir.join('repos')
     remote_kconfiglib = str(rr.join('Kconfiglib'))
     remote_zephyr = str(rr.join('zephyr'))
@@ -1967,17 +2174,32 @@ def test_extension_command_duplicate(repos_tmpdir):
                           path: zephyr
                       ''')})
 
-    # Initialize the net-tools repository.
+    # Add extension commands to the Kconfiglib remote.
     add_commit(remote_kconfiglib, 'add west commands',
                files={'scripts/west-commands.yml': textwrap.dedent('''\
                       west-commands:
                         - file: scripts/test.py
                           commands:
+                            - name: list
+                              class: List
                             - name: test-extension
                               class: Test
                       '''),
                       'scripts/test.py': textwrap.dedent('''\
+                      from argparse import REMAINDER
                       from west.commands import WestCommand
+                      class List(WestCommand):
+                          def __init__(self):
+                              super(List, self).__init__(
+                                  'list',
+                                  'test list',
+                                  '')
+                          def do_add_parser(self, parser_adder):
+                              parser = parser_adder.add_parser(self.name)
+                              parser.add_argument('any', nargs=REMAINDER)
+                              return parser
+                          def do_run(self, args, ignored):
+                              print('This must never be printed')
                       class Test(WestCommand):
                           def __init__(self):
                               super(Test, self).__init__(
@@ -1995,16 +2217,22 @@ def test_extension_command_duplicate(repos_tmpdir):
     zephyr = repos_tmpdir / 'repos' / 'zephyr'
     cmd(['init', '-m', zephyr, west_tmpdir])
     west_tmpdir.chdir()
-    config.read_config()
     cmd('update')
 
-    actual = cmd('test-extension', stderr=subprocess.STDOUT).splitlines()
-    expected = [
-        'WARNING: ignoring project net-tools extension command "test-extension"; command "test-extension" is already defined as extension command',  # noqa: E501
-        'Testing kconfig test command',
+    expected_warns = [
+        'WARNING: ignoring project Kconfiglib extension command "list"; '
+        'this is a built in command',
+        'WARNING: ignoring project net-tools extension command "test-extension"; '
+        'command "test-extension" is already defined as extension command',
     ]
 
-    assert actual == expected
+    # Expect output from the built-in command, not its Kconfiglib duplicate.
+    actual = cmd('list zephyr -f {name}', stderr=subprocess.STDOUT).splitlines()
+    assert actual == expected_warns + ['manifest']
+
+    # Expect output from the Kconfiglib command, not its net-tools duplicate.
+    actual = cmd('test-extension', stderr=subprocess.STDOUT).splitlines()
+    assert actual == expected_warns + ['Testing kconfig test command']
 
 def test_topdir_none(tmpdir):
     # Running west topdir outside of any workspace ought to fail.

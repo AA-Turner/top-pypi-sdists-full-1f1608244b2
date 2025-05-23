@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: djhtml
-Version: 3.0.7
+Version: 3.0.8
 Summary: Django/Jinja template indenter
 Home-page: https://github.com/rtts/djhtml
 Author: Jaap Joris Vens
@@ -20,6 +20,7 @@ License-File: LICENSE
 Provides-Extra: dev
 Requires-Dist: nox; extra == "dev"
 Requires-Dist: pre-commit; extra == "dev"
+Dynamic: license-file
 
 # DjHTML
 
@@ -86,6 +87,18 @@ whether any files were changed. When the option `-c` / `--check` is
 used, the exit status is 1 when one or more files would have changed,
 but no changes are actually made. All available options are given by
 `djthml -h` / `djthml --help`.
+
+
+### Command-line arguments
+
+DjHTML supports the following command-line arguments:
+
+- `-h` / `--help`: Show help text.
+- `-v` / `--version`: Show version number.
+- `-c` / `--check`: Dry-run, checks without modifying files.
+- `-t` / `--tabwidth N`: Tabwidth. The default is to guess.
+- `-b` / `--extra-block BEGIN,END`: Define an extra non-standard block
+  tag. Can be used multiple times.
 
 
 ## `fmt:off` and `fmt:on`

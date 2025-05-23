@@ -57,15 +57,16 @@ def cloud(
         redirect_to_login(settings)
         return
 
+    loop = asyncio.get_event_loop()
+
     check_running_from_home_directory()
-    check_inside_git_repo(settings)
+    loop.run_until_complete(check_inside_git_repo(settings))
     check_ssl()
 
     api_key = settings.api_key
     base_url = settings.base_url
     base_api_url = settings.get_base_api_url()
     base_ws_url = settings.get_base_ws_url()
-    loop = asyncio.get_event_loop()
 
     chat_uuid = loop.run_until_complete(
         create_cloud_chat(api_key, base_api_url, base_ws_url, cloud_config_id)

@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from scope_client.api_bindings.models.alert_bound import AlertBound
+from scope_client.api_bindings.models.alert_rule_interval import AlertRuleInterval
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -33,8 +34,9 @@ class PostAlertRule(BaseModel):
     bound: AlertBound = Field(description="The bound of the alert rule.")
     query: StrictStr = Field(description="The query of the alert rule.")
     metric_name: StrictStr = Field(description="The name of the metric returned by the alert rule query.")
+    interval: AlertRuleInterval = Field(description="The interval of the alert rule, commonly '1 day', '1 hour', etc.")
     notification_webhook_ids: Optional[List[StrictStr]] = Field(default=None, description="The notification webhook IDs where the alert rule will send alert notification.")
-    __properties: ClassVar[List[str]] = ["name", "description", "threshold", "bound", "query", "metric_name", "notification_webhook_ids"]
+    __properties: ClassVar[List[str]] = ["name", "description", "threshold", "bound", "query", "metric_name", "interval", "notification_webhook_ids"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -75,6 +77,9 @@ class PostAlertRule(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of interval
+        if self.interval:
+            _dict['interval'] = self.interval.to_dict()
         # set to None if description (nullable) is None
         # and model_fields_set contains the field
         if self.description is None and "description" in self.model_fields_set:
@@ -98,6 +103,7 @@ class PostAlertRule(BaseModel):
             "bound": obj.get("bound"),
             "query": obj.get("query"),
             "metric_name": obj.get("metric_name"),
+            "interval": AlertRuleInterval.from_dict(obj["interval"]) if obj.get("interval") is not None else None,
             "notification_webhook_ids": obj.get("notification_webhook_ids")
         })
         return _obj

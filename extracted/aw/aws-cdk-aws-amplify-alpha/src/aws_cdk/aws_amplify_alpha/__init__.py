@@ -250,6 +250,27 @@ amplify_app = amplify.App(self, "MyApp",
 )
 ```
 
+## Compute role
+
+This integration, enables you to assign an IAM role to the Amplify SSR Compute service to allow your server-side rendered (SSR) application to securely access specific AWS resources based on the role's permissions.
+
+For example, you can allow your app's SSR compute functions to securely access other AWS services or resources, such as Amazon Bedrock or an Amazon S3 bucket, based on the permissions defined in the assigned IAM role.
+
+For more information, see [Adding an SSR Compute role to allow access to AWS resources](https://docs.aws.amazon.com/amplify/latest/userguide/amplify-SSR-compute-role.html).
+
+By default, a new role is created when `platform` is `Platform.WEB_COMPUTE` or `Platform.WEB_DYNAMIC`.
+If you want to assign an IAM role to the APP, set `compute` to the role:
+
+```python
+# compute_role: iam.Role
+
+
+amplify_app = amplify.App(self, "MyApp",
+    platform=amplify.Platform.WEB_COMPUTE,
+    compute_role=compute_role
+)
+```
+
 ## Cache Config
 
 Amplify uses Amazon CloudFront to manage the caching configuration for your hosted applications. A cache configuration is applied to each app to optimize for the best performance.
@@ -329,6 +350,7 @@ import constructs as _constructs_77d1e7e8
         "basic_auth": "basicAuth",
         "build_spec": "buildSpec",
         "cache_config_type": "cacheConfigType",
+        "compute_role": "computeRole",
         "custom_response_headers": "customResponseHeaders",
         "custom_rules": "customRules",
         "description": "description",
@@ -348,6 +370,7 @@ class AppProps:
         basic_auth: typing.Optional["BasicAuth"] = None,
         build_spec: typing.Optional[_aws_cdk_aws_codebuild_ceddda9d.BuildSpec] = None,
         cache_config_type: typing.Optional["CacheConfigType"] = None,
+        compute_role: typing.Optional[_aws_cdk_aws_iam_ceddda9d.IRole] = None,
         custom_response_headers: typing.Optional[typing.Sequence[typing.Union["CustomResponseHeader", typing.Dict[builtins.str, typing.Any]]]] = None,
         custom_rules: typing.Optional[typing.Sequence["CustomRule"]] = None,
         description: typing.Optional[builtins.str] = None,
@@ -364,6 +387,7 @@ class AppProps:
         :param basic_auth: (experimental) The Basic Auth configuration. Use this to set password protection at an app level to all your branches. Default: - no password protection
         :param build_spec: (experimental) BuildSpec for the application. Alternatively, add a ``amplify.yml`` file to the repository. Default: - no build spec
         :param cache_config_type: (experimental) The type of cache configuration to use for an Amplify app. Default: CacheConfigType.AMPLIFY_MANAGED
+        :param compute_role: (experimental) The IAM role for an SSR app. The Compute role allows the Amplify Hosting compute service to securely access specific AWS resources based on the role's permissions. Default: undefined - a new role is created when ``platform`` is ``Platform.WEB_COMPUTE`` or ``Platform.WEB_DYNAMIC``, otherwise no compute role
         :param custom_response_headers: (experimental) The custom HTTP response headers for an Amplify app. Default: - no custom response headers
         :param custom_rules: (experimental) Custom rewrite/redirect rules for the application. Default: - no custom rewrite/redirect rules
         :param description: (experimental) A description for the application. Default: - no description
@@ -383,9 +407,7 @@ class AppProps:
                     repository="<repo>",
                     oauth_token=SecretValue.secrets_manager("my-github-token")
                 ),
-                auto_branch_creation=amplify.AutoBranchCreation( # Automatically connect branches that match a pattern set
-                    patterns=["feature/*", "test/*"]),
-                auto_branch_deletion=True
+                basic_auth=amplify.BasicAuth.from_generated_password("username")
             )
         '''
         if isinstance(auto_branch_creation, dict):
@@ -398,6 +420,7 @@ class AppProps:
             check_type(argname="argument basic_auth", value=basic_auth, expected_type=type_hints["basic_auth"])
             check_type(argname="argument build_spec", value=build_spec, expected_type=type_hints["build_spec"])
             check_type(argname="argument cache_config_type", value=cache_config_type, expected_type=type_hints["cache_config_type"])
+            check_type(argname="argument compute_role", value=compute_role, expected_type=type_hints["compute_role"])
             check_type(argname="argument custom_response_headers", value=custom_response_headers, expected_type=type_hints["custom_response_headers"])
             check_type(argname="argument custom_rules", value=custom_rules, expected_type=type_hints["custom_rules"])
             check_type(argname="argument description", value=description, expected_type=type_hints["description"])
@@ -418,6 +441,8 @@ class AppProps:
             self._values["build_spec"] = build_spec
         if cache_config_type is not None:
             self._values["cache_config_type"] = cache_config_type
+        if compute_role is not None:
+            self._values["compute_role"] = compute_role
         if custom_response_headers is not None:
             self._values["custom_response_headers"] = custom_response_headers
         if custom_rules is not None:
@@ -508,6 +533,19 @@ class AppProps:
         '''
         result = self._values.get("cache_config_type")
         return typing.cast(typing.Optional["CacheConfigType"], result)
+
+    @builtins.property
+    def compute_role(self) -> typing.Optional[_aws_cdk_aws_iam_ceddda9d.IRole]:
+        '''(experimental) The IAM role for an SSR app.
+
+        The Compute role allows the Amplify Hosting compute service to securely access specific AWS resources based on the role's permissions.
+
+        :default: undefined - a new role is created when ``platform`` is ``Platform.WEB_COMPUTE`` or ``Platform.WEB_DYNAMIC``, otherwise no compute role
+
+        :stability: experimental
+        '''
+        result = self._values.get("compute_role")
+        return typing.cast(typing.Optional[_aws_cdk_aws_iam_ceddda9d.IRole], result)
 
     @builtins.property
     def custom_response_headers(
@@ -3112,9 +3150,7 @@ class App(
                 repository="<repo>",
                 oauth_token=SecretValue.secrets_manager("my-github-token")
             ),
-            auto_branch_creation=amplify.AutoBranchCreation( # Automatically connect branches that match a pattern set
-                patterns=["feature/*", "test/*"]),
-            auto_branch_deletion=True
+            basic_auth=amplify.BasicAuth.from_generated_password("username")
         )
     '''
 
@@ -3129,6 +3165,7 @@ class App(
         basic_auth: typing.Optional[BasicAuth] = None,
         build_spec: typing.Optional[_aws_cdk_aws_codebuild_ceddda9d.BuildSpec] = None,
         cache_config_type: typing.Optional[CacheConfigType] = None,
+        compute_role: typing.Optional[_aws_cdk_aws_iam_ceddda9d.IRole] = None,
         custom_response_headers: typing.Optional[typing.Sequence[typing.Union[CustomResponseHeader, typing.Dict[builtins.str, typing.Any]]]] = None,
         custom_rules: typing.Optional[typing.Sequence[CustomRule]] = None,
         description: typing.Optional[builtins.str] = None,
@@ -3146,6 +3183,7 @@ class App(
         :param basic_auth: (experimental) The Basic Auth configuration. Use this to set password protection at an app level to all your branches. Default: - no password protection
         :param build_spec: (experimental) BuildSpec for the application. Alternatively, add a ``amplify.yml`` file to the repository. Default: - no build spec
         :param cache_config_type: (experimental) The type of cache configuration to use for an Amplify app. Default: CacheConfigType.AMPLIFY_MANAGED
+        :param compute_role: (experimental) The IAM role for an SSR app. The Compute role allows the Amplify Hosting compute service to securely access specific AWS resources based on the role's permissions. Default: undefined - a new role is created when ``platform`` is ``Platform.WEB_COMPUTE`` or ``Platform.WEB_DYNAMIC``, otherwise no compute role
         :param custom_response_headers: (experimental) The custom HTTP response headers for an Amplify app. Default: - no custom response headers
         :param custom_rules: (experimental) Custom rewrite/redirect rules for the application. Default: - no custom rewrite/redirect rules
         :param description: (experimental) A description for the application. Default: - no description
@@ -3167,6 +3205,7 @@ class App(
             basic_auth=basic_auth,
             build_spec=build_spec,
             cache_config_type=cache_config_type,
+            compute_role=compute_role,
             custom_response_headers=custom_response_headers,
             custom_rules=custom_rules,
             description=description,
@@ -3398,6 +3437,15 @@ class App(
         :stability: experimental
         '''
         return typing.cast(_aws_cdk_aws_iam_ceddda9d.IPrincipal, jsii.get(self, "grantPrincipal"))
+
+    @builtins.property
+    @jsii.member(jsii_name="computeRole")
+    def compute_role(self) -> typing.Optional[_aws_cdk_aws_iam_ceddda9d.IRole]:
+        '''(experimental) The IAM role for an SSR app.
+
+        :stability: experimental
+        '''
+        return typing.cast(typing.Optional[_aws_cdk_aws_iam_ceddda9d.IRole], jsii.get(self, "computeRole"))
 
 
 @jsii.implements(IBranch)
@@ -3757,6 +3805,7 @@ def _typecheckingstub__00fae34ad2733a382bf4bd9703c470687ee286b909acac7113a890be0
     basic_auth: typing.Optional[BasicAuth] = None,
     build_spec: typing.Optional[_aws_cdk_aws_codebuild_ceddda9d.BuildSpec] = None,
     cache_config_type: typing.Optional[CacheConfigType] = None,
+    compute_role: typing.Optional[_aws_cdk_aws_iam_ceddda9d.IRole] = None,
     custom_response_headers: typing.Optional[typing.Sequence[typing.Union[CustomResponseHeader, typing.Dict[builtins.str, typing.Any]]]] = None,
     custom_rules: typing.Optional[typing.Sequence[CustomRule]] = None,
     description: typing.Optional[builtins.str] = None,
@@ -3984,6 +4033,7 @@ def _typecheckingstub__beb3fdecad4b351bd290c8a9d65c70964afb63130c3af329024642f75
     basic_auth: typing.Optional[BasicAuth] = None,
     build_spec: typing.Optional[_aws_cdk_aws_codebuild_ceddda9d.BuildSpec] = None,
     cache_config_type: typing.Optional[CacheConfigType] = None,
+    compute_role: typing.Optional[_aws_cdk_aws_iam_ceddda9d.IRole] = None,
     custom_response_headers: typing.Optional[typing.Sequence[typing.Union[CustomResponseHeader, typing.Dict[builtins.str, typing.Any]]]] = None,
     custom_rules: typing.Optional[typing.Sequence[CustomRule]] = None,
     description: typing.Optional[builtins.str] = None,

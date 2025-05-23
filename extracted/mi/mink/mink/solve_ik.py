@@ -7,11 +7,11 @@ import qpsolvers
 
 from .configuration import Configuration
 from .limits import ConfigurationLimit, Limit
-from .tasks import Objective, Task
+from .tasks import BaseTask, Objective
 
 
 def _compute_qp_objective(
-    configuration: Configuration, tasks: Sequence[Task], damping: float
+    configuration: Configuration, tasks: Sequence[BaseTask], damping: float
 ) -> Objective:
     H = np.eye(configuration.model.nv) * damping
     c = np.zeros(configuration.model.nv)
@@ -42,7 +42,7 @@ def _compute_qp_inequalities(
 
 def build_ik(
     configuration: Configuration,
-    tasks: Sequence[Task],
+    tasks: Sequence[BaseTask],
     dt: float,
     damping: float = 1e-12,
     limits: Optional[Sequence[Limit]] = None,
@@ -53,7 +53,9 @@ def build_ik(
         configuration: Robot configuration.
         tasks: List of kinematic tasks.
         dt: Integration timestep in [s].
-        damping: Levenberg-Marquardt damping.
+        damping: Levenberg-Marquardt damping. Higher values improve numerical
+            stability but slow down task convergence. This value applies to all
+            dofs, including floating-base coordinates.
         limits: List of limits to enforce. Set to empty list to disable. If None,
             defaults to a configuration limit.
 
@@ -67,7 +69,7 @@ def build_ik(
 
 def solve_ik(
     configuration: Configuration,
-    tasks: Sequence[Task],
+    tasks: Sequence[BaseTask],
     dt: float,
     solver: str,
     damping: float = 1e-12,
@@ -85,7 +87,9 @@ def solve_ik(
         tasks: List of kinematic tasks.
         dt: Integration timestep in [s].
         solver: Backend quadratic programming (QP) solver.
-        damping: Levenberg-Marquardt damping.
+        damping: Levenberg-Marquardt damping applied to all tasks. Higher values
+            improve numerical stability but slow down task convergence. This
+            value applies to all dofs, including floating-base coordinates.
         safety_break: If True, stop execution and raise an exception if
             the current configuration is outside limits. If False, print a
             warning and continue execution.

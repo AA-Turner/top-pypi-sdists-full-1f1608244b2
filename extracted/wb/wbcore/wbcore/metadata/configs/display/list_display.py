@@ -148,11 +148,8 @@ class Legend:
         yield "items", [dict(item) for item in self.items]
 
 
-@dataclass(unsafe_hash=True)
-class TreeGroupLevelOption:
-    list_endpoint: str
-    reorder_endpoint: str | None = None
-    reparent_endpoint: str | None = None
+@dataclass(unsafe_hash=True, kw_only=True)
+class BaseTreeGroupLevelOption:
     lookup: str = "_group_key"
     filter_key: str = "group_keys"
     filter_whitelist: list[str] = field(default_factory=list)
@@ -162,10 +159,26 @@ class TreeGroupLevelOption:
         # Set to True if preselected filters other than required ones need to be cleared out before fetching the tree group
     )
     filter_depth: int | None = 1  # None would actually return all group keys concatenated.
+
+    def __iter__(self):
+        yield "lookup", self.lookup
+        yield "filter_key", self.filter_key
+        yield "filter_whitelist", self.filter_whitelist
+        yield "filter_blacklist", self.filter_blacklist
+        yield "clear_filter", self.clear_filter
+        yield "filter_depth", self.filter_depth
+
+
+@dataclass(unsafe_hash=True, kw_only=True)
+class TreeGroupLevelOption(BaseTreeGroupLevelOption):
+    list_endpoint: str
+    reorder_endpoint: str | None = None
+    reparent_endpoint: str | None = None
     parent_field: str = "parent"
     ordering_field: str = "order"
 
     def __iter__(self):
+        yield from super().__iter__()
         endpoints = {"list": self.list_endpoint}
         if self.reorder_endpoint:
             endpoints["reorder"] = self.reorder_endpoint
@@ -174,12 +187,7 @@ class TreeGroupLevelOption:
             endpoints["reparent"] = self.reparent_endpoint
 
         yield "endpoints", endpoints
-        yield "lookup", self.lookup
-        yield "filter_key", self.filter_key
-        yield "filter_whitelist", self.filter_whitelist
-        yield "filter_blacklist", self.filter_blacklist
-        yield "clear_filter", self.clear_filter
-        yield "filter_depth", self.filter_depth
+
         yield "parent_field", self.parent_field
         yield "ordering_field", self.ordering_field
 

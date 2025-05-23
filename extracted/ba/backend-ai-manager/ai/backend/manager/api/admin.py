@@ -18,6 +18,7 @@ from graphql.execution import ExecutionResult  # pants: no-infer-dep
 from ai.backend.common import validators as tx
 from ai.backend.logging import BraceStyleAdapter
 
+from ..errors.exceptions import GraphQLError as BackendGQLError
 from ..models.base import DataLoaderManager
 from ..models.gql import (
     GQLExceptionMiddleware,
@@ -28,7 +29,6 @@ from ..models.gql import (
     Queries,
 )
 from .auth import auth_required
-from .exceptions import GraphQLError as BackendGQLError
 from .manager import GQLMutationUnfrozenRequiredMiddleware
 from .types import CORSOptions, WebMiddleware
 from .utils import check_api_params
@@ -56,12 +56,12 @@ class GQLLoggingMiddleware:
 async def _handle_gql_common(request: web.Request, params: Any) -> ExecutionResult:
     root_ctx: RootContext = request.app["_root.context"]
     app_ctx: PrivateContext = request.app["admin.context"]
-    manager_status = await root_ctx.shared_config.get_manager_status()
-    known_slot_types = await root_ctx.shared_config.get_resource_slots()
+    manager_status = await root_ctx.config_provider.legacy_etcd_config_loader.get_manager_status()
+    known_slot_types = await root_ctx.config_provider.legacy_etcd_config_loader.get_resource_slots()
     rules = []
-    if not root_ctx.shared_config["api"]["allow-graphql-schema-introspection"]:
+    if not root_ctx.config_provider.config.api.allow_graphql_schema_introspection:
         rules.append(DisableIntrospection)
-    max_depth = cast(int | None, root_ctx.shared_config["api"]["max-gql-query-depth"])
+    max_depth = cast(int | None, root_ctx.config_provider.config.api.max_gql_query_depth)
     if max_depth is not None:
         rules.append(depth_limit_validator(max_depth=max_depth))
     if rules:
@@ -75,9 +75,8 @@ async def _handle_gql_common(request: web.Request, params: Any) -> ExecutionResu
     gql_ctx = GraphQueryContext(
         schema=app_ctx.gql_schema,
         dataloader_manager=DataLoaderManager(),
-        local_config=root_ctx.local_config,
-        shared_config=root_ctx.shared_config,
-        etcd=root_ctx.shared_config.etcd,
+        config_provider=root_ctx.config_provider,
+        etcd=root_ctx.etcd,
         user=request["user"],
         access_key=request["keypair"]["access_key"],
         db=root_ctx.db,
@@ -102,11 +101,11 @@ async def _handle_gql_common(request: web.Request, params: Any) -> ExecutionResu
         operation_name=params["operation_name"],
         context_value=gql_ctx,
         middleware=[
-            GQLLoggingMiddleware(),
-            GQLExceptionMiddleware(),
-            GQLMetricMiddleware(),
-            GQLMutationUnfrozenRequiredMiddleware(),
             GQLMutationPrivilegeCheckMiddleware(),
+            GQLMutationUnfrozenRequiredMiddleware(),
+            GQLMetricMiddleware(),
+            GQLExceptionMiddleware(),
+            GQLLoggingMiddleware(),
         ],
     )
 
@@ -172,7 +171,7 @@ async def init(app: web.Application) -> None:
         auto_camelcase=False,
     )
     root_ctx: RootContext = app["_root.context"]
-    if root_ctx.shared_config["api"]["allow-graphql-schema-introspection"]:
+    if root_ctx.config_provider.config.api.allow_graphql_schema_introspection:
         log.warning(
             "GraphQL schema introspection is enabled. "
             "It is strongly advised to disable this in production setups."

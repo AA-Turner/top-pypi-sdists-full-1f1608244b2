@@ -8,12 +8,11 @@ from sklearn.exceptions import NotFittedError
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.model_selection import KFold
 from sklearn.pipeline import make_pipeline
-from sklearn.utils.estimator_checks import parametrize_with_checks
 from sklearn.utils.validation import check_is_fitted
 
-from mapie._typing import ArrayLike, NDArray
-from mapie.classification import MapieClassifier
-from mapie.regression import MapieQuantileRegressor, MapieRegressor
+from mapie.classification import _MapieClassifier
+from mapie.regression.regression import _MapieRegressor
+from mapie.regression.quantile_regression import _MapieQuantileRegressor
 
 X_toy = np.arange(18).reshape(-1, 1)
 y_toy = np.array(
@@ -22,26 +21,26 @@ y_toy = np.array(
 
 
 def MapieSimpleEstimators() -> List[BaseEstimator]:
-    return [MapieRegressor, MapieClassifier]
+    return [_MapieRegressor, _MapieClassifier]
 
 
 def MapieEstimators() -> List[BaseEstimator]:
-    return [MapieRegressor, MapieClassifier, MapieQuantileRegressor]
+    return [_MapieRegressor, _MapieClassifier, _MapieQuantileRegressor]
 
 
 def MapieDefaultEstimators() -> List[BaseEstimator]:
     return [
-        (MapieRegressor, LinearRegression),
-        (MapieClassifier, LogisticRegression),
+        (_MapieRegressor, LinearRegression),
+        (_MapieClassifier, LogisticRegression),
     ]
 
 
 def MapieTestEstimators() -> List[BaseEstimator]:
     return [
-        (MapieRegressor, LinearRegression()),
-        (MapieRegressor, make_pipeline(LinearRegression())),
-        (MapieClassifier, LogisticRegression()),
-        (MapieClassifier, make_pipeline(LogisticRegression())),
+        (_MapieRegressor, LinearRegression()),
+        (_MapieRegressor, make_pipeline(LinearRegression())),
+        (_MapieClassifier, LogisticRegression()),
+        (_MapieClassifier, make_pipeline(LogisticRegression())),
     ]
 
 
@@ -109,11 +108,11 @@ def test_none_estimator(pack: Tuple[BaseEstimator, BaseEstimator]) -> None:
     MapieEstimator, DefaultEstimator = pack
     mapie_estimator = MapieEstimator(estimator=None)
     mapie_estimator.fit(X_toy, y_toy)
-    if isinstance(mapie_estimator, MapieClassifier):
+    if isinstance(mapie_estimator, _MapieClassifier):
         assert isinstance(
             mapie_estimator.estimator_.single_estimator_, DefaultEstimator
         )
-    if isinstance(mapie_estimator, MapieRegressor):
+    if isinstance(mapie_estimator, _MapieRegressor):
         assert isinstance(
             mapie_estimator.estimator_.single_estimator_, DefaultEstimator
         )
@@ -155,15 +154,6 @@ def test_valid_prefit_estimator(
 
 
 @pytest.mark.parametrize("MapieEstimator", MapieSimpleEstimators())
-@pytest.mark.parametrize("method", [0.5, 1, "cv", ["base", "plus"]])
-def test_invalid_method(MapieEstimator: BaseEstimator, method: str) -> None:
-    """Test that invalid methods raise errors."""
-    mapie_estimator = MapieEstimator(method=method)
-    with pytest.raises(ValueError, match=r".*Invalid method.*"):
-        mapie_estimator.fit(X_toy, y_toy)
-
-
-@pytest.mark.parametrize("MapieEstimator", MapieSimpleEstimators())
 @pytest.mark.parametrize(
     "cv", [-3.14, -2, 0, 1, "cv", LinearRegression(), [1, 2]]
 )
@@ -188,128 +178,3 @@ def test_none_alpha_results(pack: Tuple[BaseEstimator, BaseEstimator]) -> None:
     mapie_estimator.fit(X_toy, y_toy)
     y_pred = mapie_estimator.predict(X_toy)
     np.testing.assert_allclose(y_pred_expected, y_pred)
-
-
-@parametrize_with_checks([MapieRegressor()])
-def test_sklearn_compatible_estimator(
-    estimator: BaseEstimator, check: Any
-) -> None:
-    """Check compatibility with sklearn, using sklearn estimator checks API."""
-    check(estimator)
-
-
-def test_warning_when_import_from_gamma_conformity_score():
-    """Check that a DepreciationWarning is raised when importing from
-    mapie.conformity_scores.residual_conformity_scores"""
-
-    with pytest.warns(
-        FutureWarning, match=r".*WARNING: Deprecated path to import.*"
-    ):
-        from mapie.conformity_scores.residual_conformity_scores import (
-            GammaConformityScore
-        )
-        GammaConformityScore()
-
-
-def test_warning_when_import_from_absolute_conformity_score():
-    """Check that a DepreciationWarning is raised when importing from
-    mapie.conformity_scores.residual_conformity_scores"""
-
-    with pytest.warns(
-        FutureWarning, match=r".*WARNING: Deprecated path to import.*"
-    ):
-        from mapie.conformity_scores.residual_conformity_scores import (
-            AbsoluteConformityScore
-        )
-        AbsoluteConformityScore()
-
-
-def test_warning_when_import_from_residual_conformity_score():
-    """Check that a DepreciationWarning is raised when importing from
-    mapie.conformity_scores.residual_conformity_scores"""
-
-    with pytest.warns(
-        FutureWarning, match=r".*WARNING: Deprecated path to import.*"
-    ):
-        from mapie.conformity_scores.residual_conformity_scores import (
-            ResidualNormalisedScore
-        )
-        ResidualNormalisedScore()
-
-
-def test_warning_when_import_from_conformity_scores():
-    """Check that a DepreciationWarning is raised when importing from
-    mapie.conformity_scores.conformity_score"""
-
-    with pytest.warns(
-        FutureWarning, match=r".*WARNING: Deprecated path to import.*"
-    ):
-        from mapie.conformity_scores.conformity_scores import (
-            ConformityScore
-        )
-
-        class DummyConformityScore(ConformityScore):
-            def __init__(self) -> None:
-                super().__init__(sym=True, consistency_check=True)
-
-            def get_signed_conformity_scores(
-                self, y: ArrayLike, y_pred: ArrayLike, **kwargs
-            ) -> NDArray:
-                return np.array([])
-
-            def get_estimation_distribution(
-                self, y_pred: ArrayLike, conformity_scores: ArrayLike, **kwargs
-            ) -> NDArray:
-                """
-                A positive constant is added to the sum between predictions and
-                conformity scores to make the estimated distribution
-                inconsistent with the conformity score.
-                """
-                return np.array([])
-
-            def get_conformity_scores(
-                self, y: ArrayLike, y_pred: ArrayLike, **kwargs
-            ) -> NDArray:
-                return np.array([])
-
-            def predict_set(
-                self, X: NDArray, alpha_np: NDArray, **kwargs
-            ) -> NDArray:
-                return np.array([])
-
-        dcs = DummyConformityScore()
-        dcs.get_signed_conformity_scores(y_toy, y_toy)
-        dcs.get_estimation_distribution(y_toy, y_toy)
-        dcs.get_conformity_scores(y_toy, y_toy)
-        dcs.predict_set(y_toy, 0.5)
-
-
-def test_warning_when_import_from_old_get_true_label_position():
-    """Check that a DepreciationWarning is raised when importing from
-    mapie.conformity_scores.residual_conformity_scores"""
-
-    with pytest.warns(
-        FutureWarning, match=r".*WARNING: Deprecated path to import.*"
-    ):
-        from mapie.conformity_scores.utils_classification_conformity_scores\
-              import get_true_label_position
-        get_true_label_position(np.array([[0.1, 0.2, 0.7]]), np.array([2]))
-
-
-def test_warning_when_import_from_estimator():
-    """Check that a DepreciationWarning is raised when importing from
-    mapie.estimator.estimator"""
-
-    with pytest.warns(
-        FutureWarning, match=r".*WARNING: Deprecated path to import.*"
-    ):
-        from mapie.estimator.estimator import EnsembleRegressor
-        EnsembleRegressor(
-            estimator=LinearRegression(),
-            method="naive",
-            cv=3,
-            agg_function="mean",
-            n_jobs=1,
-            test_size=0.2,
-            verbose=0,
-        )

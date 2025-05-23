@@ -37,6 +37,7 @@ from .v2 import (
     create_cluster,
     create_package_sync_software_env,
     delete_cluster,
+    get_cluster_from_node,
     get_dask_client_from_batch_node,
     list_clusters,
 )

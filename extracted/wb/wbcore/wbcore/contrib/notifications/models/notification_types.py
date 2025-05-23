@@ -2,6 +2,7 @@ from contextlib import suppress
 
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import UniqueConstraint
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from guardian.utils import get_anonymous_user
@@ -72,6 +73,16 @@ class NotificationTypeSetting(WBModel):
     def __str__(self) -> str:
         return f"{self.user}: {self.notification_type} ({self.enable_web}/{self.enable_mobile}/{self.enable_email})"
 
+    class Meta:
+        verbose_name = "Notification Type Setting"
+        verbose_name_plural = "Notification Type Settings"
+        constraints = [
+            UniqueConstraint(
+                name="unique_notification_setting",
+                fields=["user", "notification_type"],
+            )
+        ]
+
     def save(self, *args, **kwargs):
         if self.notification_type.is_lock:
             self.enable_web = self.notification_type.default_enable_web
@@ -100,32 +111,55 @@ class NotificationTypeSetting(WBModel):
 @receiver(post_save, sender="notifications.NotificationType")
 def post_save_notification_type(instance, **kwargs):
     anonymous_user = get_anonymous_user()
+
+    objs = []
     for user in get_user_model().objects.filter(~models.Q(pk=anonymous_user.pk)):
-        NotificationTypeSetting.objects.get_or_create(
-            notification_type=instance,
-            user=user,
-            defaults={
-                "enable_web": instance.default_enable_web,
-                "enable_mobile": instance.default_enable_mobile,
-                "enable_email": instance.default_enable_email,
-            },
+        try:
+            existing_setting = NotificationTypeSetting.objects.get(user=user, notification_type=instance)
+            enable_web = existing_setting.enable_web if not instance.is_lock else instance.default_enable_web
+            enable_mobile = existing_setting.enable_mobile if not instance.is_lock else instance.default_enable_mobile
+            enable_email = existing_setting.enable_email if not instance.is_lock else instance.default_enable_email
+        except NotificationTypeSetting.DoesNotExist:
+            enable_web = instance.default_enable_web
+            enable_mobile = instance.default_enable_mobile
+            enable_email = instance.default_enable_email
+
+        objs.append(
+            NotificationTypeSetting(
+                notification_type=instance,
+                user=user,
+                enable_web=enable_web,
+                enable_mobile=enable_mobile,
+                enable_email=enable_email,
+            )
+        )
+    if objs:
+        NotificationTypeSetting.objects.bulk_create(
+            objs,
+            unique_fields=["notification_type", "user"],
+            update_fields=["enable_web", "enable_mobile", "enable_email"],
+            update_conflicts=True,
         )
 
 
 @receiver(post_save, sender=get_user_model())
-def post_save_user(instance, **kwargs):
-    with suppress(get_user_model().DoesNotExist):
-        anonymous_user = get_anonymous_user()
-        if instance.pk == anonymous_user.pk:
-            return
+def post_save_user(sender, instance, created, raw, **kwargs):
+    if created:
+        with suppress(get_user_model().DoesNotExist):
+            anonymous_user = get_anonymous_user()
+            if instance.pk == anonymous_user.pk:
+                return
 
-    for notification_type in NotificationType.objects.all():
-        NotificationTypeSetting.objects.get_or_create(
-            notification_type=notification_type,
-            user=instance,
-            defaults={
-                "enable_web": notification_type.default_enable_web,
-                "enable_mobile": notification_type.default_enable_mobile,
-                "enable_email": notification_type.default_enable_email,
-            },
-        )
+        objs = []
+        for notification_type in NotificationType.objects.all():
+            objs.append(
+                NotificationTypeSetting(
+                    notification_type=notification_type,
+                    user=instance,
+                    enable_web=notification_type.default_enable_web,
+                    enable_mobile=notification_type.default_enable_mobile,
+                    enable_email=notification_type.default_enable_email,
+                )
+            )
+        if objs:
+            NotificationTypeSetting.objects.bulk_create(objs, unique_fields=["notification_type", "user"])

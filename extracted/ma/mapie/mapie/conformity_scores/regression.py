@@ -7,9 +7,8 @@ import numpy as np
 from mapie.conformity_scores.interface import BaseConformityScore
 from mapie.estimator.regressor import EnsembleRegressor
 
-from mapie._compatibility import np_nanquantile
 from mapie._machine_precision import EPSILON
-from mapie._typing import NDArray
+from numpy.typing import NDArray
 
 
 class BaseRegressionScore(BaseConformityScore, metaclass=ABCMeta):
@@ -150,7 +149,7 @@ class BaseRegressionScore(BaseConformityScore, metaclass=ABCMeta):
             y_pred, conformity_scores, **kwargs
         )
         abs_conformity_scores = np.abs(np.subtract(score_distribution, y))
-        max_conf_score = np.max(abs_conformity_scores)
+        max_conf_score: float = np.max(abs_conformity_scores)
         if max_conf_score > self.eps:
             raise ValueError(
                 "The two functions get_conformity_scores and "
@@ -238,13 +237,13 @@ class BaseRegressionScore(BaseConformityScore, metaclass=ABCMeta):
                 num=len(lower_bounds),
                 endpoint=True,
             )
-            one_alpha_beta = np_nanquantile(
+            one_alpha_beta = np.nanquantile(
                 upper_bounds.astype(float),
                 1 - _alpha + betas,
                 axis=1,
                 method="higher",
             )
-            beta = np_nanquantile(
+            beta = np.nanquantile(
                 lower_bounds.astype(float),
                 betas,
                 axis=1,
@@ -326,7 +325,7 @@ class BaseRegressionScore(BaseConformityScore, metaclass=ABCMeta):
         """
         if self.sym and optimize_beta:
             raise ValueError(
-                "Beta optimisation cannot be used with "
+                "Interval width minimization cannot be used with a "
                 + "symmetrical conformity score function."
             )
 

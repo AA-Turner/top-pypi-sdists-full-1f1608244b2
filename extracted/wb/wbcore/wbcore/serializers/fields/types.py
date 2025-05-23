@@ -29,6 +29,7 @@ class WBCoreType(Enum):
     COLOR = "color"
     URL = "url"
     SPARKLINE = "sparkline"
+    LANGUAGE = "language"
 
 
 class ReturnContentType(Enum):

@@ -21,6 +21,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from scope_client.api_bindings.models.alert_bound import AlertBound
+from scope_client.api_bindings.models.alert_rule_interval import AlertRuleInterval
 from scope_client.api_bindings.models.alert_rule_notification_webhook import AlertRuleNotificationWebhook
 from scope_client.api_bindings.models.user import User
 from typing import Optional, Set
@@ -40,9 +41,10 @@ class AlertRule(BaseModel):
     bound: AlertBound = Field(description="The bound of the alert rule.")
     query: StrictStr = Field(description="The query of the alert rule.")
     metric_name: StrictStr = Field(description="The name of the metric returned by the alert rule query.")
+    interval: AlertRuleInterval = Field(description="The interval of the alert rule, commonly '1 day', '1 hour', etc.")
     last_updated_by_user: Optional[User] = None
     notification_webhooks: List[AlertRuleNotificationWebhook] = Field(description="Notification webhooks configured for the alert rule.")
-    __properties: ClassVar[List[str]] = ["created_at", "updated_at", "id", "model_id", "name", "description", "threshold", "bound", "query", "metric_name", "last_updated_by_user", "notification_webhooks"]
+    __properties: ClassVar[List[str]] = ["created_at", "updated_at", "id", "model_id", "name", "description", "threshold", "bound", "query", "metric_name", "interval", "last_updated_by_user", "notification_webhooks"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,6 +85,9 @@ class AlertRule(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of interval
+        if self.interval:
+            _dict['interval'] = self.interval.to_dict()
         # override the default output from pydantic by calling `to_dict()` of last_updated_by_user
         if self.last_updated_by_user:
             _dict['last_updated_by_user'] = self.last_updated_by_user.to_dict()
@@ -125,6 +130,7 @@ class AlertRule(BaseModel):
             "bound": obj.get("bound"),
             "query": obj.get("query"),
             "metric_name": obj.get("metric_name"),
+            "interval": AlertRuleInterval.from_dict(obj["interval"]) if obj.get("interval") is not None else None,
             "last_updated_by_user": User.from_dict(obj["last_updated_by_user"]) if obj.get("last_updated_by_user") is not None else None,
             "notification_webhooks": [AlertRuleNotificationWebhook.from_dict(_item) for _item in obj["notification_webhooks"]] if obj.get("notification_webhooks") is not None else None
         })

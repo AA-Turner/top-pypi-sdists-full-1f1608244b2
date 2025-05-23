@@ -1,8 +1,8 @@
 from typing import Optional, Tuple, Union, cast
 
 import numpy as np
-from sklearn.dummy import check_random_state
-from sklearn.calibration import label_binarize
+from sklearn.utils import check_random_state
+from sklearn.preprocessing import label_binarize
 
 from mapie.conformity_scores.sets.naive import NaiveConformityScore
 from mapie.conformity_scores.sets.utils import (
@@ -11,15 +11,15 @@ from mapie.conformity_scores.sets.utils import (
 from mapie.estimator.classifier import EnsembleClassifier
 
 from mapie._machine_precision import EPSILON
-from mapie._typing import ArrayLike, NDArray
-from mapie.utils import compute_quantiles
+from numpy.typing import ArrayLike, NDArray
+from mapie.utils import _compute_quantiles
 
 
 class APSConformityScore(NaiveConformityScore):
     """
     Adaptive Prediction Sets (APS) method-based non-conformity score.
     It is based on the sum of the softmax outputs of the labels until the true
-    label is reached, on the calibration set. See [1] for more details.
+    label is reached, on the conformalization set. See [1] for more details.
 
     References
     ----------
@@ -205,7 +205,7 @@ class APSConformityScore(NaiveConformityScore):
         n = len(conformity_scores)
 
         if estimator.cv == "prefit" or agg_scores in ["mean"]:
-            quantiles_ = compute_quantiles(conformity_scores, alpha_np)
+            quantiles_ = _compute_quantiles(conformity_scores, alpha_np)
         else:
             quantiles_ = (n + 1) * (1 - alpha_np)
 
@@ -360,15 +360,40 @@ class APSConformityScore(NaiveConformityScore):
             By default ``"mean"``.
 
         include_last_label: Optional[Union[bool, str]]
-            Whether or not to include last label in prediction sets.
-            Choose among ``False``, ``True``  or ``"randomized"``.
+            Whether or not to include last label in
+            prediction sets for the "aps" method. Choose among:
 
-            By default, ``True``.
+            - False, does not include label whose cumulated score is just over
+              the quantile.
+            - True, includes label whose cumulated score is just over the
+              quantile, unless there is only one label in the prediction set.
+            - "randomized", randomly includes label whose cumulated score is
+              just over the quantile based on the comparison of a uniform
+              number and the difference between the cumulated score of
+              the last label and the quantile.
+
+            When set to ``True`` or ``False``, it may result in a coverage
+            higher than ``1 - alpha`` (because contrary to the "randomized"
+            setting, none of these methods create empty prediction sets). See
+            [1] and [2] for more details.
+
+            By default ``True``.
 
         Returns
         --------
         NDArray
             Array of quantiles with respect to alpha_np.
+
+        References
+        ----------
+        [1] Yaniv Romano, Matteo Sesia and Emmanuel J. Candès.
+        "Classification with Valid and Adaptive Coverage."
+        NeurIPS 202 (spotlight) 2020.
+
+        [2] Anastasios Nikolas Angelopoulos, Stephen Bates, Michael Jordan
+        and Jitendra Malik.
+        "Uncertainty Sets for Image Classifiers using Conformal Prediction."
+        International Conference on Learning Representations 2021.
         """
         include_last_label = check_include_last_label(include_last_label)
 

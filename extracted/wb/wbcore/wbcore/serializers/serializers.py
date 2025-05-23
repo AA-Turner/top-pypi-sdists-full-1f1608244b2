@@ -23,6 +23,7 @@ from timezone_field import TimeZoneField
 from wbcore.contrib.color.fields import ColorField
 from wbcore.contrib.icons.models import IconField
 from wbcore.contrib.icons.serializers import IconSelectField
+from wbcore.metadata.configs.display.list_display import BaseTreeGroupLevelOption
 from wbcore.models.fields import YearField
 from wbcore.serializers import (
     fields,
@@ -306,7 +307,7 @@ class ModelSerializer(
 class RepresentationSerializer(WBCoreSerializerFieldMixin, ModelSerializer):
     field_type = WBCoreType.SELECT.value
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, tree_config: BaseTreeGroupLevelOption | None = None, **kwargs):
         self.ignore_filter = kwargs.pop("ignore_filter", getattr(self, "ignore_filter", None))
         self.filter_params = kwargs.pop("filter_params", getattr(self, "filter_params", None))
         self.endpoint = kwargs.pop(
@@ -332,6 +333,7 @@ class RepresentationSerializer(WBCoreSerializerFieldMixin, ModelSerializer):
             "optional_get_parameters",
             getattr(self, "optional_get_parameters", None),
         )
+        self.tree_config = tree_config
         super().__init__(*args, **kwargs)
 
     def to_representation(self, value):
@@ -413,4 +415,7 @@ class RepresentationSerializer(WBCoreSerializerFieldMixin, ModelSerializer):
 
         if self.optional_get_parameters:
             representation["endpoint"]["optional_get_parameters"] = self.optional_get_parameters
+
+        if self.tree_config:
+            representation["tree_config"] = dict(self.tree_config)
         return self.get_related_key(), representation

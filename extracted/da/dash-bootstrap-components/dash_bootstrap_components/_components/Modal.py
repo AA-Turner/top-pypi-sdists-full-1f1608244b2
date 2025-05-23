@@ -1,13 +1,21 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 import typing  # noqa: F401
-import numbers # noqa: F401
 from typing_extensions import TypedDict, NotRequired, Literal # noqa: F401
-from dash.development.base_component import Component
-try:
-    from dash.development.base_component import ComponentType # noqa: F401
-except ImportError:
-    ComponentType = typing.TypeVar("ComponentType", bound=Component)
+from dash.development.base_component import Component, _explicitize_args
+
+ComponentType = typing.Union[
+    str,
+    int,
+    float,
+    Component,
+    None,
+    typing.Sequence[typing.Union[str, int, float, Component, None]],
+]
+
+NumberType = typing.Union[
+    typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex
+]
 
 
 class Modal(Component):
@@ -136,11 +144,10 @@ Keyword arguments:
     _namespace = 'dash_bootstrap_components'
     _type = 'Modal'
 
-    _explicitize_dash_init = True
 
     def __init__(
         self,
-        children: typing.Optional[typing.Union[str, int, float, ComponentType, typing.Sequence[typing.Union[str, int, float, ComponentType]]]] = None,
+        children: typing.Optional[ComponentType] = None,
         id: typing.Optional[typing.Union[str, dict]] = None,
         *,
         is_open: typing.Optional[bool] = None,
@@ -164,7 +171,7 @@ Keyword arguments:
         enforceFocus: typing.Optional[bool] = None,
         role: typing.Optional[str] = None,
         labelledby: typing.Optional[str] = None,
-        zindex: typing.Optional[typing.Union[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex], str]] = None,
+        zindex: typing.Optional[typing.Union[NumberType, str]] = None,
         dialogStyle: typing.Optional[dict] = None,
         contentStyle: typing.Optional[dict] = None,
         backdropStyle: typing.Optional[dict] = None,
@@ -174,7 +181,7 @@ Keyword arguments:
         dialogClassName: typing.Optional[str] = None,
         autoFocus: typing.Optional[bool] = None,
         labelledBy: typing.Optional[str] = None,
-        zIndex: typing.Optional[typing.Union[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex], str]] = None,
+        zIndex: typing.Optional[typing.Union[NumberType, str]] = None,
         **kwargs
     ):
         self._prop_names = ['children', 'id', 'is_open', 'centered', 'scrollable', 'size', 'backdrop', 'fullscreen', 'keyboard', 'fade', 'style', 'dialog_style', 'content_style', 'backdrop_style', 'class_name', 'dialog_class_name', 'backdrop_class_name', 'content_class_name', 'tag', 'autofocus', 'enforceFocus', 'role', 'labelledby', 'zindex', 'dialogStyle', 'contentStyle', 'backdropStyle', 'className', 'backdropClassName', 'contentClassName', 'dialogClassName', 'autoFocus', 'labelledBy', 'zIndex']
@@ -187,3 +194,5 @@ Keyword arguments:
         args = {k: _locals[k] for k in _explicit_args if k != 'children'}
 
         super(Modal, self).__init__(children=children, **args)
+
+setattr(Modal, "__init__", _explicitize_args(Modal.__init__))

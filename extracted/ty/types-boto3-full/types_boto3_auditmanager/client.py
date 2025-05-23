@@ -532,8 +532,8 @@ class AuditManagerClient(BaseClient):
 
     def get_services_in_scope(self) -> GetServicesInScopeResponseTypeDef:
         """
-        Gets a list of the Amazon Web Services from which Audit Manager can collect
-        evidence.
+        Gets a list of the Amazon Web Services services from which Audit Manager can
+        collect evidence.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/auditmanager/client/get_services_in_scope.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_auditmanager/client/#get_services_in_scope)

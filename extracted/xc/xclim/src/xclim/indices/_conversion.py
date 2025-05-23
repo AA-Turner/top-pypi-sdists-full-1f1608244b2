@@ -17,7 +17,6 @@ from xclim.core.units import (
     rate2flux,
     units2pint,
 )
-from xclim.core.utils import deprecated
 from xclim.indices.helpers import (
     _gather_lat,
     _gather_lon,
@@ -32,6 +31,7 @@ from xclim.indices.helpers import (
 
 __all__ = [
     "clausius_clapeyron_scaled_precipitation",
+    "clearness_index",
     "fao_allen98",
     "heat_index",
     "humidex",
@@ -43,8 +43,8 @@ __all__ = [
     "rain_approximation",
     "relative_humidity",
     "saturation_vapor_pressure",
-    "sfcwind_2_uas_vas",
     "sfcwind_to_uas_vas",
+    "shortwave_downwelling_radiation_from_clearness_index",
     "shortwave_upwelling_radiation_from_net_downwelling",
     "snd_to_snw",
     "snowfall_approximation",
@@ -52,7 +52,6 @@ __all__ = [
     "specific_humidity",
     "specific_humidity_from_dewpoint",
     "tas",
-    "uas_vas_2_sfcwind",
     "uas_vas_to_sfcwind",
     "universal_thermal_climate_index",
     "vapor_pressure_deficit",
@@ -242,21 +241,6 @@ def tas(tasmin: xr.DataArray, tasmax: xr.DataArray) -> xr.DataArray:
     return tas
 
 
-@deprecated(from_version="0.56.0", suggested="uas_vas_to_sfcwind")
-def uas_vas_2_sfcwind(*args, **kwargs):  # numpydoc ignore=PR01,RT01
-    """
-    Wind speed and direction from the eastward and northward wind components.
-
-    Computes the magnitude and angle of the wind vector from its northward and eastward components,
-    following the meteorological convention that sets calm wind to a direction of 0° and northerly wind to 360°.
-
-    Warnings
-    --------
-    This function has been deprecated in favour of `uas_vas_to_sfcwind`.
-    """
-    return uas_vas_to_sfcwind(*args, **kwargs)
-
-
 @declare_units(uas="[speed]", vas="[speed]", calm_wind_thresh="[speed]")
 def uas_vas_to_sfcwind(
     uas: xr.DataArray, vas: xr.DataArray, calm_wind_thresh: Quantified = "0.5 m/s"
@@ -317,20 +301,6 @@ def uas_vas_to_sfcwind(
     wind_from_dir = xr.where(wind < wind_thresh, 0, wind_from_dir)
     wind_from_dir.attrs["units"] = "degree"
     return wind, wind_from_dir
-
-
-@deprecated(from_version="0.56.0", suggested="sfcwind_to_uas_vas")
-def sfcwind_2_uas_vas(*args, **kwargs):  # numpydoc ignore=PR01,RT01
-    """
-    Eastward and northward wind components from the wind speed and direction.
-
-    Compute the eastward and northward wind components from the wind speed and direction.
-
-    Warnings
-    --------
-    This function has been deprecated in favour of `sfcwind_to_uas_vas`.
-    """
-    return sfcwind_to_uas_vas(*args, **kwargs)
 
 
 @declare_units(sfcWind="[speed]", sfcWindfromdir="[]")
@@ -1212,6 +1182,77 @@ def shortwave_upwelling_radiation_from_net_downwelling(rss: xr.DataArray, rsds: 
     rsus: xr.DataArray = rsds - rss
     rsus = rsus.assign_attrs(units=rsds.units)
     return rsus
+
+
+@declare_units(rsds="[radiation]")
+def clearness_index(rsds: xr.DataArray) -> xr.DataArray:
+    r"""
+    Compute the clearness index.
+
+    The clearness index is the ratio between the shortwave downwelling radiation
+    and the total extraterrestrial radiation on a given day.
+
+    Parameters
+    ----------
+    rsds : xr.DataArray
+        Surface downwelling solar radiation.
+
+    Returns
+    -------
+    xr.DataArray, [unitless]
+        Clearness index.
+
+    Notes
+    -----
+    Clearness Index (ci) is defined as:
+
+    .. math :
+
+       ci = rsds / \text{extraterrestrial_solar_radiation}
+
+    References
+    ----------
+    :cite:cts:`lauret_solar_2022`
+    """
+    rtop = extraterrestrial_solar_radiation(rsds.time, rsds.lat)
+    rtop = convert_units_to(rtop, rsds)
+    with xr.set_options(keep_attrs=True):
+        ci = xr.where(rsds != 0, rsds / rtop, 0)
+    ci = ci.assign_attrs(units="")
+    return ci
+
+
+@declare_units(ci="[]")
+def shortwave_downwelling_radiation_from_clearness_index(ci: xr.DataArray) -> xr.DataArray:
+    r"""
+    Compute the surface downwelling solar radiation from clearness index.
+
+    Parameters
+    ----------
+    ci : xr.DataArray
+        Clearness index.
+
+    Returns
+    -------
+    xr.DataArray, [unitless]
+        Surface downwelling solar radiation.
+
+    See Also
+    --------
+    clearness_index : Inverse transformation, and definition of the clearness index.
+
+    Notes
+    -----
+    The conversion from Clearness Index is defined as:
+
+    .. math :
+
+       rsds = ci * \text{extraterrestrial_solar_radiation}
+    """
+    rtop = extraterrestrial_solar_radiation(ci.time, ci.lat)
+    with xr.set_options(keep_attrs=True):
+        rsds = (rtop * ci).assign_attrs(units=rtop.units)
+    return rsds
 
 
 @declare_units(

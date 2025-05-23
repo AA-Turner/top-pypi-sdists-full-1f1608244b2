@@ -27,6 +27,8 @@ __all__ = (
     "ClusterActiveWaiterName",
     "ClusterNotExistsWaiterName",
     "ClusterStatusType",
+    "EncryptionStatusType",
+    "EncryptionTypeType",
     "ListClustersPaginatorName",
     "PaginatorName",
     "ResourceServiceName",
@@ -49,6 +51,8 @@ ClusterStatusType = Literal[
     "PENDING_SETUP",
     "UPDATING",
 ]
+EncryptionStatusType = Literal["ENABLED", "ENABLING", "KMS_KEY_INACCESSIBLE", "UPDATING"]
+EncryptionTypeType = Literal["AWS_OWNED_KMS_KEY", "CUSTOMER_MANAGED_KMS_KEY"]
 ListClustersPaginatorName = Literal["list_clusters"]
 AuroraDSQLServiceName = Literal["dsql"]
 ServiceName = Literal[

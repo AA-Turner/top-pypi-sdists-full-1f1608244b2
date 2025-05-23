@@ -2,9 +2,9 @@
 [build-system]
 # Minimum requirements for the build system to execute.
 requires = [
-    'setuptools >= 68.1.1',
-    'passagemath-setup ~= 10.5.37.0',
-    'passagemath-environment ~= 10.5.37.0',
+    'setuptools >= 77.0.0',
+    'passagemath-setup ~= 10.5.38.0',
+    'passagemath-environment ~= 10.5.38.0',
     'cython >=3.0, != 3.0.3, <4.0', 'cython >=3.0.8,<3.1.0',
     'memory_allocator',
     'cysignals ==1.12.0rc2',
@@ -20,7 +20,7 @@ dependencies = [
     'cysignals ==1.12.0rc2',
 ]
 dynamic = ["version"]
-license = {text = "GNU General Public License (GPL) v2 or later"}
+license = "GPL-2.0-or-later"
 authors = [{name = "The Sage Developers", email = "sage-support@googlegroups.com"}]
 maintainers = [
     {name = "Matthias Köppe"},
@@ -30,7 +30,6 @@ classifiers = [
     "Development Status :: 6 - Mature",
     "Intended Audience :: Education",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
     "Operating System :: POSIX",
     "Operating System :: MacOS :: MacOS X",
     "Programming Language :: Python :: 3 :: Only",

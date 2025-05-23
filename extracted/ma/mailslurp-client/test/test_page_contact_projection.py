@@ -58,8 +58,8 @@ class TestPageContactProjection(unittest.TestCase):
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(
-                        sorted = True, 
                         unsorted = True, 
+                        sorted = True, 
                         empty = True, ), ), 
                 total_elements = 56, 
                 total_pages = 56, 
@@ -69,8 +69,8 @@ class TestPageContactProjection(unittest.TestCase):
                 size = 56, 
                 number = 56, 
                 sort = mailslurp_client.models.sort_object.SortObject(
-                    sorted = True, 
                     unsorted = True, 
+                    sorted = True, 
                     empty = True, ), 
                 empty = True
             )

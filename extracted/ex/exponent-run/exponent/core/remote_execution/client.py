@@ -66,7 +66,6 @@ from exponent.core.remote_execution.types import (
     SwitchCLIChatRequest,
     SwitchCLIChatResponse,
     SystemContextRequest,
-    UseToolsConfig,
     ErrorResponse,
     CreateCheckpointRequest,
     RollbackToCheckpointRequest,
@@ -210,7 +209,7 @@ class RemoteExecutionClient:
 
         async def beat() -> None:
             while True:
-                info = self.get_heartbeat_info()
+                info = await self.get_heartbeat_info()
                 await beats.put(info)
                 await asyncio.sleep(3)
 
@@ -400,15 +399,12 @@ class RemoteExecutionClient:
         )
         return await deserialize_api_response(response, CreateChatResponse)
 
-    async def start_chat(
-        self, chat_uuid: str, prompt: str, use_tools_config: UseToolsConfig
-    ) -> StartChatResponse:
+    async def start_chat(self, chat_uuid: str, prompt: str) -> StartChatResponse:
         response = await self.api_client.post(
             "/api/remote_execution/start_chat",
             json=StartChatRequest(
                 chat_uuid=chat_uuid,
                 prompt=prompt,
-                use_tools_config=use_tools_config,
             ).model_dump(),
             timeout=60,
         )
@@ -429,16 +425,16 @@ class RemoteExecutionClient:
             )
         return cast(dict[str, Any], response.json())
 
-    def get_heartbeat_info(self) -> HeartbeatInfo:
+    async def get_heartbeat_info(self) -> HeartbeatInfo:
         return HeartbeatInfo(
-            system_info=system_context.get_system_info(self.working_directory),
+            system_info=await system_context.get_system_info(self.working_directory),
             exponent_version=get_installed_version(),
             editable_installation=is_editable_install(),
         )
 
     async def send_heartbeat(self, chat_uuid: str) -> CLIConnectedState:
         logger.info(f"Sending heartbeat for chat_uuid {chat_uuid}")
-        heartbeat_info = self.get_heartbeat_info()
+        heartbeat_info = await self.get_heartbeat_info()
         response = await self.api_client.post(
             f"/api/remote_execution/{chat_uuid}/heartbeat",
             content=heartbeat_info.model_dump_json(),
@@ -468,7 +464,7 @@ class RemoteExecutionClient:
                     should_halt=self.get_halt_check(request.correlation_id),
                 )
             elif isinstance(request, FileWriteRequest):
-                response = execute_file_write(
+                response = await execute_file_write(
                     request,
                     working_directory=self.working_directory,
                 )
@@ -485,7 +481,7 @@ class RemoteExecutionClient:
             elif isinstance(request, GetMatchingFilesRequest):
                 response = await files.get_matching_files(request, self.file_cache)
             elif isinstance(request, SystemContextRequest):
-                response = system_context.get_system_context(
+                response = await system_context.get_system_context(
                     request, self.working_directory
                 )
             elif isinstance(request, GetAllTrackedFilesRequest):

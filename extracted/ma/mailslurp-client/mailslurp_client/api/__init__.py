@@ -3,6 +3,7 @@ from __future__ import absolute_import
 # flake8: noqa
 
 # import apis into api package
+from mailslurp_client.api.ai_controller_api import AIControllerApi
 from mailslurp_client.api.alias_controller_api import AliasControllerApi
 from mailslurp_client.api.attachment_controller_api import AttachmentControllerApi
 from mailslurp_client.api.bounce_controller_api import BounceControllerApi
@@ -36,4 +37,3 @@ from mailslurp_client.api.tracking_controller_api import TrackingControllerApi
 from mailslurp_client.api.user_controller_api import UserControllerApi
 from mailslurp_client.api.wait_for_controller_api import WaitForControllerApi
 from mailslurp_client.api.webhook_controller_api import WebhookControllerApi
-from mailslurp_client.api.sse_controller_api import SseControllerApi

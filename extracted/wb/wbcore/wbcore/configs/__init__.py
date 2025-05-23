@@ -8,4 +8,5 @@ from .configs import (
     share_config,
     beta_button,
     frontend_version,
+    user_preferences
 )

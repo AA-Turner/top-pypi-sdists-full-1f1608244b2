@@ -1,7 +1,7 @@
 r'''
 # `newrelic_nrql_alert_condition`
 
-Refer to the Terraform Registry for docs: [`newrelic_nrql_alert_condition`](https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition).
+Refer to the Terraform Registry for docs: [`newrelic_nrql_alert_condition`](https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class NrqlAlertCondition(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-newrelic.nrqlAlertCondition.NrqlAlertCondition",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition newrelic_nrql_alert_condition}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition newrelic_nrql_alert_condition}.'''
 
     def __init__(
         self,
@@ -89,40 +89,40 @@ class NrqlAlertCondition(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition newrelic_nrql_alert_condition} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition newrelic_nrql_alert_condition} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: The title of the condition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#name NrqlAlertCondition#name}
-        :param nrql: nrql block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#nrql NrqlAlertCondition#nrql}
-        :param policy_id: The ID of the policy where this condition should be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#policy_id NrqlAlertCondition#policy_id}
-        :param account_id: The New Relic account ID for managing your NRQL alert conditions. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#account_id NrqlAlertCondition#account_id}
-        :param aggregation_delay: How long we wait for data that belongs in each aggregation window. Depending on your data, a longer delay may increase accuracy but delay notifications. Use aggregationDelay with the EVENT_FLOW and CADENCE aggregation methods. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#aggregation_delay NrqlAlertCondition#aggregation_delay}
-        :param aggregation_method: The method that determines when we consider an aggregation window to be complete so that we can evaluate the signal for incidents. Default is EVENT_FLOW. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#aggregation_method NrqlAlertCondition#aggregation_method}
-        :param aggregation_timer: How long we wait after each data point arrives to make sure we've processed the whole batch. Use aggregationTimer with the EVENT_TIMER aggregation method. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#aggregation_timer NrqlAlertCondition#aggregation_timer}
-        :param aggregation_window: The duration of the time window used to evaluate the NRQL query, in seconds. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#aggregation_window NrqlAlertCondition#aggregation_window}
-        :param baseline_direction: The baseline direction of a baseline NRQL alert condition. Valid values are: 'LOWER_ONLY', 'UPPER_AND_LOWER', 'UPPER_ONLY' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#baseline_direction NrqlAlertCondition#baseline_direction}
-        :param close_violations_on_expiration: Whether to close all open incidents when the signal expires. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#close_violations_on_expiration NrqlAlertCondition#close_violations_on_expiration}
-        :param critical: critical block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#critical NrqlAlertCondition#critical}
-        :param description: The description of the NRQL alert condition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#description NrqlAlertCondition#description}
-        :param enabled: Whether or not to enable the alert condition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#enabled NrqlAlertCondition#enabled}
-        :param evaluation_delay: How long we wait until the signal starts evaluating. The maximum delay is 7200 seconds (120 minutes). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#evaluation_delay NrqlAlertCondition#evaluation_delay}
-        :param expiration_duration: The amount of time (in seconds) to wait before considering the signal expired. Must be in the range of 30 to 172800 (inclusive) Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#expiration_duration NrqlAlertCondition#expiration_duration}
-        :param fill_option: Which strategy to use when filling gaps in the signal. If static, the 'fill value' will be used for filling gaps in the signal. Valid values are: 'NONE', 'LAST_VALUE', or 'STATIC' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#fill_option NrqlAlertCondition#fill_option}
-        :param fill_value: If using the 'static' fill option, this value will be used for filling gaps in the signal. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#fill_value NrqlAlertCondition#fill_value}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#id NrqlAlertCondition#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param ignore_on_expected_termination: Whether to ignore expected termination of a signal when considering whether to create a loss of signal incident. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#ignore_on_expected_termination NrqlAlertCondition#ignore_on_expected_termination}
-        :param open_violation_on_expiration: Whether to create a new incident to capture that the signal expired. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#open_violation_on_expiration NrqlAlertCondition#open_violation_on_expiration}
-        :param runbook_url: Runbook URL to display in notifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#runbook_url NrqlAlertCondition#runbook_url}
-        :param signal_seasonality: Seasonality under which a condition's signal(s) are evaluated. Valid values are: 'NEW_RELIC_CALCULATION', 'HOURLY', 'DAILY', 'WEEKLY', or 'NONE'. To have New Relic calculate seasonality automatically, set to 'NEW_RELIC_CALCULATION' (default). To turn off seasonality completely, set to 'NONE'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#signal_seasonality NrqlAlertCondition#signal_seasonality}
-        :param slide_by: The duration of overlapping time windows used to smooth the chart line, in seconds. Must be a factor of ``aggregation_window`` and less than the aggregation window. If ``aggregation_window`` is less than or equal to 3600 seconds, it should be greater or equal to 30 seconds. If ``aggregation_window`` is greater than 3600 seconds but less than 7200 seconds, it should be greater or equal to ``aggregation_window / 120``. If ``aggregation_window`` is greater than 7200 seconds, it should be greater or equal to `aggregation_window / 24 Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#slide_by NrqlAlertCondition#slide_by}
-        :param term: term block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#term NrqlAlertCondition#term}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#timeouts NrqlAlertCondition#timeouts}
-        :param title_template: This field allows you to create a custom title to be used when incidents are opened by the condition. Setting this field will override the default title. Must be Handlebars format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#title_template NrqlAlertCondition#title_template}
-        :param type: The type of NRQL alert condition to create. Valid values are: 'static', 'baseline'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#type NrqlAlertCondition#type}
-        :param violation_time_limit: Sets a time limit, in hours, that will automatically force-close a long-lasting incident after the time limit you select. Possible values are 'ONE_HOUR', 'TWO_HOURS', 'FOUR_HOURS', 'EIGHT_HOURS', 'TWELVE_HOURS', 'TWENTY_FOUR_HOURS', 'THIRTY_DAYS' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#violation_time_limit NrqlAlertCondition#violation_time_limit}
-        :param violation_time_limit_seconds: Sets a time limit, in seconds, that will automatically force-close a long-lasting incident after the time limit you select. Must be in the range of 300 to 2592000 (inclusive) Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#violation_time_limit_seconds NrqlAlertCondition#violation_time_limit_seconds}
-        :param warning: warning block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#warning NrqlAlertCondition#warning}
+        :param name: The title of the condition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#name NrqlAlertCondition#name}
+        :param nrql: nrql block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#nrql NrqlAlertCondition#nrql}
+        :param policy_id: The ID of the policy where this condition should be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#policy_id NrqlAlertCondition#policy_id}
+        :param account_id: The New Relic account ID for managing your NRQL alert conditions. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#account_id NrqlAlertCondition#account_id}
+        :param aggregation_delay: How long we wait for data that belongs in each aggregation window. Depending on your data, a longer delay may increase accuracy but delay notifications. Use aggregationDelay with the EVENT_FLOW and CADENCE aggregation methods. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#aggregation_delay NrqlAlertCondition#aggregation_delay}
+        :param aggregation_method: The method that determines when we consider an aggregation window to be complete so that we can evaluate the signal for incidents. Default is EVENT_FLOW. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#aggregation_method NrqlAlertCondition#aggregation_method}
+        :param aggregation_timer: How long we wait after each data point arrives to make sure we've processed the whole batch. Use aggregationTimer with the EVENT_TIMER aggregation method. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#aggregation_timer NrqlAlertCondition#aggregation_timer}
+        :param aggregation_window: The duration of the time window used to evaluate the NRQL query, in seconds. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#aggregation_window NrqlAlertCondition#aggregation_window}
+        :param baseline_direction: The baseline direction of a baseline NRQL alert condition. Valid values are: 'LOWER_ONLY', 'UPPER_AND_LOWER', 'UPPER_ONLY' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#baseline_direction NrqlAlertCondition#baseline_direction}
+        :param close_violations_on_expiration: Whether to close all open incidents when the signal expires. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#close_violations_on_expiration NrqlAlertCondition#close_violations_on_expiration}
+        :param critical: critical block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#critical NrqlAlertCondition#critical}
+        :param description: The description of the NRQL alert condition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#description NrqlAlertCondition#description}
+        :param enabled: Whether or not to enable the alert condition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#enabled NrqlAlertCondition#enabled}
+        :param evaluation_delay: How long we wait until the signal starts evaluating. The maximum delay is 7200 seconds (120 minutes). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#evaluation_delay NrqlAlertCondition#evaluation_delay}
+        :param expiration_duration: The amount of time (in seconds) to wait before considering the signal expired. Must be in the range of 30 to 172800 (inclusive) Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#expiration_duration NrqlAlertCondition#expiration_duration}
+        :param fill_option: Which strategy to use when filling gaps in the signal. If static, the 'fill value' will be used for filling gaps in the signal. Valid values are: 'NONE', 'LAST_VALUE', or 'STATIC' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#fill_option NrqlAlertCondition#fill_option}
+        :param fill_value: If using the 'static' fill option, this value will be used for filling gaps in the signal. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#fill_value NrqlAlertCondition#fill_value}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#id NrqlAlertCondition#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param ignore_on_expected_termination: Whether to ignore expected termination of a signal when considering whether to create a loss of signal incident. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#ignore_on_expected_termination NrqlAlertCondition#ignore_on_expected_termination}
+        :param open_violation_on_expiration: Whether to create a new incident to capture that the signal expired. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#open_violation_on_expiration NrqlAlertCondition#open_violation_on_expiration}
+        :param runbook_url: Runbook URL to display in notifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#runbook_url NrqlAlertCondition#runbook_url}
+        :param signal_seasonality: Seasonality under which a condition's signal(s) are evaluated. Valid values are: 'NEW_RELIC_CALCULATION', 'HOURLY', 'DAILY', 'WEEKLY', or 'NONE'. To have New Relic calculate seasonality automatically, set to 'NEW_RELIC_CALCULATION' (default). To turn off seasonality completely, set to 'NONE'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#signal_seasonality NrqlAlertCondition#signal_seasonality}
+        :param slide_by: The duration of overlapping time windows used to smooth the chart line, in seconds. Must be a factor of ``aggregation_window`` and less than the aggregation window. If ``aggregation_window`` is less than or equal to 3600 seconds, it should be greater or equal to 30 seconds. If ``aggregation_window`` is greater than 3600 seconds but less than 7200 seconds, it should be greater or equal to ``aggregation_window / 120``. If ``aggregation_window`` is greater than 7200 seconds, it should be greater or equal to `aggregation_window / 24 Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#slide_by NrqlAlertCondition#slide_by}
+        :param term: term block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#term NrqlAlertCondition#term}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#timeouts NrqlAlertCondition#timeouts}
+        :param title_template: This field allows you to create a custom title to be used when incidents are opened by the condition. Setting this field will override the default title. Must be Handlebars format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#title_template NrqlAlertCondition#title_template}
+        :param type: The type of NRQL alert condition to create. Valid values are: 'static', 'baseline'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#type NrqlAlertCondition#type}
+        :param violation_time_limit: Sets a time limit, in hours, that will automatically force-close a long-lasting incident after the time limit you select. Possible values are 'ONE_HOUR', 'TWO_HOURS', 'FOUR_HOURS', 'EIGHT_HOURS', 'TWELVE_HOURS', 'TWENTY_FOUR_HOURS', 'THIRTY_DAYS' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#violation_time_limit NrqlAlertCondition#violation_time_limit}
+        :param violation_time_limit_seconds: Sets a time limit, in seconds, that will automatically force-close a long-lasting incident after the time limit you select. Must be in the range of 300 to 2592000 (inclusive) Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#violation_time_limit_seconds NrqlAlertCondition#violation_time_limit_seconds}
+        :param warning: warning block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#warning NrqlAlertCondition#warning}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -190,7 +190,7 @@ class NrqlAlertCondition(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the NrqlAlertCondition to import.
-        :param import_from_id: The id of the existing NrqlAlertCondition that should be imported. Refer to the {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing NrqlAlertCondition that should be imported. Refer to the {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the NrqlAlertCondition to import is found.
         '''
         if __debug__:
@@ -206,6 +206,7 @@ class NrqlAlertCondition(
         self,
         *,
         threshold: jsii.Number,
+        disable_health_status_reporting: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         duration: typing.Optional[jsii.Number] = None,
         operator: typing.Optional[builtins.str] = None,
         prediction: typing.Optional[typing.Union["NrqlAlertConditionCriticalPrediction", typing.Dict[builtins.str, typing.Any]]] = None,
@@ -214,16 +215,18 @@ class NrqlAlertCondition(
         time_function: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param threshold: For baseline conditions must be in range [1, 1000]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
-        :param duration: In minutes, must be in the range of 1 to 120 (inclusive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
-        :param operator: One of (above, above_or_equals, below, below_or_equals, equals, not_equals). Defaults to 'equals'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
-        :param prediction: prediction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
-        :param threshold_duration: The duration, in seconds, that the threshold must violate in order to create an incident. Value must be a multiple of the 'aggregation_window' (which has a default of 60 seconds). Value must be within 120-86400 seconds for baseline conditions, and within 60-86400 seconds for static conditions Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
-        :param threshold_occurrences: The criteria for how many data points must be in violation for the specified threshold duration. Valid values are: 'ALL' or 'AT_LEAST_ONCE' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
-        :param time_function: Valid values are: 'all' or 'any'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
+        :param threshold: For baseline conditions must be in range [1, 1000]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
+        :param disable_health_status_reporting: Violations will not change system health status for this term. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#disable_health_status_reporting NrqlAlertCondition#disable_health_status_reporting}
+        :param duration: In minutes, must be in the range of 1 to 120 (inclusive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
+        :param operator: One of (above, above_or_equals, below, below_or_equals, equals, not_equals). Defaults to 'equals'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
+        :param prediction: prediction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
+        :param threshold_duration: The duration, in seconds, that the threshold must violate in order to create an incident. Value must be a multiple of the 'aggregation_window' (which has a default of 60 seconds). Value must be within 120-86400 seconds for baseline conditions, and within 60-86400 seconds for static conditions Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
+        :param threshold_occurrences: The criteria for how many data points must be in violation for the specified threshold duration. Valid values are: 'ALL' or 'AT_LEAST_ONCE' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
+        :param time_function: Valid values are: 'all' or 'any'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
         '''
         value = NrqlAlertConditionCritical(
             threshold=threshold,
+            disable_health_status_reporting=disable_health_status_reporting,
             duration=duration,
             operator=operator,
             prediction=prediction,
@@ -244,10 +247,10 @@ class NrqlAlertCondition(
         since_value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param query: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#query NrqlAlertCondition#query}.
-        :param data_account_id: The New Relic account ID to use as the basis for the NRQL alert condition's ``query``; will default to ``account_id`` if unspecified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#data_account_id NrqlAlertCondition#data_account_id}
-        :param evaluation_offset: NRQL queries are evaluated in one-minute time windows. The start time depends on the value you provide in the NRQL condition's ``evaluation_offset``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#evaluation_offset NrqlAlertCondition#evaluation_offset}
-        :param since_value: NRQL queries are evaluated in one-minute time windows. The start time depends on the value you provide in the NRQL condition's ``since_value``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#since_value NrqlAlertCondition#since_value}
+        :param query: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#query NrqlAlertCondition#query}.
+        :param data_account_id: The New Relic account ID to use as the basis for the NRQL alert condition's ``query``; will default to ``account_id`` if unspecified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#data_account_id NrqlAlertCondition#data_account_id}
+        :param evaluation_offset: NRQL queries are evaluated in one-minute time windows. The start time depends on the value you provide in the NRQL condition's ``evaluation_offset``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#evaluation_offset NrqlAlertCondition#evaluation_offset}
+        :param since_value: NRQL queries are evaluated in one-minute time windows. The start time depends on the value you provide in the NRQL condition's ``since_value``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#since_value NrqlAlertCondition#since_value}
         '''
         value = NrqlAlertConditionNrql(
             query=query,
@@ -274,7 +277,7 @@ class NrqlAlertCondition(
     @jsii.member(jsii_name="putTimeouts")
     def put_timeouts(self, *, create: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#create NrqlAlertCondition#create}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#create NrqlAlertCondition#create}.
         '''
         value = NrqlAlertConditionTimeouts(create=create)
 
@@ -285,6 +288,7 @@ class NrqlAlertCondition(
         self,
         *,
         threshold: jsii.Number,
+        disable_health_status_reporting: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         duration: typing.Optional[jsii.Number] = None,
         operator: typing.Optional[builtins.str] = None,
         prediction: typing.Optional[typing.Union["NrqlAlertConditionWarningPrediction", typing.Dict[builtins.str, typing.Any]]] = None,
@@ -293,16 +297,18 @@ class NrqlAlertCondition(
         time_function: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param threshold: For baseline conditions must be in range [1, 1000]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
-        :param duration: In minutes, must be in the range of 1 to 120 (inclusive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
-        :param operator: One of (above, above_or_equals, below, below_or_equals, equals, not_equals). Defaults to 'equals'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
-        :param prediction: prediction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
-        :param threshold_duration: The duration, in seconds, that the threshold must violate in order to create an incident. Value must be a multiple of the 'aggregation_window' (which has a default of 60 seconds). Value must be within 120-86400 seconds for baseline conditions, and within 60-86400 seconds for static conditions Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
-        :param threshold_occurrences: The criteria for how many data points must be in violation for the specified threshold duration. Valid values are: 'ALL' or 'AT_LEAST_ONCE' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
-        :param time_function: Valid values are: 'all' or 'any'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
+        :param threshold: For baseline conditions must be in range [1, 1000]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
+        :param disable_health_status_reporting: Violations will not change system health status for this term. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#disable_health_status_reporting NrqlAlertCondition#disable_health_status_reporting}
+        :param duration: In minutes, must be in the range of 1 to 120 (inclusive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
+        :param operator: One of (above, above_or_equals, below, below_or_equals, equals, not_equals). Defaults to 'equals'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
+        :param prediction: prediction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
+        :param threshold_duration: The duration, in seconds, that the threshold must violate in order to create an incident. Value must be a multiple of the 'aggregation_window' (which has a default of 60 seconds). Value must be within 120-86400 seconds for baseline conditions, and within 60-86400 seconds for static conditions Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
+        :param threshold_occurrences: The criteria for how many data points must be in violation for the specified threshold duration. Valid values are: 'ALL' or 'AT_LEAST_ONCE' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
+        :param time_function: Valid values are: 'all' or 'any'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
         '''
         value = NrqlAlertConditionWarning(
             threshold=threshold,
+            disable_health_status_reporting=disable_health_status_reporting,
             duration=duration,
             operator=operator,
             prediction=prediction,
@@ -1038,36 +1044,36 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: The title of the condition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#name NrqlAlertCondition#name}
-        :param nrql: nrql block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#nrql NrqlAlertCondition#nrql}
-        :param policy_id: The ID of the policy where this condition should be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#policy_id NrqlAlertCondition#policy_id}
-        :param account_id: The New Relic account ID for managing your NRQL alert conditions. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#account_id NrqlAlertCondition#account_id}
-        :param aggregation_delay: How long we wait for data that belongs in each aggregation window. Depending on your data, a longer delay may increase accuracy but delay notifications. Use aggregationDelay with the EVENT_FLOW and CADENCE aggregation methods. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#aggregation_delay NrqlAlertCondition#aggregation_delay}
-        :param aggregation_method: The method that determines when we consider an aggregation window to be complete so that we can evaluate the signal for incidents. Default is EVENT_FLOW. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#aggregation_method NrqlAlertCondition#aggregation_method}
-        :param aggregation_timer: How long we wait after each data point arrives to make sure we've processed the whole batch. Use aggregationTimer with the EVENT_TIMER aggregation method. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#aggregation_timer NrqlAlertCondition#aggregation_timer}
-        :param aggregation_window: The duration of the time window used to evaluate the NRQL query, in seconds. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#aggregation_window NrqlAlertCondition#aggregation_window}
-        :param baseline_direction: The baseline direction of a baseline NRQL alert condition. Valid values are: 'LOWER_ONLY', 'UPPER_AND_LOWER', 'UPPER_ONLY' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#baseline_direction NrqlAlertCondition#baseline_direction}
-        :param close_violations_on_expiration: Whether to close all open incidents when the signal expires. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#close_violations_on_expiration NrqlAlertCondition#close_violations_on_expiration}
-        :param critical: critical block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#critical NrqlAlertCondition#critical}
-        :param description: The description of the NRQL alert condition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#description NrqlAlertCondition#description}
-        :param enabled: Whether or not to enable the alert condition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#enabled NrqlAlertCondition#enabled}
-        :param evaluation_delay: How long we wait until the signal starts evaluating. The maximum delay is 7200 seconds (120 minutes). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#evaluation_delay NrqlAlertCondition#evaluation_delay}
-        :param expiration_duration: The amount of time (in seconds) to wait before considering the signal expired. Must be in the range of 30 to 172800 (inclusive) Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#expiration_duration NrqlAlertCondition#expiration_duration}
-        :param fill_option: Which strategy to use when filling gaps in the signal. If static, the 'fill value' will be used for filling gaps in the signal. Valid values are: 'NONE', 'LAST_VALUE', or 'STATIC' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#fill_option NrqlAlertCondition#fill_option}
-        :param fill_value: If using the 'static' fill option, this value will be used for filling gaps in the signal. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#fill_value NrqlAlertCondition#fill_value}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#id NrqlAlertCondition#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param ignore_on_expected_termination: Whether to ignore expected termination of a signal when considering whether to create a loss of signal incident. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#ignore_on_expected_termination NrqlAlertCondition#ignore_on_expected_termination}
-        :param open_violation_on_expiration: Whether to create a new incident to capture that the signal expired. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#open_violation_on_expiration NrqlAlertCondition#open_violation_on_expiration}
-        :param runbook_url: Runbook URL to display in notifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#runbook_url NrqlAlertCondition#runbook_url}
-        :param signal_seasonality: Seasonality under which a condition's signal(s) are evaluated. Valid values are: 'NEW_RELIC_CALCULATION', 'HOURLY', 'DAILY', 'WEEKLY', or 'NONE'. To have New Relic calculate seasonality automatically, set to 'NEW_RELIC_CALCULATION' (default). To turn off seasonality completely, set to 'NONE'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#signal_seasonality NrqlAlertCondition#signal_seasonality}
-        :param slide_by: The duration of overlapping time windows used to smooth the chart line, in seconds. Must be a factor of ``aggregation_window`` and less than the aggregation window. If ``aggregation_window`` is less than or equal to 3600 seconds, it should be greater or equal to 30 seconds. If ``aggregation_window`` is greater than 3600 seconds but less than 7200 seconds, it should be greater or equal to ``aggregation_window / 120``. If ``aggregation_window`` is greater than 7200 seconds, it should be greater or equal to `aggregation_window / 24 Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#slide_by NrqlAlertCondition#slide_by}
-        :param term: term block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#term NrqlAlertCondition#term}
-        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#timeouts NrqlAlertCondition#timeouts}
-        :param title_template: This field allows you to create a custom title to be used when incidents are opened by the condition. Setting this field will override the default title. Must be Handlebars format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#title_template NrqlAlertCondition#title_template}
-        :param type: The type of NRQL alert condition to create. Valid values are: 'static', 'baseline'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#type NrqlAlertCondition#type}
-        :param violation_time_limit: Sets a time limit, in hours, that will automatically force-close a long-lasting incident after the time limit you select. Possible values are 'ONE_HOUR', 'TWO_HOURS', 'FOUR_HOURS', 'EIGHT_HOURS', 'TWELVE_HOURS', 'TWENTY_FOUR_HOURS', 'THIRTY_DAYS' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#violation_time_limit NrqlAlertCondition#violation_time_limit}
-        :param violation_time_limit_seconds: Sets a time limit, in seconds, that will automatically force-close a long-lasting incident after the time limit you select. Must be in the range of 300 to 2592000 (inclusive) Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#violation_time_limit_seconds NrqlAlertCondition#violation_time_limit_seconds}
-        :param warning: warning block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#warning NrqlAlertCondition#warning}
+        :param name: The title of the condition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#name NrqlAlertCondition#name}
+        :param nrql: nrql block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#nrql NrqlAlertCondition#nrql}
+        :param policy_id: The ID of the policy where this condition should be used. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#policy_id NrqlAlertCondition#policy_id}
+        :param account_id: The New Relic account ID for managing your NRQL alert conditions. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#account_id NrqlAlertCondition#account_id}
+        :param aggregation_delay: How long we wait for data that belongs in each aggregation window. Depending on your data, a longer delay may increase accuracy but delay notifications. Use aggregationDelay with the EVENT_FLOW and CADENCE aggregation methods. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#aggregation_delay NrqlAlertCondition#aggregation_delay}
+        :param aggregation_method: The method that determines when we consider an aggregation window to be complete so that we can evaluate the signal for incidents. Default is EVENT_FLOW. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#aggregation_method NrqlAlertCondition#aggregation_method}
+        :param aggregation_timer: How long we wait after each data point arrives to make sure we've processed the whole batch. Use aggregationTimer with the EVENT_TIMER aggregation method. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#aggregation_timer NrqlAlertCondition#aggregation_timer}
+        :param aggregation_window: The duration of the time window used to evaluate the NRQL query, in seconds. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#aggregation_window NrqlAlertCondition#aggregation_window}
+        :param baseline_direction: The baseline direction of a baseline NRQL alert condition. Valid values are: 'LOWER_ONLY', 'UPPER_AND_LOWER', 'UPPER_ONLY' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#baseline_direction NrqlAlertCondition#baseline_direction}
+        :param close_violations_on_expiration: Whether to close all open incidents when the signal expires. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#close_violations_on_expiration NrqlAlertCondition#close_violations_on_expiration}
+        :param critical: critical block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#critical NrqlAlertCondition#critical}
+        :param description: The description of the NRQL alert condition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#description NrqlAlertCondition#description}
+        :param enabled: Whether or not to enable the alert condition. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#enabled NrqlAlertCondition#enabled}
+        :param evaluation_delay: How long we wait until the signal starts evaluating. The maximum delay is 7200 seconds (120 minutes). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#evaluation_delay NrqlAlertCondition#evaluation_delay}
+        :param expiration_duration: The amount of time (in seconds) to wait before considering the signal expired. Must be in the range of 30 to 172800 (inclusive) Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#expiration_duration NrqlAlertCondition#expiration_duration}
+        :param fill_option: Which strategy to use when filling gaps in the signal. If static, the 'fill value' will be used for filling gaps in the signal. Valid values are: 'NONE', 'LAST_VALUE', or 'STATIC' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#fill_option NrqlAlertCondition#fill_option}
+        :param fill_value: If using the 'static' fill option, this value will be used for filling gaps in the signal. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#fill_value NrqlAlertCondition#fill_value}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#id NrqlAlertCondition#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param ignore_on_expected_termination: Whether to ignore expected termination of a signal when considering whether to create a loss of signal incident. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#ignore_on_expected_termination NrqlAlertCondition#ignore_on_expected_termination}
+        :param open_violation_on_expiration: Whether to create a new incident to capture that the signal expired. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#open_violation_on_expiration NrqlAlertCondition#open_violation_on_expiration}
+        :param runbook_url: Runbook URL to display in notifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#runbook_url NrqlAlertCondition#runbook_url}
+        :param signal_seasonality: Seasonality under which a condition's signal(s) are evaluated. Valid values are: 'NEW_RELIC_CALCULATION', 'HOURLY', 'DAILY', 'WEEKLY', or 'NONE'. To have New Relic calculate seasonality automatically, set to 'NEW_RELIC_CALCULATION' (default). To turn off seasonality completely, set to 'NONE'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#signal_seasonality NrqlAlertCondition#signal_seasonality}
+        :param slide_by: The duration of overlapping time windows used to smooth the chart line, in seconds. Must be a factor of ``aggregation_window`` and less than the aggregation window. If ``aggregation_window`` is less than or equal to 3600 seconds, it should be greater or equal to 30 seconds. If ``aggregation_window`` is greater than 3600 seconds but less than 7200 seconds, it should be greater or equal to ``aggregation_window / 120``. If ``aggregation_window`` is greater than 7200 seconds, it should be greater or equal to `aggregation_window / 24 Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#slide_by NrqlAlertCondition#slide_by}
+        :param term: term block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#term NrqlAlertCondition#term}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#timeouts NrqlAlertCondition#timeouts}
+        :param title_template: This field allows you to create a custom title to be used when incidents are opened by the condition. Setting this field will override the default title. Must be Handlebars format. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#title_template NrqlAlertCondition#title_template}
+        :param type: The type of NRQL alert condition to create. Valid values are: 'static', 'baseline'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#type NrqlAlertCondition#type}
+        :param violation_time_limit: Sets a time limit, in hours, that will automatically force-close a long-lasting incident after the time limit you select. Possible values are 'ONE_HOUR', 'TWO_HOURS', 'FOUR_HOURS', 'EIGHT_HOURS', 'TWELVE_HOURS', 'TWENTY_FOUR_HOURS', 'THIRTY_DAYS' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#violation_time_limit NrqlAlertCondition#violation_time_limit}
+        :param violation_time_limit_seconds: Sets a time limit, in seconds, that will automatically force-close a long-lasting incident after the time limit you select. Must be in the range of 300 to 2592000 (inclusive) Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#violation_time_limit_seconds NrqlAlertCondition#violation_time_limit_seconds}
+        :param warning: warning block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#warning NrqlAlertCondition#warning}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1260,7 +1266,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''The title of the condition.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#name NrqlAlertCondition#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#name NrqlAlertCondition#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -1270,7 +1276,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def nrql(self) -> "NrqlAlertConditionNrql":
         '''nrql block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#nrql NrqlAlertCondition#nrql}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#nrql NrqlAlertCondition#nrql}
         '''
         result = self._values.get("nrql")
         assert result is not None, "Required property 'nrql' is missing"
@@ -1280,7 +1286,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def policy_id(self) -> jsii.Number:
         '''The ID of the policy where this condition should be used.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#policy_id NrqlAlertCondition#policy_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#policy_id NrqlAlertCondition#policy_id}
         '''
         result = self._values.get("policy_id")
         assert result is not None, "Required property 'policy_id' is missing"
@@ -1290,7 +1296,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def account_id(self) -> typing.Optional[jsii.Number]:
         '''The New Relic account ID for managing your NRQL alert conditions.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#account_id NrqlAlertCondition#account_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#account_id NrqlAlertCondition#account_id}
         '''
         result = self._values.get("account_id")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1301,7 +1307,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Depending on your data, a longer delay may increase accuracy but delay notifications. Use aggregationDelay with the EVENT_FLOW and CADENCE aggregation methods.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#aggregation_delay NrqlAlertCondition#aggregation_delay}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#aggregation_delay NrqlAlertCondition#aggregation_delay}
         '''
         result = self._values.get("aggregation_delay")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1312,7 +1318,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Default is EVENT_FLOW.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#aggregation_method NrqlAlertCondition#aggregation_method}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#aggregation_method NrqlAlertCondition#aggregation_method}
         '''
         result = self._values.get("aggregation_method")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1323,7 +1329,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Use aggregationTimer with the EVENT_TIMER aggregation method.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#aggregation_timer NrqlAlertCondition#aggregation_timer}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#aggregation_timer NrqlAlertCondition#aggregation_timer}
         '''
         result = self._values.get("aggregation_timer")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1332,7 +1338,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def aggregation_window(self) -> typing.Optional[jsii.Number]:
         '''The duration of the time window used to evaluate the NRQL query, in seconds.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#aggregation_window NrqlAlertCondition#aggregation_window}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#aggregation_window NrqlAlertCondition#aggregation_window}
         '''
         result = self._values.get("aggregation_window")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1341,7 +1347,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def baseline_direction(self) -> typing.Optional[builtins.str]:
         '''The baseline direction of a baseline NRQL alert condition. Valid values are: 'LOWER_ONLY', 'UPPER_AND_LOWER', 'UPPER_ONLY' (case insensitive).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#baseline_direction NrqlAlertCondition#baseline_direction}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#baseline_direction NrqlAlertCondition#baseline_direction}
         '''
         result = self._values.get("baseline_direction")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1352,7 +1358,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether to close all open incidents when the signal expires.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#close_violations_on_expiration NrqlAlertCondition#close_violations_on_expiration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#close_violations_on_expiration NrqlAlertCondition#close_violations_on_expiration}
         '''
         result = self._values.get("close_violations_on_expiration")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1361,7 +1367,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def critical(self) -> typing.Optional["NrqlAlertConditionCritical"]:
         '''critical block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#critical NrqlAlertCondition#critical}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#critical NrqlAlertCondition#critical}
         '''
         result = self._values.get("critical")
         return typing.cast(typing.Optional["NrqlAlertConditionCritical"], result)
@@ -1370,7 +1376,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def description(self) -> typing.Optional[builtins.str]:
         '''The description of the NRQL alert condition.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#description NrqlAlertCondition#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#description NrqlAlertCondition#description}
         '''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1381,7 +1387,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether or not to enable the alert condition.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#enabled NrqlAlertCondition#enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#enabled NrqlAlertCondition#enabled}
         '''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1390,7 +1396,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def evaluation_delay(self) -> typing.Optional[jsii.Number]:
         '''How long we wait until the signal starts evaluating. The maximum delay is 7200 seconds (120 minutes).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#evaluation_delay NrqlAlertCondition#evaluation_delay}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#evaluation_delay NrqlAlertCondition#evaluation_delay}
         '''
         result = self._values.get("evaluation_delay")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1401,7 +1407,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Must be in the range of 30 to 172800 (inclusive)
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#expiration_duration NrqlAlertCondition#expiration_duration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#expiration_duration NrqlAlertCondition#expiration_duration}
         '''
         result = self._values.get("expiration_duration")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1412,7 +1418,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         If static, the 'fill value' will be used for filling gaps in the signal. Valid values are: 'NONE', 'LAST_VALUE', or 'STATIC' (case insensitive).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#fill_option NrqlAlertCondition#fill_option}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#fill_option NrqlAlertCondition#fill_option}
         '''
         result = self._values.get("fill_option")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1421,14 +1427,14 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def fill_value(self) -> typing.Optional[jsii.Number]:
         '''If using the 'static' fill option, this value will be used for filling gaps in the signal.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#fill_value NrqlAlertCondition#fill_value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#fill_value NrqlAlertCondition#fill_value}
         '''
         result = self._values.get("fill_value")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#id NrqlAlertCondition#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#id NrqlAlertCondition#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1442,7 +1448,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether to ignore expected termination of a signal when considering whether to create a loss of signal incident.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#ignore_on_expected_termination NrqlAlertCondition#ignore_on_expected_termination}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#ignore_on_expected_termination NrqlAlertCondition#ignore_on_expected_termination}
         '''
         result = self._values.get("ignore_on_expected_termination")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1453,7 +1459,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether to create a new incident to capture that the signal expired.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#open_violation_on_expiration NrqlAlertCondition#open_violation_on_expiration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#open_violation_on_expiration NrqlAlertCondition#open_violation_on_expiration}
         '''
         result = self._values.get("open_violation_on_expiration")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -1462,7 +1468,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def runbook_url(self) -> typing.Optional[builtins.str]:
         '''Runbook URL to display in notifications.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#runbook_url NrqlAlertCondition#runbook_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#runbook_url NrqlAlertCondition#runbook_url}
         '''
         result = self._values.get("runbook_url")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1473,7 +1479,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Valid values are: 'NEW_RELIC_CALCULATION', 'HOURLY', 'DAILY', 'WEEKLY', or 'NONE'. To have New Relic calculate seasonality automatically, set to 'NEW_RELIC_CALCULATION' (default). To turn off seasonality completely, set to 'NONE'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#signal_seasonality NrqlAlertCondition#signal_seasonality}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#signal_seasonality NrqlAlertCondition#signal_seasonality}
         '''
         result = self._values.get("signal_seasonality")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1484,7 +1490,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Must be a factor of ``aggregation_window`` and less than the aggregation window. If ``aggregation_window`` is less than or equal to 3600 seconds, it should be greater or equal to 30 seconds. If ``aggregation_window`` is greater than 3600 seconds but less than 7200 seconds, it should be greater or equal to ``aggregation_window / 120``.  If ``aggregation_window`` is greater than 7200 seconds, it should be greater or equal to `aggregation_window / 24
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#slide_by NrqlAlertCondition#slide_by}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#slide_by NrqlAlertCondition#slide_by}
         '''
         result = self._values.get("slide_by")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1495,7 +1501,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["NrqlAlertConditionTerm"]]]:
         '''term block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#term NrqlAlertCondition#term}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#term NrqlAlertCondition#term}
         '''
         result = self._values.get("term")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["NrqlAlertConditionTerm"]]], result)
@@ -1504,7 +1510,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def timeouts(self) -> typing.Optional["NrqlAlertConditionTimeouts"]:
         '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#timeouts NrqlAlertCondition#timeouts}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#timeouts NrqlAlertCondition#timeouts}
         '''
         result = self._values.get("timeouts")
         return typing.cast(typing.Optional["NrqlAlertConditionTimeouts"], result)
@@ -1515,7 +1521,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Setting this field will override the default title. Must be Handlebars format.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#title_template NrqlAlertCondition#title_template}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#title_template NrqlAlertCondition#title_template}
         '''
         result = self._values.get("title_template")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1524,7 +1530,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def type(self) -> typing.Optional[builtins.str]:
         '''The type of NRQL alert condition to create. Valid values are: 'static', 'baseline'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#type NrqlAlertCondition#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#type NrqlAlertCondition#type}
         '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1535,7 +1541,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Possible values are 'ONE_HOUR', 'TWO_HOURS', 'FOUR_HOURS', 'EIGHT_HOURS', 'TWELVE_HOURS', 'TWENTY_FOUR_HOURS', 'THIRTY_DAYS' (case insensitive).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#violation_time_limit NrqlAlertCondition#violation_time_limit}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#violation_time_limit NrqlAlertCondition#violation_time_limit}
         '''
         result = self._values.get("violation_time_limit")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1546,7 +1552,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Must be in the range of 300 to 2592000 (inclusive)
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#violation_time_limit_seconds NrqlAlertCondition#violation_time_limit_seconds}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#violation_time_limit_seconds NrqlAlertCondition#violation_time_limit_seconds}
         '''
         result = self._values.get("violation_time_limit_seconds")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1555,7 +1561,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def warning(self) -> typing.Optional["NrqlAlertConditionWarning"]:
         '''warning block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#warning NrqlAlertCondition#warning}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#warning NrqlAlertCondition#warning}
         '''
         result = self._values.get("warning")
         return typing.cast(typing.Optional["NrqlAlertConditionWarning"], result)
@@ -1577,6 +1583,7 @@ class NrqlAlertConditionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     jsii_struct_bases=[],
     name_mapping={
         "threshold": "threshold",
+        "disable_health_status_reporting": "disableHealthStatusReporting",
         "duration": "duration",
         "operator": "operator",
         "prediction": "prediction",
@@ -1590,6 +1597,7 @@ class NrqlAlertConditionCritical:
         self,
         *,
         threshold: jsii.Number,
+        disable_health_status_reporting: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         duration: typing.Optional[jsii.Number] = None,
         operator: typing.Optional[builtins.str] = None,
         prediction: typing.Optional[typing.Union["NrqlAlertConditionCriticalPrediction", typing.Dict[builtins.str, typing.Any]]] = None,
@@ -1598,19 +1606,21 @@ class NrqlAlertConditionCritical:
         time_function: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param threshold: For baseline conditions must be in range [1, 1000]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
-        :param duration: In minutes, must be in the range of 1 to 120 (inclusive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
-        :param operator: One of (above, above_or_equals, below, below_or_equals, equals, not_equals). Defaults to 'equals'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
-        :param prediction: prediction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
-        :param threshold_duration: The duration, in seconds, that the threshold must violate in order to create an incident. Value must be a multiple of the 'aggregation_window' (which has a default of 60 seconds). Value must be within 120-86400 seconds for baseline conditions, and within 60-86400 seconds for static conditions Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
-        :param threshold_occurrences: The criteria for how many data points must be in violation for the specified threshold duration. Valid values are: 'ALL' or 'AT_LEAST_ONCE' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
-        :param time_function: Valid values are: 'all' or 'any'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
+        :param threshold: For baseline conditions must be in range [1, 1000]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
+        :param disable_health_status_reporting: Violations will not change system health status for this term. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#disable_health_status_reporting NrqlAlertCondition#disable_health_status_reporting}
+        :param duration: In minutes, must be in the range of 1 to 120 (inclusive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
+        :param operator: One of (above, above_or_equals, below, below_or_equals, equals, not_equals). Defaults to 'equals'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
+        :param prediction: prediction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
+        :param threshold_duration: The duration, in seconds, that the threshold must violate in order to create an incident. Value must be a multiple of the 'aggregation_window' (which has a default of 60 seconds). Value must be within 120-86400 seconds for baseline conditions, and within 60-86400 seconds for static conditions Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
+        :param threshold_occurrences: The criteria for how many data points must be in violation for the specified threshold duration. Valid values are: 'ALL' or 'AT_LEAST_ONCE' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
+        :param time_function: Valid values are: 'all' or 'any'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
         '''
         if isinstance(prediction, dict):
             prediction = NrqlAlertConditionCriticalPrediction(**prediction)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__9cc7d6cd689719ee6613918d93752c1b1df2a84ebf4cb678d6c69aad3c55e36d)
             check_type(argname="argument threshold", value=threshold, expected_type=type_hints["threshold"])
+            check_type(argname="argument disable_health_status_reporting", value=disable_health_status_reporting, expected_type=type_hints["disable_health_status_reporting"])
             check_type(argname="argument duration", value=duration, expected_type=type_hints["duration"])
             check_type(argname="argument operator", value=operator, expected_type=type_hints["operator"])
             check_type(argname="argument prediction", value=prediction, expected_type=type_hints["prediction"])
@@ -1620,6 +1630,8 @@ class NrqlAlertConditionCritical:
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "threshold": threshold,
         }
+        if disable_health_status_reporting is not None:
+            self._values["disable_health_status_reporting"] = disable_health_status_reporting
         if duration is not None:
             self._values["duration"] = duration
         if operator is not None:
@@ -1637,17 +1649,28 @@ class NrqlAlertConditionCritical:
     def threshold(self) -> jsii.Number:
         '''For baseline conditions must be in range [1, 1000].
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
         '''
         result = self._values.get("threshold")
         assert result is not None, "Required property 'threshold' is missing"
         return typing.cast(jsii.Number, result)
 
     @builtins.property
+    def disable_health_status_reporting(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''Violations will not change system health status for this term.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#disable_health_status_reporting NrqlAlertCondition#disable_health_status_reporting}
+        '''
+        result = self._values.get("disable_health_status_reporting")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    @builtins.property
     def duration(self) -> typing.Optional[jsii.Number]:
         '''In minutes, must be in the range of 1 to 120 (inclusive).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
         '''
         result = self._values.get("duration")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1656,7 +1679,7 @@ class NrqlAlertConditionCritical:
     def operator(self) -> typing.Optional[builtins.str]:
         '''One of (above, above_or_equals, below, below_or_equals, equals, not_equals). Defaults to 'equals'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
         '''
         result = self._values.get("operator")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1665,7 +1688,7 @@ class NrqlAlertConditionCritical:
     def prediction(self) -> typing.Optional["NrqlAlertConditionCriticalPrediction"]:
         '''prediction block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
         '''
         result = self._values.get("prediction")
         return typing.cast(typing.Optional["NrqlAlertConditionCriticalPrediction"], result)
@@ -1676,7 +1699,7 @@ class NrqlAlertConditionCritical:
 
         Value must be a multiple of the 'aggregation_window' (which has a default of 60 seconds). Value must be within 120-86400 seconds for baseline conditions, and within 60-86400 seconds for static conditions
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
         '''
         result = self._values.get("threshold_duration")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1687,7 +1710,7 @@ class NrqlAlertConditionCritical:
 
         Valid values are: 'ALL' or 'AT_LEAST_ONCE' (case insensitive).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
         '''
         result = self._values.get("threshold_occurrences")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1696,7 +1719,7 @@ class NrqlAlertConditionCritical:
     def time_function(self) -> typing.Optional[builtins.str]:
         '''Valid values are: 'all' or 'any'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
         '''
         result = self._values.get("time_function")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1741,8 +1764,8 @@ class NrqlAlertConditionCriticalOutputReference(
         prefer_prediction_violation: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param predict_by: BETA PREVIEW: the ``predict_by`` field is in limited release and only enabled for preview on a per-account basis. - The duration, in seconds, that the prediction should look into the future. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
-        :param prefer_prediction_violation: BETA PREVIEW: the ``prefer_prediction_violation`` field is in limited release and only enabled for preview on a per-account basis. - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
+        :param predict_by: BETA PREVIEW: the ``predict_by`` field is in limited release and only enabled for preview on a per-account basis. - The duration, in seconds, that the prediction should look into the future. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
+        :param prefer_prediction_violation: BETA PREVIEW: the ``prefer_prediction_violation`` field is in limited release and only enabled for preview on a per-account basis. - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
         '''
         value = NrqlAlertConditionCriticalPrediction(
             predict_by=predict_by,
@@ -1750,6 +1773,10 @@ class NrqlAlertConditionCriticalOutputReference(
         )
 
         return typing.cast(None, jsii.invoke(self, "putPrediction", [value]))
+
+    @jsii.member(jsii_name="resetDisableHealthStatusReporting")
+    def reset_disable_health_status_reporting(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDisableHealthStatusReporting", []))
 
     @jsii.member(jsii_name="resetDuration")
     def reset_duration(self) -> None:
@@ -1779,6 +1806,13 @@ class NrqlAlertConditionCriticalOutputReference(
     @jsii.member(jsii_name="prediction")
     def prediction(self) -> "NrqlAlertConditionCriticalPredictionOutputReference":
         return typing.cast("NrqlAlertConditionCriticalPredictionOutputReference", jsii.get(self, "prediction"))
+
+    @builtins.property
+    @jsii.member(jsii_name="disableHealthStatusReportingInput")
+    def disable_health_status_reporting_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "disableHealthStatusReportingInput"))
 
     @builtins.property
     @jsii.member(jsii_name="durationInput")
@@ -1816,6 +1850,23 @@ class NrqlAlertConditionCriticalOutputReference(
     @jsii.member(jsii_name="timeFunctionInput")
     def time_function_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "timeFunctionInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="disableHealthStatusReporting")
+    def disable_health_status_reporting(
+        self,
+    ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "disableHealthStatusReporting"))
+
+    @disable_health_status_reporting.setter
+    def disable_health_status_reporting(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__ab98be15f1b90d6daf004e1ebc5c7e27cfdad1e66262f18943e3624eb58f896a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "disableHealthStatusReporting", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
     @jsii.member(jsii_name="duration")
@@ -1921,8 +1972,8 @@ class NrqlAlertConditionCriticalPrediction:
         prefer_prediction_violation: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param predict_by: BETA PREVIEW: the ``predict_by`` field is in limited release and only enabled for preview on a per-account basis. - The duration, in seconds, that the prediction should look into the future. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
-        :param prefer_prediction_violation: BETA PREVIEW: the ``prefer_prediction_violation`` field is in limited release and only enabled for preview on a per-account basis. - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
+        :param predict_by: BETA PREVIEW: the ``predict_by`` field is in limited release and only enabled for preview on a per-account basis. - The duration, in seconds, that the prediction should look into the future. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
+        :param prefer_prediction_violation: BETA PREVIEW: the ``prefer_prediction_violation`` field is in limited release and only enabled for preview on a per-account basis. - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__f016c68996fe74893413497c1cd7939a04ea54e41746ce3a67c2d7859eaa893d)
@@ -1940,7 +1991,7 @@ class NrqlAlertConditionCriticalPrediction:
 
         - The duration, in seconds, that the prediction should look into the future.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
         '''
         result = self._values.get("predict_by")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -1953,7 +2004,7 @@ class NrqlAlertConditionCriticalPrediction:
 
         - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
         '''
         result = self._values.get("prefer_prediction_violation")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2075,10 +2126,10 @@ class NrqlAlertConditionNrql:
         since_value: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param query: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#query NrqlAlertCondition#query}.
-        :param data_account_id: The New Relic account ID to use as the basis for the NRQL alert condition's ``query``; will default to ``account_id`` if unspecified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#data_account_id NrqlAlertCondition#data_account_id}
-        :param evaluation_offset: NRQL queries are evaluated in one-minute time windows. The start time depends on the value you provide in the NRQL condition's ``evaluation_offset``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#evaluation_offset NrqlAlertCondition#evaluation_offset}
-        :param since_value: NRQL queries are evaluated in one-minute time windows. The start time depends on the value you provide in the NRQL condition's ``since_value``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#since_value NrqlAlertCondition#since_value}
+        :param query: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#query NrqlAlertCondition#query}.
+        :param data_account_id: The New Relic account ID to use as the basis for the NRQL alert condition's ``query``; will default to ``account_id`` if unspecified. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#data_account_id NrqlAlertCondition#data_account_id}
+        :param evaluation_offset: NRQL queries are evaluated in one-minute time windows. The start time depends on the value you provide in the NRQL condition's ``evaluation_offset``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#evaluation_offset NrqlAlertCondition#evaluation_offset}
+        :param since_value: NRQL queries are evaluated in one-minute time windows. The start time depends on the value you provide in the NRQL condition's ``since_value``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#since_value NrqlAlertCondition#since_value}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__9c62249076f8a1e95787e0bdf5c0c59b2f6e89562e4dfc241b121925caa3708d)
@@ -2098,7 +2149,7 @@ class NrqlAlertConditionNrql:
 
     @builtins.property
     def query(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#query NrqlAlertCondition#query}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#query NrqlAlertCondition#query}.'''
         result = self._values.get("query")
         assert result is not None, "Required property 'query' is missing"
         return typing.cast(builtins.str, result)
@@ -2109,7 +2160,7 @@ class NrqlAlertConditionNrql:
 
         will default to ``account_id`` if unspecified.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#data_account_id NrqlAlertCondition#data_account_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#data_account_id NrqlAlertCondition#data_account_id}
         '''
         result = self._values.get("data_account_id")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -2120,7 +2171,7 @@ class NrqlAlertConditionNrql:
 
         The start time depends on the value you provide in the NRQL condition's ``evaluation_offset``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#evaluation_offset NrqlAlertCondition#evaluation_offset}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#evaluation_offset NrqlAlertCondition#evaluation_offset}
         '''
         result = self._values.get("evaluation_offset")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -2131,7 +2182,7 @@ class NrqlAlertConditionNrql:
 
         The start time depends on the value you provide in the NRQL condition's ``since_value``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#since_value NrqlAlertCondition#since_value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#since_value NrqlAlertCondition#since_value}
         '''
         result = self._values.get("since_value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2266,6 +2317,7 @@ class NrqlAlertConditionNrqlOutputReference(
     jsii_struct_bases=[],
     name_mapping={
         "threshold": "threshold",
+        "disable_health_status_reporting": "disableHealthStatusReporting",
         "duration": "duration",
         "operator": "operator",
         "prediction": "prediction",
@@ -2280,6 +2332,7 @@ class NrqlAlertConditionTerm:
         self,
         *,
         threshold: jsii.Number,
+        disable_health_status_reporting: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         duration: typing.Optional[jsii.Number] = None,
         operator: typing.Optional[builtins.str] = None,
         prediction: typing.Optional[typing.Union["NrqlAlertConditionTermPrediction", typing.Dict[builtins.str, typing.Any]]] = None,
@@ -2289,20 +2342,22 @@ class NrqlAlertConditionTerm:
         time_function: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param threshold: For baseline conditions must be in range [1, 1000]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
-        :param duration: In minutes, must be in the range of 1 to 120 (inclusive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
-        :param operator: One of (above, above_or_equals, below, below_or_equals, equals, not_equals). Defaults to 'equals'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
-        :param prediction: prediction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
-        :param priority: One of (critical, warning). Defaults to 'critical'. At least one condition term must have priority set to 'critical'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#priority NrqlAlertCondition#priority}
-        :param threshold_duration: The duration, in seconds, that the threshold must violate in order to create an incident. Value must be a multiple of the 'aggregation_window' (which has a default of 60 seconds). Value must be within 120-86400 seconds for baseline conditions, and within 60-86400 seconds for static conditions Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
-        :param threshold_occurrences: The criteria for how many data points must be in violation for the specified threshold duration. Valid values are: 'ALL' or 'AT_LEAST_ONCE' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
-        :param time_function: Valid values are: 'all' or 'any'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
+        :param threshold: For baseline conditions must be in range [1, 1000]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
+        :param disable_health_status_reporting: Violations will not change system health status for this term. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#disable_health_status_reporting NrqlAlertCondition#disable_health_status_reporting}
+        :param duration: In minutes, must be in the range of 1 to 120 (inclusive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
+        :param operator: One of (above, above_or_equals, below, below_or_equals, equals, not_equals). Defaults to 'equals'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
+        :param prediction: prediction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
+        :param priority: One of (critical, warning). Defaults to 'critical'. At least one condition term must have priority set to 'critical'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#priority NrqlAlertCondition#priority}
+        :param threshold_duration: The duration, in seconds, that the threshold must violate in order to create an incident. Value must be a multiple of the 'aggregation_window' (which has a default of 60 seconds). Value must be within 120-86400 seconds for baseline conditions, and within 60-86400 seconds for static conditions Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
+        :param threshold_occurrences: The criteria for how many data points must be in violation for the specified threshold duration. Valid values are: 'ALL' or 'AT_LEAST_ONCE' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
+        :param time_function: Valid values are: 'all' or 'any'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
         '''
         if isinstance(prediction, dict):
             prediction = NrqlAlertConditionTermPrediction(**prediction)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__472601cc201d7341e0bb9b95ae234ecf5726c2f0aaf9c8341255ddcd44f88883)
             check_type(argname="argument threshold", value=threshold, expected_type=type_hints["threshold"])
+            check_type(argname="argument disable_health_status_reporting", value=disable_health_status_reporting, expected_type=type_hints["disable_health_status_reporting"])
             check_type(argname="argument duration", value=duration, expected_type=type_hints["duration"])
             check_type(argname="argument operator", value=operator, expected_type=type_hints["operator"])
             check_type(argname="argument prediction", value=prediction, expected_type=type_hints["prediction"])
@@ -2313,6 +2368,8 @@ class NrqlAlertConditionTerm:
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "threshold": threshold,
         }
+        if disable_health_status_reporting is not None:
+            self._values["disable_health_status_reporting"] = disable_health_status_reporting
         if duration is not None:
             self._values["duration"] = duration
         if operator is not None:
@@ -2332,17 +2389,28 @@ class NrqlAlertConditionTerm:
     def threshold(self) -> jsii.Number:
         '''For baseline conditions must be in range [1, 1000].
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
         '''
         result = self._values.get("threshold")
         assert result is not None, "Required property 'threshold' is missing"
         return typing.cast(jsii.Number, result)
 
     @builtins.property
+    def disable_health_status_reporting(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''Violations will not change system health status for this term.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#disable_health_status_reporting NrqlAlertCondition#disable_health_status_reporting}
+        '''
+        result = self._values.get("disable_health_status_reporting")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    @builtins.property
     def duration(self) -> typing.Optional[jsii.Number]:
         '''In minutes, must be in the range of 1 to 120 (inclusive).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
         '''
         result = self._values.get("duration")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -2351,7 +2419,7 @@ class NrqlAlertConditionTerm:
     def operator(self) -> typing.Optional[builtins.str]:
         '''One of (above, above_or_equals, below, below_or_equals, equals, not_equals). Defaults to 'equals'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
         '''
         result = self._values.get("operator")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2360,7 +2428,7 @@ class NrqlAlertConditionTerm:
     def prediction(self) -> typing.Optional["NrqlAlertConditionTermPrediction"]:
         '''prediction block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
         '''
         result = self._values.get("prediction")
         return typing.cast(typing.Optional["NrqlAlertConditionTermPrediction"], result)
@@ -2369,7 +2437,7 @@ class NrqlAlertConditionTerm:
     def priority(self) -> typing.Optional[builtins.str]:
         '''One of (critical, warning). Defaults to 'critical'. At least one condition term must have priority set to 'critical'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#priority NrqlAlertCondition#priority}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#priority NrqlAlertCondition#priority}
         '''
         result = self._values.get("priority")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2380,7 +2448,7 @@ class NrqlAlertConditionTerm:
 
         Value must be a multiple of the 'aggregation_window' (which has a default of 60 seconds). Value must be within 120-86400 seconds for baseline conditions, and within 60-86400 seconds for static conditions
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
         '''
         result = self._values.get("threshold_duration")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -2391,7 +2459,7 @@ class NrqlAlertConditionTerm:
 
         Valid values are: 'ALL' or 'AT_LEAST_ONCE' (case insensitive).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
         '''
         result = self._values.get("threshold_occurrences")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2400,7 +2468,7 @@ class NrqlAlertConditionTerm:
     def time_function(self) -> typing.Optional[builtins.str]:
         '''Valid values are: 'all' or 'any'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
         '''
         result = self._values.get("time_function")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -2541,8 +2609,8 @@ class NrqlAlertConditionTermOutputReference(
         prefer_prediction_violation: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param predict_by: BETA PREVIEW: the ``predict_by`` field is in limited release and only enabled for preview on a per-account basis. - The duration, in seconds, that the prediction should look into the future. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
-        :param prefer_prediction_violation: BETA PREVIEW: the ``prefer_prediction_violation`` field is in limited release and only enabled for preview on a per-account basis. - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
+        :param predict_by: BETA PREVIEW: the ``predict_by`` field is in limited release and only enabled for preview on a per-account basis. - The duration, in seconds, that the prediction should look into the future. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
+        :param prefer_prediction_violation: BETA PREVIEW: the ``prefer_prediction_violation`` field is in limited release and only enabled for preview on a per-account basis. - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
         '''
         value = NrqlAlertConditionTermPrediction(
             predict_by=predict_by,
@@ -2550,6 +2618,10 @@ class NrqlAlertConditionTermOutputReference(
         )
 
         return typing.cast(None, jsii.invoke(self, "putPrediction", [value]))
+
+    @jsii.member(jsii_name="resetDisableHealthStatusReporting")
+    def reset_disable_health_status_reporting(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDisableHealthStatusReporting", []))
 
     @jsii.member(jsii_name="resetDuration")
     def reset_duration(self) -> None:
@@ -2583,6 +2655,13 @@ class NrqlAlertConditionTermOutputReference(
     @jsii.member(jsii_name="prediction")
     def prediction(self) -> "NrqlAlertConditionTermPredictionOutputReference":
         return typing.cast("NrqlAlertConditionTermPredictionOutputReference", jsii.get(self, "prediction"))
+
+    @builtins.property
+    @jsii.member(jsii_name="disableHealthStatusReportingInput")
+    def disable_health_status_reporting_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "disableHealthStatusReportingInput"))
 
     @builtins.property
     @jsii.member(jsii_name="durationInput")
@@ -2623,6 +2702,23 @@ class NrqlAlertConditionTermOutputReference(
     @jsii.member(jsii_name="timeFunctionInput")
     def time_function_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "timeFunctionInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="disableHealthStatusReporting")
+    def disable_health_status_reporting(
+        self,
+    ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "disableHealthStatusReporting"))
+
+    @disable_health_status_reporting.setter
+    def disable_health_status_reporting(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__aac9b9bc3f78ad9469fa7d29c1dc60f40fc12fa372a4bb64b6505a290b183967)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "disableHealthStatusReporting", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
     @jsii.member(jsii_name="duration")
@@ -2742,8 +2838,8 @@ class NrqlAlertConditionTermPrediction:
         prefer_prediction_violation: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param predict_by: BETA PREVIEW: the ``predict_by`` field is in limited release and only enabled for preview on a per-account basis. - The duration, in seconds, that the prediction should look into the future. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
-        :param prefer_prediction_violation: BETA PREVIEW: the ``prefer_prediction_violation`` field is in limited release and only enabled for preview on a per-account basis. - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
+        :param predict_by: BETA PREVIEW: the ``predict_by`` field is in limited release and only enabled for preview on a per-account basis. - The duration, in seconds, that the prediction should look into the future. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
+        :param prefer_prediction_violation: BETA PREVIEW: the ``prefer_prediction_violation`` field is in limited release and only enabled for preview on a per-account basis. - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__a9d8d626bf7989bbb243f3b8cc5d92cc286b2c5de6e1de6512d57aa529402bc4)
@@ -2761,7 +2857,7 @@ class NrqlAlertConditionTermPrediction:
 
         - The duration, in seconds, that the prediction should look into the future.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
         '''
         result = self._values.get("predict_by")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -2774,7 +2870,7 @@ class NrqlAlertConditionTermPrediction:
 
         - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
         '''
         result = self._values.get("prefer_prediction_violation")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -2884,7 +2980,7 @@ class NrqlAlertConditionTermPredictionOutputReference(
 class NrqlAlertConditionTimeouts:
     def __init__(self, *, create: typing.Optional[builtins.str] = None) -> None:
         '''
-        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#create NrqlAlertCondition#create}.
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#create NrqlAlertCondition#create}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__0ad557cdb849fcdabb8eb24917c404848f2760660e0b62e55ca1dad407aec562)
@@ -2895,7 +2991,7 @@ class NrqlAlertConditionTimeouts:
 
     @builtins.property
     def create(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#create NrqlAlertCondition#create}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#create NrqlAlertCondition#create}.'''
         result = self._values.get("create")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -2975,6 +3071,7 @@ class NrqlAlertConditionTimeoutsOutputReference(
     jsii_struct_bases=[],
     name_mapping={
         "threshold": "threshold",
+        "disable_health_status_reporting": "disableHealthStatusReporting",
         "duration": "duration",
         "operator": "operator",
         "prediction": "prediction",
@@ -2988,6 +3085,7 @@ class NrqlAlertConditionWarning:
         self,
         *,
         threshold: jsii.Number,
+        disable_health_status_reporting: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         duration: typing.Optional[jsii.Number] = None,
         operator: typing.Optional[builtins.str] = None,
         prediction: typing.Optional[typing.Union["NrqlAlertConditionWarningPrediction", typing.Dict[builtins.str, typing.Any]]] = None,
@@ -2996,19 +3094,21 @@ class NrqlAlertConditionWarning:
         time_function: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param threshold: For baseline conditions must be in range [1, 1000]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
-        :param duration: In minutes, must be in the range of 1 to 120 (inclusive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
-        :param operator: One of (above, above_or_equals, below, below_or_equals, equals, not_equals). Defaults to 'equals'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
-        :param prediction: prediction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
-        :param threshold_duration: The duration, in seconds, that the threshold must violate in order to create an incident. Value must be a multiple of the 'aggregation_window' (which has a default of 60 seconds). Value must be within 120-86400 seconds for baseline conditions, and within 60-86400 seconds for static conditions Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
-        :param threshold_occurrences: The criteria for how many data points must be in violation for the specified threshold duration. Valid values are: 'ALL' or 'AT_LEAST_ONCE' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
-        :param time_function: Valid values are: 'all' or 'any'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
+        :param threshold: For baseline conditions must be in range [1, 1000]. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
+        :param disable_health_status_reporting: Violations will not change system health status for this term. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#disable_health_status_reporting NrqlAlertCondition#disable_health_status_reporting}
+        :param duration: In minutes, must be in the range of 1 to 120 (inclusive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
+        :param operator: One of (above, above_or_equals, below, below_or_equals, equals, not_equals). Defaults to 'equals'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
+        :param prediction: prediction block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
+        :param threshold_duration: The duration, in seconds, that the threshold must violate in order to create an incident. Value must be a multiple of the 'aggregation_window' (which has a default of 60 seconds). Value must be within 120-86400 seconds for baseline conditions, and within 60-86400 seconds for static conditions Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
+        :param threshold_occurrences: The criteria for how many data points must be in violation for the specified threshold duration. Valid values are: 'ALL' or 'AT_LEAST_ONCE' (case insensitive). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
+        :param time_function: Valid values are: 'all' or 'any'. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
         '''
         if isinstance(prediction, dict):
             prediction = NrqlAlertConditionWarningPrediction(**prediction)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__a906eb9e700e83c5bfb17aac849a1f4fe122be55f472074e1087e4f759c52bf6)
             check_type(argname="argument threshold", value=threshold, expected_type=type_hints["threshold"])
+            check_type(argname="argument disable_health_status_reporting", value=disable_health_status_reporting, expected_type=type_hints["disable_health_status_reporting"])
             check_type(argname="argument duration", value=duration, expected_type=type_hints["duration"])
             check_type(argname="argument operator", value=operator, expected_type=type_hints["operator"])
             check_type(argname="argument prediction", value=prediction, expected_type=type_hints["prediction"])
@@ -3018,6 +3118,8 @@ class NrqlAlertConditionWarning:
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "threshold": threshold,
         }
+        if disable_health_status_reporting is not None:
+            self._values["disable_health_status_reporting"] = disable_health_status_reporting
         if duration is not None:
             self._values["duration"] = duration
         if operator is not None:
@@ -3035,17 +3137,28 @@ class NrqlAlertConditionWarning:
     def threshold(self) -> jsii.Number:
         '''For baseline conditions must be in range [1, 1000].
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold NrqlAlertCondition#threshold}
         '''
         result = self._values.get("threshold")
         assert result is not None, "Required property 'threshold' is missing"
         return typing.cast(jsii.Number, result)
 
     @builtins.property
+    def disable_health_status_reporting(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        '''Violations will not change system health status for this term.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#disable_health_status_reporting NrqlAlertCondition#disable_health_status_reporting}
+        '''
+        result = self._values.get("disable_health_status_reporting")
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    @builtins.property
     def duration(self) -> typing.Optional[jsii.Number]:
         '''In minutes, must be in the range of 1 to 120 (inclusive).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#duration NrqlAlertCondition#duration}
         '''
         result = self._values.get("duration")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -3054,7 +3167,7 @@ class NrqlAlertConditionWarning:
     def operator(self) -> typing.Optional[builtins.str]:
         '''One of (above, above_or_equals, below, below_or_equals, equals, not_equals). Defaults to 'equals'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#operator NrqlAlertCondition#operator}
         '''
         result = self._values.get("operator")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3063,7 +3176,7 @@ class NrqlAlertConditionWarning:
     def prediction(self) -> typing.Optional["NrqlAlertConditionWarningPrediction"]:
         '''prediction block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prediction NrqlAlertCondition#prediction}
         '''
         result = self._values.get("prediction")
         return typing.cast(typing.Optional["NrqlAlertConditionWarningPrediction"], result)
@@ -3074,7 +3187,7 @@ class NrqlAlertConditionWarning:
 
         Value must be a multiple of the 'aggregation_window' (which has a default of 60 seconds). Value must be within 120-86400 seconds for baseline conditions, and within 60-86400 seconds for static conditions
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_duration NrqlAlertCondition#threshold_duration}
         '''
         result = self._values.get("threshold_duration")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -3085,7 +3198,7 @@ class NrqlAlertConditionWarning:
 
         Valid values are: 'ALL' or 'AT_LEAST_ONCE' (case insensitive).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#threshold_occurrences NrqlAlertCondition#threshold_occurrences}
         '''
         result = self._values.get("threshold_occurrences")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3094,7 +3207,7 @@ class NrqlAlertConditionWarning:
     def time_function(self) -> typing.Optional[builtins.str]:
         '''Valid values are: 'all' or 'any'.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#time_function NrqlAlertCondition#time_function}
         '''
         result = self._values.get("time_function")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -3139,8 +3252,8 @@ class NrqlAlertConditionWarningOutputReference(
         prefer_prediction_violation: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param predict_by: BETA PREVIEW: the ``predict_by`` field is in limited release and only enabled for preview on a per-account basis. - The duration, in seconds, that the prediction should look into the future. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
-        :param prefer_prediction_violation: BETA PREVIEW: the ``prefer_prediction_violation`` field is in limited release and only enabled for preview on a per-account basis. - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
+        :param predict_by: BETA PREVIEW: the ``predict_by`` field is in limited release and only enabled for preview on a per-account basis. - The duration, in seconds, that the prediction should look into the future. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
+        :param prefer_prediction_violation: BETA PREVIEW: the ``prefer_prediction_violation`` field is in limited release and only enabled for preview on a per-account basis. - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
         '''
         value = NrqlAlertConditionWarningPrediction(
             predict_by=predict_by,
@@ -3148,6 +3261,10 @@ class NrqlAlertConditionWarningOutputReference(
         )
 
         return typing.cast(None, jsii.invoke(self, "putPrediction", [value]))
+
+    @jsii.member(jsii_name="resetDisableHealthStatusReporting")
+    def reset_disable_health_status_reporting(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDisableHealthStatusReporting", []))
 
     @jsii.member(jsii_name="resetDuration")
     def reset_duration(self) -> None:
@@ -3177,6 +3294,13 @@ class NrqlAlertConditionWarningOutputReference(
     @jsii.member(jsii_name="prediction")
     def prediction(self) -> "NrqlAlertConditionWarningPredictionOutputReference":
         return typing.cast("NrqlAlertConditionWarningPredictionOutputReference", jsii.get(self, "prediction"))
+
+    @builtins.property
+    @jsii.member(jsii_name="disableHealthStatusReportingInput")
+    def disable_health_status_reporting_input(
+        self,
+    ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
+        return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], jsii.get(self, "disableHealthStatusReportingInput"))
 
     @builtins.property
     @jsii.member(jsii_name="durationInput")
@@ -3214,6 +3338,23 @@ class NrqlAlertConditionWarningOutputReference(
     @jsii.member(jsii_name="timeFunctionInput")
     def time_function_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "timeFunctionInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="disableHealthStatusReporting")
+    def disable_health_status_reporting(
+        self,
+    ) -> typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]:
+        return typing.cast(typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable], jsii.get(self, "disableHealthStatusReporting"))
+
+    @disable_health_status_reporting.setter
+    def disable_health_status_reporting(
+        self,
+        value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__847f92e3eb72d25916d7a9d0d7934e58c5112e74910e8c9c1da40a3f0bcc7a64)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "disableHealthStatusReporting", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
     @jsii.member(jsii_name="duration")
@@ -3316,8 +3457,8 @@ class NrqlAlertConditionWarningPrediction:
         prefer_prediction_violation: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
         '''
-        :param predict_by: BETA PREVIEW: the ``predict_by`` field is in limited release and only enabled for preview on a per-account basis. - The duration, in seconds, that the prediction should look into the future. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
-        :param prefer_prediction_violation: BETA PREVIEW: the ``prefer_prediction_violation`` field is in limited release and only enabled for preview on a per-account basis. - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
+        :param predict_by: BETA PREVIEW: the ``predict_by`` field is in limited release and only enabled for preview on a per-account basis. - The duration, in seconds, that the prediction should look into the future. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
+        :param prefer_prediction_violation: BETA PREVIEW: the ``prefer_prediction_violation`` field is in limited release and only enabled for preview on a per-account basis. - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__16cd67c82e668e9d0589af97fac34021db2897c7dde623d83be37e583afc80a8)
@@ -3335,7 +3476,7 @@ class NrqlAlertConditionWarningPrediction:
 
         - The duration, in seconds, that the prediction should look into the future.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#predict_by NrqlAlertCondition#predict_by}
         '''
         result = self._values.get("predict_by")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -3348,7 +3489,7 @@ class NrqlAlertConditionWarningPrediction:
 
         - If a prediction incident is open when a term's static threshold is breached by the actual signal, default behavior is to close the prediction incident and open a static incident. Setting ``prefer_prediction_violation`` to ``true`` overrides this behavior leaving the prediction incident open and preventing a static incident from opening.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.61.3/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/newrelic/newrelic/3.62.0/docs/resources/nrql_alert_condition#prefer_prediction_violation NrqlAlertCondition#prefer_prediction_violation}
         '''
         result = self._values.get("prefer_prediction_violation")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -3730,6 +3871,7 @@ def _typecheckingstub__fc0430dc9a3ee76d1557f1c8c9c13137528d867e7657bd1048c6d0fab
 def _typecheckingstub__9cc7d6cd689719ee6613918d93752c1b1df2a84ebf4cb678d6c69aad3c55e36d(
     *,
     threshold: jsii.Number,
+    disable_health_status_reporting: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     duration: typing.Optional[jsii.Number] = None,
     operator: typing.Optional[builtins.str] = None,
     prediction: typing.Optional[typing.Union[NrqlAlertConditionCriticalPrediction, typing.Dict[builtins.str, typing.Any]]] = None,
@@ -3743,6 +3885,12 @@ def _typecheckingstub__9cc7d6cd689719ee6613918d93752c1b1df2a84ebf4cb678d6c69aad3
 def _typecheckingstub__fe7a5abac695cf60326226f1d06d767876623700784e01dd6fcc777627da5745(
     terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
     terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__ab98be15f1b90d6daf004e1ebc5c7e27cfdad1e66262f18943e3624eb58f896a(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
 ) -> None:
     """Type checking stubs"""
     pass
@@ -3872,6 +4020,7 @@ def _typecheckingstub__78b60e0cbb22b6a787c5884dd47d99c013a34c17031205979d4ba8146
 def _typecheckingstub__472601cc201d7341e0bb9b95ae234ecf5726c2f0aaf9c8341255ddcd44f88883(
     *,
     threshold: jsii.Number,
+    disable_health_status_reporting: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     duration: typing.Optional[jsii.Number] = None,
     operator: typing.Optional[builtins.str] = None,
     prediction: typing.Optional[typing.Union[NrqlAlertConditionTermPrediction, typing.Dict[builtins.str, typing.Any]]] = None,
@@ -3926,6 +4075,12 @@ def _typecheckingstub__d048ac133ef35f3687c54fcb3c76ce9dc76768eb5814f3d9ed7a2ae47
     terraform_attribute: builtins.str,
     complex_object_index: jsii.Number,
     complex_object_is_from_set: builtins.bool,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__aac9b9bc3f78ad9469fa7d29c1dc60f40fc12fa372a4bb64b6505a290b183967(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
 ) -> None:
     """Type checking stubs"""
     pass
@@ -4040,6 +4195,7 @@ def _typecheckingstub__b9e3ca0effb140cc7bd5e446c4bb34697a236c010d087a8bc3a92f36d
 def _typecheckingstub__a906eb9e700e83c5bfb17aac849a1f4fe122be55f472074e1087e4f759c52bf6(
     *,
     threshold: jsii.Number,
+    disable_health_status_reporting: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     duration: typing.Optional[jsii.Number] = None,
     operator: typing.Optional[builtins.str] = None,
     prediction: typing.Optional[typing.Union[NrqlAlertConditionWarningPrediction, typing.Dict[builtins.str, typing.Any]]] = None,
@@ -4053,6 +4209,12 @@ def _typecheckingstub__a906eb9e700e83c5bfb17aac849a1f4fe122be55f472074e1087e4f75
 def _typecheckingstub__396902798d995dbd5cfef87e84cdffaa06f918e064d3c594ff61a1fbdf69fedf(
     terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
     terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__847f92e3eb72d25916d7a9d0d7934e58c5112e74910e8c9c1da40a3f0bcc7a64(
+    value: typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable],
 ) -> None:
     """Type checking stubs"""
     pass

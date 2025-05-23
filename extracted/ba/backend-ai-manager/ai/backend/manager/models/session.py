@@ -35,11 +35,14 @@ from sqlalchemy.ext.asyncio import AsyncSession as SASession
 from sqlalchemy.orm import contains_eager, joinedload, load_only, noload, relationship, selectinload
 
 from ai.backend.common import redis_helper
-from ai.backend.common.events import (
-    DoStartSessionEvent,
-    DoUpdateSessionStatusEvent,
-    EventDispatcher,
+from ai.backend.common.events.dispatcher import (
     EventProducer,
+)
+from ai.backend.common.events.schedule import (
+    DoStartSessionEvent,
+)
+from ai.backend.common.events.session import (
+    DoUpdateSessionStatusEvent,
     SessionStartedEvent,
     SessionTerminatedEvent,
 )
@@ -59,7 +62,8 @@ from ai.backend.common.types import (
 from ai.backend.logging import BraceStyleAdapter
 from ai.backend.manager.data.session.types import SessionData
 
-from ..api.exceptions import (
+from ..defs import DEFAULT_ROLE
+from ..errors.exceptions import (
     AgentError,
     BackendError,
     KernelCreationFailed,
@@ -72,7 +76,6 @@ from ..api.exceptions import (
     TooManyKernelsFound,
     TooManySessionsMatched,
 )
-from ..defs import DEFAULT_ROLE
 from .base import (
     GUID,
     Base,
@@ -181,13 +184,6 @@ LEADING_SESSION_STATUSES = tuple(
 DEAD_SESSION_STATUSES = frozenset([
     SessionStatus.CANCELLED,
     SessionStatus.TERMINATED,
-    SessionStatus.ERROR,
-])
-
-DEAD_KERNEL_STATUSES = frozenset([
-    KernelStatus.CANCELLED,
-    KernelStatus.TERMINATED,
-    KernelStatus.ERROR,
 ])
 
 # statuses to consider when calculating current resource usage
@@ -1504,14 +1500,12 @@ class SessionLifecycleManager:
         self,
         db: ExtendedAsyncSAEngine,
         redis_obj: RedisConnectionInfo,
-        event_dispatcher: EventDispatcher,
         event_producer: EventProducer,
         hook_plugin_ctx: HookPluginContext,
         registry: AgentRegistry,
     ) -> None:
         self.db = db
         self.redis_obj = redis_obj
-        self.event_dispatcher = event_dispatcher
         self.event_producer = event_producer
         self.hook_plugin_ctx = hook_plugin_ctx
         self.registry = registry
