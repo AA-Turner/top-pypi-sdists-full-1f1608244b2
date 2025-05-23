@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: tokencost
-Version: 0.1.21
+Version: 0.1.22
 Summary: To calculate token and translated USD cost of string and message calls to OpenAI, for example when used by AI agents
 Author-email: Trisha Pan <trishaepan@gmail.com>, Alex Reibman <areibman@gmail.com>, Pratyush Shukla <ps4534@nyu.edu>
 Project-URL: Homepage, https://github.com/AgentOps-AI/tokencost
@@ -21,6 +21,7 @@ Requires-Dist: coverage[toml]>=7.4.0; extra == "dev"
 Requires-Dist: tach>=0.6.9; extra == "dev"
 Requires-Dist: tabulate>=0.9.0; extra == "dev"
 Requires-Dist: pandas>=2.1.0; extra == "dev"
+Requires-Dist: python-dotenv>=1.0.0; extra == "dev"
 Dynamic: license-file
 
 <p align="center">
@@ -1170,10 +1171,6 @@ Units denominated in USD. All prices can be located in `model_prices.json`.
 | nscale/meta-llama/Llama-3.1-8B-Instruct                               | $0.03                             | $0.03                                 | nan                 |             nan     |
 | nscale/meta-llama/Llama-3.3-70B-Instruct                              | $0.2                              | $0.2                                  | nan                 |             nan     |
 | nscale/black-forest-labs/FLUX.1-schnell                               | --                                | --                                    | nan                 |             nan     |
-| nscale/stabilityai/stable-diffusion-xl-base-1.0                       | --                                | --                                    | nan                 |             nan     |## Contributing
-
-Contributions to TokenCost are welcome! Feel free to create an [issue](https://github.com/AgentOps-AI/tokencost/issues) for any bug reports, complaints, or feature suggestions.
-
-## License
+| nscale/stabilityai/stable-diffusion-xl-base-1.0                       | --                                | --                                    | nan                 |             nan     |## License
 
 TokenCost is released under the MIT License.

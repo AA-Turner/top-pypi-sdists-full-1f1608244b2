@@ -45,9 +45,9 @@ class EmailProjection(object):
         'message_id': 'str',
         'domain_id': 'str',
         'favourite': 'bool',
+        'in_reply_to': 'str',
         'plus_address': 'str',
         'size_bytes': 'int',
-        'in_reply_to': 'str',
         'read': 'bool',
         'body_excerpt': 'str',
         'text_excerpt': 'str',
@@ -72,9 +72,9 @@ class EmailProjection(object):
         'message_id': 'messageId',
         'domain_id': 'domainId',
         'favourite': 'favourite',
+        'in_reply_to': 'inReplyTo',
         'plus_address': 'plusAddress',
         'size_bytes': 'sizeBytes',
-        'in_reply_to': 'inReplyTo',
         'read': 'read',
         'body_excerpt': 'bodyExcerpt',
         'text_excerpt': 'textExcerpt',
@@ -87,7 +87,7 @@ class EmailProjection(object):
         '_from': 'from'
     }
 
-    def __init__(self, sender=None, recipients=None, attachments=None, inbox_id=None, created_at=None, to=None, cc=None, bcc=None, message_id=None, domain_id=None, favourite=None, plus_address=None, size_bytes=None, in_reply_to=None, read=None, body_excerpt=None, text_excerpt=None, body_part_content_types=None, body_md5_hash=None, team_access=None, subject=None, id=None, thread_id=None, _from=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, sender=None, recipients=None, attachments=None, inbox_id=None, created_at=None, to=None, cc=None, bcc=None, message_id=None, domain_id=None, favourite=None, in_reply_to=None, plus_address=None, size_bytes=None, read=None, body_excerpt=None, text_excerpt=None, body_part_content_types=None, body_md5_hash=None, team_access=None, subject=None, id=None, thread_id=None, _from=None, local_vars_configuration=None):  # noqa: E501
         """EmailProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -104,9 +104,9 @@ class EmailProjection(object):
         self._message_id = None
         self._domain_id = None
         self._favourite = None
+        self._in_reply_to = None
         self._plus_address = None
         self._size_bytes = None
-        self._in_reply_to = None
         self._read = None
         self._body_excerpt = None
         self._text_excerpt = None
@@ -130,9 +130,9 @@ class EmailProjection(object):
         self.message_id = message_id
         self.domain_id = domain_id
         self.favourite = favourite
+        self.in_reply_to = in_reply_to
         self.plus_address = plus_address
         self.size_bytes = size_bytes
-        self.in_reply_to = in_reply_to
         self.read = read
         self.body_excerpt = body_excerpt
         self.text_excerpt = text_excerpt
@@ -382,6 +382,27 @@ class EmailProjection(object):
         self._favourite = favourite
 
     @property
+    def in_reply_to(self):
+        """Gets the in_reply_to of this EmailProjection.  # noqa: E501
+
+
+        :return: The in_reply_to of this EmailProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._in_reply_to
+
+    @in_reply_to.setter
+    def in_reply_to(self, in_reply_to):
+        """Sets the in_reply_to of this EmailProjection.
+
+
+        :param in_reply_to: The in_reply_to of this EmailProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._in_reply_to = in_reply_to
+
+    @property
     def plus_address(self):
         """Gets the plus_address of this EmailProjection.  # noqa: E501
 
@@ -422,27 +443,6 @@ class EmailProjection(object):
         """
 
         self._size_bytes = size_bytes
-
-    @property
-    def in_reply_to(self):
-        """Gets the in_reply_to of this EmailProjection.  # noqa: E501
-
-
-        :return: The in_reply_to of this EmailProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._in_reply_to
-
-    @in_reply_to.setter
-    def in_reply_to(self, in_reply_to):
-        """Sets the in_reply_to of this EmailProjection.
-
-
-        :param in_reply_to: The in_reply_to of this EmailProjection.  # noqa: E501
-        :type: str
-        """
-
-        self._in_reply_to = in_reply_to
 
     @property
     def read(self):

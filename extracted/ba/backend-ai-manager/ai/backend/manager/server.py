@@ -18,13 +18,14 @@ from collections.abc import (
     Sequence,
 )
 from contextlib import asynccontextmanager as actxmgr
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from pprint import pformat
 from typing import (
     Any,
     AsyncIterator,
     Final,
-    List,
     Optional,
     cast,
 )
@@ -34,13 +35,15 @@ import aiomonitor
 import aiotools
 import click
 from aiohttp import web
-from aiohttp.typedefs import Middleware
+from aiohttp.typedefs import Handler, Middleware
 from setproctitle import setproctitle
 
 from ai.backend.common import redis_helper
 from ai.backend.common.auth import PublicKey, SecretKey
-from ai.backend.common.bgtask import BackgroundTaskManager
+from ai.backend.common.bgtask.bgtask import BackgroundTaskManager
 from ai.backend.common.cli import LazyGroup
+from ai.backend.common.config import find_config_file
+from ai.backend.common.data.config.types import EtcdConfigData
 from ai.backend.common.defs import (
     REDIS_IMAGE_DB,
     REDIS_LIVE_DB,
@@ -49,7 +52,11 @@ from ai.backend.common.defs import (
     REDIS_STREAM_LOCK,
     RedisRole,
 )
-from ai.backend.common.events import EventDispatcher, EventProducer
+from ai.backend.common.etcd import AsyncEtcd
+from ai.backend.common.events.dispatcher import EventDispatcher, EventProducer
+from ai.backend.common.events.hub.hub import EventHub
+from ai.backend.common.exception import ErrorCode
+from ai.backend.common.json import dump_json_str
 from ai.backend.common.message_queue.hiredis_queue import HiRedisMQArgs, HiRedisQueue
 from ai.backend.common.message_queue.queue import AbstractMessageQueue
 from ai.backend.common.message_queue.redis_queue import RedisMQArgs, RedisQueue
@@ -61,20 +68,46 @@ from ai.backend.common.metrics.metric import CommonMetricRegistry
 from ai.backend.common.metrics.profiler import Profiler, PyroscopeArgs
 from ai.backend.common.middlewares.request_id import request_id_middleware
 from ai.backend.common.msgpack import DEFAULT_PACK_OPTS, DEFAULT_UNPACK_OPTS
+from ai.backend.common.plugin.event import EventDispatcherPluginContext
 from ai.backend.common.plugin.hook import ALL_COMPLETED, PASSED, HookPluginContext
 from ai.backend.common.plugin.monitor import INCREMENT
+from ai.backend.common.service_discovery.etcd_discovery.service_discovery import (
+    ETCDServiceDiscovery,
+    ETCDServiceDiscoveryArgs,
+)
+from ai.backend.common.service_discovery.service_discovery import (
+    ServiceDiscoveryLoop,
+    ServiceEndpoint,
+    ServiceMetadata,
+)
 from ai.backend.common.types import (
     AGENTID_MANAGER,
     AgentSelectionStrategy,
-    EtcdRedisConfig,
-    HostPortPair,
+    RedisProfileTarget,
 )
 from ai.backend.common.utils import env_info
 from ai.backend.logging import BraceStyleAdapter, Logger, LogLevel
+from ai.backend.logging.otel import OpenTelemetrySpec
+from ai.backend.manager.actions.monitors.audit_log import AuditLogMonitor
 from ai.backend.manager.actions.monitors.prometheus import PrometheusMonitor
 from ai.backend.manager.actions.monitors.reporter import ReporterMonitor
+from ai.backend.manager.config.bootstrap import BootstrapConfig
+from ai.backend.manager.config.loader.config_overrider import ConfigOverrider
+from ai.backend.manager.config.loader.etcd_loader import (
+    EtcdCommonConfigLoader,
+    EtcdManagerConfigLoader,
+)
+from ai.backend.manager.config.loader.legacy_etcd_loader import (
+    LegacyEtcdLoader,
+    LegacyEtcdVolumesLoader,
+)
+from ai.backend.manager.config.loader.loader_chain import LoaderChain
+from ai.backend.manager.config.loader.toml_loader import TomlConfigLoader
+from ai.backend.manager.config.loader.types import AbstractConfigLoader
+from ai.backend.manager.config.provider import ManagerConfigProvider
+from ai.backend.manager.config.watchers.etcd import EtcdConfigWatcher
+from ai.backend.manager.event_dispatcher.dispatch import DispatcherArgs, Dispatchers
 from ai.backend.manager.plugin.network import NetworkPluginContext
-from ai.backend.manager.reporters.audit_log import AuditLogReporter
 from ai.backend.manager.reporters.base import AbstractReporter
 from ai.backend.manager.reporters.hub import ReporterHub, ReporterHubArgs
 from ai.backend.manager.reporters.smtp import SMTPReporter, SMTPSenderArgs
@@ -90,7 +123,12 @@ from . import __version__
 from .agent_cache import AgentRPCCache
 from .api import ManagerStatus
 from .api.context import RootContext
-from .api.exceptions import (
+from .api.types import (
+    AppCreator,
+    CleanupContext,
+    WebRequestHandler,
+)
+from .errors.exceptions import (
     BackendError,
     GenericBadRequest,
     InternalServerError,
@@ -98,13 +136,6 @@ from .api.exceptions import (
     MethodNotAllowed,
     URLNotFound,
 )
-from .api.types import (
-    AppCreator,
-    CleanupContext,
-    WebRequestHandler,
-)
-from .config import LocalConfig, SharedConfig, volume_config_iv
-from .config import load as load_config
 from .exceptions import InvalidArgument
 from .sweeper.kernel import stale_kernel_sweeper_ctx
 from .sweeper.session import stale_session_sweeper_ctx
@@ -178,8 +209,6 @@ log = BraceStyleAdapter(logging.getLogger(__spec__.name))
 PUBLIC_INTERFACES: Final = [
     "pidx",
     "background_task_manager",
-    "local_config",
-    "shared_config",
     "db",
     "registry",
     "redis_live",
@@ -276,6 +305,31 @@ async def api_middleware(request: web.Request, handler: WebRequestHandler) -> we
     return resp
 
 
+def _debug_error_response(
+    e: Exception,
+) -> web.StreamResponse:
+    error_type = ""
+    error_title = ""
+    status_code = 500
+    error_code = ErrorCode.default()
+    if isinstance(e, BackendError):
+        error_type = e.error_type
+        error_title = e.error_title
+        status_code = e.status_code
+        error_code = e.error_code()
+
+    return web.json_response(
+        {
+            "type": error_type,
+            "title": error_title,
+            "error_code": str(error_code),
+            "msg": traceback.format_exc(),
+        },
+        status=status_code,
+        dumps=dump_json_str,
+    )
+
+
 @web.middleware
 async def exception_middleware(
     request: web.Request, handler: WebRequestHandler
@@ -295,13 +349,15 @@ async def exception_middleware(
         else:
             raise InvalidAPIParameters()
     except BackendError as ex:
-        if ex.status_code == 500:
+        if ex.status_code // 100 == 5:
             log.warning("Internal server error raised inside handlers")
         await error_monitor.capture_exception()
         await stats_monitor.report_metric(INCREMENT, "ai.backend.manager.api.failures")
         await stats_monitor.report_metric(
             INCREMENT, f"ai.backend.manager.api.status.{ex.status_code}"
         )
+        if root_ctx.config_provider.config.debug.enabled:
+            return _debug_error_response(ex)
         raise
     except web.HTTPException as ex:
         await stats_monitor.report_metric(INCREMENT, "ai.backend.manager.api.failures")
@@ -325,8 +381,8 @@ async def exception_middleware(
     except Exception as e:
         await error_monitor.capture_exception()
         log.exception("Uncaught exception in HTTP request handlers {0!r}", e)
-        if root_ctx.local_config["debug"]["enabled"]:
-            raise InternalServerError(traceback.format_exc())
+        if root_ctx.config_provider.config.debug.enabled:
+            return _debug_error_response(e)
         else:
             raise InternalServerError()
     else:
@@ -335,17 +391,62 @@ async def exception_middleware(
 
 
 @actxmgr
-async def shared_config_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
-    # populate public interfaces
-    root_ctx.shared_config = SharedConfig(
-        root_ctx.local_config["etcd"]["addr"],
-        root_ctx.local_config["etcd"]["user"],
-        root_ctx.local_config["etcd"]["password"],
-        root_ctx.local_config["etcd"]["namespace"],
-    )
-    await root_ctx.shared_config.reload()
+async def etcd_ctx(root_ctx: RootContext, etcd_config: EtcdConfigData) -> AsyncIterator[None]:
+    root_ctx.etcd = AsyncEtcd.initialize(etcd_config)
     yield
-    await root_ctx.shared_config.close()
+    await root_ctx.etcd.close()
+
+
+@actxmgr
+async def config_provider_ctx(
+    root_ctx: RootContext,
+    log_level: LogLevel,
+    config_path: Optional[Path] = None,
+    extra_config: Optional[Mapping[str, Any]] = None,
+) -> AsyncIterator[ManagerConfigProvider]:
+    loaders: list[AbstractConfigLoader] = []
+
+    if config_path:
+        toml_config_loader = TomlConfigLoader(config_path, "manager")
+        loaders.append(toml_config_loader)
+    else:
+        log.warning("No config file path specified. Skipped loading toml config file...")
+
+    legacy_etcd_loader = LegacyEtcdLoader(root_ctx.etcd)
+    loaders.append(legacy_etcd_loader)
+    loaders.append(LegacyEtcdVolumesLoader(root_ctx.etcd))
+    loaders.append(EtcdCommonConfigLoader(root_ctx.etcd))
+    loaders.append(EtcdManagerConfigLoader(root_ctx.etcd))
+
+    overrides: list[tuple[tuple[str, ...], Any]] = [
+        (("debug", "enabled"), log_level == LogLevel.DEBUG),
+    ]
+    if log_level != LogLevel.NOTSET:
+        overrides += [
+            (("logging", "level"), log_level),
+            (("logging", "pkg-ns", "ai.backend"), log_level),
+            (("logging", "pkg-ns", "aiohttp"), log_level),
+        ]
+
+    loaders.append(ConfigOverrider(overrides))
+
+    unified_config_loader = LoaderChain(loaders, base_config=extra_config)
+    etcd_watcher = EtcdConfigWatcher(root_ctx.etcd)
+
+    try:
+        config_provider = await ManagerConfigProvider.create(
+            unified_config_loader,
+            etcd_watcher,
+            legacy_etcd_loader,
+        )
+        root_ctx.config_provider = config_provider
+
+        if config_provider.config.debug.enabled:
+            print("== Manager configuration ==", file=sys.stderr)
+            print(pformat(config_provider.config), file=sys.stderr)
+        yield root_ctx.config_provider
+    finally:
+        await config_provider.terminate()
 
 
 @actxmgr
@@ -353,11 +454,14 @@ async def webapp_plugin_ctx(root_app: web.Application) -> AsyncIterator[None]:
     from .plugin.webapp import WebappPluginContext
 
     root_ctx: RootContext = root_app["_root.context"]
-    plugin_ctx = WebappPluginContext(root_ctx.shared_config.etcd, root_ctx.local_config)
+    plugin_ctx = WebappPluginContext(
+        root_ctx.etcd,
+        root_ctx.config_provider.config.model_dump(),
+    )
     await plugin_ctx.init(
         context=root_ctx,
-        allowlist=root_ctx.local_config["manager"]["allowed-plugins"],
-        blocklist=root_ctx.local_config["manager"]["disabled-plugins"],
+        allowlist=root_ctx.config_provider.config.manager.allowed_plugins,
+        blocklist=root_ctx.config_provider.config.manager.disabled_plugins,
     )
     root_ctx.webapp_plugin_ctx = plugin_ctx
     for plugin_name, plugin_instance in plugin_ctx.plugins.items():
@@ -372,45 +476,47 @@ async def webapp_plugin_ctx(root_app: web.Application) -> AsyncIterator[None]:
 @actxmgr
 async def manager_status_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
     if root_ctx.pidx == 0:
-        mgr_status = await root_ctx.shared_config.get_manager_status()
+        mgr_status = await root_ctx.config_provider.legacy_etcd_config_loader.get_manager_status()
         if mgr_status is None or mgr_status not in (ManagerStatus.RUNNING, ManagerStatus.FROZEN):
             # legacy transition: we now have only RUNNING or FROZEN for HA setup.
-            await root_ctx.shared_config.update_manager_status(ManagerStatus.RUNNING)
+            await root_ctx.config_provider.legacy_etcd_config_loader.update_manager_status(
+                ManagerStatus.RUNNING
+            )
             mgr_status = ManagerStatus.RUNNING
         log.info("Manager status: {}", mgr_status)
-        tz = root_ctx.shared_config["system"]["timezone"]
+        tz = root_ctx.config_provider.config.system.timezone
         log.info("Configured timezone: {}", tz.tzname(datetime.now()))
     yield
 
 
 @actxmgr
 async def redis_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
-    etcd_redis_config: EtcdRedisConfig = EtcdRedisConfig.from_dict(
-        root_ctx.shared_config.data["redis"]
+    redis_profile_target: RedisProfileTarget = RedisProfileTarget.from_dict(
+        root_ctx.config_provider.config.redis.model_dump()
     )
 
     root_ctx.redis_live = redis_helper.get_redis_object(
-        etcd_redis_config.get_override_config(RedisRole.LIVE),
+        redis_profile_target.profile_target(RedisRole.LIVE),
         name="live",  # tracking live status of various entities
         db=REDIS_LIVE_DB,
     )
     root_ctx.redis_stat = redis_helper.get_redis_object(
-        etcd_redis_config.get_override_config(RedisRole.STATISTICS),
+        redis_profile_target.profile_target(RedisRole.STATISTICS),
         name="stat",  # temporary storage for stat snapshots
         db=REDIS_STATISTICS_DB,
     )
     root_ctx.redis_image = redis_helper.get_redis_object(
-        etcd_redis_config.get_override_config(RedisRole.IMAGE),
+        redis_profile_target.profile_target(RedisRole.IMAGE),
         name="image",  # per-agent image availability
         db=REDIS_IMAGE_DB,
     )
     root_ctx.redis_stream = redis_helper.get_redis_object(
-        etcd_redis_config.get_override_config(RedisRole.STREAM),
+        redis_profile_target.profile_target(RedisRole.STREAM),
         name="stream",  # event bus and log streams
         db=REDIS_STREAM_DB,
     )
     root_ctx.redis_lock = redis_helper.get_redis_object(
-        etcd_redis_config.get_override_config(RedisRole.STREAM_LOCK),
+        redis_profile_target.profile_target(RedisRole.STREAM_LOCK),
         name="lock",  # distributed locks
         db=REDIS_STREAM_LOCK,
     )
@@ -434,7 +540,7 @@ async def redis_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
 async def database_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
     from .models.utils import connect_database
 
-    async with connect_database(root_ctx.local_config) as db:
+    async with connect_database(root_ctx.config_provider.config.db) as db:
         root_ctx.db = db
         yield
 
@@ -443,27 +549,22 @@ def _make_registered_reporters(
     root_ctx: RootContext,
 ) -> dict[str, AbstractReporter]:
     reporters: dict[str, AbstractReporter] = {}
-    smtp_configs = root_ctx.local_config["reporter"]["smtp"]
+    smtp_configs = root_ctx.config_provider.config.reporter.smtp
     for smtp_conf in smtp_configs:
         smtp_args = SMTPSenderArgs(
-            host=smtp_conf["host"],
-            port=smtp_conf["port"],
-            username=smtp_conf["username"],
-            password=smtp_conf["password"],
-            sender=smtp_conf["sender"],
-            recipients=smtp_conf["recipients"],
-            use_tls=smtp_conf["use-tls"],
-            max_workers=smtp_conf["max-workers"],
-            template=smtp_conf["template"],
+            host=smtp_conf.host,
+            port=smtp_conf.port,
+            username=smtp_conf.username,
+            password=smtp_conf.password,
+            sender=smtp_conf.sender,
+            recipients=smtp_conf.recipients,
+            use_tls=smtp_conf.use_tls,
+            max_workers=smtp_conf.max_workers,
+            template=smtp_conf.template,
         )
-        trigger_policy = SMTPTriggerPolicy[smtp_conf["trigger-policy"]]
-        reporters[smtp_conf["name"]] = SMTPReporter(smtp_args, trigger_policy)
+        trigger_policy = SMTPTriggerPolicy[smtp_conf.trigger_policy]
+        reporters[smtp_conf.name] = SMTPReporter(smtp_args, trigger_policy)
 
-    audit_log_configs = root_ctx.local_config["reporter"]["audit-log"]
-    for audit_log_conf in audit_log_configs:
-        reporters[audit_log_conf["name"]] = AuditLogReporter(
-            root_ctx.db,
-        )
     return reporters
 
 
@@ -472,15 +573,17 @@ def _make_action_reporters(
     reporters: dict[str, AbstractReporter],
 ) -> dict[str, list[AbstractReporter]]:
     action_monitors: dict[str, list[AbstractReporter]] = {}
-    action_monitor_configs = root_ctx.local_config["reporter"]["action-monitors"]
+    action_monitor_configs = root_ctx.config_provider.config.reporter.action_monitors
     for action_monitor_conf in action_monitor_configs:
-        reporter_name: str = action_monitor_conf["reporter"]
-        reporter = reporters[reporter_name]
-        action_types: list[str] = action_monitor_conf["subscribed-actions"]
-        for action_type in action_types:
-            monitors: list[AbstractReporter] = action_monitors.get(action_type, [])
-            monitors.append(reporter)
-            action_monitors[action_type] = monitors
+        reporter_name: str = action_monitor_conf.reporter
+        try:
+            reporter = reporters[reporter_name]
+        except KeyError:
+            log.warning(f'Invalid Reporter: "{reporter_name}"')
+            continue
+
+        for action_type in action_monitor_conf.subscribed_actions:
+            action_monitors.setdefault(action_type, []).append(reporter)
 
     return action_monitors
 
@@ -496,20 +599,24 @@ async def processors_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
     )
     reporter_monitor = ReporterMonitor(reporter_hub)
     prometheus_monitor = PrometheusMonitor()
+    audit_log_monitor = AuditLogMonitor(root_ctx.db)
     root_ctx.processors = Processors.create(
         ProcessorArgs(
             service_args=ServiceArgs(
                 db=root_ctx.db,
-                shared_config=root_ctx.shared_config,
+                etcd=root_ctx.etcd,
+                config_provider=root_ctx.config_provider,
                 storage_manager=root_ctx.storage_manager,
                 redis_stat=root_ctx.redis_stat,
                 background_task_manager=root_ctx.background_task_manager,
+                event_hub=root_ctx.event_hub,
                 agent_registry=root_ctx.registry,
                 error_monitor=root_ctx.error_monitor,
                 idle_checker_host=root_ctx.idle_checker_host,
+                event_dispatcher=root_ctx.event_dispatcher,
             )
         ),
-        [reporter_monitor, prometheus_monitor],
+        [reporter_monitor, prometheus_monitor, audit_log_monitor],
     )
     yield
 
@@ -521,40 +628,97 @@ async def distributed_lock_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
 
 
 @actxmgr
-async def event_dispatcher_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
-    mq = _make_message_queue(root_ctx)
-    root_ctx.event_producer = EventProducer(
-        mq,
-        source=AGENTID_MANAGER,
-        log_events=root_ctx.local_config["debug"]["log-events"],
+async def event_hub_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
+    root_ctx.event_hub = EventHub()
+    yield
+    await root_ctx.event_hub.shutdown()
+
+
+@actxmgr
+async def service_discovery_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
+    root_ctx.service_discovery = ETCDServiceDiscovery(ETCDServiceDiscoveryArgs(root_ctx.etcd))
+    root_ctx.sd_loop = ServiceDiscoveryLoop(
+        root_ctx.service_discovery,
+        ServiceMetadata(
+            display_name=f"manager-{root_ctx.config_provider.config.manager.id}",
+            service_group="manager",
+            version=__version__,
+            endpoint=ServiceEndpoint(
+                address=root_ctx.config_provider.config.manager.announce_addr.address,
+                port=root_ctx.config_provider.config.manager.announce_addr.port,
+                protocol="http",
+                prometheus_address=root_ctx.config_provider.config.manager.announce_internal_addr.address,
+            ),
+        ),
     )
-    root_ctx.event_dispatcher = EventDispatcher(
-        mq,
-        log_events=root_ctx.local_config["debug"]["log-events"],
-        event_observer=root_ctx.metrics.event,
+
+    if root_ctx.config_provider.config.otel.enabled:
+        meta = root_ctx.sd_loop.metadata
+        otel_spec = OpenTelemetrySpec(
+            service_id=meta.id,
+            service_name=meta.service_group,
+            service_version=meta.version,
+            log_level=root_ctx.config_provider.config.otel.log_level,
+            endpoint=root_ctx.config_provider.config.otel.endpoint,
+        )
+        BraceStyleAdapter.apply_otel(otel_spec)
+    yield
+    root_ctx.sd_loop.close()
+
+
+@actxmgr
+async def message_queue_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
+    root_ctx.message_queue = _make_message_queue(root_ctx)
+    yield
+    await root_ctx.message_queue.close()
+
+
+@actxmgr
+async def event_producer_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
+    root_ctx.event_producer = EventProducer(
+        root_ctx.message_queue,
+        source=AGENTID_MANAGER,
+        log_events=root_ctx.config_provider.config.debug.log_events,
     )
     yield
     await root_ctx.event_producer.close()
     await asyncio.sleep(0.2)
+
+
+@actxmgr
+async def event_dispatcher_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
+    root_ctx.event_dispatcher = EventDispatcher(
+        root_ctx.message_queue,
+        log_events=root_ctx.config_provider.config.debug.log_events,
+        event_observer=root_ctx.metrics.event,
+    )
+    dispatchers = Dispatchers(
+        DispatcherArgs(
+            root_ctx.event_hub, root_ctx.registry, root_ctx.db, root_ctx.event_dispatcher_plugin_ctx
+        )
+    )
+    dispatchers.dispatch(root_ctx.event_dispatcher)
+    await root_ctx.event_dispatcher.start()
+    yield
     await root_ctx.event_dispatcher.close()
 
 
 def _make_message_queue(
     root_ctx: RootContext,
 ) -> AbstractMessageQueue:
-    etcd_redis_config: EtcdRedisConfig = EtcdRedisConfig.from_dict(
-        root_ctx.shared_config.data["redis"]
+    redis_profile_target: RedisProfileTarget = RedisProfileTarget.from_dict(
+        root_ctx.config_provider.config.redis.model_dump()
     )
-    stream_redis_config = etcd_redis_config.get_override_config(RedisRole.STREAM)
+    stream_redis_target = redis_profile_target.profile_target(RedisRole.STREAM)
     stream_redis = redis_helper.get_redis_object(
-        stream_redis_config,
+        stream_redis_target,
         name="event_producer.stream",
         db=REDIS_STREAM_DB,
     )
-    node_id = root_ctx.local_config["manager"]["id"]
-    if root_ctx.local_config["manager"].get("use-experimental-redis-event-dispatcher"):
+    node_id = root_ctx.config_provider.config.manager.id
+    if root_ctx.config_provider.config.manager.use_experimental_redis_event_dispatcher:
         return HiRedisQueue(
-            stream_redis_config,
+            stream_redis_target,
             HiRedisMQArgs(
                 stream_key="events",
                 group_name=EVENT_DISPATCHER_CONSUMER_GROUP,
@@ -578,7 +742,7 @@ async def idle_checker_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
 
     root_ctx.idle_checker_host = await init_idle_checkers(
         root_ctx.db,
-        root_ctx.shared_config,
+        root_ctx.config_provider,
         root_ctx.event_dispatcher,
         root_ctx.event_producer,
         root_ctx.distributed_lock_factory,
@@ -592,21 +756,22 @@ async def idle_checker_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
 async def storage_manager_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
     from .models.storage import StorageSessionManager
 
-    raw_vol_config = await root_ctx.shared_config.etcd.get_prefix("volumes")
-    config = volume_config_iv.check(raw_vol_config)
-    root_ctx.storage_manager = StorageSessionManager(config)
+    root_ctx.storage_manager = StorageSessionManager(root_ctx.config_provider.config.volumes)
     yield
     await root_ctx.storage_manager.aclose()
 
 
 @actxmgr
 async def network_plugin_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
-    ctx = NetworkPluginContext(root_ctx.shared_config.etcd, root_ctx.local_config)
+    ctx = NetworkPluginContext(
+        root_ctx.etcd,
+        root_ctx.config_provider.config.model_dump(),
+    )
     root_ctx.network_plugin_ctx = ctx
     await ctx.init(
         context=root_ctx,
-        allowlist=root_ctx.local_config["manager"]["allowed-plugins"],
-        blocklist=root_ctx.local_config["manager"]["disabled-plugins"],
+        allowlist=root_ctx.config_provider.config.manager.allowed_plugins,
+        blocklist=root_ctx.config_provider.config.manager.disabled_plugins,
     )
     yield
     await ctx.cleanup()
@@ -614,12 +779,15 @@ async def network_plugin_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
 
 @actxmgr
 async def hook_plugin_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
-    ctx = HookPluginContext(root_ctx.shared_config.etcd, root_ctx.local_config)
+    ctx = HookPluginContext(
+        root_ctx.etcd,
+        root_ctx.config_provider.config.model_dump(),
+    )
     root_ctx.hook_plugin_ctx = ctx
     await ctx.init(
         context=root_ctx,
-        allowlist=root_ctx.local_config["manager"]["allowed-plugins"],
-        blocklist=root_ctx.local_config["manager"]["disabled-plugins"],
+        allowlist=root_ctx.config_provider.config.manager.allowed_plugins,
+        blocklist=root_ctx.config_provider.config.manager.disabled_plugins,
     )
     hook_result = await ctx.dispatch(
         "ACTIVATE_MANAGER",
@@ -633,33 +801,47 @@ async def hook_plugin_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
 
 
 @actxmgr
+async def event_dispatcher_plugin_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
+    ctx = EventDispatcherPluginContext(
+        root_ctx.etcd,
+        root_ctx.config_provider.config.model_dump(),
+    )
+    root_ctx.event_dispatcher_plugin_ctx = ctx
+    await ctx.init(
+        context=root_ctx,
+        allowlist=root_ctx.config_provider.config.manager.allowed_plugins,
+        blocklist=root_ctx.config_provider.config.manager.disabled_plugins,
+    )
+    yield
+    await ctx.cleanup()
+
+
+@actxmgr
 async def agent_registry_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
     from zmq.auth.certs import load_certificate
 
     from .registry import AgentRegistry
 
     manager_pkey, manager_skey = load_certificate(
-        root_ctx.local_config["manager"]["rpc-auth-manager-keypair"]
+        root_ctx.config_provider.config.manager.rpc_auth_manager_keypair
     )
     assert manager_skey is not None
     manager_public_key = PublicKey(manager_pkey)
     manager_secret_key = SecretKey(manager_skey)
     root_ctx.agent_cache = AgentRPCCache(root_ctx.db, manager_public_key, manager_secret_key)
     root_ctx.registry = AgentRegistry(
-        root_ctx.local_config,
-        root_ctx.shared_config,
+        root_ctx.config_provider,
         root_ctx.db,
         root_ctx.agent_cache,
         root_ctx.redis_stat,
         root_ctx.redis_live,
         root_ctx.redis_image,
         root_ctx.redis_stream,
-        root_ctx.event_dispatcher,
         root_ctx.event_producer,
         root_ctx.storage_manager,
         root_ctx.hook_plugin_ctx,
         root_ctx.network_plugin_ctx,
-        debug=root_ctx.local_config["debug"]["enabled"],
+        debug=root_ctx.config_provider.config.debug.enabled,
         manager_public_key=manager_public_key,
         manager_secret_key=manager_secret_key,
     )
@@ -673,8 +855,8 @@ async def sched_dispatcher_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
     from .scheduler.dispatcher import SchedulerDispatcher
 
     sched_dispatcher = await SchedulerDispatcher.new(
-        root_ctx.local_config,
-        root_ctx.shared_config,
+        root_ctx.config_provider,
+        root_ctx.etcd,
         root_ctx.event_dispatcher,
         root_ctx.event_producer,
         root_ctx.distributed_lock_factory,
@@ -688,15 +870,16 @@ async def sched_dispatcher_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
 async def monitoring_ctx(root_ctx: RootContext) -> AsyncIterator[None]:
     from .plugin.monitor import ManagerErrorPluginContext, ManagerStatsPluginContext
 
-    ectx = ManagerErrorPluginContext(root_ctx.shared_config.etcd, root_ctx.local_config)
-    sctx = ManagerStatsPluginContext(root_ctx.shared_config.etcd, root_ctx.local_config)
+    ectx = ManagerErrorPluginContext(root_ctx.etcd, root_ctx.config_provider.config.model_dump())
+    sctx = ManagerStatsPluginContext(root_ctx.etcd, root_ctx.config_provider.config.model_dump())
     init_success = False
+
     try:
         await ectx.init(
             context={"_root.context": root_ctx},
-            allowlist=root_ctx.local_config["manager"]["allowed-plugins"],
+            allowlist=root_ctx.config_provider.config.manager.allowed_plugins,
         )
-        await sctx.init(allowlist=root_ctx.local_config["manager"]["allowed-plugins"])
+        await sctx.init(allowlist=root_ctx.config_provider.config.manager.allowed_plugins)
     except Exception:
         log.error("Failed to initialize monitoring plugins")
     else:
@@ -792,9 +975,9 @@ def init_subapp(pkg_name: str, root_app: web.Application, create_subapp: AppCrea
 
 
 def init_lock_factory(root_ctx: RootContext) -> DistributedLockFactory:
-    ipc_base_path = root_ctx.local_config["manager"]["ipc-base-path"]
-    manager_id = root_ctx.local_config["manager"]["id"]
-    lock_backend = root_ctx.local_config["manager"]["distributed-lock"]
+    ipc_base_path = root_ctx.config_provider.config.manager.ipc_base_path
+    manager_id = root_ctx.config_provider.config.manager.id
+    lock_backend = root_ctx.config_provider.config.manager.distributed_lock
     log.debug("using {} as the distributed lock backend", lock_backend)
     match lock_backend:
         case "filelock":
@@ -811,7 +994,7 @@ def init_lock_factory(root_ctx: RootContext) -> DistributedLockFactory:
         case "redlock":
             from ai.backend.common.lock import RedisLock
 
-            redlock_config = root_ctx.local_config["manager"]["redlock-config"]
+            redlock_config = root_ctx.config_provider.config.manager.redlock_config
 
             return lambda lock_id, lifetime_hint: RedisLock(
                 str(lock_id),
@@ -824,7 +1007,7 @@ def init_lock_factory(root_ctx: RootContext) -> DistributedLockFactory:
 
             return lambda lock_id, lifetime_hint: EtcdLock(
                 str(lock_id),
-                root_ctx.shared_config.etcd,
+                root_ctx.etcd,
                 lifetime=min(lifetime_hint * 2, lifetime_hint + 30),
             )
         case other:
@@ -833,21 +1016,30 @@ def init_lock_factory(root_ctx: RootContext) -> DistributedLockFactory:
 
 def build_root_app(
     pidx: int,
-    local_config: LocalConfig,
+    bootstrap_config: BootstrapConfig,
     *,
     cleanup_contexts: Optional[Sequence[CleanupContext]] = None,
     subapp_pkgs: Optional[Sequence[str]] = None,
     scheduler_opts: Optional[Mapping[str, Any]] = None,
 ) -> web.Application:
     public_interface_objs.clear()
-    Profiler(
-        pyroscope_args=PyroscopeArgs(
-            enabled=local_config["pyroscope"]["enabled"],
-            application_name=local_config["pyroscope"]["app-name"],
-            server_address=local_config["pyroscope"]["server-addr"],
-            sample_rate=local_config["pyroscope"]["sample-rate"],
+    if bootstrap_config.pyroscope.enabled:
+        if (
+            not bootstrap_config.pyroscope.app_name
+            or not bootstrap_config.pyroscope.server_addr
+            or not bootstrap_config.pyroscope.sample_rate
+        ):
+            raise ValueError("Pyroscope configuration is incomplete.")
+
+        Profiler(
+            pyroscope_args=PyroscopeArgs(
+                enabled=bootstrap_config.pyroscope.enabled,
+                application_name=bootstrap_config.pyroscope.app_name,
+                server_address=bootstrap_config.pyroscope.server_addr,
+                sample_rate=bootstrap_config.pyroscope.sample_rate,
+            )
         )
-    )
+
     root_ctx = RootContext(metrics=CommonMetricRegistry.instance())
     app = web.Application(
         middlewares=[
@@ -869,7 +1061,6 @@ def build_root_app(
         "/container-registries/webhook",
     ]
 
-    root_ctx.local_config = local_config
     root_ctx.pidx = pidx
     root_ctx.cors_options = {
         "*": aiohttp_cors.ResourceOptions(
@@ -890,23 +1081,28 @@ def build_root_app(
 
     if cleanup_contexts is None:
         cleanup_contexts = [
+            event_hub_ctx,
             manager_status_ctx,
             redis_ctx,
             database_ctx,
             services_ctx,
             distributed_lock_ctx,
-            event_dispatcher_ctx,
-            idle_checker_ctx,
+            message_queue_ctx,
+            event_producer_ctx,
             storage_manager_ctx,
-            network_plugin_ctx,
             hook_plugin_ctx,
             monitoring_ctx,
+            network_plugin_ctx,
+            event_dispatcher_plugin_ctx,
             agent_registry_ctx,
+            event_dispatcher_ctx,
+            idle_checker_ctx,
             sched_dispatcher_ctx,
             background_task_ctx,
             stale_session_sweeper_ctx,
             stale_kernel_sweeper_ctx,
             processors_ctx,
+            service_discovery_ctx,
         ]
 
     async def _cleanup_context_wrapper(cctx, app: web.Application) -> AsyncIterator[None]:
@@ -952,10 +1148,39 @@ def build_root_app(
     return app
 
 
-def build_internal_app() -> web.Application:
+def build_prometheus_service_discovery_handler(
+    root_ctx: RootContext,
+) -> Handler:
+    async def _handler(request: web.Request) -> web.Response:
+        services = await root_ctx.service_discovery.discover()
+        resp = []
+        for service in services:
+            resp.append({
+                "targets": [f"{service.endpoint.prometheus_address}"],
+                "labels": {
+                    "service_id": service.id,
+                    "service_group": service.service_group,
+                    "display_name": service.display_name,
+                    "version": service.version,
+                },
+            })
+
+        return web.json_response(
+            resp,
+            status=200,
+            dumps=dump_json_str,
+        )
+
+    return _handler
+
+
+def build_internal_app(root_ctx: RootContext) -> web.Application:
     app = web.Application()
     metric_registry = CommonMetricRegistry.instance()
     app.router.add_route("GET", r"/metrics", build_prometheus_metrics_handler(metric_registry))
+    app.router.add_route(
+        "GET", r"/metrics/service_discovery", build_prometheus_service_discovery_handler(root_ctx)
+    )
     return app
 
 
@@ -975,25 +1200,35 @@ def build_public_app(
     return app
 
 
+@dataclass
+class ServerMainArgs:
+    bootstrap_cfg: BootstrapConfig
+    bootstrap_cfg_path: Path
+    log_endpoint: str
+    log_level: LogLevel
+
+
 @actxmgr
 async def server_main(
     loop: asyncio.AbstractEventLoop,
     pidx: int,
-    _args: List[Any],
+    args: ServerMainArgs,
 ) -> AsyncIterator[None]:
-    root_app = build_root_app(pidx, _args[0], subapp_pkgs=global_subapp_pkgs)
-    internal_app = build_internal_app()
+    boostrap_config = args.bootstrap_cfg
+
+    root_app = build_root_app(pidx, boostrap_config, subapp_pkgs=global_subapp_pkgs)
     root_ctx: RootContext = root_app["_root.context"]
+    internal_app = build_internal_app(root_ctx)
 
     # Start aiomonitor.
     # Port is set by config (default=50100 + pidx).
-    loop.set_debug(root_ctx.local_config["debug"]["asyncio"])
+    loop.set_debug(boostrap_config.debug.asyncio)
     m = aiomonitor.Monitor(
         loop,
-        termui_port=root_ctx.local_config["manager"]["aiomonitor-termui-port"] + pidx,
-        webui_port=root_ctx.local_config["manager"]["aiomonitor-webui-port"] + pidx,
+        termui_port=boostrap_config.manager.aiomonitor_termui_port + pidx,
+        webui_port=boostrap_config.manager.aiomonitor_webui_port + pidx,
         console_enabled=False,
-        hook_task_factory=root_ctx.local_config["debug"]["enhanced-aiomonitor-task-info"],
+        hook_task_factory=boostrap_config.debug.enhanced_aiomonitor_task_info,
     )
     m.prompt = f"monitor (manager[{pidx}@{os.getpid()}]) >>> "
     # Add some useful console_locals for ease of debugging
@@ -1010,26 +1245,27 @@ async def server_main(
     # which freezes on_startup event.
     try:
         async with (
-            shared_config_ctx(root_ctx),
+            etcd_ctx(root_ctx, boostrap_config.etcd.to_dataclass()),
+            config_provider_ctx(root_ctx, args.log_level, args.bootstrap_cfg_path),
             webapp_plugin_ctx(root_app),
         ):
             ssl_ctx = None
-            if root_ctx.local_config["manager"]["ssl-enabled"]:
+            if root_ctx.config_provider.config.manager.ssl_enabled:
                 ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
                 ssl_ctx.load_cert_chain(
-                    str(root_ctx.local_config["manager"]["ssl-cert"]),
-                    str(root_ctx.local_config["manager"]["ssl-privkey"]),
+                    str(root_ctx.config_provider.config.manager.ssl_cert),
+                    root_ctx.config_provider.config.manager.ssl_privkey,
                 )
 
             runner = web.AppRunner(root_app, keepalive_timeout=30.0)
             internal_runner = web.AppRunner(internal_app, keepalive_timeout=30.0)
             await runner.setup()
             await internal_runner.setup()
-            service_addr = cast(HostPortPair, root_ctx.local_config["manager"]["service-addr"])
-            internal_addr = cast(HostPortPair, root_ctx.local_config["manager"]["internal-addr"])
+            service_addr = root_ctx.config_provider.config.manager.service_addr
+            internal_addr = root_ctx.config_provider.config.manager.internal_addr
             site = web.TCPSite(
                 runner,
-                str(service_addr.host),
+                service_addr.host,
                 service_addr.port,
                 backlog=1024,
                 reuse_port=True,
@@ -1037,16 +1273,14 @@ async def server_main(
             )
             internal_site = web.TCPSite(
                 internal_runner,
-                str(internal_addr.host),
+                internal_addr.host,
                 internal_addr.port,
                 backlog=1024,
                 reuse_port=True,
             )
             await site.start()
             await internal_site.start()
-            public_metrics_port = cast(
-                Optional[int], root_ctx.local_config["manager"]["public-metrics-port"]
-            )
+            public_metrics_port = root_ctx.config_provider.config.manager.public_metrics_port
             if public_metrics_port is not None:
                 _app = build_public_app(
                     root_ctx, subapp_pkgs=global_subapp_pkgs_for_public_metrics_app
@@ -1055,7 +1289,7 @@ async def server_main(
                 await _runner.setup()
                 _site = web.TCPSite(
                     _runner,
-                    str(service_addr.host),
+                    service_addr.host,
                     public_metrics_port,
                     backlog=1024,
                     reuse_port=True,
@@ -1066,8 +1300,11 @@ async def server_main(
                 )
 
             if os.geteuid() == 0:
-                uid = root_ctx.local_config["manager"]["user"]
-                gid = root_ctx.local_config["manager"]["group"]
+                uid = root_ctx.config_provider.config.manager.user
+                gid = root_ctx.config_provider.config.manager.group
+                if uid is None or gid is None:
+                    raise ValueError("user/group must be specified when running as root")
+
                 os.setgroups([
                     g.gr_gid for g in grp.getgrall() if pwd.getpwuid(uid).pw_name in g.gr_mem
                 ])
@@ -1090,14 +1327,20 @@ async def server_main(
 async def server_main_logwrapper(
     loop: asyncio.AbstractEventLoop,
     pidx: int,
-    _args: List[Any],
+    tuple_args: tuple[Any, ...],
 ) -> AsyncIterator[None]:
     setproctitle(f"backend.ai: manager worker-{pidx}")
-    log_endpoint = _args[1]
+    args = ServerMainArgs(
+        bootstrap_cfg=tuple_args[0],
+        bootstrap_cfg_path=tuple_args[1],
+        log_endpoint=tuple_args[2],
+        log_level=tuple_args[3],
+    )
+
     logger = Logger(
-        _args[0]["logging"],
+        args.bootstrap_cfg.logging,
         is_master=False,
-        log_endpoint=log_endpoint,
+        log_endpoint=args.log_endpoint,
         msgpack_options={
             "pack_opts": DEFAULT_PACK_OPTS,
             "unpack_opts": DEFAULT_UNPACK_OPTS,
@@ -1105,7 +1348,7 @@ async def server_main_logwrapper(
     )
     try:
         with logger:
-            async with server_main(loop, pidx, _args):
+            async with server_main(loop, pidx, args):
                 yield
     except Exception:
         traceback.print_exc()
@@ -1134,23 +1377,30 @@ async def server_main_logwrapper(
 @click.pass_context
 def main(
     ctx: click.Context,
-    config_path: Path,
     log_level: LogLevel,
+    config_path: Optional[Path] = None,
     debug: bool = False,
 ) -> None:
     """
     Start the manager service as a foreground process.
     """
-    cfg = load_config(config_path, LogLevel.DEBUG if debug else log_level)
+    log_level = LogLevel.DEBUG if debug else log_level
+
+    if config_path is None:
+        discovered_cfg_path = find_config_file("manager")
+    else:
+        discovered_cfg_path = Path(config_path)
+
+    bootstrap_cfg = asyncio.run(BootstrapConfig.load_from_file(discovered_cfg_path, log_level))
 
     if ctx.invoked_subcommand is None:
-        cfg["manager"]["pid-file"].write_text(str(os.getpid()))
-        ipc_base_path = cfg["manager"]["ipc-base-path"]
+        bootstrap_cfg.manager.pid_file.write_text(str(os.getpid()))
+        ipc_base_path = bootstrap_cfg.manager.ipc_base_path
         log_sockpath = ipc_base_path / f"manager-logger-{os.getpid()}.sock"
         log_endpoint = f"ipc://{log_sockpath}"
         try:
             logger = Logger(
-                cfg["logging"],
+                bootstrap_cfg.logging,
                 is_master=True,
                 log_endpoint=log_endpoint,
                 msgpack_options={
@@ -1159,13 +1409,13 @@ def main(
                 },
             )
             with logger:
-                ns = cfg["etcd"]["namespace"]
+                ns = bootstrap_cfg.etcd.namespace
                 setproctitle(f"backend.ai: manager {ns}")
                 log.info("Backend.AI Manager {0}", __version__)
                 log.info("runtime: {0}", env_info())
                 log_config = logging.getLogger("ai.backend.manager.config")
                 log_config.debug("debug mode enabled.")
-                if cfg["manager"]["event-loop"] == "uvloop":
+                if bootstrap_cfg.manager.event_loop == "uvloop":
                     import uvloop
 
                     uvloop.install()
@@ -1173,16 +1423,16 @@ def main(
                 try:
                     aiotools.start_server(
                         server_main_logwrapper,
-                        num_workers=cfg["manager"]["num-proc"],
-                        args=(cfg, log_endpoint),
+                        num_workers=bootstrap_cfg.manager.num_proc,
+                        args=(bootstrap_cfg, discovered_cfg_path, log_endpoint, log_level),
                         wait_timeout=5.0,
                     )
                 finally:
                     log.info("terminated.")
         finally:
-            if cfg["manager"]["pid-file"].is_file():
+            if bootstrap_cfg.manager.pid_file.is_file():
                 # check is_file() to prevent deleting /dev/null!
-                cfg["manager"]["pid-file"].unlink()
+                bootstrap_cfg.manager.pid_file.unlink()
     else:
         # Click is going to invoke a subcommand.
         pass

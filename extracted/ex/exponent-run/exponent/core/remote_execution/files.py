@@ -1,16 +1,16 @@
 from asyncio import gather, to_thread
-from os import PathLike
 import os
-from typing import Optional, Union, cast
+from typing import Optional, cast
 from typing import Final
 
 from anyio import Path as AsyncPath
+from exponent.core.remote_execution.utils import safe_read_file
 from rapidfuzz import process
-from typing_extensions import TypeAlias
 from python_ripgrep import PySortMode, PySortModeKind, files, search
 
 from exponent.core.remote_execution.types import (
     FileAttachment,
+    FilePath,
     GetAllTrackedFilesRequest,
     GetAllTrackedFilesResponse,
     GetFileAttachmentsRequest,
@@ -27,8 +27,6 @@ from exponent.core.remote_execution.types import (
 MAX_MATCHING_FILES: Final[int] = 10
 FILE_NOT_FOUND: Final[str] = "File {} does not exist"
 MAX_FILES_TO_WALK: Final[int] = 10_000
-
-FilePath: TypeAlias = Union[str, PathLike[str]]
 
 
 class FileCache:
@@ -97,7 +95,7 @@ async def get_file_content(
     if not exists:
         return FILE_NOT_FOUND.format(absolute_path), False
 
-    content = await file.read_text()
+    content = await safe_read_file(file)
 
     if offset or limit:
         offset = offset or 0

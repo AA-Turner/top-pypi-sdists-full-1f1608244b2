@@ -8,6 +8,7 @@ import time
 
 import grpc
 from ._list_fireworks_models_response_cached import models
+from fireworks.client.error import RateLimitError
 from fireworks.client.api_client import FireworksClient
 from fireworks.client.chat import Chat as FireworksChat
 from fireworks.client.chat_completion import ChatCompletionV2 as FireworksChatCompletion
@@ -86,11 +87,22 @@ logger.propagate = False  # Prevent duplicate logs
 if os.environ.get("FIREWORKS_SDK_DEBUG"):
     logger.setLevel(logging.DEBUG)
 
+DEFAULT_MAX_RETRIES = 5
+DEFAULT_DELAY = 0.5
+
 
 class ChatCompletion:
     def __init__(self, llm: "LLM"):
         self._client = FireworksChatCompletion(llm._client)
         self._llm = llm
+
+    def _create_setup(self):
+        """
+        Setup for .create() and .acreate()
+        """
+        self._llm._ensure_deployment_ready()
+        model_id = self._llm.model_id()
+        return model_id
 
     @overload
     def create(
@@ -130,6 +142,7 @@ class ChatCompletion:
     ) -> Union[OpenAIChatCompletion, Generator[ChatCompletionChunk, None, None]]:
         model_id = self._create_setup()
         retries = 0
+        delay = DEFAULT_DELAY
         while retries < self._llm.max_retries:
             try:
                 if self._llm.enable_metrics:
@@ -148,19 +161,12 @@ class ChatCompletion:
                     end_time = time.time()
                     self._llm._metrics.add_metric("time_to_last_token", end_time - start_time)
                 return result
-            except BadGatewayError:
+            except (BadGatewayError, ServiceUnavailableError, RateLimitError) as e:
+                logger.debug(f"{type(e).__name__}: {e}. model_id: {model_id}")
+                time.sleep(delay)
                 retries += 1
-            except ServiceUnavailableError:
-                retries += 1
+                delay *= 2
         raise Exception(f"Failed to create chat completion after {self._llm.max_retries} retries")
-
-    def _create_setup(self):
-        """
-        Wraps all the async code in one function to make it easier to call
-        """
-        self._llm._ensure_deployment_ready()
-        model_id = self._llm.model_id()
-        return model_id
 
     @overload
     async def acreate(
@@ -197,9 +203,9 @@ class ChatCompletion:
         extra_headers=None,
         **kwargs,
     ) -> Union[OpenAIChatCompletion, AsyncGenerator[ChatCompletionChunk, None]]:
-        self._llm._ensure_deployment_ready()
-        model_id = self._llm.model_id()
+        model_id = self._create_setup()
         retries = 0
+        delay = DEFAULT_DELAY
         while retries < self._llm.max_retries:
             try:
                 resp_or_generator = self._client.acreate(  # type: ignore
@@ -222,24 +228,17 @@ class ChatCompletion:
                         end_time = time.time()
                         self._llm._metrics.add_metric("time_to_last_token", end_time - start_time)
                     return resp
-            except BadGatewayError as e:
-                logger.debug(f"BadGatewayError: {e}. model_id: {model_id}")
+            except (BadGatewayError, ServiceUnavailableError, RateLimitError) as e:
+                logger.debug(f"{type(e).__name__}: {e}. model_id: {model_id}")
+                await asyncio.sleep(delay)
                 retries += 1
-            except ServiceUnavailableError as e:
-                logger.debug(f"ServiceUnavailableError: {e}. model_id: {model_id}")
-                retries += 1
+                delay *= 2
         raise Exception(f"Failed to create chat completion after {self._llm.max_retries} retries")
 
 
 class Chat:
     def __init__(self, llm: "LLM", model):
         self.completions = ChatCompletion(llm)
-
-
-# Make param a literal type so developer does not need to import AcceleratorType enum
-
-
-DEFAULT_MAX_RETRIES = 3
 
 
 class Metrics:
@@ -449,10 +448,6 @@ class LLM:
         # inside of this thread
         self._get_deployment_name()
 
-        # Add a lock to prevent concurrent calls to _ensure_deployment_ready
-        self._deployment_lock = asyncio.Lock()
-        atexit.register(self._gateway._channel.close)
-
         if isinstance(accelerator_type, str):
             self._accelerator_type = AcceleratorTypeEnum.from_string(accelerator_type)
             self._validate_model_for_gpu(self.model, self._accelerator_type)
@@ -470,9 +465,9 @@ class LLM:
             scale_to_zero_window=scale_to_zero_window,
         )
         self._autoscaling_policy_sync = SyncAutoscalingPolicy(
-            scale_up_window=Duration(seconds=scale_up_window.seconds),
-            scale_down_window=Duration(seconds=scale_down_window.seconds),
-            scale_to_zero_window=Duration(seconds=scale_to_zero_window.seconds),
+            scale_up_window=Duration(seconds=int(scale_up_window.total_seconds())),
+            scale_down_window=Duration(seconds=int(scale_down_window.total_seconds())),
+            scale_to_zero_window=Duration(seconds=int(scale_to_zero_window.total_seconds())),
         )
         self._region = region
         self._description = description
@@ -547,7 +542,7 @@ class LLM:
         await self._gateway.__aexit__(exc_type, exc_val, exc_tb)
 
     @property
-    def name(self) -> str:
+    def deployment_display_name(self) -> str:
         return self._get_deployment_name()
 
     @sync_cache
@@ -620,12 +615,21 @@ class LLM:
         return self._deployment_strategy()
 
     def delete(self, ignore_checks: bool = False):
-        try:
-            self._gateway.delete_deployment_sync(self.name, ignore_checks)
-        except grpc.RpcError as e:
-            if e.code() == grpc.StatusCode.NOT_FOUND:  # type: ignore
-                return
-            raise e
+        deployment = self.get_deployment()
+        if deployment is None:
+            logger.debug("No deployment found to delete")
+            return
+        logger.debug(f"Deleting deployment {deployment.name}")
+        self._gateway.delete_deployment_sync(deployment.name, ignore_checks)
+        # spin until deployment is deleted
+        start_time = time.time()
+        while deployment is not None:
+            current_time = time.time()
+            if current_time - start_time >= 10:
+                logger.debug(f"Waiting for deployment {deployment.name} to be deleted...")
+                start_time = current_time
+            deployment = self.get_deployment()
+            time.sleep(1)
 
     @sync_cache
     def _deployment_strategy(self) -> DeploymentStrategyLiteral:
@@ -705,7 +709,7 @@ class LLM:
         Queries all deployments for the same model and accelerator type (if given) and returns the first one.
         """
         deployments = self._gateway.list_deployments_sync(
-            filter=f'display_name="{self.name}" AND base_model="{self.model}"'
+            filter=f'display_name="{self.deployment_display_name}" AND base_model="{self.model}"'
         )
         deployment = next(iter(deployments), None)
         return deployment
@@ -727,7 +731,7 @@ class LLM:
         if deployment is None:
             logger.debug(f"No existing deployment found, creating deployment for {self.model}")
             deployment_proto = SyncDeployment(
-                display_name=self.name,
+                display_name=self.deployment_display_name,
                 base_model=self.model,
                 autoscaling_policy=self._autoscaling_policy_sync,
             )
@@ -807,7 +811,7 @@ class LLM:
 
             total_time = time.time() - start_time
             logger.debug(
-                f"Deployment {created_deployment.name} is ready, using deployment (ready in {total_time:.2f} seconds)"
+                f"Deployment {created_deployment.name} state is READY, checking replicas now (Became READY in {total_time:.2f} seconds)"
             )
         else:
             logger.debug(f"Deployment {deployment.name} already exists, checking if it needs to be scaled up")
@@ -822,8 +826,15 @@ class LLM:
                     f"{self._autoscaling_policy.scale_down_window.total_seconds()}s down, "
                     f"{self._autoscaling_policy.scale_to_zero_window.total_seconds()}s to zero"
                 )
-                deployment.autoscaling_policy = self._autoscaling_policy_sync
+                deployment.autoscaling_policy.scale_up_window = self._autoscaling_policy.scale_up_window  # type: ignore
+                deployment.autoscaling_policy.scale_down_window = self._autoscaling_policy.scale_down_window  # type: ignore
+                deployment.autoscaling_policy.scale_to_zero_window = self._autoscaling_policy.scale_to_zero_window  # type: ignore
                 field_mask.paths.append("autoscaling_policy")
+
+            if self._min_replica_count is not None and deployment.min_replica_count != self._min_replica_count:
+                logger.debug(f"Updating min_replica_count for {deployment.name} to {self._min_replica_count}")
+                deployment.min_replica_count = self._min_replica_count
+                field_mask.paths.append("min_replica_count")
 
             if deployment.accelerator_type != self._accelerator_type and self._accelerator_type is not NOT_GIVEN:
                 raise ValueError(
@@ -872,7 +883,7 @@ class LLM:
         """
         Sends a request to scale the deployment to 0 replicas but does not wait for it to complete.
         """
-        deployment = self.deployment()
+        deployment = self.get_deployment()
         if deployment is None:
             return None
         self._gateway.scale_deployment_sync(deployment.name, 0)
@@ -882,7 +893,7 @@ class LLM:
         """
         Scales the deployment to at least 1 replica.
         """
-        deployment = self.deployment()
+        deployment = self.get_deployment()
         if deployment is None:
             return
         self._gateway.scale_deployment_sync(deployment.name, 1)
@@ -901,20 +912,8 @@ class LLM:
             and deployment.autoscaling_policy.scale_to_zero_window == self._autoscaling_policy.scale_to_zero_window
         )
 
-    def deployment(self) -> Optional[SyncDeployment]:
-        return self._deployment()
-
-    @sync_cache
-    def _deployment(self) -> Optional[SyncDeployment]:
-        """
-        Queries for any deployment that should exist for this LLM under this
-        Fireworks account. If no deployment is found, but should exist, it will
-        be created and returned. If no deployment is found and should not exist,
-        None is returned.
-        """
-        self._ensure_deployment_ready()
-        deployment = self._query_existing_deployment()
-        return deployment
+    def get_deployment(self) -> Optional[SyncDeployment]:
+        return self._query_existing_deployment()
 
     def model_id(self):
         """
@@ -923,9 +922,14 @@ class LLM:
         """
         if self.is_available_on_serverless():
             return self.model
-        deployment = self.deployment()
+        deployment = self.get_deployment()
         if deployment is None:
-            return self.model
+            if self.deployment_strategy() == "on-demand":
+                raise ValueError(
+                    f"Model {self.model} is not available on serverless and no deployment exists. Make sure to call apply() before calling model_id() or call the model to trigger a deployment."
+                )
+            else:
+                return self.model
         return f"{self.model}#{deployment.name}"
 
     def __str__(self):
@@ -954,6 +958,7 @@ class LLM:
         region: Optional[RegionLiteral] = None,
         nodes: Optional[int] = None,
         batch_size: Optional[int] = None,
+        output_model: Optional[str] = None,
     ):
         """
         Creates a fine-tuning job for this dataset. If the fine-tuning job already exists, it will block until the job is ready.
@@ -976,6 +981,7 @@ class LLM:
             learning_rate=learning_rate,
             lora_rank=lora_rank,
             jinja_template=jinja_template,
+            output_model=output_model,
             early_stop=early_stop,
             max_context_length=max_context_length,
             base_model_weight_precision=base_model_weight_precision,

@@ -6,13 +6,13 @@ import numpy as np
 from joblib import Parallel, delayed
 from sklearn.base import RegressorMixin, clone
 from sklearn.model_selection import BaseCrossValidator
-from sklearn.utils import _safe_indexing, deprecated
+from sklearn.utils import _safe_indexing
 from sklearn.utils.validation import _num_samples, check_is_fitted
 
-from mapie._typing import ArrayLike, NDArray
+from numpy.typing import ArrayLike, NDArray
 from mapie.aggregation_functions import aggregate_all, phi2D
-from mapie.utils import (check_nan_in_aposteriori_prediction, check_no_agg_cv,
-                         fit_estimator)
+from mapie.utils import (_check_nan_in_aposteriori_prediction, _check_no_agg_cv,
+                         _fit_estimator)
 
 
 class EnsembleRegressor:
@@ -204,13 +204,15 @@ class EnsembleRegressor:
         RegressorMixin
             Fitted estimator.
         """
+        # TODO back-end: avoid using private utilities from sklearn like
+        # _safe_indexing (may break anytime without notice)
         X_train = _safe_indexing(X, train_index)
         y_train = _safe_indexing(y, train_index)
         if not (sample_weight is None):
             sample_weight = _safe_indexing(sample_weight, train_index)
             sample_weight = cast(NDArray, sample_weight)
 
-        estimator = fit_estimator(
+        estimator = _fit_estimator(
             estimator,
             X_train,
             y_train,
@@ -284,9 +286,7 @@ class EnsembleRegressor:
         """
         if self.method in self.no_agg_methods_ or self.use_split_method_:
             raise ValueError(
-                "There should not be aggregation of predictions "
-                f"if cv is in '{self.no_agg_cv_}', if cv >=2 "
-                f"or if method is in '{self.no_agg_methods_}'."
+                "There should not be aggregation of predictions."
             )
         elif self.agg_function == "median":
             return phi2D(A=x, B=k, fun=lambda x: np.nanmedian(x, axis=1))
@@ -299,7 +299,9 @@ class EnsembleRegressor:
             K = np.nan_to_num(k, nan=0.0)
             return np.matmul(x, (K / (K.sum(axis=1, keepdims=True))).T)
         else:
-            raise ValueError("The value of self.agg_function is not correct")
+            raise ValueError(
+                "The value of the aggregation function is not correct"
+            )
 
     def _pred_multi(self, X: ArrayLike, **predict_params) -> NDArray:
         """
@@ -398,16 +400,11 @@ class EnsembleRegressor:
                 if self.use_split_method_:
                     y_pred = pred_matrix.flatten()
                 else:
-                    check_nan_in_aposteriori_prediction(pred_matrix)
+                    _check_nan_in_aposteriori_prediction(pred_matrix)
                     y_pred = aggregate_all(self.agg_function, pred_matrix)
 
         return y_pred
 
-    @deprecated(
-        "WARNING: EnsembleRegressor.fit is deprecated."
-        "Instead use EnsembleRegressor.fit_single_estimator"
-        "then EnsembleRegressor.fit_multi_estimators"
-    )
     def fit(
         self,
         X: ArrayLike,
@@ -417,6 +414,11 @@ class EnsembleRegressor:
         **fit_params
     ) -> EnsembleRegressor:
         """
+        Note to developer: this fit method has been broken down into
+        fit_single_estimator and fit_multi_estimators,
+        but we kept it so that EnsembleRegressor passes sklearn.check_is_fitted.
+        Prefer using fit_single_estimator and fit_multi_estimators.
+
         Fit the base estimator under the ``single_estimator_`` attribute.
         Fit all cross-validated estimator clones
         and rearrange them into a list, the ``estimators_`` attribute.
@@ -526,7 +528,12 @@ class EnsembleRegressor:
         **fit_params
     ) -> EnsembleRegressor:
 
-        self.use_split_method_ = check_no_agg_cv(X, self.cv, self.no_agg_cv_)
+        self.use_split_method_ = _check_no_agg_cv(
+            X,
+            self.cv,
+            self.no_agg_cv_,
+            groups=groups
+            )
         single_estimator_: RegressorMixin
 
         if self.cv == "prefit":

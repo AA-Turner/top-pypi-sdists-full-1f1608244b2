@@ -1364,14 +1364,13 @@ def test_chain_expressions():
     le4_ = blosc2.lazyexpr("(le2 & le3)", {"le2": le2_, "le3": le3_})
     assert (le4_[:] == le4[:]).all()
 
-    # TODO: Eventually this test should pass
-    # expr1 = blosc2.lazyexpr("arange(N) + b")
-    # expr2 = blosc2.lazyexpr("a * b + 1")
-    # expr = blosc2.lazyexpr("expr1 - expr2")
-    # expr_final = blosc2.lazyexpr("expr * expr")
-    # nres = (expr * expr)[:]
-    # res = expr_final.compute()
-    # np.testing.assert_allclose(res[:], nres)
+    expr1 = blosc2.lazyexpr("arange(N) + b")
+    expr2 = blosc2.lazyexpr("a * b + 1")
+    expr = blosc2.lazyexpr("expr1 - expr2")
+    expr_final = blosc2.lazyexpr("expr * expr")
+    nres = (expr * expr)[:]
+    res = expr_final.compute()
+    np.testing.assert_allclose(res[:], nres)
 
 
 # Test the chaining of multiple persistent lazy expressions
@@ -1403,3 +1402,24 @@ def test_chain_persistentexpressions():
     le4_.save("expr4.b2nd", mode="w")
     myle4 = blosc2.open("expr4.b2nd")
     assert (myle4[:] == le4[:]).all()
+
+
+@pytest.mark.parametrize(
+    "values",
+    [
+        (np.ones(10, dtype=np.uint16), 2),
+        (np.ones(10, dtype=np.uint16), np.uint32(2)),
+        (2, np.ones(10, dtype=np.uint16)),
+        (np.uint32(2), np.ones(10, dtype=np.uint16)),
+        (np.ones(10, dtype=np.uint16), 2.0),
+        (np.ones(10, dtype=np.float32), 2.0),
+        (np.ones(10, dtype=np.float32), 2.0j),
+    ],
+)
+def test_scalar_dtypes(values):
+    value1, value2 = values
+    dtype1 = (value1 + value2).dtype
+    avalue1 = blosc2.asarray(value1) if hasattr(value1, "shape") else value1
+    avalue2 = blosc2.asarray(value2) if hasattr(value2, "shape") else value2
+    dtype2 = (avalue1 * avalue2).dtype
+    assert dtype1 == dtype2, f"Expected {dtype1} but got {dtype2}"

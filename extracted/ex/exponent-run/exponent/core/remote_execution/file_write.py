@@ -1,5 +1,6 @@
 import logging
 import os
+from anyio import Path as AsyncPath
 import re
 import subprocess
 from collections.abc import Callable
@@ -16,10 +17,15 @@ from exponent.core.types.event_types import (
 from pydantic import BaseModel
 
 from exponent.core.remote_execution.types import (
+    FilePath,
     FileWriteRequest,
     FileWriteResponse,
 )
-from exponent.core.remote_execution.utils import assert_unreachable
+from exponent.core.remote_execution.utils import (
+    assert_unreachable,
+    safe_read_file,
+    safe_write_file,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -29,22 +35,26 @@ class FileEditResult(BaseModel):
     failed_edits: list[tuple[str, str]]
 
 
-def execute_file_write(
+async def execute_file_write(
     event: FileWriteRequest, working_directory: str
 ) -> FileWriteResponse:
     write_strategy = event.write_strategy
     content = event.content
 
     if write_strategy == WRITE_STRATEGY_FULL_FILE_REWRITE:
-        result = execute_full_file_rewrite(event.file_path, content, working_directory)
+        result = await execute_full_file_rewrite(
+            event.file_path, content, working_directory
+        )
     elif write_strategy == WRITE_STRATEGY_UDIFF:
-        result = execute_udiff_edit(event.file_path, content, working_directory)
+        result = await execute_udiff_edit(event.file_path, content, working_directory)
     elif write_strategy == WRITE_STRATEGY_SEARCH_REPLACE:
-        result = execute_search_replace_edit(
+        result = await execute_search_replace_edit(
             event.file_path, content, working_directory
         )
     elif write_strategy == WRITE_STRATEGY_NATURAL_EDIT:
-        result = execute_full_file_rewrite(event.file_path, content, working_directory)
+        result = await execute_full_file_rewrite(
+            event.file_path, content, working_directory
+        )
     else:
         assert_unreachable(write_strategy)
     return FileWriteResponse(
@@ -73,58 +83,48 @@ def lint_file(file_path: str, working_directory: str) -> str:
         return f"An error occurred while linting: {e!s}"
 
 
-def format_results(file_path: str, content: str, working_directory: str) -> str:
-    footer = ""
-
-    # In case you want linting
-    # if is_editable_install():
-    #     lint_result = lint_file(file_path, working_directory)
-    #     footer = f"\n\n{lint_result}"
-
-    return content + footer
-
-
-def execute_full_file_rewrite(
-    file_path: str, content: str, working_directory: str
+async def execute_full_file_rewrite(
+    file_path: FilePath, content: str, working_directory: str
 ) -> str:
     try:
         # Construct the absolute path
-        full_file_path = os.path.join(working_directory, file_path)
+        full_file_path = AsyncPath(os.path.join(working_directory, file_path))
 
         # Check if the directory exists, if not, create it
-        os.makedirs(os.path.dirname(full_file_path), exist_ok=True)
+        await full_file_path.parent.mkdir(parents=True, exist_ok=True)
+        exists = await full_file_path.exists()
+
+        await safe_write_file(full_file_path, content)
 
         # Determine if the file exists and write the new content
-        if os.path.exists(full_file_path):
-            with open(full_file_path, "w") as file:
-                file.write(content)
+        if exists:
             result = f"Modified file {file_path} successfully"
         else:
-            with open(full_file_path, "w") as file:
-                file.write(content)
             result = f"Created file {file_path} successfully"
 
-        return format_results(file_path, result, working_directory)
+        return result
 
     except Exception as e:  # noqa: BLE001
         return f"An error occurred: {e!s}"
 
 
-def execute_udiff_edit(file_path: str, content: str, working_directory: str) -> str:
-    result = execute_partial_edit(file_path, content, working_directory, apply_udiff)
-    return format_results(file_path, result, working_directory)
-
-
-def execute_search_replace_edit(
+async def execute_udiff_edit(
     file_path: str, content: str, working_directory: str
 ) -> str:
-    result = execute_partial_edit(
+    return await execute_partial_edit(
+        file_path, content, working_directory, apply_udiff
+    )
+
+
+async def execute_search_replace_edit(
+    file_path: str, content: str, working_directory: str
+) -> str:
+    return await execute_partial_edit(
         file_path, content, working_directory, apply_all_search_replace
     )
-    return format_results(file_path, result, working_directory)
 
 
-def execute_partial_edit(
+async def execute_partial_edit(
     file_path: str,
     edit_content: str,
     working_directory: str,
@@ -132,15 +132,15 @@ def execute_partial_edit(
 ) -> str:
     try:
         # Construct the absolute path
-        full_file_path = os.path.join(working_directory, file_path)
+        full_file_path = AsyncPath(os.path.join(working_directory, file_path))
 
         # Check if the directory exists, if not, create it
-        os.makedirs(os.path.dirname(full_file_path), exist_ok=True)
+        await full_file_path.parent.mkdir(parents=True, exist_ok=True)
 
         # Determine if the file exists and write the new content
-        file_content, created = read_or_init_file(full_file_path)
+        file_content, created = await read_or_init_file(full_file_path)
 
-        success = open_file_and_apply_edit(
+        success = await open_file_and_apply_edit(
             file_path=full_file_path,
             file_content=file_content,
             edit_content=edit_content,
@@ -158,18 +158,19 @@ def execute_partial_edit(
         raise e
 
 
-def read_or_init_file(file_path: str) -> tuple[str, bool]:
-    if not os.path.exists(file_path):
-        with open(file_path, "w") as f:
-            f.write("")
+async def read_or_init_file(file_path: FilePath) -> tuple[str, bool]:
+    path = AsyncPath(file_path)
+
+    if not (await path.exists()):
+        await path.touch()
         return "", True
 
-    with open(file_path) as f:
-        return f.read(), False
+    content = await safe_read_file(path)
+    return content, False
 
 
-def open_file_and_apply_edit(
-    file_path: str,
+async def open_file_and_apply_edit(
+    file_path: FilePath,
     file_content: str,
     edit_content: str,
     edit_function: Callable[[str, str], FileEditResult],
@@ -179,8 +180,7 @@ def open_file_and_apply_edit(
     if not result.content:
         return False
 
-    with open(file_path, "w") as file:
-        file.write(result.content)
+    await safe_write_file(file_path, result.content)
 
     return True
 

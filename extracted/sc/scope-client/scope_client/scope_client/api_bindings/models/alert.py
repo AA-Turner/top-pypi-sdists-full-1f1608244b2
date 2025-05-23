@@ -21,6 +21,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from scope_client.api_bindings.models.alert_bound import AlertBound
+from scope_client.api_bindings.models.alert_rule_interval import AlertRuleInterval
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -33,6 +34,7 @@ class Alert(BaseModel):
     value: Union[StrictFloat, StrictInt] = Field(description="The value of the metric that triggered the alert.")
     threshold: Union[StrictFloat, StrictInt] = Field(description="The threshold that triggered the alert.")
     bound: AlertBound = Field(description="The bound of the alert.")
+    interval: AlertRuleInterval = Field(description="The interval of the alert rule, commonly '1 day', '1 hour', etc.")
     dimensions: Optional[Dict[str, Any]]
     alert_rule_id: StrictStr = Field(description="The alert rule id of the alert.")
     job_id: Optional[StrictStr] = None
@@ -43,7 +45,7 @@ class Alert(BaseModel):
     alert_rule_name: StrictStr = Field(description="The name of the alert rule.")
     alert_rule_metric_name: StrictStr = Field(description="The name of the metric returned by the alert rule query.")
     is_duplicate_of: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["description", "timestamp", "value", "threshold", "bound", "dimensions", "alert_rule_id", "job_id", "created_at", "updated_at", "id", "model_id", "alert_rule_name", "alert_rule_metric_name", "is_duplicate_of"]
+    __properties: ClassVar[List[str]] = ["description", "timestamp", "value", "threshold", "bound", "interval", "dimensions", "alert_rule_id", "job_id", "created_at", "updated_at", "id", "model_id", "alert_rule_name", "alert_rule_metric_name", "is_duplicate_of"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -84,6 +86,9 @@ class Alert(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of interval
+        if self.interval:
+            _dict['interval'] = self.interval.to_dict()
         # set to None if description (nullable) is None
         # and model_fields_set contains the field
         if self.description is None and "description" in self.model_fields_set:
@@ -121,6 +126,7 @@ class Alert(BaseModel):
             "value": obj.get("value"),
             "threshold": obj.get("threshold"),
             "bound": obj.get("bound"),
+            "interval": AlertRuleInterval.from_dict(obj["interval"]) if obj.get("interval") is not None else None,
             "dimensions": obj.get("dimensions"),
             "alert_rule_id": obj.get("alert_rule_id"),
             "job_id": obj.get("job_id"),

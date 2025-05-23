@@ -9,8 +9,8 @@ from mapie.conformity_scores.sets.utils import (
 from mapie.estimator.classifier import EnsembleClassifier
 
 from mapie._machine_precision import EPSILON
-from mapie._typing import NDArray
-from mapie.utils import compute_quantiles
+from numpy.typing import NDArray
+from mapie.utils import _compute_quantiles
 
 
 class TopKConformityScore(BaseClassificationScore):
@@ -18,7 +18,7 @@ class TopKConformityScore(BaseClassificationScore):
     Top-K method-based non-conformity score.
 
     It is based on the sorted index of the probability of the true label in the
-    softmax outputs, on the calibration set. In case two probabilities are
+    softmax outputs, on the conformalization set. In case two probabilities are
     equal, both are taken, thus, the size of some prediction sets may be
     different from the others.
 
@@ -143,7 +143,7 @@ class TopKConformityScore(BaseClassificationScore):
         NDArray
             Array of quantiles with respect to alpha_np.
         """
-        return compute_quantiles(conformity_scores, alpha_np)
+        return _compute_quantiles(conformity_scores, alpha_np)
 
     def get_prediction_sets(
         self,

@@ -1,4 +1,5 @@
 import json
+from anyio import Path as AsyncPath
 import logging
 from collections.abc import Awaitable, Callable
 from functools import wraps
@@ -11,6 +12,7 @@ from typing import (
     cast,
     overload,
 )
+from bs4 import UnicodeDammit
 
 from exponent.core.types.event_types import (
     CodeBlockEvent,
@@ -39,6 +41,7 @@ from exponent.core.remote_execution.types import (
     CreateCheckpointRequest,
     CreateCheckpointResponse,
     ErrorResponse,
+    FilePath,
     RollbackToCheckpointRequest,
     RollbackToCheckpointResponse,
     StreamingCodeExecutionResponse,
@@ -554,3 +557,47 @@ def ws_retry(
         return wrapped
 
     return decorator
+
+
+async def safe_read_file(path: FilePath) -> str:
+    path = AsyncPath(path)
+
+    try:
+        return await path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        # Potentially a wacky encoding or mixture of encodings,
+        # attempt to correct it.
+        fbytes = await path.read_bytes()
+        # Handles mixed encodings with utf-8 and cp1252 (windows)
+        fbytes = UnicodeDammit.detwingle(fbytes)
+
+        decode_result = smart_decode(fbytes)
+
+        if decode_result:
+            # First item in tuple is the decoded str
+            return decode_result[0]
+
+        raise
+
+
+async def safe_write_file(path: FilePath, content: str) -> None:
+    await AsyncPath(path).write_text(content, encoding="utf-8")
+
+
+def smart_decode(b: bytes) -> Optional[tuple[str, str]]:
+    # This function attempts to decode by detecting the actual source
+    # encoding, returning (decoded_str, detected_encoding) if successful.
+    # We also attempt to fix cases of mixed encodings of cp1252 + utf-8
+    # using the detwingle helper provided by bs4. This can happen on
+    # windows, particularly when a user edits a utf-8 file by pasting in
+    # the special windows smart quotes.
+    b = UnicodeDammit.detwingle(b)
+
+    encoding = UnicodeDammit(
+        b, known_definite_encodings=["utf-8", "cp1252"]
+    ).original_encoding
+
+    if not encoding:
+        return None
+
+    return (b.decode(encoding=encoding), encoding)

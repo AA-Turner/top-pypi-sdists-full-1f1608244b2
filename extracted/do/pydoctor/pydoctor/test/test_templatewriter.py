@@ -1,9 +1,8 @@
 from io import BytesIO
 import re
-from typing import Callable, Union, Any, cast, Type, TYPE_CHECKING
+from typing import Callable, Union, cast, Type, TYPE_CHECKING
 import pytest
 import warnings
-import sys
 import tempfile
 import os
 from pathlib import Path, PurePath
@@ -24,19 +23,12 @@ from pydoctor.themes import get_themes
 
 if TYPE_CHECKING:
     from twisted.web.template import Flattenable
-
     # Newer APIs from importlib_resources should arrive to stdlib importlib.resources in Python 3.9.
-    if sys.version_info >= (3, 9):
-        from importlib.abc import Traversable
-    else:
-        Traversable = Any
+    from importlib.abc import Traversable
 else:
     Traversable = object
 
-if sys.version_info < (3, 9):
-    import importlib_resources
-else:
-    import importlib.resources as importlib_resources
+import importlib.resources as importlib_resources
 
 template_dir = importlib_resources.files("pydoctor.themes") / "base"
 
@@ -576,11 +568,13 @@ def test_format_decorators() -> None:
     def func():
         ...
     ''')
-    stan = stanutils.flatten(list(pages.format_decorators(cast(model.Function, mod.contents['func']))))
-    assert stan == ("""@string_decorator(<wbr></wbr>set(<wbr></wbr><span class="rst-variable-quote">'</span>"""
+    stan = stanutils.flatten(pages.format_decorators(cast(model.Function, mod.contents['func'])))
+    assert stan == ("""<div><span class="decorator">"""
+                    """@string_decorator(<wbr></wbr>set(<wbr></wbr><span class="rst-variable-quote">'</span>"""
                     r"""<span class="rst-variable-string">\\/:*?"&lt;&gt;|\f\v\t\r\n</span>"""
-                    """<span class="rst-variable-quote">'</span>))<br />@simple_decorator"""
-                    """(<wbr></wbr>max_examples=700, <wbr></wbr>deadline=None, <wbr></wbr>option=range(<wbr></wbr>10))<br />""")
+                    """<span class="rst-variable-quote">'</span>))<br /></span><span class="decorator">@simple_decorator"""
+                    """(<wbr></wbr>max_examples=700, <wbr></wbr>deadline=None, <wbr></wbr>option=range(<wbr></wbr>10))<br />"""
+                    """</span></div>""")
 
 
 def test_compact_module_summary() -> None:
@@ -947,3 +941,48 @@ def test_canonical_links_two_root_modules() -> None:
 
     assert '<link rel="canonical" href="https://example.org/t/docs/t2.html"' in html3
     assert '<link rel="canonical" href="https://example.org/t/docs/t2.Cls.html"' in html4
+
+def test_namespace_package_doesnt_show_as_undocumented() -> None:
+    systemcls = lambda: model.System(model.Options.from_args(
+        ['--html-viewsource-base=https://github.com/some/repo/tree/master',
+         f'--project-base-dir={testpackages / "namespaces"}']))
+
+    system = processPackage(['namespaces/project1/lvl1', 
+                             'namespaces/project2/lvl1'], systemcls)
+
+    assert isinstance(root:=system.allobjects['lvl1'], model.Package)
+    assert root.kind is model.DocumentableKind.NAMESPACE_PACKAGE
+
+    assert isinstance(nested:=root.contents['lvl2'], model.Package)
+    assert nested.kind is model.DocumentableKind.NAMESPACE_PACKAGE
+
+    html1 = getHTMLOf(root)
+
+    assert 'Undocumented' not in html1
+    assert 'Contains 1 known namespace package.' in html1
+
+    html2 = getHTMLOf(nested)
+    assert 'Contains 2 known packages.' in html2
+
+def test_namespace_package_source_links() -> None:
+    systemcls = lambda: model.System(model.Options.from_args(
+        ['--html-viewsource-base=https://github.com/some/repo/tree/master',
+         f'--project-base-dir={testpackages / "namespaces"}']))
+
+    system = processPackage(['namespaces/project1/lvl1', 
+                             'namespaces/project2/lvl1'], systemcls)
+
+    assert isinstance(root:=system.allobjects['lvl1'], model.Package)
+    assert root.kind is model.DocumentableKind.NAMESPACE_PACKAGE
+
+    assert isinstance(nested:=root.contents['lvl2'], model.Package)
+    assert nested.kind is model.DocumentableKind.NAMESPACE_PACKAGE
+
+    html1 = getHTMLOf(root)
+    html2 = getHTMLOf(nested)
+
+    assert ('<a href="https://github.com/some/repo/tree/master/project1/lvl1" class="sourceLink">(source)</a>, '
+        '<a href="https://github.com/some/repo/tree/master/project2/lvl1" class="sourceLink">(source)</a>') in html1
+    
+    assert ('<a href="https://github.com/some/repo/tree/master/project1/lvl1/lvl2" class="sourceLink">(source)</a>, '
+        '<a href="https://github.com/some/repo/tree/master/project2/lvl1/lvl2" class="sourceLink">(source)</a>') in html2

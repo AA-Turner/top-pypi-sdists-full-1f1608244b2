@@ -93,7 +93,7 @@ if TYPE_CHECKING:
 
 from ai.backend.common import redis_helper
 from ai.backend.common import validators as tx
-from ai.backend.common.events import (
+from ai.backend.common.events.agent import (
     AgentTerminatedEvent,
 )
 from ai.backend.common.plugin.monitor import GAUGE
@@ -110,6 +110,11 @@ from ai.backend.common.types import (
 from ai.backend.logging import BraceStyleAdapter
 
 from ..defs import DEFAULT_IMAGE_ARCH, DEFAULT_ROLE
+from ..errors.exceptions import (
+    BackendError,
+    InsufficientPrivilege,
+    InvalidAPIParameters,
+)
 from ..models import (
     AGENT_RESOURCE_OCCUPYING_KERNEL_STATUSES,
     SessionDependencyRow,
@@ -125,11 +130,6 @@ from ..models.session import (
 )
 from ..utils import query_userinfo as _query_userinfo
 from .auth import auth_required
-from .exceptions import (
-    BackendError,
-    InsufficientPrivilege,
-    InvalidAPIParameters,
-)
 from .manager import ALL_ALLOWED, READ_ALLOWED, server_status_required
 from .types import CORSOptions, WebMiddleware
 from .utils import (
@@ -567,7 +567,7 @@ async def create_from_params(request: web.Request, params: dict[str, Any]) -> we
     if agent_list is not None:
         if (
             request["user"]["role"] != UserRole.SUPERADMIN
-            and root_ctx.local_config["manager"]["hide-agents"]
+            and root_ctx.config_provider.config.manager.hide_agents
         ):
             raise InsufficientPrivilege(
                 "You are not allowed to manually assign agents for your session."
@@ -947,7 +947,7 @@ async def convert_session_to_image(
 async def check_agent_lost(root_ctx: RootContext, interval: float) -> None:
     try:
         now = datetime.now(tzutc())
-        timeout = timedelta(seconds=root_ctx.local_config["manager"]["heartbeat-timeout"])
+        timeout = timedelta(seconds=root_ctx.config_provider.config.manager.heartbeat_timeout)
 
         async def _check_impl(r: Redis):
             async for agent_id, prev in r.hscan_iter("agent.last_seen"):

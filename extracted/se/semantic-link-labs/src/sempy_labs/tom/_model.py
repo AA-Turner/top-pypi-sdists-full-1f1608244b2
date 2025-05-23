@@ -802,23 +802,27 @@ class TOMWrapper:
         if permission not in ["Read", "None", "Default"]:
             raise ValueError(f"{icons.red_dot} Invalid 'permission' value.")
 
-        cp = TOM.ColumnPermission()
-        cp.Column = self.model.Tables[table_name].Columns[column_name]
-        cp.MetadataPermission = System.Enum.Parse(TOM.MetadataPermission, permission)
-
-        if any(
-            c.Name == column_name and t.Name == table_name and r.Name == role_name
-            for r in self.model.Roles
-            for t in r.TablePermissions
-            for c in t.ColumnPermissions
-        ):
-            self.model.Roles[role_name].TablePermissions[table_name].ColumnPermissions[
+        r = self.model.Roles[role_name]
+        tables = [t.Name for t in r.TablePermissions]
+        # Add table permission if it does not exist
+        if table_name not in tables:
+            tp = TOM.TablePermission()
+            tp.Table = self.model.Tables[table_name]
+            r.TablePermissions.Add(tp)
+        columns = [c.Name for c in r.TablePermissions[table_name].ColumnPermissions]
+        # Add column permission if it does not exist
+        if column_name not in columns:
+            cp = TOM.ColumnPermission()
+            cp.Column = self.model.Tables[table_name].Columns[column_name]
+            cp.MetadataPermission = System.Enum.Parse(
+                TOM.MetadataPermission, permission
+            )
+            r.TablePermissions[table_name].ColumnPermissions.Add(cp)
+        # Set column permission if it already exists
+        else:
+            r.TablePermissions[table_name].ColumnPermissions[
                 column_name
             ].MetadataPermission = System.Enum.Parse(TOM.MetadataPermission, permission)
-        else:
-            self.model.Roles[role_name].TablePermissions[
-                table_name
-            ].ColumnPermissions.Add(cp)
 
     def add_hierarchy(
         self,
@@ -3662,25 +3666,27 @@ class TOMWrapper:
         import Microsoft.AnalysisServices.Tabular as TOM
         import System
 
-        if not self.has_incremental_refresh_policy(table_name=table_name):
+        if not self.has_incremental_refresh_policy(
+            object=self.model.Tables[table_name]
+        ):
             print(
                 f"The '{table_name}' table does not have an incremental refresh policy."
             )
             return
 
-        incGran = ["Day", "Month", "Quarter", "Year"]
+        granularities = ["Day", "Month", "Quarter", "Year"]
 
         incremental_granularity = incremental_granularity.capitalize()
         rolling_window_granularity = rolling_window_granularity.capitalize()
 
-        if incremental_granularity not in incGran:
+        if incremental_granularity not in granularities:
             raise ValueError(
-                f"{icons.red_dot} Invalid 'incremental_granularity' value. Please choose from the following options: {incGran}."
+                f"{icons.red_dot} Invalid 'incremental_granularity' value. Please choose from the following options: {granularities}."
             )
 
-        if rolling_window_granularity not in incGran:
+        if rolling_window_granularity not in granularities:
             raise ValueError(
-                f"{icons.red_dot} Invalid 'rolling_window_granularity' value. Please choose from the following options: {incGran}."
+                f"{icons.red_dot} Invalid 'rolling_window_granularity' value. Please choose from the following options: {granularities}."
             )
 
         if rolling_window_periods < 1:
@@ -5075,6 +5081,62 @@ class TOMWrapper:
         print(
             f"{icons.green_dot} The '{table_name}' table has been converted to Import mode."
         )
+
+    def copy_object(
+        self,
+        object,
+        target_dataset: str | UUID,
+        target_workspace: Optional[str | UUID] = None,
+        readonly: bool = False,
+    ):
+        """
+        Copies a semantic model object from the current semantic model to the target semantic model.
+
+        Parameters
+        ----------
+        object : TOM Object
+            The TOM object to be copied to the target semantic model. For example: tom.model.Tables['Sales'].
+        target_dataset : str | uuid.UUID
+            Name or ID of the target semantic model.
+        target_workspace : str | uuid.UUID, default=None
+            The Fabric workspace name or ID.
+            Defaults to None which resolves to the workspace of the attached lakehouse
+            or if no lakehouse attached, resolves to the workspace of the notebook.
+        readonly : bool, default=False
+            Whether the connection is read-only or read/write. Setting this to False enables read/write which saves the changes made back to the server.
+        """
+
+        import Microsoft.AnalysisServices.Tabular as TOM
+
+        clone = object.Clone()
+        with connect_semantic_model(
+            dataset=target_dataset,
+            workspace=target_workspace,
+            readonly=readonly,
+        ) as target_tom:
+            if isinstance(object, TOM.Table):
+                target_tom.model.Tables.Add(clone)
+            elif isinstance(object, TOM.Column):
+                target_tom.model.Tables[object.Parent.Name].Columns.Add(clone)
+            elif isinstance(object, TOM.Measure):
+                target_tom.model.Tables[object.Parent.Name].Measures.Add(clone)
+            elif isinstance(object, TOM.Hierarchy):
+                target_tom.model.Tables[object.Parent.Name].Hierarchies.Add(clone)
+            elif isinstance(object, TOM.Level):
+                target_tom.model.Tables[object.Parent.Parent.Name].Hierarchies[
+                    object.Parent.Name
+                ].Levels.Add(clone)
+            elif isinstance(object, TOM.Role):
+                target_tom.model.Roles.Add(clone)
+            elif isinstance(object, TOM.Relationship):
+                target_tom.model.Relationships.Add(clone)
+            else:
+                raise NotImplementedError(
+                    f"{icons.red_dot} The '{object.ObjectType}' object type is not supported."
+                )
+            print(
+                f"{icons.green_dot} The '{object.Name}' {str(object.ObjectType).lower()} has been copied to the '{target_dataset}' semantic model within the '{target_workspace}' workspace."
+            )
 
     def close(self):
 

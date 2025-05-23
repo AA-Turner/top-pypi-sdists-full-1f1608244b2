@@ -3158,6 +3158,15 @@ class Runtime(
         return typing.cast("Runtime", jsii.sget(cls, "NODEJS_18"))
 
     @jsii.python.classproperty
+    @jsii.member(jsii_name="NODEJS_22")
+    def NODEJS_22(cls) -> "Runtime":
+        '''(experimental) NodeJS 22.
+
+        :stability: experimental
+        '''
+        return typing.cast("Runtime", jsii.sget(cls, "NODEJS_22"))
+
+    @jsii.python.classproperty
     @jsii.member(jsii_name="PHP_81")
     def PHP_81(cls) -> "Runtime":
         '''(experimental) PHP 8.1.

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pytest-isolate
-Version: 0.0.10
+Version: 0.0.11
 Summary: Run pytest tests in isolated subprocesses 
 Project-URL: Documentation, https://github.com/gilfree/pytest-isolate#readme
 Project-URL: Issues, https://github.com/gilfree/pytest-isolate/issues

@@ -1,7 +1,7 @@
 import pytest
 from rest_framework.reverse import reverse
 
-from wbcore.contrib.authentication.factories import UserFactory
+from wbcore.contrib.authentication.factories import InternalUserFactory, UserFactory
 from wbcore.contrib.notifications.factories.notification_types import (
     NotificationTypeModelFactory,
 )
@@ -110,11 +110,9 @@ class TestNotificationTypeSettingModelViewSet:
     )
     def test_change_setting_from_other_user(self, notification_type_setting, client, user, status_code):
         """Regardless of permission, no user should ever be able to change a setting from a different user"""
-        user2 = UserFactory()
-        notification_type_setting.user = user2
-        notification_type_setting.save()
+        other_user = InternalUserFactory(is_superuser=True)
 
-        client.force_authenticate(user)
+        client.force_authenticate(other_user)
         response = client.patch(
             reverse("wbcore:notifications:notification_type_setting-detail", args=[notification_type_setting.id]),
             {"enable_web": True},

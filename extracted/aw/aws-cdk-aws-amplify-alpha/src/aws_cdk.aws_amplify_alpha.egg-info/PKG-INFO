@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: aws-cdk.aws-amplify-alpha
-Version: 2.197.0a0
+Version: 2.198.0a0
 Summary: The CDK Construct Library for AWS::Amplify
 Home-page: https://github.com/aws/aws-cdk
 Author: Amazon Web Services
@@ -22,7 +22,7 @@ Requires-Python: ~=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
 License-File: NOTICE
-Requires-Dist: aws-cdk-lib<3.0.0,>=2.197.0
+Requires-Dist: aws-cdk-lib<3.0.0,>=2.198.0
 Requires-Dist: constructs<11.0.0,>=10.0.0
 Requires-Dist: jsii<2.0.0,>=1.112.0
 Requires-Dist: publication>=0.0.3
@@ -276,6 +276,27 @@ Setting the `platform` field on the Amplify `App` construct can be used to contr
 ```python
 amplify_app = amplify.App(self, "MyApp",
     platform=amplify.Platform.WEB_COMPUTE
+)
+```
+
+## Compute role
+
+This integration, enables you to assign an IAM role to the Amplify SSR Compute service to allow your server-side rendered (SSR) application to securely access specific AWS resources based on the role's permissions.
+
+For example, you can allow your app's SSR compute functions to securely access other AWS services or resources, such as Amazon Bedrock or an Amazon S3 bucket, based on the permissions defined in the assigned IAM role.
+
+For more information, see [Adding an SSR Compute role to allow access to AWS resources](https://docs.aws.amazon.com/amplify/latest/userguide/amplify-SSR-compute-role.html).
+
+By default, a new role is created when `platform` is `Platform.WEB_COMPUTE` or `Platform.WEB_DYNAMIC`.
+If you want to assign an IAM role to the APP, set `compute` to the role:
+
+```python
+# compute_role: iam.Role
+
+
+amplify_app = amplify.App(self, "MyApp",
+    platform=amplify.Platform.WEB_COMPUTE,
+    compute_role=compute_role
 )
 ```
 

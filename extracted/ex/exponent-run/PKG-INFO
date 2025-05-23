@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: exponent-run
-Version: 0.0.88
+Version: 0.0.89
 Summary: Exponent is an AI Pair Programmer
 Author: Sashank Thupukari
 Author-email: sashank@exponent.run
@@ -13,6 +13,7 @@ Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Requires-Dist: anyio (>=4.6.0,<5.0.0)
 Requires-Dist: async-timeout (>=4.0.3,<5.0.0) ; python_version < "3.11"
+Requires-Dist: beautifulsoup4[chardet] (>=4.13.4,<5.0.0)
 Requires-Dist: certifi (>=2024.8.30,<2025.0.0)
 Requires-Dist: click (>=8.1.7,<9.0.0)
 Requires-Dist: colour (>=0.1.5,<0.2.0)

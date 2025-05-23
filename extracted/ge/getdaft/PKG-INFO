@@ -1,12 +1,12 @@
 Metadata-Version: 2.4
 Name: getdaft
-Version: 0.4.15
+Version: 0.4.16
 Requires-Dist: pyarrow>=8.0.0
 Requires-Dist: fsspec
 Requires-Dist: tqdm
 Requires-Dist: typing-extensions>=4.0.0 ; python_full_version < '3.10'
 Requires-Dist: importlib-metadata ; python_full_version < '3.10'
-Requires-Dist: daft[aws,azure,gcp,ray,pandas,numpy,iceberg,deltalake,sql,unity] ; extra == 'all'
+Requires-Dist: daft[aws,azure,gcp,ray,pandas,numpy,iceberg,deltalake,spark,sql,unity] ; extra == 'all'
 Requires-Dist: boto3 ; extra == 'aws'
 Requires-Dist: deltalake ; extra == 'deltalake'
 Requires-Dist: packaging ; extra == 'deltalake'
@@ -19,6 +19,13 @@ Requires-Dist: pandas ; extra == 'pandas'
 Requires-Dist: ray[data,client]>=2.0.0 ; platform_system != 'Windows' and extra == 'ray'
 Requires-Dist: ray[data,client]>=2.10.0 ; platform_system == 'Windows' and extra == 'ray'
 Requires-Dist: packaging ; extra == 'ray'
+Requires-Dist: googleapis-common-protos==1.56.4 ; extra == 'spark'
+Requires-Dist: grpcio>=1.48,<1.57 ; extra == 'spark'
+Requires-Dist: grpcio-status>=1.48,<1.57 ; extra == 'spark'
+Requires-Dist: numpy>=1.15 ; extra == 'spark'
+Requires-Dist: pandas>=1.0.5 ; extra == 'spark'
+Requires-Dist: py4j>=0.10.9.7 ; extra == 'spark'
+Requires-Dist: pyspark ; extra == 'spark'
 Requires-Dist: connectorx ; extra == 'sql'
 Requires-Dist: sqlalchemy ; extra == 'sql'
 Requires-Dist: sqlglot ; extra == 'sql'
@@ -35,6 +42,7 @@ Provides-Extra: lance
 Provides-Extra: numpy
 Provides-Extra: pandas
 Provides-Extra: ray
+Provides-Extra: spark
 Provides-Extra: sql
 Provides-Extra: unity
 Provides-Extra: viz

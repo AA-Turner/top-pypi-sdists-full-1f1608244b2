@@ -18,6 +18,7 @@ from xclim.core.units import (
     declare_relative_units,
     declare_units,
     infer_context,
+    infer_sampling_units,
     lwethickness2amount,
     pint2cfattrs,
     pint2cfunits,
@@ -65,6 +66,8 @@ class TestUnits:
 
 
 class TestConvertUnitsTo:
+    test_data = "ERA5/daily_surface_cancities_1990-1993.nc"
+
     def test_deprecation(self, tas_series):
         with pytest.raises(TypeError):
             convert_units_to(0, units.K)
@@ -116,6 +119,35 @@ class TestConvertUnitsTo:
         out = convert_units_to(source=delta, target="delta_degC")
         assert out == 2
         assert out.attrs["units"] == "degC"
+
+    def test_dataset(self, open_dataset):
+        ds = open_dataset(self.test_data)
+
+        out = convert_units_to(ds, {"tas": "degC", "pr": "mm/d"})
+        assert out.tas.attrs["units"] == "°C"
+        assert out.pr.attrs["units"] == "mm d-1"
+        assert out.snd.attrs["units"] == "m"
+
+    def test_dataset_missing(self, open_dataset):
+        ds = open_dataset(self.test_data)
+
+        with pytest.raises(KeyError, match="No variable named"):
+            convert_units_to(ds, {"nonexistingvariable": "Å / °R"})
+
+    def test_datatree(self, open_dataset):
+        ds = open_dataset(self.test_data)
+
+        dt = xr.DataTree.from_dict(
+            {
+                "": ds.sel(location="Victoria", drop=True),
+                "MTL": ds.sel(location="Montréal", drop=True),
+                "HAL": ds.sel(location="Halifax", drop=True),
+            }
+        )
+        out = convert_units_to(dt, {"snd": "km", "uas": "pc / yr"})
+        assert out.tas.attrs["units"] == "K"
+        assert out.uas.attrs["units"] == "pc yr-1"
+        assert out.snd.attrs["units"] == "km"
 
 
 class TestUnitConversion:
@@ -395,3 +427,22 @@ def test_temp_difference_rountrip():
     # and that converting those back to cf attrs gives the same result
     attrs = pint2cfattrs(pu)
     assert attrs == {"units": "degC", "units_metadata": "temperature: difference"}
+
+
+@pytest.mark.parametrize(
+    "freq,expm,expu", [("3D", 3, "d"), ("MS", 1, "month"), ("QS-DEC", 3, "month"), ("W", 1, "week"), ("min", 1, "min")]
+)
+def test_infer_sampling_units(freq, expm, expu):
+    time = xr.date_range("14-04-2025", periods=10, freq=freq)
+    da = xr.DataArray(list(range(10)), dims=("time",), coords={"time": time})
+    m, u = infer_sampling_units(da)
+    assert expm == m
+    assert expu == u
+
+
+def test_infer_sampling_units_errors():
+    time = xr.date_range("14-04-2025", periods=10, freq="D")
+    da = xr.DataArray(list(range(10)), dims=("time",), coords={"time": time})
+    da = da[[0, 1, 5, 6]]
+    with pytest.raises(ValueError, match="Unable to find"):
+        infer_sampling_units(da)

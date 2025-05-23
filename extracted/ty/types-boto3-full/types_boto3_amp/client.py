@@ -35,6 +35,8 @@ from .type_defs import (
     CreateAlertManagerDefinitionResponseTypeDef,
     CreateLoggingConfigurationRequestTypeDef,
     CreateLoggingConfigurationResponseTypeDef,
+    CreateQueryLoggingConfigurationRequestTypeDef,
+    CreateQueryLoggingConfigurationResponseTypeDef,
     CreateRuleGroupsNamespaceRequestTypeDef,
     CreateRuleGroupsNamespaceResponseTypeDef,
     CreateScraperRequestTypeDef,
@@ -43,6 +45,7 @@ from .type_defs import (
     CreateWorkspaceResponseTypeDef,
     DeleteAlertManagerDefinitionRequestTypeDef,
     DeleteLoggingConfigurationRequestTypeDef,
+    DeleteQueryLoggingConfigurationRequestTypeDef,
     DeleteRuleGroupsNamespaceRequestTypeDef,
     DeleteScraperRequestTypeDef,
     DeleteScraperResponseTypeDef,
@@ -51,6 +54,8 @@ from .type_defs import (
     DescribeAlertManagerDefinitionResponseTypeDef,
     DescribeLoggingConfigurationRequestTypeDef,
     DescribeLoggingConfigurationResponseTypeDef,
+    DescribeQueryLoggingConfigurationRequestTypeDef,
+    DescribeQueryLoggingConfigurationResponseTypeDef,
     DescribeRuleGroupsNamespaceRequestTypeDef,
     DescribeRuleGroupsNamespaceResponseTypeDef,
     DescribeScraperRequestTypeDef,
@@ -77,6 +82,8 @@ from .type_defs import (
     UntagResourceRequestTypeDef,
     UpdateLoggingConfigurationRequestTypeDef,
     UpdateLoggingConfigurationResponseTypeDef,
+    UpdateQueryLoggingConfigurationRequestTypeDef,
+    UpdateQueryLoggingConfigurationResponseTypeDef,
     UpdateScraperRequestTypeDef,
     UpdateScraperResponseTypeDef,
     UpdateWorkspaceAliasRequestTypeDef,
@@ -166,11 +173,21 @@ class PrometheusServiceClient(BaseClient):
         self, **kwargs: Unpack[CreateLoggingConfigurationRequestTypeDef]
     ) -> CreateLoggingConfigurationResponseTypeDef:
         """
-        The <code>CreateLoggingConfiguration</code> operation creates a logging
-        configuration for the workspace.
+        The <code>CreateLoggingConfiguration</code> operation creates rules and
+        alerting logging configuration for the workspace.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/amp/client/create_logging_configuration.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_amp/client/#create_logging_configuration)
+        """
+
+    def create_query_logging_configuration(
+        self, **kwargs: Unpack[CreateQueryLoggingConfigurationRequestTypeDef]
+    ) -> CreateQueryLoggingConfigurationResponseTypeDef:
+        """
+        Creates a query logging configuration for the specified workspace.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/amp/client/create_query_logging_configuration.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_amp/client/#create_query_logging_configuration)
         """
 
     def create_rule_groups_namespace(
@@ -218,10 +235,20 @@ class PrometheusServiceClient(BaseClient):
         self, **kwargs: Unpack[DeleteLoggingConfigurationRequestTypeDef]
     ) -> EmptyResponseMetadataTypeDef:
         """
-        Deletes the logging configuration for a workspace.
+        Deletes the rules and alerting logging configuration for a workspace.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/amp/client/delete_logging_configuration.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_amp/client/#delete_logging_configuration)
+        """
+
+    def delete_query_logging_configuration(
+        self, **kwargs: Unpack[DeleteQueryLoggingConfigurationRequestTypeDef]
+    ) -> EmptyResponseMetadataTypeDef:
+        """
+        Deletes the query logging configuration for the specified workspace.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/amp/client/delete_query_logging_configuration.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_amp/client/#delete_query_logging_configuration)
         """
 
     def delete_rule_groups_namespace(
@@ -270,11 +297,22 @@ class PrometheusServiceClient(BaseClient):
         self, **kwargs: Unpack[DescribeLoggingConfigurationRequestTypeDef]
     ) -> DescribeLoggingConfigurationResponseTypeDef:
         """
-        Returns complete information about the current logging configuration of the
-        workspace.
+        Returns complete information about the current rules and alerting logging
+        configuration of the workspace.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/amp/client/describe_logging_configuration.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_amp/client/#describe_logging_configuration)
+        """
+
+    def describe_query_logging_configuration(
+        self, **kwargs: Unpack[DescribeQueryLoggingConfigurationRequestTypeDef]
+    ) -> DescribeQueryLoggingConfigurationResponseTypeDef:
+        """
+        Retrieves the details of the query logging configuration for the specified
+        workspace.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/amp/client/describe_query_logging_configuration.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_amp/client/#describe_query_logging_configuration)
         """
 
     def describe_rule_groups_namespace(
@@ -412,11 +450,21 @@ class PrometheusServiceClient(BaseClient):
         self, **kwargs: Unpack[UpdateLoggingConfigurationRequestTypeDef]
     ) -> UpdateLoggingConfigurationResponseTypeDef:
         """
-        Updates the log group ARN or the workspace ID of the current logging
-        configuration.
+        Updates the log group ARN or the workspace ID of the current rules and alerting
+        logging configuration.
 
         [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/amp/client/update_logging_configuration.html)
         [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_amp/client/#update_logging_configuration)
+        """
+
+    def update_query_logging_configuration(
+        self, **kwargs: Unpack[UpdateQueryLoggingConfigurationRequestTypeDef]
+    ) -> UpdateQueryLoggingConfigurationResponseTypeDef:
+        """
+        Updates the query logging configuration for the specified workspace.
+
+        [Show boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/amp/client/update_query_logging_configuration.html)
+        [Show types-boto3-full documentation](https://youtype.github.io/types_boto3_docs/types_boto3_amp/client/#update_query_logging_configuration)
         """
 
     def update_scraper(

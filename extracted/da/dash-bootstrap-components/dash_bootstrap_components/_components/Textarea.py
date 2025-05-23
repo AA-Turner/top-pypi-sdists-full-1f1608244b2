@@ -1,13 +1,21 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 import typing  # noqa: F401
-import numbers # noqa: F401
 from typing_extensions import TypedDict, NotRequired, Literal # noqa: F401
-from dash.development.base_component import Component
-try:
-    from dash.development.base_component import ComponentType # noqa: F401
-except ImportError:
-    ComponentType = typing.TypeVar("ComponentType", bound=Component)
+from dash.development.base_component import Component, _explicitize_args
+
+ComponentType = typing.Union[
+    str,
+    int,
+    float,
+    Component,
+    None,
+    typing.Sequence[typing.Union[str, int, float, Component, None]],
+]
+
+NumberType = typing.Union[
+    typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex
+]
 
 
 class Textarea(Component):
@@ -206,16 +214,15 @@ Keyword arguments:
     _namespace = 'dash_bootstrap_components'
     _type = 'Textarea'
 
-    _explicitize_dash_init = True
 
     def __init__(
         self,
         id: typing.Optional[typing.Union[str, dict]] = None,
         *,
         value: typing.Optional[str] = None,
-        n_blur: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
-        n_submit: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
-        n_clicks: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
+        n_blur: typing.Optional[NumberType] = None,
+        n_submit: typing.Optional[NumberType] = None,
+        n_clicks: typing.Optional[NumberType] = None,
         valid: typing.Optional[bool] = None,
         invalid: typing.Optional[bool] = None,
         placeholder: typing.Optional[str] = None,
@@ -224,41 +231,41 @@ Keyword arguments:
         class_name: typing.Optional[str] = None,
         accesskey: typing.Optional[str] = None,
         autofocus: typing.Optional[str] = None,
-        contenteditable: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        contenteditable: typing.Optional[typing.Union[str, NumberType]] = None,
         contextmenu: typing.Optional[str] = None,
-        cols: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        cols: typing.Optional[typing.Union[str, NumberType]] = None,
         dir: typing.Optional[str] = None,
         disabled: typing.Optional[typing.Union[str, bool]] = None,
         draggable: typing.Optional[typing.Union[Literal["true", "false"], bool]] = None,
         form: typing.Optional[str] = None,
         hidden: typing.Optional[str] = None,
         lang: typing.Optional[str] = None,
-        maxlength: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
-        minlength: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        maxlength: typing.Optional[typing.Union[str, NumberType]] = None,
+        minlength: typing.Optional[typing.Union[str, NumberType]] = None,
         name: typing.Optional[str] = None,
         readonly: typing.Optional[typing.Union[bool, Literal["readOnly", "readonly", "READONLY"]]] = None,
         required: typing.Optional[typing.Union[Literal["required", "REQUIRED"], bool]] = None,
-        rows: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        rows: typing.Optional[typing.Union[str, NumberType]] = None,
         spellcheck: typing.Optional[typing.Union[Literal["true", "false"], bool]] = None,
-        tabindex: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        tabindex: typing.Optional[typing.Union[str, NumberType]] = None,
         title: typing.Optional[str] = None,
         wrap: typing.Optional[str] = None,
         submit_on_enter: typing.Optional[bool] = None,
-        debounce: typing.Optional[typing.Union[bool, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
-        persistence: typing.Optional[typing.Union[bool, str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        debounce: typing.Optional[typing.Union[bool, NumberType]] = None,
+        persistence: typing.Optional[typing.Union[bool, str, NumberType]] = None,
         persisted_props: typing.Optional[typing.Sequence[Literal["value"]]] = None,
         persistence_type: typing.Optional[Literal["local", "session", "memory"]] = None,
         key: typing.Optional[str] = None,
         className: typing.Optional[str] = None,
         accessKey: typing.Optional[str] = None,
         autoFocus: typing.Optional[str] = None,
-        contentEditable: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        contentEditable: typing.Optional[typing.Union[str, NumberType]] = None,
         contextMenu: typing.Optional[str] = None,
-        maxLength: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
-        minLength: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        maxLength: typing.Optional[typing.Union[str, NumberType]] = None,
+        minLength: typing.Optional[typing.Union[str, NumberType]] = None,
         readOnly: typing.Optional[typing.Union[bool, Literal["readOnly", "readonly", "READONLY"]]] = None,
         spellCheck: typing.Optional[typing.Union[Literal["true", "false"], bool]] = None,
-        tabIndex: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        tabIndex: typing.Optional[typing.Union[str, NumberType]] = None,
         **kwargs
     ):
         self._prop_names = ['id', 'value', 'n_blur', 'n_submit', 'n_clicks', 'valid', 'invalid', 'placeholder', 'size', 'style', 'class_name', 'accesskey', 'autofocus', 'contenteditable', 'contextmenu', 'cols', 'dir', 'disabled', 'draggable', 'form', 'hidden', 'lang', 'maxlength', 'minlength', 'name', 'readonly', 'required', 'rows', 'spellcheck', 'tabindex', 'title', 'wrap', 'submit_on_enter', 'debounce', 'persistence', 'persisted_props', 'persistence_type', 'key', 'className', 'accessKey', 'autoFocus', 'contentEditable', 'contextMenu', 'maxLength', 'minLength', 'readOnly', 'spellCheck', 'tabIndex']
@@ -271,3 +278,5 @@ Keyword arguments:
         args = {k: _locals[k] for k in _explicit_args}
 
         super(Textarea, self).__init__(**args)
+
+setattr(Textarea, "__init__", _explicitize_args(Textarea.__init__))

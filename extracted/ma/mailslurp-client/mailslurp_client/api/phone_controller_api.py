@@ -1307,16 +1307,17 @@ class PhoneControllerApi(object):
             _request_timeout=local_var_params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def get_phone_number_by_name(self, **kwargs):  # noqa: E501
+    def get_phone_number_by_name(self, name, **kwargs):  # noqa: E501
         """Get a phone number by name  # noqa: E501
 
         Get a phone number by name  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_phone_number_by_name(async_req=True)
+        >>> thread = api.get_phone_number_by_name(name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param str name: (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1329,18 +1330,19 @@ class PhoneControllerApi(object):
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
-        return self.get_phone_number_by_name_with_http_info(**kwargs)  # noqa: E501
+        return self.get_phone_number_by_name_with_http_info(name, **kwargs)  # noqa: E501
 
-    def get_phone_number_by_name_with_http_info(self, **kwargs):  # noqa: E501
+    def get_phone_number_by_name_with_http_info(self, name, **kwargs):  # noqa: E501
         """Get a phone number by name  # noqa: E501
 
         Get a phone number by name  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_phone_number_by_name_with_http_info(async_req=True)
+        >>> thread = api.get_phone_number_by_name_with_http_info(name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param str name: (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1358,6 +1360,7 @@ class PhoneControllerApi(object):
         local_var_params = locals()
 
         all_params = [
+            'name'
         ]
         all_params.extend(
             [
@@ -1376,12 +1379,18 @@ class PhoneControllerApi(object):
                 )
             local_var_params[key] = val
         del local_var_params['kwargs']
+        # verify the required parameter 'name' is set
+        if self.api_client.client_side_validation and ('name' not in local_var_params or  # noqa: E501
+                                                        local_var_params['name'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `name` when calling `get_phone_number_by_name`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
+        if 'name' in local_var_params and local_var_params['name'] is not None:  # noqa: E501
+            query_params.append(('name', local_var_params['name']))  # noqa: E501
 
         header_params = {}
 
@@ -1412,16 +1421,17 @@ class PhoneControllerApi(object):
             _request_timeout=local_var_params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def get_phone_number_by_phone_number(self, **kwargs):  # noqa: E501
+    def get_phone_number_by_phone_number(self, phone_number, **kwargs):  # noqa: E501
         """Get a phone number by phone number  # noqa: E501
 
         Get a phone number by phone number  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_phone_number_by_phone_number(async_req=True)
+        >>> thread = api.get_phone_number_by_phone_number(phone_number, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param str phone_number: (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1434,18 +1444,19 @@ class PhoneControllerApi(object):
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
-        return self.get_phone_number_by_phone_number_with_http_info(**kwargs)  # noqa: E501
+        return self.get_phone_number_by_phone_number_with_http_info(phone_number, **kwargs)  # noqa: E501
 
-    def get_phone_number_by_phone_number_with_http_info(self, **kwargs):  # noqa: E501
+    def get_phone_number_by_phone_number_with_http_info(self, phone_number, **kwargs):  # noqa: E501
         """Get a phone number by phone number  # noqa: E501
 
         Get a phone number by phone number  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_phone_number_by_phone_number_with_http_info(async_req=True)
+        >>> thread = api.get_phone_number_by_phone_number_with_http_info(phone_number, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param str phone_number: (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1463,6 +1474,7 @@ class PhoneControllerApi(object):
         local_var_params = locals()
 
         all_params = [
+            'phone_number'
         ]
         all_params.extend(
             [
@@ -1481,12 +1493,18 @@ class PhoneControllerApi(object):
                 )
             local_var_params[key] = val
         del local_var_params['kwargs']
+        # verify the required parameter 'phone_number' is set
+        if self.api_client.client_side_validation and ('phone_number' not in local_var_params or  # noqa: E501
+                                                        local_var_params['phone_number'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `phone_number` when calling `get_phone_number_by_phone_number`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
+        if 'phone_number' in local_var_params and local_var_params['phone_number'] is not None:  # noqa: E501
+            query_params.append(('phoneNumber', local_var_params['phone_number']))  # noqa: E501
 
         header_params = {}
 

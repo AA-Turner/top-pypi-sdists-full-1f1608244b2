@@ -10,8 +10,12 @@
 # ------------------------------------------------------------------------------
 from __future__ import annotations
 
-from enum import Enum, EnumMeta
+from enum import Enum, EnumMeta, IntEnum
+import re
 
+# When Python 3.11 is minimum, import EnumType instead of EnumMeta
+
+# when Python 3.12 is minimum, will not need StrEnumMeta at all -- contains will work.
 
 class StrEnumMeta(EnumMeta):
     def __contains__(cls, item):
@@ -24,6 +28,32 @@ class StrEnumMeta(EnumMeta):
             return super().__contains__(item)
         except TypeError:  # pragma: no cover
             return False
+
+
+class ContainsMeta(EnumMeta):
+    '''
+    This is a backport of the Python 3.12 `EnumType` class's contains method.
+    '''
+    def __contains__(cls, item):
+        try:
+            cls(item)  # pylint: disable=no-value-for-parameter
+            return True
+        except ValueError:
+            # Python 3.12 does some more subtle things but not backward compatible.
+            return False
+
+
+class ContainsEnum(IntEnum, metaclass=ContainsMeta):
+    '''
+    An IntEnum that allows "in" checks against the values of the enum.
+    '''
+    def __repr__(self):
+        val = super().__repr__()
+        return re.sub(r'(\d+)', lambda m: f'0x{int(m.group(1)):X}', val)
+
+    @classmethod
+    def hasValue(cls, val):
+        return val in cls._value2member_map_
 
 
 class BooleanEnum(Enum):

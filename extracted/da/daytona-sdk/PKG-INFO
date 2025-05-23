@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: daytona_sdk
-Version: 0.17.0
+Version: 0.18.0
 Summary: Python SDK for Daytona
 Author-email: Vedran Jukic <vedran.jukic@gmail.com>
 License: Apache 2.0
@@ -19,9 +19,10 @@ Requires-Dist: marshmallow<4.0.0,>=3.19.0
 Requires-Dist: pydantic<3.0.0,>=2.4.2
 Requires-Dist: python-dateutil<3.0.0,>=2.8.2
 Requires-Dist: urllib3<3.0.0,>=2.0.7
-Requires-Dist: daytona_api_client<1.0.0,>=0.18.1
+Requires-Dist: daytona_api_client<1.0.0,>=0.19.1
 Requires-Dist: Deprecated<2.0.0,>=1.2.18
 Requires-Dist: httpx<0.29.0,>=0.28.0
+Requires-Dist: requests_toolbelt<1.1.0,>=1.0.0
 Provides-Extra: dev
 Requires-Dist: pydoc-markdown>=4.8.2; extra == "dev"
 Requires-Dist: black>=22.0.0; extra == "dev"
@@ -123,7 +124,7 @@ print(response.result)
 
 ```python
 # Upload a file
-sandbox.fs.upload_file('path/to/file.txt', b'Hello, World!')
+sandbox.fs.upload_file(b'Hello, World!', 'path/to/file.txt')
 
 # Download a file
 content = sandbox.fs.download_file('path/to/file.txt')

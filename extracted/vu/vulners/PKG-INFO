@@ -1,10 +1,10 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.3
 Name: vulners
-Version: 2.3.6
+Version: 3.0.1
 Summary: Python library and command-line utility for Vulners (https://vulners.com)
 Keywords: security,network,vulners,vulnerability,CVE
 Author: Vulners Team
-Requires-Python: >=3.8
+Requires-Python: >=3.10
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: Information Technology
@@ -12,17 +12,16 @@ Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
-Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Topic :: Software Development :: Version Control
 Classifier: Topic :: Utilities
-Requires-Dist: appdirs (>=1.4.4,<2.0.0)
-Requires-Dist: requests (>=2.31.0,<3.0.0)
-Requires-Dist: six (>=1.16.0,<2.0.0)
+Requires-Dist: httpx (>=0.28.1,<0.29.0)
+Requires-Dist: orjson (>=3.10.18,<4.0.0)
+Requires-Dist: pydantic (>=2.11.4,<3.0.0)
 Description-Content-Type: text/markdown
 
 # [Vulners API v3](https://vulners.com) Python wrapper

@@ -12,7 +12,7 @@ from aiohttp import hdrs, web
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from ai.backend.common.bgtask import BackgroundTaskManager
+from ai.backend.common.bgtask.bgtask import BackgroundTaskManager
 from ai.backend.common.defs import VFOLDER_GROUP_PERMISSION_MODE
 from ai.backend.common.types import (
     QuotaScopeID,
@@ -21,8 +21,9 @@ from ai.backend.common.types import (
     VFolderID,
     VFolderUsageMode,
 )
-from ai.backend.manager.api.exceptions import ObjectNotFound, StorageProxyError
-from ai.backend.manager.config import DEFAULT_CHUNK_SIZE, SharedConfig
+from ai.backend.manager.config.constant import DEFAULT_CHUNK_SIZE
+from ai.backend.manager.config.provider import ManagerConfigProvider
+from ai.backend.manager.errors.exceptions import ObjectNotFound, StorageProxyError
 from ai.backend.manager.models.endpoint import EndpointLifecycle, EndpointRow
 from ai.backend.manager.models.group import GroupRow, ProjectType
 from ai.backend.manager.models.storage import StorageSessionManager
@@ -76,7 +77,6 @@ from ..actions.base import (
 )
 from ..exceptions import (
     Forbidden,
-    InvalidParameter,
     ModelServiceDependencyNotCleared,
     ProjectNotFound,
     TooManyVFoldersFound,
@@ -84,6 +84,7 @@ from ..exceptions import (
     VFolderCreationFailure,
     VFolderFilterStatusFailed,
     VFolderFilterStatusNotAvailable,
+    VFolderInvalidParameter,
     VFolderNotFound,
 )
 from ..types import VFolderBaseInfo, VFolderOwnershipInfo, VFolderUsageInfo
@@ -106,19 +107,19 @@ async def _check_vfolder_status(
 
 class VFolderService:
     _db: ExtendedAsyncSAEngine
-    _shared_config: SharedConfig
+    _config_provider: ManagerConfigProvider
     _storage_manager: StorageSessionManager
     _background_task_manager: BackgroundTaskManager
 
     def __init__(
         self,
         db: ExtendedAsyncSAEngine,
-        shared_config: SharedConfig,
+        config_provider: ManagerConfigProvider,
         storage_manager: StorageSessionManager,
         background_task_manager: BackgroundTaskManager,
     ) -> None:
         self._db = db
-        self._shared_config = shared_config
+        self._config_provider = config_provider
         self._storage_manager = storage_manager
         self._background_task_manager = background_task_manager
 
@@ -132,9 +133,9 @@ class VFolderService:
         unmanaged_path = action.unmanaged_path
         # Resolve host for the new virtual folder.
         if not folder_host:
-            folder_host = await self._shared_config.etcd.get("volumes/default_host")
+            folder_host = self._config_provider.config.volumes.default_host
             if not folder_host:
-                raise InvalidParameter(
+                raise VFolderInvalidParameter(
                     "You must specify the vfolder host because the default host is not configured."
                 )
         # Check if user is trying to created unmanaged vFolder
@@ -144,11 +145,13 @@ class VFolderService:
                 raise Forbidden("Insufficient permission")
                 # Assign ghost host to unmanaged vfolder
 
-        allowed_vfolder_types = await self._shared_config.get_vfolder_types()
+        allowed_vfolder_types = (
+            await self._config_provider.legacy_etcd_config_loader.get_vfolder_types()
+        )
 
         if action.name.startswith(".") and action.name != ".local":
             if action.group_id_or_name is not None:
-                raise InvalidParameter("dot-prefixed vfolders cannot be a group folder.")
+                raise VFolderInvalidParameter("dot-prefixed vfolders cannot be a group folder.")
 
         group_uuid: Optional[uuid.UUID] = None
         group_type: Optional[ProjectType] = None
@@ -243,17 +246,17 @@ class VFolderService:
                 ownership_type = "user"
                 quota_scope_id = QuotaScopeID(QuotaScopeType.USER, user_uuid)
             if ownership_type not in allowed_vfolder_types:
-                raise InvalidParameter(
+                raise VFolderInvalidParameter(
                     f"{ownership_type}-owned vfolder is not allowed in this cluster"
                 )
 
         if group_type == ProjectType.MODEL_STORE:
             if action.mount_permission != VFolderPermission.READ_WRITE:
-                raise InvalidParameter(
+                raise VFolderInvalidParameter(
                     "Setting custom permission is not supported for model store vfolder"
                 )
             if action.usage_mode != VFolderUsageMode.MODEL:
-                raise InvalidParameter(
+                raise VFolderInvalidParameter(
                     "Only Model VFolder can be created under the model store project"
                 )
 
@@ -292,7 +295,7 @@ class VFolderService:
                     )
                 result = cast(int, await conn.scalar(query))
                 if result >= max_vfolder_count:
-                    raise InvalidParameter("You cannot create more vfolders.")
+                    raise VFolderInvalidParameter("You cannot create more vfolders.")
 
             # DEPRECATED: Limit vfolder size quota if it is larger than max_vfolder_size of the resource policy.
             # max_vfolder_size = resource_policy.get("max_vfolder_size", 0)
@@ -380,7 +383,7 @@ class VFolderService:
                     })
                     await conn.execute(query)
             except sa.exc.DataError:
-                raise InvalidParameter
+                raise VFolderInvalidParameter
             assert result.rowcount == 1
 
         return CreateVFolderActionResult(
@@ -403,7 +406,9 @@ class VFolderService:
         self, action: UpdateVFolderAttributeAction
     ) -> UpdateVFolderAttributeActionResult:
         modifier = action.modifier
-        allowed_vfolder_types = await self._shared_config.get_vfolder_types()
+        allowed_vfolder_types = (
+            await self._config_provider.legacy_etcd_config_loader.get_vfolder_types()
+        )
 
         async def _update(db_session: AsyncSession) -> None:
             requester_user_row = await db_session.scalar(
@@ -430,7 +435,7 @@ class VFolderService:
             else:
                 for row in vfolder_dicts:
                     if row["name"] == new_name:
-                        raise InvalidParameter(
+                        raise VFolderInvalidParameter(
                             "One of your accessible vfolders already has the name you requested."
                         )
             to_update = modifier.fields_to_update()
@@ -442,7 +447,9 @@ class VFolderService:
         return UpdateVFolderAttributeActionResult(vfolder_uuid=action.vfolder_uuid)
 
     async def get(self, action: GetVFolderAction) -> GetVFolderActionResult:
-        allowed_vfolder_types = await self._shared_config.get_vfolder_types()
+        allowed_vfolder_types = (
+            await self._config_provider.legacy_etcd_config_loader.get_vfolder_types()
+        )
         async with self._db.begin_session() as db_session:
             requester_user_row = await db_session.scalar(
                 sa.select(UserRow).where(UserRow.uuid == action.user_uuid)
@@ -506,7 +513,9 @@ class VFolderService:
         )
 
     async def list(self, action: ListVFolderAction) -> ListVFolderActionResult:
-        allowed_vfolder_types = await self._shared_config.get_vfolder_types()
+        allowed_vfolder_types = (
+            await self._config_provider.legacy_etcd_config_loader.get_vfolder_types()
+        )
         async with self._db.begin_session() as db_session:
             requester_user_row = await db_session.scalar(
                 sa.select(UserRow).where(UserRow.uuid == action.user_uuid)
@@ -554,7 +563,9 @@ class VFolderService:
         self, action: MoveToTrashVFolderAction
     ) -> MoveToTrashVFolderActionResult:
         # Only the effective folder owner can delete the folder.
-        allowed_vfolder_types = await self._shared_config.get_vfolder_types()
+        allowed_vfolder_types = (
+            await self._config_provider.legacy_etcd_config_loader.get_vfolder_types()
+        )
         async with self._db.connect() as db_conn:
             async with self._db.begin_session(db_conn) as db_session:
                 requester_user_row = await db_session.scalar(
@@ -572,7 +583,9 @@ class VFolderService:
                 )
                 vfolder_row = vfolder_dicts[0]
                 if not vfolder_row["is_owner"]:
-                    raise InvalidParameter("Cannot delete the vfolder that is not owned by myself.")
+                    raise VFolderInvalidParameter(
+                        "Cannot delete the vfolder that is not owned by myself."
+                    )
                 await _check_vfolder_status(vfolder_row["status"], VFolderStatusSet.DELETABLE)
                 # perform extra check to make sure records of alive model service not removed by foreign key rule
                 if vfolder_row["usage_mode"] == VFolderUsageMode.MODEL:
@@ -609,7 +622,9 @@ class VFolderService:
     async def restore(
         self, action: RestoreVFolderFromTrashAction
     ) -> RestoreVFolderFromTrashActionResult:
-        allowed_vfolder_types = await self._shared_config.get_vfolder_types()
+        allowed_vfolder_types = (
+            await self._config_provider.legacy_etcd_config_loader.get_vfolder_types()
+        )
 
         async with self._db.begin_session() as db_session:
             requester_user_row = await db_session.scalar(
@@ -628,14 +643,14 @@ class VFolderService:
             if len(restore_targets) > 1:
                 raise TooManyVFoldersFound(restore_targets)
             elif len(restore_targets) == 0:
-                raise InvalidParameter("No such vfolder.")
+                raise VFolderInvalidParameter("No such vfolder.")
 
             row = restore_targets[0]
             await _check_vfolder_status(row["status"], VFolderStatusSet.RECOVERABLE)
 
         # Folder owner OR user who have DELETE permission can restore folder.
         if not row["is_owner"] and row["permission"] != VFolderPermission.RW_DELETE:
-            raise InvalidParameter("Cannot restore the vfolder that is not owned by myself.")
+            raise VFolderInvalidParameter("Cannot restore the vfolder that is not owned by myself.")
 
         # fs-level mv may fail or take longer time
         # but let's complete the db transaction to reflect that it's deleted.
@@ -645,7 +660,9 @@ class VFolderService:
     async def delete_forever(
         self, action: DeleteForeverVFolderAction
     ) -> DeleteForeverVFolderActionResult:
-        allowed_vfolder_types = await self._shared_config.get_vfolder_types()
+        allowed_vfolder_types = (
+            await self._config_provider.legacy_etcd_config_loader.get_vfolder_types()
+        )
 
         async with self._db.begin_session() as db_session:
             requester_user_row = await db_session.scalar(
@@ -664,7 +681,7 @@ class VFolderService:
             if len(entries) > 1:
                 raise TooManyVFoldersFound(entries)
             elif len(entries) == 0:
-                raise InvalidParameter("No such vfolder.")
+                raise VFolderInvalidParameter("No such vfolder.")
             row = entries[0]
             await _check_vfolder_status(row["status"], VFolderStatusSet.PURGABLE)
 
@@ -679,7 +696,9 @@ class VFolderService:
     async def force_delete(
         self, action: ForceDeleteVFolderAction
     ) -> ForceDeleteVFolderActionResult:
-        allowed_vfolder_types = await self._shared_config.get_vfolder_types()
+        allowed_vfolder_types = (
+            await self._config_provider.legacy_etcd_config_loader.get_vfolder_types()
+        )
 
         async with self._db.begin_session() as db_session:
             requester_user_row = await db_session.scalar(
@@ -708,14 +727,16 @@ class VFolderService:
         return ForceDeleteVFolderActionResult(vfolder_uuid=action.vfolder_uuid)
 
     async def clone(self, action: CloneVFolderAction) -> CloneVFolderActionResult:
-        allowed_vfolder_types = await self._shared_config.get_vfolder_types()
+        allowed_vfolder_types = (
+            await self._config_provider.legacy_etcd_config_loader.get_vfolder_types()
+        )
         if "user" not in allowed_vfolder_types:
-            raise InvalidParameter("user vfolder cannot be created in this host")
+            raise VFolderInvalidParameter("user vfolder cannot be created in this host")
         requester_user_row = await UserRow.get_by_id_with_policies(
             action.requester_user_uuid, db=self._db
         )
         if requester_user_row is None:
-            raise InvalidParameter("No such user.")
+            raise VFolderInvalidParameter("No such user.")
         async with self._db.begin_readonly_session() as db_session:
             entries = await query_accessible_vfolders(
                 db_session.bind,
@@ -730,7 +751,7 @@ class VFolderService:
                     row = entry
                     break
             else:
-                raise InvalidParameter("No such vfolder.")
+                raise VFolderInvalidParameter("No such vfolder.")
         project_row: Optional[GroupRow] = None
         if (project_id := row["group"]) is not None:
             project_row = await GroupRow.get_by_id_with_policies(project_id, db=self._db)
@@ -757,20 +778,24 @@ class VFolderService:
                     if entry["name"] == action.target_name:
                         raise VFolderAlreadyExists
                     if entry["name"].startswith(".") and entry["path"] == action.target_name:
-                        raise InvalidParameter("VFolder name conflicts with your dotfile.")
+                        raise VFolderInvalidParameter("VFolder name conflicts with your dotfile.")
 
             if not target_folder_host:
-                target_folder_host = await self._shared_config.etcd.get("volumes/default_host")
+                target_folder_host = self._config_provider.config.volumes.default_host
                 if not target_folder_host:
-                    raise InvalidParameter(
+                    raise VFolderInvalidParameter(
                         "You must specify the vfolder host because the default host is not configured."
                     )
 
             if not verify_vfolder_name(action.target_name):
-                raise InvalidParameter(f"{action.target_name} is reserved for internal operations.")
+                raise VFolderInvalidParameter(
+                    f"{action.target_name} is reserved for internal operations."
+                )
 
             if source_proxy_name != target_proxy_name:
-                raise InvalidParameter("proxy name of source and target vfolders must be equal.")
+                raise VFolderInvalidParameter(
+                    "proxy name of source and target vfolders must be equal."
+                )
 
             if project_row is not None:
                 vfolder_hosts = project_row.allowed_vfolder_hosts
@@ -792,13 +817,13 @@ class VFolderService:
                 target_folder_host not in allowed_hosts
                 or VFolderHostPermission.CREATE not in allowed_hosts[target_folder_host]
             ):
-                raise InvalidParameter(
+                raise VFolderInvalidParameter(
                     f"`{VFolderHostPermission.CREATE}` Not allowed in vfolder"
                     f" host(`{target_folder_host}`)"
                 )
             # TODO: handle legacy host lists assuming that volume names don't overlap?
             if target_folder_host not in allowed_hosts:
-                raise InvalidParameter("You are not allowed to use this vfolder host.")
+                raise VFolderInvalidParameter("You are not allowed to use this vfolder host.")
 
             # Check resource policy's max_vfolder_count
             if max_vfolder_count > 0:
@@ -810,7 +835,7 @@ class VFolderService:
                 )
                 result = await db_session.scalar(query)
                 if result >= max_vfolder_count:
-                    raise InvalidParameter("You cannot create more vfolders.")
+                    raise VFolderInvalidParameter("You cannot create more vfolders.")
 
         task_id, target_folder_id = await initiate_vfolder_clone(
             self._db,

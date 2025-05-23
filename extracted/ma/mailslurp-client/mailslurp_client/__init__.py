@@ -18,6 +18,7 @@ from __future__ import absolute_import
 __version__ = ""
 
 # import apis into sdk package
+from mailslurp_client.api.ai_controller_api import AIControllerApi
 from mailslurp_client.api.alias_controller_api import AliasControllerApi
 from mailslurp_client.api.attachment_controller_api import AttachmentControllerApi
 from mailslurp_client.api.bounce_controller_api import BounceControllerApi
@@ -51,7 +52,6 @@ from mailslurp_client.api.tracking_controller_api import TrackingControllerApi
 from mailslurp_client.api.user_controller_api import UserControllerApi
 from mailslurp_client.api.wait_for_controller_api import WaitForControllerApi
 from mailslurp_client.api.webhook_controller_api import WebhookControllerApi
-from mailslurp_client.api.sse_controller_api import SseControllerApi
 
 # import ApiClient
 from mailslurp_client.api_client import ApiClient
@@ -194,6 +194,7 @@ from mailslurp_client.models.generate_dmarc_record_options import GenerateDmarcR
 from mailslurp_client.models.generate_dmarc_record_results import GenerateDmarcRecordResults
 from mailslurp_client.models.generate_mta_sts_record_options import GenerateMtaStsRecordOptions
 from mailslurp_client.models.generate_mta_sts_record_results import GenerateMtaStsRecordResults
+from mailslurp_client.models.generate_structured_content_email_options import GenerateStructuredContentEmailOptions
 from mailslurp_client.models.generate_tls_reporting_record_options import GenerateTlsReportingRecordOptions
 from mailslurp_client.models.generate_tls_reporting_record_results import GenerateTlsReportingRecordResults
 from mailslurp_client.models.get_email_screenshot_options import GetEmailScreenshotOptions
@@ -363,6 +364,8 @@ from mailslurp_client.models.sms_send_options import SmsSendOptions
 from mailslurp_client.models.smtp_access_details import SmtpAccessDetails
 from mailslurp_client.models.sort_object import SortObject
 from mailslurp_client.models.spelling_issue import SpellingIssue
+from mailslurp_client.models.structured_content_result import StructuredContentResult
+from mailslurp_client.models.structured_output_schema import StructuredOutputSchema
 from mailslurp_client.models.template_dto import TemplateDto
 from mailslurp_client.models.template_preview import TemplatePreview
 from mailslurp_client.models.template_projection import TemplateProjection

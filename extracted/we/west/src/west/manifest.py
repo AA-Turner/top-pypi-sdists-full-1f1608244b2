@@ -7,26 +7,32 @@
 Parser and abstract data types for west manifests.
 '''
 
-from collections import deque
 import enum
 import errno
 import logging
 import os
-from pathlib import PurePosixPath, Path
 import re
 import shlex
 import subprocess
 import sys
-from typing import Any, Callable, Dict, Iterable, List, NoReturn, \
-    NamedTuple, Optional, Set, TYPE_CHECKING, Union
+from collections import deque
+from collections.abc import Iterable
+from pathlib import Path, PurePosixPath
+from typing import TYPE_CHECKING, Any, Callable, NamedTuple, NoReturn, Optional, Union
 
-from packaging.version import parse as parse_version
 import pykwalify.core
 import yaml
 
+try:
+    from yaml import CSafeLoader as SafeLoader
+except ImportError:
+    from yaml import SafeLoader  # type: ignore
+
+from packaging.version import parse as parse_version
+
 from west import util
+from west.configuration import ConfigFile, Configuration, MalformedConfig
 from west.util import PathType
-from west.configuration import Configuration, ConfigFile, MalformedConfig
 
 #
 # Public constants
@@ -70,11 +76,11 @@ SCHEMA_VERSION = '1.2'
 # The value of a west-commands as passed around during manifest
 # resolution. It can become a list due to resolving imports, even
 # though it's just a str in each individual file right now.
-WestCommandsType = Union[str, List[str]]
+WestCommandsType = Union[str, list[str]]
 
 # Type for the importer callback passed to the manifest constructor.
 # (ImportedContentType is just an alias for what it gives back.)
-ImportedContentType = Optional[Union[str, List[str]]]
+ImportedContentType = Optional[Union[str, list[str]]]
 ImporterType = Callable[['Project', str], ImportedContentType]
 
 # Type for an import map filter function, which takes a Project and
@@ -84,10 +90,10 @@ ImporterType = Callable[['Project', str], ImportedContentType]
 ImapFilterFnType = Optional[Callable[['Project'], bool]]
 
 # A list of group names to enable and disable, like ['+foo', '-bar'].
-GroupFilterType = List[str]
+GroupFilterType = list[str]
 
 # A list of group names belonging to a project, like ['foo', 'bar']
-GroupsType = List[str]
+GroupsType = list[str]
 
 class PFR(enum.Enum):
     # "Project filter result": internal type for expressing whether a
@@ -126,7 +132,7 @@ class ProjectFilterElt(NamedTuple):
 #    ProjectFilterElt(re.compile('hal_my_vendor'), True)]
 #
 # The regular expression must match the entire project name.
-ProjectFilterType = List[ProjectFilterElt]
+ProjectFilterType = list[ProjectFilterElt]
 
 def _update_project_filter(project_filter: ProjectFilterType,
                            option_value: Optional[str]) -> None:
@@ -166,7 +172,7 @@ def _update_project_filter(project_filter: ProjectFilterType,
 
 # The parsed contents of a manifest YAML file as returned by _load(),
 # after sanitychecking with validate().
-ManifestDataType = Union[str, Dict]
+ManifestDataType = Union[str, dict]
 
 # Logging
 
@@ -180,7 +186,7 @@ class Submodule(NamedTuple):
     name: Optional[str] = None
 
 # Submodules may be a list of values or a bool.
-SubmodulesType = Union[List[Submodule], bool]
+SubmodulesType = Union[list[Submodule], bool]
 
 # Manifest locating, parsing, loading, etc.
 
@@ -204,12 +210,12 @@ def _is_yml(path: PathType) -> bool:
 
 def _load(data: str) -> Any:
     try:
-        return yaml.safe_load(data)
+        return yaml.load(data, Loader=SafeLoader)
     except yaml.scanner.ScannerError as e:
         raise MalformedManifest(data) from e
 
 def _west_commands_list(west_commands: Optional[WestCommandsType]) -> \
-        List[str]:
+        list[str]:
     # Convert the raw data from a manifest file to a list of
     # west_commands locations. (If it's already a list, make a
     # defensive copy.)
@@ -221,7 +227,7 @@ def _west_commands_list(west_commands: Optional[WestCommandsType]) -> \
     else:
         return list(west_commands)
 
-def _west_commands_maybe_delist(west_commands: List[str]) -> WestCommandsType:
+def _west_commands_maybe_delist(west_commands: list[str]) -> WestCommandsType:
     # Convert a west_commands list to a string if there's
     # just one element, otherwise return the list itself.
 
@@ -230,7 +236,7 @@ def _west_commands_maybe_delist(west_commands: List[str]) -> WestCommandsType:
     else:
         return west_commands
 
-def _west_commands_merge(wc1: List[str], wc2: List[str]) -> List[str]:
+def _west_commands_merge(wc1: list[str], wc2: list[str]) -> list[str]:
     # Merge two west_commands lists, filtering out duplicates.
 
     if wc1 and wc2:
@@ -296,10 +302,10 @@ def _manifest_content_at(project: 'Project', path: PathType, mf_encoding: str,
 
 class _import_map(NamedTuple):
     file: str
-    name_allowlist: List[str]
-    path_allowlist: List[str]
-    name_blocklist: List[str]
-    path_blocklist: List[str]
+    name_allowlist: list[str]
+    path_allowlist: list[str]
+    name_blocklist: list[str]
+    path_blocklist: list[str]
     path_prefix: str
 
 def _is_imap_list(value: Any) -> bool:
@@ -320,7 +326,7 @@ def _imap_filter(imap: _import_map) -> ImapFilterFnType:
     else:
         return None
 
-def _ensure_list(item: Union[str, List[str]]) -> List[str]:
+def _ensure_list(item: Union[str, list[str]]) -> list[str]:
     # Converts item to a list containing it if item is a string, or
     # returns item.
 
@@ -358,7 +364,7 @@ class _import_ctx(NamedTuple):
     # imported earlier get higher precedence: if a 'projects:' list
     # contains a name which is already present here, we ignore that
     # element.
-    projects: Dict[str, 'Project']
+    projects: dict[str, 'Project']
 
     # The project filters we should apply while resolving imports. We
     # try to load this only once from the 'manifest.project-filter'
@@ -376,7 +382,7 @@ class _import_ctx(NamedTuple):
     # repository itself. This is mutable state in the same way
     # 'projects' is. Manifests which are imported earlier get
     # higher precedence here as usual.
-    manifest_west_commands: List[str]
+    manifest_west_commands: list[str]
 
     # The current restrictions on which projects the importing
     # manifest is interested in.
@@ -432,8 +438,8 @@ def _compose_imap_filters(imap_filter1: ImapFilterFnType,
 
     if imap_filter1 and imap_filter2:
         # These type annotated versions silence mypy warnings.
-        fn1: Callable[['Project'], bool] = imap_filter1
-        fn2: Callable[['Project'], bool] = imap_filter2
+        fn1: Callable[[Project], bool] = imap_filter1
+        fn2: Callable[[Project], bool] = imap_filter2
         return lambda project: (fn1(project) and fn2(project))
     else:
         return imap_filter1 or imap_filter2
@@ -449,7 +455,7 @@ _RESERVED_GROUP_RE = re.compile(r'(^[+-]|[\s,:])')
 _INVALID_PROJECT_NAME_RE = re.compile(r'([/\\])')
 _RESERVED_PROJECT_NAME_RE = re.compile(r'[\s,]')
 
-def _update_disabled_groups(disabled_groups: Set[str],
+def _update_disabled_groups(disabled_groups: set[str],
                             group_filter: GroupFilterType):
     # Update a set of disabled groups in place based on
     # 'group_filter'.
@@ -464,11 +470,12 @@ def _update_disabled_groups(disabled_groups: Set[str],
         else:
             # We should never get here. This private helper is only
             # meant to be invoked on valid data.
-            assert False, \
-                (f"Unexpected group filter item {item}. "
-                 "This is a west bug. Please report it to the developers "
-                 "along with as much information as you can, such as the "
-                 "stack trace that preceded this message.")
+            raise AssertionError(
+                f"Unexpected group filter item {item}. "
+                "This is a west bug. Please report it to the developers "
+                "along with as much information as you can, such as the "
+                "stack trace that preceded this message."
+            )
 
 def _is_submodule_dict_ok(subm: Any) -> bool:
     # Check whether subm is a dict that contains the expected
@@ -527,7 +534,7 @@ def manifest_path() -> str:
                       os.fspath(ret_path))
     return os.fspath(ret_path)
 
-def validate(data: Any) -> Dict[str, Any]:
+def validate(data: Any) -> dict[str, Any]:
     '''Validate manifest data
 
     Raises an exception if the manifest data is not valid for loading
@@ -863,11 +870,11 @@ class Project:
     def name_and_path(self) -> str:
         return f'{self.name} ({self.path})'
 
-    def as_dict(self) -> Dict:
+    def as_dict(self) -> dict:
         '''Return a representation of this object as a dict, as it
         would be parsed from an equivalent YAML manifest.
         '''
-        ret: Dict = {}
+        ret: dict = {}
         ret['name'] = self.name
         if self.description:
             ret['description'] = _MLS(self.description)
@@ -887,7 +894,7 @@ class Project:
         elif isinstance(self.submodules, list):
             ret['submodules'] = []
             for s in self.submodules:
-                obj: Dict = {'path': s.path}
+                obj: dict = {'path': s.path}
                 if s.name:
                     obj['name'] = s.name
                 ret['submodules'].append(obj)
@@ -900,7 +907,7 @@ class Project:
     # Git helpers
     #
 
-    def git(self, cmd: Union[str, List[str]],
+    def git(self, cmd: Union[str, list[str]],
             extra_args: Iterable[str] = (),
             capture_stdout: bool = False,
             capture_stderr: bool = False,
@@ -1069,7 +1076,7 @@ class Project:
 
     def listdir_at(self, path: PathType, rev: Optional[str] = None,
                    cwd: Optional[PathType] = None,
-                   encoding: Optional[str] = None) -> List[str]:
+                   encoding: Optional[str] = None) -> list[str]:
         '''List of directory contents in the project at a specific revision.
 
         The return value is the directory contents as a list of files and
@@ -1180,10 +1187,10 @@ class ManifestProject(Project):
                                                          self.path))
         return self._abspath
 
-    def as_dict(self) -> Dict:
+    def as_dict(self) -> dict:
         '''Return a representation of this object as a dict, as it would be
         parsed from an equivalent YAML manifest.'''
-        ret: Dict = {}
+        ret: dict = {}
         if self.path:
             ret['path'] = self.path
         if self.west_commands:
@@ -1470,11 +1477,11 @@ class Manifest:
         # later as needed.
 
         # This backs the projects() property.
-        self._projects: List[Project] = []
+        self._projects: list[Project] = []
         # The final set of groups which are explicitly disabled in
         # this manifest data, after resolving imports. This is used
         # as an optimization in is_active().
-        self._disabled_groups: Set[str] = set()
+        self._disabled_groups: set[str] = set()
         # The "raw" (unparsed) manifest.group-filter configuration
         # option in the local configuration file. See
         # _config_group_filter(); only initialized if self._top_level
@@ -1529,7 +1536,7 @@ class Manifest:
                      # any str name is also a PathType
                      project_ids: Iterable[PathType],
                      allow_paths: bool = True,
-                     only_cloned: bool = False) -> List[Project]:
+                     only_cloned: bool = False) -> list[Project]:
         '''Get a list of `Project` objects in the manifest from
         *project_ids*.
 
@@ -1555,9 +1562,9 @@ class Manifest:
         :param only_cloned: raise an exception for uncloned projects
         '''
         projects = list(self.projects)
-        unknown: List[PathType] = []  # project_ids with no Projects
-        uncloned: List[Project] = []  # if only_cloned, the uncloned Projects
-        ret: List[Project] = []  # result list of resolved Projects
+        unknown: list[PathType] = []  # project_ids with no Projects
+        uncloned: list[Project] = []  # if only_cloned, the uncloned Projects
+        ret: list[Project] = []  # result list of resolved Projects
 
         # If no project_ids are specified, use all projects.
         if not project_ids:
@@ -1592,21 +1599,25 @@ class Manifest:
         return ret
 
     def _as_dict_helper(
-            self, pdict: Optional[Callable[[Project], Dict]] = None) \
-            -> Dict:
+        self,
+        pdict: Optional[Callable[[Project], dict]] = None,
+        pfilter: Optional[Callable[[Project], bool]] = None,
+    ) -> dict:
         # pdict: returns a Project's dict representation.
         #        By default, it's Project.as_dict.
+        # pfilter: filter to apply on listing the projects.
+        #          By default, no filter is applied.
         if pdict is None:
             pdict = Project.as_dict
 
         projects = list(self.projects)
         del projects[MANIFEST_PROJECT_INDEX]
-        project_dicts = [pdict(p) for p in projects]
+        project_dicts = [pdict(p) for p in projects if pfilter is None or pfilter(p)]
 
         # This relies on insertion-ordered dictionaries for
         # predictability, which is a CPython 3.6 implementation detail
         # and Python 3.7+ guarantee.
-        r: Dict[str, Any] = {}
+        r: dict[str, Any] = {}
         r['manifest'] = {}
         if self.group_filter:
             r['manifest']['group-filter'] = self.group_filter
@@ -1615,22 +1626,26 @@ class Manifest:
 
         return r
 
-    def as_dict(self) -> Dict:
+    def as_dict(self, active_only: bool = False) -> dict:
         '''Returns a dict representing self, fully resolved.
 
         The value is "resolved" in that the result is as if all
         projects had been defined in a single manifest without any
         import attributes.
-        '''
-        return self._as_dict_helper()
 
-    def as_frozen_dict(self) -> Dict:
+        :param active_only: Do not resolve inactive projects
+        '''
+        return self._as_dict_helper(pfilter=self.is_active if active_only else None)
+
+    def as_frozen_dict(self, active_only: bool = False) -> dict:
         '''Returns a dict representing self, but frozen.
 
         The value is "frozen" in that all project revisions are the
         full SHAs pointed to by `QUAL_MANIFEST_REV_BRANCH` references.
 
         Raises ``RuntimeError`` if a project SHA can't be resolved.
+
+        :param active_only: Do not freeze inactive projects
         '''
         def pdict(p):
             if not p.is_cloned():
@@ -1646,9 +1661,9 @@ class Manifest:
             d['revision'] = sha
             return d
 
-        return self._as_dict_helper(pdict=pdict)
+        return self._as_dict_helper(pdict=pdict, pfilter=self.is_active if active_only else None)
 
-    def _dump_yaml(self, to_dump: Dict, **kwargs) -> str:
+    def _dump_yaml(self, to_dump: dict, **kwargs) -> str:
         ''' Dumps dictionary to YAML using the multi-line string representer.
 
         :param dict: dictionary to be dumped
@@ -1657,7 +1672,7 @@ class Manifest:
 
         def mls_representer(dumper, data):
             if '\n' in data:
-                tag = u'tag:yaml.org,2002:str'
+                tag = 'tag:yaml.org,2002:str'
                 return dumper.represent_scalar(tag, data, style="|")
             else:
                 return dumper.represent_str(data)
@@ -1665,18 +1680,19 @@ class Manifest:
         yaml.add_representer(_MLS, mls_representer, Dumper=yaml.SafeDumper)
         return yaml.safe_dump(to_dump, **kwargs)
 
-    def as_yaml(self, **kwargs) -> str:
+    def as_yaml(self, active_only: bool = False, **kwargs) -> str:
         '''Returns a YAML representation for self, fully resolved.
 
         The value is "resolved" in that the result is as if all
         projects had been defined in a single manifest without any
         import attributes.
 
+        :param active_only: Do not resolve inactive projects
         :param kwargs: passed to yaml.safe_dump()
         '''
-        return self._dump_yaml(self.as_dict(), **kwargs)
+        return self._dump_yaml(self.as_dict(active_only=active_only), **kwargs)
 
-    def as_frozen_yaml(self, **kwargs) -> str:
+    def as_frozen_yaml(self, active_only: bool = False, **kwargs) -> str:
         '''Returns a YAML representation for self, but frozen.
 
         The value is "frozen" in that all project revisions are the
@@ -1684,12 +1700,13 @@ class Manifest:
 
         Raises ``RuntimeError`` if a project SHA can't be resolved.
 
+        :param active_only: Do not freeze inactive projects
         :param kwargs: passed to yaml.safe_dump()
         '''
-        return self._dump_yaml(self.as_frozen_dict(), **kwargs)
+        return self._dump_yaml(self.as_frozen_dict(active_only=active_only), **kwargs)
 
     @property
-    def projects(self) -> List[Project]:
+    def projects(self) -> list[Project]:
         '''Sequence of `Project` objects representing manifest
         projects.
 
@@ -1919,12 +1936,12 @@ class Manifest:
             current_abspath = topdir_abspath / current_relpath
             try:
                 current_data = current_abspath.read_text(encoding=Manifest.encoding)
-            except FileNotFoundError:
+            except FileNotFoundError as err:
                 raise MalformedConfig(
                     f'file not found: manifest file {current_abspath} '
                     '(from configuration options '
                     f'manifest.path="{manifest_path_option}", '
-                    f'manifest.file="{manifest_file}")')
+                    f'manifest.file="{manifest_file}")') from err
 
             current_repo_abspath = topdir_abspath / manifest_path
 
@@ -2011,9 +2028,9 @@ class Manifest:
             # that rely on the ManifestProject existing.
             self._projects = list(self._ctx.projects.values())
             self._projects.insert(MANIFEST_PROJECT_INDEX, mp)
-            self._projects_by_name: Dict[str, Project] = {'manifest': mp}
+            self._projects_by_name: dict[str, Project] = {'manifest': mp}
             self._projects_by_name.update(self._ctx.projects)
-            self._projects_by_rpath: Dict[Path, Project] = {}  # resolved paths
+            self._projects_by_rpath: dict[Path, Project] = {}  # resolved paths
             if self.topdir:
                 for p in self.projects:
                     if TYPE_CHECKING:
@@ -2036,14 +2053,14 @@ class Manifest:
 
         _logger.debug(f'loaded {loading_what}')
 
-    def _load_group_filter(self, manifest_data: Dict[str, Any]) -> None:
+    def _load_group_filter(self, manifest_data: dict[str, Any]) -> None:
         # Update self._ctx.group_filter_q from manifest_data.
 
         if 'group-filter' not in manifest_data:
             _logger.debug('group-filter: unset')
             return
 
-        raw_filter: List[RawGroupType] = manifest_data['group-filter']
+        raw_filter: list[RawGroupType] = manifest_data['group-filter']
         if not raw_filter:
             self._malformed('"manifest: group-filter:" may not be empty')
 
@@ -2056,7 +2073,7 @@ class Manifest:
             self._top_level_group_filter = group_filter
 
     def _validated_group_filter(
-            self, source: Optional[str], raw_filter: List[RawGroupType]
+            self, source: Optional[str], raw_filter: list[RawGroupType]
     ) -> GroupFilterType:
         # Helper function for cleaning up nonempty manifest:
         # group-filter: and manifest.group-filter values.
@@ -2086,11 +2103,11 @@ class Manifest:
 
         return ret
 
-    def _load_self(self, manifest_data: Dict[str, Any]) -> None:
+    def _load_self(self, manifest_data: dict[str, Any]) -> None:
         # Handle the "self:" section in the manifest data, including
         # import resolution and extension commands.
 
-        slf: Optional[Dict[str, Any]] = manifest_data.get('self')
+        slf: Optional[dict[str, Any]] = manifest_data.get('self')
 
         if not slf:
             return None
@@ -2147,7 +2164,7 @@ class Manifest:
         # system) with a fallback on self._ctx.project_importer.
 
         imptype = type(imp)
-        if imptype == bool:
+        if imptype is bool:
             self._malformed(f'got "self: import: {imp}" of boolean')
         elif self._ctx.import_flags & ImportFlag.IGNORE:
             # If we're ignoring imports altogether, this is fine.
@@ -2171,12 +2188,12 @@ class Manifest:
         self._assert_imports_ok()
         self.has_imports = True
 
-        if imptype == str:
+        if imptype is str:
             self._import_path_from_self(imp)
-        elif imptype == list:
+        elif imptype is list:
             for subimp in imp:
                 self._import_from_self(subimp)
-        elif imptype == dict:
+        elif imptype is dict:
             self._import_map_from_self(imp)
         else:
             self._malformed(
@@ -2224,7 +2241,7 @@ class Manifest:
         except RecursionError as e:
             raise _ManifestImportDepth(None, pathobj) from e
 
-    def _import_map_from_self(self, imp: Dict) -> None:
+    def _import_map_from_self(self, imp: dict) -> None:
         # imap may introduce additional constraints on self._ctx, such
         # as a stricter imap_filter or a longer path_prefix.
         #
@@ -2262,8 +2279,8 @@ class Manifest:
             except RecursionError as e:
                 raise _ManifestImportDepth(None, import_abs) from e
 
-    def _load_defaults(self, defaults: Dict[str, Any],
-                       url_bases: Dict[str, str]) -> _defaults:
+    def _load_defaults(self, defaults: dict[str, Any],
+                       url_bases: dict[str, str]) -> _defaults:
         # md = manifest defaults (dictionary with values parsed from
         # the manifest)
         mdrem: Optional[str] = defaults.get('remote')
@@ -2274,8 +2291,8 @@ class Manifest:
                 self._malformed(f'default remote {mdrem} is not defined')
         return _defaults(mdrem, defaults.get('revision', _DEFAULT_REV))
 
-    def _load_projects(self, manifest: Dict[str, Any],
-                       url_bases: Dict[str, str],
+    def _load_projects(self, manifest: dict[str, Any],
+                       url_bases: dict[str, str],
                        defaults: _defaults) -> None:
         # Load projects and add them to self._ctx.projects.
 
@@ -2317,7 +2334,7 @@ class Manifest:
         for project, imp in have_imports:
             self._import_from_project(project, imp)
 
-    def _load_project(self, pd: Dict, url_bases: Dict[str, str],
+    def _load_project(self, pd: dict, url_bases: dict[str, str],
                       defaults: _defaults) -> Project:
         # pd = project data (dictionary with values parsed from the
         # manifest)
@@ -2442,7 +2459,7 @@ class Manifest:
         return ret
 
     def _validate_project_groups(self, project_name: str,
-                                 raw_groups: List[RawGroupType]):
+                                 raw_groups: list[RawGroupType]):
         for raw_group in raw_groups:
             if not is_group(raw_group):
                 self._malformed(f'project {project_name}: '
@@ -2505,16 +2522,16 @@ class Manifest:
         self.has_imports = True
 
         imptype = type(imp)
-        if imptype == bool:
+        if imptype is bool:
             # We should not have been called unless the import was truthy.
             assert imp
             self._import_path_from_project(project, _WEST_YML)
-        elif imptype == str:
+        elif imptype is str:
             self._import_path_from_project(project, imp)
-        elif imptype == list:
+        elif imptype is list:
             for subimp in imp:
                 self._import_from_project(project, subimp)
-        elif imptype == dict:
+        elif imptype is dict:
             self._import_map_from_project(project, imp)
         else:
             self._malformed(f'{project.name_and_path}: invalid import {imp} '
@@ -2537,7 +2554,7 @@ class Manifest:
         _logger.debug(f'done resolving import {path} for {project}')
 
     def _import_map_from_project(self, project: Project,
-                                 imp: Dict) -> None:
+                                 imp: dict) -> None:
         imap = self._load_imap(imp, f'project {project.name}')
 
         _logger.debug(f'resolving import {imap} for {project}')
@@ -2617,7 +2634,7 @@ class Manifest:
 
         return content
 
-    def _load_imap(self, imp: Dict, src: str) -> _import_map:
+    def _load_imap(self, imp: dict, src: str) -> _import_map:
         # Convert a parsed self or project import value from YAML into
         # an _import_map namedtuple.
 
@@ -2709,7 +2726,7 @@ class Manifest:
                     'of west')
 
     def _check_paths_are_unique(self) -> None:
-        ppaths: Dict[Path, Project] = {}
+        ppaths: dict[Path, Project] = {}
         for name, project in self._ctx.projects.items():
             pp = Path(project.path)
             if self._top_level and pp == self._config_path:

@@ -53,7 +53,7 @@ def invoke_as_task(
         elif output_result and isinstance(output_result, BaseModel):
             for field, value in output_result.model_dump().items():
                 setattr(instance, field, value)
-    except BadRequestErrors as e:  # we silent bad request error because there is nothing we can do about it
+    except tuple(BadRequestErrors) as e:  # we silent bad request error because there is nothing we can do about it
         logger.warning(str(e))
     except tuple(APIStatusErrors) as e:  # for APIStatusError, we let celery retry it
         raise e

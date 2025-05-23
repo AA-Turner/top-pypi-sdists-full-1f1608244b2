@@ -50,6 +50,8 @@ from mtmai.clients.rest.models.agent_properties import AgentProperties
 from mtmai.clients.rest.models.agent_runner_input import AgentRunnerInput
 from mtmai.clients.rest.models.agent_runner_output import AgentRunnerOutput
 from mtmai.clients.rest.models.agent_topic_types import AgentTopicTypes
+from mtmai.clients.rest.models.artifact import Artifact
+from mtmai.clients.rest.models.artifact_list import ArtifactList
 from mtmai.clients.rest.models.browser_config import BrowserConfig
 from mtmai.clients.rest.models.browser_open_task import BrowserOpenTask
 from mtmai.clients.rest.models.browser_task import BrowserTask
@@ -64,9 +66,9 @@ from mtmai.clients.rest.models.create_api_token_request import CreateAPITokenReq
 from mtmai.clients.rest.models.create_api_token_response import CreateAPITokenResponse
 from mtmai.clients.rest.models.create_cron_workflow_trigger_request import CreateCronWorkflowTriggerRequest
 from mtmai.clients.rest.models.create_event_request import CreateEventRequest
+from mtmai.clients.rest.models.create_post_request import CreatePostRequest
 from mtmai.clients.rest.models.create_pull_request_from_step_run import CreatePullRequestFromStepRun
 from mtmai.clients.rest.models.create_sns_integration_request import CreateSNSIntegrationRequest
-from mtmai.clients.rest.models.create_site_host_request import CreateSiteHostRequest
 from mtmai.clients.rest.models.create_site_request import CreateSiteRequest
 from mtmai.clients.rest.models.create_tenant_alert_email_group_request import CreateTenantAlertEmailGroupRequest
 from mtmai.clients.rest.models.create_tenant_invite_request import CreateTenantInviteRequest
@@ -77,6 +79,7 @@ from mtmai.clients.rest.models.cron_workflows_method import CronWorkflowsMethod
 from mtmai.clients.rest.models.cron_workflows_order_by_field import CronWorkflowsOrderByField
 from mtmai.clients.rest.models.dash_sidebar_item import DashSidebarItem
 from mtmai.clients.rest.models.dash_sidebar_item_leaf import DashSidebarItemLeaf
+from mtmai.clients.rest.models.demo_response import DemoResponse
 from mtmai.clients.rest.models.endpoint import Endpoint
 from mtmai.clients.rest.models.endpoint_list import EndpointList
 from mtmai.clients.rest.models.event import Event
@@ -127,6 +130,8 @@ from mtmai.clients.rest.models.platform_account_properties import PlatformAccoun
 from mtmai.clients.rest.models.platform_account_upsert import PlatformAccountUpsert
 from mtmai.clients.rest.models.platform_list import PlatformList
 from mtmai.clients.rest.models.platform_update import PlatformUpdate
+from mtmai.clients.rest.models.post import Post
+from mtmai.clients.rest.models.post_list import PostList
 from mtmai.clients.rest.models.pull_request import PullRequest
 from mtmai.clients.rest.models.pull_request_state import PullRequestState
 from mtmai.clients.rest.models.queue_metrics import QueueMetrics
@@ -155,6 +160,7 @@ from mtmai.clients.rest.models.siderbar_config_other import SiderbarConfigOther
 from mtmai.clients.rest.models.site import Site
 from mtmai.clients.rest.models.site_host import SiteHost
 from mtmai.clients.rest.models.site_host_list import SiteHostList
+from mtmai.clients.rest.models.site_host_properties import SiteHostProperties
 from mtmai.clients.rest.models.site_list import SiteList
 from mtmai.clients.rest.models.site_properties import SiteProperties
 from mtmai.clients.rest.models.site_properties_state import SitePropertiesState

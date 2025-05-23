@@ -1,13 +1,21 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 import typing  # noqa: F401
-import numbers # noqa: F401
 from typing_extensions import TypedDict, NotRequired, Literal # noqa: F401
-from dash.development.base_component import Component
-try:
-    from dash.development.base_component import ComponentType # noqa: F401
-except ImportError:
-    ComponentType = typing.TypeVar("ComponentType", bound=Component)
+from dash.development.base_component import Component, _explicitize_args
+
+ComponentType = typing.Union[
+    str,
+    int,
+    float,
+    Component,
+    None,
+    typing.Sequence[typing.Union[str, int, float, Component, None]],
+]
+
+NumberType = typing.Union[
+    typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex
+]
 
 
 class Popover(Component):
@@ -119,16 +127,15 @@ Keyword arguments:
     Delay = TypedDict(
         "Delay",
             {
-            "show": NotRequired[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]],
-            "hide": NotRequired[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]
+            "show": NotRequired[NumberType],
+            "hide": NotRequired[NumberType]
         }
     )
 
-    _explicitize_dash_init = True
 
     def __init__(
         self,
-        children: typing.Optional[typing.Union[str, int, float, ComponentType, typing.Sequence[typing.Union[str, int, float, ComponentType]]]] = None,
+        children: typing.Optional[ComponentType] = None,
         id: typing.Optional[typing.Union[str, dict]] = None,
         *,
         target: typing.Optional[typing.Union[str, dict]] = None,
@@ -136,14 +143,14 @@ Keyword arguments:
         trigger: typing.Optional[str] = None,
         placement: typing.Optional[Literal["auto", "auto-start", "auto-end", "top", "top-start", "top-end", "right", "right-start", "right-end", "bottom", "bottom-start", "bottom-end", "left", "left-start", "left-end"]] = None,
         hide_arrow: typing.Optional[bool] = None,
-        delay: typing.Optional[typing.Union["Delay", typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
-        offset: typing.Optional[typing.Union[str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        delay: typing.Optional[typing.Union["Delay", NumberType]] = None,
+        offset: typing.Optional[typing.Union[str, NumberType]] = None,
         flip: typing.Optional[bool] = None,
         body: typing.Optional[bool] = None,
         autohide: typing.Optional[bool] = None,
         style: typing.Optional[typing.Any] = None,
         class_name: typing.Optional[str] = None,
-        persistence: typing.Optional[typing.Union[bool, str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        persistence: typing.Optional[typing.Union[bool, str, NumberType]] = None,
         persisted_props: typing.Optional[typing.Sequence[Literal["is_open"]]] = None,
         persistence_type: typing.Optional[Literal["local", "session", "memory"]] = None,
         key: typing.Optional[str] = None,
@@ -160,3 +167,5 @@ Keyword arguments:
         args = {k: _locals[k] for k in _explicit_args if k != 'children'}
 
         super(Popover, self).__init__(children=children, **args)
+
+setattr(Popover, "__init__", _explicitize_args(Popover.__init__))

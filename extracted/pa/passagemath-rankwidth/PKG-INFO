@@ -1,10 +1,10 @@
 Metadata-Version: 2.4
 Name: passagemath-rankwidth
-Version: 10.5.37
+Version: 10.5.38
 Summary: passagemath: Rankwidth and rank decompositions of graphs with rw
 Author-email: The Sage Developers <sage-support@googlegroups.com>
 Maintainer: Matthias Köppe, passagemath contributors
-License: GNU General Public License (GPL) v2 or later
+License-Expression: GPL-2.0-or-later
 Project-URL: release notes, https://github.com/passagemath/passagemath/releases
 Project-URL: repo (upstream), https://github.com/sagemath/sage
 Project-URL: repo, https://github.com/passagemath/passagemath
@@ -16,7 +16,6 @@ Project-URL: tracker, https://github.com/passagemath/passagemath/issues
 Classifier: Development Status :: 6 - Mature
 Classifier: Intended Audience :: Education
 Classifier: Intended Audience :: Science/Research
-Classifier: License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)
 Classifier: Operating System :: POSIX
 Classifier: Operating System :: MacOS :: MacOS X
 Classifier: Programming Language :: Python :: 3 :: Only

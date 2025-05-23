@@ -74,6 +74,15 @@ def create_abfss_path(
     return path
 
 
+def create_abfss_path_from_path(
+    lakehouse_id: UUID, workspace_id: UUID, file_path: str
+) -> str:
+
+    fp = _get_default_file_path()
+
+    return f"abfss://{workspace_id}@{fp}/{lakehouse_id}/{file_path}"
+
+
 def _get_default_file_path() -> str:
 
     default_file_storage = _get_fabric_context_setting(name="fs.defaultFS")
@@ -266,7 +275,7 @@ def create_item(
         lro_return_status_code=True,
     )
     print(
-        f"{icons.green_dot} The '{name}' {item_type} has been successfully created within the in the '{workspace_name}' workspace."
+        f"{icons.green_dot} The '{name}' {item_type} has been successfully created within the '{workspace_name}' workspace."
     )
 
 
@@ -278,10 +287,9 @@ def get_item_definition(
     return_dataframe: bool = True,
     decode: bool = True,
 ):
-
     from sempy_labs._utils import item_types
 
-    (workspace_name, workspace_id) = resolve_workspace_name_and_id(workspace)
+    workspace_id = resolve_workspace_id(workspace)
     item_id = resolve_item_id(item, type, workspace_id)
     item_type_url = item_types.get(type)[1]
     path = item_types.get(type)[2]
@@ -304,90 +312,9 @@ def get_item_definition(
         p.get("payload") for p in result["definition"]["parts"] if p.get("path") == path
     )
     if decode:
-        json.loads(_decode_b64(value))
+        return json.loads(_decode_b64(value))
     else:
         return value
-
-
-def resolve_item_id(
-    item: str | UUID, type: Optional[str] = None, workspace: Optional[str | UUID] = None
-) -> UUID:
-
-    (workspace_name, workspace_id) = resolve_workspace_name_and_id(workspace)
-    item_id = None
-
-    if _is_valid_uuid(item):
-        # Check (optional)
-        item_id = item
-        try:
-            _base_api(
-                request=f"/v1/workspaces/{workspace_id}/items/{item_id}",
-                client="fabric_sp",
-            )
-        except FabricHTTPException:
-            raise ValueError(
-                f"{icons.red_dot} The '{item_id}' item was not found in the '{workspace_name}' workspace."
-            )
-    else:
-        if type is None:
-            raise ValueError(
-                f"{icons.red_dot} The 'type' parameter is required if specifying an item name."
-            )
-        responses = _base_api(
-            request=f"/v1/workspaces/{workspace_id}/items?type={type}",
-            client="fabric_sp",
-            uses_pagination=True,
-        )
-        for r in responses:
-            for v in r.get("value", []):
-                display_name = v.get("displayName")
-                if display_name == item:
-                    item_id = v.get("id")
-                    break
-
-    if item_id is None:
-        raise ValueError(
-            f"{icons.red_dot} There's no item '{item}' of type '{type}' in the '{workspace_name}' workspace."
-        )
-
-    return item_id
-
-
-def resolve_item_name_and_id(
-    item: str | UUID, type: Optional[str] = None, workspace: Optional[str | UUID] = None
-) -> Tuple[str, UUID]:
-
-    workspace_id = resolve_workspace_id(workspace)
-    item_id = resolve_item_id(item=item, type=type, workspace=workspace_id)
-    item_name = (
-        _base_api(
-            request=f"/v1/workspaces/{workspace_id}/items/{item_id}", client="fabric_sp"
-        )
-        .json()
-        .get("displayName")
-    )
-
-    return item_name, item_id
-
-
-def resolve_item_name(item_id: UUID, workspace: Optional[str | UUID] = None) -> str:
-
-    workspace_id = resolve_workspace_id(workspace)
-    try:
-        item_name = (
-            _base_api(
-                request=f"/v1/workspaces/{workspace_id}/items/{item_id}",
-                client="fabric_sp",
-            )
-            .json()
-            .get("displayName")
-        )
-    except FabricHTTPException:
-        raise ValueError(
-            f"{icons.red_dot} The '{item_id}' item was not found in the '{workspace_id}' workspace."
-        )
-
-    return item_name
 
 
 def resolve_lakehouse_name_and_id(
@@ -732,7 +659,7 @@ def save_as_delta_table(
             "bool": ("pa", pa.bool_(), BooleanType()),
             "boolean": ("pa", pa.bool_(), BooleanType()),
             "date": ("pa", pa.date32(), DateType()),
-            "timestamp": ("pa", pa.timestamp("ms"), TimestampType()),
+            "timestamp": ("pa", pa.timestamp("us"), TimestampType()),
         }
         return {k: v[1] if pure_python else v[2] for k, v in common_mapping.items()}
 
@@ -934,6 +861,87 @@ def resolve_workspace_name_and_id(
         raise WorkspaceNotFoundException(workspace)
 
     return workspace_name, workspace_id
+
+
+def resolve_item_id(
+    item: str | UUID, type: Optional[str] = None, workspace: Optional[str | UUID] = None
+) -> UUID:
+
+    (workspace_name, workspace_id) = resolve_workspace_name_and_id(workspace)
+    item_id = None
+
+    if _is_valid_uuid(item):
+        # Check (optional)
+        item_id = item
+        try:
+            _base_api(
+                request=f"/v1/workspaces/{workspace_id}/items/{item_id}",
+                client="fabric_sp",
+            )
+        except FabricHTTPException:
+            raise ValueError(
+                f"{icons.red_dot} The '{item_id}' item was not found in the '{workspace_name}' workspace."
+            )
+    else:
+        if type is None:
+            raise ValueError(
+                f"{icons.red_dot} The 'type' parameter is required if specifying an item name."
+            )
+        responses = _base_api(
+            request=f"/v1/workspaces/{workspace_id}/items?type={type}",
+            client="fabric_sp",
+            uses_pagination=True,
+        )
+        for r in responses:
+            for v in r.get("value", []):
+                display_name = v.get("displayName")
+                if display_name == item:
+                    item_id = v.get("id")
+                    break
+
+    if item_id is None:
+        raise ValueError(
+            f"{icons.red_dot} There's no item '{item}' of type '{type}' in the '{workspace_name}' workspace."
+        )
+
+    return item_id
+
+
+def resolve_item_name_and_id(
+    item: str | UUID, type: Optional[str] = None, workspace: Optional[str | UUID] = None
+) -> Tuple[str, UUID]:
+
+    workspace_id = resolve_workspace_id(workspace)
+    item_id = resolve_item_id(item=item, type=type, workspace=workspace_id)
+    item_name = (
+        _base_api(
+            request=f"/v1/workspaces/{workspace_id}/items/{item_id}", client="fabric_sp"
+        )
+        .json()
+        .get("displayName")
+    )
+
+    return item_name, item_id
+
+
+def resolve_item_name(item_id: UUID, workspace: Optional[str | UUID] = None) -> str:
+
+    workspace_id = resolve_workspace_id(workspace)
+    try:
+        item_name = (
+            _base_api(
+                request=f"/v1/workspaces/{workspace_id}/items/{item_id}",
+                client="fabric_sp",
+            )
+            .json()
+            .get("displayName")
+        )
+    except FabricHTTPException:
+        raise ValueError(
+            f"{icons.red_dot} The '{item_id}' item was not found in the '{workspace_id}' workspace."
+        )
+
+    return item_name
 
 
 def _extract_json(dataframe: pd.DataFrame) -> dict:
@@ -1540,38 +1548,18 @@ def _get_column_aggregate(
     workspace: Optional[str | UUID] = None,
     function: str = "max",
     default_value: int = 0,
+    schema_name: Optional[str] = None,
 ) -> int | Dict[str, int]:
 
     workspace_id = resolve_workspace_id(workspace)
     lakehouse_id = resolve_lakehouse_id(lakehouse, workspace_id)
-    path = create_abfss_path(lakehouse_id, workspace_id, table_name)
+    path = create_abfss_path(lakehouse_id, workspace_id, table_name, schema_name)
     df = _read_delta_table(path)
 
+    function = function.lower()
+
     if isinstance(column_name, str):
-        result = _get_aggregate(
-            df=df,
-            column_name=column_name,
-            function=function,
-            default_value=default_value,
-        )
-    elif isinstance(column_name, list):
-        result = {}
-        for col in column_name:
-            result[col] = _get_aggregate(
-                df=df,
-                column_name=col,
-                function=function,
-                default_value=default_value,
-            )
-    else:
-        raise TypeError("column_name must be a string or a list of strings.")
-
-    return result
-
-
-def _get_aggregate(df, column_name, function, default_value: int = 0) -> int:
-
-    function = function.upper()
+        column_name = [column_name]
 
     if _pure_python_notebook():
         import polars as pl
@@ -1581,36 +1569,82 @@ def _get_aggregate(df, column_name, function, default_value: int = 0) -> int:
 
         df = pl.from_pandas(df)
 
-        # Perform aggregation
-        if "DISTINCT" in function:
-            if isinstance(df[column_name].dtype, pl.Decimal):
-                result = df[column_name].cast(pl.Float64).n_unique()
+        def get_expr(col):
+            col_dtype = df.schema[col]
+
+            if "approx" in function:
+                return pl.col(col).unique().count().alias(col)
+            elif "distinct" in function:
+                if col_dtype == pl.Decimal:
+                    return pl.col(col).cast(pl.Float64).n_unique().alias(col)
+                else:
+                    return pl.col(col).n_unique().alias(col)
+            elif function == "sum":
+                return pl.col(col).sum().alias(col)
+            elif function == "min":
+                return pl.col(col).min().alias(col)
+            elif function == "max":
+                return pl.col(col).max().alias(col)
+            elif function == "count":
+                return pl.col(col).count().alias(col)
+            elif function in {"avg", "mean"}:
+                return pl.col(col).mean().alias(col)
             else:
-                result = df[column_name].n_unique()
-        elif "APPROX" in function:
-            result = df[column_name].unique().shape[0]
-        else:
-            try:
-                result = getattr(df[column_name], function.lower())()
-            except AttributeError:
                 raise ValueError(f"Unsupported function: {function}")
 
-        return result if result is not None else default_value
-    else:
-        from pyspark.sql.functions import approx_count_distinct
-        from pyspark.sql import functions as F
+        exprs = [get_expr(col) for col in column_name]
+        aggs = df.select(exprs).to_dict(as_series=False)
 
-        if isinstance(df, pd.DataFrame):
-            df = _create_spark_dataframe(df)
-
-        if "DISTINCT" in function:
-            result = df.select(F.count_distinct(F.col(column_name)))
-        elif "APPROX" in function:
-            result = df.select(approx_count_distinct(column_name))
+        if len(column_name) == 1:
+            result = aggs[column_name[0]][0] or default_value
         else:
-            result = df.selectExpr(f"{function}({column_name})")
+            result = {col: aggs[col][0] for col in column_name}
+    else:
+        from pyspark.sql.functions import (
+            count,
+            sum,
+            min,
+            max,
+            avg,
+            approx_count_distinct,
+            countDistinct,
+        )
 
-        return result.collect()[0][0] or default_value
+        result = None
+        if "approx" in function:
+            spark_func = approx_count_distinct
+        elif "distinct" in function:
+            spark_func = countDistinct
+        elif function == "count":
+            spark_func = count
+        elif function == "sum":
+            spark_func = sum
+        elif function == "min":
+            spark_func = min
+        elif function == "max":
+            spark_func = max
+        elif function == "avg":
+            spark_func = avg
+        else:
+            raise ValueError(f"Unsupported function: {function}")
+
+        agg_exprs = []
+        for col in column_name:
+            agg_exprs.append(spark_func(col).alias(col))
+
+        aggs = df.agg(*agg_exprs).collect()[0]
+        if len(column_name) == 1:
+            result = aggs[0] or default_value
+        else:
+            result = {col: aggs[col] for col in column_name}
+
+    return result
+
+
+def _create_spark_dataframe(df: pd.DataFrame):
+
+    spark = _create_spark_session()
+    return spark.createDataFrame(df)
 
 
 def _make_list_unique(my_list):
@@ -1705,6 +1739,9 @@ def _process_and_display_chart(df, title, widget):
     df["Start"] = df["Start"] - Offset
     df["End"] = df["End"] - Offset
 
+    unique_objects = df["Object Name"].nunique()
+    height = min(max(400, unique_objects * 30), 1000)
+
     # Vega-Lite spec for Gantt chart
     spec = (
         """{
@@ -1714,7 +1751,9 @@ def _process_and_display_chart(df, title, widget):
         + df.to_json(orient="records")
         + """ },
         "width": 700,
-        "height": 400,
+        "height": """
+        + str(height)
+        + """,
         "mark": "bar",
         "encoding": {
             "y": {
@@ -2211,3 +2250,23 @@ def _xml_to_dict(element):
             element.text.strip() if element.text and element.text.strip() else None
         )
     return data
+
+
+def file_exists(file_path: str) -> bool:
+    """
+    Check if a file exists in the given path.
+
+    Parameters
+    ----------
+    file_path : str
+        The path to the file.
+
+    Returns
+    -------
+    bool
+        True if the file exists, False otherwise.
+    """
+
+    import notebookutils
+
+    return len(notebookutils.fs.ls(file_path)) > 0

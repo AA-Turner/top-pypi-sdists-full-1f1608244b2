@@ -1,8 +1,7 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.3
 Name: swarms
-Version: 7.7.8
+Version: 7.7.9
 Summary: Swarms - TGSC
-Home-page: https://github.com/kyegomez/swarms
 License: MIT
 Keywords: artificial intelligence,deep learning,optimizers,Prompt Engineering,swarms,agents,llms,transformers,multi-agent,swarms of agents,Enterprise-Grade Agents,Production-Grade Agents,Agents,Multi-Grade-Agents,Swarms,Transformers,LLMs,Prompt Engineering,Agents,Generative Agents,Generative AI,Agent Marketplace,Agent Store,quant,finance,algorithmic trading,portfolio optimization,risk management,financial modeling,machine learning for finance,natural language processing for finance
 Author: Kye Gomez
@@ -15,6 +14,7 @@ Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
 Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Requires-Dist: PyYAML
 Requires-Dist: aiofiles
@@ -38,6 +38,7 @@ Requires-Dist: tenacity
 Requires-Dist: toml
 Requires-Dist: torch
 Project-URL: Documentation, https://docs.swarms.world
+Project-URL: Homepage, https://github.com/kyegomez/swarms
 Project-URL: Repository, https://github.com/kyegomez/swarms
 Description-Content-Type: text/markdown
 

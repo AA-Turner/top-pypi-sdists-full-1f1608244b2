@@ -82,6 +82,7 @@ from chalk.utils.cached_type_hints import cached_get_type_hints
 from chalk.utils.collections import ensure_tuple
 from chalk.utils.duration import CronTab, Duration, parse_chalk_duration
 from chalk.utils.gas import GasLimit, OutOfGasError
+from chalk.utils.import_utils import check_if_subpackage
 from chalk.utils.log_with_context import get_logger
 from chalk.utils.pydanticutil.pydantic_compat import is_pydantic_basemodel
 from chalk.utils.source_parsing import should_skip_source_code_parsing
@@ -1511,6 +1512,15 @@ def parse_common_module(
 
         if mod is pd:
             return FunctionCapturedGlobalModule(name=module_name)
+    elif mod.__name__.startswith("polars"):
+        if check_if_subpackage("polars", mod.__name__):
+            return FunctionCapturedGlobalModule(name=module_name)
+    elif mod.__name__.startswith("chalk"):
+        import chalk
+
+        if check_if_subpackage(chalk, mod.__name__):
+            return FunctionCapturedGlobalModule(name=module_name)
+
     # return FunctionCapturedGlobalModule(name=module_name)
     raise ValueError(f"Unsupported module {module_name}")
 

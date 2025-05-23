@@ -79,9 +79,9 @@ class TestPageEmailProjection(unittest.TestCase):
                         message_id = '0', 
                         domain_id = '0', 
                         favourite = True, 
+                        in_reply_to = '0', 
                         plus_address = '0', 
                         size_bytes = 56, 
-                        in_reply_to = '0', 
                         read = True, 
                         body_excerpt = '0', 
                         text_excerpt = '0', 
@@ -102,8 +102,8 @@ class TestPageEmailProjection(unittest.TestCase):
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(
-                        sorted = True, 
                         unsorted = True, 
+                        sorted = True, 
                         empty = True, ), ), 
                 total_elements = 56, 
                 total_pages = 56, 
@@ -113,8 +113,8 @@ class TestPageEmailProjection(unittest.TestCase):
                 size = 56, 
                 number = 56, 
                 sort = mailslurp_client.models.sort_object.SortObject(
-                    sorted = True, 
                     unsorted = True, 
+                    sorted = True, 
                     empty = True, ), 
                 empty = True
             )

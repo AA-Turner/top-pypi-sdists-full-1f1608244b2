@@ -10,11 +10,11 @@ from urllib.parse import urlparse
 from warnings import warn
 
 from attrs import define, field
-from omegaconf import OmegaConf
 
 from kedro.config import AbstractConfigLoader, MissingConfigException
 from kedro.framework.project import settings
 from kedro.io import CatalogProtocol, DataCatalog  # noqa: TCH001
+from kedro.io.warning_utils import suppress_catalog_warning
 from kedro.pipeline.transcoding import _transcode_split
 
 if TYPE_CHECKING:
@@ -144,6 +144,21 @@ def _expand_full_path(project_path: str | Path) -> Path:
     return Path(project_path).expanduser().resolve()
 
 
+def _update_nested_dict(old_dict: dict[Any, Any], new_dict: dict[Any, Any]) -> None:
+    """Update a nested dict with values of new_dict.
+    Args:
+        old_dict: dict to be updated
+        new_dict: dict to use for updating old_dict
+    """
+    for key, value in new_dict.items():
+        if key not in old_dict:
+            old_dict[key] = value
+        elif isinstance(old_dict[key], dict) and isinstance(value, dict):
+            _update_nested_dict(old_dict[key], value)
+        else:
+            old_dict[key] = value
+
+
 @define(slots=False)  # Enable setting new attributes to `KedroContext`
 class KedroContext:
     """``KedroContext`` is the base class which holds the configuration and
@@ -202,12 +217,8 @@ class KedroContext:
         except MissingConfigException as exc:
             warn(f"Parameters not found in your Kedro project config.\n{exc!s}")
             params = {}
-
-        if self._extra_params:
-            # Merge nested structures
-            params = OmegaConf.merge(params, self._extra_params)
-
-        return OmegaConf.to_container(params) if OmegaConf.is_config(params) else params  # type: ignore[return-value]
+        _update_nested_dict(params, self._extra_params or {})
+        return params  # type: ignore
 
     def _get_catalog(
         self,
@@ -231,12 +242,13 @@ class KedroContext:
         )
         conf_creds = self._get_config_credentials()
 
-        catalog: DataCatalog = settings.DATA_CATALOG_CLASS.from_config(
-            catalog=conf_catalog,
-            credentials=conf_creds,
-            load_versions=load_versions,
-            save_version=save_version,
-        )
+        with suppress_catalog_warning():
+            catalog: DataCatalog = settings.DATA_CATALOG_CLASS.from_config(
+                catalog=conf_catalog,
+                credentials=conf_creds,
+                load_versions=load_versions,
+                save_version=save_version,
+            )
 
         feed_dict = self._get_feed_dict()
         catalog.add_feed_dict(feed_dict)

@@ -13,6 +13,7 @@ __all__ = [
     "Tensor",
     "ExternalTensor",
     "StringTensor",
+    "LazyTensor",
     "SymbolicDim",
     "Shape",
     "TensorType",
@@ -70,6 +71,7 @@ __all__ = [
     "TensorProtoTensor",
     # Conversion functions
     "from_proto",
+    "from_onnx_text",
     "to_proto",
     # Convenience constructors
     "tensor",
@@ -104,6 +106,7 @@ from onnxscript.ir._core import (
     Graph,
     GraphView,
     Input,
+    LazyTensor,
     Model,
     Node,
     OptionalType,
@@ -142,7 +145,7 @@ from onnxscript.ir._protocols import (
     TypeProtocol,
     ValueProtocol,
 )
-from onnxscript.ir.serde import TensorProtoTensor, from_proto, to_proto
+from onnxscript.ir.serde import TensorProtoTensor, from_onnx_text, from_proto, to_proto
 
 
 def __set_module() -> None:

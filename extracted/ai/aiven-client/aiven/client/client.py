@@ -280,8 +280,11 @@ class AivenClientBase:
 class AivenClient(AivenClientBase):
     """Aiven Client with high-level operations"""
 
-    def get_service_versions(self) -> Sequence[Mapping[str, str]]:
-        return self.verify(self.get, "/service_versions", result_key="service_versions")
+    def get_service_versions(self, account_id: str | None = None) -> Sequence[Mapping[str, str]]:
+        path = "/service_versions"
+        if account_id:
+            path = self.build_path("account", account_id, "service_versions")
+        return self.verify(self.get, path, result_key="service_versions")
 
     def get_service_indexes(self, project: str, service: str) -> Sequence[dict[str, Any]]:
         return self.verify(
@@ -708,6 +711,7 @@ class AivenClient(AivenClientBase):
         remote_storage_enable: bool | None = None,
         local_retention_ms: int | None = None,
         local_retention_bytes: int | None = None,
+        inkless_enable: bool | None = None,
         tags: Sequence[Tag] | None = None,
     ) -> Mapping:
         body: dict[str, Any] = {
@@ -728,6 +732,8 @@ class AivenClient(AivenClientBase):
             config["local_retention_ms"] = local_retention_ms
         if local_retention_bytes is not None:
             config["local_retention_bytes"] = local_retention_bytes
+        if inkless_enable is not None:
+            config["inkless_enable"] = inkless_enable
         if config:
             body["config"] = config
 

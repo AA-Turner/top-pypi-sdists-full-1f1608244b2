@@ -18,6 +18,9 @@ class BaseGeneralSchemas:
     class Uuids(BaseModel):
         uuids:BaseTypes.OptionalListOfUUIDs = Field(None, description="Specific Uuids")
 
+    class Codes(BaseModel):
+        codes:BaseTypes.OptionalListOfStrings = Field(None, description="Specific Codes")
+
     class Keys(BaseModel):
         keys:BaseTypes.OptionalListOfStrings = Field(None, description="Specific Keys")
 
@@ -79,6 +82,9 @@ class BaseGeneralSchemas:
 
     class Order(BaseModel):
         order:BaseTypes.OptionalInteger = Field(..., description="Data's order")
+
+    class Code(BaseModel):
+        code:str = Field(..., description="Data's code")
 
     class Key(BaseModel):
         key:str = Field(..., description="Data's key")

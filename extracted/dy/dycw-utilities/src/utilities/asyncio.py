@@ -8,6 +8,7 @@ from asyncio import (
     PriorityQueue,
     Queue,
     QueueEmpty,
+    QueueFull,
     Semaphore,
     StreamReader,
     Task,
@@ -19,6 +20,7 @@ from asyncio import (
 )
 from collections.abc import Callable, Hashable, Iterable, Iterator, Mapping
 from contextlib import (
+    AbstractAsyncContextManager,
     AsyncExitStack,
     _AsyncGeneratorContextManager,
     asynccontextmanager,
@@ -26,6 +28,7 @@ from contextlib import (
 )
 from dataclasses import dataclass, field
 from io import StringIO
+from itertools import chain
 from logging import getLogger
 from subprocess import PIPE
 from sys import stderr, stdout
@@ -42,6 +45,8 @@ from typing import (
     override,
 )
 
+from typing_extensions import deprecated
+
 from utilities.datetime import (
     MINUTE,
     SECOND,
@@ -52,7 +57,6 @@ from utilities.datetime import (
 )
 from utilities.errors import ImpossibleCaseError, repr_error
 from utilities.functions import ensure_int, ensure_not_none, get_class_name
-from utilities.reprlib import get_repr
 from utilities.sentinel import Sentinel, sentinel
 from utilities.types import (
     Coroutine1,
@@ -66,6 +70,7 @@ from utilities.types import (
 if TYPE_CHECKING:
     from asyncio import _CoroutineLike
     from asyncio.subprocess import Process
+    from collections import deque
     from collections.abc import AsyncIterator, Sequence
     from contextvars import Context
     from types import TracebackType
@@ -74,6 +79,164 @@ if TYPE_CHECKING:
 
 
 _T = TypeVar("_T")
+
+
+class EnhancedQueue(Queue[_T]):
+    """An asynchronous deque."""
+
+    @override
+    def __init__(self, maxsize: int = 0) -> None:
+        super().__init__(maxsize=maxsize)
+        self._finished: Event
+        self._getters: deque[Any]
+        self._putters: deque[Any]
+        self._queue: deque[_T]
+        self._unfinished_tasks: int
+
+    @override
+    @deprecated("Use `get_left`/`get_right` instead")
+    async def get(self) -> _T:
+        raise RuntimeError  # pragma: no cover
+
+    @override
+    @deprecated("Use `get_left_nowait`/`get_right_nowait` instead")
+    def get_nowait(self) -> _T:
+        raise RuntimeError  # pragma: no cover
+
+    @override
+    @deprecated("Use `put_left`/`put_right` instead")
+    async def put(self, item: _T) -> None:
+        raise RuntimeError(item)  # pragma: no cover
+
+    @override
+    @deprecated("Use `put_left_nowait`/`put_right_nowait` instead")
+    def put_nowait(self, item: _T) -> None:
+        raise RuntimeError(item)  # pragma: no cover
+
+    # get all
+
+    async def get_all(self, *, reverse: bool = False) -> Sequence[_T]:
+        """Remove and return all items from the queue."""
+        first = await (self.get_right() if reverse else self.get_left())
+        return list(chain([first], self.get_all_nowait(reverse=reverse)))
+
+    def get_all_nowait(self, *, reverse: bool = False) -> Sequence[_T]:
+        """Remove and return all items from the queue without blocking."""
+        items: Sequence[_T] = []
+        while True:
+            try:
+                items.append(
+                    self.get_right_nowait() if reverse else self.get_left_nowait()
+                )
+            except QueueEmpty:
+                return items
+
+    # get left/right
+
+    async def get_left(self) -> _T:
+        """Remove and return an item from the start of the queue."""
+        return await self._get_left_or_right(self._get)
+
+    async def get_right(self) -> _T:
+        """Remove and return an item from the end of the queue."""
+        return await self._get_left_or_right(self._get_right)
+
+    def get_left_nowait(self) -> _T:
+        """Remove and return an item from the start of the queue without blocking."""
+        return self._get_left_or_right_nowait(self._get)
+
+    def get_right_nowait(self) -> _T:
+        """Remove and return an item from the end of the queue without blocking."""
+        return self._get_left_or_right_nowait(self._get_right)
+
+    # put left/right
+
+    async def put_left(self, *items: _T) -> None:
+        """Put items into the queue at the start."""
+        return await self._put_left_or_right(self._put_left, *items)
+
+    async def put_right(self, *items: _T) -> None:
+        """Put items into the queue at the end."""
+        return await self._put_left_or_right(self._put, *items)
+
+    def put_left_nowait(self, *items: _T) -> None:
+        """Put items into the queue at the start without blocking."""
+        self._put_left_or_right_nowait(self._put_left, *items)
+
+    def put_right_nowait(self, *items: _T) -> None:
+        """Put items into the queue at the end without blocking."""
+        self._put_left_or_right_nowait(self._put, *items)
+
+    # private
+
+    def _put_left(self, item: _T) -> None:
+        self._queue.appendleft(item)
+
+    def _get_right(self) -> _T:
+        return self._queue.pop()
+
+    async def _get_left_or_right(self, getter_use: Callable[[], _T], /) -> _T:
+        while self.empty():  # pragma: no cover
+            getter = self._get_loop().create_future()  # pyright: ignore[reportAttributeAccessIssue]
+            self._getters.append(getter)
+            try:
+                await getter
+            except:
+                getter.cancel()
+                with suppress(ValueError):
+                    self._getters.remove(getter)
+                if not self.empty() and not getter.cancelled():
+                    self._wakeup_next(self._getters)  # pyright: ignore[reportAttributeAccessIssue]
+                raise
+        return getter_use()
+
+    def _get_left_or_right_nowait(self, getter: Callable[[], _T], /) -> _T:
+        if self.empty():
+            raise QueueEmpty
+        item = getter()
+        self._wakeup_next(self._putters)  # pyright: ignore[reportAttributeAccessIssue]
+        return item
+
+    async def _put_left_or_right(
+        self, putter_use: Callable[[_T], None], /, *items: _T
+    ) -> None:
+        """Put an item into the queue."""
+        for item in items:
+            await self._put_left_or_right_one(putter_use, item)
+
+    async def _put_left_or_right_one(
+        self, putter_use: Callable[[_T], None], item: _T, /
+    ) -> None:
+        """Put an item into the queue."""
+        while self.full():  # pragma: no cover
+            putter = self._get_loop().create_future()  # pyright: ignore[reportAttributeAccessIssue]
+            self._putters.append(putter)
+            try:
+                await putter
+            except:
+                putter.cancel()
+                with suppress(ValueError):
+                    self._putters.remove(putter)
+                if not self.full() and not putter.cancelled():
+                    self._wakeup_next(self._putters)  # pyright: ignore[reportAttributeAccessIssue]
+                raise
+        return putter_use(item)
+
+    def _put_left_or_right_nowait(
+        self, putter: Callable[[_T], None], /, *items: _T
+    ) -> None:
+        for item in items:
+            self._put_left_or_right_nowait_one(putter, item)
+
+    def _put_left_or_right_nowait_one(
+        self, putter: Callable[[_T], None], item: _T, /
+    ) -> None:
+        if self.full():  # pragma: no cover
+            raise QueueFull
+        putter(item)
+        self._unfinished_tasks += 1
+        self._finished.clear()
+        self._wakeup_next(self._getters)  # pyright: ignore[reportAttributeAccessIssue]
 
 
 ##
@@ -85,6 +248,7 @@ class EnhancedTaskGroup(TaskGroup):
     _semaphore: Semaphore | None
     _timeout: Duration | None
     _error: type[Exception]
+    _stack: AsyncExitStack
     _timeout_cm: _AsyncGeneratorContextManager[None] | None
 
     @override
@@ -99,7 +263,23 @@ class EnhancedTaskGroup(TaskGroup):
         self._semaphore = None if max_tasks is None else Semaphore(max_tasks)
         self._timeout = timeout
         self._error = error
+        self._stack = AsyncExitStack()
         self._timeout_cm = None
+
+    @override
+    async def __aenter__(self) -> Self:
+        _ = await self._stack.__aenter__()
+        return await super().__aenter__()
+
+    @override
+    async def __aexit__(
+        self,
+        et: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
+    ) -> None:
+        _ = await self._stack.__aexit__(et, exc, tb)
+        _ = await super().__aexit__(et, exc, tb)
 
     @override
     def create_task(
@@ -115,6 +295,11 @@ class EnhancedTaskGroup(TaskGroup):
             coroutine = self._wrap_with_semaphore(self._semaphore, coro)
         coroutine = self._wrap_with_timeout(coroutine)
         return super().create_task(coroutine, name=name, context=context)
+
+    def create_task_context(self, cm: AbstractAsyncContextManager[_T], /) -> Task[_T]:
+        """Have the TaskGroup start an asynchronous context manager."""
+        _ = self._stack.push_async_callback(cm.__aexit__, None, None, None)
+        return self.create_task(cm.__aenter__())
 
     async def _wrap_with_semaphore(
         self, semaphore: Semaphore, coroutine: _CoroutineLike[_T], /
@@ -155,18 +340,12 @@ class InfiniteLooper(ABC, Generic[THashable]):
 
     async def __aenter__(self) -> Self:
         """Context manager entry."""
-        if (self._task is None) and (self._depth == 0):
-            _ = await self._stack.__aenter__()
+        if self._depth == 0:
             self._task = create_task(self._run_looper())
             if self._await_upon_aenter:
                 with suppress(CancelledError):
                     await self._task
-        elif (self._task is not None) and (self._depth >= 1):
-            ...
-        else:
-            raise ImpossibleCaseError(  # pragma: no cover
-                case=[f"{self._task=}", f"{self._depth=}"]
-            )
+            _ = await self._stack.__aenter__()
         self._depth += 1
         return self
 
@@ -178,18 +357,16 @@ class InfiniteLooper(ABC, Generic[THashable]):
     ) -> None:
         """Context manager exit."""
         _ = (exc_type, exc_value, traceback)
-        if (self._task is None) or (self._depth == 0):
-            raise ImpossibleCaseError(  # pragma: no cover
-                case=[f"{self._task=}", f"{self._depth=}"]
-            )
-        self._depth -= 1
-        if self._depth == 0:
-            _ = await self._stack.__aexit__(exc_type, exc_value, traceback)
+        self._depth = max(self._depth - 1, 0)
+        if (self._depth == 0) and (self._task is not None):
             with suppress(CancelledError):
                 await self._task
             self._task = None
-            with suppress(Exception):
+            try:
                 await self._teardown()
+            except Exception as error:  # noqa: BLE001
+                self._error_upon_teardown(error)
+            _ = await self._stack.__aexit__(exc_type, exc_value, traceback)
 
     async def stop(self) -> None:
         """Stop the service."""
@@ -413,14 +590,13 @@ class _InfiniteLooperDefaultEventError(InfiniteLooperError):
 class InfiniteQueueLooper(InfiniteLooper[THashable], Generic[THashable, _T]):
     """An infinite loop which processes a queue."""
 
-    queue_type: type[Queue[_T]] = field(default=Queue, repr=False)
     _await_upon_aenter: bool = field(default=False, init=False, repr=False)
-    _queue: Queue[_T] = field(init=False)
+    _queue: EnhancedQueue[_T] = field(init=False, repr=False)
 
     @override
     def __post_init__(self) -> None:
         super().__post_init__()
-        self._queue = self.queue_type()
+        self._queue = EnhancedQueue()
 
     def __len__(self) -> int:
         return self._queue.qsize()
@@ -428,54 +604,31 @@ class InfiniteQueueLooper(InfiniteLooper[THashable], Generic[THashable, _T]):
     @override
     async def _core(self) -> None:
         """Run the core part of the loop."""
-        items = await get_items(self._queue)
-        try:
-            await self._process_items(*items)
-        except Exception as error:  # noqa: BLE001
-            raise InfiniteQueueLooperError(
-                looper=self, items=items, error=error
-            ) from None
+        first = await self._queue.get_left()
+        self._queue.put_left_nowait(first)
+        await self._process_queue()
 
     @abstractmethod
-    async def _process_items(self, *items: _T) -> None:
-        """Process the items."""
+    async def _process_queue(self) -> None:
+        """Process the queue."""
 
     def empty(self) -> bool:
         """Check if the queue is empty."""
         return self._queue.empty()
 
-    def put_items_nowait(self, *items: _T) -> None:
-        """Put items into the queue."""
-        put_items_nowait(items, self._queue)
+    def put_left_nowait(self, *items: _T) -> None:
+        """Put items into the queue at the start without blocking."""
+        self._queue.put_left_nowait(*items)  # pragma: no cover
+
+    def put_right_nowait(self, *items: _T) -> None:
+        """Put items into the queue at the end without blocking."""
+        self._queue.put_right_nowait(*items)  # pragma: no cover
 
     async def run_until_empty(self) -> None:
         """Run until the queue is empty."""
         while not self.empty():
-            await self._process_items(*get_items_nowait(self._queue))
+            await self._process_queue()
         await self.stop()
-
-    @override
-    def _error_upon_core(self, error: Exception, /) -> None:
-        """Handle any errors upon running the core function."""
-        if self.logger is not None:
-            if isinstance(error, InfiniteQueueLooperError):
-                getLogger(name=self.logger).error(
-                    "%r encountered %s whilst processing %d item(s) %s; sleeping %s...",
-                    get_class_name(self),
-                    repr_error(error.error),
-                    len(error.items),
-                    get_repr(error.items),
-                    self._sleep_restart_desc,
-                )
-            else:
-                super()._error_upon_core(error)  # pragma: no cover
-
-
-@dataclass(kw_only=True, slots=True)
-class InfiniteQueueLooperError(Exception, Generic[_T]):
-    looper: InfiniteQueueLooper[Any, Any]
-    items: Sequence[_T]
-    error: Exception
 
 
 ##
@@ -700,11 +853,11 @@ async def timeout_dur(
 
 
 __all__ = [
+    "EnhancedQueue",
     "EnhancedTaskGroup",
     "InfiniteLooper",
     "InfiniteLooperError",
     "InfiniteQueueLooper",
-    "InfiniteQueueLooperError",
     "StreamCommandOutput",
     "UniquePriorityQueue",
     "UniqueQueue",

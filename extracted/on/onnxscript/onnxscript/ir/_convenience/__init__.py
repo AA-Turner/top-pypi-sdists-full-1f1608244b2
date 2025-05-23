@@ -32,9 +32,9 @@ SupportedAttrTypes = Union[
     _protocols.TensorProtocol,  # This includes all in-memory tensor types
     onnx.TensorProto,
     _core.Attr,
-    _core.RefAttr,
     _protocols.GraphProtocol,
     Sequence[_protocols.GraphProtocol],
+    onnx.GraphProto,
     _protocols.TypeProtocol,
     Sequence[_protocols.TypeProtocol],
     None,
@@ -49,7 +49,7 @@ def _infer_attribute_type(attr: SupportedAttrTypes) -> _enums.AttributeType:
         return _enums.AttributeType.FLOAT
     if isinstance(attr, str):
         return _enums.AttributeType.STRING
-    if isinstance(attr, (_core.Attr, _core.RefAttr)):
+    if isinstance(attr, _core.Attr):
         return attr.type
     if isinstance(attr, Sequence) and all(isinstance(x, int) for x in attr):
         return _enums.AttributeType.INTS
@@ -60,10 +60,15 @@ def _infer_attribute_type(attr: SupportedAttrTypes) -> _enums.AttributeType:
     if isinstance(attr, (_core.TensorBase, onnx.TensorProto, _protocols.TensorProtocol)):
         # Be sure to check TensorProtocol last because isinstance checking on Protocols can be slower
         return _enums.AttributeType.TENSOR
-    if isinstance(attr, (_core.Graph, _protocols.GraphProtocol)):
+    if isinstance(attr, Sequence) and all(
+        isinstance(x, (_core.TensorBase, onnx.TensorProto, _protocols.TensorProtocol))
+        for x in attr
+    ):
+        return _enums.AttributeType.TENSORS
+    if isinstance(attr, (_core.Graph, onnx.GraphProto, _protocols.GraphProtocol)):
         return _enums.AttributeType.GRAPH
     if isinstance(attr, Sequence) and all(
-        isinstance(x, (_core.Graph, _protocols.GraphProtocol)) for x in attr
+        isinstance(x, (_core.Graph, onnx.GraphProto, _protocols.GraphProtocol)) for x in attr
     ):
         return _enums.AttributeType.GRAPHS
     if isinstance(
@@ -91,7 +96,7 @@ def convert_attribute(
     name: str,
     attr: SupportedAttrTypes,
     attr_type: _enums.AttributeType | None = None,
-) -> _core.Attr | _core.RefAttr:
+) -> _core.Attr:
     """Convert a Python object to a _core.Attr object.
 
     This method is useful when constructing nodes with attributes. It infers the
@@ -107,7 +112,7 @@ def convert_attribute(
         A ``Attr`` object.
 
     Raises:
-        ValueError: If :param:`attr` is ``None`` and :param:`attr_type` is not provided.
+        ValueError: If ``attr`` is ``None`` and ``attr_type`` is not provided.
         TypeError: If the type of the attribute is not supported.
     """
     if attr is None:
@@ -115,7 +120,7 @@ def convert_attribute(
             raise ValueError("attr_type must be provided when attr is None")
         return _core.Attr(name, attr_type, None)
 
-    if isinstance(attr, (_core.Attr, _core.RefAttr)):
+    if isinstance(attr, _core.Attr):
         if attr.name != name:
             raise ValueError(
                 f"Attribute name '{attr.name}' does not match provided name '{name}'"
@@ -145,11 +150,27 @@ def convert_attribute(
         if isinstance(attr, (_core.TensorBase, _protocols.TensorProtocol)):
             return _core.AttrTensor(name, attr)
         if isinstance(attr, onnx.TensorProto):
-            return _core.AttrTensor(name, serde.TensorProtoTensor(attr))
+            return _core.AttrTensor(name, serde.deserialize_tensor(attr))
+    if attr_type == _enums.AttributeType.TENSORS:
+        tensors = []
+        for t in attr:  # type: ignore[union-attr]
+            if isinstance(t, onnx.TensorProto):
+                tensors.append(_core.AttrTensor(name, serde.deserialize_tensor(t)))
+            else:
+                tensors.append(t)  # type: ignore[arg-type]
+        return _core.AttrTensors(name, tensors)  # type: ignore[arg-type]
     if attr_type == _enums.AttributeType.GRAPH:
+        if isinstance(attr, onnx.GraphProto):
+            attr = serde.deserialize_graph(attr)
         return _core.AttrGraph(name, attr)  # type: ignore[arg-type]
     if attr_type == _enums.AttributeType.GRAPHS:
-        return _core.AttrGraphs(name, attr)  # type: ignore[arg-type]
+        graphs = []
+        for graph in attr:  # type: ignore[union-attr]
+            if isinstance(graph, onnx.GraphProto):
+                graphs.append(serde.deserialize_graph(graph))
+            else:
+                graphs.append(graph)  # type: ignore[arg-type]
+        return _core.AttrGraphs(name, graphs)  # type: ignore[arg-type]
     if attr_type == _enums.AttributeType.TYPE_PROTO:
         return _core.AttrTypeProto(name, attr)  # type: ignore[arg-type]
     if attr_type == _enums.AttributeType.TYPE_PROTOS:
@@ -159,7 +180,7 @@ def convert_attribute(
 
 def convert_attributes(
     attrs: Mapping[str, SupportedAttrTypes],
-) -> list[_core.Attr | _core.RefAttr]:
+) -> list[_core.Attr]:
     """Convert a dictionary of attributes to a list of _core.Attr objects.
 
     It infers the attribute type based on the type of the value. The supported
@@ -190,7 +211,7 @@ def convert_attributes(
         ...     "type_protos": [ir.TensorType(ir.DataType.FLOAT), ir.TensorType(ir.DataType.FLOAT)],
         ... }
         >>> convert_attributes(attrs)
-        [Attr('int', INT, 1), Attr('float', FLOAT, 1.0), Attr('str', STRING, 'hello'), Attr('ints', INTS, [1, 2, 3]), Attr('floats', FLOATS, [1.0, 2.0, 3.0]), Attr('strings', STRINGS, ['hello', 'world']), Attr('tensor', TENSOR, Tensor<DOUBLE,[3]>(array([1., 2., 3.]), name=None)), Attr('tensor_proto', TENSOR, TensorProtoTensor<FLOAT,[3]>(name='proto')), Attr('graph', INTS, Graph(
+        [Attr('int', INT, 1), Attr('float', FLOAT, 1.0), Attr('str', STRING, 'hello'), Attr('ints', INTS, [1, 2, 3]), Attr('floats', FLOATS, [1.0, 2.0, 3.0]), Attr('strings', STRINGS, ['hello', 'world']), Attr('tensor', TENSOR, Tensor<DOUBLE,[3]>(array([1., 2., 3.]), name=None)), Attr('tensor_proto', TENSOR, TensorProtoTensor<FLOAT,[3]>(array([1., 2., 3.], dtype=float32), name='proto')), Attr('graph', INTS, Graph(
             name='graph0',
             inputs=(
         <BLANKLINE>
@@ -225,7 +246,7 @@ def convert_attributes(
     Returns:
         A list of _core.Attr objects.
     """
-    attributes: list[_core.Attr | _core.RefAttr] = []
+    attributes: list[_core.Attr] = []
     for name, attr in attrs.items():
         if attr is not None:
             attributes.append(convert_attribute(name, attr))
@@ -299,7 +320,7 @@ def create_value_mapping(graph: _core.Graph) -> dict[str, _core.Value]:
     Returns:
         A dictionary mapping names to values.
     """
-    values = {}
+    values: dict[str, _core.Value] = {}
     values.update(graph.initializers)
     # The names of the values can be None or "", which we need to exclude
     for input in graph.inputs:

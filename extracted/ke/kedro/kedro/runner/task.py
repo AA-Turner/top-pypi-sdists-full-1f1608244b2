@@ -207,6 +207,7 @@ class Task:
             wait(inputs.values(), return_when=ALL_COMPLETED)
             inputs = {key: value.result() for key, value in inputs.items()}
             is_async = True
+
             additional_inputs = self._collect_inputs_from_hook(
                 node, catalog, inputs, is_async, hook_manager, session_id=session_id
             )

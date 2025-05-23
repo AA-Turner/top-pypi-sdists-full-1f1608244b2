@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: edx-django-utils
-Version: 7.4.0
+Version: 8.0.0
 Summary: EdX utilities for Django Application development.
 Home-page: https://github.com/openedx/edx-django-utils
 Author: edX
@@ -22,7 +22,6 @@ Requires-Dist: PyNaCl
 Requires-Dist: click
 Requires-Dist: django-crum
 Requires-Dist: django-waffle
-Requires-Dist: newrelic
 Requires-Dist: psutil
 Requires-Dist: stevedore
 Dynamic: author
@@ -62,7 +61,7 @@ This repository includes shared utilities for:
 * `Logging Utilities`_: Includes log filters and an encrypted logging helper.
 
 * `Monitoring Utilities`_: Includes Middleware and utilities for enhanced monitoring.
-  At this time, supports NewRelic monitoring.
+  Supports several monitoring backends.
 
 * `Plugin Infrastructure`_: Enables enhanced Django Plugin capabilities.
 
@@ -210,6 +209,10 @@ Change Log
 
 Unreleased
 ----------
+
+8.0.0 - 2025-05-22
+------------------
+* **BREAKING CHANGE**: ``newrelic`` removed from dependencies. Users of New Relic should install the package separately in their services. `See relevant DEPR <https://github.com/openedx/public-engineering/issues/360>`_.
 
 7.4.0 - 2025-04-10
 ------------------

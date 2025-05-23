@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import io
 import os
 import platform
 import socket
@@ -80,8 +81,10 @@ class AdbConnection(object):
     def closed(self) -> bool:
         return self.__conn is None
 
-    def __del__(self):
-        self.close()
+    # https://github.com/openatx/adbutils/issues/169
+    # no need to close in __del__
+    # def __del__(self):
+    #     self.close()
 
     def close(self):
         if self.__conn is None:
@@ -129,6 +132,15 @@ class AdbConnection(object):
             t = n - len(buffer)
         return buffer
 
+    def read_exact(self, n: int) -> bytes:
+        try:
+            data = self._read_fully(n)
+        except socket.timeout:
+            raise AdbTimeout("adb read timeout")
+        if len(data) < n:
+            raise EOFError(f"Expected {n} bytes, got {len(data)}")
+        return data
+
     def send_command(self, cmd: str):
         cmd_bytes = cmd.encode("utf-8")
         self.conn.send("{:04x}".format(len(cmd_bytes)).encode("utf-8") + cmd_bytes)
@@ -171,7 +183,12 @@ class AdbConnection(object):
 
 
 class BaseClient(object):
-    def __init__(self, host: str = None, port: int = None, socket_timeout: float = None):
+    def __init__(
+        self,
+        host: Optional[str] = None,
+        port: Optional[int] = None,
+        socket_timeout: Optional[float] = None,
+    ):
         """
         Args:
             host (str): default value from env:ANDROID_ADB_SERVER_HOST

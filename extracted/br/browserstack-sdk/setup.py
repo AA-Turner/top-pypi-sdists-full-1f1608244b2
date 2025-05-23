@@ -1,4 +1,3 @@
-import sys
 
 from os.path import abspath, join, dirname
 try:
@@ -28,13 +27,10 @@ requirements=[
         'robotframework-retryfailed',
         'protobuf==4.21.6',
         'watchdog',
+        "grpcio==1.62.3;python_version<'3.13'",
+        "grpcio==1.70.0;python_version>='3.13'",
     ]
 
-# Handles grpcio version based on the python version of the user
-if sys.version_info >= (3, 13):
-    requirements.append('grpcio==1.70.0')
-else:
-    requirements.append('grpcio==1.62.3')
 
 
 setup(

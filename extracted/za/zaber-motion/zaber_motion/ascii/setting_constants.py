@@ -10,6 +10,11 @@ class SettingConstants:
     ACCEL = "accel"
 
     """
+    Autodetect Coil Mode.
+    """
+    AUTODETECT_COIL_MODE = "autodetect.coil.mode"
+
+    """
     Brake Mode.
     """
     BRAKE_MODE = "brake.mode"
@@ -23,6 +28,26 @@ class SettingConstants:
     Calibration Type.
     """
     CALIBRATION_TYPE = "calibration.type"
+
+    """
+    Cia 402 Controlword.
+    """
+    CIA_402_CONTROLWORD = "cia402.controlword"
+
+    """
+    Cia 402 Modes.
+    """
+    CIA_402_MODES = "cia402.modes"
+
+    """
+    Cia 402 Modes Display.
+    """
+    CIA_402_MODES_DISPLAY = "cia402.modes.display"
+
+    """
+    Cia 402 Statusword.
+    """
+    CIA_402_STATUSWORD = "cia402.statusword"
 
     """
     Cloop Continuous Enable.

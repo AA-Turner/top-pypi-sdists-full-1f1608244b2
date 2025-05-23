@@ -164,9 +164,8 @@ class PrimaryMixin(models.Model):
             next_primary = qs.first()
             next_primary.primary = True
             next_primary.save()
-            self.primary = False
-            self.save()
         if no_deletion:
+            self.primary = False
             for field_name in self.PRIMARY_ATTR_FIELDS:
                 with suppress(FieldError, FieldDoesNotExist):
                     if self._meta.get_field(field_name).null:  # ensure the field is nullable

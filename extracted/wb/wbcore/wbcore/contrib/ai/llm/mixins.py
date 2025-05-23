@@ -1,5 +1,3 @@
-from contextlib import suppress
-
 from celery import chain, shared_task
 from django.db.models import Model
 
@@ -25,11 +23,10 @@ class LLMMixin(Model):
                 tasks.append(config.schedule(self, initial=index == 0))
             if tasks:
                 res = chain(*tasks, save_instance_as_task.s())
-                with suppress(Exception):  # we suppress any possible celery exception or pytest issue
-                    if _llm_synchronous:
-                        res.apply()
-                    else:
-                        res.apply_async()
+                if _llm_synchronous:
+                    res.apply()
+                else:
+                    res.apply_async()
 
     class Meta:
         abstract = True

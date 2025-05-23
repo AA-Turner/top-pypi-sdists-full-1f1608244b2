@@ -130,12 +130,12 @@ class Units(Enum):
     FREQUENCY_NANOHERTZ = 'Frequency:nanohertz'
 
 
-UnitsAndLiterals = Union[Units, Literal["m", "cm", "mm", "µm", "um", "nm", "in", "m/s", "cm/s", "mm/s", "µm/s", "um/s", "nm/s", "in/s", "m/s²", "m/s^2", "cm/s²", "cm/s^2", "mm/s²", "mm/s^2", "µm/s²", "um/s^2", "nm/s²", "nm/s^2", "in/s²", "in/s^2", "°", "deg", "rad", "°/s", "deg/s", "rad/s", "°/s²", "deg/s^2", "rad/s²", "rad/s^2", "%", "s", "ms", "µs", "us", "GHz", "MHz", "kHz", "Hz", "mHz", "µHz", "uHz", "nHz"]]
-LengthUnits = Union[Units, Literal["m", "cm", "mm", "µm", "um", "nm", "in", "°", "deg", "rad"]]
-VelocityUnits = Union[Units, Literal["m/s", "cm/s", "mm/s", "µm/s", "um/s", "nm/s", "in/s", "°/s", "deg/s", "rad/s"]]
-AccelerationUnits = Union[Units, Literal["m/s²", "m/s^2", "cm/s²", "cm/s^2", "mm/s²", "mm/s^2", "µm/s²", "um/s^2", "nm/s²", "nm/s^2", "in/s²", "in/s^2", "°/s²", "deg/s^2", "rad/s²", "rad/s^2"]]
-TimeUnits = Union[Units, Literal["s", "ms", "µs", "us"]]
-FrequencyUnits = Union[Units, Literal["GHz", "MHz", "kHz", "Hz", "mHz", "µHz", "uHz", "nHz"]]
+UnitsAndLiterals = Union[Units, Literal["m", "cm", "mm", "µm", "um", "μm", "nm", "in", "m/s", "cm/s", "mm/s", "µm/s", "um/s", "μm/s", "nm/s", "in/s", "m/s²", "m/s^2", "cm/s²", "cm/s^2", "mm/s²", "mm/s^2", "µm/s²", "um/s^2", "μm/s²", "nm/s²", "nm/s^2", "in/s²", "in/s^2", "°", "deg", "rad", "°/s", "deg/s", "rad/s", "°/s²", "deg/s^2", "rad/s²", "rad/s^2", "%", "s", "ms", "µs", "us", "μs", "GHz", "MHz", "kHz", "Hz", "mHz", "µHz", "uHz", "μHz", "nHz"]]
+LengthUnits = Union[Units, Literal["m", "cm", "mm", "µm", "um", "μm", "nm", "in", "°", "deg", "rad"]]
+VelocityUnits = Union[Units, Literal["m/s", "cm/s", "mm/s", "µm/s", "um/s", "μm/s", "nm/s", "in/s", "°/s", "deg/s", "rad/s"]]
+AccelerationUnits = Union[Units, Literal["m/s²", "m/s^2", "cm/s²", "cm/s^2", "mm/s²", "mm/s^2", "µm/s²", "um/s^2", "μm/s²", "nm/s²", "nm/s^2", "in/s²", "in/s^2", "°/s²", "deg/s^2", "rad/s²", "rad/s^2"]]
+TimeUnits = Union[Units, Literal["s", "ms", "µs", "us", "μs"]]
+FrequencyUnits = Union[Units, Literal["GHz", "MHz", "kHz", "Hz", "mHz", "µHz", "uHz", "μHz", "nHz"]]
 
 LITERALS_TO_UNITS = {
     "m": Units.LENGTH_METRES,
@@ -143,6 +143,7 @@ LITERALS_TO_UNITS = {
     "mm": Units.LENGTH_MILLIMETRES,
     "µm": Units.LENGTH_MICROMETRES,
     "um": Units.LENGTH_MICROMETRES,
+    "μm": Units.LENGTH_MICROMETRES,
     "nm": Units.LENGTH_NANOMETRES,
     "in": Units.LENGTH_INCHES,
     "m/s": Units.VELOCITY_METRES_PER_SECOND,
@@ -150,6 +151,7 @@ LITERALS_TO_UNITS = {
     "mm/s": Units.VELOCITY_MILLIMETRES_PER_SECOND,
     "µm/s": Units.VELOCITY_MICROMETRES_PER_SECOND,
     "um/s": Units.VELOCITY_MICROMETRES_PER_SECOND,
+    "μm/s": Units.VELOCITY_MICROMETRES_PER_SECOND,
     "nm/s": Units.VELOCITY_NANOMETRES_PER_SECOND,
     "in/s": Units.VELOCITY_INCHES_PER_SECOND,
     "m/s²": Units.ACCELERATION_METRES_PER_SECOND_SQUARED,
@@ -160,6 +162,7 @@ LITERALS_TO_UNITS = {
     "mm/s^2": Units.ACCELERATION_MILLIMETRES_PER_SECOND_SQUARED,
     "µm/s²": Units.ACCELERATION_MICROMETRES_PER_SECOND_SQUARED,
     "um/s^2": Units.ACCELERATION_MICROMETRES_PER_SECOND_SQUARED,
+    "μm/s²": Units.ACCELERATION_MICROMETRES_PER_SECOND_SQUARED,
     "nm/s²": Units.ACCELERATION_NANOMETRES_PER_SECOND_SQUARED,
     "nm/s^2": Units.ACCELERATION_NANOMETRES_PER_SECOND_SQUARED,
     "in/s²": Units.ACCELERATION_INCHES_PER_SECOND_SQUARED,
@@ -179,6 +182,7 @@ LITERALS_TO_UNITS = {
     "ms": Units.TIME_MILLISECONDS,
     "µs": Units.TIME_MICROSECONDS,
     "us": Units.TIME_MICROSECONDS,
+    "μs": Units.TIME_MICROSECONDS,
     "GHz": Units.FREQUENCY_GIGAHERTZ,
     "MHz": Units.FREQUENCY_MEGAHERTZ,
     "kHz": Units.FREQUENCY_KILOHERTZ,
@@ -186,6 +190,7 @@ LITERALS_TO_UNITS = {
     "mHz": Units.FREQUENCY_MILLIHERTZ,
     "µHz": Units.FREQUENCY_MICROHERTZ,
     "uHz": Units.FREQUENCY_MICROHERTZ,
+    "μHz": Units.FREQUENCY_MICROHERTZ,
     "nHz": Units.FREQUENCY_NANOHERTZ,
 }
 

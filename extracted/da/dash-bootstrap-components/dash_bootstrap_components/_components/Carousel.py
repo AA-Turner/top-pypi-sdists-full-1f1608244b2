@@ -1,13 +1,21 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 import typing  # noqa: F401
-import numbers # noqa: F401
 from typing_extensions import TypedDict, NotRequired, Literal # noqa: F401
-from dash.development.base_component import Component
-try:
-    from dash.development.base_component import ComponentType # noqa: F401
-except ImportError:
-    ComponentType = typing.TypeVar("ComponentType", bound=Component)
+from dash.development.base_component import Component, _explicitize_args
+
+ComponentType = typing.Union[
+    str,
+    int,
+    float,
+    Component,
+    None,
+    typing.Sequence[typing.Union[str, int, float, Component, None]],
+]
+
+NumberType = typing.Union[
+    typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex
+]
 
 
 class Carousel(Component):
@@ -147,22 +155,21 @@ Keyword arguments:
         }
     )
 
-    _explicitize_dash_init = True
 
     def __init__(
         self,
         id: typing.Optional[typing.Union[str, dict]] = None,
         *,
         items: typing.Optional[typing.Sequence["Items"]] = None,
-        active_index: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
-        interval: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
+        active_index: typing.Optional[NumberType] = None,
+        interval: typing.Optional[NumberType] = None,
         controls: typing.Optional[bool] = None,
         indicators: typing.Optional[bool] = None,
         style: typing.Optional[typing.Any] = None,
         class_name: typing.Optional[str] = None,
         slide: typing.Optional[bool] = None,
         variant: typing.Optional[Literal["dark"]] = None,
-        persistence: typing.Optional[typing.Union[bool, str, typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]]] = None,
+        persistence: typing.Optional[typing.Union[bool, str, NumberType]] = None,
         persisted_props: typing.Optional[typing.Sequence[Literal["active_index"]]] = None,
         persistence_type: typing.Optional[Literal["local", "session", "memory"]] = None,
         className: typing.Optional[str] = None,
@@ -183,3 +190,5 @@ Keyword arguments:
                     'Required argument `' + k + '` was not specified.')
 
         super(Carousel, self).__init__(**args)
+
+setattr(Carousel, "__init__", _explicitize_args(Carousel.__init__))

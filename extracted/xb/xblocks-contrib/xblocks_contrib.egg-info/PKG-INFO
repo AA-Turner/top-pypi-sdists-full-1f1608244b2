@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: xblocks-contrib
-Version: 0.3.0
+Version: 0.4.0
 Summary: core xblocks
 Home-page: https://github.com/openedx/xblocks-contrib
 Author: Open edX Project
@@ -19,6 +19,9 @@ License-File: LICENSE.txt
 Requires-Dist: XBlock
 Requires-Dist: django-statici18n
 Requires-Dist: edx-i18n-tools
+Requires-Dist: edx-opaque-keys
+Requires-Dist: nh3
+Requires-Dist: oauthlib
 Requires-Dist: openedx-django-pyfs
 Dynamic: author
 Dynamic: author-email
@@ -52,9 +55,9 @@ XBlocks Being Moved Here
 These are the XBlocks being moved here, and each of their statuses:
 
 * ``poll_question`` -- Placeholder
-* ``word_cloud`` -- Placeholder
-* ``annotatable`` -- Placeholder
-* ``lti`` -- Placeholder
+* ``word_cloud`` -- In Development
+* ``annotatable`` -- In Development
+* ``lti`` -- In Development
 * ``html`` -- Placeholder
 * ``discussion`` -- Placeholder
 * ``problem`` -- Placeholder
@@ -242,6 +245,15 @@ Change Log
 
 Unreleased
 **********
+
+0.4.0 – 2025-05-7
+**********************************************
+
+Added
+=====
+
+* Implemented the LTI XBlock, extracted from edx-platform.
+
 
 0.3.0 – 2025-04-8
 **********************************************

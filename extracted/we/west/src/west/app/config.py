@@ -6,8 +6,8 @@
 
 import argparse
 
+from west.commands import CommandError, WestCommand
 from west.configuration import ConfigFile
-from west.commands import WestCommand, CommandError
 
 CONFIG_DESCRIPTION = '''\
 West configuration file handling.
@@ -48,6 +48,14 @@ To get a value for <name>, type:
 To set a value for <name>, type:
     west config <name> <value>
 
+To append to a value for <name>, type:
+    west config -a <name> <value>
+A value must exist in the selected configuration file in order to be able
+to append to it. The existing value can be empty.
+Examples:
+    west config -a build.cmake-args -- " -DEXTRA_CFLAGS='-Wextra -g0' -DFOO=BAR"
+    west config -a manifest.group-filter ,+optional
+
 To list all options and their values:
     west config -l
 
@@ -64,30 +72,13 @@ To delete <name> everywhere it's set, including the system file:
 
 CONFIG_EPILOG = '''\
 If the configuration file to use is not set, reads use all three in
-precedence order, and writes use the local file.'''
+precedence order, and writes (including appends) use the local file.'''
 
 ALL = ConfigFile.ALL
 SYSTEM = ConfigFile.SYSTEM
 GLOBAL = ConfigFile.GLOBAL
 LOCAL = ConfigFile.LOCAL
 
-class Once(argparse.Action):
-    # For enforcing mutual exclusion of options by ensuring self.dest
-    # can only be set once.
-    #
-    # This sets the 'configfile' attribute depending on the option string,
-    # which must be --system, --global, or --local.
-
-    def __call__(self, parser, namespace, ignored, option_string=None):
-        values = {'--system': SYSTEM, '--global': GLOBAL, '--local': LOCAL}
-        rev = {v: k for k, v in values.items()}
-
-        if getattr(namespace, self.dest):
-            previous = rev[getattr(namespace, self.dest)]
-            parser.error(f"argument {option_string}: "
-                         f"not allowed with argument {previous}")
-
-        setattr(namespace, self.dest, values[option_string])
 
 class Config(WestCommand):
     def __init__(self):
@@ -105,20 +96,31 @@ class Config(WestCommand):
             description=self.description,
             epilog=CONFIG_EPILOG)
 
-        parser.add_argument('-l', '--list', action='store_true',
-                            help='list all options and their values')
-        parser.add_argument('-d', '--delete', action='store_true',
-                            help='delete an option in one config file')
-        parser.add_argument('-D', '--delete-all', action='store_true',
-                            help="delete an option everywhere it's set")
+        group = parser.add_argument_group(
+            "action to perform (give at most one)"
+        ).add_mutually_exclusive_group()
+
+        group.add_argument('-l', '--list', action='store_true',
+                           help='list all options and their values')
+        group.add_argument('-d', '--delete', action='store_true',
+                           help='delete an option in one config file')
+        group.add_argument('-D', '--delete-all', action='store_true',
+                           help="delete an option everywhere it's set")
+        group.add_argument('-a', '--append', action='store_true',
+                           help='append to an existing value')
 
         group = parser.add_argument_group(
-            'configuration file to use (give at most one)')
-        group.add_argument('--system', dest='configfile', nargs=0, action=Once,
+            "configuration file to use (give at most one)"
+        ).add_mutually_exclusive_group()
+
+        group.add_argument('--system', dest='configfile',
+                           action='store_const', const=SYSTEM,
                            help='system-wide file')
-        group.add_argument('--global', dest='configfile', nargs=0, action=Once,
+        group.add_argument('--global', dest='configfile',
+                           action='store_const', const=GLOBAL,
                            help='global (user-wide) file')
-        group.add_argument('--local', dest='configfile', nargs=0, action=Once,
+        group.add_argument('--local', dest='configfile',
+                           action='store_const', const=LOCAL,
                            help="this workspace's file")
 
         parser.add_argument('name', nargs='?',
@@ -133,13 +135,12 @@ class Config(WestCommand):
         if args.list:
             if args.name:
                 self.parser.error('-l cannot be combined with name argument')
-            elif delete:
-                self.parser.error('-l cannot be combined with -d or -D')
         elif not args.name:
             self.parser.error('missing argument name '
                               '(to list all options and values, use -l)')
-        elif args.delete and args.delete_all:
-            self.parser.error('-d cannot be combined with -D')
+        elif args.append:
+            if args.value is None:
+                self.parser.error('-a requires both name and value')
 
         if args.list:
             self.list(args)
@@ -147,6 +148,8 @@ class Config(WestCommand):
             self.delete(args)
         elif args.value is None:
             self.read(args)
+        elif args.append:
+            self.append(args)
         else:
             self.write(args)
 
@@ -169,11 +172,11 @@ class Config(WestCommand):
             try:
                 self.config.delete(args.name, configfile=configfile)
                 return
-            except KeyError:
+            except KeyError as err:
                 if i == len(configfiles) - 1:
                     self.dbg(
                         f'{args.name} was not set in requested location(s)')
-                    raise CommandError(returncode=1)
+                    raise CommandError(returncode=1) from err
             except PermissionError as pe:
                 self._perm_error(pe, configfile, args.name)
 
@@ -188,8 +191,18 @@ class Config(WestCommand):
         if value is not None:
             self.inf(value)
         else:
-            self.dbg(f'{args.name} is unset')
+            self.err(f'{args.name} is unset')
             raise CommandError(returncode=1)
+
+    def append(self, args):
+        self.check_config(args.name)
+        where = args.configfile or LOCAL
+        value = self.config.get(args.name, configfile=where)
+        if value is None:
+            self.die(f'option {args.name} not found in the {where.name.lower()} '
+                     'configuration file')
+        args.value = value + args.value
+        self.write(args)
 
     def write(self, args):
         self.check_config(args.name)

@@ -15,6 +15,9 @@
 
 
 from oslo_service.backend.base import BaseBackend
+from oslo_service.backend.common import daemon_utils
+from oslo_service.backend.common import signal_utils
+from oslo_service.backend.common import singleton
 from oslo_service.backend.eventlet import loopingcall
 from oslo_service.backend.eventlet import service
 from oslo_service.backend.eventlet import threadgroup
@@ -37,8 +40,8 @@ class EventletBackend(BaseBackend):
             "Services": service.Services,
             "ServiceWrapper": service.ServiceWrapper,
             "SignalHandler": service.SignalHandler,
-            "SignalExit": service.SignalExit,
-            "Singleton": service.Singleton,
+            "SignalExit": signal_utils.SignalExit,
+            "Singleton": singleton.Singleton,
 
             # Looping call-related classes
             "LoopingCallBase": loopingcall.LoopingCallBase,
@@ -57,6 +60,6 @@ class EventletBackend(BaseBackend):
 
             # Functions
             "launch": service.launch,
-            "_is_daemon": service._is_daemon,
-            "_is_sighup_and_daemon": service._is_sighup_and_daemon,
+            "_is_daemon": daemon_utils.is_daemon,
+            "_is_sighup_and_daemon": daemon_utils.is_sighup_and_daemon,
         }

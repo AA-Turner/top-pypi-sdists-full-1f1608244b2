@@ -1,13 +1,21 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 import typing  # noqa: F401
-import numbers # noqa: F401
 from typing_extensions import TypedDict, NotRequired, Literal # noqa: F401
-from dash.development.base_component import Component
-try:
-    from dash.development.base_component import ComponentType # noqa: F401
-except ImportError:
-    ComponentType = typing.TypeVar("ComponentType", bound=Component)
+from dash.development.base_component import Component, _explicitize_args
+
+ComponentType = typing.Union[
+    str,
+    int,
+    float,
+    Component,
+    None,
+    typing.Sequence[typing.Union[str, int, float, Component, None]],
+]
+
+NumberType = typing.Union[
+    typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex
+]
 
 
 class Spinner(Component):
@@ -91,19 +99,18 @@ Keyword arguments:
     _namespace = 'dash_bootstrap_components'
     _type = 'Spinner'
 
-    _explicitize_dash_init = True
 
     def __init__(
         self,
-        children: typing.Optional[typing.Union[str, int, float, ComponentType, typing.Sequence[typing.Union[str, int, float, ComponentType]]]] = None,
+        children: typing.Optional[ComponentType] = None,
         id: typing.Optional[typing.Union[str, dict]] = None,
         *,
         color: typing.Optional[str] = None,
         type: typing.Optional[str] = None,
         size: typing.Optional[str] = None,
         fullscreen: typing.Optional[bool] = None,
-        delay_hide: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
-        delay_show: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
+        delay_hide: typing.Optional[NumberType] = None,
+        delay_show: typing.Optional[NumberType] = None,
         show_initially: typing.Optional[bool] = None,
         spinner_style: typing.Optional[dict] = None,
         spinner_class_name: typing.Optional[str] = None,
@@ -125,3 +132,5 @@ Keyword arguments:
         args = {k: _locals[k] for k in _explicit_args if k != 'children'}
 
         super(Spinner, self).__init__(children=children, **args)
+
+setattr(Spinner, "__init__", _explicitize_args(Spinner.__init__))

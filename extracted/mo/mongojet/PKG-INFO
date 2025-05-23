@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: mongojet
-Version: 0.3.2
+Version: 0.3.3
 Classifier: Development Status :: 4 - Beta
 Classifier: Programming Language :: Rust
 Classifier: Programming Language :: Python
@@ -38,7 +38,7 @@ Project-URL: repository, https://github.com/romis2012/mongojet
 
 Async (asyncio) MongoDB client for Python. 
 It uses [Rust MongoDB driver](https://github.com/mongodb/mongo-rust-driver) and [tokio](https://github.com/tokio-rs/tokio) under the hood.
-Mongojet is 2-4x faster than Motor in high concurrency scenarios.
+Mongojet is 2-4x faster than Motor (and 1.5-3.5x faster than PyMongo AsyncMongoClient) in high concurrency scenarios (see benchmarks below).
 
 ## Requirements
 - Python >= 3.8
@@ -202,8 +202,9 @@ await bucket.delete(file_id)
 
 ## Simple benchmark (lower is better):
 ### find_one
-![find_one](./benchmarks/find_one.png)
+<!-- ![find_one](./benchmarks/find_one.png) -->
+![find_one](https://github.com/romis2012/mongojet/blob/master/benchmarks/find_one.png?raw=true)
 ### insert_one
-![insert_one](./benchmarks/insert.png)
+![insert_one](https://github.com/romis2012/mongojet/blob/master/benchmarks/insert.png?raw=true)
 ### iterate over cursor
-![cursor](./benchmarks/cursor.png)
+![cursor](https://github.com/romis2012/mongojet/blob/master/benchmarks/cursor.png?raw=true)

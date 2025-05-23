@@ -25,7 +25,7 @@ from redis.asyncio.client import Pipeline
 from sqlalchemy.orm import selectinload
 
 from ai.backend.common import redis_helper
-from ai.backend.common.bgtask import ProgressReporter
+from ai.backend.common.bgtask.bgtask import ProgressReporter
 from ai.backend.common.docker import ImageRef, KernelFeatures, LabelName
 from ai.backend.common.exception import UnknownImageReference
 from ai.backend.common.types import (
@@ -75,9 +75,9 @@ from ai.backend.manager.services.image.actions.untag_image_from_registry import 
 from ai.backend.manager.services.image.types import ImageRefData
 from ai.backend.manager.types import OptionalState, TriState
 
-from ...api.exceptions import ImageNotFound
 from ...data.image.types import ImageStatus, ImageType
 from ...defs import DEFAULT_IMAGE_ARCH
+from ...errors.exceptions import ImageNotFound
 from ..base import (
     FilterExprArg,
     OrderExprArg,
@@ -190,7 +190,7 @@ class Image(graphene.ObjectType):
         installed_agents: List[str],
     ) -> Image:
         is_superadmin = ctx.user["role"] == UserRole.SUPERADMIN
-        hide_agents = False if is_superadmin else ctx.local_config["manager"]["hide-agents"]
+        hide_agents = False if is_superadmin else ctx.config_provider.config.manager.hide_agents
         image_ref = row.image_ref
         version, ptag_set = image_ref.tag_set
         ret = cls(
@@ -392,12 +392,12 @@ class Image(graphene.ObjectType):
         is_valid = ImageLoadFilter.GENERAL in load_filters
         for label in self.labels:
             match label.key:
-                case LabelName.FEATURES.value if KernelFeatures.OPERATION.value in label.value:
+                case LabelName.FEATURES if KernelFeatures.OPERATION.value in label.value:
                     if ImageLoadFilter.OPERATIONAL in load_filters:
                         is_valid = True
                     else:
                         return False
-                case LabelName.CUSTOMIZED_OWNER.value:
+                case LabelName.CUSTOMIZED_OWNER:
                     if (
                         ImageLoadFilter.CUSTOMIZED not in load_filters
                         and ImageLoadFilter.CUSTOMIZED_GLOBAL not in load_filters

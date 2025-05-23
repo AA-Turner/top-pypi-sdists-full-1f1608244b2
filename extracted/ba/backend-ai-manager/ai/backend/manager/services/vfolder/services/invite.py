@@ -10,7 +10,7 @@ from sqlalchemy.orm import contains_eager
 from ai.backend.common.types import (
     VFolderHostPermission,
 )
-from ai.backend.manager.config import SharedConfig
+from ai.backend.manager.config.provider import ManagerConfigProvider
 from ai.backend.manager.models.user import UserRole, UserRow
 from ai.backend.manager.models.utils import ExtendedAsyncSAEngine
 from ai.backend.manager.models.vfolder import (
@@ -43,9 +43,9 @@ from ..exceptions import (
     Forbidden,
     InsufficientPrivilege,
     InternalServerError,
-    InvalidParameter,
-    ObjectNotFound,
     VFolderAlreadyExists,
+    VFolderGrantAlreadyExists,
+    VFolderInvalidParameter,
     VFolderNotFound,
 )
 from ..types import VFolderInvitationInfo
@@ -58,11 +58,11 @@ from ..types import VFolderInvitationInfo
 
 class VFolderInviteService:
     _db: ExtendedAsyncSAEngine
-    _shared_config: SharedConfig
+    _config_provider: ManagerConfigProvider
 
-    def __init__(self, db: ExtendedAsyncSAEngine, shared_config: SharedConfig) -> None:
+    def __init__(self, db: ExtendedAsyncSAEngine, config_provider: ManagerConfigProvider) -> None:
         self._db = db
-        self._shared_config = shared_config
+        self._config_provider = config_provider
 
     async def invite(self, action: InviteVFolderAction) -> InviteVFolderActionResult:
         async with self._db.begin_readonly_session() as db_session:
@@ -81,7 +81,9 @@ class VFolderInviteService:
         if vfolder_row.name.startswith("."):
             raise Forbidden("Cannot share private dot-prefixed vfolders.")
 
-        allowed_vfolder_types = await self._shared_config.get_vfolder_types()
+        allowed_vfolder_types = (
+            await self._config_provider.legacy_etcd_config_loader.get_vfolder_types()
+        )
         async with self._db.begin_session() as db_session:
             query_vfolder = sa.select(VFolderRow).where(VFolderRow.id == action.vfolder_uuid)
             vfolder_row = await db_session.scalar(query_vfolder)
@@ -115,7 +117,7 @@ class VFolderInviteService:
             )
             count = await db_session.scalar(count_query)
             if count > 0:
-                raise VFolderAlreadyExists(
+                raise VFolderGrantAlreadyExists(
                     "Invitation to this VFolder already sent out to target user"
                 )
 
@@ -176,7 +178,7 @@ class VFolderInviteService:
             invitation_row = await db_session.scalar(query)
             invitation_row = cast(VFolderInvitationRow, invitation_row)
             if invitation_row is None:
-                raise ObjectNotFound()
+                raise VFolderNotFound()
 
             # Get target user.
             query = sa.select(UserRow).where(UserRow.email == invitation_row.invitee)
@@ -253,7 +255,7 @@ class VFolderInviteService:
                 user_row = await db_session.scalar(requester_query)
                 user_row = cast(UserRow, user_row)
                 if invitation_row is None:
-                    raise ObjectNotFound("vfolder invitation")
+                    raise VFolderNotFound("vfolder invitation")
                 if user_row.email == invitation_row.inviter:
                     state = VFolderInvitationState.CANCELED
                 elif user_row.email == invitation_row.invitee:
@@ -353,7 +355,7 @@ class VFolderInviteService:
             )
             requester_user_row = cast(UserRow, requester_user_row)
             if vfolder_row.ownership_type == VFolderOwnershipType.GROUP:
-                raise InvalidParameter("Cannot leave a group vfolder.")
+                raise VFolderInvalidParameter("Cannot leave a group vfolder.")
 
             if action.shared_user_uuid:
                 # Allow only superadmin to leave the shared vfolder of others.

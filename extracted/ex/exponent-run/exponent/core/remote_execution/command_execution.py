@@ -7,8 +7,8 @@ from exponent.core.remote_execution.types import (
     CommandResponse,
 )
 from exponent.core.types.command_data import (
-    FileReadCommandData,
     PrototypeCommandData,
+    FileReadCommandData,
 )
 
 

@@ -21,6 +21,7 @@ __all__ = [
     "TensorProtoTensor",
     # Deserialization
     "from_proto",
+    "from_onnx_text",
     "deserialize_attribute",
     "deserialize_dimension",
     "deserialize_function",
@@ -67,7 +68,7 @@ import numpy as np
 import onnx
 import onnx.external_data_helper
 
-from onnxscript.ir import _core, _enums, _metadata, _protocols, _type_casting
+from onnxscript.ir import _core, _enums, _protocols, _type_casting
 
 if typing.TYPE_CHECKING:
     import google.protobuf.internal.containers as proto_containers
@@ -190,6 +191,15 @@ def from_proto(proto: object) -> object:
     )
 
 
+def from_onnx_text(model_text: str, /) -> _core.Model:
+    """Convert the ONNX textual representation to an IR model.
+
+    Read more about the textual representation at: https://onnx.ai/onnx/repo-docs/Syntax.html
+    """
+    proto = onnx.parser.parse_model(model_text)
+    return deserialize_model(proto)
+
+
 @typing.overload
 def to_proto(ir_object: _protocols.ModelProtocol) -> onnx.ModelProto: ...  # type: ignore[overload-overlap]
 @typing.overload
@@ -224,9 +234,10 @@ def to_proto(ir_object: object) -> object:
         return serialize_tensor(ir_object)
     if isinstance(ir_object, _protocols.ValueProtocol):
         return serialize_value(ir_object)
-    if isinstance(ir_object, _protocols.AttributeProtocol):
+    if isinstance(ir_object, _protocols.AttributeProtocol) and not ir_object.is_ref():
         return serialize_attribute(ir_object)
     if isinstance(ir_object, _protocols.ReferenceAttributeProtocol):
+        assert ir_object.is_ref()
         return serialize_reference_attribute_into(onnx.AttributeProto(), ir_object)
     if isinstance(ir_object, _protocols.TypeProtocol):
         return serialize_type_into(onnx.TypeProto(), ir_object)
@@ -243,12 +254,11 @@ def to_proto(ir_object: object) -> object:
 class TensorProtoTensor(_core.TensorBase):  # pylint: disable=too-many-ancestors
     """A tensor initialized from a tensor proto."""
 
+    __slots__ = ("_proto",)
+
     def __init__(self, proto: onnx.TensorProto) -> None:
+        super().__init__(metadata_props=deserialize_metadata_props(proto.metadata_props))
         self._proto = proto
-        self._metadata_props: dict[str, str] | None = deserialize_metadata_props(
-            proto.metadata_props
-        )
-        self._metadata: _metadata.MetadataStore | None = None
 
     @property
     def name(self) -> str:
@@ -269,7 +279,7 @@ class TensorProtoTensor(_core.TensorBase):  # pylint: disable=too-many-ancestors
     def dtype(self) -> _enums.DataType:
         return _enums.DataType(self._proto.data_type)
 
-    @property
+    @property  # type: ignore[misc]
     def doc_string(self) -> str:
         return self._proto.doc_string
 
@@ -278,9 +288,10 @@ class TensorProtoTensor(_core.TensorBase):  # pylint: disable=too-many-ancestors
         return self._proto
 
     def __repr__(self) -> str:
-        # It is a little hard to display the content when there can be types
-        # unsupported by numpy
-        # Preferably we should display some content when the tensor is small
+        if self.size <= 10:
+            tensor_lines = repr(self.numpy()).split("\n")
+            tensor_text = " ".join(line.strip() for line in tensor_lines)
+            return f"{self._repr_base()}({tensor_text}, name={self.name!r})"
         return f"{self._repr_base()}(name={self.name!r})"
 
     def __array__(self, dtype: Any = None) -> np.ndarray:
@@ -438,23 +449,6 @@ class TensorProtoTensor(_core.TensorBase):  # pylint: disable=too-many-ancestors
         # The repeating fields can be empty and still valid.
         # For example, int32_data can be empty and still be a valid tensor.
         return b""
-
-    @property
-    def meta(self) -> _metadata.MetadataStore:
-        """The metadata store for intermediate analysis.
-
-        Write to the :attr:`metadata_props` if you would like the metadata to be serialized
-        to the ONNX proto.
-        """
-        if self._metadata is None:
-            self._metadata = _metadata.MetadataStore()
-        return self._metadata
-
-    @property
-    def metadata_props(self) -> dict[str, str]:
-        if self._metadata_props is None:
-            self._metadata_props = {}
-        return self._metadata_props
 
 
 def _get_field(proto: Any, field: str) -> Any:
@@ -672,8 +666,23 @@ def _deserialize_graph(
         for node in proto.node
     ]
 
-    # Fill in values for graph outputs
-    outputs = [deserialize_value_info_proto(info, values[info.name]) for info in proto.output]
+    outputs = []
+    for info in proto.output:
+        # Fill in values for graph outputs
+        output_name = info.name
+        if output_name not in values:
+            # Handle (invalid) graph outputs that do not have any producers
+            logger.warning(
+                "Output '%s' is not produced by any node. The graph has an invalid output",
+                output_name,
+            )
+            value = _core.Value(name=output_name)
+        else:
+            # A valid, normal graph output
+            value = values[output_name]
+        # Fill in shape/type information
+        deserialize_value_info_proto(info, value)
+        outputs.append(value)
 
     # Exit the graph scope by popping the values for this scope from the stack
     scoped_values.pop()
@@ -897,14 +906,14 @@ def deserialize_metadata_props(
 _deserialize_string_string_maps = deserialize_metadata_props
 
 
-def deserialize_attribute(proto: onnx.AttributeProto) -> _core.Attr | _core.RefAttr:
+def deserialize_attribute(proto: onnx.AttributeProto) -> _core.Attr:
     return _deserialize_attribute(proto, [])
 
 
 @_capture_errors(lambda proto, scoped_values: str(proto))
 def _deserialize_attribute(
     proto: onnx.AttributeProto, scoped_values: list[dict[str, _core.Value]]
-) -> _core.Attr | _core.RefAttr:
+) -> _core.Attr:
     name = proto.name
     doc_string = _get_field(proto, "doc_string")
     type_ = _enums.AttributeType(proto.type)
@@ -1457,20 +1466,10 @@ def serialize_node_into(node_proto: onnx.NodeProto, from_: _protocols.NodeProtoc
         node_proto.output.append(output.name)
 
     for attr in from_.attributes.values():
-        if isinstance(attr, _core.Attr):
+        if not attr.is_ref():
             serialize_attribute_into(node_proto.attribute.add(), from_=attr)
-        elif isinstance(attr, _core.RefAttr):
-            serialize_reference_attribute_into(node_proto.attribute.add(), from_=attr)
-        # Handle protocol attributes for completeness. We do not check them first because
-        # calling isinstance on a protocol can be slow.
-        # Most of the time, we will have Attr or RefAttr so the two branches below
-        # will not be taken.
-        elif isinstance(attr, _protocols.AttributeProtocol):
-            serialize_attribute_into(node_proto.attribute.add(), from_=attr)
-        elif isinstance(attr, _protocols.ReferenceAttributeProtocol):
-            serialize_reference_attribute_into(node_proto.attribute.add(), from_=attr)
         else:
-            raise TypeError(f"Unsupported attribute type: {type(attr)}")
+            serialize_reference_attribute_into(node_proto.attribute.add(), from_=attr)
 
 
 def serialize_tensor(tensor: _protocols.TensorProtocol) -> onnx.TensorProto:

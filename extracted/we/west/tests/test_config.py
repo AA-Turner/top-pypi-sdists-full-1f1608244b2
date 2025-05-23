@@ -6,12 +6,13 @@ import configparser
 import os
 import pathlib
 import subprocess
+from typing import Any, Optional
 
 import pytest
+from conftest import cmd, cmd_raises
 
 from west import configuration as config
-
-from conftest import cmd
+from west.util import PathType
 
 assert 'TOXTEMPDIR' in os.environ, "you must run these tests using tox"
 
@@ -30,8 +31,22 @@ def autouse_config_tmpdir(config_tmpdir):
 def cfg(f=ALL, topdir=None):
     # Load a fresh configuration object at the given level, and return it.
     cp = configparser.ConfigParser(allow_no_value=True)
-    config.read_config(configfile=f, config=cp, topdir=topdir)
+    # TODO: convert this mechanism without the global deprecated read_config
+    with pytest.deprecated_call():
+        config.read_config(configfile=f, config=cp, topdir=topdir)
     return cp
+
+def update_testcfg(section: str, key: str, value: Any,
+                   configfile: config.ConfigFile = LOCAL,
+                   topdir: Optional[PathType] = None) -> None:
+    c = config.Configuration(topdir)
+    c.set(option=f'{section}.{key}', value=value, configfile=configfile)
+
+def delete_testcfg(section: str, key: str,
+                   configfile: Optional[config.ConfigFile] = None,
+                   topdir: Optional[PathType] = None) -> None:
+    c = config.Configuration(topdir)
+    c.delete(option=f'{section}.{key}', configfile=configfile)
 
 def test_config_global():
     # Set a global config option via the command interface. Make sure
@@ -100,28 +115,28 @@ def test_config_local():
 def test_config_system():
     # Basic test of system-level configuration.
 
-    config.update_config('pytest', 'key', 'val', configfile=SYSTEM)
+    update_testcfg('pytest', 'key', 'val', configfile=SYSTEM)
     assert cfg(f=ALL)['pytest']['key'] == 'val'
     assert cfg(f=SYSTEM)['pytest']['key'] == 'val'
     assert 'pytest' not in cfg(f=GLOBAL)
     assert 'pytest' not in cfg(f=LOCAL)
 
-    config.update_config('pytest', 'key', 'val2', configfile=SYSTEM)
+    update_testcfg('pytest', 'key', 'val2', configfile=SYSTEM)
     assert cfg(f=SYSTEM)['pytest']['key'] == 'val2'
 
 def test_config_system_precedence():
     # Test precedence rules, including system level.
 
-    config.update_config('pytest', 'key', 'sys', configfile=SYSTEM)
+    update_testcfg('pytest', 'key', 'sys', configfile=SYSTEM)
     assert cfg(f=SYSTEM)['pytest']['key'] == 'sys'
     assert cfg(f=ALL)['pytest']['key'] == 'sys'
 
-    config.update_config('pytest', 'key', 'glb', configfile=GLOBAL)
+    update_testcfg('pytest', 'key', 'glb', configfile=GLOBAL)
     assert cfg(f=SYSTEM)['pytest']['key'] == 'sys'
     assert cfg(f=GLOBAL)['pytest']['key'] == 'glb'
     assert cfg(f=ALL)['pytest']['key'] == 'glb'
 
-    config.update_config('pytest', 'key', 'lcl', configfile=LOCAL)
+    update_testcfg('pytest', 'key', 'lcl', configfile=LOCAL)
     assert cfg(f=SYSTEM)['pytest']['key'] == 'sys'
     assert cfg(f=GLOBAL)['pytest']['key'] == 'glb'
     assert cfg(f=LOCAL)['pytest']['key'] == 'lcl'
@@ -135,7 +150,7 @@ def test_system_creation():
     assert not os.path.isfile(config._location(GLOBAL))
     assert not os.path.isfile(config._location(LOCAL))
 
-    config.update_config('pytest', 'key', 'val', configfile=SYSTEM)
+    update_testcfg('pytest', 'key', 'val', configfile=SYSTEM)
 
     assert os.path.isfile(config._location(SYSTEM))
     assert not os.path.isfile(config._location(GLOBAL))
@@ -152,7 +167,7 @@ def test_global_creation():
     assert not os.path.isfile(config._location(GLOBAL))
     assert not os.path.isfile(config._location(LOCAL))
 
-    config.update_config('pytest', 'key', 'val', configfile=GLOBAL)
+    update_testcfg('pytest', 'key', 'val', configfile=GLOBAL)
 
     assert not os.path.isfile(config._location(SYSTEM))
     assert os.path.isfile(config._location(GLOBAL))
@@ -169,7 +184,7 @@ def test_local_creation():
     assert not os.path.isfile(config._location(GLOBAL))
     assert not os.path.isfile(config._location(LOCAL))
 
-    config.update_config('pytest', 'key', 'val', configfile=LOCAL)
+    update_testcfg('pytest', 'key', 'val', configfile=LOCAL)
 
     assert not os.path.isfile(config._location(SYSTEM))
     assert not os.path.isfile(config._location(GLOBAL))
@@ -203,8 +218,7 @@ def test_local_creation_with_topdir():
     del os.environ['WEST_CONFIG_LOCAL']
 
     # We should be able to write into our topdir's config file now.
-    config.update_config('pytest', 'key', 'val', configfile=LOCAL,
-                         topdir=str(topdir))
+    update_testcfg('pytest', 'key', 'val', configfile=LOCAL, topdir=str(topdir))
     assert not system.exists()
     assert not glbl.exists()
     assert not local.exists()
@@ -215,115 +229,155 @@ def test_local_creation_with_topdir():
     assert 'pytest' not in cfg(f=GLOBAL)
     assert cfg(f=LOCAL, topdir=str(topdir))['pytest']['key'] == 'val'
 
+def test_append():
+    update_testcfg('pytest', 'key', 'system', configfile=SYSTEM)
+    update_testcfg('pytest', 'key', 'global', configfile=GLOBAL)
+    update_testcfg('pytest', 'key', 'local', configfile=LOCAL)
+    # Appending with no configfile specified should modify the local one
+    cmd('config -a pytest.key ,bar')
+
+    # Only the local one will be modified
+    assert cfg(f=SYSTEM)['pytest']['key'] == 'system'
+    assert cfg(f=GLOBAL)['pytest']['key'] == 'global'
+    assert cfg(f=LOCAL)['pytest']['key'] == 'local,bar'
+
+    # Test a more complex one, and at a particular configfile level
+    update_testcfg('build', 'cmake-args', '-DCONF_FILE=foo.conf', configfile=GLOBAL)
+    assert cfg(f=GLOBAL)['build']['cmake-args'] == '-DCONF_FILE=foo.conf'
+
+    # Use a list instead of a string to avoid one level of nested quoting
+    cmd(['config', '--global', '-a', 'build.cmake-args', '--',
+         ' -DEXTRA_CFLAGS=\'-Wextra -g0\' -DFOO=BAR'])
+
+    assert cfg(f=GLOBAL)['build']['cmake-args'] == \
+        '-DCONF_FILE=foo.conf -DEXTRA_CFLAGS=\'-Wextra -g0\' -DFOO=BAR'
+
+def test_append_novalue():
+    err_msg = cmd_raises('config -a pytest.foo', subprocess.CalledProcessError)
+    assert '-a requires both name and value' in err_msg
+
+def test_append_notfound():
+    update_testcfg('pytest', 'key', 'val', configfile=LOCAL)
+    err_msg = cmd_raises('config -a pytest.foo bar', subprocess.CalledProcessError)
+    assert 'option pytest.foo not found in the local configuration file' in err_msg
+
+
 def test_delete_basic():
     # Basic deletion test: write local, verify global and system deletions
     # don't work, then delete local does work.
-    config.update_config('pytest', 'key', 'val', configfile=LOCAL)
+    update_testcfg('pytest', 'key', 'val', configfile=LOCAL)
     assert cfg(f=ALL)['pytest']['key'] == 'val'
     with pytest.raises(KeyError):
-        config.delete_config('pytest', 'key', configfile=SYSTEM)
+        delete_testcfg('pytest', 'key', configfile=SYSTEM)
     with pytest.raises(KeyError):
-        config.delete_config('pytest', 'key', configfile=GLOBAL)
-    config.delete_config('pytest', 'key', configfile=LOCAL)
+        delete_testcfg('pytest', 'key', configfile=GLOBAL)
+    delete_testcfg('pytest', 'key', configfile=LOCAL)
     assert 'pytest' not in cfg(f=ALL)
 
 def test_delete_all():
     # Deleting ConfigFile.ALL should delete from everywhere.
-    config.update_config('pytest', 'key', 'system', configfile=SYSTEM)
-    config.update_config('pytest', 'key', 'global', configfile=GLOBAL)
-    config.update_config('pytest', 'key', 'local', configfile=LOCAL)
+    update_testcfg('pytest', 'key', 'system', configfile=SYSTEM)
+    update_testcfg('pytest', 'key', 'global', configfile=GLOBAL)
+    update_testcfg('pytest', 'key', 'local', configfile=LOCAL)
     assert cfg(f=SYSTEM)['pytest']['key'] == 'system'
     assert cfg(f=GLOBAL)['pytest']['key'] == 'global'
     assert cfg(f=LOCAL)['pytest']['key'] == 'local'
-    config.delete_config('pytest', 'key', configfile=ALL)
+    delete_testcfg('pytest', 'key', configfile=ALL)
     assert 'pytest' not in cfg(f=ALL)
 
 def test_delete_none():
     # Deleting None should delete from lowest-precedence global or
     # local file only.
-    config.update_config('pytest', 'key', 'system', configfile=SYSTEM)
-    config.update_config('pytest', 'key', 'global', configfile=GLOBAL)
-    config.update_config('pytest', 'key', 'local', configfile=LOCAL)
+    # Only supported with the deprecated call
+    update_testcfg('pytest', 'key', 'system', configfile=SYSTEM)
+    update_testcfg('pytest', 'key', 'global', configfile=GLOBAL)
+    update_testcfg('pytest', 'key', 'local', configfile=LOCAL)
     assert cfg(f=SYSTEM)['pytest']['key'] == 'system'
     assert cfg(f=GLOBAL)['pytest']['key'] == 'global'
     assert cfg(f=LOCAL)['pytest']['key'] == 'local'
-    config.delete_config('pytest', 'key', configfile=None)
+    delete_testcfg('pytest', 'key', configfile=None)
     assert cfg(f=ALL)['pytest']['key'] == 'global'
-    config.delete_config('pytest', 'key', configfile=None)
+    delete_testcfg('pytest', 'key', configfile=None)
     assert cfg(f=ALL)['pytest']['key'] == 'system'
-    with pytest.raises(KeyError):
+    with pytest.raises(KeyError), pytest.deprecated_call():
         config.delete_config('pytest', 'key', configfile=None)
+
+    # Using the Configuration Class this does remove from system
+    delete_testcfg('pytest', 'key', configfile=None)
+    assert 'pytest' not in cfg(f=ALL)
 
 def test_delete_list():
     # Test delete of a list of places.
-    config.update_config('pytest', 'key', 'system', configfile=SYSTEM)
-    config.update_config('pytest', 'key', 'global', configfile=GLOBAL)
-    config.update_config('pytest', 'key', 'local', configfile=LOCAL)
+    # Only supported with the deprecated call
+    update_testcfg('pytest', 'key', 'system', configfile=SYSTEM)
+    update_testcfg('pytest', 'key', 'global', configfile=GLOBAL)
+    update_testcfg('pytest', 'key', 'local', configfile=LOCAL)
     assert cfg(f=SYSTEM)['pytest']['key'] == 'system'
     assert cfg(f=GLOBAL)['pytest']['key'] == 'global'
     assert cfg(f=LOCAL)['pytest']['key'] == 'local'
-    config.delete_config('pytest', 'key', configfile=[GLOBAL, LOCAL])
+    with pytest.deprecated_call():
+        config.delete_config('pytest', 'key', configfile=[GLOBAL, LOCAL])
     assert cfg(f=SYSTEM)['pytest']['key'] == 'system'
     assert 'pytest' not in cfg(f=GLOBAL)
     assert 'pytest' not in cfg(f=LOCAL)
 
 def test_delete_system():
     # Test SYSTEM-only delete.
-    config.update_config('pytest', 'key', 'system', configfile=SYSTEM)
-    config.update_config('pytest', 'key', 'global', configfile=GLOBAL)
-    config.update_config('pytest', 'key', 'local', configfile=LOCAL)
+    update_testcfg('pytest', 'key', 'system', configfile=SYSTEM)
+    update_testcfg('pytest', 'key', 'global', configfile=GLOBAL)
+    update_testcfg('pytest', 'key', 'local', configfile=LOCAL)
     assert cfg(f=SYSTEM)['pytest']['key'] == 'system'
     assert cfg(f=GLOBAL)['pytest']['key'] == 'global'
     assert cfg(f=LOCAL)['pytest']['key'] == 'local'
-    config.delete_config('pytest', 'key', configfile=SYSTEM)
+    delete_testcfg('pytest', 'key', configfile=SYSTEM)
     assert 'pytest' not in cfg(f=SYSTEM)
     assert cfg(f=GLOBAL)['pytest']['key'] == 'global'
     assert cfg(f=LOCAL)['pytest']['key'] == 'local'
 
 def test_delete_global():
     # Test GLOBAL-only delete.
-    config.update_config('pytest', 'key', 'system', configfile=SYSTEM)
-    config.update_config('pytest', 'key', 'global', configfile=GLOBAL)
-    config.update_config('pytest', 'key', 'local', configfile=LOCAL)
+    update_testcfg('pytest', 'key', 'system', configfile=SYSTEM)
+    update_testcfg('pytest', 'key', 'global', configfile=GLOBAL)
+    update_testcfg('pytest', 'key', 'local', configfile=LOCAL)
     assert cfg(f=SYSTEM)['pytest']['key'] == 'system'
     assert cfg(f=GLOBAL)['pytest']['key'] == 'global'
     assert cfg(f=LOCAL)['pytest']['key'] == 'local'
-    config.delete_config('pytest', 'key', configfile=GLOBAL)
+    delete_testcfg('pytest', 'key', configfile=GLOBAL)
     assert cfg(f=SYSTEM)['pytest']['key'] == 'system'
     assert 'pytest' not in cfg(f=GLOBAL)
     assert cfg(f=LOCAL)['pytest']['key'] == 'local'
 
 def test_delete_local():
     # Test LOCAL-only delete.
-    config.update_config('pytest', 'key', 'system', configfile=SYSTEM)
-    config.update_config('pytest', 'key', 'global', configfile=GLOBAL)
-    config.update_config('pytest', 'key', 'local', configfile=LOCAL)
+    update_testcfg('pytest', 'key', 'system', configfile=SYSTEM)
+    update_testcfg('pytest', 'key', 'global', configfile=GLOBAL)
+    update_testcfg('pytest', 'key', 'local', configfile=LOCAL)
     assert cfg(f=SYSTEM)['pytest']['key'] == 'system'
     assert cfg(f=GLOBAL)['pytest']['key'] == 'global'
     assert cfg(f=LOCAL)['pytest']['key'] == 'local'
-    config.delete_config('pytest', 'key', configfile=LOCAL)
+    delete_testcfg('pytest', 'key', configfile=LOCAL)
     assert cfg(f=SYSTEM)['pytest']['key'] == 'system'
     assert cfg(f=GLOBAL)['pytest']['key'] == 'global'
     assert 'pytest' not in cfg(f=LOCAL)
 
 def test_delete_local_with_topdir():
     # Test LOCAL-only delete with specified topdir.
-    config.update_config('pytest', 'key', 'system', configfile=SYSTEM)
-    config.update_config('pytest', 'key', 'global', configfile=GLOBAL)
-    config.update_config('pytest', 'key', 'local', configfile=LOCAL)
+    update_testcfg('pytest', 'key', 'system', configfile=SYSTEM)
+    update_testcfg('pytest', 'key', 'global', configfile=GLOBAL)
+    update_testcfg('pytest', 'key', 'local', configfile=LOCAL)
     assert cfg(f=SYSTEM)['pytest']['key'] == 'system'
     assert cfg(f=GLOBAL)['pytest']['key'] == 'global'
     assert cfg(f=LOCAL)['pytest']['key'] == 'local'
-    config.delete_config('pytest', 'key', configfile=LOCAL)
+    delete_testcfg('pytest', 'key', configfile=LOCAL)
     assert cfg(f=SYSTEM)['pytest']['key'] == 'system'
     assert cfg(f=GLOBAL)['pytest']['key'] == 'global'
     assert 'pytest' not in cfg(f=LOCAL)
 
 def test_delete_local_one():
     # Test LOCAL-only delete of one option doesn't affect the other.
-    config.update_config('pytest', 'key1', 'foo', configfile=LOCAL)
-    config.update_config('pytest', 'key2', 'bar', configfile=LOCAL)
-    config.delete_config('pytest', 'key1', configfile=LOCAL)
+    update_testcfg('pytest', 'key1', 'foo', configfile=LOCAL)
+    update_testcfg('pytest', 'key2', 'bar', configfile=LOCAL)
+    delete_testcfg('pytest', 'key1', configfile=LOCAL)
     assert 'pytest' in cfg(f=LOCAL)
     assert cfg(f=LOCAL)['pytest']['key2'] == 'bar'
 
@@ -386,15 +440,12 @@ def test_delete_cmd_local():
 
 def test_delete_cmd_error():
     # Verify illegal combinations of flags error out.
-    with pytest.raises(subprocess.CalledProcessError) as e:
-        cmd('config -l -d pytest.key')
-        assert '-l cannot be combined with -d or -D' in str(e)
-    with pytest.raises(subprocess.CalledProcessError) as e:
-        cmd('config -l -D pytest.key')
-        assert '-l cannot be combined with -d or -D' in str(e)
-    with pytest.raises(subprocess.CalledProcessError) as e:
-        cmd('config -d -D pytest.key')
-        assert '-d cannot be combined with -D' in str(e)
+    err_msg = cmd_raises('config -l -d pytest.key', subprocess.CalledProcessError)
+    assert 'argument -d/--delete: not allowed with argument -l/--list' in err_msg
+    err_msg = cmd_raises('config -l -D pytest.key', subprocess.CalledProcessError)
+    assert 'argument -D/--delete-all: not allowed with argument -l/--list' in err_msg
+    err_msg = cmd_raises('config -d -D pytest.key', subprocess.CalledProcessError)
+    assert 'argument -D/--delete-all: not allowed with argument -d/--delete' in err_msg
 
 def test_default_config():
     # Writing to a value without a config destination should default
@@ -424,30 +475,26 @@ def test_config_precedence():
     assert cfg(f=LOCAL)['pytest']['precedence'] == 'local'
 
 def test_config_missing_key():
-    with pytest.raises(subprocess.CalledProcessError) as e:
-        cmd('config pytest')
-        assert str(e) == 'west config: error: missing key, please invoke ' \
-            'as: west config <section>.<key>\n'
+    err_msg = cmd_raises('config pytest', subprocess.CalledProcessError)
+    assert 'invalid configuration option "pytest"; expected "section.key" format' in err_msg
+
 
 def test_unset_config():
     # Getting unset configuration options should raise an error.
     # With verbose output, the exact missing option should be printed.
-    with pytest.raises(subprocess.CalledProcessError) as e:
-        cmd('-v config pytest.missing')
-        assert 'pytest.missing is unset' in str(e)
+    err_msg = cmd_raises('-v config pytest.missing', subprocess.CalledProcessError)
+    assert 'pytest.missing is unset' in err_msg
 
 def test_no_args():
-    with pytest.raises(subprocess.CalledProcessError) as e:
-        cmd('config')
-        assert 'missing argument name' in str(e)
+    err_msg = cmd_raises('config', subprocess.CalledProcessError)
+    assert 'missing argument name' in err_msg
 
 def test_list():
     def sorted_list(other_args=''):
         return list(sorted(cmd('config -l ' + other_args).splitlines()))
 
-    with pytest.raises(subprocess.CalledProcessError) as e:
-        cmd('config -l pytest.foo')
-        assert '-l cannot be combined with name argument' in str(e)
+    err_msg = cmd_raises('config -l pytest.foo', subprocess.CalledProcessError)
+    assert '-l cannot be combined with name argument' in err_msg
 
     assert cmd('config -l').strip() == ''
 

@@ -426,7 +426,17 @@ def test_duckdb(make_config):
         type="duckdb",
         database="test",
         connector_config={"foo": "bar"},
+        secrets=[
+            {
+                "type": "s3",
+                "region": "aws_region",
+                "key_id": "aws_access_key",
+                "secret": "aws_secret",
+            }
+        ],
     )
+    assert config.connector_config
+    assert config.secrets
     assert isinstance(config, DuckDBConnectionConfig)
     assert not config.is_recommended_for_state_sync
 
@@ -1006,7 +1016,10 @@ def test_engine_import_validator():
     with pytest.raises(
         ConfigError,
         match=re.escape(
-            """Failed to import the 'bigquery' engine library. Please run `pip install "sqlmesh[bigquery]"`."""
+            "Failed to import the 'bigquery' engine library. This may be due to a missing "
+            "or incompatible installation. Please ensure the required dependency is installed by "
+            'running: `pip install "sqlmesh[bigquery]"`. For more details, check the logs '
+            "in the 'logs/' folder, or rerun the command with the '--debug' flag."
         ),
     ):
 
@@ -1018,7 +1031,10 @@ def test_engine_import_validator():
     with pytest.raises(
         ConfigError,
         match=re.escape(
-            """Failed to import the 'bigquery' engine library. Please run `pip install "sqlmesh[bigquery_extra]"`."""
+            "Failed to import the 'bigquery' engine library. This may be due to a missing "
+            "or incompatible installation. Please ensure the required dependency is installed by "
+            'running: `pip install "sqlmesh[bigquery_extra]"`. For more details, check the logs '
+            "in the 'logs/' folder, or rerun the command with the '--debug' flag."
         ),
     ):
 

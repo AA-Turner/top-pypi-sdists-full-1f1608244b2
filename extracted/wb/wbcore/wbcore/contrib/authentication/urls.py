@@ -1,7 +1,5 @@
 from django.contrib.auth import views as auth_views
 from django.urls import include, path, reverse_lazy
-from dynamic_preferences.api.viewsets import GlobalPreferencesViewSet
-from dynamic_preferences.users.viewsets import UserPreferencesViewSet
 from rest_framework_simplejwt.views import (  # TokenObtainPairView,; TokenRefreshView,
     TokenVerifyView,
 )
@@ -36,8 +34,6 @@ router.register(r"group", GroupViewSet)
 router.register(r"permission", PermissionViewSet)
 router.register(r"user", UserModelViewSet, basename="user")
 router.register(r"userprofile", UserProfileModelViewSet, basename="userprofile")
-router.register(r"global_preferences", GlobalPreferencesViewSet, basename="global_preferences")
-router.register(r"user_preferences", UserPreferencesViewSet, basename="user_preferences")
 
 router.register(r"useractivitychart", UserActivityChart, basename="useractivitychart")
 router.register(r"useractivity", UserActivityModelViewSet, basename="useractivity")

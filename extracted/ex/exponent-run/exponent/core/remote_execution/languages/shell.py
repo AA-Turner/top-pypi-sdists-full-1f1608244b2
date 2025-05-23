@@ -141,5 +141,5 @@ async def capture(
         if not data:
             break
 
-        chunk = data.decode()
+        chunk = data.decode(errors="replace")
         output.append((fd, chunk))

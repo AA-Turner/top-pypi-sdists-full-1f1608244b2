@@ -34,55 +34,34 @@ class SortObject(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'sorted': 'bool',
         'unsorted': 'bool',
+        'sorted': 'bool',
         'empty': 'bool'
     }
 
     attribute_map = {
-        'sorted': 'sorted',
         'unsorted': 'unsorted',
+        'sorted': 'sorted',
         'empty': 'empty'
     }
 
-    def __init__(self, sorted=None, unsorted=None, empty=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, unsorted=None, sorted=None, empty=None, local_vars_configuration=None):  # noqa: E501
         """SortObject - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._sorted = None
         self._unsorted = None
+        self._sorted = None
         self._empty = None
         self.discriminator = None
 
-        if sorted is not None:
-            self.sorted = sorted
         if unsorted is not None:
             self.unsorted = unsorted
+        if sorted is not None:
+            self.sorted = sorted
         if empty is not None:
             self.empty = empty
-
-    @property
-    def sorted(self):
-        """Gets the sorted of this SortObject.  # noqa: E501
-
-
-        :return: The sorted of this SortObject.  # noqa: E501
-        :rtype: bool
-        """
-        return self._sorted
-
-    @sorted.setter
-    def sorted(self, sorted):
-        """Sets the sorted of this SortObject.
-
-
-        :param sorted: The sorted of this SortObject.  # noqa: E501
-        :type: bool
-        """
-
-        self._sorted = sorted
 
     @property
     def unsorted(self):
@@ -104,6 +83,27 @@ class SortObject(object):
         """
 
         self._unsorted = unsorted
+
+    @property
+    def sorted(self):
+        """Gets the sorted of this SortObject.  # noqa: E501
+
+
+        :return: The sorted of this SortObject.  # noqa: E501
+        :rtype: bool
+        """
+        return self._sorted
+
+    @sorted.setter
+    def sorted(self, sorted):
+        """Sets the sorted of this SortObject.
+
+
+        :param sorted: The sorted of this SortObject.  # noqa: E501
+        :type: bool
+        """
+
+        self._sorted = sorted
 
     @property
     def empty(self):

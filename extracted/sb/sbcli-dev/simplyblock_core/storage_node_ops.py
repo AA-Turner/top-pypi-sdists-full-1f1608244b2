@@ -1235,7 +1235,7 @@ def add_node(cluster_id, node_ip, iface_name, data_nics_list,
         # logger.info("Done")
 
         logger.info("Setting node status to Active")
-        set_node_status(snode.get_id(), StorageNode.STATUS_ONLINE)
+        set_node_status(snode.get_id(), StorageNode.STATUS_ONLINE, reconnect_on_online=False)
 
         for dev in snode.nvme_devices:
             if dev.status == NVMeDevice.STATUS_ONLINE:
@@ -2069,7 +2069,8 @@ def shutdown_storage_node(node_id, force=False):
         if force is False:
             return False
         for task in tasks:
-            tasks_controller.cancel_task(task.uuid)
+            if task.function_name != JobSchedule.FN_NODE_RESTART:
+                tasks_controller.cancel_task(task.uuid)
 
     logger.info("Shutting down node")
     set_node_status(node_id, StorageNode.STATUS_IN_SHUTDOWN)

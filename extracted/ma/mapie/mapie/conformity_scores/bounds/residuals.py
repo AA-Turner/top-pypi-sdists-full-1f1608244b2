@@ -9,7 +9,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.utils.validation import (check_is_fitted, check_random_state,
                                       indexable)
 
-from mapie._typing import ArrayLike, NDArray
+from numpy.typing import ArrayLike, NDArray
 from mapie.conformity_scores import BaseRegressionScore
 
 
@@ -165,7 +165,7 @@ class ResidualNormalisedScore(BaseRegressionScore):
     ) -> Tuple[NDArray, NDArray]:
         """
         Fit the residual estimator and returns the indexes used for the
-        training of the base estimator and those needed for the calibration.
+        training of the base estimator and those needed for the conformalization.
 
         Parameters
         ----------

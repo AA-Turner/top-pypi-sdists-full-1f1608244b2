@@ -14,6 +14,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use toktrie_hf_tokenizers::ByteTokenizer;
 
+use crate::llamatokenizer::tokenv_from_llamacpp;
+
 struct PyTokenizer {
     tok_trie: Arc<toktrie::TokTrie>,
     tokenizer_fun: Py<PyAny>,
@@ -68,6 +70,29 @@ impl LLTokenizer {
         )
         .map_err(val_error)?;
 
+        Ok(LLTokenizer {
+            factory: Arc::new(factory),
+        })
+    }
+
+    #[staticmethod]
+    #[pyo3(signature = (*, tokens, vocab_ptr, tokenize_fptr, eos_token, slices=None))]
+    fn from_llamacpp(
+        tokens: Vec<Vec<u8>>,
+        vocab_ptr: usize,
+        tokenize_fptr: usize,
+        eos_token: u32,
+        slices: Option<Vec<String>>,
+    ) -> PyResult<Self> {
+        let tok_env =
+            tokenv_from_llamacpp(tokens, vocab_ptr, tokenize_fptr, eos_token).map_err(val_error)?;
+
+        let factory = ParserFactory::new(
+            &tok_env,
+            InferenceCapabilities::default(),
+            &slices.unwrap_or_else(SlicedBiasComputer::general_slices),
+        )
+        .map_err(val_error)?;
         Ok(LLTokenizer {
             factory: Arc::new(factory),
         })

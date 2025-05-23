@@ -22,6 +22,7 @@ from scope_client.api_bindings.models.alert import Alert
 from scope_client.api_bindings.models.alert_bound import AlertBound
 from scope_client.api_bindings.models.alert_check_job_spec import AlertCheckJobSpec
 from scope_client.api_bindings.models.alert_rule import AlertRule
+from scope_client.api_bindings.models.alert_rule_interval import AlertRuleInterval
 from scope_client.api_bindings.models.alert_rule_notification_webhook import AlertRuleNotificationWebhook
 from scope_client.api_bindings.models.alert_rule_sort import AlertRuleSort
 from scope_client.api_bindings.models.alert_sort import AlertSort
@@ -99,6 +100,7 @@ from scope_client.api_bindings.models.infinite_pagination import InfinitePaginat
 from scope_client.api_bindings.models.infinite_resource_list_alert import InfiniteResourceListAlert
 from scope_client.api_bindings.models.infinite_resource_list_job import InfiniteResourceListJob
 from scope_client.api_bindings.models.internal_server_error import InternalServerError
+from scope_client.api_bindings.models.interval_unit import IntervalUnit
 from scope_client.api_bindings.models.invite_new_user import InviteNewUser
 from scope_client.api_bindings.models.items import Items
 from scope_client.api_bindings.models.items1 import Items1

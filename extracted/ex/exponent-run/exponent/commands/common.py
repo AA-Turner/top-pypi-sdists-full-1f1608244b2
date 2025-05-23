@@ -38,7 +38,6 @@ from exponent.core.remote_execution.exceptions import (
     ExponentError,
     HandledExponentError,
 )
-from exponent.core.remote_execution.types import UseToolsConfig
 
 load_dotenv()
 
@@ -60,8 +59,8 @@ def inside_ssh_session() -> bool:
     return (os.environ.get("SSH_TTY") or os.environ.get("SSH_TTY")) is not None
 
 
-def inside_git_repo() -> bool:
-    git_info = get_git_info(os.getcwd())
+async def inside_git_repo() -> bool:
+    git_info = await get_git_info(os.getcwd())
 
     return git_info is not None
 
@@ -123,8 +122,8 @@ def check_ssl() -> None:
         install_ssl_certs()
 
 
-def check_inside_git_repo(settings: Settings) -> None:
-    if not inside_git_repo() and not settings.options.git_warning_disabled:
+async def check_inside_git_repo(settings: Settings) -> None:
+    if not settings.options.git_warning_disabled and not (await inside_git_repo()):
         click.echo(
             click.style(
                 "\nWarning: Running from a folder that is not a git repository",
@@ -246,7 +245,7 @@ async def start_chat(
     prompt: str,
 ) -> None:
     click.secho("Starting chat...")
-    await client.start_chat(chat_uuid, prompt, use_tools_config=UseToolsConfig())
+    await client.start_chat(chat_uuid, prompt)
     click.secho("Chat started. Open the link to join the chat.")
 
 
@@ -286,7 +285,6 @@ async def start_chat_turn(
         "chatConfig": {
             "chatUuid": chat_uuid,
             "exponentModel": "PREMIUM",
-            "useToolsConfig": "read_only",
             "requireConfirmation": False,
             "readOnly": False,
             "depthLimit": 20,

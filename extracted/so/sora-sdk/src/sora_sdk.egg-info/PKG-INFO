@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sora_sdk
-Version: 2025.2.2
+Version: 2025.2.3
 Summary: WebRTC SFU Sora Python SDK
 Home-page: https://github.com/shiguredo/sora-python-sdk
 Author-email: "Shiguredo Inc." <contact+pypi@shiguredo.jp>

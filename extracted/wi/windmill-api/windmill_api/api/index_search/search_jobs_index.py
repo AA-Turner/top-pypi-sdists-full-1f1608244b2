@@ -6,18 +6,21 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.search_jobs_index_response_200 import SearchJobsIndexResponse200
-from ...types import UNSET, Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     workspace: str,
     *,
     search_query: str,
+    pagination_offset: Union[Unset, None, int] = UNSET,
 ) -> Dict[str, Any]:
     pass
 
     params: Dict[str, Any] = {}
     params["search_query"] = search_query
+
+    params["pagination_offset"] = pagination_offset
 
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
@@ -59,12 +62,14 @@ def sync_detailed(
     *,
     client: Union[AuthenticatedClient, Client],
     search_query: str,
+    pagination_offset: Union[Unset, None, int] = UNSET,
 ) -> Response[SearchJobsIndexResponse200]:
     """Search through jobs with a string query
 
     Args:
         workspace (str):
         search_query (str):
+        pagination_offset (Union[Unset, None, int]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -77,6 +82,7 @@ def sync_detailed(
     kwargs = _get_kwargs(
         workspace=workspace,
         search_query=search_query,
+        pagination_offset=pagination_offset,
     )
 
     response = client.get_httpx_client().request(
@@ -91,12 +97,14 @@ def sync(
     *,
     client: Union[AuthenticatedClient, Client],
     search_query: str,
+    pagination_offset: Union[Unset, None, int] = UNSET,
 ) -> Optional[SearchJobsIndexResponse200]:
     """Search through jobs with a string query
 
     Args:
         workspace (str):
         search_query (str):
+        pagination_offset (Union[Unset, None, int]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -110,6 +118,7 @@ def sync(
         workspace=workspace,
         client=client,
         search_query=search_query,
+        pagination_offset=pagination_offset,
     ).parsed
 
 
@@ -118,12 +127,14 @@ async def asyncio_detailed(
     *,
     client: Union[AuthenticatedClient, Client],
     search_query: str,
+    pagination_offset: Union[Unset, None, int] = UNSET,
 ) -> Response[SearchJobsIndexResponse200]:
     """Search through jobs with a string query
 
     Args:
         workspace (str):
         search_query (str):
+        pagination_offset (Union[Unset, None, int]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -136,6 +147,7 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         workspace=workspace,
         search_query=search_query,
+        pagination_offset=pagination_offset,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -148,12 +160,14 @@ async def asyncio(
     *,
     client: Union[AuthenticatedClient, Client],
     search_query: str,
+    pagination_offset: Union[Unset, None, int] = UNSET,
 ) -> Optional[SearchJobsIndexResponse200]:
     """Search through jobs with a string query
 
     Args:
         workspace (str):
         search_query (str):
+        pagination_offset (Union[Unset, None, int]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -168,5 +182,6 @@ async def asyncio(
             workspace=workspace,
             client=client,
             search_query=search_query,
+            pagination_offset=pagination_offset,
         )
     ).parsed

@@ -12,36 +12,60 @@ Nothing in here is public API.
 '''
 
 import argparse
-from collections import OrderedDict
-import colorama
-from io import StringIO
 import logging
 import os
-from pathlib import Path, PurePath
 import platform
 import shlex
 import shutil
 import signal
 import sys
-from subprocess import CalledProcessError
 import tempfile
 import textwrap
 import traceback
+from collections import OrderedDict
+from io import StringIO
+from pathlib import Path, PurePath
+from subprocess import CalledProcessError
 from typing import NamedTuple, Optional
-from typing import List as ListType
 
-from west import log
+import colorama
+
 import west.configuration
-from west.commands import WestCommand, extension_commands, \
-    CommandError, ExtensionCommandError, Verbosity
-from west.app.project import List, ManifestCommand, Compare, Diff, Status, \
-    SelfUpdate, ForAll, Grep, Init, Update, Topdir
+from west import log
 from west.app.config import Config
-from west.manifest import Manifest, MalformedConfig, MalformedManifest, \
-    ManifestVersionError, ManifestImportFailed, _ManifestImportDepth, \
-    ManifestProject, MANIFEST_REV_BRANCH
-from west.util import quote_sh_list, west_topdir, WestNotFound
+from west.app.project import (
+    Compare,
+    Diff,
+    ForAll,
+    Grep,
+    Init,
+    List,
+    ManifestCommand,
+    SelfUpdate,
+    Status,
+    Topdir,
+    Update,
+)
+from west.commands import (
+    CommandError,
+    ExtensionCommandError,
+    Verbosity,
+    WestCommand,
+    extension_commands,
+)
+from west.manifest import (
+    MANIFEST_REV_BRANCH,
+    MalformedConfig,
+    MalformedManifest,
+    Manifest,
+    ManifestImportFailed,
+    ManifestProject,
+    ManifestVersionError,
+    _ManifestImportDepth,
+)
+from west.util import WestNotFound, quote_sh_list, west_topdir
 from west.version import __version__
+
 
 class EarlyArgs(NamedTuple):
     # Data type for storing "early" argument parsing results.
@@ -65,9 +89,9 @@ class EarlyArgs(NamedTuple):
     command_name: Optional[str]
 
     # Other arguments are appended here.
-    unexpected_arguments: ListType[str]
+    unexpected_arguments: list[str]
 
-def parse_early_args(argv: ListType[str]) -> EarlyArgs:
+def parse_early_args(argv: list[str]) -> EarlyArgs:
     # Hand-rolled argument parser for early arguments.
 
     help = False
@@ -82,8 +106,7 @@ def parse_early_args(argv: ListType[str]) -> EarlyArgs:
     def consume_more_args(rest):
         # Handle the 'Vv' portion of 'west -hVv'.
 
-        nonlocal help, version, zephyr_base, verbosity, command_name
-        nonlocal unexpected_arguments
+        nonlocal help, version, zephyr_base, verbosity
         nonlocal expecting_zephyr_base
 
         if not rest:
@@ -385,17 +408,17 @@ class WestApp:
             for spec in specs:
                 if spec.name in self.builtins:
                     self.queued_io.append(
-                        lambda cmd: cmd.wrn(
-                            f'ignoring project {spec.project.name} '
-                            f'extension command "{spec.name}"; '
+                        lambda cmd, spec_const=spec: cmd.wrn(
+                            f'ignoring project {spec_const.project.name} '
+                            f'extension command "{spec_const.name}"; '
                             'this is a built in command'))
                     continue
                 if spec.name in extension_names:
                     self.queued_io.append(
-                        lambda cmd: cmd.wrn(
-                            f'ignoring project {spec.project.name} '
-                            f'extension command "{spec.name}"; '
-                            f'command "{spec.name}" is '
+                        lambda cmd, spec_const=spec: cmd.wrn(
+                            f'ignoring project {spec_const.project.name} '
+                            f'extension command "{spec_const.name}"; '
+                            f'command "{spec_const.name}" is '
                             'already defined as extension command'))
                     continue
 
@@ -896,7 +919,7 @@ class Alias(WestCommand):
         return parser
 
     def do_run(self, args, ignored):
-        assert False
+        raise AssertionError("Alias command can't run directly")
 
 class WestHelpAction(argparse.Action):
 
@@ -922,7 +945,7 @@ class WestArgumentParser(argparse.ArgumentParser):
         # come first as our override of that method relies on it.
         self.west_optionals = []
         self.west_app = kwargs.pop('west_app', None)
-        super(WestArgumentParser, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def print_help(self, file=None, top_level=False):
         print(self.format_help(top_level=top_level), end='',
@@ -938,7 +961,7 @@ class WestArgumentParser(argparse.ArgumentParser):
         # one of the subcommand parsers, and we delegate to super.
 
         if not top_level:
-            return super(WestArgumentParser, self).format_help()
+            return super().format_help()
 
         # Format the help to be at most 75 columns wide, the maximum
         # generally recommended by typographers for readability.
@@ -995,7 +1018,7 @@ class WestArgumentParser(argparse.ArgumentParser):
                 #
                 # This has its own wrinkle: we can't let a failed
                 # import break the built-in commands.
-                for path, specs in self.west_app.extension_groups.items():
+                for _path, specs in self.west_app.extension_groups.items():
                     # This may occur in case a project defines commands already
                     # defined, in which case it has been filtered out.
                     if not specs:

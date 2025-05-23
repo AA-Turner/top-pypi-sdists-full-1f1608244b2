@@ -428,3 +428,63 @@ def test_reduction_index():
     assert arr[:10].shape == (10,)
     assert arr[0].shape == (1,)
     assert arr.shape == newarr.shape
+
+
+def test_slice_lazy():
+    shape = (20, 20)
+    a = blosc2.linspace(0, 20, num=np.prod(shape), shape=shape)
+    arr = blosc2.lazyexpr("anarr.slice(slice(10,15)) + 1", {"anarr": a})
+    newarr = arr.compute()
+    np.testing.assert_allclose(newarr[:], a.slice(slice(10, 15))[:] + 1)
+
+
+def test_slicebrackets_lazy():
+    shape = (20, 20)
+    a = blosc2.linspace(0, 20, num=np.prod(shape), shape=shape)
+    arr = blosc2.lazyexpr("anarr[10:15] + 1", {"anarr": a})
+    newarr = arr.compute()
+    np.testing.assert_allclose(newarr[:], a[10:15] + 1)
+
+    # Try with getitem
+    a = blosc2.linspace(0, 20, num=np.prod(shape), shape=shape)
+    arr = blosc2.lazyexpr("anarr[10:15] + 1", {"anarr": a})
+    newarr = arr[:3]
+    res = a[10:15] + 1
+    np.testing.assert_allclose(newarr, res[:3])
+
+    # Test other cases
+    arr = blosc2.lazyexpr("anarr[10:15, 2:9] + 1", {"anarr": a})
+    newarr = arr.compute()
+    np.testing.assert_allclose(newarr[:], a[10:15, 2:9] + 1)
+
+    arr = blosc2.lazyexpr("anarr[10:15][2:9] + 1", {"anarr": a})
+    newarr = arr.compute()
+    np.testing.assert_allclose(newarr[:], a[10:15][2:9] + 1)
+
+    arr = blosc2.lazyexpr("anarr[10] + 1", {"anarr": a})
+    newarr = arr.compute()
+    np.testing.assert_allclose(newarr[:], a[10] + 1)
+
+    arr = blosc2.lazyexpr("anarr[10, 1] + 1", {"anarr": a})
+    newarr = arr[:]
+    np.testing.assert_allclose(newarr, a[10, 1] + 1)
+
+
+def test_reduce_string():
+    shape = (10, 10, 2)
+
+    # Create a NDArray from a NumPy array
+    npa = np.linspace(0, 1, np.prod(shape), dtype=np.float32).reshape(shape)
+    npb = np.linspace(1, 2, np.prod(shape), dtype=np.float64).reshape(shape)
+    npc = npa**2 + npb**2 + 2 * npa * npb + 1
+
+    a = blosc2.asarray(npa)
+    b = blosc2.asarray(npb)
+
+    # Get a LazyExpr instance
+    c = a**2 + b**2 + 2 * a * b + 1
+    # Evaluate: output is a NDArray
+    d = blosc2.lazyexpr("sl + c.sum() + a.std()", operands={"a": a, "c": c, "sl": a.slice((1, 1))})
+    sum = d.compute()[()]
+    npsum = npa[1, 1] + np.sum(npc) + np.std(npa)
+    assert np.allclose(sum, npsum)

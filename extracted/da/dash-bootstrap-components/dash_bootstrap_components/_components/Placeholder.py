@@ -1,13 +1,21 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 import typing  # noqa: F401
-import numbers # noqa: F401
 from typing_extensions import TypedDict, NotRequired, Literal # noqa: F401
-from dash.development.base_component import Component
-try:
-    from dash.development.base_component import ComponentType # noqa: F401
-except ImportError:
-    ComponentType = typing.TypeVar("ComponentType", bound=Component)
+from dash.development.base_component import Component, _explicitize_args
+
+ComponentType = typing.Union[
+    str,
+    int,
+    float,
+    Component,
+    None,
+    typing.Sequence[typing.Union[str, int, float, Component, None]],
+]
+
+NumberType = typing.Union[
+    typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex
+]
 
 
 class Placeholder(Component):
@@ -106,28 +114,27 @@ Keyword arguments:
     _namespace = 'dash_bootstrap_components'
     _type = 'Placeholder'
 
-    _explicitize_dash_init = True
 
     def __init__(
         self,
-        children: typing.Optional[typing.Union[str, int, float, ComponentType, typing.Sequence[typing.Union[str, int, float, ComponentType]]]] = None,
+        children: typing.Optional[ComponentType] = None,
         id: typing.Optional[typing.Union[str, dict]] = None,
         *,
         animation: typing.Optional[Literal["glow", "wave"]] = None,
         color: typing.Optional[str] = None,
         size: typing.Optional[Literal["xs", "sm", "lg"]] = None,
         button: typing.Optional[bool] = None,
-        delay_hide: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
-        delay_show: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
+        delay_hide: typing.Optional[NumberType] = None,
+        delay_show: typing.Optional[NumberType] = None,
         show_initially: typing.Optional[bool] = None,
         style: typing.Optional[typing.Any] = None,
         class_name: typing.Optional[str] = None,
-        xs: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
-        sm: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
-        md: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
-        lg: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
-        xl: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
-        xxl: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
+        xs: typing.Optional[NumberType] = None,
+        sm: typing.Optional[NumberType] = None,
+        md: typing.Optional[NumberType] = None,
+        lg: typing.Optional[NumberType] = None,
+        xl: typing.Optional[NumberType] = None,
+        xxl: typing.Optional[NumberType] = None,
         target_components: typing.Optional[typing.Dict[typing.Union[str, float, int], typing.Union[str, typing.Sequence[str]]]] = None,
         display: typing.Optional[Literal["auto", "show", "hide"]] = None,
         key: typing.Optional[str] = None,
@@ -144,3 +151,5 @@ Keyword arguments:
         args = {k: _locals[k] for k in _explicit_args if k != 'children'}
 
         super(Placeholder, self).__init__(children=children, **args)
+
+setattr(Placeholder, "__init__", _explicitize_args(Placeholder.__init__))

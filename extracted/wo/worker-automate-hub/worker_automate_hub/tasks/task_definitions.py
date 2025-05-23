@@ -175,7 +175,8 @@ task_definitions = {
     "260380b7-a3e5-4c23-ab69-b428ee552830": geracao_aprovacao_pedidos_171,
     "c10bbf8c-3949-4a0e-9e10-3d85d367263d": abertura_livros_fiscais,
     "68d6a695-73f0-424c-afb6-54b5dba3ab9d": lancamento_pis_cofins,
-    "def194c2-ffa0-4b9e-b95c-920fb4ad4150": importar_cte_xml
+    "def194c2-ffa0-4b9e-b95c-920fb4ad4150": importar_cte_xml,
+    "58de6a65-68cd-4e68-ab28-31b543b6de02": transferencias, #Logistica reverse
 }
 
 

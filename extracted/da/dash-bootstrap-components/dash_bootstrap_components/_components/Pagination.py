@@ -1,13 +1,21 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 import typing  # noqa: F401
-import numbers # noqa: F401
 from typing_extensions import TypedDict, NotRequired, Literal # noqa: F401
-from dash.development.base_component import Component
-try:
-    from dash.development.base_component import ComponentType # noqa: F401
-except ImportError:
-    ComponentType = typing.TypeVar("ComponentType", bound=Component)
+from dash.development.base_component import Component, _explicitize_args
+
+ComponentType = typing.Union[
+    str,
+    int,
+    float,
+    Component,
+    None,
+    typing.Sequence[typing.Union[str, int, float, Component, None]],
+]
+
+NumberType = typing.Union[
+    typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex
+]
 
 
 class Pagination(Component):
@@ -61,16 +69,15 @@ Keyword arguments:
     _namespace = 'dash_bootstrap_components'
     _type = 'Pagination'
 
-    _explicitize_dash_init = True
 
     def __init__(
         self,
         id: typing.Optional[typing.Union[str, dict]] = None,
         *,
-        active_page: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
-        min_value: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
-        max_value: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
-        step: typing.Optional[typing.Union[typing.SupportsFloat, typing.SupportsInt, typing.SupportsComplex]] = None,
+        active_page: typing.Optional[NumberType] = None,
+        min_value: typing.Optional[NumberType] = None,
+        max_value: typing.Optional[NumberType] = None,
+        step: typing.Optional[NumberType] = None,
         size: typing.Optional[Literal["sm", "lg"]] = None,
         fully_expanded: typing.Optional[bool] = None,
         previous_next: typing.Optional[bool] = None,
@@ -95,3 +102,5 @@ Keyword arguments:
                     'Required argument `' + k + '` was not specified.')
 
         super(Pagination, self).__init__(**args)
+
+setattr(Pagination, "__init__", _explicitize_args(Pagination.__init__))

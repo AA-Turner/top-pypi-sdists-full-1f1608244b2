@@ -55,6 +55,8 @@ from ruamel.yaml import YAML
 from ruamel.yaml.error import YAMLError
 from tenacity import (
     AsyncRetrying,
+    RetryError,
+    TryAgain,
     retry_if_exception_type,
     stop_after_attempt,
     stop_after_delay,
@@ -63,7 +65,7 @@ from tenacity import (
 from trafaret import DataError
 
 from ai.backend.common import msgpack, redis_helper
-from ai.backend.common.bgtask import BackgroundTaskManager
+from ai.backend.common.bgtask.bgtask import BackgroundTaskManager
 from ai.backend.common.config import model_definition_iv
 from ai.backend.common.defs import REDIS_STATISTICS_DB, REDIS_STREAM_DB, RedisRole
 from ai.backend.common.docker import (
@@ -76,32 +78,40 @@ from ai.backend.common.docker import (
 )
 from ai.backend.common.dto.agent.response import PurgeImagesResp
 from ai.backend.common.dto.manager.rpc_request import PurgeImagesReq
-from ai.backend.common.events import (
-    AbstractEvent,
+from ai.backend.common.events.agent import (
     AgentErrorEvent,
     AgentHeartbeatEvent,
     AgentImagesRemoveEvent,
     AgentStartedEvent,
     AgentTerminatedEvent,
     DoAgentResourceCheckEvent,
-    DoSyncKernelLogsEvent,
-    DoVolumeMountEvent,
-    DoVolumeUnmountEvent,
+)
+from ai.backend.common.events.dispatcher import (
+    AbstractEvent,
     EventDispatcher,
     EventProducer,
-    ExecutionCancelledEvent,
-    ExecutionFinishedEvent,
-    ExecutionStartedEvent,
-    ExecutionTimeoutEvent,
+)
+from ai.backend.common.events.kernel import (
+    DoSyncKernelLogsEvent,
     KernelCreatingEvent,
     KernelLifecycleEventReason,
     KernelPreparingEvent,
     KernelPullingEvent,
     KernelStartedEvent,
     KernelTerminatedEvent,
-    ModelServiceStatusEvent,
+)
+from ai.backend.common.events.model_serving import ModelServiceStatusEvent
+from ai.backend.common.events.session import (
+    ExecutionCancelledEvent,
+    ExecutionFinishedEvent,
+    ExecutionStartedEvent,
+    ExecutionTimeoutEvent,
     SessionFailureEvent,
     SessionSuccessEvent,
+)
+from ai.backend.common.events.volume import (
+    DoVolumeMountEvent,
+    DoVolumeUnmountEvent,
     VolumeMountableNodeType,
     VolumeMounted,
     VolumeUnmounted,
@@ -133,7 +143,6 @@ from ai.backend.common.types import (
     ContainerId,
     DeviceId,
     DeviceName,
-    EtcdRedisConfig,
     HardwareMetadata,
     ImageConfig,
     ImageRegistry,
@@ -143,8 +152,9 @@ from ai.backend.common.types import (
     ModelServiceStatus,
     MountPermission,
     MountTypes,
-    RedisConfig,
     RedisConnectionInfo,
+    RedisProfileTarget,
+    RedisTarget,
     RuntimeVariant,
     Sentinel,
     ServicePort,
@@ -270,9 +280,9 @@ class AbstractKernelCreationContext(aobject, Generic[KernelObjectType]):
         restarting: bool = False,
     ) -> None:
         self.image_labels = kernel_config["image"]["labels"]
-        self.kspec_version = int(self.image_labels.get("ai.backend.kernelspec", "1"))
+        self.kspec_version = int(self.image_labels.get(LabelName.KERNEL_SPEC, "1"))
         self.kernel_features = frozenset(
-            self.image_labels.get(LabelName.FEATURES.value, DEFAULT_KERNEL_FEATURE).split()
+            self.image_labels.get(LabelName.FEATURES, DEFAULT_KERNEL_FEATURE).split()
         )
         self.ownership_data = ownership_data
         self.session_id = ownership_data.session_id
@@ -720,14 +730,16 @@ class AbstractAgent(
         self.registry_lock = asyncio.Lock()
         self.container_lifecycle_queue = asyncio.Queue()
 
-        etcd_redis_config: EtcdRedisConfig = EtcdRedisConfig.from_dict(self.local_config["redis"])
-        stream_redis_config = etcd_redis_config.get_override_config(RedisRole.STREAM)
+        redis_profile_target: RedisProfileTarget = RedisProfileTarget.from_dict(
+            self.local_config["redis"]
+        )
+        stream_redis_target = redis_profile_target.profile_target(RedisRole.STREAM)
         stream_redis = redis_helper.get_redis_object(
-            stream_redis_config,
+            stream_redis_target,
             name="event_producer.stream",
             db=REDIS_STREAM_DB,
         )
-        mq = self._make_message_queue(stream_redis_config, stream_redis)
+        mq = self._make_message_queue(stream_redis_target, stream_redis)
         self.event_producer = EventProducer(
             mq,
             source=self.id,
@@ -739,12 +751,12 @@ class AbstractAgent(
             event_observer=self._metric_registry.event,
         )
         self.redis_stream_pool = redis_helper.get_redis_object(
-            etcd_redis_config.get_override_config(RedisRole.STREAM),
+            redis_profile_target.profile_target(RedisRole.STREAM),
             name="stream",
             db=REDIS_STREAM_DB,
         )
         self.redis_stat_pool = redis_helper.get_redis_object(
-            etcd_redis_config.get_override_config(RedisRole.STATISTICS),
+            redis_profile_target.profile_target(RedisRole.STATISTICS),
             name="stat",
             db=REDIS_STATISTICS_DB,
         )
@@ -839,9 +851,10 @@ class AbstractAgent(
         evd = self.event_dispatcher
         evd.subscribe(DoVolumeMountEvent, self, handle_volume_mount, name="ag.volume.mount")
         evd.subscribe(DoVolumeUnmountEvent, self, handle_volume_umount, name="ag.volume.umount")
+        await self.event_dispatcher.start()
 
     def _make_message_queue(
-        self, stream_redis_config: RedisConfig, stream_redis: RedisConnectionInfo
+        self, stream_redis_target: RedisTarget, stream_redis: RedisConnectionInfo
     ) -> AbstractMessageQueue:
         """
         Returns the message queue object.
@@ -849,7 +862,7 @@ class AbstractAgent(
         node_id = self.local_config["agent"]["id"]
         if self.local_config["agent"].get("use-experimental-redis-event-dispatcher"):
             return HiRedisQueue(
-                stream_redis_config,
+                stream_redis_target,
                 HiRedisMQArgs(
                     stream_key="events",
                     group_name=EVENT_DISPATCHER_CONSUMER_GROUP,
@@ -1423,7 +1436,7 @@ class AbstractAgent(
         terminated_kernels: dict[KernelId, ContainerLifecycleEvent] = {}
 
         def _get_session_id(container: Container) -> SessionId | None:
-            _session_id = container.labels.get("ai.backend.session-id")
+            _session_id = container.labels.get(LabelName.SESSION_ID)
             try:
                 return SessionId(UUID(_session_id))
             except ValueError:
@@ -1784,9 +1797,9 @@ class AbstractAgent(
             for kernel_id, container in await self.enumerate_containers(
                 ACTIVE_STATUS_SET | DEAD_STATUS_SET,
             ):
-                session_id = SessionId(UUID(container.labels["ai.backend.session-id"]))
+                session_id = SessionId(UUID(container.labels[LabelName.SESSION_ID]))
                 if container.status in ACTIVE_STATUS_SET:
-                    kernelspec = int(container.labels.get("ai.backend.kernelspec", "1"))
+                    kernelspec = int(container.labels.get(LabelName.KERNEL_SPEC, "1"))
                     if not (MIN_KERNELSPEC <= kernelspec <= MAX_KERNELSPEC):
                         continue
                     # Consume the port pool.
@@ -2072,7 +2085,7 @@ class AbstractAgent(
                     await ctx.mount_krunner(resource_spec, environ)
 
                 # Inject Backend.AI-intrinsic env-variables for libbaihook and gosu
-                label_envs_corecount = image_labels.get("ai.backend.envs.corecount", "")
+                label_envs_corecount = image_labels.get(LabelName.ENVS_CORECOUNT, "")
                 envs_corecount = label_envs_corecount.split(",") if label_envs_corecount else []
                 cpu_core_count = len(resource_spec.allocations[DeviceName("cpu")][SlotName("cpu")])
                 environ.update({k: str(cpu_core_count) for k in envs_corecount if k not in environ})
@@ -2153,8 +2166,8 @@ class AbstractAgent(
 
                 if ctx.kernel_config["cluster_role"] in ("main", "master"):
                     for sport in parse_service_ports(
-                        image_labels.get("ai.backend.service-ports", ""),
-                        image_labels.get("ai.backend.endpoint-ports", ""),
+                        image_labels.get(LabelName.SERVICE_PORTS, ""),
+                        image_labels.get(LabelName.ENDPOINT_PORTS, ""),
                     ):
                         port_map[sport["name"]] = sport
                     for port_no in preopen_ports:
@@ -2204,8 +2217,8 @@ class AbstractAgent(
                         kernel_config,
                     )
 
-                runtime_type = image_labels.get("ai.backend.runtime-type", "app")
-                runtime_path = image_labels.get("ai.backend.runtime-path", None)
+                runtime_type = image_labels.get(LabelName.RUNTIME_TYPE, "app")
+                runtime_path = image_labels.get(LabelName.RUNTIME_PATH, None)
                 cmdargs: list[str] = []
                 krunner_opts: list[str] = []
                 if self.local_config["container"]["sandbox-type"] == "jail":
@@ -2328,7 +2341,10 @@ class AbstractAgent(
                             stop_after_attempt(kernel_init_polling_attempt)
                             | stop_after_delay(kernel_init_polling_timeout)
                         ),
-                        retry=retry_if_exception_type(zmq.error.ZMQError),
+                        retry=(
+                            retry_if_exception_type(zmq.error.ZMQError)
+                            | retry_if_exception_type(TryAgain)
+                        ),
                     ):
                         with attempt:
                             # Wait until bootstrap script is executed.
@@ -2345,6 +2361,13 @@ class AbstractAgent(
                                         if live_service["name"] == service_port["name"]:
                                             service_port.update(live_service)
                                             break
+                            else:
+                                log.warning(
+                                    "Failed to retrieve service app info, retrying (kernel:{}, container:{})",
+                                    kernel_id,
+                                    container_data["container_id"],
+                                )
+                                raise TryAgain
                     if self.local_config["debug"]["log-kernel-config"]:
                         log.debug("service ports:\n{!r}", pretty(service_ports))
                 except asyncio.TimeoutError:
@@ -2369,6 +2392,20 @@ class AbstractAgent(
                     raise AgentError(
                         f"Cancelled waiting of container startup (k:{str(ctx.kernel_id)}, container:{container_data['container_id']})"
                     )
+                except RetryError:
+                    await self.inject_container_lifecycle_event(
+                        kernel_id,
+                        session_id,
+                        LifecycleEvent.DESTROY,
+                        KernelLifecycleEventReason.FAILED_TO_START,
+                        container_id=ContainerId(container_data["container_id"]),
+                    )
+                    err_msg = (
+                        "Container startup failed, the container might be missing or failed to initialize "
+                        f"(k:{str(ctx.kernel_id)}, container:{container_data['container_id']})"
+                    )
+                    log.exception(err_msg)
+                    raise AgentError(err_msg)
                 except BaseException as e:
                     log.exception(
                         "unexpected error while waiting container startup (k: {}, e: {})",
@@ -2854,7 +2891,7 @@ class AbstractAgent(
     async def get_commit_status(self, kernel_id: KernelId, subdir: str) -> CommitStatus:
         return await self.kernel_registry[kernel_id].check_duplicate_commit(kernel_id, subdir)
 
-    async def accept_file(self, kernel_id: KernelId, filename: str, filedata):
+    async def accept_file(self, kernel_id: KernelId, filename: str, filedata: bytes):
         return await self.kernel_registry[kernel_id].accept_file(filename, filedata)
 
     async def download_file(self, kernel_id: KernelId, filepath: str):

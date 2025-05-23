@@ -33,9 +33,9 @@ import constructs._jsii
 
 __jsii_assembly__ = jsii.JSIIAssembly.load(
     "@cdktf/provider-opentelekomcloud",
-    "11.1.29",
+    "11.1.30",
     __name__[0:-6],
-    "provider-opentelekomcloud@11.1.29.jsii.tgz",
+    "provider-opentelekomcloud@11.1.30.jsii.tgz",
 )
 
 __all__ = [

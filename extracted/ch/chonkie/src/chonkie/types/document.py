@@ -1,7 +1,20 @@
-"""Document type for Chonkie."""
+"""Document type for Chonkie.
 
-from dataclasses import dataclass
-from typing import List
+Documents allows chonkie to work together with other libraries that have their own 
+document types — ensuring that the transition between libraries is as seamless as possible!
+
+Additionally, documents are used to link together multiple sources of metadata that can be 
+leveraged in downstream use-cases. One example of this would be in-line images, which are
+stored as base64 encoded strings in the `metadata` field.
+
+Lastly, documents are used by the chunkers to understand that they are working with chunks
+of a document and not an assortment of text when dealing with hybrid/dual-mode chunking. 
+
+This class is designed to be extended and might go through significant changes in the future.
+"""
+
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional
 
 from .base import Chunk
 
@@ -17,10 +30,14 @@ class Document:
     with different chunkers.
 
     Args:
-        text: The text of the document.
+        id: The id of the document. If not provided, a random uuid will be generated.
+        text: The complete text of the document.
         chunks: The chunks of the document.
-
+        metadata: Any additional metadata you want to store about the document.
+        
     """
 
-    text: str
-    chunks: List[Chunk]
+    id: Optional[str] = field(default_factory=str)
+    text: str = field(default_factory=str)
+    chunks: List[Chunk] = field(default_factory=list)
+    metadata: Dict[str, Any] = field(default_factory=dict)

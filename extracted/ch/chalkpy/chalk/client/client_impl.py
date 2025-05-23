@@ -2488,16 +2488,18 @@ https://docs.chalk.ai/cli/apply
         timeout: float | timedelta | ellipsis | None = ...,
     ) -> pd.DataFrame:
         context = OfflineQueryContext(environment=environment)
-        optional_output_root_fqns = [str(f) for f in output]
-        required_output_root_fqns = [str(f) for f in required_output]
+        outputs_encoded = encode_outputs(output)
+        required_outputs_encoded = encode_outputs(required_output)
 
         if len(output) == 0 and len(required_output) == 0:
             raise ValueError("Either 'output' or 'required_output' must be specified.")
 
         return self._create_and_await_offline_query_job(
             query_input=None,
-            optional_output=optional_output_root_fqns,
-            required_output=required_output_root_fqns,
+            optional_output=outputs_encoded.string_outputs,
+            required_output=required_outputs_encoded.string_outputs,
+            optional_output_expressions=outputs_encoded.feature_expressions_base64,
+            required_output_expressions=required_outputs_encoded.feature_expressions_base64,
             max_samples=max_samples,
             context=context,
             output_id=output_id,
@@ -2868,6 +2870,8 @@ https://docs.chalk.ai/cli/apply
         self,
         optional_output: List[str],
         required_output: List[str],
+        optional_output_expressions: List[str],
+        required_output_expressions: List[str],
         query_input: Optional[OfflineQueryInput],
         max_samples: Optional[int],
         dataset_name: Optional[str],
@@ -2883,7 +2887,9 @@ https://docs.chalk.ai/cli/apply
             branch = self._branch
         req = CreateOfflineQueryJobRequest(
             output=optional_output,
+            output_expressions=optional_output_expressions,
             required_output=required_output,
+            required_output_expressions=required_output_expressions,
             destination_format="PARQUET",
             input=query_input,
             max_samples=max_samples,
@@ -3064,9 +3070,12 @@ https://docs.chalk.ai/cli/apply
         run_asynchronously: bool = False,
         timeout: float | timedelta | ellipsis | None = ...,
     ) -> DatasetImpl:
-        outputs = [str(f) for f in features] if features else []
+        encoded_outputs = encode_outputs((features or []))
+        output_root_fqns = encoded_outputs.string_outputs
+        output_expressions = encoded_outputs.feature_expressions_base64
         req = CreateOfflineQueryJobRequest(
-            output=outputs,
+            output=output_root_fqns,
+            output_expressions=output_expressions,
             required_output=[],
             destination_format="PARQUET",
             # server will understand that we have num_shards
@@ -3080,7 +3089,7 @@ https://docs.chalk.ai/cli/apply
             ),
             dataset_name=dataset_name,
             branch=branch,
-            recompute_features=outputs if outputs != [] else True,
+            recompute_features=output_root_fqns if len(output_root_fqns) > 0 else True,
             store_plan_stages=store_plan_stages,
             correlation_id=correlation_id,
             explain=explain,

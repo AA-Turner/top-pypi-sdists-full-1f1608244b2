@@ -1,7 +1,7 @@
 from typing import Optional, Tuple, Union, cast
 
 import numpy as np
-from sklearn.calibration import LabelEncoder
+from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.utils import _safe_indexing
 from sklearn.utils.validation import _num_samples
@@ -11,9 +11,9 @@ from mapie.conformity_scores.sets.utils import get_true_label_position
 from mapie.estimator.classifier import EnsembleClassifier
 
 from mapie._machine_precision import EPSILON
-from mapie._typing import NDArray
-from mapie.metrics import classification_mean_width_score
-from mapie.utils import check_alpha_and_n_samples, compute_quantiles
+from numpy.typing import NDArray
+from mapie.metrics.classification import classification_mean_width_score
+from mapie.utils import _check_alpha_and_n_samples, _compute_quantiles
 
 
 class RAPSConformityScore(APSConformityScore):
@@ -281,10 +281,7 @@ class RAPSConformityScore(APSConformityScore):
             respectively represent the updated values of lambda_star
             and the new best sizes.
         """
-        sizes = [
-            classification_mean_width_score(y_ps[:, :, i])
-            for i in range(len(alpha_np))
-        ]
+        sizes = classification_mean_width_score(y_ps)
 
         sizes_improve = (sizes < best_sizes - EPSILON)
         lambda_star = (
@@ -350,7 +347,7 @@ class RAPSConformityScore(APSConformityScore):
                 cutoff
             )
 
-            quantiles_ = compute_quantiles(
+            quantiles_ = _compute_quantiles(
                 true_label_cumsum_proba_reg,
                 alpha_np
             )
@@ -413,6 +410,10 @@ class RAPSConformityScore(APSConformityScore):
 
             By default, ``True``.
 
+            See the docstring of
+            :meth:`conformity_scores.sets.aps.APSConformityScore.get_prediction_sets`
+            for more details.
+
         X_raps: NDArray of shape (n_samples, n_features)
             Observed feature values for the RAPS method (split data).
 
@@ -446,8 +447,8 @@ class RAPSConformityScore(APSConformityScore):
         # y_pred_proba_raps = cast(NDArray, y_pred_proba_raps)
         # position_raps = cast(NDArray, position_raps)
 
-        check_alpha_and_n_samples(alpha_np, self.X_raps.shape[0])
-        self.k_star = compute_quantiles(
+        _check_alpha_and_n_samples(alpha_np, self.X_raps.shape[0])
+        self.k_star = _compute_quantiles(
             self.position_raps,
             alpha_np
         ) + 1
@@ -471,7 +472,7 @@ class RAPSConformityScore(APSConformityScore):
                 self.cutoff
             )
         )
-        quantiles_ = compute_quantiles(
+        quantiles_ = _compute_quantiles(
             conformity_scores_regularized,
             alpha_np
         )

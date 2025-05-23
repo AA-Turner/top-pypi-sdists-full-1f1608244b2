@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import pathlib
-
 __all__ = (
     "NeptuneScaleError",
     "NeptuneScaleWarning",
@@ -47,6 +45,10 @@ __all__ = (
     "NeptunePreviewStepNotAfterLastCommittedStep",
     "NeptuneDatabaseConflict",
     "NeptuneLocalStorageInUnsupportedVersion",
+    "NeptuneHistogramBinEdgesContainNaN",
+    "NeptuneHistogramTooManyBins",
+    "NeptuneHistogramBinEdgesNotIncreasing",
+    "NeptuneHistogramValuesLengthMismatch",
 )
 
 from typing import (
@@ -148,7 +150,7 @@ environment variable to `True`.
 For details, see https://docs.neptune.ai/log_configs
 """
 
-    def __init__(self, *, metric: str, step: Optional[float | int], value: Any) -> None:
+    def __init__(self, metric: str = "", step: Optional[float | int] = None, value: Any = None) -> None:
         super().__init__(metric=metric, step=step, value=value)
 
 
@@ -164,8 +166,12 @@ environment variable to `True`.
 For details, see https://docs.neptune.ai/log_configs
 """
 
-    def __init__(self) -> None:
+    def __init__(self, *_args: Any) -> None:
         # Because this class defines its own message, the argument values to super().__init__ don't matter here.
+        # However, we still need to accept *args, for unpickling to work properly. At the end of inheritance chain,
+        # NeptuneScaleError calls Exception.__init__() with the `message` argument. This gets saved by pickle
+        # and later used when unpickling the exception object, which would fail if __init__ didn't accept any
+        # positional args. Our message is fixed, so this works OK.
         super().__init__(metric="", step=None, value=None)
 
 
@@ -178,7 +184,7 @@ NeptuneUnauthorizedError: You don't have permission to access the given resource
         - Log in to Neptune and open the user menu.
         - If your workspace uses service accounts, ask the project owner to provide the token.
 
-    - Verify that the provided project name is correct.
+    - Verify that the provided project name is correct and the project exists.
       The correct project name should look like this: {correct}WORKSPACE_NAME/PROJECT_NAME{end}
       It has two parts:
           - {correct}WORKSPACE_NAME{end}: can be your username or your organization name
@@ -553,5 +559,38 @@ class NeptuneLocalStorageInUnsupportedVersion(NeptuneScaleError):
 class NeptuneDatabaseConflict(NeptuneScaleError):
     message = """NeptuneDatabaseConflict: Database with the same name `{name}` already exists."""
 
-    def __init__(self, path: pathlib.Path) -> None:
-        super().__init__(name=path.name)
+    def __init__(self, path: str = "") -> None:
+        super().__init__(name=path)
+
+
+class NeptuneHistogramBinEdgesContainNaN(NeptuneScaleError):
+    message = """
+{h1}
+NeptuneHistogramBinEdgesContainNaN: Histogram bin edges cannot contain NaN values.
+{end}
+"""
+
+
+class NeptuneHistogramTooManyBins(NeptuneScaleError):
+    message = """
+{h1}
+NeptuneHistogramTooManyBins: Histogram can have at most 512 bins
+{end}
+This corresponds to the maximum number of 513 bin edges.
+"""
+
+
+class NeptuneHistogramBinEdgesNotIncreasing(NeptuneScaleError):
+    message = """
+{h1}
+NeptuneHistogramBinEdgesNotIncreasing: Histogram bin edges must be strictly increasing.
+{end}
+"""
+
+
+class NeptuneHistogramValuesLengthMismatch(NeptuneScaleError):
+    message = """
+{h1}
+NeptuneHistogramValuesLengthMismatch: Histogram counts/densities length must be equal to bin edges length - 1.
+{end}
+"""

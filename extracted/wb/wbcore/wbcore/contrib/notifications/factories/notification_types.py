@@ -21,3 +21,4 @@ class NotificationTypeSettingModelFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = NotificationTypeSetting
+        django_get_or_create = ("user", "notification_type")

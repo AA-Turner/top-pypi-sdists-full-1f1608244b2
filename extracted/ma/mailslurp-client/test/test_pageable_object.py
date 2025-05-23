@@ -43,8 +43,8 @@ class TestPageableObject(unittest.TestCase):
                 unpaged = True, 
                 offset = 56, 
                 sort = mailslurp_client.models.sort_object.SortObject(
-                    sorted = True, 
                     unsorted = True, 
+                    sorted = True, 
                     empty = True, )
             )
         else :

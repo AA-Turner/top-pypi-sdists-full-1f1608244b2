@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Optional, Union, cast
 from anyio import Path as AsyncPath
 
+from exponent.core.remote_execution.utils import safe_read_file
 import pygit2
 from pygit2 import Tree
 from pygit2.repository import Repository
@@ -73,14 +74,14 @@ def get_repo(working_directory: str) -> Optional[Repository]:
         return None
 
 
-def get_git_info(working_directory: str) -> Optional[GitInfo]:
+async def get_git_info(working_directory: str) -> Optional[GitInfo]:
     try:
         repo = Repository(working_directory)
     except pygit2.GitError:
         return None
 
     return GitInfo(
-        branch=_get_git_branch(repo) or "<unknown branch>",
+        branch=(await _get_git_branch(repo)) or "<unknown branch>",
         remote=_get_git_remote(repo),
     )
 
@@ -150,17 +151,22 @@ def _get_git_remote(repo: Repository) -> Optional[str]:
     return None
 
 
-def _get_git_branch(repo: Repository) -> Optional[str]:
+async def _get_git_branch(repo: Repository) -> Optional[str]:
     try:
         # Look for HEAD file in the .git directory
-        head_path = os.path.join(repo.path, "HEAD")
-        with open(head_path) as head_file:
-            # The HEAD file content usually looks like: 'ref: refs/heads/branch_name'
-            head_content = head_file.read().strip()
-            if head_content.startswith("ref:"):
-                return head_content.split("refs/heads/")[-1]
-            else:
-                return None
+        head_path = AsyncPath(os.path.join(repo.path, "HEAD"))
+
+        if not await head_path.exists():
+            return None
+
+        head_content_raw = await safe_read_file(head_path)
+        head_content = head_content_raw.strip()
+
+        if head_content.startswith("ref:"):
+            return head_content.split("refs/heads/")[-1]
+        else:
+            return None
+
     except Exception:  # noqa: BLE001
         return None
 

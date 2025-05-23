@@ -1,4 +1,5 @@
 import getpass
+from anyio import Path as AsyncPath
 import os
 import platform
 from typing import Optional
@@ -10,6 +11,7 @@ from exponent.core.remote_execution.types import (
     SystemContextResponse,
     SystemInfo,
 )
+from exponent.core.remote_execution.utils import safe_read_file
 
 
 EXPONENT_TXT_FILENAMES = [
@@ -17,34 +19,34 @@ EXPONENT_TXT_FILENAMES = [
 ]
 
 
-def get_system_context(
+async def get_system_context(
     request: SystemContextRequest, working_directory: str
 ) -> SystemContextResponse:
     return SystemContextResponse(
         correlation_id=request.correlation_id,
-        exponent_txt=_read_exponent_txt(working_directory),
-        system_info=get_system_info(working_directory),
+        exponent_txt=await _read_exponent_txt(working_directory),
+        system_info=await get_system_info(working_directory),
     )
 
 
-def get_system_info(working_directory: str) -> SystemInfo:
+async def get_system_info(working_directory: str) -> SystemInfo:
     return SystemInfo(
         name=getpass.getuser(),
         cwd=working_directory,
         os=platform.system(),
         shell=_get_user_shell(),
-        git=get_git_info(working_directory),
+        git=await get_git_info(working_directory),
         python_env=python_execution.get_python_env_info(),
     )
 
 
-def _read_exponent_txt(working_directory: str) -> Optional[str]:
+async def _read_exponent_txt(working_directory: str) -> Optional[str]:
     for filename in EXPONENT_TXT_FILENAMES:
-        file_path = os.path.join(working_directory, filename.lower())
+        file_path = AsyncPath(os.path.join(working_directory, filename.lower()))
+        exists = await file_path.exists()
 
-        if os.path.exists(file_path):
-            with open(file_path) as f:
-                return f.read()
+        if exists:
+            return await safe_read_file(file_path)
 
     return None
 

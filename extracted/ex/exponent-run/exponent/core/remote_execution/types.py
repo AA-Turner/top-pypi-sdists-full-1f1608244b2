@@ -4,36 +4,36 @@ from datetime import timezone
 from enum import Enum
 from functools import cached_property
 from pathlib import Path, PurePath
-from typing import Annotated, Any, ClassVar, Generic, Literal, Optional, TypeVar, Union
+from typing import (
+    Annotated,
+    Any,
+    ClassVar,
+    Generic,
+    Literal,
+    Optional,
+    TypeVar,
+    Union,
+)
+from os import PathLike
 from anyio import Path as AsyncPath
 from exponent.core.remote_execution.error_info import SerializableErrorInfo
 from exponent.core.types.event_types import FileWriteStrategyName
 from pydantic import BaseModel, Field
+from typing_extensions import TypeAlias
 
 from exponent.core.types.command_data import (
     CommandDataType,
 )
 
 
+FilePath: TypeAlias = Union[str, PathLike[str]]
+
+
+# DEPRECATED, only around for gql compatibility
 class UseToolsMode(str, Enum):
     read_only = "read_only"
     read_write = "read_write"
     disabled = "disabled"
-
-
-class UseToolsConfig(BaseModel):
-    mode: UseToolsMode = UseToolsMode.read_only
-
-    @property
-    def read_only(self) -> bool:
-        return self.mode == UseToolsMode.read_only
-
-    @property
-    def read_write(self) -> bool:
-        return self.mode == UseToolsMode.read_write
-
-    def disable(self) -> None:
-        self.mode = UseToolsMode.disabled
 
 
 class CreateChatResponse(BaseModel):
@@ -43,7 +43,10 @@ class CreateChatResponse(BaseModel):
 class StartChatRequest(BaseModel):
     chat_uuid: str
     prompt: str
-    use_tools_config: UseToolsConfig
+
+    # for use_tools_config
+    class Config:
+        extra = "ignore"
 
 
 class StartChatResponse(BaseModel):

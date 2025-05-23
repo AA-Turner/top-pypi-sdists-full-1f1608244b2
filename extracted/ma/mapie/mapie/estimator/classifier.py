@@ -9,8 +9,8 @@ from sklearn.model_selection import (BaseCrossValidator, BaseShuffleSplit)
 from sklearn.utils import _safe_indexing
 from sklearn.utils.validation import _num_samples, check_is_fitted
 
-from mapie._typing import ArrayLike, NDArray
-from mapie.utils import check_no_agg_cv, fit_estimator, fix_number_of_classes
+from numpy.typing import ArrayLike, NDArray
+from mapie.utils import _check_no_agg_cv, _fit_estimator, _fix_number_of_classes
 
 
 class EnsembleClassifier:
@@ -74,13 +74,6 @@ class EnsembleClassifier:
 
         By default ``None``.
 
-    random_state: Optional[Union[int, RandomState]]
-        Pseudo random number generator state used for random uniform sampling
-        for evaluation quantiles and prediction sets.
-        Pass an int for reproducible output across multiple function calls.
-
-        By default ``None``.
-
     verbose: int, optional
         The verbosity level, used with joblib for multiprocessing.
         At this moment, parallel processing is disabled.
@@ -119,7 +112,6 @@ class EnsembleClassifier:
         n_classes: int,
         cv: Optional[Union[int, str, BaseCrossValidator]],
         n_jobs: Optional[int],
-        random_state: Optional[Union[int, np.random.RandomState]],
         test_size: Optional[Union[int, float]],
         verbose: int,
     ):
@@ -127,7 +119,6 @@ class EnsembleClassifier:
         self.n_classes = n_classes
         self.cv = cv
         self.n_jobs = n_jobs
-        self.random_state = random_state
         self.test_size = test_size
         self.verbose = verbose
 
@@ -175,7 +166,7 @@ class EnsembleClassifier:
             sample_weight = _safe_indexing(sample_weight, train_index)
             sample_weight = cast(NDArray, sample_weight)
 
-        estimator = fit_estimator(
+        estimator = _fit_estimator(
             estimator,
             X_train,
             y_train,
@@ -242,7 +233,7 @@ class EnsembleClassifier:
         y_pred_proba = estimator.predict_proba(X, **predict_params)
         # we enforce y_pred_proba to contain all labels included in y
         if len(estimator.classes_) != self.n_classes:
-            y_pred_proba = fix_number_of_classes(
+            y_pred_proba = _fix_number_of_classes(
                 self.n_classes, estimator.classes_, y_pred_proba
             )
         return y_pred_proba
@@ -333,7 +324,7 @@ class EnsembleClassifier:
         estimators_: List[ClassifierMixin] = []
         full_indexes = np.arange(_num_samples(X))
         cv = self.cv
-        self.use_split_method_ = check_no_agg_cv(X, self.cv, self.no_agg_cv_)
+        self.use_split_method_ = _check_no_agg_cv(X, self.cv, self.no_agg_cv_)
         estimator = self.estimator
         n_samples = _num_samples(y)
 

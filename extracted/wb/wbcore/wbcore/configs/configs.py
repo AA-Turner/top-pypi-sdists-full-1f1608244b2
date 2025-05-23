@@ -50,3 +50,8 @@ def beta_button(request: Request) -> tuple[str, dict] | None:
 @register_config
 def frontend_version(request: Request) -> tuple[str, str | None]:
     return "frontend_version", getattr(settings, "FRONTEND_VERSION", None)
+
+
+@register_config
+def user_preferences(request: Request) -> tuple[str, dict] | None:
+    return "user_preferences", reverse("wbcore:user_preferences-list", request=request)

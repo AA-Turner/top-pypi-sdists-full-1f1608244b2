@@ -127,14 +127,17 @@ class Gateway:
         self._api_key = api_key
         self._host = self._server_addr.split(":")[0]
         self._port = int(self._server_addr.split(":")[1])
-        self._channel = Channel(host=self._host, port=self._port, ssl=True)
+        try:
+            self._channel = Channel(host=self._host, port=self._port, ssl=True)
+            self._stub = GatewayStub(self._channel, metadata=[("x-api-key", api_key)])
+        except RuntimeError as e:
+            pass
         creds = grpc.composite_channel_credentials(
             grpc.ssl_channel_credentials(),
             grpc.metadata_call_credentials(CustomAuthMetadata(api_key)),
         )
         self._sync_channel = grpc.secure_channel(self._server_addr, creds)
         self._sync_stub = SyncGatewayStub(self._sync_channel)
-        self._stub = GatewayStub(self._channel, metadata=[("x-api-key", api_key)])
 
     async def __aenter__(self):
         return self
