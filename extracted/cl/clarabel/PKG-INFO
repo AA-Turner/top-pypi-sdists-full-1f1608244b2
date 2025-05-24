@@ -1,9 +1,10 @@
 Metadata-Version: 2.4
 Name: clarabel
-Version: 0.10.0
+Version: 0.11.0
 Classifier: Programming Language :: Rust
 Requires-Dist: numpy
 Requires-Dist: scipy
+Requires-Dist: cffi
 License-File: LICENSE.md
 Summary: Clarabel Conic Interior Point Solver for Rust / Python
 Keywords: convex,optimization,conic,solver,linear-programming
@@ -16,9 +17,9 @@ Project-URL: Source Code, https://github.com/oxfordcontrol/Clarabel.rs
 
 <p align="center">
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/oxfordcontrol/ClarabelDocs/blob/main/docs/src/assets/logo-banner-dark-rs.png" width=60%>
-  <source media="(prefers-color-scheme: light)" srcset="https://github.com/oxfordcontrol/ClarabelDocs/blob/main/docs/src/assets/logo-banner-light-rs.png" width=60%>
-  <img alt="Clarabel.jl logo" src="https://github.com/oxfordcontrol/ClarabelDocs/blob/main/docs/src/assets/logo-banner-light-rs.png" height="25">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/oxfordcontrol/ClarabelDocs/main/docs/src/assets/logo-banner-dark-rs.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/oxfordcontrol/ClarabelDocs/main/docs/src/assets/logo-banner-light-rs.png">
+  <img alt="Clarabel.jl logo" src="https://raw.githubusercontent.com/oxfordcontrol/ClarabelDocs/main/docs/src/assets/logo-banner-light-rs.png" width="66%">
 </picture>
 <h1 align="center" margin=0px>
 Interior Point Conic Optimization for Rust and Python
@@ -28,7 +29,7 @@ Interior Point Conic Optimization for Rust and Python
   <a href="https://codecov.io/gh/oxfordcontrol/Clarabel.rs"><img src="https://codecov.io/gh/oxfordcontrol/Clarabel.rs/branch/main/graph/badge.svg"></a>
   <a href="https://clarabel.org"><img src="https://img.shields.io/badge/Documentation-stable-purple.svg"></a>
   <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"></a>
-  <a href="https://github.com/oxfordcontrol/Clarabel.rs/releases"><img src="https://img.shields.io/badge/Release-v0.10.0-blue.svg"></a>
+  <a href="https://github.com/oxfordcontrol/Clarabel.rs/releases"><img src="https://img.shields.io/badge/Release-v0.11.0-blue.svg"></a>
 </p>
 
 <p align="center">

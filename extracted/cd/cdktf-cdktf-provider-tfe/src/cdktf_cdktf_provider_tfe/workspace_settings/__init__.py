@@ -1,7 +1,7 @@
 r'''
 # `tfe_workspace_settings`
 
-Refer to the Terraform Registry for docs: [`tfe_workspace_settings`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings).
+Refer to the Terraform Registry for docs: [`tfe_workspace_settings`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class WorkspaceSettings(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.workspaceSettings.WorkspaceSettings",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings tfe_workspace_settings}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings tfe_workspace_settings}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class WorkspaceSettings(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings tfe_workspace_settings} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings tfe_workspace_settings} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#workspace_id WorkspaceSettings#workspace_id}.
-        :param agent_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#agent_pool_id WorkspaceSettings#agent_pool_id}.
-        :param execution_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#execution_mode WorkspaceSettings#execution_mode}.
-        :param global_remote_state: Whether the workspace allows all workspaces in the organization to access its state data during runs. If false, then only workspaces defined in ``remote_state_consumer_ids`` can access its state. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#global_remote_state WorkspaceSettings#global_remote_state}
-        :param remote_state_consumer_ids: The set of workspace IDs set as explicit remote state consumers for the given workspace. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#remote_state_consumer_ids WorkspaceSettings#remote_state_consumer_ids}
+        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#workspace_id WorkspaceSettings#workspace_id}.
+        :param agent_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#agent_pool_id WorkspaceSettings#agent_pool_id}.
+        :param execution_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#execution_mode WorkspaceSettings#execution_mode}.
+        :param global_remote_state: Whether the workspace allows all workspaces in the organization to access its state data during runs. If false, then only workspaces defined in ``remote_state_consumer_ids`` can access its state. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#global_remote_state WorkspaceSettings#global_remote_state}
+        :param remote_state_consumer_ids: The set of workspace IDs set as explicit remote state consumers for the given workspace. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#remote_state_consumer_ids WorkspaceSettings#remote_state_consumer_ids}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class WorkspaceSettings(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the WorkspaceSettings to import.
-        :param import_from_id: The id of the existing WorkspaceSettings that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing WorkspaceSettings that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the WorkspaceSettings to import is found.
         '''
         if __debug__:
@@ -303,11 +303,11 @@ class WorkspaceSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#workspace_id WorkspaceSettings#workspace_id}.
-        :param agent_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#agent_pool_id WorkspaceSettings#agent_pool_id}.
-        :param execution_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#execution_mode WorkspaceSettings#execution_mode}.
-        :param global_remote_state: Whether the workspace allows all workspaces in the organization to access its state data during runs. If false, then only workspaces defined in ``remote_state_consumer_ids`` can access its state. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#global_remote_state WorkspaceSettings#global_remote_state}
-        :param remote_state_consumer_ids: The set of workspace IDs set as explicit remote state consumers for the given workspace. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#remote_state_consumer_ids WorkspaceSettings#remote_state_consumer_ids}
+        :param workspace_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#workspace_id WorkspaceSettings#workspace_id}.
+        :param agent_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#agent_pool_id WorkspaceSettings#agent_pool_id}.
+        :param execution_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#execution_mode WorkspaceSettings#execution_mode}.
+        :param global_remote_state: Whether the workspace allows all workspaces in the organization to access its state data during runs. If false, then only workspaces defined in ``remote_state_consumer_ids`` can access its state. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#global_remote_state WorkspaceSettings#global_remote_state}
+        :param remote_state_consumer_ids: The set of workspace IDs set as explicit remote state consumers for the given workspace. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#remote_state_consumer_ids WorkspaceSettings#remote_state_consumer_ids}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -417,20 +417,20 @@ class WorkspaceSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def workspace_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#workspace_id WorkspaceSettings#workspace_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#workspace_id WorkspaceSettings#workspace_id}.'''
         result = self._values.get("workspace_id")
         assert result is not None, "Required property 'workspace_id' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def agent_pool_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#agent_pool_id WorkspaceSettings#agent_pool_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#agent_pool_id WorkspaceSettings#agent_pool_id}.'''
         result = self._values.get("agent_pool_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def execution_mode(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#execution_mode WorkspaceSettings#execution_mode}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#execution_mode WorkspaceSettings#execution_mode}.'''
         result = self._values.get("execution_mode")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -442,7 +442,7 @@ class WorkspaceSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         If false, then only workspaces defined in ``remote_state_consumer_ids`` can access its state.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#global_remote_state WorkspaceSettings#global_remote_state}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#global_remote_state WorkspaceSettings#global_remote_state}
         '''
         result = self._values.get("global_remote_state")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -451,7 +451,7 @@ class WorkspaceSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def remote_state_consumer_ids(self) -> typing.Optional[typing.List[builtins.str]]:
         '''The set of workspace IDs set as explicit remote state consumers for the given workspace.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace_settings#remote_state_consumer_ids WorkspaceSettings#remote_state_consumer_ids}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace_settings#remote_state_consumer_ids WorkspaceSettings#remote_state_consumer_ids}
         '''
         result = self._values.get("remote_state_consumer_ids")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)

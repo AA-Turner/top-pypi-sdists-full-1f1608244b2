@@ -1,7 +1,7 @@
 r'''
 # `tfe_workspace`
 
-Refer to the Terraform Registry for docs: [`tfe_workspace`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace).
+Refer to the Terraform Registry for docs: [`tfe_workspace`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Workspace(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.workspace.Workspace",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace tfe_workspace}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace tfe_workspace}.'''
 
     def __init__(
         self,
@@ -92,43 +92,43 @@ class Workspace(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace tfe_workspace} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace tfe_workspace} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#name Workspace#name}.
-        :param agent_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#agent_pool_id Workspace#agent_pool_id}.
-        :param allow_destroy_plan: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#allow_destroy_plan Workspace#allow_destroy_plan}.
-        :param assessments_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#assessments_enabled Workspace#assessments_enabled}.
-        :param auto_apply: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#auto_apply Workspace#auto_apply}.
-        :param auto_apply_run_trigger: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#auto_apply_run_trigger Workspace#auto_apply_run_trigger}.
-        :param auto_destroy_activity_duration: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#auto_destroy_activity_duration Workspace#auto_destroy_activity_duration}.
-        :param auto_destroy_at: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#auto_destroy_at Workspace#auto_destroy_at}.
-        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#description Workspace#description}.
-        :param execution_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#execution_mode Workspace#execution_mode}.
-        :param file_triggers_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#file_triggers_enabled Workspace#file_triggers_enabled}.
-        :param force_delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#force_delete Workspace#force_delete}.
-        :param global_remote_state: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#global_remote_state Workspace#global_remote_state}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#id Workspace#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param ignore_additional_tag_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#ignore_additional_tag_names Workspace#ignore_additional_tag_names}.
-        :param ignore_additional_tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#ignore_additional_tags Workspace#ignore_additional_tags}.
-        :param operations: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#operations Workspace#operations}.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#organization Workspace#organization}.
-        :param project_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#project_id Workspace#project_id}.
-        :param queue_all_runs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#queue_all_runs Workspace#queue_all_runs}.
-        :param remote_state_consumer_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#remote_state_consumer_ids Workspace#remote_state_consumer_ids}.
-        :param source_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#source_name Workspace#source_name}.
-        :param source_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#source_url Workspace#source_url}.
-        :param speculative_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#speculative_enabled Workspace#speculative_enabled}.
-        :param ssh_key_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#ssh_key_id Workspace#ssh_key_id}.
-        :param structured_run_output_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#structured_run_output_enabled Workspace#structured_run_output_enabled}.
-        :param tag_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#tag_names Workspace#tag_names}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#tags Workspace#tags}.
-        :param terraform_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#terraform_version Workspace#terraform_version}.
-        :param trigger_patterns: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#trigger_patterns Workspace#trigger_patterns}.
-        :param trigger_prefixes: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#trigger_prefixes Workspace#trigger_prefixes}.
-        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#vcs_repo Workspace#vcs_repo}
-        :param working_directory: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#working_directory Workspace#working_directory}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#name Workspace#name}.
+        :param agent_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#agent_pool_id Workspace#agent_pool_id}.
+        :param allow_destroy_plan: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#allow_destroy_plan Workspace#allow_destroy_plan}.
+        :param assessments_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#assessments_enabled Workspace#assessments_enabled}.
+        :param auto_apply: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#auto_apply Workspace#auto_apply}.
+        :param auto_apply_run_trigger: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#auto_apply_run_trigger Workspace#auto_apply_run_trigger}.
+        :param auto_destroy_activity_duration: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#auto_destroy_activity_duration Workspace#auto_destroy_activity_duration}.
+        :param auto_destroy_at: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#auto_destroy_at Workspace#auto_destroy_at}.
+        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#description Workspace#description}.
+        :param execution_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#execution_mode Workspace#execution_mode}.
+        :param file_triggers_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#file_triggers_enabled Workspace#file_triggers_enabled}.
+        :param force_delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#force_delete Workspace#force_delete}.
+        :param global_remote_state: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#global_remote_state Workspace#global_remote_state}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#id Workspace#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param ignore_additional_tag_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#ignore_additional_tag_names Workspace#ignore_additional_tag_names}.
+        :param ignore_additional_tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#ignore_additional_tags Workspace#ignore_additional_tags}.
+        :param operations: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#operations Workspace#operations}.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#organization Workspace#organization}.
+        :param project_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#project_id Workspace#project_id}.
+        :param queue_all_runs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#queue_all_runs Workspace#queue_all_runs}.
+        :param remote_state_consumer_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#remote_state_consumer_ids Workspace#remote_state_consumer_ids}.
+        :param source_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#source_name Workspace#source_name}.
+        :param source_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#source_url Workspace#source_url}.
+        :param speculative_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#speculative_enabled Workspace#speculative_enabled}.
+        :param ssh_key_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#ssh_key_id Workspace#ssh_key_id}.
+        :param structured_run_output_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#structured_run_output_enabled Workspace#structured_run_output_enabled}.
+        :param tag_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#tag_names Workspace#tag_names}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#tags Workspace#tags}.
+        :param terraform_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#terraform_version Workspace#terraform_version}.
+        :param trigger_patterns: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#trigger_patterns Workspace#trigger_patterns}.
+        :param trigger_prefixes: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#trigger_prefixes Workspace#trigger_prefixes}.
+        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#vcs_repo Workspace#vcs_repo}
+        :param working_directory: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#working_directory Workspace#working_directory}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -199,7 +199,7 @@ class Workspace(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Workspace to import.
-        :param import_from_id: The id of the existing Workspace that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Workspace that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Workspace to import is found.
         '''
         if __debug__:
@@ -222,12 +222,12 @@ class Workspace(
         tags_regex: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#identifier Workspace#identifier}.
-        :param branch: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#branch Workspace#branch}.
-        :param github_app_installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#github_app_installation_id Workspace#github_app_installation_id}.
-        :param ingress_submodules: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#ingress_submodules Workspace#ingress_submodules}.
-        :param oauth_token_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#oauth_token_id Workspace#oauth_token_id}.
-        :param tags_regex: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#tags_regex Workspace#tags_regex}.
+        :param identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#identifier Workspace#identifier}.
+        :param branch: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#branch Workspace#branch}.
+        :param github_app_installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#github_app_installation_id Workspace#github_app_installation_id}.
+        :param ingress_submodules: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#ingress_submodules Workspace#ingress_submodules}.
+        :param oauth_token_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#oauth_token_id Workspace#oauth_token_id}.
+        :param tags_regex: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#tags_regex Workspace#tags_regex}.
         '''
         value = WorkspaceVcsRepo(
             identifier=identifier,
@@ -1142,39 +1142,39 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#name Workspace#name}.
-        :param agent_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#agent_pool_id Workspace#agent_pool_id}.
-        :param allow_destroy_plan: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#allow_destroy_plan Workspace#allow_destroy_plan}.
-        :param assessments_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#assessments_enabled Workspace#assessments_enabled}.
-        :param auto_apply: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#auto_apply Workspace#auto_apply}.
-        :param auto_apply_run_trigger: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#auto_apply_run_trigger Workspace#auto_apply_run_trigger}.
-        :param auto_destroy_activity_duration: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#auto_destroy_activity_duration Workspace#auto_destroy_activity_duration}.
-        :param auto_destroy_at: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#auto_destroy_at Workspace#auto_destroy_at}.
-        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#description Workspace#description}.
-        :param execution_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#execution_mode Workspace#execution_mode}.
-        :param file_triggers_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#file_triggers_enabled Workspace#file_triggers_enabled}.
-        :param force_delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#force_delete Workspace#force_delete}.
-        :param global_remote_state: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#global_remote_state Workspace#global_remote_state}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#id Workspace#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param ignore_additional_tag_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#ignore_additional_tag_names Workspace#ignore_additional_tag_names}.
-        :param ignore_additional_tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#ignore_additional_tags Workspace#ignore_additional_tags}.
-        :param operations: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#operations Workspace#operations}.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#organization Workspace#organization}.
-        :param project_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#project_id Workspace#project_id}.
-        :param queue_all_runs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#queue_all_runs Workspace#queue_all_runs}.
-        :param remote_state_consumer_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#remote_state_consumer_ids Workspace#remote_state_consumer_ids}.
-        :param source_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#source_name Workspace#source_name}.
-        :param source_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#source_url Workspace#source_url}.
-        :param speculative_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#speculative_enabled Workspace#speculative_enabled}.
-        :param ssh_key_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#ssh_key_id Workspace#ssh_key_id}.
-        :param structured_run_output_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#structured_run_output_enabled Workspace#structured_run_output_enabled}.
-        :param tag_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#tag_names Workspace#tag_names}.
-        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#tags Workspace#tags}.
-        :param terraform_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#terraform_version Workspace#terraform_version}.
-        :param trigger_patterns: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#trigger_patterns Workspace#trigger_patterns}.
-        :param trigger_prefixes: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#trigger_prefixes Workspace#trigger_prefixes}.
-        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#vcs_repo Workspace#vcs_repo}
-        :param working_directory: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#working_directory Workspace#working_directory}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#name Workspace#name}.
+        :param agent_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#agent_pool_id Workspace#agent_pool_id}.
+        :param allow_destroy_plan: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#allow_destroy_plan Workspace#allow_destroy_plan}.
+        :param assessments_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#assessments_enabled Workspace#assessments_enabled}.
+        :param auto_apply: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#auto_apply Workspace#auto_apply}.
+        :param auto_apply_run_trigger: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#auto_apply_run_trigger Workspace#auto_apply_run_trigger}.
+        :param auto_destroy_activity_duration: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#auto_destroy_activity_duration Workspace#auto_destroy_activity_duration}.
+        :param auto_destroy_at: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#auto_destroy_at Workspace#auto_destroy_at}.
+        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#description Workspace#description}.
+        :param execution_mode: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#execution_mode Workspace#execution_mode}.
+        :param file_triggers_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#file_triggers_enabled Workspace#file_triggers_enabled}.
+        :param force_delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#force_delete Workspace#force_delete}.
+        :param global_remote_state: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#global_remote_state Workspace#global_remote_state}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#id Workspace#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param ignore_additional_tag_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#ignore_additional_tag_names Workspace#ignore_additional_tag_names}.
+        :param ignore_additional_tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#ignore_additional_tags Workspace#ignore_additional_tags}.
+        :param operations: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#operations Workspace#operations}.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#organization Workspace#organization}.
+        :param project_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#project_id Workspace#project_id}.
+        :param queue_all_runs: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#queue_all_runs Workspace#queue_all_runs}.
+        :param remote_state_consumer_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#remote_state_consumer_ids Workspace#remote_state_consumer_ids}.
+        :param source_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#source_name Workspace#source_name}.
+        :param source_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#source_url Workspace#source_url}.
+        :param speculative_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#speculative_enabled Workspace#speculative_enabled}.
+        :param ssh_key_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#ssh_key_id Workspace#ssh_key_id}.
+        :param structured_run_output_enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#structured_run_output_enabled Workspace#structured_run_output_enabled}.
+        :param tag_names: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#tag_names Workspace#tag_names}.
+        :param tags: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#tags Workspace#tags}.
+        :param terraform_version: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#terraform_version Workspace#terraform_version}.
+        :param trigger_patterns: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#trigger_patterns Workspace#trigger_patterns}.
+        :param trigger_prefixes: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#trigger_prefixes Workspace#trigger_prefixes}.
+        :param vcs_repo: vcs_repo block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#vcs_repo Workspace#vcs_repo}
+        :param working_directory: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#working_directory Workspace#working_directory}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -1370,14 +1370,14 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#name Workspace#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#name Workspace#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def agent_pool_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#agent_pool_id Workspace#agent_pool_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#agent_pool_id Workspace#agent_pool_id}.'''
         result = self._values.get("agent_pool_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1385,7 +1385,7 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def allow_destroy_plan(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#allow_destroy_plan Workspace#allow_destroy_plan}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#allow_destroy_plan Workspace#allow_destroy_plan}.'''
         result = self._values.get("allow_destroy_plan")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1393,7 +1393,7 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def assessments_enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#assessments_enabled Workspace#assessments_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#assessments_enabled Workspace#assessments_enabled}.'''
         result = self._values.get("assessments_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1401,7 +1401,7 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def auto_apply(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#auto_apply Workspace#auto_apply}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#auto_apply Workspace#auto_apply}.'''
         result = self._values.get("auto_apply")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1409,31 +1409,31 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def auto_apply_run_trigger(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#auto_apply_run_trigger Workspace#auto_apply_run_trigger}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#auto_apply_run_trigger Workspace#auto_apply_run_trigger}.'''
         result = self._values.get("auto_apply_run_trigger")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def auto_destroy_activity_duration(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#auto_destroy_activity_duration Workspace#auto_destroy_activity_duration}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#auto_destroy_activity_duration Workspace#auto_destroy_activity_duration}.'''
         result = self._values.get("auto_destroy_activity_duration")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def auto_destroy_at(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#auto_destroy_at Workspace#auto_destroy_at}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#auto_destroy_at Workspace#auto_destroy_at}.'''
         result = self._values.get("auto_destroy_at")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def description(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#description Workspace#description}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#description Workspace#description}.'''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def execution_mode(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#execution_mode Workspace#execution_mode}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#execution_mode Workspace#execution_mode}.'''
         result = self._values.get("execution_mode")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1441,7 +1441,7 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def file_triggers_enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#file_triggers_enabled Workspace#file_triggers_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#file_triggers_enabled Workspace#file_triggers_enabled}.'''
         result = self._values.get("file_triggers_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1449,7 +1449,7 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def force_delete(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#force_delete Workspace#force_delete}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#force_delete Workspace#force_delete}.'''
         result = self._values.get("force_delete")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1457,13 +1457,13 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def global_remote_state(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#global_remote_state Workspace#global_remote_state}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#global_remote_state Workspace#global_remote_state}.'''
         result = self._values.get("global_remote_state")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#id Workspace#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#id Workspace#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1475,7 +1475,7 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def ignore_additional_tag_names(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#ignore_additional_tag_names Workspace#ignore_additional_tag_names}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#ignore_additional_tag_names Workspace#ignore_additional_tag_names}.'''
         result = self._values.get("ignore_additional_tag_names")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1483,7 +1483,7 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def ignore_additional_tags(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#ignore_additional_tags Workspace#ignore_additional_tags}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#ignore_additional_tags Workspace#ignore_additional_tags}.'''
         result = self._values.get("ignore_additional_tags")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -1491,19 +1491,19 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def operations(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#operations Workspace#operations}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#operations Workspace#operations}.'''
         result = self._values.get("operations")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def organization(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#organization Workspace#organization}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#organization Workspace#organization}.'''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def project_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#project_id Workspace#project_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#project_id Workspace#project_id}.'''
         result = self._values.get("project_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1511,25 +1511,25 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def queue_all_runs(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#queue_all_runs Workspace#queue_all_runs}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#queue_all_runs Workspace#queue_all_runs}.'''
         result = self._values.get("queue_all_runs")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def remote_state_consumer_ids(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#remote_state_consumer_ids Workspace#remote_state_consumer_ids}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#remote_state_consumer_ids Workspace#remote_state_consumer_ids}.'''
         result = self._values.get("remote_state_consumer_ids")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def source_name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#source_name Workspace#source_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#source_name Workspace#source_name}.'''
         result = self._values.get("source_name")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def source_url(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#source_url Workspace#source_url}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#source_url Workspace#source_url}.'''
         result = self._values.get("source_url")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1537,13 +1537,13 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def speculative_enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#speculative_enabled Workspace#speculative_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#speculative_enabled Workspace#speculative_enabled}.'''
         result = self._values.get("speculative_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def ssh_key_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#ssh_key_id Workspace#ssh_key_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#ssh_key_id Workspace#ssh_key_id}.'''
         result = self._values.get("ssh_key_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1551,37 +1551,37 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def structured_run_output_enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#structured_run_output_enabled Workspace#structured_run_output_enabled}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#structured_run_output_enabled Workspace#structured_run_output_enabled}.'''
         result = self._values.get("structured_run_output_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def tag_names(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#tag_names Workspace#tag_names}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#tag_names Workspace#tag_names}.'''
         result = self._values.get("tag_names")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def tags(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#tags Workspace#tags}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#tags Workspace#tags}.'''
         result = self._values.get("tags")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)
 
     @builtins.property
     def terraform_version(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#terraform_version Workspace#terraform_version}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#terraform_version Workspace#terraform_version}.'''
         result = self._values.get("terraform_version")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def trigger_patterns(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#trigger_patterns Workspace#trigger_patterns}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#trigger_patterns Workspace#trigger_patterns}.'''
         result = self._values.get("trigger_patterns")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
     @builtins.property
     def trigger_prefixes(self) -> typing.Optional[typing.List[builtins.str]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#trigger_prefixes Workspace#trigger_prefixes}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#trigger_prefixes Workspace#trigger_prefixes}.'''
         result = self._values.get("trigger_prefixes")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
 
@@ -1589,14 +1589,14 @@ class WorkspaceConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def vcs_repo(self) -> typing.Optional["WorkspaceVcsRepo"]:
         '''vcs_repo block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#vcs_repo Workspace#vcs_repo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#vcs_repo Workspace#vcs_repo}
         '''
         result = self._values.get("vcs_repo")
         return typing.cast(typing.Optional["WorkspaceVcsRepo"], result)
 
     @builtins.property
     def working_directory(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#working_directory Workspace#working_directory}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#working_directory Workspace#working_directory}.'''
         result = self._values.get("working_directory")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1636,12 +1636,12 @@ class WorkspaceVcsRepo:
         tags_regex: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
-        :param identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#identifier Workspace#identifier}.
-        :param branch: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#branch Workspace#branch}.
-        :param github_app_installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#github_app_installation_id Workspace#github_app_installation_id}.
-        :param ingress_submodules: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#ingress_submodules Workspace#ingress_submodules}.
-        :param oauth_token_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#oauth_token_id Workspace#oauth_token_id}.
-        :param tags_regex: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#tags_regex Workspace#tags_regex}.
+        :param identifier: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#identifier Workspace#identifier}.
+        :param branch: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#branch Workspace#branch}.
+        :param github_app_installation_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#github_app_installation_id Workspace#github_app_installation_id}.
+        :param ingress_submodules: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#ingress_submodules Workspace#ingress_submodules}.
+        :param oauth_token_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#oauth_token_id Workspace#oauth_token_id}.
+        :param tags_regex: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#tags_regex Workspace#tags_regex}.
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__aff975a6bd7030cca9ebdacd6fe620a9c9aa60a26f549dfd175758974455ba8f)
@@ -1667,20 +1667,20 @@ class WorkspaceVcsRepo:
 
     @builtins.property
     def identifier(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#identifier Workspace#identifier}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#identifier Workspace#identifier}.'''
         result = self._values.get("identifier")
         assert result is not None, "Required property 'identifier' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def branch(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#branch Workspace#branch}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#branch Workspace#branch}.'''
         result = self._values.get("branch")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def github_app_installation_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#github_app_installation_id Workspace#github_app_installation_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#github_app_installation_id Workspace#github_app_installation_id}.'''
         result = self._values.get("github_app_installation_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -1688,19 +1688,19 @@ class WorkspaceVcsRepo:
     def ingress_submodules(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#ingress_submodules Workspace#ingress_submodules}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#ingress_submodules Workspace#ingress_submodules}.'''
         result = self._values.get("ingress_submodules")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def oauth_token_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#oauth_token_id Workspace#oauth_token_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#oauth_token_id Workspace#oauth_token_id}.'''
         result = self._values.get("oauth_token_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def tags_regex(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/workspace#tags_regex Workspace#tags_regex}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/workspace#tags_regex Workspace#tags_regex}.'''
         result = self._values.get("tags_regex")
         return typing.cast(typing.Optional[builtins.str], result)
 

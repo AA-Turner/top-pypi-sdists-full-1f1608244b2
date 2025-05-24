@@ -1,7 +1,7 @@
 r'''
 # `tfe_saml_settings`
 
-Refer to the Terraform Registry for docs: [`tfe_saml_settings`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings).
+Refer to the Terraform Registry for docs: [`tfe_saml_settings`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class SamlSettings(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.samlSettings.SamlSettings",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings tfe_saml_settings}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings tfe_saml_settings}.'''
 
     def __init__(
         self,
@@ -76,27 +76,27 @@ class SamlSettings(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings tfe_saml_settings} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings tfe_saml_settings} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param idp_cert: Identity Provider Certificate specifies the PEM encoded X.509 Certificate as provided by the IdP configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#idp_cert SamlSettings#idp_cert}
-        :param slo_endpoint_url: Single Log Out URL specifies the HTTPS endpoint on your IdP for single logout requests. This value is provided by the IdP configuration Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#slo_endpoint_url SamlSettings#slo_endpoint_url}
-        :param sso_endpoint_url: Single Sign On URL specifies the HTTPS endpoint on your IdP for single sign-on requests. This value is provided by the IdP configuration Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#sso_endpoint_url SamlSettings#sso_endpoint_url}
-        :param attr_groups: Team Attribute Name specifies the name of the SAML attribute that determines team membership. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#attr_groups SamlSettings#attr_groups}
-        :param attr_site_admin: Specifies the role for site admin access. Overrides the "Site Admin Role" method. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#attr_site_admin SamlSettings#attr_site_admin}
-        :param attr_username: Username Attribute Name specifies the name of the SAML attribute that determines the user's username. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#attr_username SamlSettings#attr_username}
-        :param authn_requests_signed: Ensure that `samlp:AuthnRequest <samlp:AuthnRequest>`_ messages are signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#authn_requests_signed SamlSettings#authn_requests_signed}
-        :param certificate: The certificate used for request and assertion signing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#certificate SamlSettings#certificate}
-        :param debug: When sign-on fails and this is enabled, the SAMLResponse XML will be displayed on the login page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#debug SamlSettings#debug}
-        :param private_key: The private key used for request and assertion signing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#private_key SamlSettings#private_key}
-        :param private_key_wo: The private key in write-only mode used for request and assertion signing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#private_key_wo SamlSettings#private_key_wo}
-        :param signature_digest_method: Signature Digest Method. Must be either ``SHA1`` or ``SHA256``. Defaults to ``SHA256``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#signature_digest_method SamlSettings#signature_digest_method}
-        :param signature_signing_method: Signature Signing Method. Must be either ``SHA1`` or ``SHA256``. Defaults to ``SHA256``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#signature_signing_method SamlSettings#signature_signing_method}
-        :param site_admin_role: Specifies the role for site admin access, provided in the list of roles sent in the Team Attribute Name attribute. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#site_admin_role SamlSettings#site_admin_role}
-        :param sso_api_token_session_timeout: Specifies the Single Sign On session timeout in seconds. Defaults to 14 days. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#sso_api_token_session_timeout SamlSettings#sso_api_token_session_timeout}
-        :param team_management_enabled: Set it to false if you would rather use Terraform Enterprise to manage team membership. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#team_management_enabled SamlSettings#team_management_enabled}
-        :param want_assertions_signed: Ensure that `saml:Assertion <saml:Assertion>`_ elements are signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#want_assertions_signed SamlSettings#want_assertions_signed}
+        :param idp_cert: Identity Provider Certificate specifies the PEM encoded X.509 Certificate as provided by the IdP configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#idp_cert SamlSettings#idp_cert}
+        :param slo_endpoint_url: Single Log Out URL specifies the HTTPS endpoint on your IdP for single logout requests. This value is provided by the IdP configuration Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#slo_endpoint_url SamlSettings#slo_endpoint_url}
+        :param sso_endpoint_url: Single Sign On URL specifies the HTTPS endpoint on your IdP for single sign-on requests. This value is provided by the IdP configuration Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#sso_endpoint_url SamlSettings#sso_endpoint_url}
+        :param attr_groups: Team Attribute Name specifies the name of the SAML attribute that determines team membership. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#attr_groups SamlSettings#attr_groups}
+        :param attr_site_admin: Specifies the role for site admin access. Overrides the "Site Admin Role" method. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#attr_site_admin SamlSettings#attr_site_admin}
+        :param attr_username: Username Attribute Name specifies the name of the SAML attribute that determines the user's username. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#attr_username SamlSettings#attr_username}
+        :param authn_requests_signed: Ensure that `samlp:AuthnRequest <samlp:AuthnRequest>`_ messages are signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#authn_requests_signed SamlSettings#authn_requests_signed}
+        :param certificate: The certificate used for request and assertion signing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#certificate SamlSettings#certificate}
+        :param debug: When sign-on fails and this is enabled, the SAMLResponse XML will be displayed on the login page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#debug SamlSettings#debug}
+        :param private_key: The private key used for request and assertion signing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#private_key SamlSettings#private_key}
+        :param private_key_wo: The private key in write-only mode used for request and assertion signing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#private_key_wo SamlSettings#private_key_wo}
+        :param signature_digest_method: Signature Digest Method. Must be either ``SHA1`` or ``SHA256``. Defaults to ``SHA256``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#signature_digest_method SamlSettings#signature_digest_method}
+        :param signature_signing_method: Signature Signing Method. Must be either ``SHA1`` or ``SHA256``. Defaults to ``SHA256``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#signature_signing_method SamlSettings#signature_signing_method}
+        :param site_admin_role: Specifies the role for site admin access, provided in the list of roles sent in the Team Attribute Name attribute. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#site_admin_role SamlSettings#site_admin_role}
+        :param sso_api_token_session_timeout: Specifies the Single Sign On session timeout in seconds. Defaults to 14 days. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#sso_api_token_session_timeout SamlSettings#sso_api_token_session_timeout}
+        :param team_management_enabled: Set it to false if you would rather use Terraform Enterprise to manage team membership. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#team_management_enabled SamlSettings#team_management_enabled}
+        :param want_assertions_signed: Ensure that `saml:Assertion <saml:Assertion>`_ elements are signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#want_assertions_signed SamlSettings#want_assertions_signed}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -151,7 +151,7 @@ class SamlSettings(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the SamlSettings to import.
-        :param import_from_id: The id of the existing SamlSettings that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing SamlSettings that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the SamlSettings to import is found.
         '''
         if __debug__:
@@ -639,23 +639,23 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param idp_cert: Identity Provider Certificate specifies the PEM encoded X.509 Certificate as provided by the IdP configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#idp_cert SamlSettings#idp_cert}
-        :param slo_endpoint_url: Single Log Out URL specifies the HTTPS endpoint on your IdP for single logout requests. This value is provided by the IdP configuration Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#slo_endpoint_url SamlSettings#slo_endpoint_url}
-        :param sso_endpoint_url: Single Sign On URL specifies the HTTPS endpoint on your IdP for single sign-on requests. This value is provided by the IdP configuration Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#sso_endpoint_url SamlSettings#sso_endpoint_url}
-        :param attr_groups: Team Attribute Name specifies the name of the SAML attribute that determines team membership. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#attr_groups SamlSettings#attr_groups}
-        :param attr_site_admin: Specifies the role for site admin access. Overrides the "Site Admin Role" method. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#attr_site_admin SamlSettings#attr_site_admin}
-        :param attr_username: Username Attribute Name specifies the name of the SAML attribute that determines the user's username. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#attr_username SamlSettings#attr_username}
-        :param authn_requests_signed: Ensure that `samlp:AuthnRequest <samlp:AuthnRequest>`_ messages are signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#authn_requests_signed SamlSettings#authn_requests_signed}
-        :param certificate: The certificate used for request and assertion signing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#certificate SamlSettings#certificate}
-        :param debug: When sign-on fails and this is enabled, the SAMLResponse XML will be displayed on the login page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#debug SamlSettings#debug}
-        :param private_key: The private key used for request and assertion signing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#private_key SamlSettings#private_key}
-        :param private_key_wo: The private key in write-only mode used for request and assertion signing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#private_key_wo SamlSettings#private_key_wo}
-        :param signature_digest_method: Signature Digest Method. Must be either ``SHA1`` or ``SHA256``. Defaults to ``SHA256``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#signature_digest_method SamlSettings#signature_digest_method}
-        :param signature_signing_method: Signature Signing Method. Must be either ``SHA1`` or ``SHA256``. Defaults to ``SHA256``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#signature_signing_method SamlSettings#signature_signing_method}
-        :param site_admin_role: Specifies the role for site admin access, provided in the list of roles sent in the Team Attribute Name attribute. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#site_admin_role SamlSettings#site_admin_role}
-        :param sso_api_token_session_timeout: Specifies the Single Sign On session timeout in seconds. Defaults to 14 days. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#sso_api_token_session_timeout SamlSettings#sso_api_token_session_timeout}
-        :param team_management_enabled: Set it to false if you would rather use Terraform Enterprise to manage team membership. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#team_management_enabled SamlSettings#team_management_enabled}
-        :param want_assertions_signed: Ensure that `saml:Assertion <saml:Assertion>`_ elements are signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#want_assertions_signed SamlSettings#want_assertions_signed}
+        :param idp_cert: Identity Provider Certificate specifies the PEM encoded X.509 Certificate as provided by the IdP configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#idp_cert SamlSettings#idp_cert}
+        :param slo_endpoint_url: Single Log Out URL specifies the HTTPS endpoint on your IdP for single logout requests. This value is provided by the IdP configuration Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#slo_endpoint_url SamlSettings#slo_endpoint_url}
+        :param sso_endpoint_url: Single Sign On URL specifies the HTTPS endpoint on your IdP for single sign-on requests. This value is provided by the IdP configuration Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#sso_endpoint_url SamlSettings#sso_endpoint_url}
+        :param attr_groups: Team Attribute Name specifies the name of the SAML attribute that determines team membership. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#attr_groups SamlSettings#attr_groups}
+        :param attr_site_admin: Specifies the role for site admin access. Overrides the "Site Admin Role" method. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#attr_site_admin SamlSettings#attr_site_admin}
+        :param attr_username: Username Attribute Name specifies the name of the SAML attribute that determines the user's username. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#attr_username SamlSettings#attr_username}
+        :param authn_requests_signed: Ensure that `samlp:AuthnRequest <samlp:AuthnRequest>`_ messages are signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#authn_requests_signed SamlSettings#authn_requests_signed}
+        :param certificate: The certificate used for request and assertion signing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#certificate SamlSettings#certificate}
+        :param debug: When sign-on fails and this is enabled, the SAMLResponse XML will be displayed on the login page. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#debug SamlSettings#debug}
+        :param private_key: The private key used for request and assertion signing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#private_key SamlSettings#private_key}
+        :param private_key_wo: The private key in write-only mode used for request and assertion signing. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#private_key_wo SamlSettings#private_key_wo}
+        :param signature_digest_method: Signature Digest Method. Must be either ``SHA1`` or ``SHA256``. Defaults to ``SHA256``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#signature_digest_method SamlSettings#signature_digest_method}
+        :param signature_signing_method: Signature Signing Method. Must be either ``SHA1`` or ``SHA256``. Defaults to ``SHA256``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#signature_signing_method SamlSettings#signature_signing_method}
+        :param site_admin_role: Specifies the role for site admin access, provided in the list of roles sent in the Team Attribute Name attribute. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#site_admin_role SamlSettings#site_admin_role}
+        :param sso_api_token_session_timeout: Specifies the Single Sign On session timeout in seconds. Defaults to 14 days. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#sso_api_token_session_timeout SamlSettings#sso_api_token_session_timeout}
+        :param team_management_enabled: Set it to false if you would rather use Terraform Enterprise to manage team membership. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#team_management_enabled SamlSettings#team_management_enabled}
+        :param want_assertions_signed: Ensure that `saml:Assertion <saml:Assertion>`_ elements are signed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#want_assertions_signed SamlSettings#want_assertions_signed}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -801,7 +801,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def idp_cert(self) -> builtins.str:
         '''Identity Provider Certificate specifies the PEM encoded X.509 Certificate as provided by the IdP configuration.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#idp_cert SamlSettings#idp_cert}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#idp_cert SamlSettings#idp_cert}
         '''
         result = self._values.get("idp_cert")
         assert result is not None, "Required property 'idp_cert' is missing"
@@ -813,7 +813,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This value is provided by the IdP configuration
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#slo_endpoint_url SamlSettings#slo_endpoint_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#slo_endpoint_url SamlSettings#slo_endpoint_url}
         '''
         result = self._values.get("slo_endpoint_url")
         assert result is not None, "Required property 'slo_endpoint_url' is missing"
@@ -825,7 +825,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This value is provided by the IdP configuration
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#sso_endpoint_url SamlSettings#sso_endpoint_url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#sso_endpoint_url SamlSettings#sso_endpoint_url}
         '''
         result = self._values.get("sso_endpoint_url")
         assert result is not None, "Required property 'sso_endpoint_url' is missing"
@@ -835,7 +835,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def attr_groups(self) -> typing.Optional[builtins.str]:
         '''Team Attribute Name specifies the name of the SAML attribute that determines team membership.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#attr_groups SamlSettings#attr_groups}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#attr_groups SamlSettings#attr_groups}
         '''
         result = self._values.get("attr_groups")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -844,7 +844,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def attr_site_admin(self) -> typing.Optional[builtins.str]:
         '''Specifies the role for site admin access. Overrides the "Site Admin Role" method.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#attr_site_admin SamlSettings#attr_site_admin}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#attr_site_admin SamlSettings#attr_site_admin}
         '''
         result = self._values.get("attr_site_admin")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -853,7 +853,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def attr_username(self) -> typing.Optional[builtins.str]:
         '''Username Attribute Name specifies the name of the SAML attribute that determines the user's username.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#attr_username SamlSettings#attr_username}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#attr_username SamlSettings#attr_username}
         '''
         result = self._values.get("attr_username")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -864,7 +864,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Ensure that `samlp:AuthnRequest <samlp:AuthnRequest>`_ messages are signed.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#authn_requests_signed SamlSettings#authn_requests_signed}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#authn_requests_signed SamlSettings#authn_requests_signed}
         '''
         result = self._values.get("authn_requests_signed")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -873,7 +873,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def certificate(self) -> typing.Optional[builtins.str]:
         '''The certificate used for request and assertion signing.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#certificate SamlSettings#certificate}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#certificate SamlSettings#certificate}
         '''
         result = self._values.get("certificate")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -884,7 +884,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''When sign-on fails and this is enabled, the SAMLResponse XML will be displayed on the login page.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#debug SamlSettings#debug}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#debug SamlSettings#debug}
         '''
         result = self._values.get("debug")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -893,7 +893,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def private_key(self) -> typing.Optional[builtins.str]:
         '''The private key used for request and assertion signing.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#private_key SamlSettings#private_key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#private_key SamlSettings#private_key}
         '''
         result = self._values.get("private_key")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -902,7 +902,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def private_key_wo(self) -> typing.Optional[builtins.str]:
         '''The private key in write-only mode used for request and assertion signing.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#private_key_wo SamlSettings#private_key_wo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#private_key_wo SamlSettings#private_key_wo}
         '''
         result = self._values.get("private_key_wo")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -911,7 +911,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def signature_digest_method(self) -> typing.Optional[builtins.str]:
         '''Signature Digest Method. Must be either ``SHA1`` or ``SHA256``. Defaults to ``SHA256``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#signature_digest_method SamlSettings#signature_digest_method}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#signature_digest_method SamlSettings#signature_digest_method}
         '''
         result = self._values.get("signature_digest_method")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -920,7 +920,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def signature_signing_method(self) -> typing.Optional[builtins.str]:
         '''Signature Signing Method. Must be either ``SHA1`` or ``SHA256``. Defaults to ``SHA256``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#signature_signing_method SamlSettings#signature_signing_method}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#signature_signing_method SamlSettings#signature_signing_method}
         '''
         result = self._values.get("signature_signing_method")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -929,7 +929,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def site_admin_role(self) -> typing.Optional[builtins.str]:
         '''Specifies the role for site admin access, provided in the list of roles sent in the Team Attribute Name attribute.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#site_admin_role SamlSettings#site_admin_role}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#site_admin_role SamlSettings#site_admin_role}
         '''
         result = self._values.get("site_admin_role")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -938,7 +938,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def sso_api_token_session_timeout(self) -> typing.Optional[jsii.Number]:
         '''Specifies the Single Sign On session timeout in seconds. Defaults to 14 days.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#sso_api_token_session_timeout SamlSettings#sso_api_token_session_timeout}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#sso_api_token_session_timeout SamlSettings#sso_api_token_session_timeout}
         '''
         result = self._values.get("sso_api_token_session_timeout")
         return typing.cast(typing.Optional[jsii.Number], result)
@@ -949,7 +949,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Set it to false if you would rather use Terraform Enterprise to manage team membership.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#team_management_enabled SamlSettings#team_management_enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#team_management_enabled SamlSettings#team_management_enabled}
         '''
         result = self._values.get("team_management_enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -960,7 +960,7 @@ class SamlSettingsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Ensure that `saml:Assertion <saml:Assertion>`_ elements are signed.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/saml_settings#want_assertions_signed SamlSettings#want_assertions_signed}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/saml_settings#want_assertions_signed SamlSettings#want_assertions_signed}
         '''
         result = self._values.get("want_assertions_signed")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)

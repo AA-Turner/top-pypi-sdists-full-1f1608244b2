@@ -1,7 +1,7 @@
 r'''
 # `tfe_organization_module_sharing`
 
-Refer to the Terraform Registry for docs: [`tfe_organization_module_sharing`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_module_sharing).
+Refer to the Terraform Registry for docs: [`tfe_organization_module_sharing`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_module_sharing).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class OrganizationModuleSharing(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.organizationModuleSharing.OrganizationModuleSharing",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_module_sharing tfe_organization_module_sharing}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_module_sharing tfe_organization_module_sharing}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class OrganizationModuleSharing(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_module_sharing tfe_organization_module_sharing} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_module_sharing tfe_organization_module_sharing} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param module_consumers: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_module_sharing#module_consumers OrganizationModuleSharing#module_consumers}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_module_sharing#id OrganizationModuleSharing#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_module_sharing#organization OrganizationModuleSharing#organization}.
+        :param module_consumers: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_module_sharing#module_consumers OrganizationModuleSharing#module_consumers}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_module_sharing#id OrganizationModuleSharing#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_module_sharing#organization OrganizationModuleSharing#organization}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class OrganizationModuleSharing(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the OrganizationModuleSharing to import.
-        :param import_from_id: The id of the existing OrganizationModuleSharing that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_module_sharing#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing OrganizationModuleSharing that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_module_sharing#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the OrganizationModuleSharing to import is found.
         '''
         if __debug__:
@@ -232,9 +232,9 @@ class OrganizationModuleSharingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param module_consumers: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_module_sharing#module_consumers OrganizationModuleSharing#module_consumers}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_module_sharing#id OrganizationModuleSharing#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_module_sharing#organization OrganizationModuleSharing#organization}.
+        :param module_consumers: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_module_sharing#module_consumers OrganizationModuleSharing#module_consumers}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_module_sharing#id OrganizationModuleSharing#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_module_sharing#organization OrganizationModuleSharing#organization}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -338,14 +338,14 @@ class OrganizationModuleSharingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def module_consumers(self) -> typing.List[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_module_sharing#module_consumers OrganizationModuleSharing#module_consumers}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_module_sharing#module_consumers OrganizationModuleSharing#module_consumers}.'''
         result = self._values.get("module_consumers")
         assert result is not None, "Required property 'module_consumers' is missing"
         return typing.cast(typing.List[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_module_sharing#id OrganizationModuleSharing#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_module_sharing#id OrganizationModuleSharing#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -355,7 +355,7 @@ class OrganizationModuleSharingConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def organization(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/organization_module_sharing#organization OrganizationModuleSharing#organization}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/organization_module_sharing#organization OrganizationModuleSharing#organization}.'''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
 

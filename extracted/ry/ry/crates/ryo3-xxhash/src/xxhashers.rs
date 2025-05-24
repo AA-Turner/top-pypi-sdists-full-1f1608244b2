@@ -1,5 +1,6 @@
-use pyo3::types::{PyBytes, PyModule, PyModuleMethods};
-use pyo3::{pyclass, pyfunction, pymethods, wrap_pyfunction, Bound, PyResult, Python};
+use pyo3::intern;
+use pyo3::prelude::*;
+use pyo3::types::{PyBytes, PyString};
 use xxhash_rust::xxh3::{Xxh3, Xxh3Builder};
 use xxhash_rust::xxh32::Xxh32;
 use xxhash_rust::xxh64::Xxh64;
@@ -38,8 +39,18 @@ impl PyXxh32 {
     }
 
     #[classattr]
-    fn name() -> PyResult<String> {
-        Ok("xxh32".to_string())
+    fn name(py: Python<'_>) -> &Bound<'_, PyString> {
+        intern!(py, "xxh32")
+    }
+
+    #[classattr]
+    fn digest_size() -> usize {
+        4
+    }
+
+    #[classattr]
+    fn block_size() -> usize {
+        16
     }
 
     #[getter]
@@ -80,7 +91,7 @@ impl PyXxh32 {
     }
 }
 
-/// Create a new Xxh32 hasher
+/// Create a new xxh32 hasher
 #[pyfunction]
 #[pyo3(signature = (s = None, seed = 0))]
 pub fn xxh32(s: Option<ryo3_bytes::PyBytes>, seed: Option<u32>) -> PyResult<PyXxh32> {
@@ -126,14 +137,25 @@ impl PyXxh64 {
 
     /// Return the name of the hasher ('xxh64')
     #[classattr]
-    fn name() -> PyResult<String> {
-        Ok("xxh64".to_string())
+    fn name(py: Python<'_>) -> &Bound<'_, PyString> {
+        intern!(py, "xxh64")
+    }
+
+    #[classattr]
+    fn digest_size() -> usize {
+        8
+    }
+
+    #[classattr]
+    fn block_size() -> usize {
+        32
     }
 
     #[getter]
     fn seed(&self) -> PyResult<u64> {
         Ok(self.seed)
     }
+
     fn digest<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyBytes>> {
         let digest = self.hasher.digest();
         Ok(PyBytes::new(py, &digest.to_be_bytes()))
@@ -212,8 +234,18 @@ impl PyXxh3 {
     }
 
     #[classattr]
-    fn name() -> String {
-        "xxh3".to_string()
+    fn name(py: Python<'_>) -> &Bound<'_, PyString> {
+        intern!(py, "xxh3")
+    }
+
+    #[classattr]
+    fn digest_size() -> usize {
+        16
+    }
+
+    #[classattr]
+    fn block_size() -> usize {
+        64
     }
 
     #[getter]

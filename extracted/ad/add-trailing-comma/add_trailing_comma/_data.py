@@ -3,12 +3,10 @@ from __future__ import annotations
 import ast
 import collections
 import pkgutil
+from collections.abc import Iterable
 from typing import Callable
-from typing import Iterable
-from typing import List
 from typing import NamedTuple
 from typing import Protocol
-from typing import Tuple
 from typing import TypeVar
 
 from tokenize_rt import Offset
@@ -22,10 +20,11 @@ class State(NamedTuple):
 
 
 AST_T = TypeVar('AST_T', bound=ast.AST)
-TokenFunc = Callable[[int, List[Token]], None]
-ASTFunc = Callable[[State, AST_T], Iterable[Tuple[Offset, TokenFunc]]]
+TokenFunc = Callable[[int, list[Token]], None]
+ASTFunc = Callable[[State, AST_T], Iterable[tuple[Offset, TokenFunc]]]
 
-FUNCS = collections.defaultdict(list)
+FUNCS: ASTCallbackMapping  # python/mypy#17566
+FUNCS = collections.defaultdict(list)  # type: ignore[assignment]
 
 
 def register(tp: type[AST_T]) -> Callable[[ASTFunc[AST_T]], ASTFunc[AST_T]]:

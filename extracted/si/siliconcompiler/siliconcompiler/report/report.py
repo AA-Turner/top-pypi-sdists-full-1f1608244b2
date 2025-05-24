@@ -3,8 +3,8 @@ import os
 from siliconcompiler import Schema
 from siliconcompiler.schema import PerNode
 from siliconcompiler.report import utils
-from siliconcompiler.utils.flowgraph import nodes_to_execute
 from siliconcompiler.tools._common import get_tool_task
+from siliconcompiler.flowgraph import RuntimeFlowgraph
 
 
 def make_metric_dataframe(chip):
@@ -199,7 +199,12 @@ def get_flowgraph_path(chip):
         Returns the "winning" path for that job.
     '''
     flow = chip.get('option', 'flow')
-    return utils._get_flowgraph_path(chip, flow, nodes_to_execute(chip))
+    runtime = RuntimeFlowgraph(
+        chip.schema.get("flowgraph", flow, field='schema'),
+        from_steps=chip.get('option', 'from'),
+        to_steps=chip.get('option', 'to'),
+        prune_nodes=chip.get('option', 'prune'))
+    return utils._get_flowgraph_path(chip, flow, runtime.get_nodes())
 
 
 def search_manifest_keys(manifest, key):
@@ -289,9 +294,9 @@ def get_total_manifest_key_count(manifest):
         acc (int) : An accumulator of the current number of folders and files.
     '''
     acc = len(manifest)
-    for dictKeys in manifest:
-        if isinstance(manifest[dictKeys], dict):
-            acc += get_total_manifest_key_count(manifest[dictKeys])
+    for key in manifest:
+        if isinstance(manifest[key], dict):
+            acc += get_total_manifest_key_count(manifest[key])
     return acc
 
 

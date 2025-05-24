@@ -111,9 +111,7 @@ class Web3(_Web3):
             self._remove_middlewares()
 
     def is_connected(self) -> bool:
-        if not self.provider:
-            return False
-        return super().is_connected()
+        return super().is_connected() if self.provider else False
 
     def isConnected(self) -> bool:
         # retained to avoid breaking an interface explicitly defined in brownie
@@ -130,7 +128,7 @@ class Web3(_Web3):
         if self._supports_traces is None:
             try:
                 response = self.provider.make_request("debug_traceTransaction", [])
-                self._supports_traces = bool(response["error"]["code"] != -32601)
+                self._supports_traces = response["error"]["code"] != -32601
             except HTTPError:
                 self._supports_traces = False
 
@@ -156,7 +154,8 @@ class Web3(_Web3):
         if self.provider is None:
             raise ConnectionError("web3 is not currently connected")
         if self._genesis_hash is None:
-            self._genesis_hash = self.eth.get_block(0)["hash"].hex()[2:]
+            # removeprefix is used for compatability with both hexbytes<1 and >=1
+            self._genesis_hash = self.eth.get_block(0)["hash"].hex().removeprefix("0x")
         return self._genesis_hash
 
     @property
@@ -165,7 +164,8 @@ class Web3(_Web3):
             raise ConnectionError("web3 is not currently connected")
         if self.genesis_hash not in _chain_uri_cache:
             block_number = max(self.eth.block_number - 16, 0)
-            block_hash = self.eth.get_block(block_number)["hash"].hex()[2:]
+            # removeprefix is used for compatability with both hexbytes<1 and >=1
+            block_hash = self.eth.get_block(block_number)["hash"].hex().removeprefix("0x")
             chain_uri = f"blockchain://{self.genesis_hash}/block/{block_hash}"
             _chain_uri_cache[self.genesis_hash] = chain_uri
         return _chain_uri_cache[self.genesis_hash]

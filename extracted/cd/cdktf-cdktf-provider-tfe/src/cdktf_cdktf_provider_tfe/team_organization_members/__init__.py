@@ -1,7 +1,7 @@
 r'''
 # `tfe_team_organization_members`
 
-Refer to the Terraform Registry for docs: [`tfe_team_organization_members`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_organization_members).
+Refer to the Terraform Registry for docs: [`tfe_team_organization_members`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_organization_members).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class TeamOrganizationMembers(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.teamOrganizationMembers.TeamOrganizationMembers",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_organization_members tfe_team_organization_members}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_organization_members tfe_team_organization_members}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class TeamOrganizationMembers(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_organization_members tfe_team_organization_members} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_organization_members tfe_team_organization_members} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param organization_membership_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_organization_members#organization_membership_ids TeamOrganizationMembers#organization_membership_ids}.
-        :param team_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_organization_members#team_id TeamOrganizationMembers#team_id}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_organization_members#id TeamOrganizationMembers#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param organization_membership_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_organization_members#organization_membership_ids TeamOrganizationMembers#organization_membership_ids}.
+        :param team_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_organization_members#team_id TeamOrganizationMembers#team_id}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_organization_members#id TeamOrganizationMembers#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class TeamOrganizationMembers(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the TeamOrganizationMembers to import.
-        :param import_from_id: The id of the existing TeamOrganizationMembers that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_organization_members#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing TeamOrganizationMembers that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_organization_members#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the TeamOrganizationMembers to import is found.
         '''
         if __debug__:
@@ -230,9 +230,9 @@ class TeamOrganizationMembersConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param organization_membership_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_organization_members#organization_membership_ids TeamOrganizationMembers#organization_membership_ids}.
-        :param team_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_organization_members#team_id TeamOrganizationMembers#team_id}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_organization_members#id TeamOrganizationMembers#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param organization_membership_ids: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_organization_members#organization_membership_ids TeamOrganizationMembers#organization_membership_ids}.
+        :param team_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_organization_members#team_id TeamOrganizationMembers#team_id}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_organization_members#id TeamOrganizationMembers#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -335,21 +335,21 @@ class TeamOrganizationMembersConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def organization_membership_ids(self) -> typing.List[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_organization_members#organization_membership_ids TeamOrganizationMembers#organization_membership_ids}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_organization_members#organization_membership_ids TeamOrganizationMembers#organization_membership_ids}.'''
         result = self._values.get("organization_membership_ids")
         assert result is not None, "Required property 'organization_membership_ids' is missing"
         return typing.cast(typing.List[builtins.str], result)
 
     @builtins.property
     def team_id(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_organization_members#team_id TeamOrganizationMembers#team_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_organization_members#team_id TeamOrganizationMembers#team_id}.'''
         result = self._values.get("team_id")
         assert result is not None, "Required property 'team_id' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_organization_members#id TeamOrganizationMembers#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_organization_members#id TeamOrganizationMembers#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.

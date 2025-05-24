@@ -326,7 +326,7 @@ async def upsert_account(
             )
 
             for da in domo_accounts.accounts:
-                if da.name.lower() != account_name.lower():
+                if da.name and da.name.lower() != account_name.lower():
                     continue
 
                 if data_provider_type and data_provider_type != da.data_provider_type:

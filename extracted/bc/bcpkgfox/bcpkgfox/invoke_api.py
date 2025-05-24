@@ -60,7 +60,7 @@ def invoke_api_list(link: str, token: str, method: Optional[str] = "GET", header
 
             else: raise ValueError("Api list falhou")
 
-def invoke_api_proc(link: str, payload_vars: dict, token: str, method: str, print_response: Optional[bool] = False) -> str:
+def invoke_api_proc(link: str, payload_vars: dict, token: str, method: str, print_response: Optional[bool | str] = False) -> str:
     import requests
 
     """
@@ -82,8 +82,16 @@ def invoke_api_proc(link: str, payload_vars: dict, token: str, method: str, prin
         bc.invoke_api_proc_final(link, payload, token, print_response=True)
 
     OBS: o print_response vem por padrão desligado, caso você queria ver o returno do response coloque 'ON'
+    OBS2: Caso queria printar o json response intero coloque: 'print_response = "full"'
 
     """
+
+    if isinstance(print_response, str):
+        if print_response.lower().strip() ==  "full":
+            print_response = "full"
+
+        else:
+            raise ValueError("print_response com variável inválida\n Use tipo 'bool' ou escreva 'full' (str) para response completo")
 
     http_methods = {
         "POST": requests.post,
@@ -103,7 +111,7 @@ def invoke_api_proc(link: str, payload_vars: dict, token: str, method: str, prin
 
     payload = payload_vars
 
-    if print_response == True:
+    if print_response == True or print_response == "full":
         print(f'payload: {payload}')
 
     headers = {"x-access-token": token}
@@ -117,19 +125,14 @@ def invoke_api_proc(link: str, payload_vars: dict, token: str, method: str, prin
 
             response_insert.raise_for_status()
 
-            if print_response == True:
+            if print_response == True or print_response == "full":
                 print(response_insert.json())
 
-            try:
-                status = response_insert.json()[0]['STATUS']
+            if print_response == "full":
+                return response_insert.json()
 
-                if status != 200:
-                    from .get_driver import ORANGE, RESET, RD
-                    print(f' {ORANGE} > {RD}Erro ao atualizar caso!{RESET}')
-                    invoke_api_proc()
-                else: return status
-            except: pass
-            return None
+            status = response_insert.json()[0]['STATUS']
+            return status
 
         except Exception as e:
             print(f"Tentativa {attempt} falhou: {e}")
@@ -158,82 +161,3 @@ def invoke_api_proc_log(link, id_robo, token):
     responseinsert = requests.request(
         "POST", link, json=payload, headers=headers)
     print(f"\n{responseinsert.json()}")
-
-# FIX: Não funcional ainda, está aqui como base para o futuro
-def captcha_solver():
-    import requests
-
-
-    # Configurações
-    API_KEY = "40efad0ffa6a4398bb7829185b1729e9"
-    SITE_KEY = "6LeARtIZAAAAAEyCjkSFdYCBZG6JahcIveDriif3"  # A "sitekey" do reCAPTCHA
-    PAGE_URL = "https://consorcio.cnpseguradora.com.br/"  # URL onde o CAPTCHA aparece
-
-    def enviar_captcha():
-        url = "https://2captcha.com/in.php"
-        payload = {
-            "key": API_KEY,
-            "method": "userrecaptcha",
-            "googlekey": SITE_KEY,
-            "pageurl": PAGE_URL,
-            "json": 1,
-        }
-        response = requests.post(url, data=payload)
-        result = response.json()
-
-        if result.get("status") == 1:
-            return result.get("request")  # ID da tarefa
-        else:
-            raise Exception(f"Erro ao enviar CAPTCHA: {result.get('request')}")
-
-    def verificar_captcha(task_id):
-        url = "https://2captcha.com/res.php"
-        payload = {
-            "key": API_KEY,
-            "action": "get",
-            "id": task_id,
-            "json": 1,
-        }
-
-        while True:
-            response = requests.get(url, params=payload)
-            result = response.json()
-
-            if result.get("status") == 1:  # Solução disponível
-                return result.get("request")  # TOKEN do CAPTCHA
-            elif result.get("request") == "CAPCHA_NOT_READY":  # Ainda processando
-                time.sleep(5)  # Aguardar antes de tentar novamente
-            else:
-                raise Exception(f"Erro ao verificar CAPTCHA: {result.get('request')}")
-
-    def resolver_recaptcha():
-        try:
-            print("Enviando CAPTCHA para o TwoCaptcha...")
-            task_id = enviar_captcha()
-            print(f"Tarefa enviada! ID: {task_id}")
-
-            print("Aguardando solução...")
-            token = verificar_captcha(task_id)
-            print(f"CAPTCHA resolvido! Token: {token}")
-
-            return token
-        except Exception as e:
-            print(f"Erro: {e}")
-
-    id = enviar_captcha()
-    verificar_captcha(id)
-    token_resolution = resolver_recaptcha()
-
-    self.driver.execute_script("""
-        var element = document.querySelector('input[id="g-recaptcha-response]"');
-        if (element) {
-            element.setAttribute('type', 'text');
-        }
-    """)
-
-    self.driver.execute_script(f"""
-    const element = document.querySelector('textarea[id="g-recaptcha-response"]');
-    if (element) {{
-        element.value = "{token_resolution}";
-    }}
-    """)

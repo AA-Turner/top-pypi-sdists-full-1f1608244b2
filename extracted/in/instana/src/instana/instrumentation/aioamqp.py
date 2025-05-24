@@ -33,14 +33,14 @@ try:
                 logger.debug(f"aioamqp basic_publish_with_instana error: {exc}")
 
     @wrapt.patch_function_wrapper("aioamqp.channel", "Channel.basic_consume")
-    def basic_consume_with_instana(
+    async def basic_consume_with_instana(
         wrapped: Callable[..., aioamqp.connect],
         instance: object,
         argv: Tuple[object, Tuple[object, ...]],
         kwargs: Dict[str, Any],
     ) -> object:
         if tracing_is_off():
-            return wrapped(*argv, **kwargs)
+            return await wrapped(*argv, **kwargs)
 
         callback = argv[0]
         tracer, parent_span, _ = get_tracer_tuple()
@@ -70,7 +70,7 @@ try:
         wrapped_callback = callback_wrapper(callback)
         argv = (wrapped_callback,) + argv[1:]
 
-        return wrapped(*argv, **kwargs)
+        return await wrapped(*argv, **kwargs)
 
     logger.debug("Instrumenting aioamqp")
 

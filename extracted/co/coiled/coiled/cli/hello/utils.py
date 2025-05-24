@@ -6,8 +6,8 @@ import pathlib
 import subprocess
 import sys
 import time
+from importlib.metadata import distribution
 
-import importlib_metadata
 import rich
 import rich.panel
 from rich import box
@@ -72,7 +72,7 @@ def missing_dependencies_message(dependencies):
     missing = []
     for dep in dependencies:
         try:
-            importlib_metadata.distribution(dep)
+            distribution(dep)
         except ModuleNotFoundError:
             missing.append(dep)
     coiled.add_interaction("cli-hello:missing-deps", success=True, missing=missing)
@@ -94,7 +94,7 @@ Your current software environment is missing the
 {"libraries" if plural else "library"} {missing_formatted}
 which {"are" if plural else "is"} needed for this example.
 We'll install {"them" if plural else "it"} for you with `pip` before
-running the example.  
+running the example.
 
 <br>
 """  # noqa
@@ -220,7 +220,7 @@ def macos_system_python_message():
             Group(
                 Markdown(
                     f"""
-We're about to run a fun Python example on the cloud.  
+We're about to run a fun Python example on the cloud.
 Normally, Coiled copies your local software environment to
 cloud machines automatically (no Docker!)
 However this doesn't work well when using the macOS system Python.

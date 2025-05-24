@@ -3,11 +3,14 @@ from ._lib import (
     CKernel,
     SchemaHolder,
     ArrayHolder,
-    CVectorType,
+    CGeometryDataType,
     CArrayView,
     CBuilder,
     GeoArrowCException,
 )
+
+# Ease the transition between 0.1 and 0.2
+CVectorType = CGeometryDataType
 
 
 class GeometryType:
@@ -38,6 +41,8 @@ class GeometryType:
     MULTIPOLYGON = _lib.GEOARROW_GEOMETRY_TYPE_MULTIPOLYGON
     #: Geometrycollection geometry type
     GEOMETRYCOLLECTION = _lib.GEOARROW_GEOMETRY_TYPE_GEOMETRYCOLLECTION
+    #: Box geometry type
+    BOX = _lib.GEOARROW_GEOMETRY_TYPE_BOX
 
 
 class Dimensions:
@@ -98,6 +103,14 @@ class EdgeType:
     PLANAR = _lib.GEOARROW_EDGE_TYPE_PLANAR
     #: Edges are geodesic on a sphere
     SPHERICAL = _lib.GEOARROW_EDGE_TYPE_SPHERICAL
+    #: Edges are geodesic on a spheroid according to the Vincenty algorithm
+    VINCENTY = _lib.GEOARROW_EDGE_TYPE_VINCENTY
+    #: Edges are geodesic on a spheroid according to the Thomas algorithm
+    THOMAS = _lib.GEOARROW_EDGE_TYPE_THOMAS
+    #: Edges are geodesic on a spheroid according to the Andoyer algorithm
+    ANDOYER = _lib.GEOARROW_EDGE_TYPE_ANDOYER
+    #: Edges are geodesic on a spheroid according to the Karney algorithm
+    KARNEY = _lib.GEOARROW_EDGE_TYPE_KARNEY
 
 
 class CrsType:
@@ -117,3 +130,9 @@ class CrsType:
     UNKNOWN = _lib.GEOARROW_CRS_TYPE_UNKNOWN
     #: The CRS value is a PROJJSON-encoded string
     PROJJSON = _lib.GEOARROW_CRS_TYPE_PROJJSON
+    #: The CRS value is a WKT:2019-encoded string
+    WKT2_2019 = _lib.GEOARROW_CRS_TYPE_WKT2_2019
+    #: The CRS value is a authority:code-encoded string
+    AUTHORITY_CODE = _lib.GEOARROW_CRS_TYPE_AUTHORITY_CODE
+    #: The CRS value is an opaque producer-defined identifier
+    SRID = _lib.GEOARROW_CRS_TYPE_SRID

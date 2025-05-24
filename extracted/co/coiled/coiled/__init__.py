@@ -1,6 +1,6 @@
 # Get function backing "coiled install" command
 # Get function backing "coiled env inspect" command
-from importlib_metadata import version
+from importlib.metadata import version
 
 from .batch import run as batch_run
 from .cli.env import inspect as _inspect

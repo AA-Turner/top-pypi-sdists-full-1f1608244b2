@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: skypilot-nightly
-Version: 1.0.0.dev20250522
+Version: 1.0.0.dev20250523
 Summary: SkyPilot: Run AI on Any Infra — Unified, Faster, Cheaper.
 Author: SkyPilot Team
 License: Apache 2.0
@@ -87,6 +87,9 @@ Requires-Dist: ray[default]!=2.6.0,>=2.2.0; extra == "oci"
 Provides-Extra: kubernetes
 Requires-Dist: kubernetes!=32.0.0,>=20.0.0; extra == "kubernetes"
 Requires-Dist: websockets; extra == "kubernetes"
+Provides-Extra: ssh
+Requires-Dist: kubernetes!=32.0.0,>=20.0.0; extra == "ssh"
+Requires-Dist: websockets; extra == "ssh"
 Provides-Extra: remote
 Requires-Dist: grpcio!=1.48.0,>=1.32.0; python_version < "3.10" and extra == "remote"
 Requires-Dist: grpcio!=1.48.0,>=1.42.0; python_version >= "3.10" and extra == "remote"
@@ -140,6 +143,8 @@ Requires-Dist: colorama<0.4.5; extra == "all"
 Requires-Dist: ray[default]!=2.6.0,>=2.2.0; extra == "all"
 Requires-Dist: oci; extra == "all"
 Requires-Dist: ray[default]!=2.6.0,>=2.2.0; extra == "all"
+Requires-Dist: kubernetes!=32.0.0,>=20.0.0; extra == "all"
+Requires-Dist: websockets; extra == "all"
 Requires-Dist: kubernetes!=32.0.0,>=20.0.0; extra == "all"
 Requires-Dist: websockets; extra == "all"
 Requires-Dist: grpcio!=1.48.0,>=1.32.0; python_version < "3.10" and extra == "all"

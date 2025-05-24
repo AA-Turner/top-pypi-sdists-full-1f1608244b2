@@ -12,7 +12,7 @@ from setuptools.discovery import FlatLayoutPackageFinder
 from multiprocessing import cpu_count
 
 # When updating the version, one must also update the docs/source/useful_links/version_history.rst file
-version = 1.3
+version = 1.4
 minor_version = 1
 
 release_version = f"{version}.{minor_version}"
@@ -20,13 +20,6 @@ release_version = f"{version}.{minor_version}"
 include_dirs = [np.get_include()]
 libraries = []
 library_dirs = []
-if iutil.find_spec("pyarrow") is not None:
-    import pyarrow as pa
-
-    pa.create_library_symlinks()
-    include_dirs.append(pa.get_include())
-    libraries.extend(pa.get_libraries())
-    library_dirs.extend(pa.get_library_dirs())
 
 is_win = "WINDOWS" in platform.platform().upper()
 is_mac = any(e in platform.platform().upper() for e in ["MACOS", "DARWIN"])
@@ -127,9 +120,6 @@ pkg_data = {
     ],
 }
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
-
 if __name__ == "__main__":
     setup(
         name="aequilibrae",
@@ -140,18 +130,28 @@ if __name__ == "__main__":
         package_data=pkg_data,
         zip_safe=False,
         description="A package for transportation modeling",
-        long_description=long_description,
         author="Pedro Camargo",
         author_email="c@margo.co",
         url="https://github.com/AequilibraE/aequilibrae",
         license="See LICENSE.TXT",
         license_files=("LICENSE.TXT",),
+        readme="README.md",
         classifiers=[
+            "Development Status :: 5 - Production/Stable",
+            "Intended Audience :: Developers",
+            "Intended Audience :: Science/Research",
+            "Intended Audience :: End Users/Desktop",
+            "Intended Audience :: Other Audience",
+            "License :: OSI Approved :: MIT License",
+            "Operating System :: OS Independent",
             "Programming Language :: Python",
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3 :: Only",
             "Programming Language :: Python :: 3.9",
             "Programming Language :: Python :: 3.10",
             "Programming Language :: Python :: 3.11",
             "Programming Language :: Python :: 3.12",
+            "Topic :: Scientific/Engineering",
         ],
         cmdclass={"build_ext": build_ext},
         ext_modules=cythonize(

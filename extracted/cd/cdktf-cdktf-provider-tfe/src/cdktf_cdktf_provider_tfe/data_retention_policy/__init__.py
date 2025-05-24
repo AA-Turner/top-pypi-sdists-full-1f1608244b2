@@ -1,7 +1,7 @@
 r'''
 # `tfe_data_retention_policy`
 
-Refer to the Terraform Registry for docs: [`tfe_data_retention_policy`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy).
+Refer to the Terraform Registry for docs: [`tfe_data_retention_policy`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataRetentionPolicy(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.dataRetentionPolicy.DataRetentionPolicy",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy tfe_data_retention_policy}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy tfe_data_retention_policy}.'''
 
     def __init__(
         self,
@@ -63,14 +63,14 @@ class DataRetentionPolicy(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy tfe_data_retention_policy} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy tfe_data_retention_policy} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param delete_older_than: delete_older_than block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#delete_older_than DataRetentionPolicy#delete_older_than}
-        :param dont_delete: dont_delete block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#dont_delete DataRetentionPolicy#dont_delete}
-        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#organization DataRetentionPolicy#organization}
-        :param workspace_id: ID of the workspace that the data retention policy should apply to. If omitted, the data retention policy will apply to the entire organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#workspace_id DataRetentionPolicy#workspace_id}
+        :param delete_older_than: delete_older_than block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#delete_older_than DataRetentionPolicy#delete_older_than}
+        :param dont_delete: dont_delete block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#dont_delete DataRetentionPolicy#dont_delete}
+        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#organization DataRetentionPolicy#organization}
+        :param workspace_id: ID of the workspace that the data retention policy should apply to. If omitted, the data retention policy will apply to the entire organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#workspace_id DataRetentionPolicy#workspace_id}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -112,7 +112,7 @@ class DataRetentionPolicy(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataRetentionPolicy to import.
-        :param import_from_id: The id of the existing DataRetentionPolicy that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataRetentionPolicy that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataRetentionPolicy to import is found.
         '''
         if __debug__:
@@ -130,7 +130,7 @@ class DataRetentionPolicy(
         days: typing.Optional[jsii.Number] = None,
     ) -> None:
         '''
-        :param days: Number of days. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#days DataRetentionPolicy#days}
+        :param days: Number of days. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#days DataRetentionPolicy#days}
         '''
         value = DataRetentionPolicyDeleteOlderThan(days=days)
 
@@ -272,10 +272,10 @@ class DataRetentionPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param delete_older_than: delete_older_than block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#delete_older_than DataRetentionPolicy#delete_older_than}
-        :param dont_delete: dont_delete block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#dont_delete DataRetentionPolicy#dont_delete}
-        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#organization DataRetentionPolicy#organization}
-        :param workspace_id: ID of the workspace that the data retention policy should apply to. If omitted, the data retention policy will apply to the entire organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#workspace_id DataRetentionPolicy#workspace_id}
+        :param delete_older_than: delete_older_than block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#delete_older_than DataRetentionPolicy#delete_older_than}
+        :param dont_delete: dont_delete block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#dont_delete DataRetentionPolicy#dont_delete}
+        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#organization DataRetentionPolicy#organization}
+        :param workspace_id: ID of the workspace that the data retention policy should apply to. If omitted, the data retention policy will apply to the entire organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#workspace_id DataRetentionPolicy#workspace_id}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -390,7 +390,7 @@ class DataRetentionPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional["DataRetentionPolicyDeleteOlderThan"]:
         '''delete_older_than block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#delete_older_than DataRetentionPolicy#delete_older_than}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#delete_older_than DataRetentionPolicy#delete_older_than}
         '''
         result = self._values.get("delete_older_than")
         return typing.cast(typing.Optional["DataRetentionPolicyDeleteOlderThan"], result)
@@ -399,7 +399,7 @@ class DataRetentionPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def dont_delete(self) -> typing.Optional["DataRetentionPolicyDontDelete"]:
         '''dont_delete block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#dont_delete DataRetentionPolicy#dont_delete}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#dont_delete DataRetentionPolicy#dont_delete}
         '''
         result = self._values.get("dont_delete")
         return typing.cast(typing.Optional["DataRetentionPolicyDontDelete"], result)
@@ -408,7 +408,7 @@ class DataRetentionPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def organization(self) -> typing.Optional[builtins.str]:
         '''Name of the organization. If omitted, organization must be defined in the provider config.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#organization DataRetentionPolicy#organization}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#organization DataRetentionPolicy#organization}
         '''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -419,7 +419,7 @@ class DataRetentionPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         If omitted, the data retention policy will apply to the entire organization.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#workspace_id DataRetentionPolicy#workspace_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#workspace_id DataRetentionPolicy#workspace_id}
         '''
         result = self._values.get("workspace_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -444,7 +444,7 @@ class DataRetentionPolicyConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 class DataRetentionPolicyDeleteOlderThan:
     def __init__(self, *, days: typing.Optional[jsii.Number] = None) -> None:
         '''
-        :param days: Number of days. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#days DataRetentionPolicy#days}
+        :param days: Number of days. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#days DataRetentionPolicy#days}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__5259261c2d6bc133c46371ef0f9c599ca0bdd9c8d3c9972d527d07a625e490f7)
@@ -457,7 +457,7 @@ class DataRetentionPolicyDeleteOlderThan:
     def days(self) -> typing.Optional[jsii.Number]:
         '''Number of days.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/data_retention_policy#days DataRetentionPolicy#days}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/data_retention_policy#days DataRetentionPolicy#days}
         '''
         result = self._values.get("days")
         return typing.cast(typing.Optional[jsii.Number], result)

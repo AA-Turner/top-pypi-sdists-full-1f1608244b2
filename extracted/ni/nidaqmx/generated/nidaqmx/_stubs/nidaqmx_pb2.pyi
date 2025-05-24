@@ -10,6 +10,7 @@ Proto file for the NI-DAQMX Metadata
 
 import builtins
 import collections.abc
+from nidaqmx._stubs import data_moniker_pb2
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.internal.enum_type_wrapper
@@ -2560,6 +2561,8 @@ class _DeviceStringAttributeEnumTypeWrapper(google.protobuf.internal.enum_type_w
     DEVICE_ATTRIBUTE_COMPACT_RIO_CHASSIS_DEV_NAME: _DeviceStringAttribute.ValueType  # 12641
     DEVICE_ATTRIBUTE_FIELD_DAQ_DEV_NAME: _DeviceStringAttribute.ValueType  # 12657
     DEVICE_ATTRIBUTE_FIELD_DAQ_BANK_DEV_NAMES: _DeviceStringAttribute.ValueType  # 12664
+    DEVICE_ATTRIBUTE_ID_PIN_PIN_NAMES: _DeviceStringAttribute.ValueType  # 12785
+    DEVICE_ATTRIBUTE_ID_PIN_MEM_SERIAL_NUMS: _DeviceStringAttribute.ValueType  # 12788
 
 class DeviceStringAttribute(_DeviceStringAttribute, metaclass=_DeviceStringAttributeEnumTypeWrapper): ...
 
@@ -2584,6 +2587,8 @@ DEVICE_ATTRIBUTE_NAV_PHYSICAL_CHANS: DeviceStringAttribute.ValueType  # 12322
 DEVICE_ATTRIBUTE_COMPACT_RIO_CHASSIS_DEV_NAME: DeviceStringAttribute.ValueType  # 12641
 DEVICE_ATTRIBUTE_FIELD_DAQ_DEV_NAME: DeviceStringAttribute.ValueType  # 12657
 DEVICE_ATTRIBUTE_FIELD_DAQ_BANK_DEV_NAMES: DeviceStringAttribute.ValueType  # 12664
+DEVICE_ATTRIBUTE_ID_PIN_PIN_NAMES: DeviceStringAttribute.ValueType  # 12785
+DEVICE_ATTRIBUTE_ID_PIN_MEM_SERIAL_NUMS: DeviceStringAttribute.ValueType  # 12788
 global___DeviceStringAttribute = DeviceStringAttribute
 
 class _DeviceUInt32Attribute:
@@ -2824,12 +2829,16 @@ class _DeviceUInt32ArrayAttributeEnumTypeWrapper(google.protobuf.internal.enum_t
     DEVICE_UINT32_ARRAY_ATTRIBUTE_UNSPECIFIED: _DeviceUInt32ArrayAttribute.ValueType  # 0
     DEVICE_ATTRIBUTE_ACCESSORY_PRODUCT_NUMS: _DeviceUInt32ArrayAttribute.ValueType  # 12142
     DEVICE_ATTRIBUTE_ACCESSORY_SERIAL_NUMS: _DeviceUInt32ArrayAttribute.ValueType  # 12143
+    DEVICE_ATTRIBUTE_ID_PIN_MEM_FAMILY_CODES: _DeviceUInt32ArrayAttribute.ValueType  # 12787
+    DEVICE_ATTRIBUTE_ID_PIN_MEM_SIZES: _DeviceUInt32ArrayAttribute.ValueType  # 12789
 
 class DeviceUInt32ArrayAttribute(_DeviceUInt32ArrayAttribute, metaclass=_DeviceUInt32ArrayAttributeEnumTypeWrapper): ...
 
 DEVICE_UINT32_ARRAY_ATTRIBUTE_UNSPECIFIED: DeviceUInt32ArrayAttribute.ValueType  # 0
 DEVICE_ATTRIBUTE_ACCESSORY_PRODUCT_NUMS: DeviceUInt32ArrayAttribute.ValueType  # 12142
 DEVICE_ATTRIBUTE_ACCESSORY_SERIAL_NUMS: DeviceUInt32ArrayAttribute.ValueType  # 12143
+DEVICE_ATTRIBUTE_ID_PIN_MEM_FAMILY_CODES: DeviceUInt32ArrayAttribute.ValueType  # 12787
+DEVICE_ATTRIBUTE_ID_PIN_MEM_SIZES: DeviceUInt32ArrayAttribute.ValueType  # 12789
 global___DeviceUInt32ArrayAttribute = DeviceUInt32ArrayAttribute
 
 class _DeviceInt32ArrayAttribute:
@@ -2850,6 +2859,7 @@ class _DeviceInt32ArrayAttributeEnumTypeWrapper(google.protobuf.internal.enum_ty
     DEVICE_ATTRIBUTE_NAV_SUPPORTED_MEAS_TYPES: _DeviceInt32ArrayAttribute.ValueType  # 12323
     DEVICE_ATTRIBUTE_NAV_TRIG_USAGE: _DeviceInt32ArrayAttribute.ValueType  # 12324
     DEVICE_ATTRIBUTE_AI_DIG_FLTR_TYPES: _DeviceInt32ArrayAttribute.ValueType  # 12551
+    DEVICE_ATTRIBUTE_ID_PIN_PIN_STATUSES: _DeviceInt32ArrayAttribute.ValueType  # 12786
 
 class DeviceInt32ArrayAttribute(_DeviceInt32ArrayAttribute, metaclass=_DeviceInt32ArrayAttributeEnumTypeWrapper): ...
 
@@ -2865,6 +2875,7 @@ DEVICE_ATTRIBUTE_CO_SAMP_MODES: DeviceInt32ArrayAttribute.ValueType  # 12255
 DEVICE_ATTRIBUTE_NAV_SUPPORTED_MEAS_TYPES: DeviceInt32ArrayAttribute.ValueType  # 12323
 DEVICE_ATTRIBUTE_NAV_TRIG_USAGE: DeviceInt32ArrayAttribute.ValueType  # 12324
 DEVICE_ATTRIBUTE_AI_DIG_FLTR_TYPES: DeviceInt32ArrayAttribute.ValueType  # 12551
+DEVICE_ATTRIBUTE_ID_PIN_PIN_STATUSES: DeviceInt32ArrayAttribute.ValueType  # 12786
 global___DeviceInt32ArrayAttribute = DeviceInt32ArrayAttribute
 
 class _ExportSignalDoubleAttribute:
@@ -3409,6 +3420,7 @@ class _PhysicalChannelInt32AttributeEnumTypeWrapper(google.protobuf.internal.enu
     PHYSICALCHANNEL_ATTRIBUTE_PHYSICAL_CHAN_AI_TERM_CFGS: _PhysicalChannelInt32Attribute.ValueType  # 9026
     PHYSICALCHANNEL_ATTRIBUTE_PHYSICAL_CHAN_AO_TERM_CFGS: _PhysicalChannelInt32Attribute.ValueType  # 10659
     PHYSICALCHANNEL_ATTRIBUTE_PHYSICAL_CHAN_AI_POWER_CONTROL_TYPE: _PhysicalChannelInt32Attribute.ValueType  # 12654
+    PHYSICALCHANNEL_ATTRIBUTE_PHYSICAL_CHAN_DIG_PORT_LOGIC_FAMILY: _PhysicalChannelInt32Attribute.ValueType  # 12779
 
 class PhysicalChannelInt32Attribute(_PhysicalChannelInt32Attribute, metaclass=_PhysicalChannelInt32AttributeEnumTypeWrapper): ...
 
@@ -3416,6 +3428,7 @@ PHYSICALCHANNEL_INT32_ATTRIBUTE_UNSPECIFIED: PhysicalChannelInt32Attribute.Value
 PHYSICALCHANNEL_ATTRIBUTE_PHYSICAL_CHAN_AI_TERM_CFGS: PhysicalChannelInt32Attribute.ValueType  # 9026
 PHYSICALCHANNEL_ATTRIBUTE_PHYSICAL_CHAN_AO_TERM_CFGS: PhysicalChannelInt32Attribute.ValueType  # 10659
 PHYSICALCHANNEL_ATTRIBUTE_PHYSICAL_CHAN_AI_POWER_CONTROL_TYPE: PhysicalChannelInt32Attribute.ValueType  # 12654
+PHYSICALCHANNEL_ATTRIBUTE_PHYSICAL_CHAN_DIG_PORT_LOGIC_FAMILY: PhysicalChannelInt32Attribute.ValueType  # 12779
 global___PhysicalChannelInt32Attribute = PhysicalChannelInt32Attribute
 
 class _PhysicalChannelBoolAttribute:
@@ -3463,6 +3476,7 @@ class _PhysicalChannelResetAttributeEnumTypeWrapper(google.protobuf.internal.enu
     PHYSICALCHANNEL_RESET_ATTRIBUTE_PHYSICAL_CHAN_AI_POWER_CONTROL_VOLTAGE: _PhysicalChannelResetAttribute.ValueType  # 12652
     PHYSICALCHANNEL_RESET_ATTRIBUTE_PHYSICAL_CHAN_AI_POWER_CONTROL_ENABLE: _PhysicalChannelResetAttribute.ValueType  # 12653
     PHYSICALCHANNEL_RESET_ATTRIBUTE_PHYSICAL_CHAN_AI_POWER_CONTROL_TYPE: _PhysicalChannelResetAttribute.ValueType  # 12654
+    PHYSICALCHANNEL_RESET_ATTRIBUTE_PHYSICAL_CHAN_DIG_PORT_LOGIC_FAMILY: _PhysicalChannelResetAttribute.ValueType  # 12779
 
 class PhysicalChannelResetAttribute(_PhysicalChannelResetAttribute, metaclass=_PhysicalChannelResetAttributeEnumTypeWrapper): ...
 
@@ -3472,6 +3486,7 @@ PHYSICALCHANNEL_RESET_ATTRIBUTE_AO_POWER_AMP_CHANNEL_ENABLE: PhysicalChannelRese
 PHYSICALCHANNEL_RESET_ATTRIBUTE_PHYSICAL_CHAN_AI_POWER_CONTROL_VOLTAGE: PhysicalChannelResetAttribute.ValueType  # 12652
 PHYSICALCHANNEL_RESET_ATTRIBUTE_PHYSICAL_CHAN_AI_POWER_CONTROL_ENABLE: PhysicalChannelResetAttribute.ValueType  # 12653
 PHYSICALCHANNEL_RESET_ATTRIBUTE_PHYSICAL_CHAN_AI_POWER_CONTROL_TYPE: PhysicalChannelResetAttribute.ValueType  # 12654
+PHYSICALCHANNEL_RESET_ATTRIBUTE_PHYSICAL_CHAN_DIG_PORT_LOGIC_FAMILY: PhysicalChannelResetAttribute.ValueType  # 12779
 global___PhysicalChannelResetAttribute = PhysicalChannelResetAttribute
 
 class _PhysicalChannelDoubleAttribute:
@@ -6210,6 +6225,7 @@ class _LogicFamily:
 class _LogicFamilyEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_LogicFamily.ValueType], builtins.type):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     LOGIC_FAMILY_UNSPECIFIED: _LogicFamily.ValueType  # 0
+    LOGIC_FAMILY_1POINT_8_V: _LogicFamily.ValueType  # 16184
     LOGIC_FAMILY_2POINT_5_V: _LogicFamily.ValueType  # 14620
     LOGIC_FAMILY_3POINT_3_V: _LogicFamily.ValueType  # 14621
     LOGIC_FAMILY_5_V: _LogicFamily.ValueType  # 14619
@@ -6217,6 +6233,7 @@ class _LogicFamilyEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._En
 class LogicFamily(_LogicFamily, metaclass=_LogicFamilyEnumTypeWrapper): ...
 
 LOGIC_FAMILY_UNSPECIFIED: LogicFamily.ValueType  # 0
+LOGIC_FAMILY_1POINT_8_V: LogicFamily.ValueType  # 16184
 LOGIC_FAMILY_2POINT_5_V: LogicFamily.ValueType  # 14620
 LOGIC_FAMILY_3POINT_3_V: LogicFamily.ValueType  # 14621
 LOGIC_FAMILY_5_V: LogicFamily.ValueType  # 14619
@@ -6591,6 +6608,35 @@ STRAIN_GAGE_BRIDGE_TYPE1_HALF_BRIDGE_II: StrainGageBridgeType1.ValueType  # 1018
 STRAIN_GAGE_BRIDGE_TYPE1_QUARTER_BRIDGE_I: StrainGageBridgeType1.ValueType  # 10271
 STRAIN_GAGE_BRIDGE_TYPE1_QUARTER_BRIDGE_II: StrainGageBridgeType1.ValueType  # 10272
 global___StrainGageBridgeType1 = StrainGageBridgeType1
+
+class _StrainGageRosetteMeasurementType:
+    ValueType = typing.NewType("ValueType", builtins.int)
+    V: typing_extensions.TypeAlias = ValueType
+
+class _StrainGageRosetteMeasurementTypeEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_StrainGageRosetteMeasurementType.ValueType], builtins.type):
+    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+    STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_UNSPECIFIED: _StrainGageRosetteMeasurementType.ValueType  # 0
+    STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_PRINCIPAL_STRAIN_1: _StrainGageRosetteMeasurementType.ValueType  # 15971
+    STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_PRINCIPAL_STRAIN_2: _StrainGageRosetteMeasurementType.ValueType  # 15972
+    STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_PRINCIPAL_STRAIN_ANGLE: _StrainGageRosetteMeasurementType.ValueType  # 15973
+    STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_CARTESIAN_STRAIN_X: _StrainGageRosetteMeasurementType.ValueType  # 15974
+    STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_CARTESIAN_STRAIN_Y: _StrainGageRosetteMeasurementType.ValueType  # 15975
+    STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_CARTESIAN_SHEAR_STRAIN_XY: _StrainGageRosetteMeasurementType.ValueType  # 15976
+    STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_MAX_SHEAR_STRAIN: _StrainGageRosetteMeasurementType.ValueType  # 15977
+    STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_MAX_SHEAR_STRAIN_ANGLE: _StrainGageRosetteMeasurementType.ValueType  # 15978
+
+class StrainGageRosetteMeasurementType(_StrainGageRosetteMeasurementType, metaclass=_StrainGageRosetteMeasurementTypeEnumTypeWrapper): ...
+
+STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_UNSPECIFIED: StrainGageRosetteMeasurementType.ValueType  # 0
+STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_PRINCIPAL_STRAIN_1: StrainGageRosetteMeasurementType.ValueType  # 15971
+STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_PRINCIPAL_STRAIN_2: StrainGageRosetteMeasurementType.ValueType  # 15972
+STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_PRINCIPAL_STRAIN_ANGLE: StrainGageRosetteMeasurementType.ValueType  # 15973
+STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_CARTESIAN_STRAIN_X: StrainGageRosetteMeasurementType.ValueType  # 15974
+STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_CARTESIAN_STRAIN_Y: StrainGageRosetteMeasurementType.ValueType  # 15975
+STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_CARTESIAN_SHEAR_STRAIN_XY: StrainGageRosetteMeasurementType.ValueType  # 15976
+STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_MAX_SHEAR_STRAIN: StrainGageRosetteMeasurementType.ValueType  # 15977
+STRAIN_GAGE_ROSETTE_MEASUREMENT_TYPE_MAX_SHEAR_STRAIN_ANGLE: StrainGageRosetteMeasurementType.ValueType  # 15978
+global___StrainGageRosetteMeasurementType = StrainGageRosetteMeasurementType
 
 class _StrainGageRosetteType:
     ValueType = typing.NewType("ValueType", builtins.int)
@@ -7093,6 +7139,7 @@ class _ChannelInt32AttributeValuesEnumTypeWrapper(google.protobuf.internal.enum_
     CHANNEL_INT32_AI_MEASUREMENT_TYPE_TEDS_SENSOR: _ChannelInt32AttributeValues.ValueType  # 12531
     CHANNEL_INT32_AI_MEASUREMENT_TYPE_CHARGE: _ChannelInt32AttributeValues.ValueType  # 16105
     CHANNEL_INT32_AI_MEASUREMENT_TYPE_POWER: _ChannelInt32AttributeValues.ValueType  # 16201
+    CHANNEL_INT32_AI_MEASUREMENT_TYPE_CALCULATED_POWER: _ChannelInt32AttributeValues.ValueType  # 16204
     CHANNEL_INT32_AO_IDLE_OUTPUT_BEHAVIOR_ZERO_VOLTS: _ChannelInt32AttributeValues.ValueType  # 12526
     CHANNEL_INT32_AO_IDLE_OUTPUT_BEHAVIOR_HIGH_IMPEDANCE: _ChannelInt32AttributeValues.ValueType  # 12527
     CHANNEL_INT32_AO_IDLE_OUTPUT_BEHAVIOR_MAINTAIN_EXISTING_VALUE: _ChannelInt32AttributeValues.ValueType  # 12528
@@ -7290,6 +7337,7 @@ class _ChannelInt32AttributeValuesEnumTypeWrapper(google.protobuf.internal.enum_
     CHANNEL_INT32_LENGTH_UNITS4_FROM_CUSTOM_SCALE: _ChannelInt32AttributeValues.ValueType  # 10065
     CHANNEL_INT32_LEVEL1_HIGH: _ChannelInt32AttributeValues.ValueType  # 10192
     CHANNEL_INT32_LEVEL1_LOW: _ChannelInt32AttributeValues.ValueType  # 10214
+    CHANNEL_INT32_LOGIC_FAMILY_1POINT_8_V: _ChannelInt32AttributeValues.ValueType  # 16184
     CHANNEL_INT32_LOGIC_FAMILY_2POINT_5_V: _ChannelInt32AttributeValues.ValueType  # 14620
     CHANNEL_INT32_LOGIC_FAMILY_3POINT_3_V: _ChannelInt32AttributeValues.ValueType  # 14621
     CHANNEL_INT32_LOGIC_FAMILY_5_V: _ChannelInt32AttributeValues.ValueType  # 14619
@@ -7474,6 +7522,7 @@ CHANNEL_INT32_AI_MEASUREMENT_TYPE_TORQUE_BRIDGE: ChannelInt32AttributeValues.Val
 CHANNEL_INT32_AI_MEASUREMENT_TYPE_TEDS_SENSOR: ChannelInt32AttributeValues.ValueType  # 12531
 CHANNEL_INT32_AI_MEASUREMENT_TYPE_CHARGE: ChannelInt32AttributeValues.ValueType  # 16105
 CHANNEL_INT32_AI_MEASUREMENT_TYPE_POWER: ChannelInt32AttributeValues.ValueType  # 16201
+CHANNEL_INT32_AI_MEASUREMENT_TYPE_CALCULATED_POWER: ChannelInt32AttributeValues.ValueType  # 16204
 CHANNEL_INT32_AO_IDLE_OUTPUT_BEHAVIOR_ZERO_VOLTS: ChannelInt32AttributeValues.ValueType  # 12526
 CHANNEL_INT32_AO_IDLE_OUTPUT_BEHAVIOR_HIGH_IMPEDANCE: ChannelInt32AttributeValues.ValueType  # 12527
 CHANNEL_INT32_AO_IDLE_OUTPUT_BEHAVIOR_MAINTAIN_EXISTING_VALUE: ChannelInt32AttributeValues.ValueType  # 12528
@@ -7671,6 +7720,7 @@ CHANNEL_INT32_LENGTH_UNITS4_FEET: ChannelInt32AttributeValues.ValueType  # 10380
 CHANNEL_INT32_LENGTH_UNITS4_FROM_CUSTOM_SCALE: ChannelInt32AttributeValues.ValueType  # 10065
 CHANNEL_INT32_LEVEL1_HIGH: ChannelInt32AttributeValues.ValueType  # 10192
 CHANNEL_INT32_LEVEL1_LOW: ChannelInt32AttributeValues.ValueType  # 10214
+CHANNEL_INT32_LOGIC_FAMILY_1POINT_8_V: ChannelInt32AttributeValues.ValueType  # 16184
 CHANNEL_INT32_LOGIC_FAMILY_2POINT_5_V: ChannelInt32AttributeValues.ValueType  # 14620
 CHANNEL_INT32_LOGIC_FAMILY_3POINT_3_V: ChannelInt32AttributeValues.ValueType  # 14621
 CHANNEL_INT32_LOGIC_FAMILY_5_V: ChannelInt32AttributeValues.ValueType  # 14619
@@ -7851,6 +7901,7 @@ class _DeviceInt32AttributeValuesEnumTypeWrapper(google.protobuf.internal.enum_t
     DEVICE_INT32_AI_MEASUREMENT_TYPE_TEDS_SENSOR: _DeviceInt32AttributeValues.ValueType  # 12531
     DEVICE_INT32_AI_MEASUREMENT_TYPE_CHARGE: _DeviceInt32AttributeValues.ValueType  # 16105
     DEVICE_INT32_AI_MEASUREMENT_TYPE_POWER: _DeviceInt32AttributeValues.ValueType  # 16201
+    DEVICE_INT32_AI_MEASUREMENT_TYPE_CALCULATED_POWER: _DeviceInt32AttributeValues.ValueType  # 16204
     DEVICE_INT32_AO_OUTPUT_CHANNEL_TYPE_VOLTAGE: _DeviceInt32AttributeValues.ValueType  # 10322
     DEVICE_INT32_AO_OUTPUT_CHANNEL_TYPE_CURRENT: _DeviceInt32AttributeValues.ValueType  # 10134
     DEVICE_INT32_AO_OUTPUT_CHANNEL_TYPE_FUNC_GEN: _DeviceInt32AttributeValues.ValueType  # 14750
@@ -7905,6 +7956,8 @@ class _DeviceInt32AttributeValuesEnumTypeWrapper(google.protobuf.internal.enum_t
     DEVICE_INT32_FILTER_TYPE2_BANDPASS: _DeviceInt32AttributeValues.ValueType  # 16073
     DEVICE_INT32_FILTER_TYPE2_NOTCH: _DeviceInt32AttributeValues.ValueType  # 16074
     DEVICE_INT32_FILTER_TYPE2_CUSTOM: _DeviceInt32AttributeValues.ValueType  # 10137
+    DEVICE_INT32_ID_PIN_STATUS_MEMORY_NOT_PRESENT: _DeviceInt32AttributeValues.ValueType  # 16205
+    DEVICE_INT32_ID_PIN_STATUS_MEMORY_PRESENT: _DeviceInt32AttributeValues.ValueType  # 16206
     DEVICE_INT32_NAV_MEASUREMENT_TYPE_ALTITUDE: _DeviceInt32AttributeValues.ValueType  # 15997
     DEVICE_INT32_NAV_MEASUREMENT_TYPE_LONGITUDE: _DeviceInt32AttributeValues.ValueType  # 15998
     DEVICE_INT32_NAV_MEASUREMENT_TYPE_LATITUDE: _DeviceInt32AttributeValues.ValueType  # 15999
@@ -7939,6 +7992,7 @@ class _DeviceInt32AttributeValuesEnumTypeWrapper(google.protobuf.internal.enum_t
     DEVICE_INT32_PRODUCT_CATEGORY_FIELD_DAQ: _DeviceInt32AttributeValues.ValueType  # 16151
     DEVICE_INT32_PRODUCT_CATEGORY_TEST_SCALE_CHASSIS: _DeviceInt32AttributeValues.ValueType  # 16180
     DEVICE_INT32_PRODUCT_CATEGORY_TEST_SCALE_MODULE: _DeviceInt32AttributeValues.ValueType  # 16181
+    DEVICE_INT32_PRODUCT_CATEGORY_MIO_DAQ: _DeviceInt32AttributeValues.ValueType  # 16182
     DEVICE_INT32_PRODUCT_CATEGORY_UNKNOWN: _DeviceInt32AttributeValues.ValueType  # 12588
     DEVICE_INT32_TRIGGER_USAGE_ADVANCE: _DeviceInt32AttributeValues.ValueType  # 12488
     DEVICE_INT32_TRIGGER_USAGE_PAUSE: _DeviceInt32AttributeValues.ValueType  # 12489
@@ -7985,6 +8039,7 @@ DEVICE_INT32_AI_MEASUREMENT_TYPE_TORQUE_BRIDGE: DeviceInt32AttributeValues.Value
 DEVICE_INT32_AI_MEASUREMENT_TYPE_TEDS_SENSOR: DeviceInt32AttributeValues.ValueType  # 12531
 DEVICE_INT32_AI_MEASUREMENT_TYPE_CHARGE: DeviceInt32AttributeValues.ValueType  # 16105
 DEVICE_INT32_AI_MEASUREMENT_TYPE_POWER: DeviceInt32AttributeValues.ValueType  # 16201
+DEVICE_INT32_AI_MEASUREMENT_TYPE_CALCULATED_POWER: DeviceInt32AttributeValues.ValueType  # 16204
 DEVICE_INT32_AO_OUTPUT_CHANNEL_TYPE_VOLTAGE: DeviceInt32AttributeValues.ValueType  # 10322
 DEVICE_INT32_AO_OUTPUT_CHANNEL_TYPE_CURRENT: DeviceInt32AttributeValues.ValueType  # 10134
 DEVICE_INT32_AO_OUTPUT_CHANNEL_TYPE_FUNC_GEN: DeviceInt32AttributeValues.ValueType  # 14750
@@ -8039,6 +8094,8 @@ DEVICE_INT32_FILTER_TYPE2_HIGHPASS: DeviceInt32AttributeValues.ValueType  # 1607
 DEVICE_INT32_FILTER_TYPE2_BANDPASS: DeviceInt32AttributeValues.ValueType  # 16073
 DEVICE_INT32_FILTER_TYPE2_NOTCH: DeviceInt32AttributeValues.ValueType  # 16074
 DEVICE_INT32_FILTER_TYPE2_CUSTOM: DeviceInt32AttributeValues.ValueType  # 10137
+DEVICE_INT32_ID_PIN_STATUS_MEMORY_NOT_PRESENT: DeviceInt32AttributeValues.ValueType  # 16205
+DEVICE_INT32_ID_PIN_STATUS_MEMORY_PRESENT: DeviceInt32AttributeValues.ValueType  # 16206
 DEVICE_INT32_NAV_MEASUREMENT_TYPE_ALTITUDE: DeviceInt32AttributeValues.ValueType  # 15997
 DEVICE_INT32_NAV_MEASUREMENT_TYPE_LONGITUDE: DeviceInt32AttributeValues.ValueType  # 15998
 DEVICE_INT32_NAV_MEASUREMENT_TYPE_LATITUDE: DeviceInt32AttributeValues.ValueType  # 15999
@@ -8073,6 +8130,7 @@ DEVICE_INT32_PRODUCT_CATEGORY_SC_EXPRESS: DeviceInt32AttributeValues.ValueType  
 DEVICE_INT32_PRODUCT_CATEGORY_FIELD_DAQ: DeviceInt32AttributeValues.ValueType  # 16151
 DEVICE_INT32_PRODUCT_CATEGORY_TEST_SCALE_CHASSIS: DeviceInt32AttributeValues.ValueType  # 16180
 DEVICE_INT32_PRODUCT_CATEGORY_TEST_SCALE_MODULE: DeviceInt32AttributeValues.ValueType  # 16181
+DEVICE_INT32_PRODUCT_CATEGORY_MIO_DAQ: DeviceInt32AttributeValues.ValueType  # 16182
 DEVICE_INT32_PRODUCT_CATEGORY_UNKNOWN: DeviceInt32AttributeValues.ValueType  # 12588
 DEVICE_INT32_TRIGGER_USAGE_ADVANCE: DeviceInt32AttributeValues.ValueType  # 12488
 DEVICE_INT32_TRIGGER_USAGE_PAUSE: DeviceInt32AttributeValues.ValueType  # 12489
@@ -8177,6 +8235,7 @@ class _PhysicalChannelInt32AttributeValuesEnumTypeWrapper(google.protobuf.intern
     PHYSICALCHANNEL_INT32_AI_MEASUREMENT_TYPE_TEDS_SENSOR: _PhysicalChannelInt32AttributeValues.ValueType  # 12531
     PHYSICALCHANNEL_INT32_AI_MEASUREMENT_TYPE_CHARGE: _PhysicalChannelInt32AttributeValues.ValueType  # 16105
     PHYSICALCHANNEL_INT32_AI_MEASUREMENT_TYPE_POWER: _PhysicalChannelInt32AttributeValues.ValueType  # 16201
+    PHYSICALCHANNEL_INT32_AI_MEASUREMENT_TYPE_CALCULATED_POWER: _PhysicalChannelInt32AttributeValues.ValueType  # 16204
     PHYSICALCHANNEL_INT32_AO_OUTPUT_CHANNEL_TYPE_VOLTAGE: _PhysicalChannelInt32AttributeValues.ValueType  # 10322
     PHYSICALCHANNEL_INT32_AO_OUTPUT_CHANNEL_TYPE_CURRENT: _PhysicalChannelInt32AttributeValues.ValueType  # 10134
     PHYSICALCHANNEL_INT32_AO_OUTPUT_CHANNEL_TYPE_FUNC_GEN: _PhysicalChannelInt32AttributeValues.ValueType  # 14750
@@ -8204,6 +8263,10 @@ class _PhysicalChannelInt32AttributeValuesEnumTypeWrapper(google.protobuf.intern
     PHYSICALCHANNEL_INT32_CO_OUTPUT_TYPE_PULSE_TIME: _PhysicalChannelInt32AttributeValues.ValueType  # 10269
     PHYSICALCHANNEL_INT32_CO_OUTPUT_TYPE_PULSE_FREQ: _PhysicalChannelInt32AttributeValues.ValueType  # 10119
     PHYSICALCHANNEL_INT32_CO_OUTPUT_TYPE_PULSE_TICKS: _PhysicalChannelInt32AttributeValues.ValueType  # 10268
+    PHYSICALCHANNEL_INT32_LOGIC_FAMILY_1POINT_8_V: _PhysicalChannelInt32AttributeValues.ValueType  # 16184
+    PHYSICALCHANNEL_INT32_LOGIC_FAMILY_2POINT_5_V: _PhysicalChannelInt32AttributeValues.ValueType  # 14620
+    PHYSICALCHANNEL_INT32_LOGIC_FAMILY_3POINT_3_V: _PhysicalChannelInt32AttributeValues.ValueType  # 14621
+    PHYSICALCHANNEL_INT32_LOGIC_FAMILY_5_V: _PhysicalChannelInt32AttributeValues.ValueType  # 14619
     PHYSICALCHANNEL_INT32_NAV_MEASUREMENT_TYPE_ALTITUDE: _PhysicalChannelInt32AttributeValues.ValueType  # 15997
     PHYSICALCHANNEL_INT32_NAV_MEASUREMENT_TYPE_LONGITUDE: _PhysicalChannelInt32AttributeValues.ValueType  # 15998
     PHYSICALCHANNEL_INT32_NAV_MEASUREMENT_TYPE_LATITUDE: _PhysicalChannelInt32AttributeValues.ValueType  # 15999
@@ -8251,6 +8314,7 @@ PHYSICALCHANNEL_INT32_AI_MEASUREMENT_TYPE_TORQUE_BRIDGE: PhysicalChannelInt32Att
 PHYSICALCHANNEL_INT32_AI_MEASUREMENT_TYPE_TEDS_SENSOR: PhysicalChannelInt32AttributeValues.ValueType  # 12531
 PHYSICALCHANNEL_INT32_AI_MEASUREMENT_TYPE_CHARGE: PhysicalChannelInt32AttributeValues.ValueType  # 16105
 PHYSICALCHANNEL_INT32_AI_MEASUREMENT_TYPE_POWER: PhysicalChannelInt32AttributeValues.ValueType  # 16201
+PHYSICALCHANNEL_INT32_AI_MEASUREMENT_TYPE_CALCULATED_POWER: PhysicalChannelInt32AttributeValues.ValueType  # 16204
 PHYSICALCHANNEL_INT32_AO_OUTPUT_CHANNEL_TYPE_VOLTAGE: PhysicalChannelInt32AttributeValues.ValueType  # 10322
 PHYSICALCHANNEL_INT32_AO_OUTPUT_CHANNEL_TYPE_CURRENT: PhysicalChannelInt32AttributeValues.ValueType  # 10134
 PHYSICALCHANNEL_INT32_AO_OUTPUT_CHANNEL_TYPE_FUNC_GEN: PhysicalChannelInt32AttributeValues.ValueType  # 14750
@@ -8278,6 +8342,10 @@ PHYSICALCHANNEL_INT32_CI_MEASUREMENT_TYPE_GPS_TIMESTAMP: PhysicalChannelInt32Att
 PHYSICALCHANNEL_INT32_CO_OUTPUT_TYPE_PULSE_TIME: PhysicalChannelInt32AttributeValues.ValueType  # 10269
 PHYSICALCHANNEL_INT32_CO_OUTPUT_TYPE_PULSE_FREQ: PhysicalChannelInt32AttributeValues.ValueType  # 10119
 PHYSICALCHANNEL_INT32_CO_OUTPUT_TYPE_PULSE_TICKS: PhysicalChannelInt32AttributeValues.ValueType  # 10268
+PHYSICALCHANNEL_INT32_LOGIC_FAMILY_1POINT_8_V: PhysicalChannelInt32AttributeValues.ValueType  # 16184
+PHYSICALCHANNEL_INT32_LOGIC_FAMILY_2POINT_5_V: PhysicalChannelInt32AttributeValues.ValueType  # 14620
+PHYSICALCHANNEL_INT32_LOGIC_FAMILY_3POINT_3_V: PhysicalChannelInt32AttributeValues.ValueType  # 14621
+PHYSICALCHANNEL_INT32_LOGIC_FAMILY_5_V: PhysicalChannelInt32AttributeValues.ValueType  # 14619
 PHYSICALCHANNEL_INT32_NAV_MEASUREMENT_TYPE_ALTITUDE: PhysicalChannelInt32AttributeValues.ValueType  # 15997
 PHYSICALCHANNEL_INT32_NAV_MEASUREMENT_TYPE_LONGITUDE: PhysicalChannelInt32AttributeValues.ValueType  # 15998
 PHYSICALCHANNEL_INT32_NAV_MEASUREMENT_TYPE_LATITUDE: PhysicalChannelInt32AttributeValues.ValueType  # 15999
@@ -9168,7 +9236,7 @@ class CfgAnlgMultiEdgeRefTrigRequest(google.protobuf.message.Message):
     @property
     def task(self) -> session_pb2.Session: ...
     @property
-    def trigger_slope_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def trigger_slope_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[global___Slope1.ValueType]: ...
     @property
     def trigger_level_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
     def __init__(
@@ -9176,7 +9244,7 @@ class CfgAnlgMultiEdgeRefTrigRequest(google.protobuf.message.Message):
         *,
         task: session_pb2.Session | None = ...,
         trigger_sources: builtins.str = ...,
-        trigger_slope_array: collections.abc.Iterable[builtins.int] | None = ...,
+        trigger_slope_array: collections.abc.Iterable[global___Slope1.ValueType] | None = ...,
         trigger_level_array: collections.abc.Iterable[builtins.float] | None = ...,
         pretrigger_samples: builtins.int = ...,
     ) -> None: ...
@@ -9212,7 +9280,7 @@ class CfgAnlgMultiEdgeStartTrigRequest(google.protobuf.message.Message):
     @property
     def task(self) -> session_pb2.Session: ...
     @property
-    def trigger_slope_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def trigger_slope_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[global___Slope1.ValueType]: ...
     @property
     def trigger_level_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
     def __init__(
@@ -9220,7 +9288,7 @@ class CfgAnlgMultiEdgeStartTrigRequest(google.protobuf.message.Message):
         *,
         task: session_pb2.Session | None = ...,
         trigger_sources: builtins.str = ...,
-        trigger_slope_array: collections.abc.Iterable[builtins.int] | None = ...,
+        trigger_slope_array: collections.abc.Iterable[global___Slope1.ValueType] | None = ...,
         trigger_level_array: collections.abc.Iterable[builtins.float] | None = ...,
     ) -> None: ...
     def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
@@ -12231,7 +12299,7 @@ class CreateAIRosetteStrainGageChanRequest(google.protobuf.message.Message):
     @property
     def task(self) -> session_pb2.Session: ...
     @property
-    def rosette_meas_types(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def rosette_meas_types(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[global___StrainGageRosetteMeasurementType.ValueType]: ...
     def __init__(
         self,
         *,
@@ -12243,7 +12311,7 @@ class CreateAIRosetteStrainGageChanRequest(google.protobuf.message.Message):
         rosette_type: global___StrainGageRosetteType.ValueType = ...,
         rosette_type_raw: builtins.int = ...,
         gage_orientation: builtins.float = ...,
-        rosette_meas_types: collections.abc.Iterable[builtins.int] | None = ...,
+        rosette_meas_types: collections.abc.Iterable[global___StrainGageRosetteMeasurementType.ValueType] | None = ...,
         strain_config: global___StrainGageBridgeType1.ValueType = ...,
         strain_config_raw: builtins.int = ...,
         voltage_excit_source: global___ExcitationSource.ValueType = ...,
@@ -21575,6 +21643,81 @@ class ReadAnalogF64Response(google.protobuf.message.Message):
 global___ReadAnalogF64Response = ReadAnalogF64Response
 
 @typing.final
+class BeginReadAnalogF64Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    FILL_MODE_FIELD_NUMBER: builtins.int
+    FILL_MODE_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    fill_mode: global___GroupBy.ValueType
+    fill_mode_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        fill_mode: global___GroupBy.ValueType = ...,
+        fill_mode_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["fill_mode_enum", b"fill_mode_enum"]) -> typing.Literal["fill_mode", "fill_mode_raw"] | None: ...
+
+global___BeginReadAnalogF64Request = BeginReadAnalogF64Request
+
+@typing.final
+class BeginReadAnalogF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadAnalogF64Response = BeginReadAnalogF64Response
+
+@typing.final
+class MonikerReadAnalogF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array: collections.abc.Iterable[builtins.float] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadAnalogF64Response = MonikerReadAnalogF64Response
+
+@typing.final
 class ReadAnalogScalarF64Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -21611,6 +21754,64 @@ class ReadAnalogScalarF64Response(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["status", b"status", "value", b"value"]) -> None: ...
 
 global___ReadAnalogScalarF64Response = ReadAnalogScalarF64Response
+
+@typing.final
+class BeginReadAnalogScalarF64Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginReadAnalogScalarF64Request = BeginReadAnalogScalarF64Request
+
+@typing.final
+class BeginReadAnalogScalarF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadAnalogScalarF64Response = BeginReadAnalogScalarF64Response
+
+@typing.final
+class MonikerReadAnalogScalarF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    VALUE_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    value: builtins.float
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        value: builtins.float = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["status", b"status", "value", b"value"]) -> None: ...
+
+global___MonikerReadAnalogScalarF64Response = MonikerReadAnalogScalarF64Response
 
 @typing.final
 class ReadBinaryI16Request(google.protobuf.message.Message):
@@ -21668,6 +21869,81 @@ class ReadBinaryI16Response(google.protobuf.message.Message):
 global___ReadBinaryI16Response = ReadBinaryI16Response
 
 @typing.final
+class BeginReadBinaryI16Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    FILL_MODE_FIELD_NUMBER: builtins.int
+    FILL_MODE_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    fill_mode: global___GroupBy.ValueType
+    fill_mode_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        fill_mode: global___GroupBy.ValueType = ...,
+        fill_mode_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["fill_mode_enum", b"fill_mode_enum"]) -> typing.Literal["fill_mode", "fill_mode_raw"] | None: ...
+
+global___BeginReadBinaryI16Request = BeginReadBinaryI16Request
+
+@typing.final
+class BeginReadBinaryI16Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadBinaryI16Response = BeginReadBinaryI16Response
+
+@typing.final
+class MonikerReadBinaryI16Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array: collections.abc.Iterable[builtins.int] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadBinaryI16Response = MonikerReadBinaryI16Response
+
+@typing.final
 class ReadBinaryI32Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -21721,6 +21997,81 @@ class ReadBinaryI32Response(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
 
 global___ReadBinaryI32Response = ReadBinaryI32Response
+
+@typing.final
+class BeginReadBinaryI32Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    FILL_MODE_FIELD_NUMBER: builtins.int
+    FILL_MODE_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    fill_mode: global___GroupBy.ValueType
+    fill_mode_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        fill_mode: global___GroupBy.ValueType = ...,
+        fill_mode_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["fill_mode_enum", b"fill_mode_enum"]) -> typing.Literal["fill_mode", "fill_mode_raw"] | None: ...
+
+global___BeginReadBinaryI32Request = BeginReadBinaryI32Request
+
+@typing.final
+class BeginReadBinaryI32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadBinaryI32Response = BeginReadBinaryI32Response
+
+@typing.final
+class MonikerReadBinaryI32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array: collections.abc.Iterable[builtins.int] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadBinaryI32Response = MonikerReadBinaryI32Response
 
 @typing.final
 class ReadBinaryU16Request(google.protobuf.message.Message):
@@ -21778,6 +22129,81 @@ class ReadBinaryU16Response(google.protobuf.message.Message):
 global___ReadBinaryU16Response = ReadBinaryU16Response
 
 @typing.final
+class BeginReadBinaryU16Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    FILL_MODE_FIELD_NUMBER: builtins.int
+    FILL_MODE_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    fill_mode: global___GroupBy.ValueType
+    fill_mode_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        fill_mode: global___GroupBy.ValueType = ...,
+        fill_mode_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["fill_mode_enum", b"fill_mode_enum"]) -> typing.Literal["fill_mode", "fill_mode_raw"] | None: ...
+
+global___BeginReadBinaryU16Request = BeginReadBinaryU16Request
+
+@typing.final
+class BeginReadBinaryU16Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadBinaryU16Response = BeginReadBinaryU16Response
+
+@typing.final
+class MonikerReadBinaryU16Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array: collections.abc.Iterable[builtins.int] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadBinaryU16Response = MonikerReadBinaryU16Response
+
+@typing.final
 class ReadBinaryU32Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -21833,6 +22259,81 @@ class ReadBinaryU32Response(google.protobuf.message.Message):
 global___ReadBinaryU32Response = ReadBinaryU32Response
 
 @typing.final
+class BeginReadBinaryU32Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    FILL_MODE_FIELD_NUMBER: builtins.int
+    FILL_MODE_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    fill_mode: global___GroupBy.ValueType
+    fill_mode_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        fill_mode: global___GroupBy.ValueType = ...,
+        fill_mode_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["fill_mode_enum", b"fill_mode_enum"]) -> typing.Literal["fill_mode", "fill_mode_raw"] | None: ...
+
+global___BeginReadBinaryU32Request = BeginReadBinaryU32Request
+
+@typing.final
+class BeginReadBinaryU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadBinaryU32Response = BeginReadBinaryU32Response
+
+@typing.final
+class MonikerReadBinaryU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array: collections.abc.Iterable[builtins.int] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadBinaryU32Response = MonikerReadBinaryU32Response
+
+@typing.final
 class ReadCounterF64Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -21879,6 +22380,74 @@ class ReadCounterF64Response(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
 
 global___ReadCounterF64Response = ReadCounterF64Response
+
+@typing.final
+class BeginReadCounterF64Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginReadCounterF64Request = BeginReadCounterF64Request
+
+@typing.final
+class BeginReadCounterF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadCounterF64Response = BeginReadCounterF64Response
+
+@typing.final
+class MonikerReadCounterF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array: collections.abc.Iterable[builtins.float] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadCounterF64Response = MonikerReadCounterF64Response
 
 @typing.final
 class ReadCounterF64ExRequest(google.protobuf.message.Message):
@@ -21936,6 +22505,81 @@ class ReadCounterF64ExResponse(google.protobuf.message.Message):
 global___ReadCounterF64ExResponse = ReadCounterF64ExResponse
 
 @typing.final
+class BeginReadCounterF64ExRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    FILL_MODE_FIELD_NUMBER: builtins.int
+    FILL_MODE_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    fill_mode: global___GroupBy.ValueType
+    fill_mode_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        fill_mode: global___GroupBy.ValueType = ...,
+        fill_mode_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["fill_mode_enum", b"fill_mode_enum"]) -> typing.Literal["fill_mode", "fill_mode_raw"] | None: ...
+
+global___BeginReadCounterF64ExRequest = BeginReadCounterF64ExRequest
+
+@typing.final
+class BeginReadCounterF64ExResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadCounterF64ExResponse = BeginReadCounterF64ExResponse
+
+@typing.final
+class MonikerReadCounterF64ExResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array: collections.abc.Iterable[builtins.float] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadCounterF64ExResponse = MonikerReadCounterF64ExResponse
+
+@typing.final
 class ReadCounterScalarF64Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -21974,6 +22618,64 @@ class ReadCounterScalarF64Response(google.protobuf.message.Message):
 global___ReadCounterScalarF64Response = ReadCounterScalarF64Response
 
 @typing.final
+class BeginReadCounterScalarF64Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginReadCounterScalarF64Request = BeginReadCounterScalarF64Request
+
+@typing.final
+class BeginReadCounterScalarF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadCounterScalarF64Response = BeginReadCounterScalarF64Response
+
+@typing.final
+class MonikerReadCounterScalarF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    VALUE_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    value: builtins.float
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        value: builtins.float = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["status", b"status", "value", b"value"]) -> None: ...
+
+global___MonikerReadCounterScalarF64Response = MonikerReadCounterScalarF64Response
+
+@typing.final
 class ReadCounterScalarU32Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -22010,6 +22712,64 @@ class ReadCounterScalarU32Response(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["status", b"status", "value", b"value"]) -> None: ...
 
 global___ReadCounterScalarU32Response = ReadCounterScalarU32Response
+
+@typing.final
+class BeginReadCounterScalarU32Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginReadCounterScalarU32Request = BeginReadCounterScalarU32Request
+
+@typing.final
+class BeginReadCounterScalarU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadCounterScalarU32Response = BeginReadCounterScalarU32Response
+
+@typing.final
+class MonikerReadCounterScalarU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    VALUE_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    value: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        value: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["status", b"status", "value", b"value"]) -> None: ...
+
+global___MonikerReadCounterScalarU32Response = MonikerReadCounterScalarU32Response
 
 @typing.final
 class ReadCounterU32Request(google.protobuf.message.Message):
@@ -22058,6 +22818,74 @@ class ReadCounterU32Response(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
 
 global___ReadCounterU32Response = ReadCounterU32Response
+
+@typing.final
+class BeginReadCounterU32Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginReadCounterU32Request = BeginReadCounterU32Request
+
+@typing.final
+class BeginReadCounterU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadCounterU32Response = BeginReadCounterU32Response
+
+@typing.final
+class MonikerReadCounterU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array: collections.abc.Iterable[builtins.int] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadCounterU32Response = MonikerReadCounterU32Response
 
 @typing.final
 class ReadCounterU32ExRequest(google.protobuf.message.Message):
@@ -22113,6 +22941,81 @@ class ReadCounterU32ExResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
 
 global___ReadCounterU32ExResponse = ReadCounterU32ExResponse
+
+@typing.final
+class BeginReadCounterU32ExRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    FILL_MODE_FIELD_NUMBER: builtins.int
+    FILL_MODE_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    fill_mode: global___GroupBy.ValueType
+    fill_mode_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        fill_mode: global___GroupBy.ValueType = ...,
+        fill_mode_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["fill_mode_enum", b"fill_mode_enum"]) -> typing.Literal["fill_mode", "fill_mode_raw"] | None: ...
+
+global___BeginReadCounterU32ExRequest = BeginReadCounterU32ExRequest
+
+@typing.final
+class BeginReadCounterU32ExResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadCounterU32ExResponse = BeginReadCounterU32ExResponse
+
+@typing.final
+class MonikerReadCounterU32ExResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array: collections.abc.Iterable[builtins.int] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadCounterU32ExResponse = MonikerReadCounterU32ExResponse
 
 @typing.final
 class ReadCtrFreqRequest(google.protobuf.message.Message):
@@ -22174,6 +23077,85 @@ class ReadCtrFreqResponse(google.protobuf.message.Message):
 global___ReadCtrFreqResponse = ReadCtrFreqResponse
 
 @typing.final
+class BeginReadCtrFreqRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    INTERLEAVED_FIELD_NUMBER: builtins.int
+    INTERLEAVED_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    interleaved: global___GroupBy.ValueType
+    interleaved_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        interleaved: global___GroupBy.ValueType = ...,
+        interleaved_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["interleaved", b"interleaved", "interleaved_enum", b"interleaved_enum", "interleaved_raw", b"interleaved_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "interleaved", b"interleaved", "interleaved_enum", b"interleaved_enum", "interleaved_raw", b"interleaved_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["interleaved_enum", b"interleaved_enum"]) -> typing.Literal["interleaved", "interleaved_raw"] | None: ...
+
+global___BeginReadCtrFreqRequest = BeginReadCtrFreqRequest
+
+@typing.final
+class BeginReadCtrFreqResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadCtrFreqResponse = BeginReadCtrFreqResponse
+
+@typing.final
+class MonikerReadCtrFreqResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FREQUENCY_FIELD_NUMBER: builtins.int
+    READ_ARRAY_DUTY_CYCLE_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array_frequency(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    @property
+    def read_array_duty_cycle(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array_frequency: collections.abc.Iterable[builtins.float] | None = ...,
+        read_array_duty_cycle: collections.abc.Iterable[builtins.float] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array_duty_cycle", b"read_array_duty_cycle", "read_array_frequency", b"read_array_frequency", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadCtrFreqResponse = MonikerReadCtrFreqResponse
+
+@typing.final
 class ReadCtrFreqScalarRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -22213,6 +23195,67 @@ class ReadCtrFreqScalarResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["duty_cycle", b"duty_cycle", "frequency", b"frequency", "status", b"status"]) -> None: ...
 
 global___ReadCtrFreqScalarResponse = ReadCtrFreqScalarResponse
+
+@typing.final
+class BeginReadCtrFreqScalarRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginReadCtrFreqScalarRequest = BeginReadCtrFreqScalarRequest
+
+@typing.final
+class BeginReadCtrFreqScalarResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadCtrFreqScalarResponse = BeginReadCtrFreqScalarResponse
+
+@typing.final
+class MonikerReadCtrFreqScalarResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    FREQUENCY_FIELD_NUMBER: builtins.int
+    DUTY_CYCLE_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    frequency: builtins.float
+    duty_cycle: builtins.float
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        frequency: builtins.float = ...,
+        duty_cycle: builtins.float = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["duty_cycle", b"duty_cycle", "frequency", b"frequency", "status", b"status"]) -> None: ...
+
+global___MonikerReadCtrFreqScalarResponse = MonikerReadCtrFreqScalarResponse
 
 @typing.final
 class ReadCtrTicksRequest(google.protobuf.message.Message):
@@ -22274,6 +23317,85 @@ class ReadCtrTicksResponse(google.protobuf.message.Message):
 global___ReadCtrTicksResponse = ReadCtrTicksResponse
 
 @typing.final
+class BeginReadCtrTicksRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    INTERLEAVED_FIELD_NUMBER: builtins.int
+    INTERLEAVED_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    interleaved: global___GroupBy.ValueType
+    interleaved_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        interleaved: global___GroupBy.ValueType = ...,
+        interleaved_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["interleaved", b"interleaved", "interleaved_enum", b"interleaved_enum", "interleaved_raw", b"interleaved_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "interleaved", b"interleaved", "interleaved_enum", b"interleaved_enum", "interleaved_raw", b"interleaved_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["interleaved_enum", b"interleaved_enum"]) -> typing.Literal["interleaved", "interleaved_raw"] | None: ...
+
+global___BeginReadCtrTicksRequest = BeginReadCtrTicksRequest
+
+@typing.final
+class BeginReadCtrTicksResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadCtrTicksResponse = BeginReadCtrTicksResponse
+
+@typing.final
+class MonikerReadCtrTicksResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_HIGH_TICKS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_LOW_TICKS_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array_high_ticks(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    @property
+    def read_array_low_ticks(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array_high_ticks: collections.abc.Iterable[builtins.int] | None = ...,
+        read_array_low_ticks: collections.abc.Iterable[builtins.int] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array_high_ticks", b"read_array_high_ticks", "read_array_low_ticks", b"read_array_low_ticks", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadCtrTicksResponse = MonikerReadCtrTicksResponse
+
+@typing.final
 class ReadCtrTicksScalarRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -22313,6 +23435,67 @@ class ReadCtrTicksScalarResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["high_ticks", b"high_ticks", "low_ticks", b"low_ticks", "status", b"status"]) -> None: ...
 
 global___ReadCtrTicksScalarResponse = ReadCtrTicksScalarResponse
+
+@typing.final
+class BeginReadCtrTicksScalarRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginReadCtrTicksScalarRequest = BeginReadCtrTicksScalarRequest
+
+@typing.final
+class BeginReadCtrTicksScalarResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadCtrTicksScalarResponse = BeginReadCtrTicksScalarResponse
+
+@typing.final
+class MonikerReadCtrTicksScalarResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    HIGH_TICKS_FIELD_NUMBER: builtins.int
+    LOW_TICKS_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    high_ticks: builtins.int
+    low_ticks: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        high_ticks: builtins.int = ...,
+        low_ticks: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["high_ticks", b"high_ticks", "low_ticks", b"low_ticks", "status", b"status"]) -> None: ...
+
+global___MonikerReadCtrTicksScalarResponse = MonikerReadCtrTicksScalarResponse
 
 @typing.final
 class ReadCtrTimeRequest(google.protobuf.message.Message):
@@ -22374,6 +23557,85 @@ class ReadCtrTimeResponse(google.protobuf.message.Message):
 global___ReadCtrTimeResponse = ReadCtrTimeResponse
 
 @typing.final
+class BeginReadCtrTimeRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    INTERLEAVED_FIELD_NUMBER: builtins.int
+    INTERLEAVED_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    interleaved: global___GroupBy.ValueType
+    interleaved_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        interleaved: global___GroupBy.ValueType = ...,
+        interleaved_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["interleaved", b"interleaved", "interleaved_enum", b"interleaved_enum", "interleaved_raw", b"interleaved_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "interleaved", b"interleaved", "interleaved_enum", b"interleaved_enum", "interleaved_raw", b"interleaved_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["interleaved_enum", b"interleaved_enum"]) -> typing.Literal["interleaved", "interleaved_raw"] | None: ...
+
+global___BeginReadCtrTimeRequest = BeginReadCtrTimeRequest
+
+@typing.final
+class BeginReadCtrTimeResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadCtrTimeResponse = BeginReadCtrTimeResponse
+
+@typing.final
+class MonikerReadCtrTimeResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_HIGH_TIME_FIELD_NUMBER: builtins.int
+    READ_ARRAY_LOW_TIME_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array_high_time(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    @property
+    def read_array_low_time(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array_high_time: collections.abc.Iterable[builtins.float] | None = ...,
+        read_array_low_time: collections.abc.Iterable[builtins.float] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array_high_time", b"read_array_high_time", "read_array_low_time", b"read_array_low_time", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadCtrTimeResponse = MonikerReadCtrTimeResponse
+
+@typing.final
 class ReadCtrTimeScalarRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -22413,6 +23675,67 @@ class ReadCtrTimeScalarResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["high_time", b"high_time", "low_time", b"low_time", "status", b"status"]) -> None: ...
 
 global___ReadCtrTimeScalarResponse = ReadCtrTimeScalarResponse
+
+@typing.final
+class BeginReadCtrTimeScalarRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginReadCtrTimeScalarRequest = BeginReadCtrTimeScalarRequest
+
+@typing.final
+class BeginReadCtrTimeScalarResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadCtrTimeScalarResponse = BeginReadCtrTimeScalarResponse
+
+@typing.final
+class MonikerReadCtrTimeScalarResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    HIGH_TIME_FIELD_NUMBER: builtins.int
+    LOW_TIME_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    high_time: builtins.float
+    low_time: builtins.float
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        high_time: builtins.float = ...,
+        low_time: builtins.float = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["high_time", b"high_time", "low_time", b"low_time", "status", b"status"]) -> None: ...
+
+global___MonikerReadCtrTimeScalarResponse = MonikerReadCtrTimeScalarResponse
 
 @typing.final
 class ReadDigitalLinesRequest(google.protobuf.message.Message):
@@ -22472,6 +23795,86 @@ class ReadDigitalLinesResponse(google.protobuf.message.Message):
 global___ReadDigitalLinesResponse = ReadDigitalLinesResponse
 
 @typing.final
+class BeginReadDigitalLinesRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    FILL_MODE_FIELD_NUMBER: builtins.int
+    FILL_MODE_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_BYTES_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    fill_mode: global___GroupBy.ValueType
+    fill_mode_raw: builtins.int
+    array_size_in_bytes: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        fill_mode: global___GroupBy.ValueType = ...,
+        fill_mode_raw: builtins.int = ...,
+        array_size_in_bytes: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_bytes", b"array_size_in_bytes", "fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["fill_mode_enum", b"fill_mode_enum"]) -> typing.Literal["fill_mode", "fill_mode_raw"] | None: ...
+
+global___BeginReadDigitalLinesRequest = BeginReadDigitalLinesRequest
+
+@typing.final
+class BeginReadDigitalLinesResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    NUM_BYTES_PER_SAMP_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    num_bytes_per_samp: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        num_bytes_per_samp: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "num_bytes_per_samp", b"num_bytes_per_samp", "status", b"status"]) -> None: ...
+
+global___BeginReadDigitalLinesResponse = BeginReadDigitalLinesResponse
+
+@typing.final
+class MonikerReadDigitalLinesResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    NUM_BYTES_PER_SAMP_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    read_array: builtins.bytes
+    samps_per_chan_read: builtins.int
+    num_bytes_per_samp: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array: builtins.bytes = ...,
+        samps_per_chan_read: builtins.int = ...,
+        num_bytes_per_samp: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["num_bytes_per_samp", b"num_bytes_per_samp", "read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadDigitalLinesResponse = MonikerReadDigitalLinesResponse
+
+@typing.final
 class ReadDigitalScalarU32Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -22508,6 +23911,64 @@ class ReadDigitalScalarU32Response(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["status", b"status", "value", b"value"]) -> None: ...
 
 global___ReadDigitalScalarU32Response = ReadDigitalScalarU32Response
+
+@typing.final
+class BeginReadDigitalScalarU32Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginReadDigitalScalarU32Request = BeginReadDigitalScalarU32Request
+
+@typing.final
+class BeginReadDigitalScalarU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadDigitalScalarU32Response = BeginReadDigitalScalarU32Response
+
+@typing.final
+class MonikerReadDigitalScalarU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    VALUE_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    value: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        value: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["status", b"status", "value", b"value"]) -> None: ...
+
+global___MonikerReadDigitalScalarU32Response = MonikerReadDigitalScalarU32Response
 
 @typing.final
 class ReadDigitalU16Request(google.protobuf.message.Message):
@@ -22565,6 +24026,81 @@ class ReadDigitalU16Response(google.protobuf.message.Message):
 global___ReadDigitalU16Response = ReadDigitalU16Response
 
 @typing.final
+class BeginReadDigitalU16Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    FILL_MODE_FIELD_NUMBER: builtins.int
+    FILL_MODE_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    fill_mode: global___GroupBy.ValueType
+    fill_mode_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        fill_mode: global___GroupBy.ValueType = ...,
+        fill_mode_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["fill_mode_enum", b"fill_mode_enum"]) -> typing.Literal["fill_mode", "fill_mode_raw"] | None: ...
+
+global___BeginReadDigitalU16Request = BeginReadDigitalU16Request
+
+@typing.final
+class BeginReadDigitalU16Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadDigitalU16Response = BeginReadDigitalU16Response
+
+@typing.final
+class MonikerReadDigitalU16Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array: collections.abc.Iterable[builtins.int] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadDigitalU16Response = MonikerReadDigitalU16Response
+
+@typing.final
 class ReadDigitalU32Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -22620,6 +24156,81 @@ class ReadDigitalU32Response(google.protobuf.message.Message):
 global___ReadDigitalU32Response = ReadDigitalU32Response
 
 @typing.final
+class BeginReadDigitalU32Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    FILL_MODE_FIELD_NUMBER: builtins.int
+    FILL_MODE_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    fill_mode: global___GroupBy.ValueType
+    fill_mode_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        fill_mode: global___GroupBy.ValueType = ...,
+        fill_mode_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["fill_mode_enum", b"fill_mode_enum"]) -> typing.Literal["fill_mode", "fill_mode_raw"] | None: ...
+
+global___BeginReadDigitalU32Request = BeginReadDigitalU32Request
+
+@typing.final
+class BeginReadDigitalU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadDigitalU32Response = BeginReadDigitalU32Response
+
+@typing.final
+class MonikerReadDigitalU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array: collections.abc.Iterable[builtins.int] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadDigitalU32Response = MonikerReadDigitalU32Response
+
+@typing.final
 class ReadDigitalU8Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -22672,6 +24283,125 @@ class ReadDigitalU8Response(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
 
 global___ReadDigitalU8Response = ReadDigitalU8Response
+
+@typing.final
+class BeginReadDigitalU8Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    FILL_MODE_FIELD_NUMBER: builtins.int
+    FILL_MODE_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    fill_mode: global___GroupBy.ValueType
+    fill_mode_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        fill_mode: global___GroupBy.ValueType = ...,
+        fill_mode_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["fill_mode_enum", b"fill_mode_enum"]) -> typing.Literal["fill_mode", "fill_mode_raw"] | None: ...
+
+global___BeginReadDigitalU8Request = BeginReadDigitalU8Request
+
+@typing.final
+class BeginReadDigitalU8Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadDigitalU8Response = BeginReadDigitalU8Response
+
+@typing.final
+class MonikerReadDigitalU8Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    read_array: builtins.bytes
+    samps_per_chan_read: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array: builtins.bytes = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array", b"read_array", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadDigitalU8Response = MonikerReadDigitalU8Response
+
+@typing.final
+class ReadIDPinMemoryRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    DEVICE_NAME_FIELD_NUMBER: builtins.int
+    ID_PIN_NAME_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_FIELD_NUMBER: builtins.int
+    device_name: builtins.str
+    id_pin_name: builtins.str
+    array_size: builtins.int
+    def __init__(
+        self,
+        *,
+        device_name: builtins.str = ...,
+        id_pin_name: builtins.str = ...,
+        array_size: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["array_size", b"array_size", "device_name", b"device_name", "id_pin_name", b"id_pin_name"]) -> None: ...
+
+global___ReadIDPinMemoryRequest = ReadIDPinMemoryRequest
+
+@typing.final
+class ReadIDPinMemoryResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    DATA_FIELD_NUMBER: builtins.int
+    DATA_LENGTH_READ_FIELD_NUMBER: builtins.int
+    FORMAT_CODE_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    data: builtins.bytes
+    data_length_read: builtins.int
+    format_code: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        data: builtins.bytes = ...,
+        data_length_read: builtins.int = ...,
+        format_code: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["data", b"data", "data_length_read", b"data_length_read", "format_code", b"format_code", "status", b"status"]) -> None: ...
+
+global___ReadIDPinMemoryResponse = ReadIDPinMemoryResponse
 
 @typing.final
 class ReadPowerBinaryI16Request(google.protobuf.message.Message):
@@ -22733,6 +24463,85 @@ class ReadPowerBinaryI16Response(google.protobuf.message.Message):
 global___ReadPowerBinaryI16Response = ReadPowerBinaryI16Response
 
 @typing.final
+class BeginReadPowerBinaryI16Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    FILL_MODE_FIELD_NUMBER: builtins.int
+    FILL_MODE_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    fill_mode: global___GroupBy.ValueType
+    fill_mode_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        fill_mode: global___GroupBy.ValueType = ...,
+        fill_mode_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["fill_mode_enum", b"fill_mode_enum"]) -> typing.Literal["fill_mode", "fill_mode_raw"] | None: ...
+
+global___BeginReadPowerBinaryI16Request = BeginReadPowerBinaryI16Request
+
+@typing.final
+class BeginReadPowerBinaryI16Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadPowerBinaryI16Response = BeginReadPowerBinaryI16Response
+
+@typing.final
+class MonikerReadPowerBinaryI16Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_VOLTAGE_FIELD_NUMBER: builtins.int
+    READ_ARRAY_CURRENT_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array_voltage(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    @property
+    def read_array_current(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array_voltage: collections.abc.Iterable[builtins.int] | None = ...,
+        read_array_current: collections.abc.Iterable[builtins.int] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array_current", b"read_array_current", "read_array_voltage", b"read_array_voltage", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadPowerBinaryI16Response = MonikerReadPowerBinaryI16Response
+
+@typing.final
 class ReadPowerF64Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -22792,6 +24601,85 @@ class ReadPowerF64Response(google.protobuf.message.Message):
 global___ReadPowerF64Response = ReadPowerF64Response
 
 @typing.final
+class BeginReadPowerF64Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    FILL_MODE_FIELD_NUMBER: builtins.int
+    FILL_MODE_RAW_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_SAMPS_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    fill_mode: global___GroupBy.ValueType
+    fill_mode_raw: builtins.int
+    array_size_in_samps: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        fill_mode: global___GroupBy.ValueType = ...,
+        fill_mode_raw: builtins.int = ...,
+        array_size_in_samps: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_samps", b"array_size_in_samps", "fill_mode", b"fill_mode", "fill_mode_enum", b"fill_mode_enum", "fill_mode_raw", b"fill_mode_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["fill_mode_enum", b"fill_mode_enum"]) -> typing.Literal["fill_mode", "fill_mode_raw"] | None: ...
+
+global___BeginReadPowerF64Request = BeginReadPowerF64Request
+
+@typing.final
+class BeginReadPowerF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadPowerF64Response = BeginReadPowerF64Response
+
+@typing.final
+class MonikerReadPowerF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_VOLTAGE_FIELD_NUMBER: builtins.int
+    READ_ARRAY_CURRENT_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_READ_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_read: builtins.int
+    @property
+    def read_array_voltage(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    @property
+    def read_array_current(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array_voltage: collections.abc.Iterable[builtins.float] | None = ...,
+        read_array_current: collections.abc.Iterable[builtins.float] | None = ...,
+        samps_per_chan_read: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["read_array_current", b"read_array_current", "read_array_voltage", b"read_array_voltage", "samps_per_chan_read", b"samps_per_chan_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadPowerF64Response = MonikerReadPowerF64Response
+
+@typing.final
 class ReadPowerScalarF64Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -22831,6 +24719,67 @@ class ReadPowerScalarF64Response(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["current", b"current", "status", b"status", "voltage", b"voltage"]) -> None: ...
 
 global___ReadPowerScalarF64Response = ReadPowerScalarF64Response
+
+@typing.final
+class BeginReadPowerScalarF64Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginReadPowerScalarF64Request = BeginReadPowerScalarF64Request
+
+@typing.final
+class BeginReadPowerScalarF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadPowerScalarF64Response = BeginReadPowerScalarF64Response
+
+@typing.final
+class MonikerReadPowerScalarF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    VOLTAGE_FIELD_NUMBER: builtins.int
+    CURRENT_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    voltage: builtins.float
+    current: builtins.float
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        voltage: builtins.float = ...,
+        current: builtins.float = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["current", b"current", "status", b"status", "voltage", b"voltage"]) -> None: ...
+
+global___MonikerReadPowerScalarF64Response = MonikerReadPowerScalarF64Response
 
 @typing.final
 class ReadRawRequest(google.protobuf.message.Message):
@@ -22881,6 +24830,76 @@ class ReadRawResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["num_bytes_per_samp", b"num_bytes_per_samp", "read_array", b"read_array", "samps_read", b"samps_read", "status", b"status"]) -> None: ...
 
 global___ReadRawResponse = ReadRawResponse
+
+@typing.final
+class BeginReadRawRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    ARRAY_SIZE_IN_BYTES_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    timeout: builtins.float
+    array_size_in_bytes: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        timeout: builtins.float = ...,
+        array_size_in_bytes: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["array_size_in_bytes", b"array_size_in_bytes", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginReadRawRequest = BeginReadRawRequest
+
+@typing.final
+class BeginReadRawResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginReadRawResponse = BeginReadRawResponse
+
+@typing.final
+class MonikerReadRawResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    READ_ARRAY_FIELD_NUMBER: builtins.int
+    SAMPS_READ_FIELD_NUMBER: builtins.int
+    NUM_BYTES_PER_SAMP_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    read_array: builtins.bytes
+    samps_read: builtins.int
+    num_bytes_per_samp: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        read_array: builtins.bytes = ...,
+        samps_read: builtins.int = ...,
+        num_bytes_per_samp: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["num_bytes_per_samp", b"num_bytes_per_samp", "read_array", b"read_array", "samps_read", b"samps_read", "status", b"status"]) -> None: ...
+
+global___MonikerReadRawResponse = MonikerReadRawResponse
 
 @typing.final
 class RegisterDoneEventRequest(google.protobuf.message.Message):
@@ -27167,6 +29186,64 @@ class WaitForNextSampleClockResponse(google.protobuf.message.Message):
 global___WaitForNextSampleClockResponse = WaitForNextSampleClockResponse
 
 @typing.final
+class BeginWaitForNextSampleClockRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginWaitForNextSampleClockRequest = BeginWaitForNextSampleClockRequest
+
+@typing.final
+class BeginWaitForNextSampleClockResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWaitForNextSampleClockResponse = BeginWaitForNextSampleClockResponse
+
+@typing.final
+class MonikerWaitForNextSampleClockResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    IS_LATE_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    is_late: builtins.bool
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        is_late: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["is_late", b"is_late", "status", b"status"]) -> None: ...
+
+global___MonikerWaitForNextSampleClockResponse = MonikerWaitForNextSampleClockResponse
+
+@typing.final
 class WaitForValidTimestampRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -27304,6 +29381,93 @@ class WriteAnalogF64Response(google.protobuf.message.Message):
 global___WriteAnalogF64Response = WriteAnalogF64Response
 
 @typing.final
+class BeginWriteAnalogF64Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_RAW_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    data_layout: global___GroupBy.ValueType
+    data_layout_raw: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+        data_layout: global___GroupBy.ValueType = ...,
+        data_layout_raw: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["data_layout_enum", b"data_layout_enum"]) -> typing.Literal["data_layout", "data_layout_raw"] | None: ...
+
+global___BeginWriteAnalogF64Request = BeginWriteAnalogF64Request
+
+@typing.final
+class BeginWriteAnalogF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteAnalogF64Response = BeginWriteAnalogF64Response
+
+@typing.final
+class MonikerWriteAnalogF64Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    WRITE_ARRAY_FIELD_NUMBER: builtins.int
+    @property
+    def write_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    def __init__(
+        self,
+        *,
+        write_array: collections.abc.Iterable[builtins.float] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["write_array", b"write_array"]) -> None: ...
+
+global___MonikerWriteAnalogF64Request = MonikerWriteAnalogF64Request
+
+@typing.final
+class MonikerWriteAnalogF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_WRITTEN_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_written: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        samps_per_chan_written: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["samps_per_chan_written", b"samps_per_chan_written", "status", b"status"]) -> None: ...
+
+global___MonikerWriteAnalogF64Response = MonikerWriteAnalogF64Response
+
+@typing.final
 class WriteAnalogScalarF64Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -27343,6 +29507,79 @@ class WriteAnalogScalarF64Response(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["status", b"status"]) -> None: ...
 
 global___WriteAnalogScalarF64Response = WriteAnalogScalarF64Response
+
+@typing.final
+class BeginWriteAnalogScalarF64Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginWriteAnalogScalarF64Request = BeginWriteAnalogScalarF64Request
+
+@typing.final
+class BeginWriteAnalogScalarF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteAnalogScalarF64Response = BeginWriteAnalogScalarF64Response
+
+@typing.final
+class MonikerWriteAnalogScalarF64Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    VALUE_FIELD_NUMBER: builtins.int
+    value: builtins.float
+    def __init__(
+        self,
+        *,
+        value: builtins.float = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["value", b"value"]) -> None: ...
+
+global___MonikerWriteAnalogScalarF64Request = MonikerWriteAnalogScalarF64Request
+
+@typing.final
+class MonikerWriteAnalogScalarF64Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["status", b"status"]) -> None: ...
+
+global___MonikerWriteAnalogScalarF64Response = MonikerWriteAnalogScalarF64Response
 
 @typing.final
 class WriteBinaryI16Request(google.protobuf.message.Message):
@@ -27400,6 +29637,93 @@ class WriteBinaryI16Response(google.protobuf.message.Message):
 global___WriteBinaryI16Response = WriteBinaryI16Response
 
 @typing.final
+class BeginWriteBinaryI16Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_RAW_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    data_layout: global___GroupBy.ValueType
+    data_layout_raw: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+        data_layout: global___GroupBy.ValueType = ...,
+        data_layout_raw: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["data_layout_enum", b"data_layout_enum"]) -> typing.Literal["data_layout", "data_layout_raw"] | None: ...
+
+global___BeginWriteBinaryI16Request = BeginWriteBinaryI16Request
+
+@typing.final
+class BeginWriteBinaryI16Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteBinaryI16Response = BeginWriteBinaryI16Response
+
+@typing.final
+class MonikerWriteBinaryI16Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    WRITE_ARRAY_FIELD_NUMBER: builtins.int
+    @property
+    def write_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        write_array: collections.abc.Iterable[builtins.int] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["write_array", b"write_array"]) -> None: ...
+
+global___MonikerWriteBinaryI16Request = MonikerWriteBinaryI16Request
+
+@typing.final
+class MonikerWriteBinaryI16Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_WRITTEN_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_written: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        samps_per_chan_written: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["samps_per_chan_written", b"samps_per_chan_written", "status", b"status"]) -> None: ...
+
+global___MonikerWriteBinaryI16Response = MonikerWriteBinaryI16Response
+
+@typing.final
 class WriteBinaryI32Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -27453,6 +29777,93 @@ class WriteBinaryI32Response(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["samps_per_chan_written", b"samps_per_chan_written", "status", b"status"]) -> None: ...
 
 global___WriteBinaryI32Response = WriteBinaryI32Response
+
+@typing.final
+class BeginWriteBinaryI32Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_RAW_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    data_layout: global___GroupBy.ValueType
+    data_layout_raw: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+        data_layout: global___GroupBy.ValueType = ...,
+        data_layout_raw: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["data_layout_enum", b"data_layout_enum"]) -> typing.Literal["data_layout", "data_layout_raw"] | None: ...
+
+global___BeginWriteBinaryI32Request = BeginWriteBinaryI32Request
+
+@typing.final
+class BeginWriteBinaryI32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteBinaryI32Response = BeginWriteBinaryI32Response
+
+@typing.final
+class MonikerWriteBinaryI32Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    WRITE_ARRAY_FIELD_NUMBER: builtins.int
+    @property
+    def write_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        write_array: collections.abc.Iterable[builtins.int] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["write_array", b"write_array"]) -> None: ...
+
+global___MonikerWriteBinaryI32Request = MonikerWriteBinaryI32Request
+
+@typing.final
+class MonikerWriteBinaryI32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_WRITTEN_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_written: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        samps_per_chan_written: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["samps_per_chan_written", b"samps_per_chan_written", "status", b"status"]) -> None: ...
+
+global___MonikerWriteBinaryI32Response = MonikerWriteBinaryI32Response
 
 @typing.final
 class WriteBinaryU16Request(google.protobuf.message.Message):
@@ -27510,6 +29921,93 @@ class WriteBinaryU16Response(google.protobuf.message.Message):
 global___WriteBinaryU16Response = WriteBinaryU16Response
 
 @typing.final
+class BeginWriteBinaryU16Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_RAW_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    data_layout: global___GroupBy.ValueType
+    data_layout_raw: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+        data_layout: global___GroupBy.ValueType = ...,
+        data_layout_raw: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["data_layout_enum", b"data_layout_enum"]) -> typing.Literal["data_layout", "data_layout_raw"] | None: ...
+
+global___BeginWriteBinaryU16Request = BeginWriteBinaryU16Request
+
+@typing.final
+class BeginWriteBinaryU16Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteBinaryU16Response = BeginWriteBinaryU16Response
+
+@typing.final
+class MonikerWriteBinaryU16Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    WRITE_ARRAY_FIELD_NUMBER: builtins.int
+    @property
+    def write_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        write_array: collections.abc.Iterable[builtins.int] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["write_array", b"write_array"]) -> None: ...
+
+global___MonikerWriteBinaryU16Request = MonikerWriteBinaryU16Request
+
+@typing.final
+class MonikerWriteBinaryU16Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_WRITTEN_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_written: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        samps_per_chan_written: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["samps_per_chan_written", b"samps_per_chan_written", "status", b"status"]) -> None: ...
+
+global___MonikerWriteBinaryU16Response = MonikerWriteBinaryU16Response
+
+@typing.final
 class WriteBinaryU32Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -27563,6 +30061,93 @@ class WriteBinaryU32Response(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["samps_per_chan_written", b"samps_per_chan_written", "status", b"status"]) -> None: ...
 
 global___WriteBinaryU32Response = WriteBinaryU32Response
+
+@typing.final
+class BeginWriteBinaryU32Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_RAW_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    data_layout: global___GroupBy.ValueType
+    data_layout_raw: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+        data_layout: global___GroupBy.ValueType = ...,
+        data_layout_raw: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["data_layout_enum", b"data_layout_enum"]) -> typing.Literal["data_layout", "data_layout_raw"] | None: ...
+
+global___BeginWriteBinaryU32Request = BeginWriteBinaryU32Request
+
+@typing.final
+class BeginWriteBinaryU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteBinaryU32Response = BeginWriteBinaryU32Response
+
+@typing.final
+class MonikerWriteBinaryU32Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    WRITE_ARRAY_FIELD_NUMBER: builtins.int
+    @property
+    def write_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        write_array: collections.abc.Iterable[builtins.int] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["write_array", b"write_array"]) -> None: ...
+
+global___MonikerWriteBinaryU32Request = MonikerWriteBinaryU32Request
+
+@typing.final
+class MonikerWriteBinaryU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_WRITTEN_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_written: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        samps_per_chan_written: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["samps_per_chan_written", b"samps_per_chan_written", "status", b"status"]) -> None: ...
+
+global___MonikerWriteBinaryU32Response = MonikerWriteBinaryU32Response
 
 @typing.final
 class WriteCtrFreqRequest(google.protobuf.message.Message):
@@ -27624,6 +30209,97 @@ class WriteCtrFreqResponse(google.protobuf.message.Message):
 global___WriteCtrFreqResponse = WriteCtrFreqResponse
 
 @typing.final
+class BeginWriteCtrFreqRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_RAW_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    data_layout: global___GroupBy.ValueType
+    data_layout_raw: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+        data_layout: global___GroupBy.ValueType = ...,
+        data_layout_raw: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["data_layout_enum", b"data_layout_enum"]) -> typing.Literal["data_layout", "data_layout_raw"] | None: ...
+
+global___BeginWriteCtrFreqRequest = BeginWriteCtrFreqRequest
+
+@typing.final
+class BeginWriteCtrFreqResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteCtrFreqResponse = BeginWriteCtrFreqResponse
+
+@typing.final
+class MonikerWriteCtrFreqRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    FREQUENCY_FIELD_NUMBER: builtins.int
+    DUTY_CYCLE_FIELD_NUMBER: builtins.int
+    @property
+    def frequency(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    @property
+    def duty_cycle(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    def __init__(
+        self,
+        *,
+        frequency: collections.abc.Iterable[builtins.float] | None = ...,
+        duty_cycle: collections.abc.Iterable[builtins.float] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["duty_cycle", b"duty_cycle", "frequency", b"frequency"]) -> None: ...
+
+global___MonikerWriteCtrFreqRequest = MonikerWriteCtrFreqRequest
+
+@typing.final
+class MonikerWriteCtrFreqResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_WRITTEN_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    num_samps_per_chan_written: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        num_samps_per_chan_written: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["num_samps_per_chan_written", b"num_samps_per_chan_written", "status", b"status"]) -> None: ...
+
+global___MonikerWriteCtrFreqResponse = MonikerWriteCtrFreqResponse
+
+@typing.final
 class WriteCtrFreqScalarRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -27666,6 +30342,82 @@ class WriteCtrFreqScalarResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["status", b"status"]) -> None: ...
 
 global___WriteCtrFreqScalarResponse = WriteCtrFreqScalarResponse
+
+@typing.final
+class BeginWriteCtrFreqScalarRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginWriteCtrFreqScalarRequest = BeginWriteCtrFreqScalarRequest
+
+@typing.final
+class BeginWriteCtrFreqScalarResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteCtrFreqScalarResponse = BeginWriteCtrFreqScalarResponse
+
+@typing.final
+class MonikerWriteCtrFreqScalarRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    FREQUENCY_FIELD_NUMBER: builtins.int
+    DUTY_CYCLE_FIELD_NUMBER: builtins.int
+    frequency: builtins.float
+    duty_cycle: builtins.float
+    def __init__(
+        self,
+        *,
+        frequency: builtins.float = ...,
+        duty_cycle: builtins.float = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["duty_cycle", b"duty_cycle", "frequency", b"frequency"]) -> None: ...
+
+global___MonikerWriteCtrFreqScalarRequest = MonikerWriteCtrFreqScalarRequest
+
+@typing.final
+class MonikerWriteCtrFreqScalarResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["status", b"status"]) -> None: ...
+
+global___MonikerWriteCtrFreqScalarResponse = MonikerWriteCtrFreqScalarResponse
 
 @typing.final
 class WriteCtrTicksRequest(google.protobuf.message.Message):
@@ -27727,6 +30479,97 @@ class WriteCtrTicksResponse(google.protobuf.message.Message):
 global___WriteCtrTicksResponse = WriteCtrTicksResponse
 
 @typing.final
+class BeginWriteCtrTicksRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_RAW_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    data_layout: global___GroupBy.ValueType
+    data_layout_raw: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+        data_layout: global___GroupBy.ValueType = ...,
+        data_layout_raw: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["data_layout_enum", b"data_layout_enum"]) -> typing.Literal["data_layout", "data_layout_raw"] | None: ...
+
+global___BeginWriteCtrTicksRequest = BeginWriteCtrTicksRequest
+
+@typing.final
+class BeginWriteCtrTicksResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteCtrTicksResponse = BeginWriteCtrTicksResponse
+
+@typing.final
+class MonikerWriteCtrTicksRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    HIGH_TICKS_FIELD_NUMBER: builtins.int
+    LOW_TICKS_FIELD_NUMBER: builtins.int
+    @property
+    def high_ticks(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    @property
+    def low_ticks(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        high_ticks: collections.abc.Iterable[builtins.int] | None = ...,
+        low_ticks: collections.abc.Iterable[builtins.int] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["high_ticks", b"high_ticks", "low_ticks", b"low_ticks"]) -> None: ...
+
+global___MonikerWriteCtrTicksRequest = MonikerWriteCtrTicksRequest
+
+@typing.final
+class MonikerWriteCtrTicksResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_WRITTEN_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    num_samps_per_chan_written: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        num_samps_per_chan_written: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["num_samps_per_chan_written", b"num_samps_per_chan_written", "status", b"status"]) -> None: ...
+
+global___MonikerWriteCtrTicksResponse = MonikerWriteCtrTicksResponse
+
+@typing.final
 class WriteCtrTicksScalarRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -27769,6 +30612,82 @@ class WriteCtrTicksScalarResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["status", b"status"]) -> None: ...
 
 global___WriteCtrTicksScalarResponse = WriteCtrTicksScalarResponse
+
+@typing.final
+class BeginWriteCtrTicksScalarRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginWriteCtrTicksScalarRequest = BeginWriteCtrTicksScalarRequest
+
+@typing.final
+class BeginWriteCtrTicksScalarResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteCtrTicksScalarResponse = BeginWriteCtrTicksScalarResponse
+
+@typing.final
+class MonikerWriteCtrTicksScalarRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    HIGH_TICKS_FIELD_NUMBER: builtins.int
+    LOW_TICKS_FIELD_NUMBER: builtins.int
+    high_ticks: builtins.int
+    low_ticks: builtins.int
+    def __init__(
+        self,
+        *,
+        high_ticks: builtins.int = ...,
+        low_ticks: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["high_ticks", b"high_ticks", "low_ticks", b"low_ticks"]) -> None: ...
+
+global___MonikerWriteCtrTicksScalarRequest = MonikerWriteCtrTicksScalarRequest
+
+@typing.final
+class MonikerWriteCtrTicksScalarResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["status", b"status"]) -> None: ...
+
+global___MonikerWriteCtrTicksScalarResponse = MonikerWriteCtrTicksScalarResponse
 
 @typing.final
 class WriteCtrTimeRequest(google.protobuf.message.Message):
@@ -27830,6 +30749,97 @@ class WriteCtrTimeResponse(google.protobuf.message.Message):
 global___WriteCtrTimeResponse = WriteCtrTimeResponse
 
 @typing.final
+class BeginWriteCtrTimeRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_RAW_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    data_layout: global___GroupBy.ValueType
+    data_layout_raw: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+        data_layout: global___GroupBy.ValueType = ...,
+        data_layout_raw: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["data_layout_enum", b"data_layout_enum"]) -> typing.Literal["data_layout", "data_layout_raw"] | None: ...
+
+global___BeginWriteCtrTimeRequest = BeginWriteCtrTimeRequest
+
+@typing.final
+class BeginWriteCtrTimeResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteCtrTimeResponse = BeginWriteCtrTimeResponse
+
+@typing.final
+class MonikerWriteCtrTimeRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    HIGH_TIME_FIELD_NUMBER: builtins.int
+    LOW_TIME_FIELD_NUMBER: builtins.int
+    @property
+    def high_time(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    @property
+    def low_time(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.float]: ...
+    def __init__(
+        self,
+        *,
+        high_time: collections.abc.Iterable[builtins.float] | None = ...,
+        low_time: collections.abc.Iterable[builtins.float] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["high_time", b"high_time", "low_time", b"low_time"]) -> None: ...
+
+global___MonikerWriteCtrTimeRequest = MonikerWriteCtrTimeRequest
+
+@typing.final
+class MonikerWriteCtrTimeResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_WRITTEN_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    num_samps_per_chan_written: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        num_samps_per_chan_written: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["num_samps_per_chan_written", b"num_samps_per_chan_written", "status", b"status"]) -> None: ...
+
+global___MonikerWriteCtrTimeResponse = MonikerWriteCtrTimeResponse
+
+@typing.final
 class WriteCtrTimeScalarRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -27872,6 +30882,82 @@ class WriteCtrTimeScalarResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["status", b"status"]) -> None: ...
 
 global___WriteCtrTimeScalarResponse = WriteCtrTimeScalarResponse
+
+@typing.final
+class BeginWriteCtrTimeScalarRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginWriteCtrTimeScalarRequest = BeginWriteCtrTimeScalarRequest
+
+@typing.final
+class BeginWriteCtrTimeScalarResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteCtrTimeScalarResponse = BeginWriteCtrTimeScalarResponse
+
+@typing.final
+class MonikerWriteCtrTimeScalarRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    HIGH_TIME_FIELD_NUMBER: builtins.int
+    LOW_TIME_FIELD_NUMBER: builtins.int
+    high_time: builtins.float
+    low_time: builtins.float
+    def __init__(
+        self,
+        *,
+        high_time: builtins.float = ...,
+        low_time: builtins.float = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["high_time", b"high_time", "low_time", b"low_time"]) -> None: ...
+
+global___MonikerWriteCtrTimeScalarRequest = MonikerWriteCtrTimeScalarRequest
+
+@typing.final
+class MonikerWriteCtrTimeScalarResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["status", b"status"]) -> None: ...
+
+global___MonikerWriteCtrTimeScalarResponse = MonikerWriteCtrTimeScalarResponse
 
 @typing.final
 class WriteDigitalLinesRequest(google.protobuf.message.Message):
@@ -27928,6 +31014,92 @@ class WriteDigitalLinesResponse(google.protobuf.message.Message):
 global___WriteDigitalLinesResponse = WriteDigitalLinesResponse
 
 @typing.final
+class BeginWriteDigitalLinesRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_RAW_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    data_layout: global___GroupBy.ValueType
+    data_layout_raw: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+        data_layout: global___GroupBy.ValueType = ...,
+        data_layout_raw: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["data_layout_enum", b"data_layout_enum"]) -> typing.Literal["data_layout", "data_layout_raw"] | None: ...
+
+global___BeginWriteDigitalLinesRequest = BeginWriteDigitalLinesRequest
+
+@typing.final
+class BeginWriteDigitalLinesResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteDigitalLinesResponse = BeginWriteDigitalLinesResponse
+
+@typing.final
+class MonikerWriteDigitalLinesRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    WRITE_ARRAY_FIELD_NUMBER: builtins.int
+    write_array: builtins.bytes
+    def __init__(
+        self,
+        *,
+        write_array: builtins.bytes = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["write_array", b"write_array"]) -> None: ...
+
+global___MonikerWriteDigitalLinesRequest = MonikerWriteDigitalLinesRequest
+
+@typing.final
+class MonikerWriteDigitalLinesResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_WRITTEN_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_written: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        samps_per_chan_written: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["samps_per_chan_written", b"samps_per_chan_written", "status", b"status"]) -> None: ...
+
+global___MonikerWriteDigitalLinesResponse = MonikerWriteDigitalLinesResponse
+
+@typing.final
 class WriteDigitalScalarU32Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -27967,6 +31139,79 @@ class WriteDigitalScalarU32Response(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["status", b"status"]) -> None: ...
 
 global___WriteDigitalScalarU32Response = WriteDigitalScalarU32Response
+
+@typing.final
+class BeginWriteDigitalScalarU32Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginWriteDigitalScalarU32Request = BeginWriteDigitalScalarU32Request
+
+@typing.final
+class BeginWriteDigitalScalarU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteDigitalScalarU32Response = BeginWriteDigitalScalarU32Response
+
+@typing.final
+class MonikerWriteDigitalScalarU32Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    VALUE_FIELD_NUMBER: builtins.int
+    value: builtins.int
+    def __init__(
+        self,
+        *,
+        value: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["value", b"value"]) -> None: ...
+
+global___MonikerWriteDigitalScalarU32Request = MonikerWriteDigitalScalarU32Request
+
+@typing.final
+class MonikerWriteDigitalScalarU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["status", b"status"]) -> None: ...
+
+global___MonikerWriteDigitalScalarU32Response = MonikerWriteDigitalScalarU32Response
 
 @typing.final
 class WriteDigitalU16Request(google.protobuf.message.Message):
@@ -28024,6 +31269,93 @@ class WriteDigitalU16Response(google.protobuf.message.Message):
 global___WriteDigitalU16Response = WriteDigitalU16Response
 
 @typing.final
+class BeginWriteDigitalU16Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_RAW_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    data_layout: global___GroupBy.ValueType
+    data_layout_raw: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+        data_layout: global___GroupBy.ValueType = ...,
+        data_layout_raw: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["data_layout_enum", b"data_layout_enum"]) -> typing.Literal["data_layout", "data_layout_raw"] | None: ...
+
+global___BeginWriteDigitalU16Request = BeginWriteDigitalU16Request
+
+@typing.final
+class BeginWriteDigitalU16Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteDigitalU16Response = BeginWriteDigitalU16Response
+
+@typing.final
+class MonikerWriteDigitalU16Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    WRITE_ARRAY_FIELD_NUMBER: builtins.int
+    @property
+    def write_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        write_array: collections.abc.Iterable[builtins.int] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["write_array", b"write_array"]) -> None: ...
+
+global___MonikerWriteDigitalU16Request = MonikerWriteDigitalU16Request
+
+@typing.final
+class MonikerWriteDigitalU16Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_WRITTEN_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_written: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        samps_per_chan_written: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["samps_per_chan_written", b"samps_per_chan_written", "status", b"status"]) -> None: ...
+
+global___MonikerWriteDigitalU16Response = MonikerWriteDigitalU16Response
+
+@typing.final
 class WriteDigitalU32Request(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -28077,6 +31409,93 @@ class WriteDigitalU32Response(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["samps_per_chan_written", b"samps_per_chan_written", "status", b"status"]) -> None: ...
 
 global___WriteDigitalU32Response = WriteDigitalU32Response
+
+@typing.final
+class BeginWriteDigitalU32Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_RAW_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    data_layout: global___GroupBy.ValueType
+    data_layout_raw: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+        data_layout: global___GroupBy.ValueType = ...,
+        data_layout_raw: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["data_layout_enum", b"data_layout_enum"]) -> typing.Literal["data_layout", "data_layout_raw"] | None: ...
+
+global___BeginWriteDigitalU32Request = BeginWriteDigitalU32Request
+
+@typing.final
+class BeginWriteDigitalU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteDigitalU32Response = BeginWriteDigitalU32Response
+
+@typing.final
+class MonikerWriteDigitalU32Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    WRITE_ARRAY_FIELD_NUMBER: builtins.int
+    @property
+    def write_array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]: ...
+    def __init__(
+        self,
+        *,
+        write_array: collections.abc.Iterable[builtins.int] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["write_array", b"write_array"]) -> None: ...
+
+global___MonikerWriteDigitalU32Request = MonikerWriteDigitalU32Request
+
+@typing.final
+class MonikerWriteDigitalU32Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_WRITTEN_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_written: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        samps_per_chan_written: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["samps_per_chan_written", b"samps_per_chan_written", "status", b"status"]) -> None: ...
+
+global___MonikerWriteDigitalU32Response = MonikerWriteDigitalU32Response
 
 @typing.final
 class WriteDigitalU8Request(google.protobuf.message.Message):
@@ -28133,6 +31552,131 @@ class WriteDigitalU8Response(google.protobuf.message.Message):
 global___WriteDigitalU8Response = WriteDigitalU8Response
 
 @typing.final
+class BeginWriteDigitalU8Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_PER_CHAN_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_FIELD_NUMBER: builtins.int
+    DATA_LAYOUT_RAW_FIELD_NUMBER: builtins.int
+    num_samps_per_chan: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    data_layout: global___GroupBy.ValueType
+    data_layout_raw: builtins.int
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps_per_chan: builtins.int = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+        data_layout: global___GroupBy.ValueType = ...,
+        data_layout_raw: builtins.int = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "data_layout", b"data_layout", "data_layout_enum", b"data_layout_enum", "data_layout_raw", b"data_layout_raw", "num_samps_per_chan", b"num_samps_per_chan", "task", b"task", "timeout", b"timeout"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing.Literal["data_layout_enum", b"data_layout_enum"]) -> typing.Literal["data_layout", "data_layout_raw"] | None: ...
+
+global___BeginWriteDigitalU8Request = BeginWriteDigitalU8Request
+
+@typing.final
+class BeginWriteDigitalU8Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteDigitalU8Response = BeginWriteDigitalU8Response
+
+@typing.final
+class MonikerWriteDigitalU8Request(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    WRITE_ARRAY_FIELD_NUMBER: builtins.int
+    write_array: builtins.bytes
+    def __init__(
+        self,
+        *,
+        write_array: builtins.bytes = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["write_array", b"write_array"]) -> None: ...
+
+global___MonikerWriteDigitalU8Request = MonikerWriteDigitalU8Request
+
+@typing.final
+class MonikerWriteDigitalU8Response(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_WRITTEN_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_written: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        samps_per_chan_written: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["samps_per_chan_written", b"samps_per_chan_written", "status", b"status"]) -> None: ...
+
+global___MonikerWriteDigitalU8Response = MonikerWriteDigitalU8Response
+
+@typing.final
+class WriteIDPinMemoryRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    DEVICE_NAME_FIELD_NUMBER: builtins.int
+    ID_PIN_NAME_FIELD_NUMBER: builtins.int
+    DATA_FIELD_NUMBER: builtins.int
+    FORMAT_CODE_FIELD_NUMBER: builtins.int
+    device_name: builtins.str
+    id_pin_name: builtins.str
+    data: builtins.bytes
+    format_code: builtins.int
+    def __init__(
+        self,
+        *,
+        device_name: builtins.str = ...,
+        id_pin_name: builtins.str = ...,
+        data: builtins.bytes = ...,
+        format_code: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["data", b"data", "device_name", b"device_name", "format_code", b"format_code", "id_pin_name", b"id_pin_name"]) -> None: ...
+
+global___WriteIDPinMemoryRequest = WriteIDPinMemoryRequest
+
+@typing.final
+class WriteIDPinMemoryResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["status", b"status"]) -> None: ...
+
+global___WriteIDPinMemoryResponse = WriteIDPinMemoryResponse
+
+@typing.final
 class WriteRawRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -28178,6 +31722,85 @@ class WriteRawResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal["samps_per_chan_written", b"samps_per_chan_written", "status", b"status"]) -> None: ...
 
 global___WriteRawResponse = WriteRawResponse
+
+@typing.final
+class BeginWriteRawRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    TASK_FIELD_NUMBER: builtins.int
+    NUM_SAMPS_FIELD_NUMBER: builtins.int
+    AUTO_START_FIELD_NUMBER: builtins.int
+    TIMEOUT_FIELD_NUMBER: builtins.int
+    num_samps: builtins.int
+    auto_start: builtins.bool
+    timeout: builtins.float
+    @property
+    def task(self) -> session_pb2.Session: ...
+    def __init__(
+        self,
+        *,
+        task: session_pb2.Session | None = ...,
+        num_samps: builtins.int = ...,
+        auto_start: builtins.bool = ...,
+        timeout: builtins.float = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["task", b"task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["auto_start", b"auto_start", "num_samps", b"num_samps", "task", b"task", "timeout", b"timeout"]) -> None: ...
+
+global___BeginWriteRawRequest = BeginWriteRawRequest
+
+@typing.final
+class BeginWriteRawResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    MONIKER_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    @property
+    def moniker(self) -> data_moniker_pb2.Moniker: ...
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        moniker: data_moniker_pb2.Moniker | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing.Literal["moniker", b"moniker"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["moniker", b"moniker", "status", b"status"]) -> None: ...
+
+global___BeginWriteRawResponse = BeginWriteRawResponse
+
+@typing.final
+class MonikerWriteRawRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    WRITE_ARRAY_FIELD_NUMBER: builtins.int
+    write_array: builtins.bytes
+    def __init__(
+        self,
+        *,
+        write_array: builtins.bytes = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["write_array", b"write_array"]) -> None: ...
+
+global___MonikerWriteRawRequest = MonikerWriteRawRequest
+
+@typing.final
+class MonikerWriteRawResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    STATUS_FIELD_NUMBER: builtins.int
+    SAMPS_PER_CHAN_WRITTEN_FIELD_NUMBER: builtins.int
+    status: builtins.int
+    samps_per_chan_written: builtins.int
+    def __init__(
+        self,
+        *,
+        status: builtins.int = ...,
+        samps_per_chan_written: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["samps_per_chan_written", b"samps_per_chan_written", "status", b"status"]) -> None: ...
+
+global___MonikerWriteRawResponse = MonikerWriteRawResponse
 
 @typing.final
 class WriteToTEDSFromArrayRequest(google.protobuf.message.Message):

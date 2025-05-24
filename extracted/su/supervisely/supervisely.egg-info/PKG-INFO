@@ -1,10 +1,10 @@
 Metadata-Version: 2.1
 Name: supervisely
-Version: 6.73.366
+Version: 6.73.367
 Summary: Supervisely Python SDK.
 Home-page: https://github.com/supervisely/supervisely
 Author: Supervisely
-Author-email: support@supervise.ly
+Author-email: support@supervisely.com
 Maintainer: Max Kolomeychenko
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers

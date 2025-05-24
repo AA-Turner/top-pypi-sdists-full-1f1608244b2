@@ -23,12 +23,11 @@ from typing import (
     Tuple,
     Union,
 )
-from urllib.parse import urlparse
 
 import eth_abi
 import requests
 import solcx
-from eth_utils import combomethod, remove_0x_prefix
+from eth_utils import combomethod
 from hexbytes import HexBytes
 from semantic_version import Version
 from vvm import get_installable_vyper_versions
@@ -58,7 +57,7 @@ from brownie.exceptions import (
 from brownie.project import compiler
 from brownie.project.flattener import Flattener
 from brownie.typing import AccountsType, TransactionReceiptType
-from brownie.utils import color
+from brownie.utils import color, hexbytes_to_hexstring
 
 from . import accounts, chain
 from .event import _add_deployment_topics, _get_topics, event_watcher
@@ -74,22 +73,6 @@ from .state import (
 from .web3 import ContractEvent, _ContractEvents, _resolve_address, web3
 
 _unverified_addresses: Set = set()
-
-_explorer_tokens = {
-    "optimistic": "OPTIMISMSCAN_TOKEN",
-    "etherscan": "ETHERSCAN_TOKEN",
-    "bscscan": "BSCSCAN_TOKEN",
-    "zkevm": "ZKEVMSCAN_TOKEN",
-    "polygonscan": "POLYGONSCAN_TOKEN",
-    "ftmscan": "FTMSCAN_TOKEN",
-    "arbiscan": "ARBISCAN_TOKEN",
-    "snowtrace": "SNOWTRACE_TOKEN",
-    "aurorascan": "AURORASCAN_TOKEN",
-    "moonscan": "MOONSCAN_TOKEN",
-    "gnosisscan": "GNOSISSCAN_TOKEN",
-    "base": "BASESCAN_TOKEN",
-    "blast": "BLASTSCAN_TOKEN",
-}
 
 
 class _ContractBase:
@@ -147,7 +130,8 @@ class _ContractBase:
         if not isinstance(calldata, HexBytes):
             calldata = HexBytes(calldata)
 
-        fn_selector = calldata[:4].hex()  # type: ignore
+        fn_selector = hexbytes_to_hexstring(calldata[:4])
+
         abi = next(
             (
                 i
@@ -219,7 +203,8 @@ class ContractContainer(_ContractBase):
             i
             for i in self._contracts
             if (i.tx and i.tx.block_number is not None and i.tx.block_number > height)
-            or len(web3.eth.get_code(i.address).hex()) <= 4
+            # removeprefix is used for compatability with both hexbytes<1 and >=1
+            or len(web3.eth.get_code(i.address).hex().removeprefix("0x")) <= 2
         ]
         for contract in reverted:
             self.remove(contract)
@@ -269,9 +254,8 @@ class ContractContainer(_ContractBase):
         contract._save_deployment()
         _add_contract(contract)
         self._contracts.append(contract)
-        if CONFIG.network_type == "live":
-            if persist:
-                _add_deployment(contract)
+        if CONFIG.network_type == "live" and persist:
+            _add_deployment(contract)
 
         return contract
 
@@ -337,25 +321,12 @@ class ContractContainer(_ContractBase):
     def publish_source(self, contract: Any, silent: bool = False) -> bool:
         """Flatten contract and publish source on the selected explorer"""
 
-        # Check required conditions for verifying
-        url = CONFIG.active_network.get("explorer")
-        if url is None:
-            raise ValueError("Explorer API not set for this network")
-        env_token = next((v for k, v in _explorer_tokens.items() if k in url), None)
-        if env_token is None:
+        api_key = os.getenv("ETHERSCAN_TOKEN")
+        if api_key is None:
             raise ValueError(
-                f"Publishing source is only supported on {', '.join(_explorer_tokens)},"
-                "change the Explorer API"
-            )
-
-        if os.getenv(env_token):
-            api_key = os.getenv(env_token)
-        else:
-            host = urlparse(url).netloc
-            host = host[host.index(".") + 1 :]
-            raise ValueError(
-                f"An API token is required to verify contract source code. Visit https://{host}/ "
-                f"to obtain a token, and then store it as the environment variable ${env_token}"
+                "An API token is required to verify contract source code. "
+                "Visit https://etherscan.io/register to obtain a token, and "
+                "then store it as the environment variable $ETHERSCAN_TOKEN"
             )
 
         address = _resolve_address(contract.address)
@@ -394,7 +365,9 @@ class ContractContainer(_ContractBase):
             license_code = 12
 
         # get constructor arguments
+        url = "https://api.etherscan.io/v2/api"
         params_tx: Dict = {
+            "chainid": web3.chain_id,
             "apikey": api_key,
             "module": "account",
             "action": "txlist",
@@ -414,16 +387,16 @@ class ContractContainer(_ContractBase):
             if int(data["status"]) == 1:
                 # Constructor arguments received
                 break
-            else:
-                # Wait for contract to be recognized by etherscan
-                # This takes a few seconds after the contract is deployed
-                # After 10 loops we throw with the API result message (includes address)
-                if i >= 10:
-                    raise ValueError(f"API request failed with: {data['result']}")
-                elif i == 0 and not silent:
-                    print(f"Waiting for {url} to process contract...")
-                i += 1
-                time.sleep(10)
+
+            # Wait for contract to be recognized by etherscan
+            # This takes a few seconds after the contract is deployed
+            # After 10 loops we throw with the API result message (includes address)
+            if i >= 10:
+                raise ValueError(f"API request failed with: {data['result']}")
+            elif i == 0 and not silent:
+                print(f"Waiting for {url} to process contract...")
+            i += 1
+            time.sleep(10)
 
         if data["message"] == "OK":
             constructor_arguments = data["result"][0]["input"][contract_info["bytecode_len"] + 2 :]
@@ -445,7 +418,9 @@ class ContractContainer(_ContractBase):
             "constructorArguements": constructor_arguments,
             "licenseType": license_code,
         }
-        response = requests.post(url, data=payload_verification, headers=REQUEST_HEADERS)
+        response = requests.post(
+            f"{url}?chainid={web3.chain_id}", data=payload_verification, headers=REQUEST_HEADERS
+        )
         if response.status_code != 200:
             raise ConnectionError(
                 f"Status {response.status_code} when querying {url}: {response.text}"
@@ -460,6 +435,7 @@ class ContractContainer(_ContractBase):
             print("Verification submitted successfully. Waiting for result...")
         time.sleep(10)
         params_status: Dict = {
+            "chainid": web3.chain_id,
             "apikey": api_key,
             "module": "contract",
             "action": "checkverifystatus",
@@ -670,7 +646,8 @@ class InterfaceConstructor:
         if not isinstance(calldata, HexBytes):
             calldata = HexBytes(calldata)
 
-        fn_selector = calldata[:4].hex()  # type: ignore
+        fn_selector = hexbytes_to_hexstring(calldata[:4])
+
         abi = next(
             (
                 i
@@ -709,7 +686,9 @@ class _DeployedContractBase(_ContractBase):
     ) -> None:
         address = _resolve_address(address)
         self.bytecode = (
-            self._build.get("deployedBytecode", None) or web3.eth.get_code(address).hex()[2:]
+            # removeprefix is used for compatability with both hexbytes<1 and >=1
+            self._build.get("deployedBytecode", None)
+            or web3.eth.get_code(address).hex().removeprefix("0x")
         )
         if not self.bytecode:
             raise ContractNotFound(f"No contract deployed at {address}")
@@ -790,11 +769,10 @@ class _DeployedContractBase(_ContractBase):
             raise AttributeError(f"Contract '{self._name}' object has no attribute '{name}'")
 
     def __setattr__(self, name: str, value: Any) -> None:
-        if self._initialized and hasattr(self, name):
-            if isinstance(getattr(self, name), _ContractMethod):
-                raise AttributeError(
-                    f"{self._name}.{name} is a contract function, it cannot be assigned to"
-                )
+        if self._initialized and isinstance(getattr(self, name, None), _ContractMethod):
+            raise AttributeError(
+                f"{self._name}.{name} is a contract function, it cannot be assigned to"
+            )
         super().__setattr__(name, value)
 
     def get_method_object(self, calldata: str) -> Optional["_ContractMethod"]:
@@ -842,8 +820,7 @@ class _DeployedContractBase(_ContractBase):
                     json.dump(deployment_build, fp)
 
     def _delete_deployment(self) -> None:
-        path = self._deployment_path()
-        if path:
+        if path := self._deployment_path():
             self._project._remove_from_deployment_map(self)
             if path.exists():
                 path.unlink()
@@ -955,7 +932,8 @@ class Contract(_DeployedContractBase):
             "address": address,
             "contractName": name,
             "type": "contract",
-            "deployedBytecode": web3.eth.get_code(address).hex()[2:],
+            # removeprefix is used for compatability with both hexbytes<1 and >=1
+            "deployedBytecode": web3.eth.get_code(address).hex().removeprefix("0x"),
         }
 
         self = cls.__new__(cls)
@@ -1078,7 +1056,7 @@ class Contract(_DeployedContractBase):
         elif data["result"][0]["OptimizationUsed"] in ("true", "false"):
             if not silent:
                 warnings.warn(
-                    f"Blockscout explorer API has limited support by Brownie. "  # noqa
+                    "Blockscout explorer API has limited support by Brownie. "  # noqa
                     "Some debugging functionality will not be available.",
                     BrownieCompilerWarning,
                 )
@@ -1309,13 +1287,10 @@ class ContractEvents(_ContractEvents):
                 event_type: ContractEvent = self.__getitem__(event_type)  # type: ignore
             return self._retrieve_contract_events(event_type, from_block, to_block)
 
-        # Returns event sequence for all contract events
-        events_logbook = dict()
-        for event in ContractEvents.__iter__(self):
-            events_logbook[event.event_name] = self._retrieve_contract_events(
-                event, from_block, to_block
-            )
-        return AttributeDict(events_logbook)
+        return AttributeDict(
+            (event.event_name, self._retrieve_contract_events(event, from_block, to_block))
+            for event in ContractEvents.__iter__(self)
+        )
 
     def listen(self, event_name: str, timeout: float = 0) -> Coroutine:
         """
@@ -1367,7 +1342,7 @@ class ContractEvents(_ContractEvents):
         event_watcher.add_event_callback(
             event=target_event, callback=_event_callback, delay=0.2, repeat=False
         )
-        return _listening_task(bool(timeout > 0), _listener_end_time)
+        return _listening_task(timeout > 0, _listener_end_time)
 
     @combomethod
     def _retrieve_contract_events(
@@ -1519,7 +1494,8 @@ class OverloadedMethod:
         -------
         Decoded values
         """
-        selector = HexBytes(hexstr)[:4].hex()
+        selector = hexbytes_to_hexstring(HexBytes(hexstr)[:4])
+
         fn = next((i for i in self.methods.values() if i == selector), None)
         if fn is None:
             raise ValueError(
@@ -1553,9 +1529,7 @@ class OverloadedMethod:
         """
         Display NatSpec documentation for this method.
         """
-        fn_sigs = []
-        for fn in self.methods.values():
-            fn_sigs.append(f"{fn.abi['name']}({_inputs(fn.abi)})")
+        fn_sigs = (f"{fn.abi['name']}({_inputs(fn.abi)})" for fn in self.methods.values())
         for sig in sorted(fn_sigs, key=lambda k: len(k)):
             print(sig)
         _print_natspec(self.natspec)
@@ -1914,13 +1888,14 @@ def _inputs(abi: Dict) -> str:
     types_list = get_type_strings(abi["inputs"], {"fixed168x10": "decimal"})
     params = zip([i["name"] for i in abi["inputs"]], types_list)
     return ", ".join(
-        f"{i[1]}{color('bright blue')}{' '+i[0] if i[0] else ''}{color}" for i in params
+        f"{i[1]}{color('bright blue')}{f' {i[0]}' if i[0] else ''}{color}" for i in params
     )
 
 
 def _verify_deployed_code(address: str, expected_bytecode: str, language: str) -> bool:
-    actual_bytecode = web3.eth.get_code(address).hex()[2:]
-    expected_bytecode = remove_0x_prefix(expected_bytecode)  # type: ignore
+    # removeprefix is used for compatability with both hexbytes<1 and >=1
+    actual_bytecode = web3.eth.get_code(address).hex().removeprefix("0x")
+    expected_bytecode = expected_bytecode.removeprefix("0x")
 
     if expected_bytecode.startswith("730000000000000000000000000000000000000000"):
         # special case for Solidity libraries
@@ -1972,14 +1947,11 @@ def _print_natspec(natspec: Dict) -> None:
 
 
 def _fetch_from_explorer(address: str, action: str, silent: bool) -> Dict:
-    url = CONFIG.active_network.get("explorer")
-    if url is None:
-        raise ValueError("Explorer API not set for this network")
-
     if address in _unverified_addresses:
         raise ValueError(f"Source for {address} has not been verified")
 
-    code = web3.eth.get_code(address).hex()[2:]
+    # removeprefix is used for compatability with both hexbytes<1 and >=1
+    code = web3.eth.get_code(address).hex().removeprefix("0x")
     # EIP-1167: Minimal Proxy Contract
     if code[:20] == "363d3d373d3d3d363d73" and code[60:] == "5af43d82803e903d91602b57fd5bf3":
         address = _resolve_address(code[20:60])
@@ -1997,29 +1969,32 @@ def _fetch_from_explorer(address: str, action: str, silent: bool) -> Dict:
     ):
         address = _resolve_address(code[120:160])
 
-    params: Dict = {"module": "contract", "action": action, "address": address}
-    explorer, env_key = next(
-        ((k, v) for k, v in _explorer_tokens.items() if k in url), (None, None)
-    )
+    params: Dict = {
+        "module": "contract",
+        "action": action,
+        "address": address,
+        "chainid": web3.chain_id,
+    }
+    env_key = os.getenv("ETHERSCAN_TOKEN")
     if env_key is not None:
-        if os.getenv(env_key):
-            params["apiKey"] = os.getenv(env_key)
-        elif not silent:
-            warnings.warn(
-                f"No {explorer} API token set. You may experience issues with rate limiting. "
-                f"Visit https://{explorer}.io/register to obtain a token, and then store it "
-                f"as the environment variable ${env_key}",
-                BrownieEnvironmentWarning,
-            )
-    if not silent:
-        print(
-            f"Fetching source of {color('bright blue')}{address}{color} "
-            f"from {color('bright blue')}{urlparse(url).netloc}{color}..."
+        params["apiKey"] = env_key
+    elif not silent:
+        warnings.warn(
+            "No ETHERSCAN_API token set. You may experience issues with rate limiting. "
+            "Visit https://etherscan.io/register to obtain a token, and then store it "
+            "as the environment variable $ETHERSCAN_TOKEN",
+            BrownieEnvironmentWarning,
         )
+    if not silent:
+        print(f"Fetching source of {color('bright blue')}{address}{color} from Etherscan...")
 
-    response = requests.get(url, params=params, headers=REQUEST_HEADERS)
+    response = requests.get(
+        "https://api.etherscan.io/v2/api", params=params, headers=REQUEST_HEADERS
+    )
     if response.status_code != 200:
-        raise ConnectionError(f"Status {response.status_code} when querying {url}: {response.text}")
+        raise ConnectionError(
+            f"Status {response.status_code} when querying Etherscan: {response.text}"
+        )
     data = response.json()
     if int(data["status"]) != 1:
         raise ValueError(f"Failed to retrieve data from API: {data}")
@@ -2056,14 +2031,13 @@ def _contract_method_autosuggest(args: List, is_transaction: bool, is_payable: b
     types_list = get_type_strings(args, {"fixed168x10": "decimal"})
     params = zip([i["name"] for i in args], types_list)
 
+    suggestions = (f" {i[1]}{f' {i[0]}' if i[0] else ''}" for i in params)
     if not is_transaction:
-        tx_hint: List = []
+        return list(suggestions)
     elif is_payable:
-        tx_hint = [" {'from': Account", " 'value': Wei}"]
+        return [*suggestions, " {'from': Account", " 'value': Wei}"]
     else:
-        tx_hint = [" {'from': Account}"]
-
-    return [f" {i[1]}{' '+i[0] if i[0] else ''}" for i in params] + tx_hint
+        return [*suggestions, " {'from': Account}"]
 
 
 def _comment_slicer(match: Match) -> str:

@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: scrapegraphai
-Version: 1.51.0
+Version: 1.52.0
 Summary: A web scraping library based on LangChain which uses LLM and direct graph logic to create scraping pipelines.
 Author-email: Marco Vinciguerra <mvincig11@gmail.com>, Lorenzo Padoan <lorenzo.padoan977@gmail.com>
 Keywords: ai,artificial intelligence,gpt,graph,langchain,llm,machine learning,natural language processing,nlp,openai,rag,scrapegraph,scrapegraphai,scraping,web scraping,web scraping library,web scraping tool,webscraping
@@ -71,7 +71,7 @@ Just say which information you want to extract and the library will do it for yo
 ## 🚀 Integrations
 ScrapeGraphAI offers seamless integration with popular frameworks and tools to enhance your scraping capabilities. Whether you're building with Python or Node.js, using LLM frameworks, or working with no-code platforms, we've got you covered with our comprehensive integration options..
 
-You cna find more informations at the following [link](https://scrapegraphai.com)
+You can find more informations at the following [link](https://scrapegraphai.com)
 
 **Integrations**:
 
@@ -79,6 +79,7 @@ You cna find more informations at the following [link](https://scrapegraphai.com
 - **SDKs**: [Python](https://docs.scrapegraphai.com/sdks/python), [Node](https://docs.scrapegraphai.com/sdks/javascript) 
 - **LLM Frameworks**: [Langchain](https://docs.scrapegraphai.com/integrations/langchain), [Llama Index](https://docs.scrapegraphai.com/integrations/llamaindex), [Crew.ai](https://docs.scrapegraphai.com/integrations/crewai), [CamelAI](https://github.com/camel-ai/camel)
 - **Low-code Frameworks**: [Pipedream](https://pipedream.com/apps/scrapegraphai), [Bubble](https://bubble.io/plugin/scrapegraphai-1745408893195x213542371433906180), [Zapier](https://zapier.com/apps/scrapegraphai/integrations), [n8n](http://localhost:5001/dashboard)
+- **MCP server**:  [Link](https://smithery.ai/server/@ScrapeGraphAI/scrapegraph-mcp)
 
 ## 🚀 Quick install
 
@@ -234,9 +235,6 @@ The Official API Documentation can be found [here](https://docs.scrapegraphai.co
   </a>
     <a href="https://scrape.do">
     <img src="https://raw.githubusercontent.com/VinciGit00/Scrapegraph-ai/main/docs/assets/scrapedo.png" alt="Stats" style="width: 11%;">
-  </a>
-    <a href="https://www.scrapeless.com/en?utm_source=github&utm_medium=ads&utm_campaign=scraping&utm_term=scrapegraphai">
-    <img src="https://github.com/ScrapeGraphAI/Scrapegraph-ai/blob/main/docs/assets/scrapeless.png" alt="Stats" style="width: 11%;">
   </a>
 </div>
 

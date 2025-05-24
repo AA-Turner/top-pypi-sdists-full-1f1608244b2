@@ -26,12 +26,18 @@ class FanboxExtractor(Extractor):
     directory_fmt = ("{category}", "{creatorId}")
     filename_fmt = "{id}_{num}.{extension}"
     archive_fmt = "{id}_{num}"
+    browser = "firefox"
     _warning = True
 
     def _init(self):
         self.headers = {
-            "Accept": "application/json, text/plain, */*",
-            "Origin": self.root,
+            "Accept" : "application/json, text/plain, */*",
+            "Origin" : "https://www.fanbox.cc",
+            "Referer": "https://www.fanbox.cc/",
+            "Cookie" : None,
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-site",
         }
         self.embeds = self.config("embeds", True)
 

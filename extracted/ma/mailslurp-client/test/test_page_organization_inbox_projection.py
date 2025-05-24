@@ -65,8 +65,8 @@ class TestPageOrganizationInboxProjection(unittest.TestCase):
                     unpaged = True, 
                     offset = 56, 
                     sort = mailslurp_client.models.sort_object.SortObject(
-                        unsorted = True, 
                         sorted = True, 
+                        unsorted = True, 
                         empty = True, ), ), 
                 total_elements = 56, 
                 total_pages = 56, 
@@ -76,8 +76,8 @@ class TestPageOrganizationInboxProjection(unittest.TestCase):
                 size = 56, 
                 number = 56, 
                 sort = mailslurp_client.models.sort_object.SortObject(
-                    unsorted = True, 
                     sorted = True, 
+                    unsorted = True, 
                     empty = True, ), 
                 empty = True
             )

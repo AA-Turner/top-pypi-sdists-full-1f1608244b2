@@ -10,7 +10,9 @@ use tower_lsp::lsp_types::{
 use crate::{
     execution::annotations,
     parsing::{
-        ast::types::{Annotation, ImportSelector, ItemVisibility, Node, NonCodeValue, VariableKind},
+        ast::types::{
+            Annotation, Expr, ImportSelector, ItemVisibility, LiteralValue, Node, NonCodeValue, VariableKind,
+        },
         token::NumericSuffix,
     },
     ModuleId,
@@ -291,17 +293,6 @@ impl DocData {
             DocData::Ty(t) => t.with_comments(comments),
             DocData::Mod(m) => m.with_comments(comments),
         }
-    }
-
-    #[cfg(test)]
-    fn examples(&self) -> impl Iterator<Item = &String> {
-        match self {
-            DocData::Fn(f) => f.examples.iter(),
-            DocData::Const(c) => c.examples.iter(),
-            DocData::Ty(t) => t.examples.iter(),
-            DocData::Mod(_) => unimplemented!(),
-        }
-        .filter_map(|(s, p)| (!p.norun).then_some(s))
     }
 
     fn expect_mod(&self) -> &ModData {
@@ -631,8 +622,6 @@ impl FnData {
             return "clone(${0:part001})".to_owned();
         } else if self.name == "hole" {
             return "hole(${0:holeSketch}, ${1:%})".to_owned();
-        } else if self.name == "circle" {
-            return "circle(center = [${0:3.14}, ${1:3.14}], diameter = ${2:3.14})".to_owned();
         }
         let mut args = Vec::new();
         let mut index = 0;
@@ -696,6 +685,8 @@ pub struct ArgData {
     /// This is helpful if the type is really basic, like "number" -- that won't tell the user much about
     /// how this argument is meant to be used.
     pub docs: Option<String>,
+    /// If given, LSP should use these as completion items.
+    pub snippet_array: Option<Vec<String>>,
 }
 
 impl fmt::Display for ArgData {
@@ -723,6 +714,7 @@ pub enum ArgKind {
 impl ArgData {
     fn from_ast(arg: &crate::parsing::ast::types::Parameter) -> Self {
         let mut result = ArgData {
+            snippet_array: Default::default(),
             name: arg.identifier.name.clone(),
             ty: arg.type_.as_ref().map(|t| t.to_string()),
             docs: None,
@@ -751,6 +743,30 @@ impl ArgData {
                                 p.value
                             );
                         }
+                    } else if p.key.name == "snippetArray" {
+                        let Expr::ArrayExpression(arr) = &p.value else {
+                            panic!(
+                                "Invalid value for `snippetArray`, expected array literal, found {:?}",
+                                p.value
+                            );
+                        };
+                        let mut items = Vec::new();
+                        for s in &arr.elements {
+                            let Expr::Literal(lit) = s else {
+                                panic!(
+                                    "Invalid value in `snippetArray`, all items must be string literals but found {:?}",
+                                    s
+                                );
+                            };
+                            let LiteralValue::String(litstr) = &lit.inner.value else {
+                                panic!(
+                                    "Invalid value in `snippetArray`, all items must be string literals but found {:?}",
+                                    s
+                                );
+                            };
+                            items.push(litstr.to_owned());
+                        }
+                        result.snippet_array = Some(items);
                     }
                 }
             }
@@ -772,6 +788,19 @@ impl ArgData {
         } else {
             format!("{} = ", self.name)
         };
+        if let Some(vals) = &self.snippet_array {
+            let mut snippet = label.to_owned();
+            snippet.push('[');
+            let n = vals.len();
+            for (i, val) in vals.iter().enumerate() {
+                snippet.push_str(&format!("${{{}:{}}}", index + i, val));
+                if i != n - 1 {
+                    snippet.push_str(", ");
+                }
+            }
+            snippet.push(']');
+            return Some((index + n - 1, snippet));
+        }
         match self.ty.as_deref() {
             Some(s) if s.starts_with("number") => Some((index, format!(r#"{label}${{{}:3.14}}"#, index))),
             Some("Point2d") => Some((
@@ -1187,7 +1216,7 @@ impl ApplyMeta for ArgData {
 
 #[cfg(test)]
 mod test {
-    use kcl_derive_docs::for_each_std_mod;
+    use kcl_derive_docs::{for_all_example_test, for_each_example_test};
 
     use super::*;
 
@@ -1225,51 +1254,81 @@ mod test {
         );
     }
 
-    #[for_each_std_mod]
+    #[for_all_example_test]
+    #[tokio::test(flavor = "multi_thread")]
+    async fn missing_test_examples() {
+        fn check_mod(m: &ModData) {
+            for d in m.children.values() {
+                let DocData::Fn(f) = d else {
+                    continue;
+                };
+
+                for i in 0..f.examples.len() {
+                    let name = format!("{}-{i}", f.qual_name.replace("::", "-"));
+                    assert!(TEST_NAMES.contains(&&*name), "Missing test for example \"{name}\", maybe need to update kcl-derive-docs/src/example_tests.rs?")
+                }
+            }
+        }
+
+        let data = walk_prelude();
+
+        check_mod(&data);
+        for m in data.children.values() {
+            if let DocData::Mod(m) = m {
+                check_mod(m);
+            }
+        }
+    }
+
+    #[for_each_example_test]
     #[tokio::test(flavor = "multi_thread")]
     async fn kcl_test_examples() {
         let std = walk_prelude();
-        let mut errs = Vec::new();
 
-        let data = if STD_MOD_NAME == "prelude" {
+        let names = NAME.split('-');
+        let mut mods: Vec<_> = names.collect();
+        let number = mods.pop().unwrap();
+        let number: usize = number.parse().unwrap();
+        let name = mods.pop().unwrap();
+        let mut qualname = mods.join("::");
+        qualname.push_str("::");
+        qualname.push_str(name);
+
+        let data = if mods.len() == 1 {
             &std
         } else {
-            std.children
-                .get(&format!("M:std::{STD_MOD_NAME}"))
-                .unwrap()
-                .expect_mod()
+            std.children.get(&format!("M:std::{}", mods[1])).unwrap().expect_mod()
         };
 
-        let mut count = 0;
-        for d in data.children.values() {
-            if let DocData::Mod(_) = d {
+        let Some(DocData::Fn(d)) = data.children.get(&format!("I:{qualname}")) else {
+            panic!("Could not find data for {NAME} (missing a child entry for {qualname}), maybe need to update kcl-derive-docs/src/example_tests.rs?");
+        };
+
+        for (i, eg) in d.examples.iter().enumerate() {
+            if i != number {
                 continue;
             }
-
-            for (i, eg) in d.examples().enumerate() {
-                count += 1;
-                if count % SHARD_COUNT != SHARD {
-                    continue;
+            let result = match crate::test_server::execute_and_snapshot(&eg.0, None).await {
+                Err(crate::errors::ExecError::Kcl(e)) => {
+                    panic!("Error testing example {}{i}: {}", d.name, e.error.message());
                 }
-
-                let result = match crate::test_server::execute_and_snapshot(eg, None).await {
-                    Err(crate::errors::ExecError::Kcl(e)) => {
-                        errs.push(format!("Error testing example {}{i}: {}", d.name(), e.error.message()));
-                        continue;
-                    }
-                    Err(other_err) => panic!("{}", other_err),
-                    Ok(img) => img,
-                };
-                twenty_twenty::assert_image(
-                    format!("tests/outputs/serial_test_example_{}{i}.png", d.example_name()),
-                    &result,
-                    0.99,
-                );
+                Err(other_err) => panic!("{}", other_err),
+                Ok(img) => img,
+            };
+            if eg.1.norun {
+                return;
             }
+            twenty_twenty::assert_image(
+                format!(
+                    "tests/outputs/serial_test_example_fn_{}{i}.png",
+                    qualname.replace("::", "-")
+                ),
+                &result,
+                0.99,
+            );
+            return;
         }
 
-        if !errs.is_empty() {
-            panic!("{}", errs.join("\n\n"));
-        }
+        panic!("Could not find data for {NAME} (no example {number}), maybe need to update kcl-derive-docs/src/example_tests.rs?");
     }
 }

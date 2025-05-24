@@ -1,7 +1,7 @@
 r'''
 # `data_tfe_outputs`
 
-Refer to the Terraform Registry for docs: [`data_tfe_outputs`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/outputs).
+Refer to the Terraform Registry for docs: [`data_tfe_outputs`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/outputs).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class DataTfeOutputs(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.dataTfeOutputs.DataTfeOutputs",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/outputs tfe_outputs}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/outputs tfe_outputs}.'''
 
     def __init__(
         self,
@@ -53,7 +53,6 @@ class DataTfeOutputs(
         *,
         workspace: builtins.str,
         organization: typing.Optional[builtins.str] = None,
-        values: typing.Optional[typing.Mapping[builtins.str, typing.Any]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
         depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -62,13 +61,12 @@ class DataTfeOutputs(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/outputs tfe_outputs} Data Source.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/outputs tfe_outputs} Data Source.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param workspace: The workspace to fetch the remote state from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/outputs#workspace DataTfeOutputs#workspace}
-        :param organization: The organization to fetch the remote state from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/outputs#organization DataTfeOutputs#organization}
-        :param values: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/outputs#values DataTfeOutputs#values}.
+        :param workspace: Name of the workspace. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/outputs#workspace DataTfeOutputs#workspace}
+        :param organization: Name of the organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/outputs#organization DataTfeOutputs#organization}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -84,7 +82,6 @@ class DataTfeOutputs(
         config = DataTfeOutputsConfig(
             workspace=workspace,
             organization=organization,
-            values=values,
             connection=connection,
             count=count,
             depends_on=depends_on,
@@ -109,7 +106,7 @@ class DataTfeOutputs(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the DataTfeOutputs to import.
-        :param import_from_id: The id of the existing DataTfeOutputs that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/outputs#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing DataTfeOutputs that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/outputs#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the DataTfeOutputs to import is found.
         '''
         if __debug__:
@@ -123,10 +120,6 @@ class DataTfeOutputs(
     @jsii.member(jsii_name="resetOrganization")
     def reset_organization(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetOrganization", []))
-
-    @jsii.member(jsii_name="resetValues")
-    def reset_values(self) -> None:
-        return typing.cast(None, jsii.invoke(self, "resetValues", []))
 
     @jsii.member(jsii_name="synthesizeAttributes")
     def _synthesize_attributes(self) -> typing.Mapping[builtins.str, typing.Any]:
@@ -152,14 +145,14 @@ class DataTfeOutputs(
         return typing.cast(_cdktf_9a9027ec.AnyMap, jsii.get(self, "nonsensitiveValues"))
 
     @builtins.property
+    @jsii.member(jsii_name="values")
+    def values(self) -> _cdktf_9a9027ec.AnyMap:
+        return typing.cast(_cdktf_9a9027ec.AnyMap, jsii.get(self, "values"))
+
+    @builtins.property
     @jsii.member(jsii_name="organizationInput")
     def organization_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "organizationInput"))
-
-    @builtins.property
-    @jsii.member(jsii_name="valuesInput")
-    def values_input(self) -> typing.Optional[typing.Mapping[builtins.str, typing.Any]]:
-        return typing.cast(typing.Optional[typing.Mapping[builtins.str, typing.Any]], jsii.get(self, "valuesInput"))
 
     @builtins.property
     @jsii.member(jsii_name="workspaceInput")
@@ -177,18 +170,6 @@ class DataTfeOutputs(
             type_hints = typing.get_type_hints(_typecheckingstub__c217002529e90674a62d2e4662248ad531471bf08cac20391b7db45b4a344e1d)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         jsii.set(self, "organization", value) # pyright: ignore[reportArgumentType]
-
-    @builtins.property
-    @jsii.member(jsii_name="values")
-    def values(self) -> typing.Mapping[builtins.str, typing.Any]:
-        return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.get(self, "values"))
-
-    @values.setter
-    def values(self, value: typing.Mapping[builtins.str, typing.Any]) -> None:
-        if __debug__:
-            type_hints = typing.get_type_hints(_typecheckingstub__002c05b1339f20548bd8264b061c000d6c00cca5693ff7a18b10fdc06d70c557)
-            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
-        jsii.set(self, "values", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
     @jsii.member(jsii_name="workspace")
@@ -216,7 +197,6 @@ class DataTfeOutputs(
         "provisioners": "provisioners",
         "workspace": "workspace",
         "organization": "organization",
-        "values": "values",
     },
 )
 class DataTfeOutputsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
@@ -232,7 +212,6 @@ class DataTfeOutputsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
         workspace: builtins.str,
         organization: typing.Optional[builtins.str] = None,
-        values: typing.Optional[typing.Mapping[builtins.str, typing.Any]] = None,
     ) -> None:
         '''
         :param connection: 
@@ -242,9 +221,8 @@ class DataTfeOutputsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param workspace: The workspace to fetch the remote state from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/outputs#workspace DataTfeOutputs#workspace}
-        :param organization: The organization to fetch the remote state from. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/outputs#organization DataTfeOutputs#organization}
-        :param values: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/outputs#values DataTfeOutputs#values}.
+        :param workspace: Name of the workspace. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/outputs#workspace DataTfeOutputs#workspace}
+        :param organization: Name of the organization. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/outputs#organization DataTfeOutputs#organization}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -259,7 +237,6 @@ class DataTfeOutputsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument provisioners", value=provisioners, expected_type=type_hints["provisioners"])
             check_type(argname="argument workspace", value=workspace, expected_type=type_hints["workspace"])
             check_type(argname="argument organization", value=organization, expected_type=type_hints["organization"])
-            check_type(argname="argument values", value=values, expected_type=type_hints["values"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "workspace": workspace,
         }
@@ -279,8 +256,6 @@ class DataTfeOutputsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["provisioners"] = provisioners
         if organization is not None:
             self._values["organization"] = organization
-        if values is not None:
-            self._values["values"] = values
 
     @builtins.property
     def connection(
@@ -348,9 +323,9 @@ class DataTfeOutputsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def workspace(self) -> builtins.str:
-        '''The workspace to fetch the remote state from.
+        '''Name of the workspace.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/outputs#workspace DataTfeOutputs#workspace}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/outputs#workspace DataTfeOutputs#workspace}
         '''
         result = self._values.get("workspace")
         assert result is not None, "Required property 'workspace' is missing"
@@ -358,18 +333,12 @@ class DataTfeOutputsConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def organization(self) -> typing.Optional[builtins.str]:
-        '''The organization to fetch the remote state from.
+        '''Name of the organization.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/outputs#organization DataTfeOutputs#organization}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/data-sources/outputs#organization DataTfeOutputs#organization}
         '''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
-
-    @builtins.property
-    def values(self) -> typing.Optional[typing.Mapping[builtins.str, typing.Any]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/data-sources/outputs#values DataTfeOutputs#values}.'''
-        result = self._values.get("values")
-        return typing.cast(typing.Optional[typing.Mapping[builtins.str, typing.Any]], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
@@ -396,7 +365,6 @@ def _typecheckingstub__13d742db739ee7265f786088adcf3cd9dacebbe6b4ffb76bc2aca82e8
     *,
     workspace: builtins.str,
     organization: typing.Optional[builtins.str] = None,
-    values: typing.Optional[typing.Mapping[builtins.str, typing.Any]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
     depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -423,12 +391,6 @@ def _typecheckingstub__c217002529e90674a62d2e4662248ad531471bf08cac20391b7db45b4
     """Type checking stubs"""
     pass
 
-def _typecheckingstub__002c05b1339f20548bd8264b061c000d6c00cca5693ff7a18b10fdc06d70c557(
-    value: typing.Mapping[builtins.str, typing.Any],
-) -> None:
-    """Type checking stubs"""
-    pass
-
 def _typecheckingstub__6358cbb6d065f3983c77af81a9164c99ba5bbfe8c20aec71bd084d0cc3c11ffb(
     value: builtins.str,
 ) -> None:
@@ -446,7 +408,6 @@ def _typecheckingstub__d32784b9b8fe1f5881f23a0cf8d372b5854b3ff74a91ce6b1b0afb357
     provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     workspace: builtins.str,
     organization: typing.Optional[builtins.str] = None,
-    values: typing.Optional[typing.Mapping[builtins.str, typing.Any]] = None,
 ) -> None:
     """Type checking stubs"""
     pass

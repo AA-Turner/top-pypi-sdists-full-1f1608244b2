@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: graphrag
-Version: 2.2.1
+Version: 2.3.0
 Summary: GraphRAG: A graph-based retrieval-augmented generation (RAG) system.
 License: MIT
 Author: Alonso Guevara Fernández
@@ -18,7 +18,7 @@ Requires-Dist: azure-search-documents (>=11.5.2,<12.0.0)
 Requires-Dist: azure-storage-blob (>=12.24.0,<13.0.0)
 Requires-Dist: devtools (>=0.12.2,<0.13.0)
 Requires-Dist: environs (>=11.0.0,<12.0.0)
-Requires-Dist: fnllm[azure,openai] (==0.2.3)
+Requires-Dist: fnllm[azure,openai] (>=0.3.0,<0.4.0)
 Requires-Dist: future (>=1.0.0,<2.0.0)
 Requires-Dist: graspologic (>=3.4.1,<4.0.0)
 Requires-Dist: json-repair (>=0.30.3,<0.31.0)
@@ -28,7 +28,7 @@ Requires-Dist: nltk (==3.9.1)
 Requires-Dist: numpy (>=1.25.2,<2.0.0)
 Requires-Dist: openai (>=1.68.0,<2.0.0)
 Requires-Dist: pandas (>=2.2.3,<3.0.0)
-Requires-Dist: pyarrow (>=15.0.0,<16.0.0)
+Requires-Dist: pyarrow (>=17.0.0)
 Requires-Dist: pydantic (>=2.10.3,<3.0.0)
 Requires-Dist: python-dotenv (>=1.0.1,<2.0.0)
 Requires-Dist: pyyaml (>=6.0.2,<7.0.0)

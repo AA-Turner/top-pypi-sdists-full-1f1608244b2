@@ -44,16 +44,22 @@ sources += [
     if f.endswith(".c")
 ]
 
+sources += [
+    f"src/geoarrow/c/geoarrow/nanoarrow/{f}"
+    for f in os.listdir(os.path.join(vendor_dir, "nanoarrow"))
+    if f.endswith(".c")
+]
+
 
 # Workaround because setuptools has no easy way to mix C and C++ sources
-# if extra flags are required (e.g., -std=c++11 like we need here).
+# if extra flags are required (e.g., -std=c++17 like we need here).
 class build_ext_subclass(build_ext):
     def build_extensions(self):
         original__compile = self.compiler._compile
 
         def new__compile(obj, src, ext, cc_args, extra_postargs, pp_opts):
             if src.endswith(".c"):
-                extra_postargs = [s for s in extra_postargs if s != "-std=c++11"]
+                extra_postargs = [s for s in extra_postargs if s != "-std=c++17"]
             return original__compile(obj, src, ext, cc_args, extra_postargs, pp_opts)
 
         self.compiler._compile = new__compile
@@ -81,12 +87,20 @@ setup(
     ext_modules=[
         Extension(
             name="geoarrow.c._lib",
-            include_dirs=["src/geoarrow/c/geoarrow", "src/geoarrow/c/geoarrow_python"],
+            include_dirs=[
+                "src/geoarrow/c",
+                "src/geoarrow/c/geoarrow",
+                "src/geoarrow/c/geoarrow_python",
+            ],
             language="c++",
             sources=["src/geoarrow/c/_lib.pyx"] + sources,
-            extra_compile_args=["-std=c++11"] + extra_compile_args,
+            extra_compile_args=["-std=c++17"] + extra_compile_args,
             extra_link_args=[] + extra_link_args,
-            define_macros=[] + extra_define_macros,
+            define_macros=[
+                ("GEOARROW_NAMESPACE", "GeoArrowPythonPkg"),
+                ("NANOARROW_NAMESPACE", "GeoArrowPythonPkg"),
+            ]
+            + extra_define_macros,
         )
     ],
     cmdclass={"build_ext": build_ext_subclass},

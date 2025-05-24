@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: backend.ai-manager
-Version: 25.8.0
+Version: 25.8.1
 Summary: Backend.AI Manager
 Home-page: https://github.com/lablup/backend.ai
 Author: Lablup Inc. and contributors
@@ -34,10 +34,10 @@ Requires-Dist: aiotools~=1.8.2
 Requires-Dist: alembic~=1.13.2
 Requires-Dist: async_timeout~=4.0
 Requires-Dist: attrs>=25.3
-Requires-Dist: backend.ai-cli==25.8.0
-Requires-Dist: backend.ai-common==25.8.0
-Requires-Dist: backend.ai-logging==25.8.0
-Requires-Dist: backend.ai-plugin==25.8.0
+Requires-Dist: backend.ai-cli==25.8.1
+Requires-Dist: backend.ai-common==25.8.1
+Requires-Dist: backend.ai-logging==25.8.1
+Requires-Dist: backend.ai-plugin==25.8.1
 Requires-Dist: bcrypt~=4.2.0
 Requires-Dist: boto3~=1.35
 Requires-Dist: callosum~=1.0.3

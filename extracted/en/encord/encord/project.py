@@ -369,25 +369,6 @@ class Project:
             copy_labels=copy_labels,
         )
 
-    def submit_label_row_for_review(self, uid: str):
-        """Submit a label row for review.
-
-        **Note:** This method is not supported for workflow-based projects. See the documentation about the workflows.
-
-        Args:
-            uid: A label_hash (uid) string.
-
-        Returns:
-            bool: True if the submission was successful, False otherwise.
-
-        Raises:
-            AuthenticationError: If the project API key is invalid.
-            AuthorisationError: If access to the specified resource is restricted.
-            UnknownError: If an error occurs while submitting for review.
-            OperationNotAllowed: If the write operation is not allowed by the API key.
-        """
-        return self._client.submit_label_row_for_review(uid)
-
     def add_datasets(self, dataset_hashes: List[str]) -> bool:
         """Add datasets to the project.
 
@@ -538,55 +519,6 @@ class Project:
         """
         return self._client.object_interpolation(key_frames, objects_to_interpolate)
 
-    def fitted_bounding_boxes(
-        self,
-        frames: dict,
-        video: dict,
-    ):
-        """Fit bounding boxes to the given frames of a video.
-
-        Args:
-            frames: Labels for frames to be fitted. Frames are consumed in the form::
-
-            ```python
-                {
-                    "[frame_number]": {
-                        "objects": [
-                            {
-                                "objectHash": "[object_hash]",
-                                "featureHash": "[feature_hash]",
-                                "polygon": {
-                                    "0": { "x": x1, "y": y1, },
-                                    "1": { "x": x2, "y": y2, },
-                                    # ...,
-                                }
-                            },
-                            # ...
-                        ]
-                    },
-                    # ...,
-                }
-            ```
-
-            video: Metadata of the video for which bounding box fitting needs to be run::
-
-            ```
-                {
-                    "width": w,
-                    "height": h,
-                }
-            ```
-
-        Returns:
-            dict: Full set of filled frames including fitted objects.
-
-        Raises:
-            AuthenticationError: If the project API key is invalid.
-            AuthorisationError: If access to the specified resource is restricted.
-            UnknownError: If an error occurs while running interpolation.
-        """
-        return self._client.fitted_bounding_boxes(frames, video)
-
     def get_data(self, data_hash: str, get_signed_url: bool = False) -> Tuple[Optional[Video], Optional[List[Image]]]:
         """Retrieve information about a video or image group.
 
@@ -688,22 +620,6 @@ class Project:
             label_hashes=label_hashes,
             data_hashes=data_hashes,
         )
-
-    def set_label_status(self, label_hash: str, label_status: LabelStatus) -> bool:
-        """Set the label status for a label row to a desired value.
-
-        Args:
-            label_hash: Unique identifier of the label row whose status is to be updated.
-            label_status: The new status that needs to be set.
-
-        Returns:
-            True if the label status was successfully updated, False otherwise.
-
-        Raises:
-            AuthorisationError: If the label_hash provided is invalid or not a member of the project.
-            UnknownError: If an error occurs while updating the status.
-        """
-        return self._client.set_label_status(label_hash, label_status)
 
     @deprecated(version="0.1.123", alternative=".list_label_rows_v2")
     def get_label_row(
@@ -1144,3 +1060,11 @@ class Project:
             project_uuid=self._project_instance.project_hash,
             filter_preset_uuid=uuid,
         )
+
+    def set_status(self, status: ProjectStatus):
+        """Set the status of the project.
+
+        Args:
+            status: The new status of the project.
+        """
+        self._client.set_status(status)

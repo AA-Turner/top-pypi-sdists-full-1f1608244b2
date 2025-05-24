@@ -16,10 +16,14 @@ import time
 import random
 import statistics
 import tempfile
+import threading
 
+whole_start_time: float = time.time()
 last_progress_bar_desc: str = ""
 job_submit_durations: list[float] = []
+job_submit_nrs: list[int] = []
 log_gen_times: list[float] = []
+log_nr_gen_jobs: list[int] = []
 generation_strategy_human_readable: str = ""
 oo_call: str = "./omniopt"
 progress_bar_length: int = 0
@@ -116,8 +120,6 @@ try:
         from submitit import LocalExecutor, AutoExecutor
         from submitit import Job
 
-        import threading
-
         import importlib.util
         import inspect
         import platform
@@ -175,7 +177,7 @@ with console.status("[bold green]Loading rich_argparse...") as status:
     try:
         from rich_argparse import RichHelpFormatter
     except ModuleNotFoundError:
-        RichHelpFormatter: Any = argparse.HelpFormatter
+        RichHelpFormatter = argparse.HelpFormatter  # type: ignore
 
 @beartype
 def makedirs(p: str) -> bool:
@@ -371,6 +373,11 @@ def my_exit(_code: int = 0) -> None:
 
     print(exit_code_string)
     print_debug(exit_code_string)
+
+    whole_end_time: float = time.time()
+    whole_run_time = whole_end_time - whole_start_time
+    print(f"Wallclock-Runtime: {whole_run_time} seconds")
+
     sys.exit(_code)
 
 @beartype
@@ -460,6 +467,7 @@ class ConfigLoader:
     username: Optional[str]
     max_nr_of_zero_results: int
     mem_gb: int
+    flame_graph: bool
     continue_previous_job: Optional[str]
     calculate_pareto_front_of_job: Optional[str]
     revert_to_random_when_seemingly_exhausted: bool
@@ -472,6 +480,7 @@ class ConfigLoader:
     root_venv_dir: str
     pareto_front_confidence: float
     follow: bool
+    show_generation_and_submission_sixel: bool
     n_estimators_randomforest: int
     checkout_to_latest_tested_version: bool
     load_data_from_existing_jobs: List[str]
@@ -599,6 +608,7 @@ class ConfigLoader:
         debug.add_argument('--verbose', help='Verbose logging', action='store_true', default=False)
         debug.add_argument('--verbose_break_run_search_table', help='Verbose logging for break_run_search', action='store_true', default=False)
         debug.add_argument('--debug', help='Enable debugging', action='store_true', default=False)
+        debug.add_argument('--flame_graph', help='Enable flame-graphing. Makes everything slower, but creates a flame graph', action='store_true', default=False)
         debug.add_argument('--no_sleep', help='Disables sleeping for fast job generation (not to be used on HPC)', action='store_true', default=False)
         debug.add_argument('--tests', help='Run simple internal tests', action='store_true', default=False)
         debug.add_argument('--show_worker_percentage_table_at_end', help='Show a table of percentage of usage of max worker over time', action='store_true', default=False)
@@ -606,6 +616,7 @@ class ConfigLoader:
         debug.add_argument('--run_tests_that_fail_on_taurus', help='Run tests on Taurus that usually fail', action='store_true', default=False)
         debug.add_argument('--raise_in_eval', help='Raise a signal in eval (only useful for debugging and testing)', action='store_true', default=False)
         debug.add_argument('--show_ram_every_n_seconds', help='Show RAM usage every n seconds (0 = disabled)', type=int, default=0)
+        debug.add_argument('--show_generation_and_submission_sixel', help='Show sixel plots for generation and submission times', action='store_true', default=False)
 
     @beartype
     def load_config(self: Any, config_path: str, file_format: str) -> dict:
@@ -1294,12 +1305,7 @@ def run_live_share_command() -> Tuple[str, str]:
 
     if get_current_run_folder():
         try:
-            _user = os.getenv('USER')
-            if _user is None:
-                _user = 'defaultuser'
-
-            if args.username:
-                _user = args.username
+            _user = get_username()
 
             _command = f"bash {script_dir}/omniopt_share {get_current_run_folder()} --update --username={_user} --no_color"
 
@@ -1579,6 +1585,7 @@ except Exception as e:
     print(f"Error trying to get process: {e}")
 
 global_vars: dict = {}
+global_vars_jobs_lock = threading.Lock()
 
 VAL_IF_NOTHING_FOUND: int = 99999999999999999999999999999999999999999999999999999999999
 NO_RESULT: str = "{:.0e}".format(VAL_IF_NOTHING_FOUND)
@@ -4617,6 +4624,18 @@ def load_experiment_parameters_from_checkpoint_file(checkpoint_file: str) -> dic
     return experiment_parameters
 
 @beartype
+def get_username() -> str:
+    _user = os.getenv('USER')
+
+    if args.username:
+        _user = args.username
+
+    if _user is None:
+        return 'defaultuser'
+
+    return _user
+
+@beartype
 def copy_continue_uuid() -> None:
     source_file = os.path.join(args.continue_previous_job, "state_files", "run_uuid")
     destination_file = os.path.join(get_current_run_folder(), "state_files", "continue_from_run_uuid")
@@ -5378,7 +5397,7 @@ def parse_csv(csv_path: str) -> Tuple[List, List]:
     return arm_params_list, results_list
 
 @beartype
-def get_generation_node_for_index(this_csv_file_path, arm_params_list, results_list, index):
+def get_generation_node_for_index(this_csv_file_path: str, arm_params_list: list, results_list: list, index: int) -> str:
     try:
         if index < 0 or index >= len(arm_params_list) or index >= len(results_list):
             return "MANUAL"
@@ -5392,7 +5411,7 @@ def get_generation_node_for_index(this_csv_file_path, arm_params_list, results_l
 
         with open(this_csv_file_path, mode='r', newline='', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
-            if "generation_node" not in reader.fieldnames:
+            if reader.fieldnames is None or "generation_node" not in reader.fieldnames:
                 return "MANUAL"
 
             for row in reader:
@@ -5916,11 +5935,65 @@ def mark_trial_as_failed(trial_index: int, _trial: Any) -> None:
     return None
 
 @beartype
+def _finish_job_core_helper_check_valid_result(result: Union[None, list, int, float, tuple]) -> bool:
+    possible_val_not_found_values = [
+        VAL_IF_NOTHING_FOUND,
+        -VAL_IF_NOTHING_FOUND,
+        -99999999999999997168788049560464200849936328366177157906432,
+        99999999999999997168788049560464200849936328366177157906432
+    ]
+    values_to_check = result if isinstance(result, list) else [result]
+    return result is not None and all(r not in possible_val_not_found_values for r in values_to_check)
+
+@beartype
+def _finish_job_core_helper_complete_trial(trial_index: int, raw_result: dict) -> None:
+    try:
+        print_debug(f"Completing trial: {trial_index} with result: {raw_result}...")
+        ax_client.complete_trial(trial_index=trial_index, raw_data=raw_result)
+        print_debug(f"Completing trial: {trial_index} with result: {raw_result}... Done!")
+    except ax.exceptions.core.UnsupportedError as e:
+        if f"{e}":
+            print_debug(f"Completing trial: {trial_index} with result: {raw_result} after failure. Trying to update trial...")
+            ax_client.update_trial_data(trial_index=trial_index, raw_data=raw_result)
+            print_debug(f"Completing trial: {trial_index} with result: {raw_result} after failure... Done!")
+        else:
+            print_red(f"Error completing trial: {e}")
+            my_exit(234)
+
+@beartype
+def _finish_job_core_helper_mark_success(_trial: ax.core.trial.Trial, result: Union[float, int, tuple]) -> None:
+    print_debug(f"Marking trial {_trial} as completed")
+    _trial.mark_completed(unsafe=True)
+
+    succeeded_jobs(1)
+
+    progressbar_description([f"new result: {result}"])
+    update_progress_bar(progress_bar, 1)
+
+    log_what_needs_to_be_logged()
+    live_share()
+
+@beartype
+def _finish_job_core_helper_mark_failure(job: Any, trial_index: int, _trial: Any) -> None:
+    print_debug(f"Counting job {job} as failed, because the result is {job.result() if job else 'None'}")
+    if job:
+        try:
+            progressbar_description(["job_failed"])
+            ax_client.log_trial_failure(trial_index=trial_index)
+            _trial.mark_failed(unsafe=True)
+        except Exception as e:
+            print_red(f"\nERROR while trying to mark job as failure: {e}")
+        job.cancel()
+        orchestrate_job(job, trial_index)
+
+    mark_trial_as_failed(trial_index, _trial)
+    failed_jobs(1)
+
+@beartype
 def finish_job_core(job: Any, trial_index: int, this_jobs_finished: int) -> int:
     die_for_debug_reasons()
 
     result = job.result()
-
     print_debug(f"finish_job_core: trial-index: {trial_index}, job.result(): {result}, state: {state_from_job(job)}")
 
     raw_result = result
@@ -5931,54 +6004,15 @@ def finish_job_core(job: Any, trial_index: int, this_jobs_finished: int) -> int:
     if ax_client:
         _trial = ax_client.get_trial(trial_index)
 
-        possible_val_not_found_values = [VAL_IF_NOTHING_FOUND, -VAL_IF_NOTHING_FOUND, -99999999999999997168788049560464200849936328366177157906432, 99999999999999997168788049560464200849936328366177157906432]
+        if _finish_job_core_helper_check_valid_result(result):
+            _finish_job_core_helper_complete_trial(trial_index, raw_result)
 
-        values_to_check = result if isinstance(result, list) else [result]
-
-        if result is not None and all(r not in possible_val_not_found_values for r in values_to_check):
-            print_debug(f"Completing trial: {trial_index} with result: {raw_result}...")
             try:
-                print_debug(f"Completing trial: {trial_index} with result: {raw_result}...")
-                ax_client.complete_trial(trial_index=trial_index, raw_data=raw_result)
-                print_debug(f"Completing trial: {trial_index} with result: {raw_result}... Done!")
-            except ax.exceptions.core.UnsupportedError as e:
-                if f"{e}":
-                    print_debug(f"Completing trial: {trial_index} with result: {raw_result} after failure. Trying to update trial...")
-                    ax_client.update_trial_data(trial_index=trial_index, raw_data=raw_result)
-                    print_debug(f"Completing trial: {trial_index} with result: {raw_result} after failure... Done!")
-                else:
-                    print_red(f"Error completing trial: {e}")
-                    my_exit(234)
-
-            #count_done_jobs(1)
-            try:
-                print_debug(f"Marking trial {_trial} as completed")
-                _trial.mark_completed(unsafe=True)
-
-                succeeded_jobs(1)
-
-                progressbar_description([f"new result: {result}"])
-                update_progress_bar(progress_bar, 1)
-
-                log_what_needs_to_be_logged()
-
-                live_share()
+                _finish_job_core_helper_mark_success(_trial, result)
             except Exception as e:
                 print(f"ERROR in line {get_line_info()}: {e}")
         else:
-            print_debug(f"Counting job {job} as failed, because the result is {result}")
-            if job:
-                try:
-                    progressbar_description(["job_failed"])
-                    ax_client.log_trial_failure(trial_index=trial_index)
-                    _trial.mark_failed(unsafe=True)
-                except Exception as e:
-                    print_red(f"\nERROR while trying to mark job as failure: {e}")
-                job.cancel()
-                orchestrate_job(job, trial_index)
-
-            mark_trial_as_failed(trial_index, _trial)
-            failed_jobs(1)
+            _finish_job_core_helper_mark_failure(job, trial_index, _trial)
     else:
         print_red("ax_client could not be found or used")
         my_exit(9)
@@ -5989,70 +6023,107 @@ def finish_job_core(job: Any, trial_index: int, this_jobs_finished: int) -> int:
     return this_jobs_finished
 
 @beartype
+def _finish_previous_jobs_helper_handle_failed_job(job: Any, trial_index: int) -> None:
+    if job:
+        try:
+            progressbar_description(["job_failed"])
+            _trial = ax_client.get_trial(trial_index)
+            ax_client.log_trial_failure(trial_index=trial_index)
+            mark_trial_as_failed(trial_index, _trial)
+        except Exception as e:
+            print(f"ERROR in line {get_line_info()}: {e}")
+        job.cancel()
+        orchestrate_job(job, trial_index)
+    failed_jobs(1)
+    print_debug(f"finish_previous_jobs: removing job {job}, trial_index: {trial_index}")
+
+    with global_vars_jobs_lock:
+        print_debug(f"finish_previous_jobs: removing job {job}, trial_index: {trial_index}")
+        global_vars["jobs"].remove((job, trial_index))
+
+@beartype
+def _finish_previous_jobs_helper_handle_exception(job: Any, trial_index: int, error: Exception) -> int:
+    if "None for metric" in str(error):
+        print_red(
+            f"\n⚠ It seems like the program that was about to be run didn't have 'RESULT: <FLOAT>' in it's output string."
+            f"\nError: {error}\nJob-result: {job.result()}"
+        )
+    else:
+        print_red(f"\n⚠ {error}")
+
+    _finish_previous_jobs_helper_handle_failed_job(job, trial_index)
+    return 1
+
+@beartype
+def _finish_previous_jobs_helper_process_job(job: Any, trial_index: int, this_jobs_finished: int) -> int:
+    try:
+        this_jobs_finished = finish_job_core(job, trial_index, this_jobs_finished)
+    except (SignalINT, SignalUSR, SignalCONT) as e:
+        print_red(f"Cancelled finish_job_core: {e}")
+    except (FileNotFoundError, submitit.core.utils.UncompletedJobError, ax.exceptions.core.UserInputError) as error:
+        this_jobs_finished += _finish_previous_jobs_helper_handle_exception(job, trial_index, error)
+    return this_jobs_finished
+
+@beartype
+def _finish_previous_jobs_helper_check_and_process(job: Any, trial_index: int, this_jobs_finished: int) -> int:
+    if job is None:
+        print_debug(f"finish_previous_jobs: job {job} is None")
+        return this_jobs_finished
+
+    if job.done() or type(job) in [LocalJob, DebugJob]:
+        this_jobs_finished = _finish_previous_jobs_helper_process_job(job, trial_index, this_jobs_finished)
+    else:
+        if not isinstance(job, SlurmJob):
+            print_debug(f"finish_previous_jobs: job was neither done, nor LocalJob nor DebugJob, but {job}")
+
+    return this_jobs_finished
+
+@beartype
+def _finish_previous_jobs_helper_wrapper(__args: Tuple[Any, int]) -> int:
+    job, trial_index = __args
+    return _finish_previous_jobs_helper_check_and_process(job, trial_index, 0)
+
+@beartype
 def finish_previous_jobs(new_msgs: List[str]) -> None:
     global JOBS_FINISHED
 
     if not ax_client:
         print_red("ax_client failed")
         my_exit(101)
-
         return None
 
     this_jobs_finished = 0
 
-    if len(global_vars["jobs"]) > 0:
-        print_debug(f"jobs in finish_previous_jobs: {global_vars['jobs']}")
+    jobs_copy = global_vars["jobs"][:]
 
-    for job, trial_index in global_vars["jobs"][:]:
-        if job is None:
-            print_debug(f"finish_previous_jobs: job {job} is None")
-            continue
+    if len(jobs_copy) > 0:
+        print_debug(f"jobs in finish_previous_jobs: {jobs_copy}")
 
-        #print_debug(f"finish_previous_jobs: single job {job}")
+    finishing_jobs_start_time = time.time()
 
-        if job.done() or type(job) in [LocalJob, DebugJob]:
+    with ThreadPoolExecutor() as finish_job_executor:
+        futures = [finish_job_executor.submit(_finish_previous_jobs_helper_wrapper, (job, trial_index)) for job, trial_index in jobs_copy]
+
+        for future in as_completed(futures):
             try:
-                this_jobs_finished = finish_job_core(job, trial_index, this_jobs_finished)
-            except (SignalINT, SignalUSR, SignalCONT) as e:
-                print_red(f"Cancelled finish_job_core: {e}")
-            except (FileNotFoundError, submitit.core.utils.UncompletedJobError, ax.exceptions.core.UserInputError) as error:
-                if "None for metric" in str(error):
-                    print_red(f"\n⚠ It seems like the program that was about to be run didn't have 'RESULT: <FLOAT>' in it's output string.\nError: {error}\nJob-result: {job.result()}")
-                else:
-                    print_red(f"\n⚠ {error}")
+                this_jobs_finished += future.result()
+            except Exception as e:
+                print_red(f"⚠ Exception in parallel job handling: {e}")
 
-                if job:
-                    try:
-                        progressbar_description(["job_failed"])
-                        _trial = ax_client.get_trial(trial_index)
-                        ax_client.log_trial_failure(trial_index=trial_index)
-                        mark_trial_as_failed(trial_index, _trial)
-                    except Exception as e:
-                        print(f"ERROR in line {get_line_info()}: {e}")
-                    job.cancel()
-                    orchestrate_job(job, trial_index)
+    finishing_jobs_end_time = time.time()
 
-                failed_jobs(1)
-                this_jobs_finished += 1
-                print_debug(f"finish_previous_jobs: removing job {job}, trial_index: {trial_index}")
-                global_vars["jobs"].remove((job, trial_index))
+    finishing_jobs_runtime = finishing_jobs_end_time - finishing_jobs_start_time
 
-            save_checkpoint()
-        else:
-            if not isinstance(job, SlurmJob):
-                print_debug(f"finish_previous_jobs: job was neither done, nor LocalJob nor DebugJob, but {job}")
-
-        save_results_csv()
+    print_debug(f"Finishing jobs took {finishing_jobs_runtime} second(s)")
 
     save_results_csv()
+    save_checkpoint()
 
     if this_jobs_finished > 0:
         progressbar_description([*new_msgs, f"finished {this_jobs_finished} {'job' if this_jobs_finished == 1 else 'jobs'}"])
 
     JOBS_FINISHED += this_jobs_finished
-
     clean_completed_jobs()
-
     return None
 
 @beartype
@@ -6351,16 +6422,23 @@ def exclude_defective_nodes() -> None:
             my_exit(9)
 
 @beartype
-def handle_failed_job(error: Union[None, Exception, str], trial_index: int, new_job: Job) -> None:
+def handle_failed_job(error: Union[None, Exception, str], trial_index: int, new_job: Optional[Job]) -> None:
     if "QOSMinGRES" in str(error) and args.gpus == 0:
         print_red("\n⚠ It seems like, on the chosen partition, you need at least one GPU. Use --gpus=1 (or more) as parameter.")
     else:
         print_red(f"\n⚠ FAILED: {error}")
 
+    if new_job is None:
+        print_red("handle_failed_job: job is None")
+
+        return None
+
     try:
         cancel_failed_job(trial_index, new_job)
     except Exception as e:
         print_red(f"\n⚠ Cancelling failed job FAILED: {e}")
+
+    return None
 
 @beartype
 def cancel_failed_job(trial_index: int, new_job: Job) -> None:
@@ -6560,7 +6638,7 @@ def get_acquisition_options() -> dict:
 
 @beartype
 def get_batched_arms(nr_of_jobs_to_get: int) -> list:
-    batched_arms = []
+    batched_arms: list = []
     attempts = 0
 
     while len(batched_arms) != nr_of_jobs_to_get:
@@ -6651,6 +6729,7 @@ def _fetch_next_trials(nr_of_jobs_to_get: int, recursion: bool = False) -> Optio
         all_time = float(all_end_time - all_start_time)
 
         log_gen_times.append(all_time)
+        log_nr_gen_jobs.append(cnt)
 
         if cnt:
             progressbar_description([f"requested {nr_of_jobs_to_get} jobs, got {cnt}, {all_time / cnt} s/job"])
@@ -6732,6 +6811,7 @@ def save_table_as_text(table: Table, filepath: str) -> None:
 def show_time_debugging_table() -> None:
     generate_time_table_rich()
     generate_job_submit_table_rich()
+    plot_times_for_creation_and_submission()
 
     live_share()
 
@@ -6741,37 +6821,50 @@ def generate_time_table_rich() -> None:
         print_debug("generate_time_table_rich: Error: log_gen_times is not a list.")
         return
 
+    if not isinstance(log_nr_gen_jobs, list):
+        print_debug("generate_time_table_rich: Error: log_nr_gen_jobs is not a list.")
+        return
+
+    if len(log_gen_times) != len(log_nr_gen_jobs):
+        print_debug("generate_time_table_rich: Error: Mismatched lengths of times and job counts.")
+        return
+
     if len(log_gen_times) == 0:
         print_debug("generate_time_table_rich: No times to display.")
         return
 
-    for i, val in enumerate(log_gen_times):
+    for i, (val, jobs) in enumerate(zip(log_gen_times, log_nr_gen_jobs)):
         try:
             float(val)
+            int(jobs)
         except (ValueError, TypeError):
-            print_debug(f"generate_time_table_rich: Error: Element at index {i} is not a valid float.")
+            print_debug(f"generate_time_table_rich: Error: Invalid data at index {i}.")
             return
 
     table = Table(show_header=True, header_style="bold", title="Model generation times")
     table.add_column("Iteration", justify="right")
     table.add_column("Seconds", justify="right")
+    table.add_column("Jobs", justify="right")
+    table.add_column("Time per job", justify="right")
 
-    for idx, time_val in enumerate(log_gen_times, start=1):
-        table.add_row(str(idx), f"{float(time_val):.3f}")
+    times_float: List[float] = []
+    times_per_job: List[float] = []
 
-    times_float: List[float] = [float(t) for t in log_gen_times]
-    avg_time = mean(times_float)
-    median_time = median(times_float)
-    total_time = sum(times_float)
-    max_time = max(times_float)
-    min_time = min(times_float)
+    for idx, (time_val, job_count) in enumerate(zip(log_gen_times, log_nr_gen_jobs), start=1):
+        seconds = float(time_val)
+        jobs = int(job_count)
+        per_job = seconds / jobs if jobs != 0 else 0.0
+        times_float.append(seconds)
+        times_per_job.append(per_job)
+        table.add_row(str(idx), f"{seconds:.3f}", str(jobs), f"{per_job:.3f}")
 
-    table.add_row("", "")
-    table.add_row("Model generation times Average", f"{avg_time:.3f}")
-    table.add_row("Model generation times Median", f"{median_time:.3f}")
-    table.add_row("Model generation times Total", f"{total_time:.3f}")
-    table.add_row("Model generation times Max", f"{max_time:.3f}")
-    table.add_row("Model generation times Min", f"{min_time:.3f}")
+    table.add_section()
+
+    table.add_row("Average", f"{mean(times_float):.3f}", "", "")
+    table.add_row("Median", f"{median(times_float):.3f}", "", "")
+    table.add_row("Total", f"{sum(times_float):.3f}", "", "")
+    table.add_row("Max", f"{max(times_float):.3f}", "", "")
+    table.add_row("Min", f"{min(times_float):.3f}", "", "")
 
     if args.show_generate_time_table:
         console.print(table)
@@ -6783,41 +6876,54 @@ def generate_time_table_rich() -> None:
 
 @beartype
 def generate_job_submit_table_rich() -> None:
-    if not isinstance(job_submit_durations, list):
-        print_debug("generate_job_submit_table_rich: Error: job_submit_durations is not a list.")
+    if not isinstance(job_submit_durations, list) or not isinstance(job_submit_nrs, list):
+        print_debug("generate_job_submit_table_rich: Error: job_submit_durations or job_submit_nrs is not a list.")
         return
 
-    if len(job_submit_durations) == 0:
-        print_debug("generate_job_submit_table_rich: No durations to display.")
+    if len(job_submit_durations) == 0 or len(job_submit_nrs) == 0:
+        print_debug("generate_job_submit_table_rich: No durations or job counts to display.")
+        return
+
+    if len(job_submit_durations) != len(job_submit_nrs):
+        print_debug("generate_job_submit_table_rich: Length mismatch between durations and job counts.")
         return
 
     for i, val in enumerate(job_submit_durations):
         try:
             float(val)
         except (ValueError, TypeError):
-            print_debug(f"generate_job_submit_table_rich: Error: Element at index {i} is not a valid float.")
+            print_debug(f"generate_job_submit_table_rich: Error: Element at index {i} in durations is not a valid float.")
+            return
+    for i, val in enumerate(job_submit_nrs):
+        if not isinstance(val, int):
+            print_debug(f"generate_job_submit_table_rich: Error: Element at index {i} in job counts is not an int.")
             return
 
     table = Table(show_header=True, header_style="bold", title="Job submission durations")
     table.add_column("Batch", justify="right")
     table.add_column("Seconds", justify="right")
+    table.add_column("Jobs", justify="right")
+    table.add_column("Time per job", justify="right")
 
-    for idx, time_val in enumerate(job_submit_durations, start=1):
-        table.add_row(str(idx), f"{float(time_val):.3f}")
+    for idx, (time_val, jobs) in enumerate(zip(job_submit_durations, job_submit_nrs), start=1):
+        time_val_float = float(time_val)
+        time_per_job = time_val_float / jobs if jobs > 0 else 0
+        table.add_row(str(idx), f"{time_val_float:.3f}", str(jobs), f"{time_per_job:.3f}")
 
-    times_float: List[float] = [float(t) for t in job_submit_durations]
+    times_float = [float(t) for t in job_submit_durations]
     avg_time = mean(times_float)
     median_time = median(times_float)
     total_time = sum(times_float)
     max_time = max(times_float)
     min_time = min(times_float)
 
-    table.add_row("", "")
-    table.add_row("Job submission durations Average", f"{avg_time:.3f}")
-    table.add_row("Job submission durations Median", f"{median_time:.3f}")
-    table.add_row("Job submission durations Total", f"{total_time:.3f}")
-    table.add_row("Job submission durations Max", f"{max_time:.3f}")
-    table.add_row("Job submission durations Min", f"{min_time:.3f}")
+    table.add_section()
+
+    table.add_row("Average", f"{avg_time:.3f}", "", "")
+    table.add_row("Median", f"{median_time:.3f}", "", "")
+    table.add_row("Total", f"{total_time:.3f}", "", "")
+    table.add_row("Max", f"{max_time:.3f}", "", "")
+    table.add_row("Min", f"{min_time:.3f}", "", "")
 
     if args.show_generate_time_table:
         console.print(table)
@@ -6826,6 +6932,67 @@ def generate_job_submit_table_rich() -> None:
     filename = "job_submit_durations.txt"
     filepath = os.path.join(folder, filename)
     save_table_as_text(table, filepath)
+
+@beartype
+def plot_times_for_creation_and_submission() -> None:
+    if not args.show_generation_and_submission_sixel:
+        return
+
+    plot_times_vs_jobs_sixel(
+        times=job_submit_durations,
+        job_counts=job_submit_nrs,
+        xlabel="Index",
+        ylabel="Duration (seconds)",
+        title="Job Submission Durations vs Number of Jobs"
+    )
+
+    plot_times_vs_jobs_sixel(
+        times=log_gen_times,
+        job_counts=log_nr_gen_jobs,
+        xlabel="Index",
+        ylabel="Generation Time (seconds)",
+        title="Model Generation Times vs Number of Jobs"
+    )
+
+@beartype
+def plot_times_vs_jobs_sixel(
+    times: List[float],
+    job_counts: List[int],
+    xlabel: Optional[str] = "Iteration",
+    ylabel: Optional[str] = "Duration (seconds)",
+    title: Optional[str] = "Times vs Jobs"
+) -> None:
+    if not times or not job_counts or len(times) != len(job_counts):
+        print("[italic yellow]No valid data or mismatched lengths to plot.[/]")
+        return
+
+    if not supports_sixel():
+        print("[italic yellow]Your console does not support sixel-images. Cannot show plot.[/]")
+        return
+
+    import matplotlib.pyplot as plt
+
+    fig, _ax = plt.subplots()
+
+    iterations = list(range(1, len(times) + 1))
+    sizes = [max(20, min(200, jc * 10)) for jc in job_counts]  # Punktgröße je nach Jobanzahl, skaliert
+
+    scatter = _ax.scatter(iterations, times, s=sizes, c=job_counts, cmap='viridis', alpha=0.7, edgecolors='black')
+
+    _ax.set_xlabel(xlabel)
+    _ax.set_ylabel(ylabel)
+    _ax.set_title(title)
+    _ax.grid(True)
+
+    cbar = plt.colorbar(scatter, ax=_ax)
+    cbar.set_label('Number of Jobs')
+
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=True) as tmp_file:
+        plt.savefig(tmp_file.name, dpi=300)
+        print_image_to_cli(tmp_file.name, width=1000)
+
+    plt.close(fig)
+
 
 @beartype
 def _handle_linalg_error(error: Union[None, str, Exception]) -> None:
@@ -7383,10 +7550,13 @@ def execute_trials(
 
     start_time = time.time()
 
+    cnt = 0
+
     with ThreadPoolExecutor(max_workers=min(len(index_param_list), 16)) as tp_executor:
         future_to_args = {tp_executor.submit(execute_evaluation, args): args for args in index_param_list}
 
         for future in as_completed(future_to_args):
+            cnt = cnt + 1
             try:
                 result = future.result()
                 results.append(result)
@@ -7398,6 +7568,7 @@ def execute_trials(
 
     duration = float(end_time - start_time)
     job_submit_durations.append(duration)
+    job_submit_nrs.append(cnt)
 
     return results
 
@@ -7734,7 +7905,7 @@ def go_through_jobs_that_are_not_completed_yet() -> None:
     jobs_left = len(global_vars['jobs'])
 
     if jobs_left == 1:
-        finish_previous_jobs([f"waiting for {jobs_left} job)"])
+        finish_previous_jobs([f"waiting for {jobs_left} job"])
     else:
         finish_previous_jobs([f"waiting for {jobs_left} jobs"])
 
@@ -8228,7 +8399,7 @@ def show_pareto_frontier_data(res_names: list, force: bool = False) -> None:
         return
 
     objectives = ax_client.experiment.optimization_config.objective.objectives
-    pareto_front_data = {}
+    pareto_front_data: dict = {}
     all_combinations = list(combinations(range(len(objectives)), 2))
     collected_data = []
 

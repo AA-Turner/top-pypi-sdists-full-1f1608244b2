@@ -1,22 +1,21 @@
 Metadata-Version: 2.3
 Name: pypika-tortoise
-Version: 0.5.0
+Version: 0.6.0
 Summary: Forked from pypika and streamline just for tortoise-orm
-Home-page: https://github.com/tortoise/pypika-tortoise
 License: Apache-2.0
 Keywords: postgresql,Tortoise-ORM,mysql,sqlite,sql
 Author: long2ice
 Author-email: long2ice@gmail.com
-Requires-Python: >=3.8,<4.0
+Requires-Python: >=3.9
 Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
 Classifier: Programming Language :: Python :: 3.13
 Project-URL: Documentation, https://github.com/tortoise/pypika-tortoise
+Project-URL: Homepage, https://github.com/tortoise/pypika-tortoise
 Project-URL: Repository, https://github.com/tortoise/pypika-tortoise.git
 Description-Content-Type: text/markdown
 

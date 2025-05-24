@@ -9,7 +9,7 @@ from pathlib import Path
 from sqlite3 import OperationalError
 from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple, Union
 
-from hexbytes import HexBytes
+from eth_utils.toolz import keymap
 from web3.types import BlockData
 
 from brownie._config import CONFIG, _get_data_folder
@@ -18,6 +18,7 @@ from brownie.convert import Wei
 from brownie.exceptions import BrownieEnvironmentError, CompilerError
 from brownie.network import rpc
 from brownie.project.build import DEPLOYMENT_KEYS
+from brownie.utils import bytes_to_hexstring
 from brownie.utils.sql import Cursor
 
 from .transaction import TransactionReceipt
@@ -117,10 +118,8 @@ class TxHistory(metaclass=_Singleton):
         List
             A filtered list of TransactionReceipt objects.
         """
-        result = [i for i in self._list if all(getattr(i, k) == v for k, v in kwargs.items())]
-        if key is None:
-            return result
-        return [i for i in result if key(i)]
+        result = (i for i in self._list if all(getattr(i, k) == v for k, v in kwargs.items()))
+        return list(result if key is None else filter(key, result))
 
     def wait(self, key: Optional[Callable] = None, **kwargs: Optional[Any]) -> None:
         """
@@ -351,7 +350,7 @@ class Chain(metaclass=_Singleton):
         Return a TransactionReceipt object for the given transaction hash.
         """
         if not isinstance(txid, str):
-            txid = HexBytes(txid).hex()
+            txid = bytes_to_hexstring(txid)
         tx = next((i for i in TxHistory() if i.txid == txid), None)
         return tx or TransactionReceipt(txid, silent=True, required_confs=0)
 
@@ -400,14 +399,14 @@ class Chain(metaclass=_Singleton):
         if not isinstance(blocks, int):
             raise TypeError("`blocks` must be an integer value")
 
-        if timedelta is not None and timestamp is not None:
-            raise ValueError("Cannot use both `timestamp` and `timedelta`")
-
         if timedelta is not None:
+            if timestamp is not None:
+                raise ValueError("Cannot use both `timestamp` and `timedelta`")
+
             timestamp = self.time() + timedelta
 
         if timestamp is None:
-            params: List = [[] for i in range(blocks)]
+            params: List = [[] for _ in range(blocks)]
         elif blocks == 1:
             params = [[timestamp]]
         else:
@@ -496,7 +495,7 @@ class Chain(metaclass=_Singleton):
             if num > len(self._undo_buffer):
                 raise ValueError(f"Undo buffer contains {len(self._undo_buffer)} items")
 
-            for i in range(num):
+            for _ in range(num):
                 id_, fn, args, kwargs = self._undo_buffer.pop()
                 self._redo_buffer.append((fn, args, kwargs))
 
@@ -525,7 +524,7 @@ class Chain(metaclass=_Singleton):
             if num > len(self._redo_buffer):
                 raise ValueError(f"Redo buffer contains {len(self._redo_buffer)} items")
 
-            for i in range(num):
+            for _ in range(num):
                 fn, args, kwargs = self._redo_buffer.pop()
                 fn(*args, **kwargs)
 
@@ -570,7 +569,7 @@ def _find_contract(address: Any) -> Any:
 
 
 def _get_current_dependencies() -> List:
-    dependencies = set(v._name for v in _contract_map.values())
+    dependencies = {v._name for v in _contract_map.values()}
     for contract in _contract_map.values():
         dependencies.update(contract._build.get("dependencies", []))
     return sorted(dependencies)
@@ -607,7 +606,7 @@ def _get_deployment(
         return None, None
 
     keys = ["address", "alias", "paths"] + DEPLOYMENT_KEYS
-    build_json = {k: v for k, v in zip(keys, row)}
+    build_json = dict(zip(keys, row))
     path_map = build_json.pop("paths")
     sources = {
         i[1]: cur.fetchone("SELECT source FROM sources WHERE hash=?", (i[0],))[0]
@@ -615,7 +614,7 @@ def _get_deployment(
     }
     build_json["allSourcePaths"] = {k: v[1] for k, v in path_map.items()}
     if isinstance(build_json["pcMap"], dict):
-        build_json["pcMap"] = dict((int(k), v) for k, v in build_json["pcMap"].items())
+        build_json["pcMap"] = keymap(int, build_json["pcMap"])
 
     return build_json, sources
 
@@ -671,8 +670,7 @@ def _remove_deployment(
     # delete entry from chain{n}
     cur.execute(f"DELETE FROM {name} WHERE {query}")
     # delete all entries from sources matching the contract's source hashes
-    contract = _find_contract(address)
-    if contract:
+    if contract := _find_contract(address):
         for key, path in contract._build.get("allSourcePaths", {}).items():
             source = contract._sources.get(path)
             if source is None:

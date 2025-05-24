@@ -5504,6 +5504,14 @@ class AWSManagedPolicies(enum.Enum):
     '''
     :stability: experimental
     '''
+    AWSQUICK_SIGHT_SECRETS_MANAGER_WRITE_ACCESS = "AWSQUICK_SIGHT_SECRETS_MANAGER_WRITE_ACCESS"
+    '''
+    :stability: experimental
+    '''
+    AMAZONDYNAMODBFULLACCESS_V2 = "AMAZONDYNAMODBFULLACCESS_V2"
+    '''
+    :stability: experimental
+    '''
 
 
 class LambdaArmFunction(

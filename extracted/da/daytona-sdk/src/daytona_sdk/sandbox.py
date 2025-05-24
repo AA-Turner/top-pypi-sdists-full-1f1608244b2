@@ -114,7 +114,7 @@ class SandboxInfo(ApiSandboxInfo):
             deprecated="The `name` field is deprecated.",
         ),
     ]
-    image: str
+    image: Optional[str]
     user: str
     env: Dict[str, str]
     labels: Dict[str, str]

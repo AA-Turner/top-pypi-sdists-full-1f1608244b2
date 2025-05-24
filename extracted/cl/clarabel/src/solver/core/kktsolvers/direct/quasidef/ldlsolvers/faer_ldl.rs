@@ -1,15 +1,7 @@
 #![allow(non_snake_case)]
 
 use faer::dyn_stack::{MemBuffer, MemStack, StackReq};
-// use faer::{
-//     dyn_stack::{GlobalPodBuffer, PodStack, StackReq},
-//     linalg::cholesky::ldlt::compute::LdltRegularization,
-//     sparse::{
-//         linalg::{amd::Control, cholesky::*, SupernodalThreshold},
-//         SparseColMatRef, SymbolicSparseColMatRef,
-//     },
-//     Conj, Parallelism, Side,
-// };
+
 use faer::{
     linalg::cholesky::ldlt::factor::{LdltParams, LdltRegularization},
     sparse::{
@@ -27,8 +19,13 @@ use faer::{
 };
 
 use crate::algebra::*;
-use crate::solver::core::kktsolvers::direct::DirectLDLSolver;
-use crate::solver::core::CoreSettings;
+use crate::solver::core::{
+    kktsolvers::{
+        direct::{DirectLDLSolver, DirectLDLSolverReqs},
+        HasLinearSolverInfo, LinearSolverInfo,
+    },
+    CoreSettings,
+};
 use std::iter::zip;
 
 #[derive(Debug)]
@@ -88,11 +85,12 @@ impl<T> FaerDirectLDLSolver<T>
 where
     T: FloatT,
 {
-    pub fn nthreads_from_settings(setting: usize) -> usize {
-        faer::utils::thread::parallelism_degree(faer::Par::rayon(setting))
-    }
-
-    pub fn new(KKT: &CscMatrix<T>, Dsigns: &[i8], settings: &CoreSettings<T>) -> Self {
+    pub fn new(
+        KKT: &CscMatrix<T>,
+        Dsigns: &[i8],
+        settings: &CoreSettings<T>,
+        perm: Option<Vec<usize>>,
+    ) -> Self {
         assert!(KKT.is_square(), "KKT matrix is not square");
 
         // -----------------------------
@@ -106,10 +104,17 @@ where
             }
         };
 
-        // manually compute an AMD ordering for the KKT matrix
-        // and permute it to match the ordering used in QDLDL
-        let amd_dense_scale = 1.5; // magic number from QDLDL
-        let (perm, iperm) = crate::qdldl::get_amd_ordering(KKT, amd_dense_scale);
+        // perm has possibly been passed by LDL auto selector.
+        // If not, find an ordering now
+        let (perm, iperm) = {
+            if let Some(perm) = perm {
+                let iperm = invperm(&perm);
+                (perm, iperm)
+            } else {
+                let (perm, iperm, _) = super::amd_order(KKT);
+                (perm, iperm)
+            }
+        };
 
         let (mut perm_kkt, mut perm_map) = crate::qdldl::permute_symmetric(KKT, &iperm);
 
@@ -187,6 +192,30 @@ where
     }
 }
 
+impl<T> DirectLDLSolverReqs for FaerDirectLDLSolver<T>
+where
+    T: FloatT,
+{
+    fn required_matrix_shape() -> MatrixTriangle {
+        MatrixTriangle::Triu
+    }
+}
+
+impl<T> HasLinearSolverInfo for FaerDirectLDLSolver<T>
+where
+    T: FloatT,
+{
+    fn linear_solver_info(&self) -> LinearSolverInfo {
+        LinearSolverInfo {
+            name: "faer".to_string(),
+            threads: self.parallelism.degree(),
+            direct: true,
+            nnzA: self.perm_kkt.nnz(),
+            nnzL: self.ld_vals.len() - self.perm_kkt.n,
+        }
+    }
+}
+
 impl<T> DirectLDLSolver<T> for FaerDirectLDLSolver<T>
 where
     T: FloatT,
@@ -222,7 +251,7 @@ where
         }
     }
 
-    fn solve(&mut self, _kkt: &CscMatrix<T>, x: &mut [T], b: &[T]) {
+    fn solve(&mut self, _kkt: &CscMatrix<T>, x: &mut [T], b: &mut [T]) {
         // NB: faer solves in place.  Permute b to match the ordering used internally
         permute(&mut self.bperm, b, &self.perm);
 
@@ -265,10 +294,6 @@ where
                 self.ldlt_params,
             )
             .is_ok() // PJG: convert to bool for consistency with qdldl.   Should really return Result here and elsewhere
-    }
-
-    fn required_matrix_shape() -> MatrixTriangle {
-        MatrixTriangle::Triu
     }
 }
 
@@ -336,10 +361,10 @@ fn test_faer_ldl() {
 
     let Dsigns = vec![1, 1, -1, -1, -1, -1];
 
-    let mut solver = FaerDirectLDLSolver::new(&KKT, &Dsigns, &CoreSettings::default());
+    let mut solver = FaerDirectLDLSolver::new(&KKT, &Dsigns, &CoreSettings::default(), None);
 
     let mut x = vec![0.0; 6];
-    let b = vec![1.0, 2.0, 3.0, 4., 5., 6.];
+    let mut b = vec![1.0, 2.0, 3.0, 4., 5., 6.];
 
     // check that the permuted values are in what should be natural order
     let nzval = &solver.perm_kkt.nzval; // post perm internal data
@@ -350,7 +375,7 @@ fn test_faer_ldl() {
     }
 
     solver.refactor(&KKT);
-    solver.solve(&KKT, &mut x, &b);
+    solver.solve(&KKT, &mut x, &mut b);
 
     let xsol = vec![
         1.0,
@@ -366,7 +391,7 @@ fn test_faer_ldl() {
     solver.update_values(&[9], &[-10.0]);
 
     solver.refactor(&KKT);
-    solver.solve(&KKT, &mut x, &b);
+    solver.solve(&KKT, &mut x, &mut b);
 
     let xsol = vec![
         1.0,
@@ -411,7 +436,7 @@ fn test_faer_qp() {
         .build()
         .unwrap();
 
-    let mut solver = crate::solver::DefaultSolver::new(&P, &q, &A, &b, &cones, settings);
+    let mut solver = crate::solver::DefaultSolver::new(&P, &q, &A, &b, &cones, settings).unwrap();
 
     solver.solve();
 

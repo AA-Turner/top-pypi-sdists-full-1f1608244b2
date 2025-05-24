@@ -1,7 +1,7 @@
 r'''
 # `tfe_test_variable`
 
-Refer to the Terraform Registry for docs: [`tfe_test_variable`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable).
+Refer to the Terraform Registry for docs: [`tfe_test_variable`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class TestVariable(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.testVariable.TestVariable",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable tfe_test_variable}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable tfe_test_variable}.'''
 
     def __init__(
         self,
@@ -69,20 +69,20 @@ class TestVariable(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable tfe_test_variable} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable tfe_test_variable} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param category: Whether this is a Terraform or environment variable. Valid values are "terraform" or "env". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#category TestVariable#category}
-        :param key: Name of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#key TestVariable#key}
-        :param module_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#module_name TestVariable#module_name}.
-        :param module_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#module_provider TestVariable#module_provider}.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#organization TestVariable#organization}.
-        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#description TestVariable#description}.
-        :param hcl: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#hcl TestVariable#hcl}.
-        :param sensitive: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#sensitive TestVariable#sensitive}.
-        :param value: Value of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#value TestVariable#value}
-        :param value_wo: Value of the variable in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#value_wo TestVariable#value_wo}
+        :param category: Whether this is a Terraform or environment variable. Valid values are "terraform" or "env". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#category TestVariable#category}
+        :param key: Name of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#key TestVariable#key}
+        :param module_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#module_name TestVariable#module_name}.
+        :param module_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#module_provider TestVariable#module_provider}.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#organization TestVariable#organization}.
+        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#description TestVariable#description}.
+        :param hcl: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#hcl TestVariable#hcl}.
+        :param sensitive: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#sensitive TestVariable#sensitive}.
+        :param value: Value of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#value TestVariable#value}
+        :param value_wo: Value of the variable in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#value_wo TestVariable#value_wo}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -130,7 +130,7 @@ class TestVariable(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the TestVariable to import.
-        :param import_from_id: The id of the existing TestVariable that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing TestVariable that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the TestVariable to import is found.
         '''
         if __debug__:
@@ -418,16 +418,16 @@ class TestVariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param category: Whether this is a Terraform or environment variable. Valid values are "terraform" or "env". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#category TestVariable#category}
-        :param key: Name of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#key TestVariable#key}
-        :param module_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#module_name TestVariable#module_name}.
-        :param module_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#module_provider TestVariable#module_provider}.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#organization TestVariable#organization}.
-        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#description TestVariable#description}.
-        :param hcl: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#hcl TestVariable#hcl}.
-        :param sensitive: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#sensitive TestVariable#sensitive}.
-        :param value: Value of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#value TestVariable#value}
-        :param value_wo: Value of the variable in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#value_wo TestVariable#value_wo}
+        :param category: Whether this is a Terraform or environment variable. Valid values are "terraform" or "env". Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#category TestVariable#category}
+        :param key: Name of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#key TestVariable#key}
+        :param module_name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#module_name TestVariable#module_name}.
+        :param module_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#module_provider TestVariable#module_provider}.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#organization TestVariable#organization}.
+        :param description: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#description TestVariable#description}.
+        :param hcl: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#hcl TestVariable#hcl}.
+        :param sensitive: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#sensitive TestVariable#sensitive}.
+        :param value: Value of the variable. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#value TestVariable#value}
+        :param value_wo: Value of the variable in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#value_wo TestVariable#value_wo}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -550,7 +550,7 @@ class TestVariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def category(self) -> builtins.str:
         '''Whether this is a Terraform or environment variable. Valid values are "terraform" or "env".
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#category TestVariable#category}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#category TestVariable#category}
         '''
         result = self._values.get("category")
         assert result is not None, "Required property 'category' is missing"
@@ -560,7 +560,7 @@ class TestVariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def key(self) -> builtins.str:
         '''Name of the variable.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#key TestVariable#key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#key TestVariable#key}
         '''
         result = self._values.get("key")
         assert result is not None, "Required property 'key' is missing"
@@ -568,28 +568,28 @@ class TestVariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def module_name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#module_name TestVariable#module_name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#module_name TestVariable#module_name}.'''
         result = self._values.get("module_name")
         assert result is not None, "Required property 'module_name' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def module_provider(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#module_provider TestVariable#module_provider}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#module_provider TestVariable#module_provider}.'''
         result = self._values.get("module_provider")
         assert result is not None, "Required property 'module_provider' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def organization(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#organization TestVariable#organization}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#organization TestVariable#organization}.'''
         result = self._values.get("organization")
         assert result is not None, "Required property 'organization' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def description(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#description TestVariable#description}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#description TestVariable#description}.'''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -597,7 +597,7 @@ class TestVariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def hcl(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#hcl TestVariable#hcl}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#hcl TestVariable#hcl}.'''
         result = self._values.get("hcl")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -605,7 +605,7 @@ class TestVariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def sensitive(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#sensitive TestVariable#sensitive}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#sensitive TestVariable#sensitive}.'''
         result = self._values.get("sensitive")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -613,7 +613,7 @@ class TestVariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def value(self) -> typing.Optional[builtins.str]:
         '''Value of the variable.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#value TestVariable#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#value TestVariable#value}
         '''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -622,7 +622,7 @@ class TestVariableConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def value_wo(self) -> typing.Optional[builtins.str]:
         '''Value of the variable in write-only mode.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/test_variable#value_wo TestVariable#value_wo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/test_variable#value_wo TestVariable#value_wo}
         '''
         result = self._values.get("value_wo")
         return typing.cast(typing.Optional[builtins.str], result)

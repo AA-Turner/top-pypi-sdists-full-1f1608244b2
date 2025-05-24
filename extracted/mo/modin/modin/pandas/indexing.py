@@ -32,7 +32,7 @@ https://github.com/ray-project/ray/pull/1955#issuecomment-386781826
 from __future__ import annotations
 
 import itertools
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 import numpy as np
 import pandas
@@ -40,14 +40,21 @@ from pandas.api.types import is_bool, is_list_like
 from pandas.core.dtypes.common import is_bool_dtype, is_integer, is_integer_dtype
 from pandas.core.indexing import IndexingError
 
+from modin.core.storage_formats.pandas.query_compiler_caster import (
+    EXTENSION_DICT_TYPE,
+    QueryCompilerCaster,
+)
 from modin.error_message import ErrorMessage
-from modin.logging import ClassLogger
+from modin.logging import ClassLogger, disable_logging
+from modin.utils import _inherit_docstrings
 
 from .dataframe import DataFrame
 from .series import Series
 from .utils import is_scalar
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from modin.core.storage_formats import BaseQueryCompiler
 
 
@@ -273,7 +280,7 @@ def _compute_ndim(row_loc, col_loc):
     return ndim
 
 
-class _LocationIndexerBase(ClassLogger):
+class _LocationIndexerBase(QueryCompilerCaster, ClassLogger):
     """
     Base class for location indexer like loc and iloc.
 
@@ -285,8 +292,81 @@ class _LocationIndexerBase(ClassLogger):
 
     df: Union[DataFrame, Series]
     qc: BaseQueryCompiler
+    _extensions: EXTENSION_DICT_TYPE = EXTENSION_DICT_TYPE(dict)
+
+    def is_backend_pinned(self) -> bool:
+        """
+        Get whether this object's data is pinned to a particular backend.
+
+        Returns
+        -------
+        bool
+            True if the data is pinned.
+        """
+        return self.df.is_backend_pinned()
+
+    def _set_backend_pinned(self, pinned: bool, inplace: bool = False):
+        """
+        Update whether this object's data is pinned to a particular backend.
+
+        Parameters
+        ----------
+        pinned : bool
+            Whether the data is pinned.
+
+        inplace : bool, default: False
+            Whether to update the object in place.
+
+        Returns
+        -------
+        Optional[Self]
+            The object with the new pin state, if `inplace` is False. Otherwise, None.
+        """
+        change = (self.is_backend_pinned() and not pinned) or (
+            not self.is_backend_pinned() and pinned
+        )
+        if not change:
+            return None if inplace else self
+        result = type(self)(self.df._set_backend_pinned(pinned))
+        if inplace:
+            result._copy_into(self)
+            return None
+        return result
+
+    @disable_logging
+    @_inherit_docstrings(QueryCompilerCaster.set_backend)
+    def set_backend(
+        self, backend, inplace: bool = False, *, switch_operation: Optional[str] = None
+    ) -> Optional[Self]:
+        result = type(self)(
+            self.df.set_backend(backend, switch_operation=switch_operation)
+        )
+        if inplace:
+            result._copy_into(self)
+            return None
+        return result
+
+    @disable_logging
+    @_inherit_docstrings(QueryCompilerCaster._get_query_compiler)
+    def _get_query_compiler(self):
+        return getattr(self, "qc", None)
+
+    @disable_logging
+    @_inherit_docstrings(QueryCompilerCaster.get_backend)
+    def get_backend(self):
+        return self.qc.get_backend()
+
+    @disable_logging
+    @_inherit_docstrings(QueryCompilerCaster._copy_into)
+    def _copy_into(self, other: Series):
+        other.qc = self.df._query_compiler
+        other.df._update_inplace(new_query_compiler=self.df._query_compiler)
+        other.df._set_backend_pinned(self.is_backend_pinned())
+        return None
 
     def __init__(self, modin_df: Union[DataFrame, Series]):
+        # TODO(https://github.com/modin-project/modin/issues/7513): Do not keep
+        # both `df` and `qc`.
         self.df = modin_df
         self.qc = modin_df._query_compiler
 
@@ -442,12 +522,12 @@ class _LocationIndexerBase(ClassLogger):
             assert len(row_lookup) == 1
             new_qc = self.qc.setitem(1, self.qc.index[row_lookup[0]], item)
             self.df._create_or_update_from_compiler(new_qc, inplace=True)
-            self.qc = self.df._query_compiler
         # Assignment to both axes.
         else:
             new_qc = self.qc.write_items(row_lookup, col_lookup, item)
             self.df._create_or_update_from_compiler(new_qc, inplace=True)
-            self.qc = self.df._query_compiler
+
+        self.qc = self.df._query_compiler
 
     def _determine_setitem_axis(self, row_lookup, col_lookup, row_scalar, col_scalar):
         """
@@ -625,6 +705,8 @@ class _LocIndexer(_LocationIndexerBase):
         DataFrame to operate on.
     """
 
+    _extensions: EXTENSION_DICT_TYPE = EXTENSION_DICT_TYPE(dict)
+
     def __getitem__(self, key):
         """
         Retrieve dataset according to `key`.
@@ -792,6 +874,7 @@ class _LocIndexer(_LocationIndexerBase):
             self.df._update_inplace(
                 new_query_compiler=self.df._default_to_pandas(_loc)._query_compiler
             )
+            self.qc = self.df._query_compiler
             return
         row_loc, col_loc, ndims = self._parse_row_and_column_locators(key)
         append_axis = self._check_missing_loc(row_loc, col_loc)
@@ -811,6 +894,7 @@ class _LocIndexer(_LocationIndexerBase):
                 self._set_item_existing_loc(row_loc, col_loc, item)
         else:
             self._set_item_existing_loc(row_loc, col_loc, item)
+        self.qc = self.df._query_compiler
 
     def _setitem_with_new_columns(self, row_loc, col_loc, item):
         """
@@ -847,6 +931,7 @@ class _LocIndexer(_LocationIndexerBase):
             self.qc = self.qc.reindex(labels=columns, axis=1, fill_value=np.nan)
             self.df._update_inplace(new_query_compiler=self.qc)
         self._set_item_existing_loc(row_loc, np.array(col_loc), item)
+        self.qc = self.df._query_compiler
 
     def _set_item_existing_loc(self, row_loc, col_loc, item):
         """
@@ -870,6 +955,7 @@ class _LocIndexer(_LocationIndexerBase):
                 row_loc._query_compiler, col_loc, item
             )
             self.df._update_inplace(new_qc)
+            self.qc = self.df._query_compiler
             return
 
         row_lookup, col_lookup = self.qc.get_positions_from_labels(row_loc, col_loc)
@@ -980,6 +1066,8 @@ class _iLocIndexer(_LocationIndexerBase):
         DataFrame to operate on.
     """
 
+    _extensions: EXTENSION_DICT_TYPE = EXTENSION_DICT_TYPE(dict)
+
     def __getitem__(self, key):
         """
         Retrieve dataset according to `key`.
@@ -1063,6 +1151,7 @@ class _iLocIndexer(_LocationIndexerBase):
             self.df._update_inplace(
                 new_query_compiler=self.df._default_to_pandas(_iloc)._query_compiler
             )
+            self.qc = self.df._query_compiler
             return
         row_loc, col_loc, _ = self._parse_row_and_column_locators(key)
         row_scalar = is_scalar(row_loc)

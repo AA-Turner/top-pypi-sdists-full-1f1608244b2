@@ -6,88 +6,6 @@ from siliconcompiler.tools._common import input_file_node_name, get_tool_task
 from siliconcompiler.flowgraph import RuntimeFlowgraph
 
 
-def _get_pruned_node_inputs(chip, flow, node):
-    # Ignore option from/to, we want reachable nodes of the whole flowgraph
-    flow_schema = chip.schema.get("flowgraph", flow, field="schema")
-    runtime = RuntimeFlowgraph(
-        flow_schema,
-        from_steps=set([step for step, _ in flow_schema.get_entry_nodes()]),
-        prune_nodes=chip.get('option', 'prune'))
-
-    return runtime.get_node_inputs(*node, record=chip.schema.get("record", field="schema"))
-
-
-#######################################
-def _get_flowgraph_execution_order(chip, flow, reverse=False):
-    return chip.schema.get("flowgraph", flow, field="schema").get_execution_order(reverse=reverse)
-
-
-def get_nodes_from(chip, flow, nodes):
-    runtime = RuntimeFlowgraph(
-        chip.schema.get("flowgraph", flow, field="schema"),
-        from_steps=chip.get('option', 'from'),
-        to_steps=chip.get('option', 'to'),
-        prune_nodes=chip.get('option', 'prune'))
-
-    all_nodes = set()
-    for node in nodes:
-        all_nodes.update(runtime.get_nodes_starting_at(*node))
-
-    return all_nodes
-
-
-###########################################################################
-def nodes_to_execute(chip, flow=None):
-    '''
-    Returns an ordered list of flowgraph nodes which will be executed.
-    This takes the from/to options into account if flow is the current flow or None.
-
-    Returns:
-        A list of nodes that will get executed during run() (or a specific flow).
-
-    Example:
-        >>> nodes = nodes_to_execute()
-    '''
-    if flow is None:
-        flow = chip.get('option', 'flow')
-
-    runtime = RuntimeFlowgraph(
-        chip.schema.get("flowgraph", flow, field='schema'),
-        args=(chip.get('arg', 'step'), chip.get('arg', 'index')),
-        from_steps=chip.get('option', 'from'),
-        to_steps=chip.get('option', 'to'),
-        prune_nodes=chip.get('option', 'prune'))
-
-    return runtime.get_nodes()
-
-
-###########################################################################
-def _check_flowgraph(chip, flow=None):
-    '''
-    Check if flowgraph is valid.
-
-    * Checks if all edges have valid nodes
-    * Checks that there are no duplicate edges
-    * Checks if from/to is valid
-
-    Returns True if valid, False otherwise.
-    '''
-
-    if not flow:
-        flow = chip.get('option', 'flow')
-
-    error = not chip.schema.get("flowgraph", flow, field="schema").validate(logger=chip.logger)
-    if not error:
-        error = not RuntimeFlowgraph.validate(
-            chip.schema.get("flowgraph", flow, field="schema"),
-            from_steps=chip.get('option', 'from'),
-            to_steps=chip.get('option', 'to'),
-            prune_nodes=chip.get('option', 'prune'),
-            logger=chip.logger)
-
-    return not error
-
-
 ###########################################################################
 def _check_flowgraph_io(chip, nodes=None):
     '''Check if flowgraph is valid in terms of input and output files.
@@ -98,7 +16,6 @@ def _check_flowgraph_io(chip, nodes=None):
 
     runtime_full = RuntimeFlowgraph(
         chip.schema.get("flowgraph", flow, field='schema'),
-        args=(chip.get('arg', 'step'), chip.get('arg', 'index')),
         to_steps=chip.get('option', 'to'),
         prune_nodes=chip.get('option', 'prune'))
     runtime_flow = RuntimeFlowgraph(
@@ -144,7 +61,11 @@ def _check_flowgraph_io(chip, nodes=None):
                 manifest = f'{design}.pkg.json'
                 inputs = [inp for inp in os.listdir(in_step_out_dir) if inp != manifest]
             else:
-                inputs = _gather_outputs(chip, in_step, in_index)
+                in_tool, _ = get_tool_task(chip, in_step, in_index, flow=flow)
+                task_class = chip.get("tool", in_tool, field="schema")
+                task_class.set_runtime(chip, step=in_step, index=in_index)
+
+                inputs = task_class.get_output_files()
 
             for inp in inputs:
                 node_inp = input_file_node_name(inp, in_step, in_index)
@@ -165,22 +86,6 @@ def _check_flowgraph_io(chip, nodes=None):
     return True
 
 
-###########################################################################
-def _gather_outputs(chip, step, index):
-    '''Return set of filenames that are guaranteed to be in outputs
-    directory after a successful run of step/index.'''
-
-    flow = chip.get('option', 'flow')
-    task_gather = getattr(chip._get_task_module(step, index, flow=flow, error=False),
-                          '_gather_outputs',
-                          None)
-    if task_gather:
-        return set(task_gather(chip, step, index))
-
-    tool, task = get_tool_task(chip, step, index, flow=flow)
-    return set(chip.get('tool', tool, 'task', task, 'output', step=step, index=index))
-
-
 def _get_flowgraph_information(chip, flow, io=True):
     from siliconcompiler.scheduler import _setup_node
     from siliconcompiler.tools._common import input_provides, input_file_node_name
@@ -190,7 +95,7 @@ def _get_flowgraph_information(chip, flow, io=True):
     chip.schema = chip.schema.copy()
 
     # Setup nodes
-    node_exec_order = _get_flowgraph_execution_order(chip, flow)
+    node_exec_order = chip.schema.get("flowgraph", flow, field="schema").get_execution_order()
     if io:
         # try:
         for layer_nodes in node_exec_order:

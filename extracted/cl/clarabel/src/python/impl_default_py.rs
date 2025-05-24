@@ -2,19 +2,22 @@
 // implementation and its related types.
 
 #![allow(non_snake_case)]
-
 use super::*;
 use crate::{
     algebra::CscMatrix,
+    io::*,
     solver::{
         core::{
+            callbacks::ClarabelCallbackFn,
+            kktsolvers::LinearSolverInfo,
             traits::{InfoPrint, Settings},
-            IPSolver, SolverStatus,
+            IPSolver, SettingsError, SolverStatus,
         },
         implementations::default::*,
         SolverJSONReadWrite,
     },
 };
+use derive_more::with_trait::Debug;
 use pyo3::{exceptions::PyException, prelude::*, types::PyDict};
 use std::fmt::Write;
 
@@ -31,10 +34,142 @@ use std::fmt::Write;
 // https://github.com/PyO3/pyo3/issues/1088
 
 // ----------------------------------
+// DefaultInfo
+// ----------------------------------
+
+#[derive(Clone)]
+#[pyclass(name = "LinearSolverInfo")]
+pub struct PyLinearSolverInfo {
+    #[pyo3(get)]
+    pub name: String,
+    #[pyo3(get)]
+    pub threads: usize,
+    #[pyo3(get)]
+    pub direct: bool,
+    #[pyo3(get)]
+    pub nnzA: usize,
+    #[pyo3(get)]
+    pub nnzL: usize,
+}
+
+impl From<&LinearSolverInfo> for PyLinearSolverInfo {
+    fn from(info: &LinearSolverInfo) -> Self {
+        Self {
+            name: info.name.clone(),
+            threads: info.threads,
+            direct: info.direct,
+            nnzA: info.nnzA,
+            nnzL: info.nnzL,
+        }
+    }
+}
+
+// Must directly implement debug for this so that it appears
+// as a nested "LinearSolverInfo" object in the debug output of
+// DefaultInfo.   For other types we can just drop the leading
+// "Py" prefix when implement __repr__
+
+impl Debug for PyLinearSolverInfo {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        fmt.debug_struct("LinearSolverInfo")
+            .field("name", &self.name)
+            .field("threads", &self.threads)
+            .field("direct", &self.direct)
+            .field("nnzA", &self.nnzA)
+            .field("nnzL", &self.nnzL)
+            .finish()
+    }
+}
+
+#[pymethods]
+impl PyLinearSolverInfo {
+    pub fn __repr__(&self) -> String {
+        let mut s = String::new();
+        write!(s, "{:#?}", self).unwrap();
+        s
+    }
+}
+
+#[derive(Debug, Clone)]
+#[pyclass(name = "DefaultInfo")]
+pub struct PyDefaultInfo {
+    #[pyo3(get)]
+    pub mu: f64,
+    #[pyo3(get)]
+    pub sigma: f64,
+    #[pyo3(get)]
+    pub step_length: f64,
+    #[pyo3(get)]
+    pub iterations: u32,
+    #[pyo3(get)]
+    pub cost_primal: f64,
+    #[pyo3(get)]
+    pub cost_dual: f64,
+    #[pyo3(get)]
+    pub res_primal: f64,
+    #[pyo3(get)]
+    pub res_dual: f64,
+    #[pyo3(get)]
+    pub res_primal_inf: f64,
+    #[pyo3(get)]
+    pub res_dual_inf: f64,
+    #[pyo3(get)]
+    pub gap_abs: f64,
+    #[pyo3(get)]
+    pub gap_rel: f64,
+    #[pyo3(get)]
+    pub ktratio: f64,
+    //
+    // prev iterate values deliberately excluded
+    // since they are pub(crate) in the solver
+    //
+    #[pyo3(get)]
+    pub solve_time: f64,
+    #[pyo3(get)]
+    pub status: PySolverStatus,
+    #[pyo3(get)]
+    pub linsolver: PyLinearSolverInfo,
+    // print stream intentionally excluded
+}
+
+impl From<&DefaultInfo<f64>> for PyDefaultInfo {
+    fn from(info: &DefaultInfo<f64>) -> Self {
+        let status = (&info.status).into();
+        let linsolver = (&info.linsolver).into();
+        Self {
+            mu: info.mu,
+            sigma: info.sigma,
+            step_length: info.step_length,
+            iterations: info.iterations,
+            cost_primal: info.cost_primal,
+            cost_dual: info.cost_dual,
+            res_primal: info.res_primal,
+            res_dual: info.res_dual,
+            res_primal_inf: info.res_primal_inf,
+            res_dual_inf: info.res_dual_inf,
+            gap_abs: info.gap_abs,
+            gap_rel: info.gap_rel,
+            ktratio: info.ktratio,
+            solve_time: info.solve_time,
+            status,
+            linsolver,
+        }
+    }
+}
+
+#[pymethods]
+impl PyDefaultInfo {
+    pub fn __repr__(&self) -> String {
+        let mut s = String::new();
+        write!(s, "{:#?}", self).unwrap();
+        s.replacen("PyDefaultInfo", "DefaultInfo", 1)
+    }
+}
+
+// ----------------------------------
 // DefaultSolution
 // ----------------------------------
 
-#[derive(Debug)]
 #[pyclass(name = "DefaultSolution")]
 pub struct PyDefaultSolution {
     #[pyo3(get)]
@@ -59,12 +194,12 @@ pub struct PyDefaultSolution {
     pub r_dual: f64,
 }
 
-impl PyDefaultSolution {
-    pub(crate) fn new_from_internal(result: &DefaultSolution<f64>) -> Self {
+impl From<&DefaultSolution<f64>> for PyDefaultSolution {
+    fn from(result: &DefaultSolution<f64>) -> Self {
         let x = result.x.clone();
         let s = result.s.clone();
         let z = result.z.clone();
-        let status = PySolverStatus::new_from_internal(&result.status);
+        let status = (&result.status).into();
         Self {
             x,
             s,
@@ -80,16 +215,65 @@ impl PyDefaultSolution {
     }
 }
 
+struct TruncatedSlice<'a, T>(&'a [T]);
+impl<T> Debug for TruncatedSlice<'_, T>
+where
+    T: std::fmt::Debug,
+{
+    fn fmt(&self, fmt: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let MAX = 5;
+        if self.0.len() > MAX {
+            let truncated: Vec<String> = self.0[..MAX - 2]
+                .iter()
+                .map(|v| format!("{:?}", v))
+                .collect();
+            write!(
+                fmt,
+                "[{} ... ({} more)]",
+                truncated.join(", "),
+                self.0.len() - truncated.len()
+            )
+        } else {
+            write!(fmt, "{:?}", self.0)
+        }
+    }
+}
+
+impl Debug for PyDefaultSolution {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        fmt.debug_struct("PyDefaultSolution")
+            .field("x", &TruncatedSlice(&self.x))
+            .field("s", &TruncatedSlice(&self.s))
+            .field("z", &TruncatedSlice(&self.z))
+            .field("status", &self.status)
+            .field("obj_val", &self.obj_val)
+            .field("obj_val_dual", &self.obj_val_dual)
+            .field("solve_time", &self.solve_time)
+            .field("iterations", &self.iterations)
+            .field("r_prim", &self.r_prim)
+            .field("r_dual", &self.r_dual)
+            .finish()
+    }
+}
+
 #[pymethods]
 impl PyDefaultSolution {
     pub fn __repr__(&self) -> String {
-        "Clarabel solution object".to_string()
+        let mut s = String::new();
+        write!(s, "{:#?}", self).unwrap();
+        s.replacen("PyDefaultSolution", "DefaultSolution", 1)
     }
 }
 
 // ----------------------------------
 // Solver Status
 // ----------------------------------
+
+impl From<SolverError> for PyErr {
+    fn from(err: SolverError) -> Self {
+        PyException::new_err(err.to_string())
+    }
+}
 
 #[derive(PartialEq, Debug, Clone, Copy)]
 #[pyclass(eq, eq_int, name = "SolverStatus")]
@@ -105,10 +289,11 @@ pub enum PySolverStatus {
     MaxTime,
     NumericalError,
     InsufficientProgress,
+    CallbackTerminated,
 }
 
-impl PySolverStatus {
-    pub(crate) fn new_from_internal(status: &SolverStatus) -> Self {
+impl From<&SolverStatus> for PySolverStatus {
+    fn from(status: &SolverStatus) -> Self {
         match status {
             SolverStatus::Unsolved => PySolverStatus::Unsolved,
             SolverStatus::Solved => PySolverStatus::Solved,
@@ -121,6 +306,7 @@ impl PySolverStatus {
             SolverStatus::MaxTime => PySolverStatus::MaxTime,
             SolverStatus::NumericalError => PySolverStatus::NumericalError,
             SolverStatus::InsufficientProgress => PySolverStatus::InsufficientProgress,
+            SolverStatus::CallbackTerminated => PySolverStatus::CallbackTerminated,
         }
     }
 }
@@ -140,6 +326,7 @@ impl PySolverStatus {
             PySolverStatus::MaxTime => "MaxTime",
             PySolverStatus::NumericalError => "NumericalError",
             PySolverStatus::InsufficientProgress => "InsufficientProgress",
+            PySolverStatus::CallbackTerminated => "CallbackTerminated",
         }
         .to_string()
     }
@@ -153,6 +340,12 @@ impl PySolverStatus {
 // ----------------------------------
 // Solver Settings
 // ----------------------------------
+
+impl From<SettingsError> for PyErr {
+    fn from(err: SettingsError) -> Self {
+        PyException::new_err(err.to_string())
+    }
+}
 
 #[derive(Debug, Clone)]
 #[pyclass(name = "DefaultSettings")]
@@ -252,6 +445,9 @@ pub struct PyDefaultSettings {
     #[pyo3(get, set)]
     pub presolve_enable: bool,
 
+    #[pyo3(get, set)]
+    pub input_sparse_dropzeros: bool,
+
     //chordal decomposition (python must be built with "sdp" feature)
     #[pyo3(get, set)]
     pub chordal_decomposition_enable: bool,
@@ -261,13 +457,22 @@ pub struct PyDefaultSettings {
     pub chordal_decomposition_compact: bool,
     #[pyo3(get, set)]
     pub chordal_decomposition_complete_dual: bool,
+
+    // pardiso settings (requires pardiso features enabled)
+    #[cfg(any(feature = "pardiso-mkl", feature = "pardiso-panua"))]
+    #[debug("iparm array [i32; 64]")]
+    #[pyo3(get, set)]
+    pub pardiso_iparm: [i32; 64],
+    #[cfg(any(feature = "pardiso-mkl", feature = "pardiso-panua"))]
+    #[pyo3(get, set)]
+    pub pardiso_verbose: bool,
 }
 
 #[pymethods]
 impl PyDefaultSettings {
     #[new]
     pub fn new() -> Self {
-        PyDefaultSettings::new_from_internal(&DefaultSettings::<f64>::default())
+        (&DefaultSettings::<f64>::default()).into()
     }
 
     #[staticmethod]
@@ -279,7 +484,7 @@ impl PyDefaultSettings {
     pub fn __repr__(&self) -> String {
         let mut s = String::new();
         write!(s, "{:#?}", self).unwrap();
-        s
+        s.replacen("PyDefaultSettings", "DefaultSettings", 1)
     }
 }
 
@@ -290,8 +495,8 @@ impl Default for PyDefaultSettings {
     }
 }
 
-impl PyDefaultSettings {
-    pub(crate) fn new_from_internal(set: &DefaultSettings<f64>) -> Self {
+impl From<&DefaultSettings<f64>> for PyDefaultSettings {
+    fn from(set: &DefaultSettings<f64>) -> Self {
         PyDefaultSettings {
             max_iter: set.max_iter,
             time_limit: set.time_limit,
@@ -331,13 +536,24 @@ impl PyDefaultSettings {
             iterative_refinement_max_iter: set.iterative_refinement_max_iter,
             iterative_refinement_stop_ratio: set.iterative_refinement_stop_ratio,
             presolve_enable: set.presolve_enable,
+            input_sparse_dropzeros: set.input_sparse_dropzeros,
+            #[cfg(feature = "sdp")]
             chordal_decomposition_enable: set.chordal_decomposition_enable,
+            #[cfg(feature = "sdp")]
             chordal_decomposition_merge_method: set.chordal_decomposition_merge_method.clone(),
+            #[cfg(feature = "sdp")]
             chordal_decomposition_compact: set.chordal_decomposition_compact,
+            #[cfg(feature = "sdp")]
             chordal_decomposition_complete_dual: set.chordal_decomposition_complete_dual,
+            #[cfg(any(feature = "pardiso-mkl", feature = "pardiso-panua"))]
+            pardiso_iparm: set.pardiso_iparm,
+            #[cfg(any(feature = "pardiso-mkl", feature = "pardiso-panua"))]
+            pardiso_verbose: set.pardiso_verbose,
         }
     }
+}
 
+impl PyDefaultSettings {
     pub(crate) fn to_internal(&self) -> Result<DefaultSettings<f64>, PyErr> {
         // convert python settings -> Rust
 
@@ -380,17 +596,21 @@ impl PyDefaultSettings {
             iterative_refinement_max_iter: self.iterative_refinement_max_iter,
             iterative_refinement_stop_ratio: self.iterative_refinement_stop_ratio,
             presolve_enable: self.presolve_enable,
+            input_sparse_dropzeros: self.input_sparse_dropzeros,
+            #[cfg(feature = "sdp")]
             chordal_decomposition_enable: self.chordal_decomposition_enable,
+            #[cfg(feature = "sdp")]
             chordal_decomposition_merge_method: self.chordal_decomposition_merge_method.clone(),
+            #[cfg(feature = "sdp")]
             chordal_decomposition_compact: self.chordal_decomposition_compact,
+            #[cfg(feature = "sdp")]
             chordal_decomposition_complete_dual: self.chordal_decomposition_complete_dual,
+            #[cfg(any(feature = "pardiso-mkl", feature = "pardiso-panua"))]
+            pardiso_iparm: self.pardiso_iparm,
+            #[cfg(any(feature = "pardiso-mkl", feature = "pardiso-panua"))]
+            pardiso_verbose: self.pardiso_verbose,
         };
-
-        //manually validate settings from Python side
-        match settings.validate() {
-            Ok(_) => Ok(settings),
-            Err(e) => Err(PyException::new_err(format!("Invalid settings: {}", e))),
-        }
+        Ok(settings)
     }
 }
 
@@ -422,13 +642,15 @@ impl PyDefaultSolver {
         let cones = _py_to_native_cones(cones);
         let settings = settings.to_internal()?;
 
-        let solver = DefaultSolver::new(&P, &q, &A, &b, &cones, settings);
+        // Handle the Result returned by DefaultSolver::new
+        let solver = DefaultSolver::new(&P, &q, &A, &b, &cones, settings)?;
+
         Ok(Self { inner: solver })
     }
 
     fn solve(&mut self, py: Python<'_>) -> PyDefaultSolution {
         py.allow_threads(|| self.inner.solve());
-        PyDefaultSolution::new_from_internal(&self.inner.solution)
+        self.get_solution()
     }
 
     pub fn __repr__(&self) -> String {
@@ -457,10 +679,20 @@ impl PyDefaultSolver {
         };
     }
 
-    fn write_to_file(&self, filename: &str) -> PyResult<()> {
-        let mut file = std::fs::File::create(filename)?;
-        self.inner.write_to_file(&mut file)?;
+    // printing redirects
+    fn print_to_stdout(&mut self) {
+        self.inner.print_to_stdout();
+    }
+    fn print_to_file(&mut self, filename: &str) -> PyResult<()> {
+        let file = std::fs::File::create(filename)?;
+        self.inner.print_to_file(file);
         Ok(())
+    }
+    fn print_to_buffer(&mut self) {
+        self.inner.print_to_buffer();
+    }
+    fn get_print_buffer(&mut self) -> PyResult<String> {
+        self.inner.get_print_buffer().map_err(|e| e.into())
     }
 
     #[pyo3(signature = (**kwds))]
@@ -522,7 +754,7 @@ impl PyDefaultSolver {
                 "settings" => {
                     let settings: PyDefaultSettings = value.extract()?;
                     let settings = settings.to_internal()?;
-                    self.inner.settings = settings;
+                    self.inner.update_settings(settings)?;
                 }
                 _ => {
                     println!("unrecognized key: {}", key);
@@ -536,11 +768,45 @@ impl PyDefaultSolver {
     // are to be overridden, modify this object then pass back using kwargs
     // update(settings=settings)
     fn get_settings(&self) -> PyDefaultSettings {
-        PyDefaultSettings::new_from_internal(&self.inner.settings)
+        (&self.inner.settings).into()
+    }
+
+    fn get_info(&self) -> PyDefaultInfo {
+        (&self.inner.info).into()
+    }
+
+    fn set_termination_callback(&mut self, callback: PyObject) {
+        let callback = make_termination_callback(callback);
+        self.inner.set_termination_callback(callback);
+    }
+
+    fn unset_termination_callback(&mut self) {
+        self.inner.unset_termination_callback()
+    }
+
+    fn get_solution(&self) -> PyDefaultSolution {
+        (&self.inner.solution).into()
     }
 
     fn is_data_update_allowed(&self) -> bool {
         self.inner.is_data_update_allowed()
+    }
+}
+
+// Create a Rust closure that wraps the Python callback
+pub fn make_termination_callback(
+    py_callback: PyObject,
+) -> impl ClarabelCallbackFn<DefaultInfo<f64>> {
+    move |info: &DefaultInfo<f64>| {
+        let py_info = PyDefaultInfo::from(info);
+
+        Python::with_gil(|py| match py_callback.call1(py, (py_info,)) {
+            Ok(result) => result.extract::<bool>(py).unwrap_or(false),
+            Err(e) => {
+                e.print(py);
+                false
+            }
+        })
     }
 }
 
@@ -592,9 +858,9 @@ fn _py_to_vector_update(arg: Bound<'_, PyAny>) -> Option<PyVectorUpdateData> {
     None
 }
 
-#[pyfunction(name = "read_from_file")]
+#[pyfunction(name = "load_from_file")]
 #[pyo3(signature = (filename, settings=None))]
-pub fn read_from_file_py(
+pub fn load_from_file_py(
     filename: &str,
     settings: Option<PyDefaultSettings>,
 ) -> PyResult<PyDefaultSolver> {
@@ -603,11 +869,11 @@ pub fn read_from_file_py(
     match settings {
         Some(settings) => {
             let settings = settings.to_internal()?;
-            let solver = DefaultSolver::<f64>::read_from_file(&mut file, Some(settings))?;
+            let solver = DefaultSolver::<f64>::load_from_file(&mut file, Some(settings))?;
             Ok(PyDefaultSolver { inner: solver })
         }
         None => {
-            let solver = DefaultSolver::<f64>::read_from_file(&mut file, None)?;
+            let solver = DefaultSolver::<f64>::load_from_file(&mut file, None)?;
             Ok(PyDefaultSolver { inner: solver })
         }
     }

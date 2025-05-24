@@ -18,6 +18,7 @@ from brownie._singleton import _Singleton
 from brownie.convert.datatypes import ReturnValue
 from brownie.convert.normalize import format_event
 from brownie.exceptions import EventLookupError
+from brownie.utils import hexbytes_to_hexstring
 
 from .web3 import ContractEvent, web3
 
@@ -87,11 +88,11 @@ class EventDict:
         return len(self._ordered)
 
     def __str__(self) -> str:
-        return str(dict((k, [i[0] for i in v._ordered]) for k, v in self._dict.items()))
+        return str({k: [i[0] for i in v._ordered] for k, v in self._dict.items()})
 
     def count(self, name: str) -> int:
         """EventDict.count(name) -> integer -- return number of occurrences of name"""
-        return len([i.name for i in self._ordered if i.name == name])
+        return sum(i.name == name for i in self._ordered)
 
     def items(self) -> List:
         """EventDict.items() -> a list object providing a view on EventDict's items"""
@@ -354,7 +355,7 @@ class EventWatcher(metaclass=_Singleton):
         self.target_list_lock.acquire()  # lock
         # Key refering to this specific event (event.address is the address
         # of the contract to which the event is linked)
-        event_watch_data_key = str(event.address) + "+" + event.event_name
+        event_watch_data_key = f"{str(event.address)}+{event.event_name}"
         if self.target_events_watch_data.get(event_watch_data_key) is None:
             # If the _EventWatchData for 'event' does not exist, creates it.
             self.target_events_watch_data[event_watch_data_key] = _EventWatchData(
@@ -422,10 +423,9 @@ class EventWatcher(metaclass=_Singleton):
         for worker_instance in workers_list:
             worker_instance.join(timeout=30)
             if worker_instance.is_alive():
+                worker_name = worker_instance.getName()
                 warnings.warn(
-                    message="Callback execution ({}) could not be joined.".format(
-                        worker_instance.getName()
-                    ),
+                    message=f"Callback execution ({worker_name}) could not be joined.",
                     category=RuntimeWarning,
                 )
 
@@ -480,8 +480,7 @@ def _decode_logs(logs: List, contracts: Optional[Dict] = None) -> EventDict:
         topics_map = _deployment_topics.get(address, _topics)
         for item in log_slice:
             if contracts and contracts[item.address]:
-                note = _decode_ds_note(item, contracts[item.address])
-                if note:
+                if note := _decode_ds_note(item, contracts[item.address]):
                     events.append(note)
                     continue
             try:
@@ -492,16 +491,16 @@ def _decode_logs(logs: List, contracts: Optional[Dict] = None) -> EventDict:
         if log_slice[-1] == logs[-1]:
             break
 
-    events = [format_event(i) for i in events]
-    return EventDict(events)
+    return EventDict(map(format_event, events))
 
 
 def _decode_ds_note(log, contract):  # type: ignore
     # ds-note encodes function selector as the first topic
     selector, tail = log.topics[0][:4], log.topics[0][4:]
-    if selector.hex() not in contract.selectors or sum(tail):
+    selector_hexstr = hexbytes_to_hexstring(selector)
+    if selector_hexstr not in contract.selectors or sum(tail):
         return
-    name = contract.selectors[selector.hex()]
+    name = contract.selectors[selector_hexstr]
     data = bytes.fromhex(log.data[2:]) if isinstance(log.data, str) else log.data
     # data uses ABI encoding of [uint256, bytes] or [bytes] in different versions
     # instead of trying them all, assume the payload starts from selector
@@ -509,13 +508,14 @@ def _decode_ds_note(log, contract):  # type: ignore
         func, args = contract.decode_input(data[data.index(selector) :])
     except ValueError:
         return
+    selector_hexstr = hexbytes_to_hexstring(selector)
     return {
         "name": name,
         "address": log.address,
         "decoded": True,
         "data": [
             {"name": abi["name"], "type": abi["type"], "value": arg, "decoded": True}
-            for arg, abi in zip(args, contract.get_method_object(selector.hex()).abi["inputs"])
+            for arg, abi in zip(args, contract.get_method_object(selector_hexstr).abi["inputs"])
         ],
     }
 
@@ -527,8 +527,7 @@ def _decode_trace(trace: Sequence, initial_address: str) -> EventDict:
     events = eth_event.decode_traceTransaction(
         trace, _topics, allow_undecoded=True, initial_address=initial_address
     )
-    events = [format_event(i) for i in events]
-    return EventDict(events)
+    return EventDict(map(format_event, events))
 
 
 # dictionary of event topic ABIs specific to a single contract deployment

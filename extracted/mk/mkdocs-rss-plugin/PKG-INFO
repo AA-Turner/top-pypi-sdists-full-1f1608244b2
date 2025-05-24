@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: mkdocs-rss-plugin
-Version: 1.17.1
+Version: 1.17.2
 Summary: MkDocs plugin which generates a static RSS feed using git log and page.meta.
 Author: Julien Moura
 Author-email: dev@ingeoveritas.com
@@ -38,20 +38,33 @@ Requires-Dist: flake8-bugbear>=24.10; extra == "dev"
 Requires-Dist: flake8-builtins>=2.5; extra == "dev"
 Requires-Dist: flake8-eradicate>=1.5; extra == "dev"
 Requires-Dist: flake8-isort>=6.1.1; extra == "dev"
-Requires-Dist: pre-commit<4,>=3.7; extra == "dev"
+Requires-Dist: pre-commit<5,>=3.7; extra == "dev"
 Provides-Extra: doc
-Requires-Dist: mkdocs-git-committers-plugin-2<2.5,>=2.4.1; extra == "doc"
-Requires-Dist: mkdocs-git-revision-date-localized-plugin<1.4,>=1.3; extra == "doc"
+Requires-Dist: mkdocs-git-committers-plugin-2<2.6,>=2.4.1; extra == "doc"
+Requires-Dist: mkdocs-git-revision-date-localized-plugin<1.5,>=1.3; extra == "doc"
 Requires-Dist: mkdocs-material[imaging]<10,>=9.5.47; extra == "doc"
 Requires-Dist: mkdocs-minify-plugin<0.9,>=0.8; extra == "doc"
-Requires-Dist: mkdocstrings[python]<1,>=0.27; extra == "doc"
-Requires-Dist: termynal<0.13,>=0.12.2; extra == "doc"
+Requires-Dist: mkdocstrings-python<1.17,>=1.16.2; extra == "doc"
+Requires-Dist: termynal<0.14,>=0.12.2; extra == "doc"
 Provides-Extra: test
 Requires-Dist: feedparser<6.1,>=6.0.11; extra == "test"
-Requires-Dist: jsonfeed-util<2,>=1.1.2; extra == "test"
+Requires-Dist: jsonfeed-util<2,>=1.2; extra == "test"
 Requires-Dist: mkdocs-material[imaging]>=9.5.47; extra == "test"
 Requires-Dist: pytest-cov<7,>=6; extra == "test"
 Requires-Dist: validator-collection<1.6,>=1.5; extra == "test"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: project-url
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 # MkDocs RSS plugin
 

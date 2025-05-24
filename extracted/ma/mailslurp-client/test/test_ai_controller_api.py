@@ -36,6 +36,13 @@ class TestAIControllerApi(unittest.TestCase):
         """
         pass
 
+    def test_validate_structured_output_schema(self):
+        """Test case for validate_structured_output_schema
+
+        Validate structured content schema  # noqa: E501
+        """
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()

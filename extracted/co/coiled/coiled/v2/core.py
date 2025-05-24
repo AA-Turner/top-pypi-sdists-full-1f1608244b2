@@ -657,6 +657,13 @@ class CloudV2(OldCloud, Generic[IsAsynchronous]):
             "pause_on_exit": pause_on_exit,
         }
 
+        try:
+            from distributed.versions import get_versions
+
+            data["local_versions"] = get_versions()["packages"]
+        except Exception:
+            pass
+
         backend_options = backend_options if backend_options else {}
 
         if gcp_worker_gpu_type is not None:

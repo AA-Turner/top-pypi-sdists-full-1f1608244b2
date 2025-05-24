@@ -1,7 +1,7 @@
 r'''
 # `tfe_policy_set_parameter`
 
-Refer to the Terraform Registry for docs: [`tfe_policy_set_parameter`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter).
+Refer to the Terraform Registry for docs: [`tfe_policy_set_parameter`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class PolicySetParameter(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.policySetParameter.PolicySetParameter",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter tfe_policy_set_parameter}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter tfe_policy_set_parameter}.'''
 
     def __init__(
         self,
@@ -64,15 +64,15 @@ class PolicySetParameter(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter tfe_policy_set_parameter} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter tfe_policy_set_parameter} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param key: Name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#key PolicySetParameter#key}
-        :param policy_set_id: The ID of the policy set that owns the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#policy_set_id PolicySetParameter#policy_set_id}
-        :param sensitive: Whether the value is sensitive. If true then the parameter is written once and not visible thereafter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#sensitive PolicySetParameter#sensitive}
-        :param value: Value of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#value PolicySetParameter#value}
-        :param value_wo: Value of the parameter in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#value_wo PolicySetParameter#value_wo}
+        :param key: Name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#key PolicySetParameter#key}
+        :param policy_set_id: The ID of the policy set that owns the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#policy_set_id PolicySetParameter#policy_set_id}
+        :param sensitive: Whether the value is sensitive. If true then the parameter is written once and not visible thereafter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#sensitive PolicySetParameter#sensitive}
+        :param value: Value of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#value PolicySetParameter#value}
+        :param value_wo: Value of the parameter in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#value_wo PolicySetParameter#value_wo}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -115,7 +115,7 @@ class PolicySetParameter(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the PolicySetParameter to import.
-        :param import_from_id: The id of the existing PolicySetParameter that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing PolicySetParameter that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the PolicySetParameter to import is found.
         '''
         if __debug__:
@@ -290,11 +290,11 @@ class PolicySetParameterConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param key: Name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#key PolicySetParameter#key}
-        :param policy_set_id: The ID of the policy set that owns the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#policy_set_id PolicySetParameter#policy_set_id}
-        :param sensitive: Whether the value is sensitive. If true then the parameter is written once and not visible thereafter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#sensitive PolicySetParameter#sensitive}
-        :param value: Value of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#value PolicySetParameter#value}
-        :param value_wo: Value of the parameter in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#value_wo PolicySetParameter#value_wo}
+        :param key: Name of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#key PolicySetParameter#key}
+        :param policy_set_id: The ID of the policy set that owns the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#policy_set_id PolicySetParameter#policy_set_id}
+        :param sensitive: Whether the value is sensitive. If true then the parameter is written once and not visible thereafter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#sensitive PolicySetParameter#sensitive}
+        :param value: Value of the parameter. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#value PolicySetParameter#value}
+        :param value_wo: Value of the parameter in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#value_wo PolicySetParameter#value_wo}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -405,7 +405,7 @@ class PolicySetParameterConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def key(self) -> builtins.str:
         '''Name of the parameter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#key PolicySetParameter#key}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#key PolicySetParameter#key}
         '''
         result = self._values.get("key")
         assert result is not None, "Required property 'key' is missing"
@@ -415,7 +415,7 @@ class PolicySetParameterConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def policy_set_id(self) -> builtins.str:
         '''The ID of the policy set that owns the parameter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#policy_set_id PolicySetParameter#policy_set_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#policy_set_id PolicySetParameter#policy_set_id}
         '''
         result = self._values.get("policy_set_id")
         assert result is not None, "Required property 'policy_set_id' is missing"
@@ -427,7 +427,7 @@ class PolicySetParameterConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether the value is sensitive. If true then the parameter is written once and not visible thereafter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#sensitive PolicySetParameter#sensitive}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#sensitive PolicySetParameter#sensitive}
         '''
         result = self._values.get("sensitive")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -436,7 +436,7 @@ class PolicySetParameterConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def value(self) -> typing.Optional[builtins.str]:
         '''Value of the parameter.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#value PolicySetParameter#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#value PolicySetParameter#value}
         '''
         result = self._values.get("value")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -445,7 +445,7 @@ class PolicySetParameterConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def value_wo(self) -> typing.Optional[builtins.str]:
         '''Value of the parameter in write-only mode.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/policy_set_parameter#value_wo PolicySetParameter#value_wo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/policy_set_parameter#value_wo PolicySetParameter#value_wo}
         '''
         result = self._values.get("value_wo")
         return typing.cast(typing.Optional[builtins.str], result)

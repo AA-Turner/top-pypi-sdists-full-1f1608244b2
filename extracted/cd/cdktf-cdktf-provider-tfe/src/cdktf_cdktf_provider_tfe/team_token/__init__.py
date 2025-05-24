@@ -1,7 +1,7 @@
 r'''
 # `tfe_team_token`
 
-Refer to the Terraform Registry for docs: [`tfe_team_token`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_token).
+Refer to the Terraform Registry for docs: [`tfe_team_token`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class TeamToken(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.teamToken.TeamToken",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_token tfe_team_token}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token tfe_team_token}.'''
 
     def __init__(
         self,
@@ -52,6 +52,7 @@ class TeamToken(
         id: builtins.str,
         *,
         team_id: builtins.str,
+        description: typing.Optional[builtins.str] = None,
         expired_at: typing.Optional[builtins.str] = None,
         force_regenerate: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
@@ -62,13 +63,14 @@ class TeamToken(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_token tfe_team_token} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token tfe_team_token} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param team_id: ID of the team. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_token#team_id TeamToken#team_id}
-        :param expired_at: The token's expiration date. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_token#expired_at TeamToken#expired_at}
-        :param force_regenerate: When set to true will force the audit trail token to be recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_token#force_regenerate TeamToken#force_regenerate}
+        :param team_id: ID of the team. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token#team_id TeamToken#team_id}
+        :param description: The description of the token, which must be unique per team. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token#description TeamToken#description}
+        :param expired_at: The token's expiration date. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token#expired_at TeamToken#expired_at}
+        :param force_regenerate: When set to true will force the audit trail token to be recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token#force_regenerate TeamToken#force_regenerate}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -83,6 +85,7 @@ class TeamToken(
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
         config = TeamTokenConfig(
             team_id=team_id,
+            description=description,
             expired_at=expired_at,
             force_regenerate=force_regenerate,
             connection=connection,
@@ -109,7 +112,7 @@ class TeamToken(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the TeamToken to import.
-        :param import_from_id: The id of the existing TeamToken that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_token#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing TeamToken that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the TeamToken to import is found.
         '''
         if __debug__:
@@ -119,6 +122,10 @@ class TeamToken(
             check_type(argname="argument import_from_id", value=import_from_id, expected_type=type_hints["import_from_id"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
+
+    @jsii.member(jsii_name="resetDescription")
+    def reset_description(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDescription", []))
 
     @jsii.member(jsii_name="resetExpiredAt")
     def reset_expired_at(self) -> None:
@@ -152,6 +159,11 @@ class TeamToken(
         return typing.cast(builtins.str, jsii.get(self, "token"))
 
     @builtins.property
+    @jsii.member(jsii_name="descriptionInput")
+    def description_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "descriptionInput"))
+
+    @builtins.property
     @jsii.member(jsii_name="expiredAtInput")
     def expired_at_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "expiredAtInput"))
@@ -167,6 +179,18 @@ class TeamToken(
     @jsii.member(jsii_name="teamIdInput")
     def team_id_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "teamIdInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="description")
+    def description(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "description"))
+
+    @description.setter
+    def description(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__8315caaff3774cf9a25d2841ba9258a57c803c3f90400db9f60396e6547c00b8)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "description", value) # pyright: ignore[reportArgumentType]
 
     @builtins.property
     @jsii.member(jsii_name="expiredAt")
@@ -222,6 +246,7 @@ class TeamToken(
         "provider": "provider",
         "provisioners": "provisioners",
         "team_id": "teamId",
+        "description": "description",
         "expired_at": "expiredAt",
         "force_regenerate": "forceRegenerate",
     },
@@ -238,6 +263,7 @@ class TeamTokenConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
         team_id: builtins.str,
+        description: typing.Optional[builtins.str] = None,
         expired_at: typing.Optional[builtins.str] = None,
         force_regenerate: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     ) -> None:
@@ -249,9 +275,10 @@ class TeamTokenConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param team_id: ID of the team. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_token#team_id TeamToken#team_id}
-        :param expired_at: The token's expiration date. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_token#expired_at TeamToken#expired_at}
-        :param force_regenerate: When set to true will force the audit trail token to be recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_token#force_regenerate TeamToken#force_regenerate}
+        :param team_id: ID of the team. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token#team_id TeamToken#team_id}
+        :param description: The description of the token, which must be unique per team. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token#description TeamToken#description}
+        :param expired_at: The token's expiration date. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token#expired_at TeamToken#expired_at}
+        :param force_regenerate: When set to true will force the audit trail token to be recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token#force_regenerate TeamToken#force_regenerate}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -265,6 +292,7 @@ class TeamTokenConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
             check_type(argname="argument provisioners", value=provisioners, expected_type=type_hints["provisioners"])
             check_type(argname="argument team_id", value=team_id, expected_type=type_hints["team_id"])
+            check_type(argname="argument description", value=description, expected_type=type_hints["description"])
             check_type(argname="argument expired_at", value=expired_at, expected_type=type_hints["expired_at"])
             check_type(argname="argument force_regenerate", value=force_regenerate, expected_type=type_hints["force_regenerate"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
@@ -284,6 +312,8 @@ class TeamTokenConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["provider"] = provider
         if provisioners is not None:
             self._values["provisioners"] = provisioners
+        if description is not None:
+            self._values["description"] = description
         if expired_at is not None:
             self._values["expired_at"] = expired_at
         if force_regenerate is not None:
@@ -357,17 +387,26 @@ class TeamTokenConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def team_id(self) -> builtins.str:
         '''ID of the team.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_token#team_id TeamToken#team_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token#team_id TeamToken#team_id}
         '''
         result = self._values.get("team_id")
         assert result is not None, "Required property 'team_id' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
+    def description(self) -> typing.Optional[builtins.str]:
+        '''The description of the token, which must be unique per team.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token#description TeamToken#description}
+        '''
+        result = self._values.get("description")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
     def expired_at(self) -> typing.Optional[builtins.str]:
         '''The token's expiration date.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_token#expired_at TeamToken#expired_at}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token#expired_at TeamToken#expired_at}
         '''
         result = self._values.get("expired_at")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -378,7 +417,7 @@ class TeamTokenConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''When set to true will force the audit trail token to be recreated.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/team_token#force_regenerate TeamToken#force_regenerate}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/team_token#force_regenerate TeamToken#force_regenerate}
         '''
         result = self._values.get("force_regenerate")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -407,6 +446,7 @@ def _typecheckingstub__fb30beab6b46ce916234883cbade92cc916e5bc0334be5bdecfc45b01
     id: builtins.str,
     *,
     team_id: builtins.str,
+    description: typing.Optional[builtins.str] = None,
     expired_at: typing.Optional[builtins.str] = None,
     force_regenerate: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
@@ -425,6 +465,12 @@ def _typecheckingstub__7a9e214b8cb44f7b78068e8040c4b352281d77b1a974409496ca791b1
     import_to_id: builtins.str,
     import_from_id: builtins.str,
     provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__8315caaff3774cf9a25d2841ba9258a57c803c3f90400db9f60396e6547c00b8(
+    value: builtins.str,
 ) -> None:
     """Type checking stubs"""
     pass
@@ -457,6 +503,7 @@ def _typecheckingstub__5819d6b01e765a40e2d126f5334f47277b339f12680c9bc4af5833010
     provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
     provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     team_id: builtins.str,
+    description: typing.Optional[builtins.str] = None,
     expired_at: typing.Optional[builtins.str] = None,
     force_regenerate: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
 ) -> None:

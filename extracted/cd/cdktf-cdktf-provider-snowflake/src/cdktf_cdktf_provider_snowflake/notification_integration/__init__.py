@@ -1,7 +1,7 @@
 r'''
 # `snowflake_notification_integration`
 
-Refer to the Terraform Registry for docs: [`snowflake_notification_integration`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration).
+Refer to the Terraform Registry for docs: [`snowflake_notification_integration`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class NotificationIntegration(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.notificationIntegration.NotificationIntegration",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration snowflake_notification_integration}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration snowflake_notification_integration}.'''
 
     def __init__(
         self,
@@ -65,6 +65,7 @@ class NotificationIntegration(
         gcp_pubsub_subscription_name: typing.Optional[builtins.str] = None,
         gcp_pubsub_topic_name: typing.Optional[builtins.str] = None,
         id: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["NotificationIntegrationTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         type: typing.Optional[builtins.str] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -74,25 +75,26 @@ class NotificationIntegration(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration snowflake_notification_integration} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration snowflake_notification_integration} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#name NotificationIntegration#name}.
-        :param notification_provider: The third-party cloud message queuing service (supported values: AZURE_STORAGE_QUEUE, AWS_SNS, GCP_PUBSUB; AWS_SQS is deprecated and will be removed in the future provider versions) Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#notification_provider NotificationIntegration#notification_provider}
-        :param aws_sns_role_arn: AWS IAM role ARN for notification integration to assume. Required for AWS_SNS provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#aws_sns_role_arn NotificationIntegration#aws_sns_role_arn}
-        :param aws_sns_topic_arn: AWS SNS Topic ARN for notification integration to connect to. Required for AWS_SNS provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#aws_sns_topic_arn NotificationIntegration#aws_sns_topic_arn}
-        :param aws_sqs_arn: AWS SQS queue ARN for notification integration to connect to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#aws_sqs_arn NotificationIntegration#aws_sqs_arn}
-        :param aws_sqs_role_arn: AWS IAM role ARN for notification integration to assume. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#aws_sqs_role_arn NotificationIntegration#aws_sqs_role_arn}
-        :param azure_storage_queue_primary_uri: The queue ID for the Azure Queue Storage queue created for Event Grid notifications. Required for AZURE_STORAGE_QUEUE provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#azure_storage_queue_primary_uri NotificationIntegration#azure_storage_queue_primary_uri}
-        :param azure_tenant_id: The ID of the Azure Active Directory tenant used for identity management. Required for AZURE_STORAGE_QUEUE provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#azure_tenant_id NotificationIntegration#azure_tenant_id}
-        :param comment: A comment for the integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#comment NotificationIntegration#comment}
-        :param direction: Direction of the cloud messaging with respect to Snowflake (required only for error notifications). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#direction NotificationIntegration#direction}
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#enabled NotificationIntegration#enabled}.
-        :param gcp_pubsub_subscription_name: The subscription id that Snowflake will listen to when using the GCP_PUBSUB provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#gcp_pubsub_subscription_name NotificationIntegration#gcp_pubsub_subscription_name}
-        :param gcp_pubsub_topic_name: The topic id that Snowflake will use to push notifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#gcp_pubsub_topic_name NotificationIntegration#gcp_pubsub_topic_name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#id NotificationIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param type: A type of integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#type NotificationIntegration#type}
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#name NotificationIntegration#name}.
+        :param notification_provider: The third-party cloud message queuing service (supported values: AZURE_STORAGE_QUEUE, AWS_SNS, GCP_PUBSUB; AWS_SQS is deprecated and will be removed in the future provider versions) Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#notification_provider NotificationIntegration#notification_provider}
+        :param aws_sns_role_arn: AWS IAM role ARN for notification integration to assume. Required for AWS_SNS provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#aws_sns_role_arn NotificationIntegration#aws_sns_role_arn}
+        :param aws_sns_topic_arn: AWS SNS Topic ARN for notification integration to connect to. Required for AWS_SNS provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#aws_sns_topic_arn NotificationIntegration#aws_sns_topic_arn}
+        :param aws_sqs_arn: AWS SQS queue ARN for notification integration to connect to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#aws_sqs_arn NotificationIntegration#aws_sqs_arn}
+        :param aws_sqs_role_arn: AWS IAM role ARN for notification integration to assume. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#aws_sqs_role_arn NotificationIntegration#aws_sqs_role_arn}
+        :param azure_storage_queue_primary_uri: The queue ID for the Azure Queue Storage queue created for Event Grid notifications. Required for AZURE_STORAGE_QUEUE provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#azure_storage_queue_primary_uri NotificationIntegration#azure_storage_queue_primary_uri}
+        :param azure_tenant_id: The ID of the Azure Active Directory tenant used for identity management. Required for AZURE_STORAGE_QUEUE provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#azure_tenant_id NotificationIntegration#azure_tenant_id}
+        :param comment: A comment for the integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#comment NotificationIntegration#comment}
+        :param direction: Direction of the cloud messaging with respect to Snowflake (required only for error notifications). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#direction NotificationIntegration#direction}
+        :param enabled: (Default: ``true``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#enabled NotificationIntegration#enabled}
+        :param gcp_pubsub_subscription_name: The subscription id that Snowflake will listen to when using the GCP_PUBSUB provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#gcp_pubsub_subscription_name NotificationIntegration#gcp_pubsub_subscription_name}
+        :param gcp_pubsub_topic_name: The topic id that Snowflake will use to push notifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#gcp_pubsub_topic_name NotificationIntegration#gcp_pubsub_topic_name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#id NotificationIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#timeouts NotificationIntegration#timeouts}
+        :param type: (Default: ``QUEUE``) A type of integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#type NotificationIntegration#type}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -120,6 +122,7 @@ class NotificationIntegration(
             gcp_pubsub_subscription_name=gcp_pubsub_subscription_name,
             gcp_pubsub_topic_name=gcp_pubsub_topic_name,
             id=id,
+            timeouts=timeouts,
             type=type,
             connection=connection,
             count=count,
@@ -145,7 +148,7 @@ class NotificationIntegration(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the NotificationIntegration to import.
-        :param import_from_id: The id of the existing NotificationIntegration that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing NotificationIntegration that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the NotificationIntegration to import is found.
         '''
         if __debug__:
@@ -155,6 +158,27 @@ class NotificationIntegration(
             check_type(argname="argument import_from_id", value=import_from_id, expected_type=type_hints["import_from_id"])
             check_type(argname="argument provider", value=provider, expected_type=type_hints["provider"])
         return typing.cast(_cdktf_9a9027ec.ImportableResource, jsii.sinvoke(cls, "generateConfigForImport", [scope, import_to_id, import_from_id, provider]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#create NotificationIntegration#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#delete NotificationIntegration#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#read NotificationIntegration#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#update NotificationIntegration#update}.
+        '''
+        value = NotificationIntegrationTimeouts(
+            create=create, delete=delete, read=read, update=update
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetAwsSnsRoleArn")
     def reset_aws_sns_role_arn(self) -> None:
@@ -203,6 +227,10 @@ class NotificationIntegration(
     @jsii.member(jsii_name="resetId")
     def reset_id(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetId", []))
+
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
 
     @jsii.member(jsii_name="resetType")
     def reset_type(self) -> None:
@@ -255,6 +283,11 @@ class NotificationIntegration(
     @jsii.member(jsii_name="gcpPubsubServiceAccount")
     def gcp_pubsub_service_account(self) -> builtins.str:
         return typing.cast(builtins.str, jsii.get(self, "gcpPubsubServiceAccount"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "NotificationIntegrationTimeoutsOutputReference":
+        return typing.cast("NotificationIntegrationTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="awsSnsRoleArnInput")
@@ -327,6 +360,13 @@ class NotificationIntegration(
     @jsii.member(jsii_name="notificationProviderInput")
     def notification_provider_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "notificationProviderInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "NotificationIntegrationTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "NotificationIntegrationTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="typeInput")
@@ -542,6 +582,7 @@ class NotificationIntegration(
         "gcp_pubsub_subscription_name": "gcpPubsubSubscriptionName",
         "gcp_pubsub_topic_name": "gcpPubsubTopicName",
         "id": "id",
+        "timeouts": "timeouts",
         "type": "type",
     },
 )
@@ -570,6 +611,7 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         gcp_pubsub_subscription_name: typing.Optional[builtins.str] = None,
         gcp_pubsub_topic_name: typing.Optional[builtins.str] = None,
         id: typing.Optional[builtins.str] = None,
+        timeouts: typing.Optional[typing.Union["NotificationIntegrationTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         type: typing.Optional[builtins.str] = None,
     ) -> None:
         '''
@@ -580,24 +622,27 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#name NotificationIntegration#name}.
-        :param notification_provider: The third-party cloud message queuing service (supported values: AZURE_STORAGE_QUEUE, AWS_SNS, GCP_PUBSUB; AWS_SQS is deprecated and will be removed in the future provider versions) Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#notification_provider NotificationIntegration#notification_provider}
-        :param aws_sns_role_arn: AWS IAM role ARN for notification integration to assume. Required for AWS_SNS provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#aws_sns_role_arn NotificationIntegration#aws_sns_role_arn}
-        :param aws_sns_topic_arn: AWS SNS Topic ARN for notification integration to connect to. Required for AWS_SNS provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#aws_sns_topic_arn NotificationIntegration#aws_sns_topic_arn}
-        :param aws_sqs_arn: AWS SQS queue ARN for notification integration to connect to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#aws_sqs_arn NotificationIntegration#aws_sqs_arn}
-        :param aws_sqs_role_arn: AWS IAM role ARN for notification integration to assume. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#aws_sqs_role_arn NotificationIntegration#aws_sqs_role_arn}
-        :param azure_storage_queue_primary_uri: The queue ID for the Azure Queue Storage queue created for Event Grid notifications. Required for AZURE_STORAGE_QUEUE provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#azure_storage_queue_primary_uri NotificationIntegration#azure_storage_queue_primary_uri}
-        :param azure_tenant_id: The ID of the Azure Active Directory tenant used for identity management. Required for AZURE_STORAGE_QUEUE provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#azure_tenant_id NotificationIntegration#azure_tenant_id}
-        :param comment: A comment for the integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#comment NotificationIntegration#comment}
-        :param direction: Direction of the cloud messaging with respect to Snowflake (required only for error notifications). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#direction NotificationIntegration#direction}
-        :param enabled: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#enabled NotificationIntegration#enabled}.
-        :param gcp_pubsub_subscription_name: The subscription id that Snowflake will listen to when using the GCP_PUBSUB provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#gcp_pubsub_subscription_name NotificationIntegration#gcp_pubsub_subscription_name}
-        :param gcp_pubsub_topic_name: The topic id that Snowflake will use to push notifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#gcp_pubsub_topic_name NotificationIntegration#gcp_pubsub_topic_name}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#id NotificationIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param type: A type of integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#type NotificationIntegration#type}
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#name NotificationIntegration#name}.
+        :param notification_provider: The third-party cloud message queuing service (supported values: AZURE_STORAGE_QUEUE, AWS_SNS, GCP_PUBSUB; AWS_SQS is deprecated and will be removed in the future provider versions) Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#notification_provider NotificationIntegration#notification_provider}
+        :param aws_sns_role_arn: AWS IAM role ARN for notification integration to assume. Required for AWS_SNS provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#aws_sns_role_arn NotificationIntegration#aws_sns_role_arn}
+        :param aws_sns_topic_arn: AWS SNS Topic ARN for notification integration to connect to. Required for AWS_SNS provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#aws_sns_topic_arn NotificationIntegration#aws_sns_topic_arn}
+        :param aws_sqs_arn: AWS SQS queue ARN for notification integration to connect to. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#aws_sqs_arn NotificationIntegration#aws_sqs_arn}
+        :param aws_sqs_role_arn: AWS IAM role ARN for notification integration to assume. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#aws_sqs_role_arn NotificationIntegration#aws_sqs_role_arn}
+        :param azure_storage_queue_primary_uri: The queue ID for the Azure Queue Storage queue created for Event Grid notifications. Required for AZURE_STORAGE_QUEUE provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#azure_storage_queue_primary_uri NotificationIntegration#azure_storage_queue_primary_uri}
+        :param azure_tenant_id: The ID of the Azure Active Directory tenant used for identity management. Required for AZURE_STORAGE_QUEUE provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#azure_tenant_id NotificationIntegration#azure_tenant_id}
+        :param comment: A comment for the integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#comment NotificationIntegration#comment}
+        :param direction: Direction of the cloud messaging with respect to Snowflake (required only for error notifications). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#direction NotificationIntegration#direction}
+        :param enabled: (Default: ``true``). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#enabled NotificationIntegration#enabled}
+        :param gcp_pubsub_subscription_name: The subscription id that Snowflake will listen to when using the GCP_PUBSUB provider. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#gcp_pubsub_subscription_name NotificationIntegration#gcp_pubsub_subscription_name}
+        :param gcp_pubsub_topic_name: The topic id that Snowflake will use to push notifications. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#gcp_pubsub_topic_name NotificationIntegration#gcp_pubsub_topic_name}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#id NotificationIntegration#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#timeouts NotificationIntegration#timeouts}
+        :param type: (Default: ``QUEUE``) A type of integration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#type NotificationIntegration#type}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = NotificationIntegrationTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__c181187ccc249e55a6025eade78d9b867e0a26bb2ee2fb9ff6f0ec7d626fd9d8)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -621,6 +666,7 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument gcp_pubsub_subscription_name", value=gcp_pubsub_subscription_name, expected_type=type_hints["gcp_pubsub_subscription_name"])
             check_type(argname="argument gcp_pubsub_topic_name", value=gcp_pubsub_topic_name, expected_type=type_hints["gcp_pubsub_topic_name"])
             check_type(argname="argument id", value=id, expected_type=type_hints["id"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
             check_type(argname="argument type", value=type, expected_type=type_hints["type"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "name": name,
@@ -664,6 +710,8 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["gcp_pubsub_topic_name"] = gcp_pubsub_topic_name
         if id is not None:
             self._values["id"] = id
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
         if type is not None:
             self._values["type"] = type
 
@@ -733,7 +781,7 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def name(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#name NotificationIntegration#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#name NotificationIntegration#name}.'''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
         return typing.cast(builtins.str, result)
@@ -744,7 +792,7 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         AWS_SQS is deprecated and will be removed in the future provider versions)
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#notification_provider NotificationIntegration#notification_provider}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#notification_provider NotificationIntegration#notification_provider}
         '''
         result = self._values.get("notification_provider")
         assert result is not None, "Required property 'notification_provider' is missing"
@@ -754,7 +802,7 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def aws_sns_role_arn(self) -> typing.Optional[builtins.str]:
         '''AWS IAM role ARN for notification integration to assume. Required for AWS_SNS provider.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#aws_sns_role_arn NotificationIntegration#aws_sns_role_arn}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#aws_sns_role_arn NotificationIntegration#aws_sns_role_arn}
         '''
         result = self._values.get("aws_sns_role_arn")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -763,7 +811,7 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def aws_sns_topic_arn(self) -> typing.Optional[builtins.str]:
         '''AWS SNS Topic ARN for notification integration to connect to. Required for AWS_SNS provider.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#aws_sns_topic_arn NotificationIntegration#aws_sns_topic_arn}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#aws_sns_topic_arn NotificationIntegration#aws_sns_topic_arn}
         '''
         result = self._values.get("aws_sns_topic_arn")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -772,7 +820,7 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def aws_sqs_arn(self) -> typing.Optional[builtins.str]:
         '''AWS SQS queue ARN for notification integration to connect to.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#aws_sqs_arn NotificationIntegration#aws_sqs_arn}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#aws_sqs_arn NotificationIntegration#aws_sqs_arn}
         '''
         result = self._values.get("aws_sqs_arn")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -781,7 +829,7 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def aws_sqs_role_arn(self) -> typing.Optional[builtins.str]:
         '''AWS IAM role ARN for notification integration to assume.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#aws_sqs_role_arn NotificationIntegration#aws_sqs_role_arn}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#aws_sqs_role_arn NotificationIntegration#aws_sqs_role_arn}
         '''
         result = self._values.get("aws_sqs_role_arn")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -790,7 +838,7 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def azure_storage_queue_primary_uri(self) -> typing.Optional[builtins.str]:
         '''The queue ID for the Azure Queue Storage queue created for Event Grid notifications. Required for AZURE_STORAGE_QUEUE provider.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#azure_storage_queue_primary_uri NotificationIntegration#azure_storage_queue_primary_uri}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#azure_storage_queue_primary_uri NotificationIntegration#azure_storage_queue_primary_uri}
         '''
         result = self._values.get("azure_storage_queue_primary_uri")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -799,7 +847,7 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def azure_tenant_id(self) -> typing.Optional[builtins.str]:
         '''The ID of the Azure Active Directory tenant used for identity management. Required for AZURE_STORAGE_QUEUE provider.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#azure_tenant_id NotificationIntegration#azure_tenant_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#azure_tenant_id NotificationIntegration#azure_tenant_id}
         '''
         result = self._values.get("azure_tenant_id")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -808,7 +856,7 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def comment(self) -> typing.Optional[builtins.str]:
         '''A comment for the integration.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#comment NotificationIntegration#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#comment NotificationIntegration#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -817,7 +865,7 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def direction(self) -> typing.Optional[builtins.str]:
         '''Direction of the cloud messaging with respect to Snowflake (required only for error notifications).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#direction NotificationIntegration#direction}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#direction NotificationIntegration#direction}
         '''
         result = self._values.get("direction")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -826,7 +874,10 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def enabled(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#enabled NotificationIntegration#enabled}.'''
+        '''(Default: ``true``).
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#enabled NotificationIntegration#enabled}
+        '''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
@@ -834,7 +885,7 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def gcp_pubsub_subscription_name(self) -> typing.Optional[builtins.str]:
         '''The subscription id that Snowflake will listen to when using the GCP_PUBSUB provider.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#gcp_pubsub_subscription_name NotificationIntegration#gcp_pubsub_subscription_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#gcp_pubsub_subscription_name NotificationIntegration#gcp_pubsub_subscription_name}
         '''
         result = self._values.get("gcp_pubsub_subscription_name")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -843,14 +894,14 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def gcp_pubsub_topic_name(self) -> typing.Optional[builtins.str]:
         '''The topic id that Snowflake will use to push notifications.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#gcp_pubsub_topic_name NotificationIntegration#gcp_pubsub_topic_name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#gcp_pubsub_topic_name NotificationIntegration#gcp_pubsub_topic_name}
         '''
         result = self._values.get("gcp_pubsub_topic_name")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#id NotificationIntegration#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#id NotificationIntegration#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -859,10 +910,19 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
-    def type(self) -> typing.Optional[builtins.str]:
-        '''A type of integration.
+    def timeouts(self) -> typing.Optional["NotificationIntegrationTimeouts"]:
+        '''timeouts block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/notification_integration#type NotificationIntegration#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#timeouts NotificationIntegration#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["NotificationIntegrationTimeouts"], result)
+
+    @builtins.property
+    def type(self) -> typing.Optional[builtins.str]:
+        '''(Default: ``QUEUE``) A type of integration.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#type NotificationIntegration#type}
         '''
         result = self._values.get("type")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -879,9 +939,210 @@ class NotificationIntegrationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         )
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.notificationIntegration.NotificationIntegrationTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class NotificationIntegrationTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#create NotificationIntegration#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#delete NotificationIntegration#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#read NotificationIntegration#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#update NotificationIntegration#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__598aa83249053ac83e4268820a66a98d728ecebcbc471b0c0503fcb0b9cd6bcf)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#create NotificationIntegration#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#delete NotificationIntegration#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#read NotificationIntegration#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/notification_integration#update NotificationIntegration#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "NotificationIntegrationTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class NotificationIntegrationTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.notificationIntegration.NotificationIntegrationTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__088a2ac60586d11e7767e200491abba440a3f52233c5cf575b78a90a890d429d)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d4ab89035cbed0cf16b157ed5e903bc9611fe6736a407128858f9c315f0204fb)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__af8b9d42371258bbef12a36107265088fd50599d1bb90fb5051b7996fda09da8)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__a1e6ee91cdfb184d9754c47757965ce3b9a0948d5b1e526945759fc6d0bebb75)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__158accb8240e543c73fc40f09fd74969a04b65c80cd107cbc007be481d33a19c)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, NotificationIntegrationTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, NotificationIntegrationTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, NotificationIntegrationTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__d54501cc8045b69d125b5b28805812b35051392359f581d63657bce4d3364c20)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "NotificationIntegration",
     "NotificationIntegrationConfig",
+    "NotificationIntegrationTimeouts",
+    "NotificationIntegrationTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -904,6 +1165,7 @@ def _typecheckingstub__2e36fa304f77865a7509990b6c34e2a03df3ed1ba3e006344fbe37ffc
     gcp_pubsub_subscription_name: typing.Optional[builtins.str] = None,
     gcp_pubsub_topic_name: typing.Optional[builtins.str] = None,
     id: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[NotificationIntegrationTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     type: typing.Optional[builtins.str] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
@@ -1038,7 +1300,55 @@ def _typecheckingstub__c181187ccc249e55a6025eade78d9b867e0a26bb2ee2fb9ff6f0ec7d6
     gcp_pubsub_subscription_name: typing.Optional[builtins.str] = None,
     gcp_pubsub_topic_name: typing.Optional[builtins.str] = None,
     id: typing.Optional[builtins.str] = None,
+    timeouts: typing.Optional[typing.Union[NotificationIntegrationTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     type: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__598aa83249053ac83e4268820a66a98d728ecebcbc471b0c0503fcb0b9cd6bcf(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__088a2ac60586d11e7767e200491abba440a3f52233c5cf575b78a90a890d429d(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d4ab89035cbed0cf16b157ed5e903bc9611fe6736a407128858f9c315f0204fb(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__af8b9d42371258bbef12a36107265088fd50599d1bb90fb5051b7996fda09da8(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__a1e6ee91cdfb184d9754c47757965ce3b9a0948d5b1e526945759fc6d0bebb75(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__158accb8240e543c73fc40f09fd74969a04b65c80cd107cbc007be481d33a19c(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__d54501cc8045b69d125b5b28805812b35051392359f581d63657bce4d3364c20(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, NotificationIntegrationTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

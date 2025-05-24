@@ -1,7 +1,7 @@
 r'''
 # `tfe_audit_trail_token`
 
-Refer to the Terraform Registry for docs: [`tfe_audit_trail_token`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/audit_trail_token).
+Refer to the Terraform Registry for docs: [`tfe_audit_trail_token`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/audit_trail_token).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class AuditTrailToken(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.auditTrailToken.AuditTrailToken",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/audit_trail_token tfe_audit_trail_token}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/audit_trail_token tfe_audit_trail_token}.'''
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class AuditTrailToken(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/audit_trail_token tfe_audit_trail_token} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/audit_trail_token tfe_audit_trail_token} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param expired_at: The time when the audit trail token will expire. This must be a valid ISO8601 timestamp. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/audit_trail_token#expired_at AuditTrailToken#expired_at}
-        :param force_regenerate: When set to true will force the audit trail token to be recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/audit_trail_token#force_regenerate AuditTrailToken#force_regenerate}
-        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/audit_trail_token#organization AuditTrailToken#organization}
+        :param expired_at: The time when the audit trail token will expire. This must be a valid ISO8601 timestamp. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/audit_trail_token#expired_at AuditTrailToken#expired_at}
+        :param force_regenerate: When set to true will force the audit trail token to be recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/audit_trail_token#force_regenerate AuditTrailToken#force_regenerate}
+        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/audit_trail_token#organization AuditTrailToken#organization}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -109,7 +109,7 @@ class AuditTrailToken(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the AuditTrailToken to import.
-        :param import_from_id: The id of the existing AuditTrailToken that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/audit_trail_token#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing AuditTrailToken that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/audit_trail_token#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the AuditTrailToken to import is found.
         '''
         if __debug__:
@@ -253,9 +253,9 @@ class AuditTrailTokenConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param expired_at: The time when the audit trail token will expire. This must be a valid ISO8601 timestamp. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/audit_trail_token#expired_at AuditTrailToken#expired_at}
-        :param force_regenerate: When set to true will force the audit trail token to be recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/audit_trail_token#force_regenerate AuditTrailToken#force_regenerate}
-        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/audit_trail_token#organization AuditTrailToken#organization}
+        :param expired_at: The time when the audit trail token will expire. This must be a valid ISO8601 timestamp. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/audit_trail_token#expired_at AuditTrailToken#expired_at}
+        :param force_regenerate: When set to true will force the audit trail token to be recreated. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/audit_trail_token#force_regenerate AuditTrailToken#force_regenerate}
+        :param organization: Name of the organization. If omitted, organization must be defined in the provider config. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/audit_trail_token#organization AuditTrailToken#organization}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -361,7 +361,7 @@ class AuditTrailTokenConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def expired_at(self) -> typing.Optional[builtins.str]:
         '''The time when the audit trail token will expire. This must be a valid ISO8601 timestamp.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/audit_trail_token#expired_at AuditTrailToken#expired_at}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/audit_trail_token#expired_at AuditTrailToken#expired_at}
         '''
         result = self._values.get("expired_at")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -372,7 +372,7 @@ class AuditTrailTokenConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''When set to true will force the audit trail token to be recreated.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/audit_trail_token#force_regenerate AuditTrailToken#force_regenerate}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/audit_trail_token#force_regenerate AuditTrailToken#force_regenerate}
         '''
         result = self._values.get("force_regenerate")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -381,7 +381,7 @@ class AuditTrailTokenConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def organization(self) -> typing.Optional[builtins.str]:
         '''Name of the organization. If omitted, organization must be defined in the provider config.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/audit_trail_token#organization AuditTrailToken#organization}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/audit_trail_token#organization AuditTrailToken#organization}
         '''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)

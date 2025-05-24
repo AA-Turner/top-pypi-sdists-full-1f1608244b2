@@ -4,12 +4,12 @@ import asyncio
 import logging
 import signal
 import subprocess
+from importlib.metadata import distribution
 from pathlib import Path
 from typing import List, Sequence, Union
 from webbrowser import open as open_webbrowser
 
 import click
-import importlib_metadata
 from packaging.version import Version
 from rich import print
 from rich.control import Control
@@ -60,13 +60,13 @@ def check_distributed_version() -> bool:
 
 def check_jupyter() -> bool:
     try:
-        importlib_metadata.distribution("jupyterlab")
+        distribution("jupyterlab")
     except ModuleNotFoundError:
         print("[bold red]Jupyterlab must be installed locally to launch notebooks.[/]")
         return False
 
     try:
-        importlib_metadata.distribution("jupyter_server_proxy")
+        distribution("jupyter_server_proxy")
     except ModuleNotFoundError:
         print(
             "[bold red]jupyter-server-proxy is not installed, "

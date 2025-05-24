@@ -4919,6 +4919,10 @@ def test_signals():
     model = load_sql_based_model(expressions)
     assert model.signals[0][1] == {"arg": exp.Literal.number(1)}
 
+    @signal()
+    def my_signal(batch):
+        return True
+
     expressions = d.parse(
         """
         MODEL (
@@ -4946,7 +4950,10 @@ def test_signals():
         """
     )
 
-    model = load_sql_based_model(expressions)
+    model = load_sql_based_model(
+        expressions,
+        signal_definitions={"my_signal": signal.get_registry()["my_signal"]},
+    )
     assert model.signals == [
         (
             "my_signal",
@@ -9837,6 +9844,22 @@ def test_invalid_audit_reference():
         load_sql_based_model(expressions)
 
 
+def test_invalid_signal_reference():
+    sql = """
+    MODEL (
+      name test,
+      signals (s())
+    );
+
+    SELECT
+      1 AS id
+    """
+    expressions = d.parse(sql)
+
+    with pytest.raises(ConfigError, match="Signal 's' is undefined"):
+        load_sql_based_model(expressions)
+
+
 def test_scd_time_data_type_does_not_cause_diff_after_deserialization() -> None:
     for dialect in (
         "athena",
@@ -9970,6 +9993,7 @@ def test_extract_schema_in_post_statement(tmp_path: Path) -> None:
         SELECT c FROM x;
         ON_VIRTUAL_UPDATE_BEGIN;
         @check_schema('y');
+        @check_self_schema();
         ON_VIRTUAL_UPDATE_END;
         """
     )
@@ -9984,6 +10008,11 @@ from sqlmesh import macro
 def check_schema(evaluator, model_name: str):
     if evaluator.runtime_stage != 'loading':
         assert evaluator.columns_to_types(model_name) == {"c": exp.DataType.build("INT")}
+
+@macro()
+def check_self_schema(evaluator):
+    if evaluator.runtime_stage != 'loading':
+        assert evaluator.columns_to_types(evaluator.this_model_fqn) == {"c": exp.DataType.build("INT")}
 """)
 
     context = Context(paths=tmp_path, config=config)

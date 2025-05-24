@@ -39,6 +39,7 @@ import weakref
 from contextlib import contextmanager
 from dataclasses import dataclass
 from hashlib import md5
+from importlib.metadata import PackageNotFoundError, version
 from json.decoder import JSONDecodeError
 from typing import (
     Any,
@@ -69,7 +70,6 @@ import httpx
 import rich
 from distributed.comm.addressing import parse_address
 from distributed.utils import LoopRunner, sync
-from importlib_metadata import PackageNotFoundError, version
 from packaging.version import Version
 from rich.console import Console
 from rich.text import Text

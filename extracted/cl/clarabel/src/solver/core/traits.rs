@@ -10,7 +10,8 @@
 //!  which collectively implement support for the problem format described in the top
 //! level crate documentation.
 
-use super::{cones::Cone, CoreSettings, ScalingStrategy};
+use super::ffi::*;
+use super::{cones::Cone, CoreSettings, ScalingStrategy, SettingsError};
 use super::{SolverStatus, StepDirection};
 use crate::algebra::*;
 use crate::timers::*;
@@ -152,28 +153,31 @@ where
     /// associated settings type
     type SE: Settings<T>;
 
+    /// Return the print target for the solver.
+    fn print_target(&mut self) -> &mut dyn std::io::Write;
+
     /// Print the solver configuration, e.g. settings etc.
     /// This function is called once at the start of the solve.
     fn print_configuration(
-        &self,
+        &mut self,
         settings: &Self::SE,
         data: &Self::D,
         cones: &Self::C,
     ) -> std::io::Result<()>;
 
     /// Print a header to appear at the top of progress information.
-    fn print_status_header(&self, settings: &Self::SE) -> std::io::Result<()>;
+    fn print_status_header(&mut self, settings: &Self::SE) -> std::io::Result<()>;
 
     /// Print solver progress information.   Called once per iteration.
-    fn print_status(&self, settings: &Self::SE) -> std::io::Result<()>;
+    fn print_status(&mut self, settings: &Self::SE) -> std::io::Result<()>;
 
     /// Print solver final status and other exit information.   Called at
     /// solver termination.
-    fn print_footer(&self, settings: &Self::SE) -> std::io::Result<()>;
+    fn print_footer(&mut self, settings: &Self::SE) -> std::io::Result<()>;
 }
 
 /// Internal information for the solver to monitor progress and check for termination.
-pub trait Info<T>: InfoPrint<T>
+pub trait Info<T>: InfoPrint<T> + ClarabelFFI<Self> + Sized + Clone
 where
     T: FloatT,
 {
@@ -249,10 +253,18 @@ pub trait Solution<T: FloatT> {
 /// specific settings they wish.   They must, however, also maintain
 /// a settings object of type [`CoreSettings`](crate::solver::core::CoreSettings)
 /// and return this to the solver internally.   
-pub trait Settings<T: FloatT> {
+pub trait Settings<T: FloatT>: ClarabelFFI<Self> + Sized + Clone {
     /// Return the core settings.
     fn core(&self) -> &CoreSettings<T>;
 
     /// Return the core settings (mutably).
     fn core_mut(&mut self) -> &mut CoreSettings<T>;
+
+    /// sanity check the settings
+    fn validate(&self) -> Result<(), SettingsError>;
+
+    /// check that the settings are a valid update to some previous
+    /// version.   Used to ensure that settings used only at solver
+    /// initialization are not changed during the solve.
+    fn validate_as_update(&self, prev: &Self) -> Result<(), SettingsError>;
 }

@@ -358,6 +358,11 @@ class HandshakeStartCondition(Enum):
     WAIT_FOR_HANDSHAKE_TRIGGER_DEASSERT = 12551  #: Device is waiting for the Handshake Trigger to deassert.
 
 
+class IDPinStatus(Enum):
+    MEMORY_NOT_PRESENT = 16205  #: No memory is connected to ID Pin.
+    MEMORY_PRESENT = 16206  #: The memory is connected to ID Pin.
+
+
 class Impedance1(Enum):
     FIFTY_OHMS = 50  #: 50 Ohms.
     SEVENTY_FIVE_OHMS = 75  #: 75 Ohms.
@@ -415,6 +420,7 @@ class LoggingOperation(Enum):
 
 
 class LogicFamily(Enum):
+    ONE_POINT_EIGHT_V = 16184  #: Compatible with 1.8 V CMOS signals.
     TWO_POINT_FIVE_V = 14620  #: Compatible with 2.5 V CMOS signals.
     THREE_POINT_THREE_V = 14621  #: Compatible with LVTTL signals.
     FIVE_V = 14619  #: Compatible with TTL and 5 V CMOS signals.
@@ -894,6 +900,7 @@ class UsageTypeAI(Enum):
     TEDS = 12531  #: Measurement type defined by TEDS.
     CHARGE = 16105  #: Charge measurement.
     POWER = 16201  #: Power source and measurement.
+    CALCULATED_POWER = 16204  #: Calculated power measurement.
 
 
 class UsageTypeAO(Enum):

@@ -1,15 +1,15 @@
 
 #include <errno.h>
 
-#include "geoarrow.h"
+#include "geoarrow/geoarrow.h"
 
-#include "nanoarrow.h"
+#include "nanoarrow/nanoarrow.h"
 
 static int32_t kZeroInt32 = 0;
 
-static int GeoArrowArrayViewInitInternal(struct GeoArrowArrayView* array_view,
-                                         struct GeoArrowError* error) {
+static int GeoArrowArrayViewInitInternal(struct GeoArrowArrayView* array_view) {
   switch (array_view->schema_view.geometry_type) {
+    case GEOARROW_GEOMETRY_TYPE_BOX:
     case GEOARROW_GEOMETRY_TYPE_POINT:
       array_view->n_offsets = 0;
       break;
@@ -59,6 +59,10 @@ static int GeoArrowArrayViewInitInternal(struct GeoArrowArrayView* array_view,
       break;
   }
 
+  if (array_view->schema_view.geometry_type == GEOARROW_GEOMETRY_TYPE_BOX) {
+    array_view->coords.n_values *= 2;
+  }
+
   switch (array_view->schema_view.coord_type) {
     case GEOARROW_COORD_TYPE_SEPARATE:
       array_view->coords.coords_stride = 1;
@@ -72,25 +76,23 @@ static int GeoArrowArrayViewInitInternal(struct GeoArrowArrayView* array_view,
       break;
   }
 
-  for (int i = 0; i < 4; i++) {
-    array_view->coords.values[i] = NULL;
-  }
-
   return GEOARROW_OK;
 }
 
 GeoArrowErrorCode GeoArrowArrayViewInitFromType(struct GeoArrowArrayView* array_view,
                                                 enum GeoArrowType type) {
+  memset(array_view, 0, sizeof(struct GeoArrowArrayView));
   NANOARROW_RETURN_NOT_OK(GeoArrowSchemaViewInitFromType(&array_view->schema_view, type));
-  return GeoArrowArrayViewInitInternal(array_view, NULL);
+  return GeoArrowArrayViewInitInternal(array_view);
 }
 
 GeoArrowErrorCode GeoArrowArrayViewInitFromSchema(struct GeoArrowArrayView* array_view,
                                                   const struct ArrowSchema* schema,
                                                   struct GeoArrowError* error) {
+  memset(array_view, 0, sizeof(struct GeoArrowArrayView));
   NANOARROW_RETURN_NOT_OK(
       GeoArrowSchemaViewInit(&array_view->schema_view, schema, error));
-  return GeoArrowArrayViewInitInternal(array_view, error);
+  return GeoArrowArrayViewInitInternal(array_view);
 }
 
 static int GeoArrowArrayViewSetArrayInternal(struct GeoArrowArrayView* array_view,
@@ -202,13 +204,43 @@ static int GeoArrowArrayViewSetArrayInternal(struct GeoArrowArrayView* array_vie
 }
 
 static GeoArrowErrorCode GeoArrowArrayViewSetArraySerialized(
-    struct GeoArrowArrayView* array_view, const struct ArrowArray* array,
-    struct GeoArrowError* error) {
+    struct GeoArrowArrayView* array_view, const struct ArrowArray* array) {
   array_view->length[0] = array->length;
   array_view->offset[0] = array->offset;
 
   array_view->offsets[0] = (const int32_t*)array->buffers[1];
   array_view->data = (const uint8_t*)array->buffers[2];
+  return GEOARROW_OK;
+}
+
+static GeoArrowErrorCode GeoArrowArrayViewSetArrayBox(
+    struct GeoArrowArrayView* array_view, const struct ArrowArray* array,
+    struct GeoArrowError* error) {
+  array_view->length[0] = array->length;
+  array_view->offset[0] = array->offset;
+  array_view->coords.n_coords = array->length;
+
+  if (array->n_children != array_view->coords.n_values) {
+    GeoArrowErrorSet(error,
+                     "Unexpected number of children for box array struct "
+                     "in GeoArrowArrayViewSetArray()");
+    return EINVAL;
+  }
+
+  // Set the coord pointers to the data buffer of each child (applying
+  // offset before assigning the pointer)
+  for (int32_t i = 0; i < array_view->coords.n_values; i++) {
+    if (array->children[i]->n_buffers != 2) {
+      ArrowErrorSet((struct ArrowError*)error,
+                    "Unexpected number of buffers for box array child "
+                    "in GeoArrowArrayViewSetArray()");
+      return EINVAL;
+    }
+
+    array_view->coords.values[i] =
+        ((const double*)array->children[i]->buffers[1]) + array->children[i]->offset;
+  }
+
   return GEOARROW_OK;
 }
 
@@ -218,8 +250,13 @@ GeoArrowErrorCode GeoArrowArrayViewSetArray(struct GeoArrowArrayView* array_view
   switch (array_view->schema_view.type) {
     case GEOARROW_TYPE_WKT:
     case GEOARROW_TYPE_WKB:
-      NANOARROW_RETURN_NOT_OK(
-          GeoArrowArrayViewSetArraySerialized(array_view, array, error));
+      NANOARROW_RETURN_NOT_OK(GeoArrowArrayViewSetArraySerialized(array_view, array));
+      break;
+    case GEOARROW_TYPE_BOX:
+    case GEOARROW_TYPE_BOX_Z:
+    case GEOARROW_TYPE_BOX_M:
+    case GEOARROW_TYPE_BOX_ZM:
+      NANOARROW_RETURN_NOT_OK(GeoArrowArrayViewSetArrayBox(array_view, array, error));
       break;
     default:
       NANOARROW_RETURN_NOT_OK(
@@ -240,7 +277,7 @@ static inline void GeoArrowCoordViewUpdate(const struct GeoArrowCoordView* src,
   dst->n_coords = length;
 }
 
-static GeoArrowErrorCode GeoArrowArrayViewVisitPoint(
+static GeoArrowErrorCode GeoArrowArrayViewVisitNativePoint(
     const struct GeoArrowArrayView* array_view, int64_t offset, int64_t length,
     struct GeoArrowVisitor* v) {
   struct GeoArrowCoordView coords = array_view->coords;
@@ -269,7 +306,7 @@ static GeoArrowErrorCode GeoArrowArrayViewVisitPoint(
   return GEOARROW_OK;
 }
 
-static GeoArrowErrorCode GeoArrowArrayViewVisitLinestring(
+static GeoArrowErrorCode GeoArrowArrayViewVisitNativeLinestring(
     const struct GeoArrowArrayView* array_view, int64_t offset, int64_t length,
     struct GeoArrowVisitor* v) {
   struct GeoArrowCoordView coords = array_view->coords;
@@ -299,7 +336,7 @@ static GeoArrowErrorCode GeoArrowArrayViewVisitLinestring(
   return GEOARROW_OK;
 }
 
-static GeoArrowErrorCode GeoArrowArrayViewVisitPolygon(
+static GeoArrowErrorCode GeoArrowArrayViewVisitNativePolygon(
     const struct GeoArrowArrayView* array_view, int64_t offset, int64_t length,
     struct GeoArrowVisitor* v) {
   struct GeoArrowCoordView coords = array_view->coords;
@@ -340,7 +377,7 @@ static GeoArrowErrorCode GeoArrowArrayViewVisitPolygon(
   return GEOARROW_OK;
 }
 
-static GeoArrowErrorCode GeoArrowArrayViewVisitMultipoint(
+static GeoArrowErrorCode GeoArrowArrayViewVisitNativeMultipoint(
     const struct GeoArrowArrayView* array_view, int64_t offset, int64_t length,
     struct GeoArrowVisitor* v) {
   struct GeoArrowCoordView coords = array_view->coords;
@@ -375,7 +412,7 @@ static GeoArrowErrorCode GeoArrowArrayViewVisitMultipoint(
   return GEOARROW_OK;
 }
 
-static GeoArrowErrorCode GeoArrowArrayViewVisitMultilinestring(
+static GeoArrowErrorCode GeoArrowArrayViewVisitNativeMultilinestring(
     const struct GeoArrowArrayView* array_view, int64_t offset, int64_t length,
     struct GeoArrowVisitor* v) {
   struct GeoArrowCoordView coords = array_view->coords;
@@ -417,7 +454,7 @@ static GeoArrowErrorCode GeoArrowArrayViewVisitMultilinestring(
   return GEOARROW_OK;
 }
 
-static GeoArrowErrorCode GeoArrowArrayViewVisitMultipolygon(
+static GeoArrowErrorCode GeoArrowArrayViewVisitNativeMultipolygon(
     const struct GeoArrowArrayView* array_view, int64_t offset, int64_t length,
     struct GeoArrowVisitor* v) {
   struct GeoArrowCoordView coords = array_view->coords;
@@ -472,22 +509,96 @@ static GeoArrowErrorCode GeoArrowArrayViewVisitMultipolygon(
   return GEOARROW_OK;
 }
 
-GeoArrowErrorCode GeoArrowArrayViewVisit(const struct GeoArrowArrayView* array_view,
-                                         int64_t offset, int64_t length,
-                                         struct GeoArrowVisitor* v) {
+static GeoArrowErrorCode GeoArrowArrayViewVisitNativeBox(
+    const struct GeoArrowArrayView* array_view, int64_t offset, int64_t length,
+    struct GeoArrowVisitor* v) {
+  // We aren't going to attempt Z, M, or ZM boxes since there is no canonical
+  // way to do this (maybe only if the non-XY dimensions are constant?).
+  if (array_view->schema_view.dimensions != GEOARROW_DIMENSIONS_XY) {
+    GeoArrowErrorSet(v->error, "Can't visit box with non-XY dimensions");
+    return ENOTSUP;
+  }
+
+  // These are the polygon coords and the arrays to back them
+  struct GeoArrowCoordView poly_coords;
+  memset(&poly_coords, 0, sizeof(struct GeoArrowCoordView));
+
+  int n_dim = array_view->coords.n_values / 2;
+  double x[5];
+  double y[5];
+  poly_coords.n_values = n_dim;
+  poly_coords.n_coords = 5;
+  poly_coords.coords_stride = 1;
+  poly_coords.values[0] = x;
+  poly_coords.values[1] = y;
+
+  // index into each box coord's values[] for each polygon coordinate
+  int box_coord_poly_map_x[] = {0, n_dim, n_dim, 0, 0};
+  int box_coord_poly_map_y[] = {1, 1, n_dim + 1, n_dim + 1, 1};
+
+  for (int64_t i = 0; i < length; i++) {
+    int64_t raw_offset = array_view->offset[0] + offset + i;
+    NANOARROW_RETURN_NOT_OK(v->feat_start(v));
+    if (!array_view->validity_bitmap ||
+        ArrowBitGet(array_view->validity_bitmap, raw_offset)) {
+      // Check for empty dimensions
+      int n_empty_dims = 0;
+      for (int i = 0; i < n_dim; i++) {
+        double dim_min = GEOARROW_COORD_VIEW_VALUE(&array_view->coords, raw_offset, i);
+        double dim_max =
+            GEOARROW_COORD_VIEW_VALUE(&array_view->coords, raw_offset, n_dim + i);
+        n_empty_dims += dim_min > dim_max;
+      }
+
+      NANOARROW_RETURN_NOT_OK(v->geom_start(v, GEOARROW_GEOMETRY_TYPE_POLYGON,
+                                            array_view->schema_view.dimensions));
+
+      // If any dimension has a negative range, we consider the polygon empty
+      // (i.e., there are no points for which...)
+      if (n_empty_dims == 0) {
+        // Populate the polygon coordinates
+        for (int i = 0; i < 5; i++) {
+          x[i] = GEOARROW_COORD_VIEW_VALUE(&array_view->coords, raw_offset,
+                                           box_coord_poly_map_x[i]);
+          y[i] = GEOARROW_COORD_VIEW_VALUE(&array_view->coords, raw_offset,
+                                           box_coord_poly_map_y[i]);
+        }
+
+        // Call the visitor
+        NANOARROW_RETURN_NOT_OK(v->ring_start(v));
+        NANOARROW_RETURN_NOT_OK(v->coords(v, &poly_coords));
+        NANOARROW_RETURN_NOT_OK(v->ring_end(v));
+      }
+
+      NANOARROW_RETURN_NOT_OK(v->geom_end(v));
+    } else {
+      NANOARROW_RETURN_NOT_OK(v->null_feat(v));
+    }
+
+    NANOARROW_RETURN_NOT_OK(v->feat_end(v));
+  }
+
+  return GEOARROW_OK;
+}
+
+GeoArrowErrorCode GeoArrowArrayViewVisitNative(const struct GeoArrowArrayView* array_view,
+                                               int64_t offset, int64_t length,
+                                               struct GeoArrowVisitor* v) {
   switch (array_view->schema_view.geometry_type) {
+    case GEOARROW_GEOMETRY_TYPE_BOX:
+      return GeoArrowArrayViewVisitNativeBox(array_view, offset, length, v);
     case GEOARROW_GEOMETRY_TYPE_POINT:
-      return GeoArrowArrayViewVisitPoint(array_view, offset, length, v);
+      return GeoArrowArrayViewVisitNativePoint(array_view, offset, length, v);
     case GEOARROW_GEOMETRY_TYPE_LINESTRING:
-      return GeoArrowArrayViewVisitLinestring(array_view, offset, length, v);
+      return GeoArrowArrayViewVisitNativeLinestring(array_view, offset, length, v);
     case GEOARROW_GEOMETRY_TYPE_POLYGON:
-      return GeoArrowArrayViewVisitPolygon(array_view, offset, length, v);
+      return GeoArrowArrayViewVisitNativePolygon(array_view, offset, length, v);
     case GEOARROW_GEOMETRY_TYPE_MULTIPOINT:
-      return GeoArrowArrayViewVisitMultipoint(array_view, offset, length, v);
+      return GeoArrowArrayViewVisitNativeMultipoint(array_view, offset, length, v);
     case GEOARROW_GEOMETRY_TYPE_MULTILINESTRING:
-      return GeoArrowArrayViewVisitMultilinestring(array_view, offset, length, v);
+      return GeoArrowArrayViewVisitNativeMultilinestring(array_view, offset, length, v);
     case GEOARROW_GEOMETRY_TYPE_MULTIPOLYGON:
-      return GeoArrowArrayViewVisitMultipolygon(array_view, offset, length, v);
+      return GeoArrowArrayViewVisitNativeMultipolygon(array_view, offset, length, v);
     default:
       return ENOTSUP;
   }

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import ast
 import functools
-from typing import Iterable
+from collections.abc import Iterable
 
 from tokenize_rt import Offset
 from tokenize_rt import Token
@@ -37,7 +37,7 @@ def visit_ClassDef(
     # starargs are allowed in py3 class definitions, py35+ allows trailing
     # commas.  py34 does not, but adding an option for this very obscure
     # case seems not worth it.
-    args = [*node.bases, *node.keywords]
+    args: list[ast.expr | ast.keyword] = [*node.bases, *node.keywords]
     arg_offsets = {ast_to_offset(arg) for arg in args}
 
     if arg_offsets:

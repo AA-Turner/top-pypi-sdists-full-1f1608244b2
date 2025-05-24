@@ -1,6 +1,6 @@
 Metadata-Version: 2.3
 Name: arpakitlib
-Version: 1.8.102
+Version: 1.8.106
 Summary: arpakitlib
 License: Apache-2.0
 Keywords: arpakitlib,arpakit,arpakit-company,arpakitcompany,arpakit_company
@@ -20,6 +20,7 @@ Requires-Dist: aiogram (>=3.17.0,<4.0.0)
 Requires-Dist: aiohttp (>=3.11.16,<4.0.0)
 Requires-Dist: aiohttp-socks (>=0.10.1,<0.11.0)
 Requires-Dist: aiosmtplib (>=4.0.0,<5.0.0)
+Requires-Dist: aiosqlite (>=0.21.0,<0.22.0)
 Requires-Dist: alembic (>=1.14.1,<2.0.0)
 Requires-Dist: asyncpg (>=0.30.0,<0.31.0)
 Requires-Dist: asyncssh (>=2.19.0,<3.0.0)
@@ -51,6 +52,7 @@ Requires-Dist: pytz (>=2024.2,<2025.0)
 Requires-Dist: pyzabbix (>=1.3.1,<2.0.0)
 Requires-Dist: requests[socks] (>=2.32.3,<3.0.0)
 Requires-Dist: scipy (>=1.15.1,<2.0.0)
+Requires-Dist: speechrecognition (>=3.14.3,<4.0.0)
 Requires-Dist: sqladmin (>=0.20.1,<0.21.0)
 Requires-Dist: sqlalchemy (>=2.0.37,<3.0.0)
 Requires-Dist: twine (>=6.1.0,<7.0.0)

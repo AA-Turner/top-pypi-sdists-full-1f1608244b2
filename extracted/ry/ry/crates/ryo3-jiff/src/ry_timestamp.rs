@@ -18,7 +18,9 @@ use std::fmt::Display;
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::str::FromStr;
 
-#[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(transparent))]
+#[derive(Debug, Clone, PartialEq, PartialOrd)]
 #[pyclass(name = "Timestamp", module = "ry.ryo3", frozen)]
 pub struct RyTimestamp(pub(crate) Timestamp);
 
@@ -26,7 +28,7 @@ pub struct RyTimestamp(pub(crate) Timestamp);
 impl RyTimestamp {
     #[new]
     #[pyo3(signature = (second = None, nanosecond = None))]
-    pub fn py_new(second: Option<i64>, nanosecond: Option<i32>) -> PyResult<Self> {
+    fn py_new(second: Option<i64>, nanosecond: Option<i32>) -> PyResult<Self> {
         let s = second.unwrap_or(0);
         let ns = nanosecond.unwrap_or(0);
         Timestamp::new(s, ns)
@@ -80,8 +82,8 @@ impl RyTimestamp {
             .map_err(|e| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("{e}")))
     }
 
-    fn to_zoned(&self, time_zone: RyTimeZone) -> RyZoned {
-        RyZoned::from(Zoned::new(self.0, time_zone.0))
+    fn to_zoned(&self, time_zone: &RyTimeZone) -> RyZoned {
+        RyZoned::from(Zoned::new(self.0, time_zone.into()))
     }
 
     #[classmethod]

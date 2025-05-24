@@ -186,6 +186,16 @@ def json_list():
     return {}
 
 
+@app.route("/api/set_cookies", methods=["GET"])
+@api.validate(resp=Response(HTTP_200=StrDict))
+def set_cookies():
+    # related to GitHub issue #415
+    resp = make_response(jsonify(msg="ping"))
+    resp.set_cookie("foo", "hello")
+    resp.set_cookie("bar", "world")
+    return resp
+
+
 @app.route("/api/query_list", methods=["GET"])
 @api.validate(query=QueryList)
 def query_list():

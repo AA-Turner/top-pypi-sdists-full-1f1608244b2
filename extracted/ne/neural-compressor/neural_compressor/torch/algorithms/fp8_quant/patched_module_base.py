@@ -18,9 +18,6 @@ from typing import Union, List, Type, Optional
 from abc import abstractmethod
 import torch
 from neural_compressor.common import utils as inc_utils
-from neural_compressor.torch.algorithms.fp8_quant.utils import (
-    helper_mod_register,
-)
 from neural_compressor.torch.algorithms.fp8_quant.model_configs import (
     ModuleInfo,
     ModuleType,
@@ -35,6 +32,10 @@ from neural_compressor.torch.algorithms.fp8_quant._quant_common.quant_config imp
 )
 from neural_compressor.torch.algorithms.fp8_quant._core.scale_handler import add_scale_registry
 
+def get_call_wrapper(cls_instance, func_name):
+    def call_wrapper(*args, **kwargs):
+        return getattr(cls_instance, func_name)(*args, **kwargs)
+    return call_wrapper
 
 def set_attrs_from_orig_model(cls_instance, mod, parent, mod_extra_config, *func_names):
     cls_instance.__dict__.update(mod.__dict__)
@@ -50,10 +51,10 @@ def set_attrs_from_orig_model(cls_instance, mod, parent, mod_extra_config, *func
     # this may be omitted of torch remove the related validation from dynamo. see SW-187731.
     cls_instance.__dict__["orig_mod"] = mod
     cls_instance.__dict__["orig_mod_parent"] = parent
-    cls_instance.forward_orig = mod.forward
+    cls_instance.forward_orig = get_call_wrapper(cls_instance.orig_mod, "forward")
     if func_names is not None:
         for func in func_names:
-            setattr(cls_instance, func, getattr(mod, func))
+            setattr(cls_instance, func, get_call_wrapper(cls_instance.orig_mod, func))
 
 __all__ = [
     "PatchedModuleBase",
@@ -113,8 +114,6 @@ def register_patched_module(
                         f"    device_type: {device_type}"
                     )
                 )
-                # Add the new module to the `helper_mods` dict
-                _create_and_register_helper_module_class(supported_type.__name__)
         return patch_module_cls
 
     return decorator
@@ -175,25 +174,26 @@ class PatchedModuleBase(torch.nn.Module):
 
     @classmethod
     def get_module_info(cls) -> ModuleInfo:
-        """Return the module info for the module.
+        """Only necessary for the newly registered patched module that doesn't in _mod_default_dict.
+        Return the module info for the module, which is used to determine the scaling methods for the module.
 
         For example, for linear module, the module info is: ModuleInfo(type="linear", patched_module=cls).
         """
         return ModuleInfo(type=cls.get_type(), patched_module=cls)
 
     @classmethod
-    @abstractmethod
     def get_type(cls) -> str:
-        """Return the type of the patched module.
+        """Only necessary for the newly registered patched module that doesn't in _mod_default_dict.
+        Return the type of the patched module, which is used to determine the scaling methods for the module.
 
         Multiple patched modules can have the same type, and share the same scaling methods.
         """
         raise NotImplementedError("`get_type` is not implemented")
 
     @classmethod
-    @abstractmethod
     def get_module_type(cls) -> ModuleType:
-        """Return the module type for the module.
+        """Only necessary for the newly registered patched module that doesn't in _mod_default_dict.
+        Return the module type for the module, which is used to determine the number of inputs, outputs, and parameters of the module.
 
         The module type is used to determine the number of inputs, outputs, and parameters of the module.
         For example, for linear module, the module type is: ModuleType(1, ["weight"], 1, False).
@@ -201,18 +201,7 @@ class PatchedModuleBase(torch.nn.Module):
         raise NotImplementedError("`get_module_type` is not implemented")
 
     def extra_repr(self):
+        """This extra_repr is only for the newly registered patched module that doesn't in _mod_default_dict."""
         return  f"quantization_mode={self.quantization_mode}, " + \
                 f"module_info={self.get_module_info()}, " + \
                 f"module_type={self.get_module_type()}"
-
-
-def _create_and_register_helper_module_class(name):
-    @helper_mod_register(name=name)
-    class _GenericModule(torch.nn.Module):
-        def __init__(self, patched_mod, *args, **kwargs):
-            super().__init__()
-            self.__dict__.update(patched_mod.__dict__)
-            self.extra_repr = patched_mod.extra_repr_org
-
-    _GenericModule.__name__ = name
-    return _GenericModule

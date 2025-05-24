@@ -9,8 +9,11 @@ try:
 except ImportError:
     DecimalOverrideException = BaseException  # regular catch blocks shouldn't catch
 
+import cchecksum
 import eth_utils
 from hexbytes import HexBytes
+
+from brownie.utils import bytes_to_hexstring
 
 UNITS = {
     "wei": 0,
@@ -97,7 +100,9 @@ def _to_wei(value: WeiInputTypes) -> int:
     original = value
     if isinstance(value, bytes):
         value = HexBytes(value).hex()
-    if value is None or value == "0x":
+        if value:
+            return int(value, 16)
+    if not value or value == "0x":
         return 0
     if isinstance(value, float) and "e+" in str(value):
         num_str, dec = str(value).split("e+")
@@ -108,7 +113,7 @@ def _to_wei(value: WeiInputTypes) -> int:
     if value[:2] == "0x":
         return int(value, 16)
     for unit, dec in UNITS.items():
-        if " " + unit not in value:
+        if f" {unit}" not in value:
             continue
         num_str = value.split(" ")[0]
         num = num_str.split(".") if "." in num_str else [num_str, ""]
@@ -202,10 +207,10 @@ class EthAddress(str):
     def __new__(cls, value: Union[bytes, str]) -> str:
         converted_value = value
         if isinstance(value, bytes):
-            converted_value = HexBytes(value).hex()
+            converted_value = bytes_to_hexstring(value)
         converted_value = eth_utils.add_0x_prefix(str(converted_value))  # type: ignore
         try:
-            converted_value = eth_utils.to_checksum_address(converted_value)
+            converted_value = cchecksum.to_checksum_address(converted_value)
         except ValueError:
             raise ValueError(f"'{value}' is not a valid ETH address") from None
         return super().__new__(cls, converted_value)  # type: ignore
@@ -242,7 +247,7 @@ class HexString(bytes):
         return not _hex_compare(self.hex(), other)
 
     def __str__(self) -> str:
-        return "0x" + self.hex()
+        return f"0x{self.hex()}"
 
     def __repr__(self) -> str:
         return str(self)
@@ -276,7 +281,7 @@ def _to_bytes(value: Any, type_str: str = "bytes32") -> bytes:
 def _to_hex(value: Any) -> str:
     """Convert a value to a hexstring"""
     if isinstance(value, bytes):
-        return HexBytes(value).hex()
+        return bytes_to_hexstring(value)
     if isinstance(value, int):
         return hex(value)
     if isinstance(value, str):

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: browser-use
-Version: 0.1.48
+Version: 0.2.2
 Summary: Make websites accessible for AI agents
 Project-URL: Repository, https://github.com/browser-use/browser-use
 Author: Gregor Zunic
@@ -23,6 +23,7 @@ Requires-Dist: langchain-openai==0.3.11
 Requires-Dist: langchain>=0.3.21
 Requires-Dist: markdownify==1.1.0
 Requires-Dist: mem0ai==0.1.93
+Requires-Dist: patchright>=1.52.4
 Requires-Dist: playwright>=1.52.0
 Requires-Dist: posthog>=3.7.0
 Requires-Dist: psutil>=7.0.0
@@ -33,11 +34,15 @@ Requires-Dist: python-dotenv>=1.0.1
 Requires-Dist: requests>=2.32.3
 Requires-Dist: screeninfo>=0.8.1; platform_system != 'darwin'
 Requires-Dist: typing-extensions>=4.12.2
+Requires-Dist: uuid7>=0.1.0
 Provides-Extra: all
 Requires-Dist: botocore>=1.37.23; extra == 'all'
+Requires-Dist: browserbase>=0.4.0; extra == 'all'
 Requires-Dist: click>=8.1.8; extra == 'all'
+Requires-Dist: imgcat>=0.6.0; extra == 'all'
 Requires-Dist: rich>=14.0.0; extra == 'all'
 Requires-Dist: sentence-transformers>=4.0.2; extra == 'all'
+Requires-Dist: stagehand-py>=0.3.6; extra == 'all'
 Requires-Dist: textual>=3.2.0; extra == 'all'
 Provides-Extra: cli
 Requires-Dist: click>=8.1.8; extra == 'cli'
@@ -45,6 +50,9 @@ Requires-Dist: rich>=14.0.0; extra == 'cli'
 Requires-Dist: textual>=3.2.0; extra == 'cli'
 Provides-Extra: examples
 Requires-Dist: botocore>=1.37.23; extra == 'examples'
+Requires-Dist: browserbase>=0.4.0; extra == 'examples'
+Requires-Dist: imgcat>=0.6.0; extra == 'examples'
+Requires-Dist: stagehand-py>=0.3.6; extra == 'examples'
 Provides-Extra: memory
 Requires-Dist: sentence-transformers>=4.0.2; extra == 'memory'
 Description-Content-Type: text/markdown

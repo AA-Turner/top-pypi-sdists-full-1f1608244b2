@@ -1,7 +1,7 @@
 import sys
+from importlib.metadata import version
 
 import distributed
-from importlib_metadata import version
 from packaging.version import Version
 
 COILED_VERSION = version("coiled")

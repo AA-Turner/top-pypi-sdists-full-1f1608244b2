@@ -30,8 +30,8 @@ def test_array_holder():
 
 
 def test_c_vector_type_empty():
-    empty = lib.CVectorType()
-    assert "Invalid CVectorType" in repr(empty)
+    empty = lib.CGeometryDataType()
+    assert "Uninitialized CGeometryDataType" in repr(empty)
 
     with pytest.raises(ValueError):
         empty.id
@@ -83,7 +83,7 @@ def test_c_vector_type_empty():
 
 
 def test_c_vector_type():
-    type_obj = lib.CVectorType.Make(
+    type_obj = lib.CGeometryDataType.Make(
         ga.GeometryType.POINT, ga.Dimensions.XY, ga.CoordType.SEPARATE
     )
 
@@ -93,12 +93,15 @@ def test_c_vector_type():
     assert type_obj.id == ga._lib.GeoArrowType.GEOARROW_TYPE_POINT
 
     schema = type_obj.to_schema()
-    type_obj2 = lib.CVectorType.FromExtension(schema)
+    type_obj2 = lib.CGeometryDataType.FromExtension(schema)
     assert type_obj2 == type_obj
 
     pa_type = pa.DataType._import_from_c(schema._addr())
     pa_type_expected = pa.struct(
-        [pa.field("x", pa.float64()), pa.field("y", pa.float64())]
+        [
+            pa.field("x", pa.float64(), nullable=False),
+            pa.field("y", pa.float64(), nullable=False),
+        ]
     )
 
     # Depending on how the tests are run, the extension type might be
@@ -110,11 +113,13 @@ def test_c_vector_type():
 
     # Schema is now released, so we get an error
     with pytest.raises(ValueError):
-        lib.CVectorType.FromExtension(schema)
+        lib.CGeometryDataType.FromExtension(schema)
 
     schema_storage = lib.SchemaHolder()
     pa_type_expected._export_to_c(schema_storage._addr())
-    type_obj3 = lib.CVectorType.FromStorage(schema_storage, b"geoarrow.point", b"")
+    type_obj3 = lib.CGeometryDataType.FromStorage(
+        schema_storage, b"geoarrow.point", b""
+    )
 
     assert type_obj3.geometry_type == ga.GeometryType.POINT
     assert type_obj3.dimensions == ga.Dimensions.XY
@@ -122,7 +127,7 @@ def test_c_vector_type():
 
 
 def test_c_vector_type_with():
-    type_obj = lib.CVectorType.Make(
+    type_obj = lib.CGeometryDataType.Make(
         lib.GeometryType.POINT, ga.Dimensions.XY, ga.CoordType.SEPARATE
     )
 
@@ -191,7 +196,7 @@ def test_kernel_init_error():
 
 
 def test_builder():
-    type_obj = lib.CVectorType.Make(
+    type_obj = lib.CGeometryDataType.Make(
         lib.GeometryType.LINESTRING, ga.Dimensions.XY, ga.CoordType.SEPARATE
     )
     schema = type_obj.to_schema()

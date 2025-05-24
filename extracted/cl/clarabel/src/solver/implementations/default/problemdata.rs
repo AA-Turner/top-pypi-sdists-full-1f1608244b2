@@ -42,6 +42,7 @@ pub struct DefaultProblemData<T> {
     normb: Option<T>,
 
     pub(crate) presolver: Option<Presolver<T>>,
+    dropped_zeros: usize, // number of eliminated structural zeros
 
     #[cfg(feature = "sdp")]
     pub(crate) chordal_info: Option<ChordalInfo<T>>,
@@ -60,6 +61,11 @@ where
         cones: &[SupportedConeT<T>],
         settings: &DefaultSettings<T>,
     ) -> Self {
+        // clean up the cones by consolidating repeated NNs,
+        // eliminate empty cones, transform singletons etc
+        // this makes a locally owned copy of the cones
+        let cones = SupportedConeT::new_collapsed(cones);
+
         // some caution is required to ensure we take a minimal,
         // but nonzero, number of data copies during presolve steps
 
@@ -76,17 +82,17 @@ where
 
         // presolve : return nothing if disabled or no reduction
         // --------------------------------------
-        let presolver = try_presolver(A, b, cones, settings);
+        let presolver = try_presolver(A, b, &cones, settings);
 
         if let Some(ref presolver) = presolver {
-            let (_A_new, _b_new, _cones_new) = presolver.presolve(A, b, cones);
+            let (_A_new, _b_new, _cones_new) = presolver.presolve(A, b, &cones);
             (A_new, b_new, cones_new) = (Some(_A_new), Some(_b_new), Some(_cones_new));
         }
 
         // chordal decomposition : return nothing if disabled or no decomp
         // --------------------------------------
         #[cfg(feature = "sdp")]
-        let mut chordal_info = try_chordal_info(A, b, cones, settings);
+        let mut chordal_info = try_chordal_info(A, b, &cones, settings);
         #[cfg(feature = "sdp")]
         if let Some(ref mut chordal_info) = chordal_info {
             let (_P_new, _q_new, _A_new, _b_new, _cones_new) = chordal_info.decomp_augment(
@@ -109,11 +115,13 @@ where
         // haven't made one already.   Necessary since we will scale
         // the internal copy and don't want to step on the user
 
-        let P_new = P_new.unwrap_or_else(|| P.clone());
+        let mut P_new = P_new.unwrap_or_else(|| P.clone());
         let q_new = q_new.unwrap_or_else(|| q.to_vec());
-        let A_new = A_new.unwrap_or_else(|| A.clone());
+        let mut A_new = A_new.unwrap_or_else(|| A.clone());
         let mut b_new = b_new.unwrap_or_else(|| b.to_vec());
-        let cones_new = cones_new.unwrap_or_else(|| cones.to_vec());
+
+        // cones was already copied, so can just pass through without cloning
+        let cones_new = cones_new.unwrap_or(cones);
 
         //cap entries in b at INFINITY.  This is important
         //for inf values that were not in a reduced cone
@@ -124,6 +132,15 @@ where
 
         // this ensures m is the *reduced* size m
         let (m, n) = A_new.size();
+
+        // explicitly dropzeros on the copied data, since dropzeros
+        // operates in place.  PJG: revisit this order of operations
+        // once a proper presolver is implemented, since it might
+        // be preferable to dropzeros then presolve
+        let mut dropped_zeros = 0;
+        if settings.input_sparse_dropzeros {
+            dropped_zeros += P_new.dropzeros() + A_new.dropzeros();
+        }
 
         let equilibration = DefaultEquilibrationData::<T>::new(n, m);
 
@@ -141,6 +158,7 @@ where
             equilibration,
             normq,
             normb,
+            dropped_zeros,
             presolver,
             #[cfg(feature = "sdp")]
             chordal_info,
@@ -182,6 +200,12 @@ where
     //reduction or chordal decomposition
     pub(crate) fn is_presolved(&self) -> bool {
         self.presolver.is_some()
+    }
+
+    // data updating not supported if structural zeros
+    // have been eliminated
+    pub(crate) fn is_dropped_zeros(&self) -> bool {
+        self.dropped_zeros != 0
     }
 
     #[allow(dead_code)]
@@ -338,10 +362,10 @@ where
         return None;
     }
 
-    // nothing to do if there are no PSD cones
+    // nothing to do if there are no PSD cones or they are all small
     if !cones
         .iter()
-        .any(|c| matches!(c, SupportedConeT::PSDTriangleConeT(_)))
+        .any(|c| matches!(c, SupportedConeT::PSDTriangleConeT(dim) if *dim > 3))
     {
         return None;
     }

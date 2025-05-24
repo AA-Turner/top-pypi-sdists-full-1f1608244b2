@@ -35,10 +35,10 @@ class SentEmailProjection(object):
     """
     openapi_types = {
         'id': 'str',
+        'subject': 'str',
         '_from': 'str',
         'sender': 'Sender',
         'recipients': 'EmailRecipients',
-        'subject': 'str',
         'user_id': 'str',
         'attachments': 'list[str]',
         'inbox_id': 'str',
@@ -57,10 +57,10 @@ class SentEmailProjection(object):
 
     attribute_map = {
         'id': 'id',
+        'subject': 'subject',
         '_from': 'from',
         'sender': 'sender',
         'recipients': 'recipients',
-        'subject': 'subject',
         'user_id': 'userId',
         'attachments': 'attachments',
         'inbox_id': 'inboxId',
@@ -77,17 +77,17 @@ class SentEmailProjection(object):
         'thread_id': 'threadId'
     }
 
-    def __init__(self, id=None, _from=None, sender=None, recipients=None, subject=None, user_id=None, attachments=None, inbox_id=None, created_at=None, to=None, cc=None, bcc=None, message_id=None, in_reply_to=None, body_excerpt=None, text_excerpt=None, body_md5_hash=None, virtual_send=None, thread_id=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, id=None, subject=None, _from=None, sender=None, recipients=None, user_id=None, attachments=None, inbox_id=None, created_at=None, to=None, cc=None, bcc=None, message_id=None, in_reply_to=None, body_excerpt=None, text_excerpt=None, body_md5_hash=None, virtual_send=None, thread_id=None, local_vars_configuration=None):  # noqa: E501
         """SentEmailProjection - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
         self._id = None
+        self._subject = None
         self.__from = None
         self._sender = None
         self._recipients = None
-        self._subject = None
         self._user_id = None
         self._attachments = None
         self._inbox_id = None
@@ -105,10 +105,10 @@ class SentEmailProjection(object):
         self.discriminator = None
 
         self.id = id
+        self.subject = subject
         self._from = _from
         self.sender = sender
         self.recipients = recipients
-        self.subject = subject
         self.user_id = user_id
         self.attachments = attachments
         self.inbox_id = inbox_id
@@ -146,6 +146,27 @@ class SentEmailProjection(object):
             raise ValueError("Invalid value for `id`, must not be `None`")  # noqa: E501
 
         self._id = id
+
+    @property
+    def subject(self):
+        """Gets the subject of this SentEmailProjection.  # noqa: E501
+
+
+        :return: The subject of this SentEmailProjection.  # noqa: E501
+        :rtype: str
+        """
+        return self._subject
+
+    @subject.setter
+    def subject(self, subject):
+        """Sets the subject of this SentEmailProjection.
+
+
+        :param subject: The subject of this SentEmailProjection.  # noqa: E501
+        :type: str
+        """
+
+        self._subject = subject
 
     @property
     def _from(self):
@@ -209,27 +230,6 @@ class SentEmailProjection(object):
         """
 
         self._recipients = recipients
-
-    @property
-    def subject(self):
-        """Gets the subject of this SentEmailProjection.  # noqa: E501
-
-
-        :return: The subject of this SentEmailProjection.  # noqa: E501
-        :rtype: str
-        """
-        return self._subject
-
-    @subject.setter
-    def subject(self, subject):
-        """Sets the subject of this SentEmailProjection.
-
-
-        :param subject: The subject of this SentEmailProjection.  # noqa: E501
-        :type: str
-        """
-
-        self._subject = subject
 
     @property
     def user_id(self):

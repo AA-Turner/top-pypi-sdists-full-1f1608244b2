@@ -58,7 +58,7 @@ dependencies = [
 
     # dashboard, streamlit does not support 3.9.7
     "streamlit == 1.40.1; python_version <= '3.8'",
-    "streamlit == 1.45.0; python_version >= '3.9' and python_full_version != '3.9.7'",
+    "streamlit == 1.45.1; python_version >= '3.9' and python_full_version != '3.9.7'",
     "streamlit_agraph == 0.0.45; python_full_version != '3.9.7'",
     "streamlit-antd-components == 0.3.2; python_full_version != '3.9.7'",
     "streamlit_javascript == 0.1.5; python_full_version != '3.9.7'",
@@ -165,6 +165,9 @@ asyncio_default_fixture_loop_scope = "function"
 filterwarnings = [
     "ignore:pkg_resources is deprecated as an API:DeprecationWarning",
     'ignore:Deprecated call to `pkg_resources.declare_namespace.*:DeprecationWarning',
+    'ignore:The distutils\.sysconfig module is deprecated, use sysconfig instead',
+    'ignore:The distutils package is deprecated and slated for removal in Python 3\.12',
+    'ignore:Creating a LegacyVersion has been deprecated and will be removed in the next major release',
     'ignore:.* is multi-threaded, use of fork\(\) may lead to deadlocks in the child.:DeprecationWarning'
 ]
 

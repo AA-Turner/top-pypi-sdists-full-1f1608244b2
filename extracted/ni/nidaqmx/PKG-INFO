@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: nidaqmx
-Version: 1.0.2
+Version: 1.1.0
 Summary: NI-DAQmx Python API
 Home-page: https://github.com/ni/nidaqmx-python
 License: MIT
@@ -9,7 +9,7 @@ Author: NI
 Author-email: opensource@ni.com
 Maintainer: Zach Hindes
 Maintainer-email: zach.hindes@ni.com
-Requires-Python: >=3.8,<4.0
+Requires-Python: >=3.9,<4.0
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: Manufacturing
@@ -18,7 +18,6 @@ Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: Microsoft :: Windows
 Classifier: Operating System :: POSIX
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
@@ -35,7 +34,7 @@ Requires-Dist: deprecation (>=2.1)
 Requires-Dist: distro (>=1.9.0) ; sys_platform == "linux"
 Requires-Dist: grpcio (>=1.49.0,<2.0) ; extra == "grpc"
 Requires-Dist: hightime (>=0.2.2,<0.3.0)
-Requires-Dist: numpy (>=1.22) ; python_version >= "3.8" and python_version < "3.12"
+Requires-Dist: numpy (>=1.22) ; python_version >= "3.9" and python_version < "3.12"
 Requires-Dist: numpy (>=1.26) ; python_version >= "3.12" and python_version < "3.13"
 Requires-Dist: numpy (>=2.1) ; python_version >= "3.13" and python_version < "4.0"
 Requires-Dist: protobuf (>=4.21) ; extra == "grpc"
@@ -106,7 +105,7 @@ system.
 Python Version Support
 ----------------------
 
-**nidaqmx** supports CPython 3.8+ and PyPy3.
+**nidaqmx** supports CPython 3.9+ and PyPy3.
 
 Installation
 ============

@@ -13,10 +13,11 @@ import pydantic_ai
 from pydantic_ai.mcp import MCPServer
 from pydantic_ai.models import KnownModelName, Model, ModelSettings
 from pydantic_ai.result import ToolOutput
-from pydantic_ai.tools import Tool
 
 import marvin
-from marvin._internal.integrations.mcp import discover_mcp_tools
+from marvin._internal.integrations.fastmcp import (
+    attempt_convert_to_pydantic_ai_mcp_server,
+)
 from marvin.agents.actor import Actor
 from marvin.agents.names import AGENT_NAMES
 from marvin.memory.memory import Memory
@@ -65,7 +66,7 @@ class Agent(Actor):
         metadata={"description": "List of memory modules available to the agent"},
     )
 
-    mcp_servers: list["MCPServer"] = field(
+    mcp_servers: list[Any] = field(
         default_factory=lambda: [],
         metadata={"description": "List of MCP servers available to the agent"},
         repr=False,
@@ -105,8 +106,19 @@ class Agent(Actor):
     def get_memories(self) -> list[Memory]:
         return list(self.memories)
 
-    def get_mcp_servers(self) -> list["MCPServer"]:
-        return list(self.mcp_servers)
+    def get_mcp_servers(self) -> list[MCPServer]:
+        converted_servers: list[MCPServer] = []
+        for server_instance in self.mcp_servers:
+            converted = attempt_convert_to_pydantic_ai_mcp_server(server_instance)
+            if converted is not None:
+                converted_servers.append(converted)
+            else:
+                raise TypeError(
+                    f"Unsupported server type in mcp_servers: {type(server_instance).__name__}. "
+                    f"Must be a valid `pydantic_ai` `MCPServer` or `fastmcp` `FastMCP` instance."
+                )
+
+        return converted_servers
 
     def get_model_settings(self) -> ModelSettings:
         defaults: ModelSettings = {}
@@ -130,7 +142,6 @@ class Agent(Actor):
         end_turn_tools: Sequence["EndTurn"],
         active_mcp_servers: list[MCPServer] | None = None,
     ) -> pydantic_ai.Agent[Any, Any]:
-        import marvin.engine.orchestrator
         from marvin.engine.end_turn import EndTurn
 
         # --- Separate standard tools and EndTurn tools --- #
@@ -159,15 +170,7 @@ class Agent(Actor):
 
         unique_marvin_tools = [wrap_tool_errors(tool) for tool in marvin_tool_callables]
 
-        mcp_tool_instances: list[Tool] = []
-        if active_mcp_servers:
-            orchestrator = marvin.engine.orchestrator.get_current_orchestrator()
-            mcp_tool_instances = await discover_mcp_tools(
-                mcp_servers=active_mcp_servers,
-                orchestrator=orchestrator,
-            )
-
-        combined_tools: list[Any] = unique_marvin_tools + mcp_tool_instances
+        combined_tools: list[Any] = unique_marvin_tools
 
         tool_output_name = "EndTurn"
         tool_output_description = "Ends the current turn."

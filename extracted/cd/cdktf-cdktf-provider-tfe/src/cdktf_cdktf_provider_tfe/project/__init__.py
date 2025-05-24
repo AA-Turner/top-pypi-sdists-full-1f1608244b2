@@ -1,7 +1,7 @@
 r'''
 # `tfe_project`
 
-Refer to the Terraform Registry for docs: [`tfe_project`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project).
+Refer to the Terraform Registry for docs: [`tfe_project`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class Project(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.project.Project",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project tfe_project}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project tfe_project}.'''
 
     def __init__(
         self,
@@ -65,16 +65,16 @@ class Project(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project tfe_project} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project tfe_project} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param name: Name of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#name Project#name}
-        :param auto_destroy_activity_duration: Duration after which the project will be auto-destroyed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#auto_destroy_activity_duration Project#auto_destroy_activity_duration}
-        :param description: Description of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#description Project#description}
-        :param ignore_additional_tags: Explicitly ignores tags created outside of Terraform so they will not be overwritten by tags defined in configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#ignore_additional_tags Project#ignore_additional_tags}
-        :param organization: Name of the organization to which the project belongs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#organization Project#organization}
-        :param tags: A map of key-value tags to add to the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#tags Project#tags}
+        :param name: Name of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#name Project#name}
+        :param auto_destroy_activity_duration: Duration after which the project will be auto-destroyed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#auto_destroy_activity_duration Project#auto_destroy_activity_duration}
+        :param description: Description of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#description Project#description}
+        :param ignore_additional_tags: Explicitly ignores tags created outside of Terraform so they will not be overwritten by tags defined in configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#ignore_additional_tags Project#ignore_additional_tags}
+        :param organization: Name of the organization to which the project belongs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#organization Project#organization}
+        :param tags: A map of key-value tags to add to the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#tags Project#tags}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -118,7 +118,7 @@ class Project(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the Project to import.
-        :param import_from_id: The id of the existing Project that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing Project that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the Project to import is found.
         '''
         if __debug__:
@@ -322,12 +322,12 @@ class ProjectConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param name: Name of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#name Project#name}
-        :param auto_destroy_activity_duration: Duration after which the project will be auto-destroyed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#auto_destroy_activity_duration Project#auto_destroy_activity_duration}
-        :param description: Description of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#description Project#description}
-        :param ignore_additional_tags: Explicitly ignores tags created outside of Terraform so they will not be overwritten by tags defined in configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#ignore_additional_tags Project#ignore_additional_tags}
-        :param organization: Name of the organization to which the project belongs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#organization Project#organization}
-        :param tags: A map of key-value tags to add to the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#tags Project#tags}
+        :param name: Name of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#name Project#name}
+        :param auto_destroy_activity_duration: Duration after which the project will be auto-destroyed. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#auto_destroy_activity_duration Project#auto_destroy_activity_duration}
+        :param description: Description of the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#description Project#description}
+        :param ignore_additional_tags: Explicitly ignores tags created outside of Terraform so they will not be overwritten by tags defined in configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#ignore_additional_tags Project#ignore_additional_tags}
+        :param organization: Name of the organization to which the project belongs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#organization Project#organization}
+        :param tags: A map of key-value tags to add to the project. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#tags Project#tags}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -442,7 +442,7 @@ class ProjectConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the project.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#name Project#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#name Project#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -452,7 +452,7 @@ class ProjectConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def auto_destroy_activity_duration(self) -> typing.Optional[builtins.str]:
         '''Duration after which the project will be auto-destroyed.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#auto_destroy_activity_duration Project#auto_destroy_activity_duration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#auto_destroy_activity_duration Project#auto_destroy_activity_duration}
         '''
         result = self._values.get("auto_destroy_activity_duration")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -461,7 +461,7 @@ class ProjectConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def description(self) -> typing.Optional[builtins.str]:
         '''Description of the project.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#description Project#description}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#description Project#description}
         '''
         result = self._values.get("description")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -472,7 +472,7 @@ class ProjectConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Explicitly ignores tags created outside of Terraform so they will not be overwritten by tags defined in configuration.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#ignore_additional_tags Project#ignore_additional_tags}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#ignore_additional_tags Project#ignore_additional_tags}
         '''
         result = self._values.get("ignore_additional_tags")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -481,7 +481,7 @@ class ProjectConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def organization(self) -> typing.Optional[builtins.str]:
         '''Name of the organization to which the project belongs.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#organization Project#organization}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#organization Project#organization}
         '''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -490,7 +490,7 @@ class ProjectConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def tags(self) -> typing.Optional[typing.Mapping[builtins.str, builtins.str]]:
         '''A map of key-value tags to add to the project.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/project#tags Project#tags}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/project#tags Project#tags}
         '''
         result = self._values.get("tags")
         return typing.cast(typing.Optional[typing.Mapping[builtins.str, builtins.str]], result)

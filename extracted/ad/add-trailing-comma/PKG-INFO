@@ -1,19 +1,19 @@
 Metadata-Version: 2.1
 Name: add_trailing_comma
-Version: 3.1.0
+Version: 3.2.0
 Summary: Automatically add trailing commas to calls and literals
 Home-page: https://github.com/asottile/add-trailing-comma
 Author: Anthony Sottile
 Author-email: asottile@umich.edu
 License: MIT
-Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3 :: Only
 Classifier: Programming Language :: Python :: Implementation :: CPython
 Classifier: Programming Language :: Python :: Implementation :: PyPy
-Requires-Python: >=3.8
+Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: tokenize-rt>=3.0.1
 
 [![build status](https://github.com/asottile/add-trailing-comma/actions/workflows/main.yml/badge.svg)](https://github.com/asottile/add-trailing-comma/actions/workflows/main.yml)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/asottile/add-trailing-comma/main.svg)](https://results.pre-commit.ci/latest/github/asottile/add-trailing-comma/main)
@@ -38,7 +38,7 @@ Sample `.pre-commit-config.yaml`:
 
 ```yaml
 -   repo: https://github.com/asottile/add-trailing-comma
-    rev: v3.1.0
+    rev: v3.2.0
     hooks:
     -   id: add-trailing-comma
 ```

@@ -1,14 +1,14 @@
 
 #include <string.h>
 
-#include "nanoarrow.h"
+#include "nanoarrow/nanoarrow.h"
 
-#include "geoarrow.h"
+#include "geoarrow/geoarrow.h"
 
 struct GeoArrowArrayWriterPrivate {
+  struct GeoArrowNativeWriter native_writer;
   struct GeoArrowWKTWriter wkt_writer;
   struct GeoArrowWKBWriter wkb_writer;
-  struct GeoArrowBuilder builder;
   enum GeoArrowType type;
 };
 
@@ -36,7 +36,7 @@ GeoArrowErrorCode GeoArrowArrayWriterInitFromType(struct GeoArrowArrayWriter* wr
       result = GeoArrowWKBWriterInit(&private_data->wkb_writer);
       break;
     default:
-      result = GeoArrowBuilderInitFromType(&private_data->builder, type);
+      result = GeoArrowNativeWriterInit(&private_data->native_writer, type);
       break;
   }
 
@@ -57,6 +57,34 @@ GeoArrowErrorCode GeoArrowArrayWriterInitFromSchema(struct GeoArrowArrayWriter* 
   return GeoArrowArrayWriterInitFromType(writer, schema_view.type);
 }
 
+GeoArrowErrorCode GeoArrowArrayWriterSetPrecision(struct GeoArrowArrayWriter* writer,
+                                                  int precision) {
+  struct GeoArrowArrayWriterPrivate* private_data =
+      (struct GeoArrowArrayWriterPrivate*)writer->private_data;
+
+  if (private_data->type != GEOARROW_TYPE_WKT &&
+      private_data->type != GEOARROW_TYPE_LARGE_WKT) {
+    return EINVAL;
+  }
+
+  private_data->wkt_writer.precision = precision;
+  return GEOARROW_OK;
+}
+
+GeoArrowErrorCode GeoArrowArrayWriterSetFlatMultipoint(struct GeoArrowArrayWriter* writer,
+                                                       int flat_multipoint) {
+  struct GeoArrowArrayWriterPrivate* private_data =
+      (struct GeoArrowArrayWriterPrivate*)writer->private_data;
+
+  if (private_data->type != GEOARROW_TYPE_WKT &&
+      private_data->type != GEOARROW_TYPE_LARGE_WKT) {
+    return EINVAL;
+  }
+
+  private_data->wkt_writer.use_flat_multipoint = flat_multipoint;
+  return GEOARROW_OK;
+}
+
 GeoArrowErrorCode GeoArrowArrayWriterInitVisitor(struct GeoArrowArrayWriter* writer,
                                                  struct GeoArrowVisitor* v) {
   struct GeoArrowArrayWriterPrivate* private_data =
@@ -70,7 +98,7 @@ GeoArrowErrorCode GeoArrowArrayWriterInitVisitor(struct GeoArrowArrayWriter* wri
       GeoArrowWKBWriterInitVisitor(&private_data->wkb_writer, v);
       return GEOARROW_OK;
     default:
-      return GeoArrowBuilderInitVisitor(&private_data->builder, v);
+      return GeoArrowNativeWriterInitVisitor(&private_data->native_writer, v);
   }
 }
 
@@ -86,7 +114,7 @@ GeoArrowErrorCode GeoArrowArrayWriterFinish(struct GeoArrowArrayWriter* writer,
     case GEOARROW_TYPE_WKB:
       return GeoArrowWKBWriterFinish(&private_data->wkb_writer, array, error);
     default:
-      return GeoArrowBuilderFinish(&private_data->builder, array, error);
+      return GeoArrowNativeWriterFinish(&private_data->native_writer, array, error);
   }
 }
 
@@ -102,9 +130,10 @@ void GeoArrowArrayWriterReset(struct GeoArrowArrayWriter* writer) {
     GeoArrowWKBWriterReset(&private_data->wkb_writer);
   }
 
-  if (private_data->builder.private_data != NULL) {
-    GeoArrowBuilderReset(&private_data->builder);
+  if (private_data->native_writer.private_data != NULL) {
+    GeoArrowNativeWriterReset(&private_data->native_writer);
   }
 
   ArrowFree(private_data);
+  writer->private_data = NULL;
 }

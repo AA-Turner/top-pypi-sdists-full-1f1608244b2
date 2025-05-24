@@ -1,7 +1,7 @@
 r'''
 # `snowflake_external_function`
 
-Refer to the Terraform Registry for docs: [`snowflake_external_function`](https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function).
+Refer to the Terraform Registry for docs: [`snowflake_external_function`](https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class ExternalFunction(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-snowflake.externalFunction.ExternalFunction",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function snowflake_external_function}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function snowflake_external_function}.'''
 
     def __init__(
         self,
@@ -69,6 +69,7 @@ class ExternalFunction(
         request_translator: typing.Optional[builtins.str] = None,
         response_translator: typing.Optional[builtins.str] = None,
         return_null_allowed: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        timeouts: typing.Optional[typing.Union["ExternalFunctionTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
         connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
         count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
         depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -77,28 +78,29 @@ class ExternalFunction(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function snowflake_external_function} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function snowflake_external_function} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param api_integration: The name of the API integration object that should be used to authenticate the call to the proxy service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#api_integration ExternalFunction#api_integration}
-        :param database: The database in which to create the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#database ExternalFunction#database}
-        :param name: Specifies the identifier for the external function. The identifier can contain the schema name and database name, as well as the function name. The function's signature (name and argument data types) must be unique within the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#name ExternalFunction#name}
-        :param return_behavior: Specifies the behavior of the function when returning results. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#return_behavior ExternalFunction#return_behavior}
-        :param return_type: Specifies the data type returned by the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#return_type ExternalFunction#return_type}
-        :param schema: The schema in which to create the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#schema ExternalFunction#schema}
-        :param url_of_proxy_and_resource: This is the invocation URL of the proxy service and resource through which Snowflake calls the remote service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#url_of_proxy_and_resource ExternalFunction#url_of_proxy_and_resource}
-        :param arg: arg block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#arg ExternalFunction#arg}
-        :param comment: A description of the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#comment ExternalFunction#comment}
-        :param compression: If specified, the JSON payload is compressed when sent from Snowflake to the proxy service, and when sent back from the proxy service to Snowflake. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#compression ExternalFunction#compression}
-        :param context_headers: Binds Snowflake context function results to HTTP headers. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#context_headers ExternalFunction#context_headers}
-        :param header: header block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#header ExternalFunction#header}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#id ExternalFunction#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param max_batch_rows: This specifies the maximum number of rows in each batch sent to the proxy service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#max_batch_rows ExternalFunction#max_batch_rows}
-        :param null_input_behavior: Specifies the behavior of the external function when called with null inputs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#null_input_behavior ExternalFunction#null_input_behavior}
-        :param request_translator: This specifies the name of the request translator function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#request_translator ExternalFunction#request_translator}
-        :param response_translator: This specifies the name of the response translator function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#response_translator ExternalFunction#response_translator}
-        :param return_null_allowed: Indicates whether the function can return NULL values (true) or must return only NON-NULL values (false). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#return_null_allowed ExternalFunction#return_null_allowed}
+        :param api_integration: The name of the API integration object that should be used to authenticate the call to the proxy service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#api_integration ExternalFunction#api_integration}
+        :param database: The database in which to create the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#database ExternalFunction#database}
+        :param name: Specifies the identifier for the external function. The identifier can contain the schema name and database name, as well as the function name. The function's signature (name and argument data types) must be unique within the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#name ExternalFunction#name}
+        :param return_behavior: Specifies the behavior of the function when returning results. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#return_behavior ExternalFunction#return_behavior}
+        :param return_type: Specifies the data type returned by the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#return_type ExternalFunction#return_type}
+        :param schema: The schema in which to create the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#schema ExternalFunction#schema}
+        :param url_of_proxy_and_resource: This is the invocation URL of the proxy service and resource through which Snowflake calls the remote service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#url_of_proxy_and_resource ExternalFunction#url_of_proxy_and_resource}
+        :param arg: arg block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#arg ExternalFunction#arg}
+        :param comment: (Default: ``user-defined function``) A description of the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#comment ExternalFunction#comment}
+        :param compression: (Default: ``AUTO``) If specified, the JSON payload is compressed when sent from Snowflake to the proxy service, and when sent back from the proxy service to Snowflake. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#compression ExternalFunction#compression}
+        :param context_headers: Binds Snowflake context function results to HTTP headers. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#context_headers ExternalFunction#context_headers}
+        :param header: header block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#header ExternalFunction#header}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#id ExternalFunction#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param max_batch_rows: This specifies the maximum number of rows in each batch sent to the proxy service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#max_batch_rows ExternalFunction#max_batch_rows}
+        :param null_input_behavior: (Default: ``CALLED ON NULL INPUT``) Specifies the behavior of the external function when called with null inputs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#null_input_behavior ExternalFunction#null_input_behavior}
+        :param request_translator: This specifies the name of the request translator function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#request_translator ExternalFunction#request_translator}
+        :param response_translator: This specifies the name of the response translator function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#response_translator ExternalFunction#response_translator}
+        :param return_null_allowed: (Default: ``true``) Indicates whether the function can return NULL values (true) or must return only NON-NULL values (false). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#return_null_allowed ExternalFunction#return_null_allowed}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#timeouts ExternalFunction#timeouts}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -130,6 +132,7 @@ class ExternalFunction(
             request_translator=request_translator,
             response_translator=response_translator,
             return_null_allowed=return_null_allowed,
+            timeouts=timeouts,
             connection=connection,
             count=count,
             depends_on=depends_on,
@@ -154,7 +157,7 @@ class ExternalFunction(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the ExternalFunction to import.
-        :param import_from_id: The id of the existing ExternalFunction that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing ExternalFunction that should be imported. Refer to the {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the ExternalFunction to import is found.
         '''
         if __debug__:
@@ -190,6 +193,27 @@ class ExternalFunction(
             type_hints = typing.get_type_hints(_typecheckingstub__7474455547fd227724769b61f2fd987e8552d128dbb3772a5d83cb8e00411a58)
             check_type(argname="argument value", value=value, expected_type=type_hints["value"])
         return typing.cast(None, jsii.invoke(self, "putHeader", [value]))
+
+    @jsii.member(jsii_name="putTimeouts")
+    def put_timeouts(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#create ExternalFunction#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#delete ExternalFunction#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#read ExternalFunction#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#update ExternalFunction#update}.
+        '''
+        value = ExternalFunctionTimeouts(
+            create=create, delete=delete, read=read, update=update
+        )
+
+        return typing.cast(None, jsii.invoke(self, "putTimeouts", [value]))
 
     @jsii.member(jsii_name="resetArg")
     def reset_arg(self) -> None:
@@ -235,6 +259,10 @@ class ExternalFunction(
     def reset_return_null_allowed(self) -> None:
         return typing.cast(None, jsii.invoke(self, "resetReturnNullAllowed", []))
 
+    @jsii.member(jsii_name="resetTimeouts")
+    def reset_timeouts(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetTimeouts", []))
+
     @jsii.member(jsii_name="synthesizeAttributes")
     def _synthesize_attributes(self) -> typing.Mapping[builtins.str, typing.Any]:
         return typing.cast(typing.Mapping[builtins.str, typing.Any], jsii.invoke(self, "synthesizeAttributes", []))
@@ -267,6 +295,11 @@ class ExternalFunction(
     @jsii.member(jsii_name="header")
     def header(self) -> "ExternalFunctionHeaderList":
         return typing.cast("ExternalFunctionHeaderList", jsii.get(self, "header"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeouts")
+    def timeouts(self) -> "ExternalFunctionTimeoutsOutputReference":
+        return typing.cast("ExternalFunctionTimeoutsOutputReference", jsii.get(self, "timeouts"))
 
     @builtins.property
     @jsii.member(jsii_name="apiIntegrationInput")
@@ -358,6 +391,13 @@ class ExternalFunction(
     @jsii.member(jsii_name="schemaInput")
     def schema_input(self) -> typing.Optional[builtins.str]:
         return typing.cast(typing.Optional[builtins.str], jsii.get(self, "schemaInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="timeoutsInput")
+    def timeouts_input(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "ExternalFunctionTimeouts"]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, "ExternalFunctionTimeouts"]], jsii.get(self, "timeoutsInput"))
 
     @builtins.property
     @jsii.member(jsii_name="urlOfProxyAndResourceInput")
@@ -570,8 +610,8 @@ class ExternalFunction(
 class ExternalFunctionArg:
     def __init__(self, *, name: builtins.str, type: builtins.str) -> None:
         '''
-        :param name: Argument name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#name ExternalFunction#name}
-        :param type: Argument type, e.g. VARCHAR. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#type ExternalFunction#type}
+        :param name: Argument name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#name ExternalFunction#name}
+        :param type: Argument type, e.g. VARCHAR. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#type ExternalFunction#type}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__aa91adf443b0e58389feed0315ed7e3e773c128d2264d70e586fc48a6636b7a9)
@@ -586,7 +626,7 @@ class ExternalFunctionArg:
     def name(self) -> builtins.str:
         '''Argument name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#name ExternalFunction#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#name ExternalFunction#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -596,7 +636,7 @@ class ExternalFunctionArg:
     def type(self) -> builtins.str:
         '''Argument type, e.g. VARCHAR.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#type ExternalFunction#type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#type ExternalFunction#type}
         '''
         result = self._values.get("type")
         assert result is not None, "Required property 'type' is missing"
@@ -811,6 +851,7 @@ class ExternalFunctionArgOutputReference(
         "request_translator": "requestTranslator",
         "response_translator": "responseTranslator",
         "return_null_allowed": "returnNullAllowed",
+        "timeouts": "timeouts",
     },
 )
 class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
@@ -842,6 +883,7 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         request_translator: typing.Optional[builtins.str] = None,
         response_translator: typing.Optional[builtins.str] = None,
         return_null_allowed: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+        timeouts: typing.Optional[typing.Union["ExternalFunctionTimeouts", typing.Dict[builtins.str, typing.Any]]] = None,
     ) -> None:
         '''
         :param connection: 
@@ -851,27 +893,30 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param api_integration: The name of the API integration object that should be used to authenticate the call to the proxy service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#api_integration ExternalFunction#api_integration}
-        :param database: The database in which to create the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#database ExternalFunction#database}
-        :param name: Specifies the identifier for the external function. The identifier can contain the schema name and database name, as well as the function name. The function's signature (name and argument data types) must be unique within the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#name ExternalFunction#name}
-        :param return_behavior: Specifies the behavior of the function when returning results. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#return_behavior ExternalFunction#return_behavior}
-        :param return_type: Specifies the data type returned by the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#return_type ExternalFunction#return_type}
-        :param schema: The schema in which to create the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#schema ExternalFunction#schema}
-        :param url_of_proxy_and_resource: This is the invocation URL of the proxy service and resource through which Snowflake calls the remote service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#url_of_proxy_and_resource ExternalFunction#url_of_proxy_and_resource}
-        :param arg: arg block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#arg ExternalFunction#arg}
-        :param comment: A description of the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#comment ExternalFunction#comment}
-        :param compression: If specified, the JSON payload is compressed when sent from Snowflake to the proxy service, and when sent back from the proxy service to Snowflake. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#compression ExternalFunction#compression}
-        :param context_headers: Binds Snowflake context function results to HTTP headers. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#context_headers ExternalFunction#context_headers}
-        :param header: header block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#header ExternalFunction#header}
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#id ExternalFunction#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param max_batch_rows: This specifies the maximum number of rows in each batch sent to the proxy service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#max_batch_rows ExternalFunction#max_batch_rows}
-        :param null_input_behavior: Specifies the behavior of the external function when called with null inputs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#null_input_behavior ExternalFunction#null_input_behavior}
-        :param request_translator: This specifies the name of the request translator function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#request_translator ExternalFunction#request_translator}
-        :param response_translator: This specifies the name of the response translator function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#response_translator ExternalFunction#response_translator}
-        :param return_null_allowed: Indicates whether the function can return NULL values (true) or must return only NON-NULL values (false). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#return_null_allowed ExternalFunction#return_null_allowed}
+        :param api_integration: The name of the API integration object that should be used to authenticate the call to the proxy service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#api_integration ExternalFunction#api_integration}
+        :param database: The database in which to create the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#database ExternalFunction#database}
+        :param name: Specifies the identifier for the external function. The identifier can contain the schema name and database name, as well as the function name. The function's signature (name and argument data types) must be unique within the schema. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#name ExternalFunction#name}
+        :param return_behavior: Specifies the behavior of the function when returning results. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#return_behavior ExternalFunction#return_behavior}
+        :param return_type: Specifies the data type returned by the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#return_type ExternalFunction#return_type}
+        :param schema: The schema in which to create the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#schema ExternalFunction#schema}
+        :param url_of_proxy_and_resource: This is the invocation URL of the proxy service and resource through which Snowflake calls the remote service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#url_of_proxy_and_resource ExternalFunction#url_of_proxy_and_resource}
+        :param arg: arg block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#arg ExternalFunction#arg}
+        :param comment: (Default: ``user-defined function``) A description of the external function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#comment ExternalFunction#comment}
+        :param compression: (Default: ``AUTO``) If specified, the JSON payload is compressed when sent from Snowflake to the proxy service, and when sent back from the proxy service to Snowflake. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#compression ExternalFunction#compression}
+        :param context_headers: Binds Snowflake context function results to HTTP headers. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#context_headers ExternalFunction#context_headers}
+        :param header: header block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#header ExternalFunction#header}
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#id ExternalFunction#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param max_batch_rows: This specifies the maximum number of rows in each batch sent to the proxy service. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#max_batch_rows ExternalFunction#max_batch_rows}
+        :param null_input_behavior: (Default: ``CALLED ON NULL INPUT``) Specifies the behavior of the external function when called with null inputs. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#null_input_behavior ExternalFunction#null_input_behavior}
+        :param request_translator: This specifies the name of the request translator function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#request_translator ExternalFunction#request_translator}
+        :param response_translator: This specifies the name of the response translator function. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#response_translator ExternalFunction#response_translator}
+        :param return_null_allowed: (Default: ``true``) Indicates whether the function can return NULL values (true) or must return only NON-NULL values (false). Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#return_null_allowed ExternalFunction#return_null_allowed}
+        :param timeouts: timeouts block. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#timeouts ExternalFunction#timeouts}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
+        if isinstance(timeouts, dict):
+            timeouts = ExternalFunctionTimeouts(**timeouts)
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__e682723f6096db49b629b164e1596e63b85a35fccd9ecf2df69658061b203273)
             check_type(argname="argument connection", value=connection, expected_type=type_hints["connection"])
@@ -899,6 +944,7 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             check_type(argname="argument request_translator", value=request_translator, expected_type=type_hints["request_translator"])
             check_type(argname="argument response_translator", value=response_translator, expected_type=type_hints["response_translator"])
             check_type(argname="argument return_null_allowed", value=return_null_allowed, expected_type=type_hints["return_null_allowed"])
+            check_type(argname="argument timeouts", value=timeouts, expected_type=type_hints["timeouts"])
         self._values: typing.Dict[builtins.str, typing.Any] = {
             "api_integration": api_integration,
             "database": database,
@@ -944,6 +990,8 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
             self._values["response_translator"] = response_translator
         if return_null_allowed is not None:
             self._values["return_null_allowed"] = return_null_allowed
+        if timeouts is not None:
+            self._values["timeouts"] = timeouts
 
     @builtins.property
     def connection(
@@ -1013,7 +1061,7 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def api_integration(self) -> builtins.str:
         '''The name of the API integration object that should be used to authenticate the call to the proxy service.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#api_integration ExternalFunction#api_integration}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#api_integration ExternalFunction#api_integration}
         '''
         result = self._values.get("api_integration")
         assert result is not None, "Required property 'api_integration' is missing"
@@ -1023,7 +1071,7 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def database(self) -> builtins.str:
         '''The database in which to create the external function.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#database ExternalFunction#database}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#database ExternalFunction#database}
         '''
         result = self._values.get("database")
         assert result is not None, "Required property 'database' is missing"
@@ -1035,7 +1083,7 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         The identifier can contain the schema name and database name, as well as the function name. The function's signature (name and argument data types) must be unique within the schema.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#name ExternalFunction#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#name ExternalFunction#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -1045,7 +1093,7 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def return_behavior(self) -> builtins.str:
         '''Specifies the behavior of the function when returning results.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#return_behavior ExternalFunction#return_behavior}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#return_behavior ExternalFunction#return_behavior}
         '''
         result = self._values.get("return_behavior")
         assert result is not None, "Required property 'return_behavior' is missing"
@@ -1055,7 +1103,7 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def return_type(self) -> builtins.str:
         '''Specifies the data type returned by the external function.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#return_type ExternalFunction#return_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#return_type ExternalFunction#return_type}
         '''
         result = self._values.get("return_type")
         assert result is not None, "Required property 'return_type' is missing"
@@ -1065,7 +1113,7 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def schema(self) -> builtins.str:
         '''The schema in which to create the external function.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#schema ExternalFunction#schema}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#schema ExternalFunction#schema}
         '''
         result = self._values.get("schema")
         assert result is not None, "Required property 'schema' is missing"
@@ -1075,7 +1123,7 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def url_of_proxy_and_resource(self) -> builtins.str:
         '''This is the invocation URL of the proxy service and resource through which Snowflake calls the remote service.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#url_of_proxy_and_resource ExternalFunction#url_of_proxy_and_resource}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#url_of_proxy_and_resource ExternalFunction#url_of_proxy_and_resource}
         '''
         result = self._values.get("url_of_proxy_and_resource")
         assert result is not None, "Required property 'url_of_proxy_and_resource' is missing"
@@ -1087,25 +1135,25 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[ExternalFunctionArg]]]:
         '''arg block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#arg ExternalFunction#arg}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#arg ExternalFunction#arg}
         '''
         result = self._values.get("arg")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List[ExternalFunctionArg]]], result)
 
     @builtins.property
     def comment(self) -> typing.Optional[builtins.str]:
-        '''A description of the external function.
+        '''(Default: ``user-defined function``) A description of the external function.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#comment ExternalFunction#comment}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#comment ExternalFunction#comment}
         '''
         result = self._values.get("comment")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def compression(self) -> typing.Optional[builtins.str]:
-        '''If specified, the JSON payload is compressed when sent from Snowflake to the proxy service, and when sent back from the proxy service to Snowflake.
+        '''(Default: ``AUTO``) If specified, the JSON payload is compressed when sent from Snowflake to the proxy service, and when sent back from the proxy service to Snowflake.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#compression ExternalFunction#compression}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#compression ExternalFunction#compression}
         '''
         result = self._values.get("compression")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1114,7 +1162,7 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def context_headers(self) -> typing.Optional[typing.List[builtins.str]]:
         '''Binds Snowflake context function results to HTTP headers.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#context_headers ExternalFunction#context_headers}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#context_headers ExternalFunction#context_headers}
         '''
         result = self._values.get("context_headers")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -1125,14 +1173,14 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ExternalFunctionHeader"]]]:
         '''header block.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#header ExternalFunction#header}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#header ExternalFunction#header}
         '''
         result = self._values.get("header")
         return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, typing.List["ExternalFunctionHeader"]]], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#id ExternalFunction#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#id ExternalFunction#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -1144,16 +1192,16 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def max_batch_rows(self) -> typing.Optional[jsii.Number]:
         '''This specifies the maximum number of rows in each batch sent to the proxy service.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#max_batch_rows ExternalFunction#max_batch_rows}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#max_batch_rows ExternalFunction#max_batch_rows}
         '''
         result = self._values.get("max_batch_rows")
         return typing.cast(typing.Optional[jsii.Number], result)
 
     @builtins.property
     def null_input_behavior(self) -> typing.Optional[builtins.str]:
-        '''Specifies the behavior of the external function when called with null inputs.
+        '''(Default: ``CALLED ON NULL INPUT``) Specifies the behavior of the external function when called with null inputs.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#null_input_behavior ExternalFunction#null_input_behavior}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#null_input_behavior ExternalFunction#null_input_behavior}
         '''
         result = self._values.get("null_input_behavior")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1162,7 +1210,7 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def request_translator(self) -> typing.Optional[builtins.str]:
         '''This specifies the name of the request translator function.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#request_translator ExternalFunction#request_translator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#request_translator ExternalFunction#request_translator}
         '''
         result = self._values.get("request_translator")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1171,7 +1219,7 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def response_translator(self) -> typing.Optional[builtins.str]:
         '''This specifies the name of the response translator function.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#response_translator ExternalFunction#response_translator}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#response_translator ExternalFunction#response_translator}
         '''
         result = self._values.get("response_translator")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -1180,12 +1228,21 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def return_null_allowed(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Indicates whether the function can return NULL values (true) or must return only NON-NULL values (false).
+        '''(Default: ``true``) Indicates whether the function can return NULL values (true) or must return only NON-NULL values (false).
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#return_null_allowed ExternalFunction#return_null_allowed}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#return_null_allowed ExternalFunction#return_null_allowed}
         '''
         result = self._values.get("return_null_allowed")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
+
+    @builtins.property
+    def timeouts(self) -> typing.Optional["ExternalFunctionTimeouts"]:
+        '''timeouts block.
+
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#timeouts ExternalFunction#timeouts}
+        '''
+        result = self._values.get("timeouts")
+        return typing.cast(typing.Optional["ExternalFunctionTimeouts"], result)
 
     def __eq__(self, rhs: typing.Any) -> builtins.bool:
         return isinstance(rhs, self.__class__) and rhs._values == self._values
@@ -1207,8 +1264,8 @@ class ExternalFunctionConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 class ExternalFunctionHeader:
     def __init__(self, *, name: builtins.str, value: builtins.str) -> None:
         '''
-        :param name: Header name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#name ExternalFunction#name}
-        :param value: Header value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#value ExternalFunction#value}
+        :param name: Header name. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#name ExternalFunction#name}
+        :param value: Header value. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#value ExternalFunction#value}
         '''
         if __debug__:
             type_hints = typing.get_type_hints(_typecheckingstub__5a9332a4b1f73bdc42756b03e408e206af9f4d76f19feefd3567b866df4afa77)
@@ -1223,7 +1280,7 @@ class ExternalFunctionHeader:
     def name(self) -> builtins.str:
         '''Header name.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#name ExternalFunction#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#name ExternalFunction#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -1233,7 +1290,7 @@ class ExternalFunctionHeader:
     def value(self) -> builtins.str:
         '''Header value.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflake-labs/snowflake/1.0.5/docs/resources/external_function#value ExternalFunction#value}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#value ExternalFunction#value}
         '''
         result = self._values.get("value")
         assert result is not None, "Required property 'value' is missing"
@@ -1419,6 +1476,205 @@ class ExternalFunctionHeaderOutputReference(
         jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
 
 
+@jsii.data_type(
+    jsii_type="@cdktf/provider-snowflake.externalFunction.ExternalFunctionTimeouts",
+    jsii_struct_bases=[],
+    name_mapping={
+        "create": "create",
+        "delete": "delete",
+        "read": "read",
+        "update": "update",
+    },
+)
+class ExternalFunctionTimeouts:
+    def __init__(
+        self,
+        *,
+        create: typing.Optional[builtins.str] = None,
+        delete: typing.Optional[builtins.str] = None,
+        read: typing.Optional[builtins.str] = None,
+        update: typing.Optional[builtins.str] = None,
+    ) -> None:
+        '''
+        :param create: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#create ExternalFunction#create}.
+        :param delete: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#delete ExternalFunction#delete}.
+        :param read: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#read ExternalFunction#read}.
+        :param update: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#update ExternalFunction#update}.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__c93d0779b1ae9595c685c26f8445f84681ef0ed91169ebb319a8e3290ccc002f)
+            check_type(argname="argument create", value=create, expected_type=type_hints["create"])
+            check_type(argname="argument delete", value=delete, expected_type=type_hints["delete"])
+            check_type(argname="argument read", value=read, expected_type=type_hints["read"])
+            check_type(argname="argument update", value=update, expected_type=type_hints["update"])
+        self._values: typing.Dict[builtins.str, typing.Any] = {}
+        if create is not None:
+            self._values["create"] = create
+        if delete is not None:
+            self._values["delete"] = delete
+        if read is not None:
+            self._values["read"] = read
+        if update is not None:
+            self._values["update"] = update
+
+    @builtins.property
+    def create(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#create ExternalFunction#create}.'''
+        result = self._values.get("create")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def delete(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#delete ExternalFunction#delete}.'''
+        result = self._values.get("delete")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def read(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#read ExternalFunction#read}.'''
+        result = self._values.get("read")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    @builtins.property
+    def update(self) -> typing.Optional[builtins.str]:
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/snowflakedb/snowflake/1.2.1/docs/resources/external_function#update ExternalFunction#update}.'''
+        result = self._values.get("update")
+        return typing.cast(typing.Optional[builtins.str], result)
+
+    def __eq__(self, rhs: typing.Any) -> builtins.bool:
+        return isinstance(rhs, self.__class__) and rhs._values == self._values
+
+    def __ne__(self, rhs: typing.Any) -> builtins.bool:
+        return not (rhs == self)
+
+    def __repr__(self) -> str:
+        return "ExternalFunctionTimeouts(%s)" % ", ".join(
+            k + "=" + repr(v) for k, v in self._values.items()
+        )
+
+
+class ExternalFunctionTimeoutsOutputReference(
+    _cdktf_9a9027ec.ComplexObject,
+    metaclass=jsii.JSIIMeta,
+    jsii_type="@cdktf/provider-snowflake.externalFunction.ExternalFunctionTimeoutsOutputReference",
+):
+    def __init__(
+        self,
+        terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+        terraform_attribute: builtins.str,
+    ) -> None:
+        '''
+        :param terraform_resource: The parent resource.
+        :param terraform_attribute: The attribute on the parent resource this class is referencing.
+        '''
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__714119ea34af3ff0e8262570dbf28403714e3f2afda13110ba9514e884ebf9eb)
+            check_type(argname="argument terraform_resource", value=terraform_resource, expected_type=type_hints["terraform_resource"])
+            check_type(argname="argument terraform_attribute", value=terraform_attribute, expected_type=type_hints["terraform_attribute"])
+        jsii.create(self.__class__, self, [terraform_resource, terraform_attribute])
+
+    @jsii.member(jsii_name="resetCreate")
+    def reset_create(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetCreate", []))
+
+    @jsii.member(jsii_name="resetDelete")
+    def reset_delete(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetDelete", []))
+
+    @jsii.member(jsii_name="resetRead")
+    def reset_read(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetRead", []))
+
+    @jsii.member(jsii_name="resetUpdate")
+    def reset_update(self) -> None:
+        return typing.cast(None, jsii.invoke(self, "resetUpdate", []))
+
+    @builtins.property
+    @jsii.member(jsii_name="createInput")
+    def create_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "createInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="deleteInput")
+    def delete_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "deleteInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="readInput")
+    def read_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "readInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="updateInput")
+    def update_input(self) -> typing.Optional[builtins.str]:
+        return typing.cast(typing.Optional[builtins.str], jsii.get(self, "updateInput"))
+
+    @builtins.property
+    @jsii.member(jsii_name="create")
+    def create(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "create"))
+
+    @create.setter
+    def create(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__8f657a95d5d056db14820381febea5864d1727d3f726f23c3089d252dab7a122)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "create", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="delete")
+    def delete(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "delete"))
+
+    @delete.setter
+    def delete(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__3ac937b83a48194ae3f34e2e5db4b1b7a148a6f349fcedae69c2853c0b94b960)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "delete", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="read")
+    def read(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "read"))
+
+    @read.setter
+    def read(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__01f7c3824812bea423733228c41232c29282dd39ec11af756c09c986420bdc85)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "read", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="update")
+    def update(self) -> builtins.str:
+        return typing.cast(builtins.str, jsii.get(self, "update"))
+
+    @update.setter
+    def update(self, value: builtins.str) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__80faf87764210156620a503b8d198babbd864091f4e618ff07989c001b43f60a)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "update", value) # pyright: ignore[reportArgumentType]
+
+    @builtins.property
+    @jsii.member(jsii_name="internalValue")
+    def internal_value(
+        self,
+    ) -> typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ExternalFunctionTimeouts]]:
+        return typing.cast(typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ExternalFunctionTimeouts]], jsii.get(self, "internalValue"))
+
+    @internal_value.setter
+    def internal_value(
+        self,
+        value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ExternalFunctionTimeouts]],
+    ) -> None:
+        if __debug__:
+            type_hints = typing.get_type_hints(_typecheckingstub__1f10f0ca8341b773cd433ac4005f6426b2f49585349937314e20180d5f87b320)
+            check_type(argname="argument value", value=value, expected_type=type_hints["value"])
+        jsii.set(self, "internalValue", value) # pyright: ignore[reportArgumentType]
+
+
 __all__ = [
     "ExternalFunction",
     "ExternalFunctionArg",
@@ -1428,6 +1684,8 @@ __all__ = [
     "ExternalFunctionHeader",
     "ExternalFunctionHeaderList",
     "ExternalFunctionHeaderOutputReference",
+    "ExternalFunctionTimeouts",
+    "ExternalFunctionTimeoutsOutputReference",
 ]
 
 publication.publish()
@@ -1454,6 +1712,7 @@ def _typecheckingstub__37f1e6377f90568ad737f9b2baba668e6a1f65589c77bec4fa5c3d72d
     request_translator: typing.Optional[builtins.str] = None,
     response_translator: typing.Optional[builtins.str] = None,
     return_null_allowed: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    timeouts: typing.Optional[typing.Union[ExternalFunctionTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
     connection: typing.Optional[typing.Union[typing.Union[_cdktf_9a9027ec.SSHProvisionerConnection, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.WinrmProvisionerConnection, typing.Dict[builtins.str, typing.Any]]]] = None,
     count: typing.Optional[typing.Union[jsii.Number, _cdktf_9a9027ec.TerraformCount]] = None,
     depends_on: typing.Optional[typing.Sequence[_cdktf_9a9027ec.ITerraformDependable]] = None,
@@ -1682,6 +1941,7 @@ def _typecheckingstub__e682723f6096db49b629b164e1596e63b85a35fccd9ecf2df69658061
     request_translator: typing.Optional[builtins.str] = None,
     response_translator: typing.Optional[builtins.str] = None,
     return_null_allowed: typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]] = None,
+    timeouts: typing.Optional[typing.Union[ExternalFunctionTimeouts, typing.Dict[builtins.str, typing.Any]]] = None,
 ) -> None:
     """Type checking stubs"""
     pass
@@ -1755,6 +2015,53 @@ def _typecheckingstub__d6d61f0d4ed662524939ef679a41d55aba07a91e57e745c1f33803b55
 
 def _typecheckingstub__f05cca51610e4817a43e91541b530392431550de94f91e62f2960b7b3e54ff49(
     value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ExternalFunctionHeader]],
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__c93d0779b1ae9595c685c26f8445f84681ef0ed91169ebb319a8e3290ccc002f(
+    *,
+    create: typing.Optional[builtins.str] = None,
+    delete: typing.Optional[builtins.str] = None,
+    read: typing.Optional[builtins.str] = None,
+    update: typing.Optional[builtins.str] = None,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__714119ea34af3ff0e8262570dbf28403714e3f2afda13110ba9514e884ebf9eb(
+    terraform_resource: _cdktf_9a9027ec.IInterpolatingParent,
+    terraform_attribute: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__8f657a95d5d056db14820381febea5864d1727d3f726f23c3089d252dab7a122(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__3ac937b83a48194ae3f34e2e5db4b1b7a148a6f349fcedae69c2853c0b94b960(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__01f7c3824812bea423733228c41232c29282dd39ec11af756c09c986420bdc85(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__80faf87764210156620a503b8d198babbd864091f4e618ff07989c001b43f60a(
+    value: builtins.str,
+) -> None:
+    """Type checking stubs"""
+    pass
+
+def _typecheckingstub__1f10f0ca8341b773cd433ac4005f6426b2f49585349937314e20180d5f87b320(
+    value: typing.Optional[typing.Union[_cdktf_9a9027ec.IResolvable, ExternalFunctionTimeouts]],
 ) -> None:
     """Type checking stubs"""
     pass

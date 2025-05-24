@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: pythran
-Version: 0.17.0
+Version: 0.18.0
 Summary: Ahead of Time compiler for numeric kernels
 Author-email: Serge Guelton <serge.guelton@telecom-bretagne.eu>
 License: Copyright (c) 2012, HPC Project and Serge Guelton
@@ -70,6 +70,7 @@ Requires-Dist: wheel; extra == "test"
 Requires-Dist: packaging; extra == "test"
 Requires-Dist: ninja; extra == "test"
 Requires-Dist: meson; extra == "test"
+Dynamic: license-file
 
 Pythran
 #######
@@ -119,7 +120,7 @@ Using ``pip``
 Using ``mamba`` or ``conda``
 ****************************
 
-1. Using ``mamba`` (https://github.com/conda-forge/miniforge#mambaforge) or ``conda`` (https://github.com/conda-forge/miniforge)
+1. Using ``mamba`` (https://github.com/conda-forge/miniforge) or ``conda`` (https://github.com/conda-forge/miniforge)
  
 2. Run::
 

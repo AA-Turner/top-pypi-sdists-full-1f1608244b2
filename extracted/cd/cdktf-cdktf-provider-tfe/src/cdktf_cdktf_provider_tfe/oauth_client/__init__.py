@@ -1,7 +1,7 @@
 r'''
 # `tfe_oauth_client`
 
-Refer to the Terraform Registry for docs: [`tfe_oauth_client`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client).
+Refer to the Terraform Registry for docs: [`tfe_oauth_client`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class OauthClient(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.oauthClient.OauthClient",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client tfe_oauth_client}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client tfe_oauth_client}.'''
 
     def __init__(
         self,
@@ -72,23 +72,23 @@ class OauthClient(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client tfe_oauth_client} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client tfe_oauth_client} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id_: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param api_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#api_url OauthClient#api_url}.
-        :param http_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#http_url OauthClient#http_url}.
-        :param service_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#service_provider OauthClient#service_provider}.
-        :param agent_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#agent_pool_id OauthClient#agent_pool_id}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#id OauthClient#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#key OauthClient#key}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#name OauthClient#name}.
-        :param oauth_token: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#oauth_token OauthClient#oauth_token}.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#organization OauthClient#organization}.
-        :param organization_scoped: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#organization_scoped OauthClient#organization_scoped}.
-        :param private_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#private_key OauthClient#private_key}.
-        :param rsa_public_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#rsa_public_key OauthClient#rsa_public_key}.
-        :param secret: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#secret OauthClient#secret}.
+        :param api_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#api_url OauthClient#api_url}.
+        :param http_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#http_url OauthClient#http_url}.
+        :param service_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#service_provider OauthClient#service_provider}.
+        :param agent_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#agent_pool_id OauthClient#agent_pool_id}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#id OauthClient#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#key OauthClient#key}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#name OauthClient#name}.
+        :param oauth_token: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#oauth_token OauthClient#oauth_token}.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#organization OauthClient#organization}.
+        :param organization_scoped: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#organization_scoped OauthClient#organization_scoped}.
+        :param private_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#private_key OauthClient#private_key}.
+        :param rsa_public_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#rsa_public_key OauthClient#rsa_public_key}.
+        :param secret: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#secret OauthClient#secret}.
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -139,7 +139,7 @@ class OauthClient(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the OauthClient to import.
-        :param import_from_id: The id of the existing OauthClient that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing OauthClient that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the OauthClient to import is found.
         '''
         if __debug__:
@@ -496,19 +496,19 @@ class OauthClientConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param api_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#api_url OauthClient#api_url}.
-        :param http_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#http_url OauthClient#http_url}.
-        :param service_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#service_provider OauthClient#service_provider}.
-        :param agent_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#agent_pool_id OauthClient#agent_pool_id}.
-        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#id OauthClient#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
-        :param key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#key OauthClient#key}.
-        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#name OauthClient#name}.
-        :param oauth_token: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#oauth_token OauthClient#oauth_token}.
-        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#organization OauthClient#organization}.
-        :param organization_scoped: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#organization_scoped OauthClient#organization_scoped}.
-        :param private_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#private_key OauthClient#private_key}.
-        :param rsa_public_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#rsa_public_key OauthClient#rsa_public_key}.
-        :param secret: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#secret OauthClient#secret}.
+        :param api_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#api_url OauthClient#api_url}.
+        :param http_url: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#http_url OauthClient#http_url}.
+        :param service_provider: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#service_provider OauthClient#service_provider}.
+        :param agent_pool_id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#agent_pool_id OauthClient#agent_pool_id}.
+        :param id: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#id OauthClient#id}. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        :param key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#key OauthClient#key}.
+        :param name: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#name OauthClient#name}.
+        :param oauth_token: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#oauth_token OauthClient#oauth_token}.
+        :param organization: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#organization OauthClient#organization}.
+        :param organization_scoped: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#organization_scoped OauthClient#organization_scoped}.
+        :param private_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#private_key OauthClient#private_key}.
+        :param rsa_public_key: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#rsa_public_key OauthClient#rsa_public_key}.
+        :param secret: Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#secret OauthClient#secret}.
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -640,34 +640,34 @@ class OauthClientConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def api_url(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#api_url OauthClient#api_url}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#api_url OauthClient#api_url}.'''
         result = self._values.get("api_url")
         assert result is not None, "Required property 'api_url' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def http_url(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#http_url OauthClient#http_url}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#http_url OauthClient#http_url}.'''
         result = self._values.get("http_url")
         assert result is not None, "Required property 'http_url' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def service_provider(self) -> builtins.str:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#service_provider OauthClient#service_provider}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#service_provider OauthClient#service_provider}.'''
         result = self._values.get("service_provider")
         assert result is not None, "Required property 'service_provider' is missing"
         return typing.cast(builtins.str, result)
 
     @builtins.property
     def agent_pool_id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#agent_pool_id OauthClient#agent_pool_id}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#agent_pool_id OauthClient#agent_pool_id}.'''
         result = self._values.get("agent_pool_id")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def id(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#id OauthClient#id}.
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#id OauthClient#id}.
 
         Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2.
         If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
@@ -677,25 +677,25 @@ class OauthClientConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
     @builtins.property
     def key(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#key OauthClient#key}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#key OauthClient#key}.'''
         result = self._values.get("key")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def name(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#name OauthClient#name}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#name OauthClient#name}.'''
         result = self._values.get("name")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def oauth_token(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#oauth_token OauthClient#oauth_token}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#oauth_token OauthClient#oauth_token}.'''
         result = self._values.get("oauth_token")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def organization(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#organization OauthClient#organization}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#organization OauthClient#organization}.'''
         result = self._values.get("organization")
         return typing.cast(typing.Optional[builtins.str], result)
 
@@ -703,25 +703,25 @@ class OauthClientConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def organization_scoped(
         self,
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#organization_scoped OauthClient#organization_scoped}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#organization_scoped OauthClient#organization_scoped}.'''
         result = self._values.get("organization_scoped")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
 
     @builtins.property
     def private_key(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#private_key OauthClient#private_key}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#private_key OauthClient#private_key}.'''
         result = self._values.get("private_key")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def rsa_public_key(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#rsa_public_key OauthClient#rsa_public_key}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#rsa_public_key OauthClient#rsa_public_key}.'''
         result = self._values.get("rsa_public_key")
         return typing.cast(typing.Optional[builtins.str], result)
 
     @builtins.property
     def secret(self) -> typing.Optional[builtins.str]:
-        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/oauth_client#secret OauthClient#secret}.'''
+        '''Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/oauth_client#secret OauthClient#secret}.'''
         result = self._values.get("secret")
         return typing.cast(typing.Optional[builtins.str], result)
 

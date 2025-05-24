@@ -133,7 +133,6 @@ fn involute_curve(radius: f64, angle: f64) -> (f64, f64) {
 /// ```
 #[stdlib {
     name = "involuteCircular",
-    keywords = true,
     unlabeled_first = true,
     args = {
         sketch = { docs = "Which sketch should this path be added to?"},
@@ -254,7 +253,6 @@ pub async fn line(exec_state: &mut ExecState, args: Args) -> Result<KclValue, Kc
 /// ```
 #[stdlib {
     name = "line",
-    keywords = true,
     unlabeled_first = true,
     args = {
         sketch = { docs = "Which sketch should this path be added to?"},
@@ -426,7 +424,6 @@ pub async fn x_line(exec_state: &mut ExecState, args: Args) -> Result<KclValue, 
 /// ```
 #[stdlib {
     name = "xLine",
-    keywords = true,
     unlabeled_first = true,
     args = {
         sketch = { docs = "Which sketch should this path be added to?"},
@@ -492,7 +489,6 @@ pub async fn y_line(exec_state: &mut ExecState, args: Args) -> Result<KclValue, 
 /// ```
 #[stdlib {
     name = "yLine",
-    keywords = true,
     unlabeled_first = true,
     args = {
         sketch = { docs = "Which sketch should this path be added to?"},
@@ -575,7 +571,6 @@ pub async fn angled_line(exec_state: &mut ExecState, args: Args) -> Result<KclVa
 /// ```
 #[stdlib {
     name = "angledLine",
-    keywords = true,
     unlabeled_first = true,
     args = {
         sketch = { docs = "Which sketch should this path be added to?"},
@@ -874,7 +869,6 @@ pub async fn angled_line_that_intersects(exec_state: &mut ExecState, args: Args)
 /// ```
 #[stdlib {
     name = "angledLineThatIntersects",
-    keywords = true,
     unlabeled_first = true,
     args = {
         sketch = { docs = "Which sketch should this path be added to?"},
@@ -1152,7 +1146,6 @@ pub async fn start_sketch_on(exec_state: &mut ExecState, args: Args) -> Result<K
 #[stdlib {
     name = "startSketchOn",
     feature_tree_operation = true,
-    keywords = true,
     unlabeled_first = true,
     args = {
         plane_or_solid = { docs = "The plane or solid to sketch on"},
@@ -1318,11 +1311,10 @@ pub async fn start_profile(exec_state: &mut ExecState, args: Args) -> Result<Kcl
 /// ```
 #[stdlib {
     name = "startProfile",
-    keywords = true,
     unlabeled_first = true,
     args = {
         sketch_surface = { docs = "What to start the profile on" },
-        at = { docs = "Where to start the profile. An absolute point." },
+        at = { docs = "Where to start the profile. An absolute point.", snippet_value_array = ["0", "0"] },
         tag = { docs = "Tag this first starting point" },
     },
     tags = ["sketch"]
@@ -1461,7 +1453,6 @@ pub async fn profile_start_x(exec_state: &mut ExecState, args: Args) -> Result<K
 /// ```
 #[stdlib {
     name = "profileStartX",
-    keywords = true,
     unlabeled_first = true,
     args = {
         profile = {docs = "Profile whose start is being used"},
@@ -1491,7 +1482,6 @@ pub async fn profile_start_y(exec_state: &mut ExecState, args: Args) -> Result<K
 /// ```
 #[stdlib {
     name = "profileStartY",
-    keywords = true,
     unlabeled_first = true,
     args = {
         profile = {docs = "Profile whose start is being used"},
@@ -1524,7 +1514,6 @@ pub async fn profile_start(exec_state: &mut ExecState, args: Args) -> Result<Kcl
 /// ```
 #[stdlib {
     name = "profileStart",
-    keywords = true,
     unlabeled_first = true,
     args = {
         profile = {docs = "Profile whose start is being used"},
@@ -1569,7 +1558,6 @@ pub async fn close(exec_state: &mut ExecState, args: Args) -> Result<KclValue, K
 /// ```
 #[stdlib {
     name = "close",
-    keywords = true,
     unlabeled_first = true,
     args = {
         sketch = { docs = "The sketch you want to close"},
@@ -1679,7 +1667,6 @@ pub async fn arc(exec_state: &mut ExecState, args: Args) -> Result<KclValue, Kcl
 /// ```
 #[stdlib {
     name = "arc",
-    keywords = true,
     unlabeled_first = true,
     args = {
         sketch = { docs = "Which sketch should this path be added to?" },
@@ -1922,7 +1909,6 @@ pub async fn tangential_arc(exec_state: &mut ExecState, args: Args) -> Result<Kc
 /// ```
 #[stdlib {
     name = "tangentialArc",
-    keywords = true,
     unlabeled_first = true,
     args = {
         sketch = { docs = "Which sketch should this path be added to?"},
@@ -2168,12 +2154,27 @@ async fn inner_tangential_arc_to_point(
 pub async fn bezier_curve(exec_state: &mut ExecState, args: Args) -> Result<KclValue, KclError> {
     let sketch =
         args.get_unlabeled_kw_arg_typed("sketch", &RuntimeType::Primitive(PrimitiveType::Sketch), exec_state)?;
-    let end: [TyF64; 2] = args.get_kw_arg_typed("end", &RuntimeType::point2d(), exec_state)?;
-    let control1: [TyF64; 2] = args.get_kw_arg_typed("control1", &RuntimeType::point2d(), exec_state)?;
-    let control2: [TyF64; 2] = args.get_kw_arg_typed("control2", &RuntimeType::point2d(), exec_state)?;
+    let control1 = args.get_kw_arg_opt_typed("control1", &RuntimeType::point2d(), exec_state)?;
+    let control2 = args.get_kw_arg_opt_typed("control2", &RuntimeType::point2d(), exec_state)?;
+    let end = args.get_kw_arg_opt_typed("end", &RuntimeType::point2d(), exec_state)?;
+    let control1_absolute = args.get_kw_arg_opt_typed("control1Absolute", &RuntimeType::point2d(), exec_state)?;
+    let control2_absolute = args.get_kw_arg_opt_typed("control2Absolute", &RuntimeType::point2d(), exec_state)?;
+    let end_absolute = args.get_kw_arg_opt_typed("endAbsolute", &RuntimeType::point2d(), exec_state)?;
     let tag = args.get_kw_arg_opt("tag")?;
 
-    let new_sketch = inner_bezier_curve(sketch, control1, control2, end, tag, exec_state, args).await?;
+    let new_sketch = inner_bezier_curve(
+        sketch,
+        control1,
+        control2,
+        end,
+        control1_absolute,
+        control2_absolute,
+        end_absolute,
+        tag,
+        exec_state,
+        args,
+    )
+    .await?;
     Ok(KclValue::Sketch {
         value: Box::new(new_sketch),
     })
@@ -2184,6 +2185,7 @@ pub async fn bezier_curve(exec_state: &mut ExecState, args: Args) -> Result<KclV
 /// shape.
 ///
 /// ```no_run
+/// // Example using relative control points.
 /// exampleSketch = startSketchOn(XZ)
 ///   |> startProfile(at = [0, 0])
 ///   |> line(end = [0, 10])
@@ -2197,52 +2199,101 @@ pub async fn bezier_curve(exec_state: &mut ExecState, args: Args) -> Result<KclV
 ///
 /// example = extrude(exampleSketch, length = 10)
 /// ```
+/// ```no_run
+/// // Example using absolute control points.
+/// startSketchOn(XY)
+///   |> startProfile(at = [300, 300])
+///   |> bezierCurve(control1Absolute = [600, 300], control2Absolute = [-300, -100], endAbsolute = [600, 600])
+///   |> close()
+///   |> extrude(length = 10)
+/// ```
 #[stdlib {
     name = "bezierCurve",
-    keywords = true,
     unlabeled_first = true,
     args = {
         sketch = { docs = "Which sketch should this path be added to?"},
-        end = { docs = "How far away (along the X and Y axes) should this line go?" },
         control1 = { docs = "First control point for the cubic" },
         control2 = { docs = "Second control point for the cubic" },
+        end = { docs = "How far away (along the X and Y axes) should this line go?" },
+        control1_absolute = { docs = "First control point for the cubic. Absolute point." },
+        control2_absolute = { docs = "Second control point for the cubic. Absolute point." },
+        end_absolute = { docs = "Coordinate on the plane at which this line should end." },
         tag = { docs = "Create a new tag which refers to this line"},
     },
     tags = ["sketch"]
 }]
+#[allow(clippy::too_many_arguments)]
 async fn inner_bezier_curve(
     sketch: Sketch,
-    control1: [TyF64; 2],
-    control2: [TyF64; 2],
-    end: [TyF64; 2],
+    control1: Option<[TyF64; 2]>,
+    control2: Option<[TyF64; 2]>,
+    end: Option<[TyF64; 2]>,
+    control1_absolute: Option<[TyF64; 2]>,
+    control2_absolute: Option<[TyF64; 2]>,
+    end_absolute: Option<[TyF64; 2]>,
     tag: Option<TagNode>,
     exec_state: &mut ExecState,
     args: Args,
 ) -> Result<Sketch, KclError> {
     let from = sketch.current_pen_position()?;
-
-    let relative = true;
-    let delta = end.clone();
-    let to = [
-        from.x + end[0].to_length_units(from.units),
-        from.y + end[1].to_length_units(from.units),
-    ];
-
     let id = exec_state.next_uuid();
 
-    args.batch_modeling_cmd(
-        id,
-        ModelingCmd::from(mcmd::ExtendPath {
-            path: sketch.id.into(),
-            segment: PathSegment::Bezier {
-                control1: KPoint2d::from(point_to_mm(control1)).with_z(0.0).map(LengthUnit),
-                control2: KPoint2d::from(point_to_mm(control2)).with_z(0.0).map(LengthUnit),
-                end: KPoint2d::from(point_to_mm(delta)).with_z(0.0).map(LengthUnit),
-                relative,
-            },
-        }),
-    )
-    .await?;
+    let to = match (
+        control1,
+        control2,
+        end,
+        control1_absolute,
+        control2_absolute,
+        end_absolute,
+    ) {
+        // Relative
+        (Some(control1), Some(control2), Some(end), None, None, None) => {
+            let delta = end.clone();
+            let to = [
+                from.x + end[0].to_length_units(from.units),
+                from.y + end[1].to_length_units(from.units),
+            ];
+
+            args.batch_modeling_cmd(
+                id,
+                ModelingCmd::from(mcmd::ExtendPath {
+                    path: sketch.id.into(),
+                    segment: PathSegment::Bezier {
+                        control1: KPoint2d::from(point_to_mm(control1)).with_z(0.0).map(LengthUnit),
+                        control2: KPoint2d::from(point_to_mm(control2)).with_z(0.0).map(LengthUnit),
+                        end: KPoint2d::from(point_to_mm(delta)).with_z(0.0).map(LengthUnit),
+                        relative: true,
+                    },
+                }),
+            )
+            .await?;
+            to
+        }
+        // Absolute
+        (None, None, None, Some(control1), Some(control2), Some(end)) => {
+            let to = [end[0].to_length_units(from.units), end[1].to_length_units(from.units)];
+            args.batch_modeling_cmd(
+                id,
+                ModelingCmd::from(mcmd::ExtendPath {
+                    path: sketch.id.into(),
+                    segment: PathSegment::Bezier {
+                        control1: KPoint2d::from(point_to_mm(control1)).with_z(0.0).map(LengthUnit),
+                        control2: KPoint2d::from(point_to_mm(control2)).with_z(0.0).map(LengthUnit),
+                        end: KPoint2d::from(point_to_mm(end)).with_z(0.0).map(LengthUnit),
+                        relative: false,
+                    },
+                }),
+            )
+            .await?;
+            to
+        }
+        _ => {
+            return Err(KclError::Semantic(KclErrorDetails::new(
+                "You must either give `control1`, `control2` and `end`, or `control1Absolute`, `control2Absolute` and `endAbsolute`.".to_owned(),
+                vec![args.source_range],
+            )));
+        }
+    };
 
     let current_path = Path::ToPoint {
         base: BasePath {
@@ -2321,7 +2372,6 @@ pub async fn subtract_2d(exec_state: &mut ExecState, args: Args) -> Result<KclVa
 #[stdlib {
     name = "subtract2d",
     feature_tree_operation = true,
-    keywords = true,
     unlabeled_first = true,
     args = {
         sketch = { docs = "Which sketch should this path be added to?" },

@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: swe-rex
-Version: 1.2.1
+Version: 1.2.2
 Summary: Sandboxed code execution for AI agents, locally or on the cloud.
 Author-email: Kilian Lieret <kilian.lieret@posteo.de>, "Carlos E. Jimenez" <carlosej@princeton.edu>, John Yang <byjohnyang@gmail.com>
 Project-URL: Homepage, https://swe-rex.com
@@ -38,10 +38,11 @@ Requires-Dist: griffe-pydantic; extra == "dev"
 Requires-Dist: swe-rex[modal]; extra == "dev"
 Requires-Dist: swe-rex[fargate]; extra == "dev"
 Provides-Extra: modal
-Requires-Dist: modal; extra == "modal"
+Requires-Dist: modal>=1.0; extra == "modal"
 Requires-Dist: boto3; extra == "modal"
 Provides-Extra: fargate
 Requires-Dist: boto3; extra == "fargate"
+Dynamic: license-file
 
 <div align="center">
 <a href="https://swe-rex.com"><img src="docs/assets/swe-rex-logo-bg.svg" alt="SWE-ReX" style="height: 10em"/></a>
@@ -78,7 +79,7 @@ Using SWE-ReX, we
 This is [SWE-agent][] using SWE-ReX to run on 30 [SWE-bench][] instances in parallel:
 
 <div align="center">
-<img src="https://private-user-images.githubusercontent.com/13602468/416860062-2b207eb5-8593-46ec-b025-19c857c84933.gif?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDA1MTQ3MDIsIm5iZiI6MTc0MDUxNDQwMiwicGF0aCI6Ii8xMzYwMjQ2OC80MTY4NjAwNjItMmIyMDdlYjUtODU5My00NmVjLWIwMjUtMTljODU3Yzg0OTMzLmdpZj9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTAyMjUlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwMjI1VDIwMTMyMlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTFjOGNmZDczZmM2YmQwN2EzZDQ1NjkwM2M5NDNhZmEzNzMwZTUxNDNkOTA2OGVmOGM1NTM3MWRhMDg3NTZmZDMmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.iVxw9VeB7DDK1YRTUP3NbGtAlp2PQuHiJ07eS44E31s" alt="SWE-ReX in action" width=600px>
+<img src="docs/assets/swerex.gif" alt="SWE-ReX in action" width=600px>
 </div>
 
 ## Get started
@@ -99,3 +100,16 @@ Then head over to [our documentation](https://swe-rex.com/) to learn more!
 [SWE-agent]: https://swe-agent.com
 [SWE-bench]: https://swebench.com
 [enigma]: https://enigma-agent.com/
+
+## Related projects
+
+<div align="center">
+  <a href="https://github.com/SWE-agent/SWE-agent"><img src="docs/assets/sweagent_logo_text_below.svg" alt="SWE-agent" height="120px"></a>
+  <!-- <a href="https://github.com/SWE-agent/SWE-ReX"><img src="docs/assets/swerex_logo_text_below.svg" alt="SWE-ReX" height="120px"></a> -->
+   &nbsp;&nbsp;
+  <a href="https://github.com/SWE-bench/SWE-smith"><img src="docs/assets/swesmith_logo_text_below.svg" alt="SWE-smith" height="120px"></a>
+   &nbsp;&nbsp;
+  <a href="https://github.com/SWE-bench/SWE-bench"><img src="docs/assets/swebench_logo_text_below.svg" alt="SWE-bench" height="120px"></a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/SWE-bench/sb-cli"><img src="docs/assets/sbcli_logo_text_below.svg" alt="sb-cli" height="120px"></a>
+</div

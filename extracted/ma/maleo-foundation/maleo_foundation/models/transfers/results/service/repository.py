@@ -4,28 +4,17 @@ from maleo_foundation.models.schemas.general import BaseGeneralSchemas
 from maleo_foundation.models.schemas.result import BaseResultSchemas
 
 class BaseServiceRepositoryResultsTransfers:
-    class Row(
-        BaseGeneralSchemas.Status,
-        BaseGeneralSchemas.Timestamps,
-        BaseGeneralSchemas.Identifiers,
-        BaseResultSchemas.BaseRow
-    ): pass
-
     class Fail(BaseResultSchemas.Fail): pass
 
     class NotFound(BaseResultSchemas.NotFound): pass
 
     class NoData(BaseResultSchemas.NoData): pass
 
-    class SingleData(BaseResultSchemas.SingleData):
-        data:BaseServiceRepositoryResultsTransfers.Row
+    class SingleData(BaseResultSchemas.SingleData): pass
 
-    class UnpaginatedMultipleData(BaseResultSchemas.UnpaginatedMultipleData):
-        data:list[BaseServiceRepositoryResultsTransfers.Row]
+    class UnpaginatedMultipleData(BaseResultSchemas.UnpaginatedMultipleData): pass
 
     class PaginatedMultipleData(BaseResultSchemas.PaginatedMultipleData):
-        data:list[BaseServiceRepositoryResultsTransfers.Row]
-
         @model_validator(mode="before")
         @classmethod
         def calculate_pagination(cls, values: dict) -> dict:

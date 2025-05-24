@@ -319,6 +319,7 @@ from mailslurp_client.models.sort_object import SortObject
 from mailslurp_client.models.spelling_issue import SpellingIssue
 from mailslurp_client.models.structured_content_result import StructuredContentResult
 from mailslurp_client.models.structured_output_schema import StructuredOutputSchema
+from mailslurp_client.models.structured_output_schema_validation import StructuredOutputSchemaValidation
 from mailslurp_client.models.template_dto import TemplateDto
 from mailslurp_client.models.template_preview import TemplatePreview
 from mailslurp_client.models.template_projection import TemplateProjection

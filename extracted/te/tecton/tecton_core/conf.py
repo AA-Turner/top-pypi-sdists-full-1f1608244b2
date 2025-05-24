@@ -448,7 +448,7 @@ _DEFAULTS = {
     "DUCKDB_ENABLE_RANGE_SPLIT": (lambda: "false"),
     "DUCKDB_RANGE_SPLIT_COUNT": (lambda: "5"),
     "DUCKDB_HTTP_RETRIES": (lambda: "10"),
-    "DUCKDB_USE_PYARROW_FILESYSTEM": (lambda: "false"),
+    "DUCKDB_USE_PYARROW_FILESYSTEM": (lambda: "true"),
     "USE_BQ_STORAGE_API": (lambda: "true"),
     "DUCKDB_CHECKPOINT_EVERY_N_JOIN": (lambda: "5"),
     "DUCKDB_BATCH_SIZE": (lambda: "10000000"),

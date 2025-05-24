@@ -1,7 +1,7 @@
 r'''
 # `tfe_notification_configuration`
 
-Refer to the Terraform Registry for docs: [`tfe_notification_configuration`](https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration).
+Refer to the Terraform Registry for docs: [`tfe_notification_configuration`](https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration).
 '''
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
@@ -44,7 +44,7 @@ class NotificationConfiguration(
     metaclass=jsii.JSIIMeta,
     jsii_type="@cdktf/provider-tfe.notificationConfiguration.NotificationConfiguration",
 ):
-    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration tfe_notification_configuration}.'''
+    '''Represents a {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration tfe_notification_configuration}.'''
 
     def __init__(
         self,
@@ -69,20 +69,20 @@ class NotificationConfiguration(
         provider: typing.Optional[_cdktf_9a9027ec.TerraformProvider] = None,
         provisioners: typing.Optional[typing.Sequence[typing.Union[typing.Union[_cdktf_9a9027ec.FileProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.LocalExecProvisioner, typing.Dict[builtins.str, typing.Any]], typing.Union[_cdktf_9a9027ec.RemoteExecProvisioner, typing.Dict[builtins.str, typing.Any]]]]] = None,
     ) -> None:
-        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration tfe_notification_configuration} Resource.
+        '''Create a new {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration tfe_notification_configuration} Resource.
 
         :param scope: The scope in which to define this construct.
         :param id: The scoped construct ID. Must be unique amongst siblings in the same scope
-        :param destination_type: The type of notification configuration payload to send. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#destination_type NotificationConfiguration#destination_type}
-        :param name: Name of the notification configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#name NotificationConfiguration#name}
-        :param workspace_id: The ID of the workspace that owns the notification configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#workspace_id NotificationConfiguration#workspace_id}
-        :param email_addresses: A list of email addresses. This value must not be provided if ``destination_type`` is ``generic``, ``microsoft-teams``, or ``slack``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#email_addresses NotificationConfiguration#email_addresses}
-        :param email_user_ids: A list of user IDs. This value must not be provided if ``destination_type`` is ``generic``, ``microsoft-teams``, or ``slack``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#email_user_ids NotificationConfiguration#email_user_ids}
-        :param enabled: Whether the notification configuration should be enabled or not. Disabled configurations will not send any notifications. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#enabled NotificationConfiguration#enabled}
-        :param token: A write-only secure token for the notification configuration, which can be used by the receiving server to verify request authenticity when configured for notification configurations with a destination type of ``generic``. Defaults to ``null``. This value *must not* be provided if ``destination_type`` is ``email``, ``microsoft-teams``, or ``slack``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#token NotificationConfiguration#token}
-        :param token_wo: Value of the token in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#token_wo NotificationConfiguration#token_wo}
-        :param triggers: The array of triggers for which this notification configuration will send notifications. If omitted, no notification triggers are configured. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#triggers NotificationConfiguration#triggers}
-        :param url: The HTTP or HTTPS URL where notification requests will be made. This value must not be provided if ``email_addresses`` or ``email_user_ids`` is present, or if ``destination_type`` is ``email``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#url NotificationConfiguration#url}
+        :param destination_type: The type of notification configuration payload to send. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#destination_type NotificationConfiguration#destination_type}
+        :param name: Name of the notification configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#name NotificationConfiguration#name}
+        :param workspace_id: The ID of the workspace that owns the notification configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#workspace_id NotificationConfiguration#workspace_id}
+        :param email_addresses: A list of email addresses. This value must not be provided if ``destination_type`` is ``generic``, ``microsoft-teams``, or ``slack``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#email_addresses NotificationConfiguration#email_addresses}
+        :param email_user_ids: A list of user IDs. This value must not be provided if ``destination_type`` is ``generic``, ``microsoft-teams``, or ``slack``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#email_user_ids NotificationConfiguration#email_user_ids}
+        :param enabled: Whether the notification configuration should be enabled or not. Disabled configurations will not send any notifications. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#enabled NotificationConfiguration#enabled}
+        :param token: A write-only secure token for the notification configuration, which can be used by the receiving server to verify request authenticity when configured for notification configurations with a destination type of ``generic``. Defaults to ``null``. This value *must not* be provided if ``destination_type`` is ``email``, ``microsoft-teams``, or ``slack``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#token NotificationConfiguration#token}
+        :param token_wo: Value of the token in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#token_wo NotificationConfiguration#token_wo}
+        :param triggers: The array of triggers for which this notification configuration will send notifications. If omitted, no notification triggers are configured. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#triggers NotificationConfiguration#triggers}
+        :param url: The HTTP or HTTPS URL where notification requests will be made. This value must not be provided if ``email_addresses`` or ``email_user_ids`` is present, or if ``destination_type`` is ``email``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#url NotificationConfiguration#url}
         :param connection: 
         :param count: 
         :param depends_on: 
@@ -130,7 +130,7 @@ class NotificationConfiguration(
 
         :param scope: The scope in which to define this construct.
         :param import_to_id: The construct id used in the generated config for the NotificationConfiguration to import.
-        :param import_from_id: The id of the existing NotificationConfiguration that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#import import section} in the documentation of this resource for the id to use
+        :param import_from_id: The id of the existing NotificationConfiguration that should be imported. Refer to the {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#import import section} in the documentation of this resource for the id to use
         :param provider: ? Optional instance of the provider where the NotificationConfiguration to import is found.
         '''
         if __debug__:
@@ -416,16 +416,16 @@ class NotificationConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
         :param lifecycle: 
         :param provider: 
         :param provisioners: 
-        :param destination_type: The type of notification configuration payload to send. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#destination_type NotificationConfiguration#destination_type}
-        :param name: Name of the notification configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#name NotificationConfiguration#name}
-        :param workspace_id: The ID of the workspace that owns the notification configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#workspace_id NotificationConfiguration#workspace_id}
-        :param email_addresses: A list of email addresses. This value must not be provided if ``destination_type`` is ``generic``, ``microsoft-teams``, or ``slack``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#email_addresses NotificationConfiguration#email_addresses}
-        :param email_user_ids: A list of user IDs. This value must not be provided if ``destination_type`` is ``generic``, ``microsoft-teams``, or ``slack``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#email_user_ids NotificationConfiguration#email_user_ids}
-        :param enabled: Whether the notification configuration should be enabled or not. Disabled configurations will not send any notifications. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#enabled NotificationConfiguration#enabled}
-        :param token: A write-only secure token for the notification configuration, which can be used by the receiving server to verify request authenticity when configured for notification configurations with a destination type of ``generic``. Defaults to ``null``. This value *must not* be provided if ``destination_type`` is ``email``, ``microsoft-teams``, or ``slack``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#token NotificationConfiguration#token}
-        :param token_wo: Value of the token in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#token_wo NotificationConfiguration#token_wo}
-        :param triggers: The array of triggers for which this notification configuration will send notifications. If omitted, no notification triggers are configured. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#triggers NotificationConfiguration#triggers}
-        :param url: The HTTP or HTTPS URL where notification requests will be made. This value must not be provided if ``email_addresses`` or ``email_user_ids`` is present, or if ``destination_type`` is ``email``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#url NotificationConfiguration#url}
+        :param destination_type: The type of notification configuration payload to send. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#destination_type NotificationConfiguration#destination_type}
+        :param name: Name of the notification configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#name NotificationConfiguration#name}
+        :param workspace_id: The ID of the workspace that owns the notification configuration. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#workspace_id NotificationConfiguration#workspace_id}
+        :param email_addresses: A list of email addresses. This value must not be provided if ``destination_type`` is ``generic``, ``microsoft-teams``, or ``slack``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#email_addresses NotificationConfiguration#email_addresses}
+        :param email_user_ids: A list of user IDs. This value must not be provided if ``destination_type`` is ``generic``, ``microsoft-teams``, or ``slack``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#email_user_ids NotificationConfiguration#email_user_ids}
+        :param enabled: Whether the notification configuration should be enabled or not. Disabled configurations will not send any notifications. Defaults to ``false``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#enabled NotificationConfiguration#enabled}
+        :param token: A write-only secure token for the notification configuration, which can be used by the receiving server to verify request authenticity when configured for notification configurations with a destination type of ``generic``. Defaults to ``null``. This value *must not* be provided if ``destination_type`` is ``email``, ``microsoft-teams``, or ``slack``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#token NotificationConfiguration#token}
+        :param token_wo: Value of the token in write-only mode. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#token_wo NotificationConfiguration#token_wo}
+        :param triggers: The array of triggers for which this notification configuration will send notifications. If omitted, no notification triggers are configured. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#triggers NotificationConfiguration#triggers}
+        :param url: The HTTP or HTTPS URL where notification requests will be made. This value must not be provided if ``email_addresses`` or ``email_user_ids`` is present, or if ``destination_type`` is ``email``. Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#url NotificationConfiguration#url}
         '''
         if isinstance(lifecycle, dict):
             lifecycle = _cdktf_9a9027ec.TerraformResourceLifecycle(**lifecycle)
@@ -550,7 +550,7 @@ class NotificationConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def destination_type(self) -> builtins.str:
         '''The type of notification configuration payload to send.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#destination_type NotificationConfiguration#destination_type}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#destination_type NotificationConfiguration#destination_type}
         '''
         result = self._values.get("destination_type")
         assert result is not None, "Required property 'destination_type' is missing"
@@ -560,7 +560,7 @@ class NotificationConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def name(self) -> builtins.str:
         '''Name of the notification configuration.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#name NotificationConfiguration#name}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#name NotificationConfiguration#name}
         '''
         result = self._values.get("name")
         assert result is not None, "Required property 'name' is missing"
@@ -570,7 +570,7 @@ class NotificationConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def workspace_id(self) -> builtins.str:
         '''The ID of the workspace that owns the notification configuration.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#workspace_id NotificationConfiguration#workspace_id}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#workspace_id NotificationConfiguration#workspace_id}
         '''
         result = self._values.get("workspace_id")
         assert result is not None, "Required property 'workspace_id' is missing"
@@ -580,7 +580,7 @@ class NotificationConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def email_addresses(self) -> typing.Optional[typing.List[builtins.str]]:
         '''A list of email addresses. This value must not be provided if ``destination_type`` is ``generic``, ``microsoft-teams``, or ``slack``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#email_addresses NotificationConfiguration#email_addresses}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#email_addresses NotificationConfiguration#email_addresses}
         '''
         result = self._values.get("email_addresses")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -589,7 +589,7 @@ class NotificationConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def email_user_ids(self) -> typing.Optional[typing.List[builtins.str]]:
         '''A list of user IDs. This value must not be provided if ``destination_type`` is ``generic``, ``microsoft-teams``, or ``slack``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#email_user_ids NotificationConfiguration#email_user_ids}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#email_user_ids NotificationConfiguration#email_user_ids}
         '''
         result = self._values.get("email_user_ids")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -600,7 +600,7 @@ class NotificationConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     ) -> typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]]:
         '''Whether the notification configuration should be enabled or not. Disabled configurations will not send any notifications. Defaults to ``false``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#enabled NotificationConfiguration#enabled}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#enabled NotificationConfiguration#enabled}
         '''
         result = self._values.get("enabled")
         return typing.cast(typing.Optional[typing.Union[builtins.bool, _cdktf_9a9027ec.IResolvable]], result)
@@ -611,7 +611,7 @@ class NotificationConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         Defaults to ``null``. This value *must not* be provided if ``destination_type`` is ``email``, ``microsoft-teams``, or ``slack``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#token NotificationConfiguration#token}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#token NotificationConfiguration#token}
         '''
         result = self._values.get("token")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -620,7 +620,7 @@ class NotificationConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def token_wo(self) -> typing.Optional[builtins.str]:
         '''Value of the token in write-only mode.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#token_wo NotificationConfiguration#token_wo}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#token_wo NotificationConfiguration#token_wo}
         '''
         result = self._values.get("token_wo")
         return typing.cast(typing.Optional[builtins.str], result)
@@ -629,7 +629,7 @@ class NotificationConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
     def triggers(self) -> typing.Optional[typing.List[builtins.str]]:
         '''The array of triggers for which this notification configuration will send notifications. If omitted, no notification triggers are configured.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#triggers NotificationConfiguration#triggers}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#triggers NotificationConfiguration#triggers}
         '''
         result = self._values.get("triggers")
         return typing.cast(typing.Optional[typing.List[builtins.str]], result)
@@ -640,7 +640,7 @@ class NotificationConfigurationConfig(_cdktf_9a9027ec.TerraformMetaArguments):
 
         This value must not be provided if ``email_addresses`` or ``email_user_ids`` is present, or if ``destination_type`` is ``email``.
 
-        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.65.2/docs/resources/notification_configuration#url NotificationConfiguration#url}
+        Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/tfe/0.66.0/docs/resources/notification_configuration#url NotificationConfiguration#url}
         '''
         result = self._values.get("url")
         return typing.cast(typing.Optional[builtins.str], result)

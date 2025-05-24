@@ -1,15 +1,23 @@
 use super::*;
-use crate::solver::core::{
-    cones::{CompositeCone, SupportedConeT},
-    traits::ProblemData,
-    Solver,
+use crate::solver::core::callbacks::SolverCallbacks;
+use crate::solver::traits::Settings;
+use crate::{
+    io::ConfigurablePrintTarget,
+    solver::core::{
+        cones::{CompositeCone, SupportedConeT},
+        kktsolvers::HasLinearSolverInfo,
+        traits::ProblemData,
+        SettingsError, Solver,
+    },
 };
+use thiserror::Error;
 
 use crate::algebra::*;
 use crate::timers::*;
 
 /// Solver for problems in standard conic program form
 pub type DefaultSolver<T = f64> = Solver<
+    T,
     DefaultProblemData<T>,
     DefaultVariables<T>,
     DefaultResiduals<T>,
@@ -19,6 +27,28 @@ pub type DefaultSolver<T = f64> = Solver<
     DefaultSolution<T>,
     DefaultSettings<T>,
 >;
+
+/// Error types returned by the DefaultSolver
+
+#[derive(Error, Debug)]
+/// Error type returned by settings validation
+pub enum SolverError {
+    /// An error attributable to one of the fields
+    #[error("Bad input data: {0}")]
+    BadInputData(&'static str),
+
+    /// Error from settings validation with details
+    #[error("Bad settings: {0}")]
+    SettingsError(#[from] SettingsError),
+
+    /// Error from I/O operations
+    #[error("I/O error: {0}")]
+    IoError(#[from] std::io::Error),
+
+    /// Error from JSON parsing/serialization
+    #[error("JSON error: {0}")]
+    JsonError(#[from] serde_json::Error),
+}
 
 impl<T> DefaultSolver<T>
 where
@@ -31,13 +61,15 @@ where
         b: &[T],
         cones: &[SupportedConeT<T>],
         settings: DefaultSettings<T>,
-    ) -> Self {
+    ) -> Result<Self, SolverError> {
         //sanity check problem dimensions
-        _check_dimensions(P, q, A, b, cones);
+        check_dimensions(P, q, A, b, cones)?;
+        //sanity check settings
+        settings.validate()?;
 
         let mut timers = Timers::default();
         let mut output;
-        let info = DefaultInfo::<T>::new();
+        let mut info = DefaultInfo::<T>::new();
 
         timeit! {timers => "setup"; {
 
@@ -67,14 +99,22 @@ where
         timeit!{timers => "kktinit"; {
             kktsystem = DefaultKKTSystem::<T>::new(&data,&cones,&settings);
         }}
+        info.linsolver = kktsystem.linear_solver_info();
 
         // work variables for assembling step direction LHS/RHS
         let step_rhs  = DefaultVariables::<T>::new(data.n,data.m);
         let step_lhs  = DefaultVariables::<T>::new(data.n,data.m);
         let prev_vars = DefaultVariables::<T>::new(data.n,data.m);
 
-        output = Self{data,variables,residuals,kktsystem,step_lhs,
-             step_rhs,prev_vars,info,solution,cones,settings,timers: None};
+        // configure empty user callbacks
+
+        output = Self{
+            data,variables,residuals,kktsystem,
+            step_lhs,step_rhs,prev_vars,info,
+            solution,cones,settings,
+            timers: None,
+            callbacks: SolverCallbacks::default(),
+            phantom: std::marker::PhantomData };
 
         }} //end "setup" timer.
 
@@ -82,27 +122,62 @@ where
         //timer object into the solver structure
         output.timers.replace(timers);
 
-        output
+        Ok(output)
     }
 }
 
-fn _check_dimensions<T: FloatT>(
+fn check_dimensions<T: FloatT>(
     P: &CscMatrix<T>,
     q: &[T],
     A: &CscMatrix<T>,
     b: &[T],
     cone_types: &[SupportedConeT<T>],
-) {
+) -> Result<(), SolverError> {
     let m = b.len();
     let n = q.len();
     let p = cone_types.iter().fold(0, |acc, cone| acc + cone.nvars());
 
-    assert!(m == A.nrows(), "A and b incompatible dimensions.");
-    assert!(
-        p == m,
-        "Constraint dimensions inconsistent with size of cones."
-    );
-    assert!(n == A.ncols(), "A and q incompatible dimensions.");
-    assert!(n == P.ncols(), "P and q incompatible dimensions.");
-    assert!(P.is_square(), "P not square.");
+    if m != A.nrows() {
+        return Err(SolverError::BadInputData("A and b incompatible dimensions"));
+    }
+    if p != m {
+        return Err(SolverError::BadInputData(
+            "Constraint dimensions inconsistent with size of cones",
+        ));
+    }
+    if n != A.ncols() {
+        return Err(SolverError::BadInputData("A and q incompatible dimensions"));
+    }
+    if n != P.ncols() {
+        return Err(SolverError::BadInputData("P and q incompatible dimensions"));
+    }
+    if !P.is_square() {
+        return Err(SolverError::BadInputData("P not square"));
+    }
+
+    Ok(())
+}
+
+impl<T> ConfigurablePrintTarget for DefaultSolver<T>
+where
+    T: FloatT,
+{
+    fn print_to_stdout(&mut self) {
+        self.info.print_to_stdout();
+    }
+    fn print_to_file(&mut self, file: std::fs::File) {
+        self.info.print_to_file(file)
+    }
+    fn print_to_stream(&mut self, stream: Box<dyn std::io::Write + Send + Sync>) {
+        self.info.print_to_stream(stream)
+    }
+    fn print_to_sink(&mut self) {
+        self.info.print_to_sink()
+    }
+    fn print_to_buffer(&mut self) {
+        self.info.print_to_buffer();
+    }
+    fn get_print_buffer(&mut self) -> std::io::Result<String> {
+        self.info.get_print_buffer()
+    }
 }
